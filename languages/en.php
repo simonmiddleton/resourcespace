@@ -609,6 +609,7 @@ $lang["log-missinglang"]="[type] (missing lang)"; # [type] will be replaced.
 $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
 $lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
 $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to state %ARCHIVE)';
+$lang['log-f']="Replaced file";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -2802,12 +2803,12 @@ $lang['browse_by_tag']                  = "Browse by tag";
 $lang['browse_by_workflow_state']       = "Workflow";
 
 # Updates to workflow
-$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
+$lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";
 
-$lang["collection_description"] = "Description";
+$lang["collection_description"]         = "Description";
 
 # Updates to workflow
-$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
+$lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";
 
 # Batch replace updates
 $lang["replacebatchlocalfolder"]        = "Retrieve files from local folder on server? (this will create an offline job)";

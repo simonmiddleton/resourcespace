@@ -170,6 +170,10 @@ for ($n=0;$n<count($inst_plugins)-1;$n++)
     $plugin_yaml_path = get_plugin_path($inst_plugins[$n]["name"])."/".$inst_plugins[$n]["name"].".yaml";
     $py = get_plugin_yaml($plugin_yaml_path, false);  
     $inst_plugins[$n]['disable_group_select'] = $py['disable_group_select'];
+    if((!isset($inst_plugins[$n]['config_url']) || trim($inst_plugins[$n]['config_url']) == "") && isset($py['config_url']))
+        {
+        $inst_plugins[$n]['config_url'] = $py['config_url'];
+        }
     }
         
 array_walk($inst_plugins, 'legacy_check');

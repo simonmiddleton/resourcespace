@@ -22,7 +22,7 @@ if(is_valid_revert_state_request())
 
 
 # Check edit permission.
-if (!get_edit_access($ref))
+if (!get_edit_access($resource))
     {
     # The user is not allowed to edit this resource or the resource doesn't exist.
     $error=$lang['error-permissiondenied'];
@@ -30,11 +30,6 @@ if (!get_edit_access($ref))
     exit();
     }
 
-# Load log entry
-$log=sql_query("select resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref where resource_log.ref='$ref'");
-if (count($log)==0) {exit("Log entry not found");}
-$log=$log[0];
-$resource=$log["resource"];
 $field=$log["resource_type_field"];
 $type=$log["type"];
 

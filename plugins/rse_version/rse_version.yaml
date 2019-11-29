@@ -5,3 +5,4 @@ version: 2.0
 default_priority: 100
 category: asset processing,system,user interface
 disable_group_select: 1
+config_url: /plugins/rse_version/pages/setup.php

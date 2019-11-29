@@ -636,3 +636,39 @@ function api_get_node_id($value, $resource_type_field)
 
     return get_node_id($value,$resource_type_field);
     }
+function api_replace_resource_file($ref, $file_location, $no_exif=false, $autorotate=false, $keep_original=true)
+    {
+    global $rse_version_block, $plugins, $usergroup,$rse_version_override_groups, $replace_resource_preserve_option;
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+    $keep_original = filter_var($keep_original, FILTER_VALIDATE_BOOLEAN);
+    $duplicates=check_duplicate_checksum($file_location,false);
+    if (count($duplicates)>0)
+        {
+        return "FAILED: Resource not replaced - duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        }
+    else 
+        {
+        if(!$keep_original)
+            {
+            if(in_array("rse_version", $plugins) && (!isset($rse_version_override_groups) || !in_array($usergroup,$rse_version_override_groups)))
+                {
+                return array("Status" => "FAILED","Message" => "Invalid option 'keep_original=false'. Original file must be preserved because versioning is enabled.");
+                }
+            // Set flag that we want to override the versioning behaviour of the rse_version plugin
+            $rse_version_block = true;
+            }
+        else
+            {
+            // Set global otion so that this is not dependent on config
+            $replace_resource_preserve_option = true;
+            }
+        $success = replace_resource_file($ref, $file_location, $no_exif, $autorotate, $keep_original);
+        if (!$success)
+            {
+            return array("Status" => "FAILED","Message" => "Resource not replaced. Refer to ResourceSpace system administrator");
+            }
+        }
+
+    return array("Status" => "SUCCESS","Message" => "Resource ID #$ref replaced");
+    }
