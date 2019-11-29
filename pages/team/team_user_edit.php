@@ -52,7 +52,7 @@ elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 		if (getval("save","")!="" && $modal)
 			{
 			# close Modal and return to action list
-			print "<script>ModalClose()</script>";
+			echo "<script>ModalClose()</script>";
 			exit();
 			}	
 		
