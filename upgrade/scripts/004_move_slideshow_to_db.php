@@ -8,6 +8,12 @@ set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Checking current slideshow images in
 $web_root = dirname(dirname(__DIR__));
 $homeanim_folder_path = "{$web_root}/{$homeanim_folder}";
 
+if(!is_dir($homeanim_folder_path))
+    {
+    // May be a newly configured system that has not followed setup.php
+    return;
+    }
+
 $found_files = array();
 $files = new \DirectoryIterator($homeanim_folder_path);
 foreach($files as $file)
