@@ -1880,40 +1880,39 @@ function register_plugin($plugin)
  * @return boolean
  */
 function rcRmdir ($path)
-	{
-	debug("rcRmdir: " . $path);
-	if (is_dir($path))
-		{
-		$foldercontents = new DirectoryIterator($path);
-		foreach($foldercontents as $objectindex => $object)
-			{
-			if($object->isDot())
+    {
+    debug("rcRmdir: " . $path);
+    if (is_dir($path))
+        {
+        $foldercontents = new DirectoryIterator($path);
+        foreach($foldercontents as $objectindex => $object)
+            {
+            if($object->isDot())
                 {
                 continue;
                 }
             $objectname = $object->getFilename();
-			
-			
-			if ($object->isDir() && $object->isWritable())
+
+            if ($object->isDir() && $object->isWritable())
                 {
-				rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
-				}				
-	        else
-				{
-	            $success = @unlink($path . DIRECTORY_SEPARATOR . $objectname);
-				}
-				
-			if(!$success)
-				{
-				debug("rcRmdir: Unable to delete " . $path . DIRECTORY_SEPARATOR . $objectname);
-				return false;
-				}
-	        }
-		}
-	$success = @rmdir($path);
+                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
+                }				
+            else
+                {
+                $success = @unlink($path . DIRECTORY_SEPARATOR . $objectname);
+                }
+
+            if(!$success)
+                {
+                debug("rcRmdir: Unable to delete " . $path . DIRECTORY_SEPARATOR . $objectname);
+                return false;
+                }
+            }
+        }
+    $success = @rmdir($path);
     debug("rcRmdir: " . $path . " - " . ($success ? "SUCCESS" : "FAILED"));
-	return $success;
-	}
+    return $success;
+    }
 
 function get_resource_table_joins(){
 	

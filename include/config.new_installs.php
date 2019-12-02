@@ -39,3 +39,4 @@ $upload_then_edit = true;
 $search_filter_nodes = true;
 
 $purge_temp_folder_age=90;
+$filestore_evenspread=true;

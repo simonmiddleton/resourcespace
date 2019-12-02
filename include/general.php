@@ -71,7 +71,8 @@ function get_resource_path(
         }
 
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,$migrating_scrambled, $scramble_key_old;
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
+           $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
@@ -208,11 +209,21 @@ function get_resource_path(
 
     for ($n=0;$n<strlen($ref);$n++)
         {
-        $folder.=substr($ref,$n,1);
-        if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
+        // If using $filestore_evenspread then the path is generated using the least significant figure first instead of the greatest significant figure
+        $refpos = $filestore_evenspread ? -($n+1) : $n;
+        $folder .= substr($ref,$refpos,1);
+
+        if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1)))
+            {
+            $folder.="_" . $scramblepath;
+            }  
+
         $folder.="/";
-        #echo "<li>" . $folder;
-        if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777,true);chmod($storagedir . $path_suffix . $folder,0777);}
+        if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate)
+            {
+            @mkdir($storagedir . $path_suffix . $folder,0777,true);
+            chmod($storagedir . $path_suffix . $folder,0777);
+            }
         }
         
     # Add the page to the filename for everything except page 1.
@@ -295,30 +306,52 @@ function get_resource_path(
             }
         }
 
-    if ($scramble && isset($migrating_scrambled) && $migrating_scrambled)
+    if (($scramble && isset($migrating_scrambled) && $migrating_scrambled) || ($filestore_migrate && $filestore_evenspread))
+        {
+        // Check if there is a file at the path using no/previous scramble key or with $filestore_evenspread=false;
+        // Most will normally have been moved using pages/tools/xfer_scrambled.php or pages/tools/filestore_migrate.php
+        
+        // Flag to set whether we are migrating to even out filestore distibution or because of scramble key change
+        $redistribute_mode = $filestore_migrate;
+
+        // Get the new paths without migrating to prevent infinite recursion
+        $migrating_scrambled = false;
+        $filestore_migrate = false;
+        $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
+        
+        // Use old settings to get old path before migration and migrate if found
+        if($redistribute_mode)
             {
-            // Check if there is a scrambled version using no/previous key, most will normally be moved using pages/tools/xfer_scrambled.php
-            $migrating_scrambled = false;
-            $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
-            
+            $filestore_evenspread = false;
+            }
+        else
+            {
             $scramble_key_saved = $scramble_key;
-            $scramble_key = isset($scramble_key_old)?$scramble_key_old:"";
-            
-            $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
-            if (file_exists($oldfilepath))
+            $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
+            }        
+        $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
+        if (file_exists($oldfilepath))
+            {
+            if(!file_exists(dirname($newpath)))
                 {
-                if(!file_exists(dirname($newpath)))
-                    {
-                    mkdir(dirname($newpath),0777,true);
-                    }
-                rename ($oldfilepath,$newpath);
+                mkdir(dirname($newpath),0777,true);
                 }
-            
-            // Reset key
+            rename ($oldfilepath,$newpath);
+            }
+        
+        // Reset key/evenspread value
+        if($redistribute_mode)
+            {
+            $filestore_evenspread = true;
+            $filestore_migrate = true;
+            }
+        else
+            {
             $scramble_key = $scramble_key_saved;
             $migrating_scrambled = true;
             }
-
+        }
+    
     return $file;
     }
 
