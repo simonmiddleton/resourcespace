@@ -480,15 +480,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 if (file_exists($path)) {unlink($path);}
                 }   
 
-            # Create previews
-            global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
-            # Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
-            $checksum_required=true;
-            if($file_upload_block_duplicates && isset($checksum))
+            global $enable_thumbnail_creation_on_upload, $file_upload_block_duplicates, $checksum, $file_checksums_offline;
+            $checksum_required = true;
+            if($file_upload_block_duplicates && !$file_checksums_offline && generate_file_checksum($ref, $extension, false))
                 {
-                sql_query("UPDATE resource SET file_checksum='" . escape_check($checksum) . "', last_verified=NOW(), integrity_fail=0 WHERE ref='" . escape_check($ref) . "'");
-                $checksum_required=false;
+                $checksum_required = false;
                 }
+
             if ($enable_thumbnail_creation_on_upload)
                 { 
                 create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
@@ -2592,7 +2590,9 @@ function generate_file_checksum($resource,$extension,$anyway=false)
         if (file_exists($path))
             {
             $checksum = get_checksum($path);
-            sql_query("UPDATE resource SET file_checksum='" . escape_check($checksum) . "' WHERE ref='$resource'");
+            sql_query(sprintf("UPDATE resource SET file_checksum = '%s', last_verified = NOW(), integrity_fail = 0 WHERE ref='%s'",
+                escape_check($checksum),
+                escape_check($resource)));
             $generated = true;
             }
         }
