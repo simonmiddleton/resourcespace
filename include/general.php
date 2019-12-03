@@ -4463,26 +4463,43 @@ function check_access_key_collection($collection, $key)
 
     $resources = get_collection_resources($collection);
 
+   
     if(0 == count($resources))
         {
         return false;
         }
 
-    $invalid_resources = array();
-    foreach($resources as $resource_id)
+    /* if resourceconnect is enabled there may be
+        1/ a collection with just remote resources 
+        2/ a collection containing a mix of local and remote resources 
+        access key check only relevant for local resources therefore retrieve local resources only
+    */   
+    // is resourceconnect plugin enabled?
+    $active_plugin_names = array_column($GLOBALS["active_plugins"], "name");
+    if( array_search('resourceconnect', $active_plugin_names) !== false)
         {
-        // Verify a supplied external access key for all resources in a collection
-        if(!check_access_key($resource_id, $key))
+        # retrieve only local resources from collection for access key validation
+        $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
+        } 
+
+    // only check access key when there are resources to check
+    if (count($resources) > 0)
+        {    
+        $invalid_resources = array();
+        foreach($resources as $resource_id)
+            {    
+            // Verify a supplied external access key for all local resources in the collection
+            if(!check_access_key($resource_id, $key))
+                {
+                $invalid_resources[] = $resource_id;
+                }
+            }
+    
+        if(count($resources) === count($invalid_resources))
             {
-            $invalid_resources[] = $resource_id;
+            return false;
             }
         }
-
-    if(count($resources) === count($invalid_resources))
-        {
-        return false;
-        }
-
     // Set the 'last used' date for this key
     sql_query("UPDATE external_access_keys SET lastused = now() WHERE collection = '{$collection}' AND access_key = '{$key}'");
 

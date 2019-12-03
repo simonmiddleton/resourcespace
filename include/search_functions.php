@@ -784,7 +784,8 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     $heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
     $search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard,
     $open_access_for_contributor, $searchstates;
-
+    
+    if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
     # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
     if(!is_array($archive)){$archive=explode(",",$archive);}
     $archive = array_filter($archive,function($state){return (string)(int)$state==(string)$state;}); // remove non-numeric values

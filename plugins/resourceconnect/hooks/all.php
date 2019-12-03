@@ -152,7 +152,68 @@ function HookResourceconnectAllGenerateurl($url)
     if (substr($url,0,strlen($baseurl_short))==$baseurl_short) {$url=substr($url,strlen($baseurl_short));$url=$baseurl . "/" . $url;}
     return ($url);
     }
+
+
+    /**
+     * This functions checks for the existence of global var $userpermissions and sets it to empty array if it doesn't already exist
+     * 
+     * Used in include/search_functions.php and relevant when there is an external collection share via a link and the $userpermissions var has not been set
+     */
+
+    function HookResourceconnectAllModifyUserPermissions()
+        {
+        global $userpermissions;
+        $userpermissions = (isset($userpermissions)) ?  $userpermissions : array();
+        }
     
+    /**
+     * This function is called from include/collection_functions.php line 169
+     * 
+     * When ResourceConnect is enabled the function returns resource ids for resources in a collection. 
+     * The resources may be from a local or remote instance of ResourceConnect
+     * 
+     * @param   array   $params     array containing function parameters $param[0] = collection id
+     * @return  array               array containing resource ids for resources (both local an remote) in a collection
+     * 
+     */
+
+    function HookResourceconnectAllreplace_get_collection_resources($params)
+        {
+       
+        $collection = $params[0];
+    
+        $sql = "
+    
+    SELECT 
+        value
+    FROM  
+    (
+    SELECT 
+        resource AS value 
+    FROM 
+        collection_resource 
+    WHERE 
+        collection='" . escape_check($collection) . "'
+    ORDER BY 
+        sortorder asc, 
+        date_added desc, 
+        resource desc
+    ) AS MAIN
+    UNION ALL
+    (
+    SELECT
+        ref AS value
+    FROM 
+        resourceconnect_collection_resources 
+    WHERE 
+        collection='$collection'    
+    )
+    ";
+    
+        return sql_array($sql);
+    
+        }    
+
 /*
 function HookResourceConnectAllAdvancedsearchlink()
     {

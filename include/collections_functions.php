@@ -168,8 +168,8 @@ function get_collection_resources($collection)
         {
         collection_cleanup_inaccessible_resources($collection);
         }
-
-    $plugin_collection_resources=hook('replace_get_collection_resources');
+	
+    $plugin_collection_resources=hook('replace_get_collection_resources', "", array($collection));
     if(is_array($plugin_collection_resources))
         {
         return $plugin_collection_resources;
