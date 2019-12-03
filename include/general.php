@@ -514,7 +514,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $fieldsSQL = "
              SELECT d.value,
-                    d.resource_type_field,
+                    f1.ref resource_type_field,
                     f1.*,
                     f1.required AS frequired,
                     f1.ref AS fref,
@@ -533,7 +533,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
               UNION
 
              SELECT group_concat(if(rn.resource = '" . escape_check($ref) . "', n.name, NULL)) AS `value`,
-                    n.resource_type_field,
+                    f2.ref resource_type_field,
                     f2.*,
                     f2.required AS frequired,
                     f2.ref AS fref,
@@ -556,7 +556,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
         }
-        
+
     $fields = sql_query($fieldsSQL);
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
