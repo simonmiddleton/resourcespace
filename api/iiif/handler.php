@@ -520,23 +520,26 @@ else
 							}
 
 						$response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-
+                        
+                        // Construct metadata array from resource field data 
 						$response["metadata"] = array();
-						$n=0;
+                        $n=0;
 						foreach($iiif_data as $iiif_data_row)
 							{
-							$response["metadata"][$n] = array();
-							$response["metadata"][$n]["label"] = $iiif_data[$n]["title"];
-							if(in_array($iiif_data[$n]["type"],$FIXED_LIST_FIELD_TYPES))
+							if(in_array($iiif_data_row["type"],$FIXED_LIST_FIELD_TYPES))
 								{
 								// Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
-								$resnodes = get_resource_nodes($iiif_results[0]["ref"],$iiif_data[$n]["resource_type_field"],true);
-								$langentries = array();
+								$resnodes = get_resource_nodes($iiif_results[0]["ref"],$iiif_data_row["resource_type_field"],true);
+                                if(count($resnodes) == 0)
+                                    {
+                                    continue;
+                                    }
+                                $langentries = array();
 								$nodecount = 0;
 								unset($def_lang);
 								foreach($resnodes as $resnode)
 									{
-									debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data[$n]["title"] . "'");
+									debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
 									$node_langs = i18n_get_translations($resnode["name"]);
 									$transcount=0;
 									$defaulttrans = "";
@@ -545,11 +548,11 @@ else
 										if(!isset($langentries[$nlang]))
 											{
 											// This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-											debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data[$n]["title"] . "'");
+											debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
 											$langentries[$nlang] = isset($def_lang)?$def_lang:array();
 											}
 										// Add the node text to the array for this language;
-										debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data[$n]["title"] . "': " . $nltext);
+										debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
 										$langentries[$nlang][] = $nltext;
 										
 										// Set default text for any translations
@@ -565,7 +568,7 @@ else
 										debug("iiif: node count: " . $nodecount);
 										if(count($mdtrans) != $nodecount)
 											{
-											debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data[$n]["title"] . "': " . $mdlang . ": " . $defaulttrans);
+											debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
 											$langentries[$mdlang][] =  $defaulttrans;
 											}
 										}
@@ -573,30 +576,35 @@ else
 									// To ensure that no nodes are lost due to missing translations,  
 									// Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
 								   
-									debug("iiif: Saving default language array for field '" . $iiif_data[$n]["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
+									debug("iiif: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
 									// Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
 									reset($langentries);
 									$def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
 									}		
 
-								$response["metadata"][$n]["value"] = array();
-								$o=0;
+								
+							    $response["metadata"][$n] = array();
+                                $response["metadata"][$n]["label"] = $iiif_data_row["title"];
+                                $response["metadata"][$n]["value"] = array();
+                                
+                                // Add each tag
+                                $o=0;
 								foreach($langentries as $mdlang => $mdtrans)
 									{
 									debug("iiif: adding to metadata language array: " . $mdlang . ": " . implode(",",$mdtrans));
-									//$response["metadata"][$n]["value"][$o]["@value"] = array();
-									//$response["metadata"][$n]["value"][$o]["@value"][] = $mdtrans;
-									//$response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
 									$response["metadata"][$n]["value"][$o]["@value"] = implode(",",array_values($mdtrans));
 									$response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
 									$o++;
-									}
+                                    }
+                                $n++;
 								}
-							else
-								{
-								$response["metadata"][$n]["value"] = $iiif_data[$n]["value"];
-								}
-							$n++;
+							elseif(trim($iiif_data_row["value"]) != "")
+                                {
+                                $response["metadata"][$n] = array();
+                                $response["metadata"][$n]["label"] = $iiif_data_row["title"];
+                                $response["metadata"][$n]["value"] = $iiif_data_row["value"];
+								$n++;
+                                }
 							}
 
 						$response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
