@@ -4327,16 +4327,50 @@ function download_summary($resource)
 	return sql_query("select usageoption,count(*) c from resource_log where resource='$resource' and type='D' group by usageoption order by usageoption");
 	}
 	
-	
 function check_use_watermark(){
-	# access status must be available prior to this.
-	# This function checks whether to use watermarks or not.
-	# Three cases:
-	# if access is restricted and the group has "w"
-	# if $watermark_open is true and the group has "w"
-	# if $watermark is set and it's an external share.
-	global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search;
-	if (($watermark_open && ($pagename == "preview" || $pagename == "view" || ($pagename == "search" && $watermark_open_search)) || $access==1) && (checkperm('w') || ($k!="" && isset($watermark)))){return true;} else {return false;}
+	# This function checks whether or not to use watermarks
+	# Note that access status must be available prior to calls to this function
+
+    global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search;
+
+    # Cannot watermark without a watermark
+    if(!isset($watermark))
+        { 
+        return false; 
+        }
+
+    # Always watermark external shares
+    if($k != "")
+        { 
+        return true; 
+        }
+
+    # Cannot watermark unless permission "w" is present       
+    if(!checkperm('w'))
+        { 
+        return false; 
+        }
+
+    # Watermark is present and permission "w" is present
+
+    # Watermark if access is restricted
+    if($access == 1)
+        { 
+        return true; 
+        }
+
+    # Watermark if open override is present    
+    if(    $watermark_open  
+        && (    ($pagename == "preview") 
+             || ($pagename == "view") 
+             || ($pagename == "search" && $watermark_open_search)
+           ) )
+        { 
+        return true; 
+        } 
+
+    # Watermark not necessary
+    return false;
 }
 
 
