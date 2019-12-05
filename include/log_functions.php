@@ -195,6 +195,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         `activity_log`.`value_old` AS 'old_value',
                         `activity_log`.`value_new` AS 'new_value',
                         if(`activity_log`.`value_diff`='','',concat('<pre>',`activity_log`.`value_diff`,'</pre>')) AS 'difference',
+                        '' AS 'access_key',
                         `activity_log`.`remote_table`AS 'table',
                         `activity_log`.`remote_column` AS 'column',
                         `activity_log`.`remote_ref` AS 'table_reference'
@@ -227,6 +228,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         `resource_log`.`previous_value` AS 'old_value',
                         '' AS 'new_value',
                         if(`resource_log`.`diff`='','',concat('<pre>',`resource_log`.`diff`,'</pre>')) AS 'difference',
+                        `resource_log`.`access_key` AS 'access_key',
                         'resource' AS 'table',
                         'ref' AS 'column',
                         `resource_log`.`resource` AS 'table_reference'
@@ -258,6 +260,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         '' AS 'old_value',
                         '' AS 'new_value',
                         '' AS 'difference',
+                        '' AS 'access_key',
                         if(`collection_log`.`resource` IS NULL,'collection','resource') AS 'table',
                         'ref' AS 'column',
                         if(`collection_log`.`resource` IS NULL,`collection_log`.`collection`,`collection_log`.`resource`) AS 'table_reference'
