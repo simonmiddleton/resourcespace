@@ -235,7 +235,6 @@ function toggleBrowseElements(browse_id, reload, useraction)
     var post_data = {
                     id: browse_id,
                     };
-    
     jQuery.ajax({
         type:"GET",
         url: url,
@@ -302,24 +301,30 @@ function toggleBrowseElements(browse_id, reload, useraction)
                 }
             else
                 {
-                //console.log("Still to load: " + browse_toload);    
+                //console.log("Still to load: " + browse_toload);
                 }
             })
         .fail(function(xhr, status, error)
             {
             if (xhr.status=="403")
                 {				
-                window.location = baseurl_short + "login.php";		
+                window.location = baseurl_short + "login.php";
                 }
             else
-                {			
-                styledalert(errorpageload + status, response);		
+                {
+                var loadindex = b_loading.indexOf(browse_id);
+                if (loadindex > -1)
+                    {
+                    b_loading.splice(loadindex, 1);
+                    }
+                browse_clicked = false;
+                styledalert('<?php echo htmlspecialchars($lang["error"]); ?> ' + xhr.status, '<?php echo htmlspecialchars($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
                 }
             });
-    
-    return true;          
+
+    return true;
     }
-    
+
 function ReloadBrowseBar()
     {
     var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
