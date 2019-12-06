@@ -1210,7 +1210,7 @@ var pluploadconfig = {
                                   uploader.bind('UploadComplete', function(up, files) {
                                   if(!upRedirBlock)
                                       {
-                                      //CentralSpaceLoad('<?php echo $redirecturl ?>',true);
+                                      CentralSpaceLoad('<?php echo $redirecturl ?>',true);
                                       }
                                   upRedirBlock = false; 
                                   });
