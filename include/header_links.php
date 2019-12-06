@@ -34,7 +34,7 @@
 			{ # no active search
 			if ($search_results_link)
 				{ ?>
-			    <li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);">
+			    <li class="HeaderLink">
 			    <i aria-hidden="true" class="fa fa-fw fa-search"></i>
 			    <?php echo $lang["searchresults"]?></a></li>
 	   	<?php 	} 
