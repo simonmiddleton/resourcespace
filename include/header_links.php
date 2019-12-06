@@ -12,16 +12,33 @@
 
         <?php hook("topnavlinksafterhome"); ?>
 
-        <?php if ((checkperm("s"))  && (! $disable_searchresults ) && ((isset($_COOKIE["search"]) && strlen($_COOKIE["search"]) > 0) || (isset($search) && (strlen($search)>0) && (strpos($search,"!")===false))))
-            {
-            if ($search_results_link) { ?>
-                <li class="HeaderLink">
-                    <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["searchresults"]?>
-                    </a>
-                </li>
-            <?php } ?>
-        <?php } ?>
+		<?php 
+		if( 
+			( checkperm("s") )  
+		&&  ( !$disable_searchresults )
+		&&	( 
+				(isset($_COOKIE["search"]) && strlen($_COOKIE["search"])>0)
+				||
+				(isset($search) && (strlen($search)>0) && (strpos($search,"!")===false))
+			)
+		  )
+			{ # active search present
+			if ($search_results_link)
+			 	{ ?>
+				<li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);">
+				<i aria-hidden="true" class="fa fa-fw fa-search"></i>
+				<?php echo $lang["searchresults"]?></a></li>
+		<?php 	} 
+			}
+			else 
+			{ # no active search
+			if ($search_results_link)
+				{ ?>
+			    <li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);">
+			    <i aria-hidden="true" class="fa fa-fw fa-search"></i>
+			    <?php echo $lang["searchresults"]?></a></li>
+	   	<?php 	} 
+			} ?>
 
         <?php if (!hook("replacethemelink")) { ?>
             <?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?>
