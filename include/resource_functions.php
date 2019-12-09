@@ -4339,12 +4339,6 @@ function check_use_watermark(){
         return false; 
         }
 
-    # Always watermark external shares
-    if($k != "")
-        { 
-        return true; 
-        }
-
     # Cannot watermark unless permission "w" is present       
     if(!checkperm('w'))
         { 
