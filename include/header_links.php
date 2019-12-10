@@ -15,7 +15,6 @@
 		<?php 
 		if( 
 			( checkperm("s") )  
-		&&  ( !$disable_searchresults )
 		&&	( 
 				(isset($_COOKIE["search"]) && strlen($_COOKIE["search"])>0)
 				||

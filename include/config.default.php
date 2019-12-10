@@ -811,9 +811,6 @@ $advanced_search_contributed_by = true;
 # Show Media section on Advanced Search
 $advanced_search_media_section = true;
 
-# Do not display 'search results' link in the top navigation
-$disable_searchresults = false;
-
 # Display a 'Recent' link in the top navigation
 $recent_link=true;
 # Display 'View New Material' link in the quick search bar (same as 'Recent')
