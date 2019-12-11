@@ -156,7 +156,7 @@ function verify_watermark_check($expected, $wm_path, $wm_perm, $wm_access, $wm_o
         return true;
     }
     # Error; not the expected outcome
-    feedback("TEST ".$test."    RESULT=$resulttext     FAILED".PHP_EOL);
+    echo "TEST ".$test."    RESULT=$resulttext     FAILED".PHP_EOL;
     return false;
 }
 
