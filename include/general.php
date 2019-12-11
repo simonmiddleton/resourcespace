@@ -4646,7 +4646,7 @@ function get_hidden_indexed_fields()
     if (is_array($hidden_fields_cache)){
         return $hidden_fields_cache;
     } else { 
-        $fields=sql_query("select ref from resource_type_field where keywords_index=1 and length(name)>0");
+        $fields=sql_query("select ref from resource_type_field where length(name)>0");
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
