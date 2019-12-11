@@ -1,5 +1,7 @@
 <?php
 
+include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
+
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$override="",$max_error_count=100,$processcsv=false)
 	{
 
@@ -357,6 +359,16 @@ $csv_field_definitions = array(
 								$error_count++;
 								continue;
 								}		
+							}
+							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_EXPIRY_DATE ||$meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE)
+							{
+								# Check a valid date has been given if not log errors
+								$valid_date = str_replace("%field%", $field_name, checkDateFormat($cell_actual_value));
+								$valid_date = str_replace("%row%", "row " . ($line_count + 1), $valid_date);
+								if ($valid_date) 
+								{
+									array_push($messages, $valid_date);
+								}
 							}
 						}
 					}				

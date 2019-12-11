@@ -177,3 +177,94 @@ function extractFitsMetadata($file_path, $resource)
 
     return false;
     }
+
+
+/**
+* Check date conforms to "yyyy-mm-dd hh:mm" format or any valid partital of that e.g. yyyy-mm.
+* 
+* @uses checkDateParts()
+* 
+* @param string         string form of the date to check
+* 
+* @return string
+*/
+function checkDateFormat($date)
+    {
+    global $lang;
+
+    // Check the format of the date to "yyyy-mm-dd hh:mm"
+    if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2})$/", $date, $parts))
+        {
+        return str_replace("%date%", $date, CheckDateParts($parts));
+        } 
+    // Check the format of the date to "yyyy-mm-dd"
+    elseif (preg_match ("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts))
+        {
+        return str_replace("%date%", $date, CheckDateParts($parts));
+        } 
+    // Check the format of the date to "yyyy-mm" pads with 01 to ensure validity
+    elseif (preg_match("/^([0-9]{4})-([0-9]{2})$/", $date, $parts))
+        {
+        array_push($parts, '01');
+        return str_replace("%date%", $date, CheckDateParts($parts));
+        } 
+    // Check the format of the date to "yyyy" pads with 01 to ensure validity
+    elseif (preg_match("/^([0-9]{4})$/", $date, $parts))
+        {
+        array_push($parts, '01', '01');
+        return str_replace("%date%", $date, CheckDateParts($parts));
+        } 
+
+    // If it matches nothing return unknown format error
+    return str_replace("%date%", $date, $lang["unknown_date_format_error"]);;
+    }
+
+/**
+* Check datepart conforms to its formatting and error out each section accordingly
+* 
+* @param array         array of the date parts
+* 
+* @return string
+*/
+function checkDateParts($parts)
+    {
+    global $lang;
+    
+    // Initialise error list holder
+    $invalid_parts = array();
+    
+    // Check day part
+    if (!checkdate('01',$parts[3],'2000'))
+        {
+        array_push($invalid_parts, 'day');
+        } 
+    // Check day month
+    if (!checkdate($parts[2],'01','2000')) 
+        {
+        array_push($invalid_parts, 'month');
+        } 
+    // Check year part
+    if (!checkdate('01','01',$parts[1])) 
+        {
+        array_push($invalid_parts, 'year');
+        }
+    // Check time part
+    if (isset($parts[4]) && isset($parts[5])) 
+        {
+        if (!strtotime($parts[4] . ':' . $parts[5]))
+            {
+            array_push($invalid_parts, 'time');
+            }
+        }
+
+    // No errors found return false
+    if(empty($invalid_parts))
+        {
+        return false;
+        } 
+    // Return errors found
+    else
+        {
+        return str_replace("%parts%", implode(", ", $invalid_parts), $lang["date_format_error"]);
+        }
+    }
