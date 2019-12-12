@@ -875,15 +875,16 @@ function ShowHelp(field)
     function AutoSave(field, obj)
         {
         if(preventautosave) return false;
+      
+        // add div and change css to prevent user from clicking on input elements while database update underway
+        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","relative");
+        jQuery('#AutoSaveStatus' + field).parents(".Question").append("<div id=\"prevent_edit_conflict\" style=\"position:absolute; left:0; right:0; top:0; bottom:0;background-color:transparent;\"></div>");
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
             function(data)
                 {
-                // disable input fields (not including hidden input) for this input group e.g. date range, input text    
-                jQuery(obj).parents(".Question").find("input:text,input:checkbox,input:radio,select,textarea,button").attr("disabled", true);
-
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
@@ -922,11 +923,12 @@ function ShowHelp(field)
                     jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
                     // alert box with error message
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
-                    }
-                // once autosave has completed, remove disabled attribute    
-                jQuery(obj).parents(".Question").find("input:text,input:checkbox,input:radio,select,textarea,button").removeAttr("disabled");  
+                    }        
                 });
-	}
+        // once autosave has completed, reset css and remove the div that prevents user input      
+        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","");
+        jQuery('#prevent_edit_conflict'.remove());
+	    }
 <?php } 
 
 # Resource next / back browsing.
