@@ -12,16 +12,16 @@ include_once("../../../include/search_functions.php");
 include_once("../../../include/resource_functions.php");
 include_once("../../../include/image_processing.php");
 
-$ref            = getvalescaped("ref", 0, true);
-$alternatives   = get_alternative_files($ref);
+$ref             = getvalescaped("ref", 0, true);
+$alternatives    = get_alternative_files($ref);
+$ffmpeg_fullpath = get_utility_path("ffmpeg");
 
 # Process submitted form
 
 if(getval("submit", "") != "" && enforcePostRequest(false))
     {
-    $temp_dir           = get_temp_dir(false, uniqid('bookend'));
-    $ffmpeg_fullpath = get_utility_path("ffmpeg");
-
+    $temp_dir = get_temp_dir(false, uniqid('bookend'));
+    
     for($n = 1; $n <= 2; $n++)
         {
         $alt = getval("image{$n}", -1, true);
@@ -40,22 +40,35 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
 
         $image = get_resource_path($ref, true, "", false, $extension, true, 1, false, '', $alt);
 
-        # Accommodate if 'title image' or 'closing image' is missing
-        # Then render image to video if exists accordingly
+        # Accommodate if 'title image' or 'closing image' is missing, then render image to video accordingly
 
         if($alt != -1) 
             {
             $path[$n] = "{$temp_dir}/video_bookend_temp_alt_{$alt}.mp4";
 
-            $shell_exec_cmd  = $ffmpeg_fullpath . " -y -loop 1 -i " . escapeshellarg($image);
-            // $shell_exec_cmd .= " -f lavfi -i aevalsrc=0 -c:v libx264";
-            // Playback Issues for Quicktime/Other Codecs - FFMpeg suggests "-pix_fmt yuv420p"
-            // Please make sure to use images which have sizes divisible by 2. As required by libx264, the "divisible 
-            // by 2" for width and height is needed for YUV 4:2:0 chroma subsampled outputs
-            // $shell_exec_cmd .= " -pix_fmt yuv420p -c:a mp3";
-            $shell_exec_cmd .= " -t " . escapeshellarg($video_bookend_seconds) . " ";
-            $shell_exec_cmd .= escapeshellarg($path[$n]);
-            exec($shell_exec_cmd);
+            # We need to know if the extension is jpg or gif as the code differs
+            # Each gif duration will differ; it will be the gif file duration, not 5 seconds set by ffmpeg
+            # $shell_exec_cmd .= " -f lavfi -i aevalsrc=0 -c:v libx264";
+            # Playback Issues for Quicktime/Other Codecs - FFMpeg suggests "-pix_fmt yuv420p"
+            # Please make sure to use images which have sizes divisible by 2. As required by libx264, the "divisible 
+            # By 2" for width and height is needed for YUV 4:2:0 chroma subsampled outputs
+            # $shell_exec_cmd .= " -pix_fmt yuv420p -c:a mp3";
+
+            if($extension == 'jpg' or $extension == 'png')
+                {
+                $shell_exec_cmd  = $ffmpeg_fullpath . " -y -loop 1 -i " . escapeshellarg($image);
+                $shell_exec_cmd .= " -t " . escapeshellarg($video_bookend_seconds) . " ";
+                $shell_exec_cmd .= escapeshellarg($path[$n]);
+                exec($shell_exec_cmd);
+                }
+
+            if($extension == 'gif')
+                {
+                $shell_exec_cmd  = $ffmpeg_fullpath . " -i " . escapeshellarg($image);
+                $shell_exec_cmd .= " ";
+                $shell_exec_cmd .= escapeshellarg($path[$n]);
+                exec($shell_exec_cmd);    
+                }
             }
         }
 
@@ -75,18 +88,17 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
     if(isset($path[1])) { $txt .= "file '$path[1]' \n"; }
     $txt .= "file '$source_pre' \n";
     if(isset($path[2])) { $txt .= "file '$path[2]' \n"; }
-
     fwrite($myfile, $txt);
     fclose($myfile);
 
-    # ffmpeg join using text file (that stores the files to be joined)
+    # ffmpeg join using text file (that stores all the files to be joined)
 
     $shell_exec_cmd  = 'ffmpeg -f concat -safe 0 ';
     $shell_exec_cmd .= "-i {$temp_dir}/bookend_videos.txt ";
     $shell_exec_cmd .= '-c copy '. $final .'';
     exec($shell_exec_cmd);
 
-    # Download the file to user...
+    # Download the finished file to user...
 
     $final_video_file_size = filesize_unlimited($final);
 
@@ -122,13 +134,12 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
         rcRmdir($temp_dir);
 
         exit();
-        
+
         }
     else
         {
         $error = $lang["bookend-failed"];
         }
-    
     }
 
 # Display page
@@ -148,7 +159,6 @@ generateFormToken("video_bookend");
 
 for($n = 1; $n <= 2; $n++)
     {
-
     print '<div class="Question">';
     print '<label for="">' . $lang["bookend-image-" . $n] . '</label>';
     print '<select name="image' . $n .'" id="image' . $n . '">';
@@ -162,7 +172,6 @@ for($n = 1; $n <= 2; $n++)
     print '</select>';
     print '<div class="clearerleft"></div>';
     print '</div>';
-
     }
 
 print '<div class="QuestionSubmit">';
