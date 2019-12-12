@@ -927,7 +927,7 @@ function ShowHelp(field)
                 });
         // once autosave has completed, reset css and remove the div that prevents user input      
         jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","");
-        jQuery('#prevent_edit_conflict'.remove());
+        jQuery('#prevent_edit_conflict').remove();
 	    }
 <?php } 
 
