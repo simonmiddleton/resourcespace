@@ -2826,8 +2826,6 @@ $keyboard_navigation_next=39;
 $keyboard_navigation_pages_use_alt=false;
 # add resource to collection, default 'a'
 $keyboard_navigation_add_resource=65;
-# remove resource from collection, default 'r'
-$keyboard_navigation_remove_resource=82;
 # previous page in document preview, default ','
 $keyboard_navigation_prev_page=188;
 # next page in document preview, default '.'

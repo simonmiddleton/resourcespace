@@ -60,8 +60,6 @@ jQuery(document).ready(function() {
                      break;   
             case <?php echo $keyboard_navigation_add_resource; ?>: if (jQuery('.addToCollection').length > 0) jQuery('.addToCollection:not(.ResourcePanelIcons .addToCollection)').click();
                      break;
-            case <?php echo $keyboard_navigation_remove_resource; ?>: if (jQuery('.removeFromCollection').length > 0) jQuery('.removeFromCollection:not(.CollectionSpace .removeFromCollection)').click();
-                     break;  
             case <?php echo $keyboard_navigation_prev_page; ?>: if (jQuery('.prevLink').length > 0) jQuery('.prevLink').click();
                      break;
             case <?php echo $keyboard_navigation_next_page; ?>: if (jQuery('.nextLink').length > 0) jQuery('.nextLink').click();
