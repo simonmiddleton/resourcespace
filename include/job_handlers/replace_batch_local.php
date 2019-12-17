@@ -43,7 +43,8 @@ else
     $logtext[] = "Replacing resources within collection " . $collectionid . " only";
     }
 
-    
+
+$logtext[] = "Embedded (EXIF) data extraction: " . ($no_exif ? "OFF" : "ON");  
 $replaced = array();
 $errors = array();
 
