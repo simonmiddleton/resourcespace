@@ -5817,7 +5817,7 @@ function get_default_archive_state($requestedstate = "")
 
 function save_original_file_as_alternative($ref)
     {
-    debug("save_original_file function called");
+    debug("save_original_file function called for resource ref: " . (int)$ref);
     if (!$ref)
         {
         debug("ERROR: Unable to save original file as alternative - no resource id passed");
@@ -5831,16 +5831,15 @@ function save_original_file_as_alternative($ref)
     * @param array   $lang 
     */
 
-    global $lang, $alternative_file_previews, $alternative_file_previews_batch;
+    global $lang, $alternative_file_previews, $alternative_file_previews_batch, $filename_field;
 
-    // GET variables
+    // Values may be passed in POST or GET data from upload_plupload.php
     $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
-    $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files    
-    $filename_field                         = getval('filename_field', ''); // GET variable - field to use for filename
+    $filename_field_use                     = getval('filename_field', $filename_field); // GET variable - field to use for filename
 
     // Make the original into an alternative, need resource data so we can get filepath/extension
     $origdata     = get_resource_data($ref);
-    $origfilename = get_data_by_field($ref, $filename_field);
+    $origfilename = get_data_by_field($ref, $filename_field_use);
 
     $newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
     $newaltdescription = nicedate(date('Y-m-d H:i'), true);
@@ -5848,8 +5847,7 @@ function save_original_file_as_alternative($ref)
     if('' != $replace_resource_original_alt_filename)
         {
         $newaltname = $replace_resource_original_alt_filename;
-        $newaltdescription = '';
-        }
+        }        
 
     $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, escape_check($origfilename), $origdata['file_extension'], $origdata['file_size']);
 
@@ -5868,17 +5866,17 @@ function save_original_file_as_alternative($ref)
             $orig_preview_path=get_resource_path($ref, true, $ps[$n]["id"],false, "");
             if (file_exists($orig_preview_path))
                 {
-                # Move the old preview file to the alternative preview file location
+                # Copy the old preview file to the alternative preview file location, not moved as original may still be required
                 $alt_preview_path=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, false, "", $newaref);
-                rename($orig_preview_path, $alt_preview_path);			
+                copy($orig_preview_path, $alt_preview_path);			
                 }
             # Also for the watermarked versions.
-            $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
+            $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true );
             if (file_exists($wmpath))
                 {
                 # Move the old preview file to the alternative preview file location
                 $alt_preview_wmpath=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, true, "", $newaref);
-                rename($wmpath, $alt_preview_wmpath);			
+                copy($wmpath, $alt_preview_wmpath);			
                 }
             }
         }
@@ -5905,7 +5903,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         {
         return false;
         }
-    
+
     // save original file as an alternative file
     if($replace_resource_preserve_option && $keep_original)
         {
@@ -5915,7 +5913,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
             return false;
             }
         }
-    
+
     if (filter_var($file_location, FILTER_VALIDATE_URL))
         {
         $uploadstatus = upload_file_by_url($ref,$no_exif,false,$autorotate,$file_location);
