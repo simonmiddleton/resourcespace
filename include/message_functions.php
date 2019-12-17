@@ -294,7 +294,7 @@ function message_send_unread_emails()
 					  }
 					elseif($user_action["type"]=="resourcerequest")
 					  {
-					  $actioneditlink = $baseurl . "/pages/edit.php";
+                      $actioneditlink = $baseurl . "/pages/team/team_request_edit.php";
 					  }
 					elseif($user_action["type"]=="userrequest")
 					  {
