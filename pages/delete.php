@@ -77,6 +77,7 @@ if(!$modal)
 ?>
 
 <div class="BasicsBox"> 
+	
   <h1><?php echo $lang["deleteresource"];render_help_link("user/deleting-resources");?></h1>
   <p><?php if($delete_requires_password){text("introtext");}else{echo $lang["delete__nopassword"];} ?></p>
   
@@ -103,8 +104,12 @@ if(!$modal)
 	<div class="QuestionSubmit">
 	<input name="save" type="hidden" value="true" />
 	<label for="buttons"> </label>			
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>
+	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>		
+	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>",true);'/>
 	</div>
+
+
+
 	</form>
 	
 </div>
