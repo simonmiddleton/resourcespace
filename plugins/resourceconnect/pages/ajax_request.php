@@ -34,7 +34,7 @@ foreach ($k as $kw)
             {
             # Preserve filter to bind the field.
             $field_info=get_resource_type_field($node["resource_type_field"]);
-            $search.=' ' . $field_info['name'] . ':' . i18n_get_translated($name) ;
+            $search.=' "' . $field_info['name'] . ':' . i18n_get_translated($name) . '"';
             }
         else
             {
