@@ -182,37 +182,37 @@ function extractFitsMetadata($file_path, $resource)
 /**
 * Check date conforms to "yyyy-mm-dd hh:mm" format or any valid partital of that e.g. yyyy-mm.
 * 
-* @uses checkDateParts()
+* @uses check_date_parts()
 * 
 * @param string         string form of the date to check
 * 
 * @return string
 */
-function checkDateFormat($date)
+function check_date_format($date)
     {
     global $lang;
 
     // Check the format of the date to "yyyy-mm-dd hh:mm"
     if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2})$/", $date, $parts))
         {
-        return str_replace("%date%", $date, CheckDateParts($parts));
+        return str_replace("%date%", $date, check_date_parts($parts));
         } 
     // Check the format of the date to "yyyy-mm-dd"
     elseif (preg_match ("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts))
         {
-        return str_replace("%date%", $date, CheckDateParts($parts));
+        return str_replace("%date%", $date, check_date_parts($parts));
         } 
     // Check the format of the date to "yyyy-mm" pads with 01 to ensure validity
     elseif (preg_match("/^([0-9]{4})-([0-9]{2})$/", $date, $parts))
         {
         array_push($parts, '01');
-        return str_replace("%date%", $date, CheckDateParts($parts));
+        return str_replace("%date%", $date, check_date_parts($parts));
         } 
     // Check the format of the date to "yyyy" pads with 01 to ensure validity
     elseif (preg_match("/^([0-9]{4})$/", $date, $parts))
         {
         array_push($parts, '01', '01');
-        return str_replace("%date%", $date, CheckDateParts($parts));
+        return str_replace("%date%", $date, check_date_parts($parts));
         } 
 
     // If it matches nothing return unknown format error
@@ -226,7 +226,7 @@ function checkDateFormat($date)
 * 
 * @return string
 */
-function checkDateParts($parts)
+function check_date_parts($parts)
     {
     global $lang;
     
