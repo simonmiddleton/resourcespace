@@ -99,13 +99,25 @@ if(!$modal)
 	<div class="clearerleft"> </div>
 	<?php if ($error!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($error) ?> !!</div><?php } ?>
 	</div>
-	<?php } ?>
+	<?php }
+	
+	$cancelparams = array();
+
+	$cancelparams["ref"] 		= $ref;
+	$cancelparams["search"] 	= $search;
+	$cancelparams["offset"] 	= $offset;
+	$cancelparams["order_by"] 	= $order_by;
+	$cancelparams["sort"] 		= $sort;
+	$cancelparams["archive"] 	= $archive;
+	
+	$cancelurl = generateURL($baseurl_short . "pages/view.php",$cancelparams);
+	?>
 	
 	<div class="QuestionSubmit">
 	<input name="save" type="hidden" value="true" />
 	<label for="buttons"> </label>			
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>		
-	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>",true);'/>
+	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $cancelurl ?>",true);'/>
 	</div>
 
 

@@ -557,6 +557,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
         }
 
+    print $fieldsSQL;
     $fields = sql_query($fieldsSQL);
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
