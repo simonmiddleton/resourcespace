@@ -62,7 +62,7 @@ function addLightBox($selector, $url = "", $title = "", $set = "")
                     .attr('href', '<?php echo $url ?>')
                     <?php }
                 ?>
-                .attr('data-title', "<?php echo htmlspecialchars(strip_tags(i18n_get_translated($title))); ?>")
+                .attr('data-title', "<?php echo str_replace(array("\r","\n")," ", htmlspecialchars(strip_tags(i18n_get_translated($title)))); ?>")
                 .attr('data-lightbox', 'lightbox<?php if ($set != "") {echo $set;} ?>')
                 .attr('onmouseup', 'closeModalOnLightBoxEnable();');
     });
