@@ -17,7 +17,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 	{
 	global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as,
 			$direct_link_previews, $hide_restricted_download_sizes, $format_chooser_output_formats,
-			$baseurl_short, $search, $offset, $k, $order_by, $sort, $archive, $direct_download;
+            $baseurl_short, $search, $offset, $k, $order_by, $sort, $archive, $direct_download,$baseurl,
+            $urlparams;
 
 	$inputFormat = $resource['file_extension'];
 
@@ -170,19 +171,20 @@ function HookFormat_chooserViewReplacedownloadoptions()
 				else
 					profile = '';
 
-				basePage = 'pages/download_progress.php?ref=<?php echo $ref ?>&ext='
-						+ selectedFormat.toLowerCase() + profile + '&size=' + sizeInfo[index]['id']
-						+ '&search=<?php echo urlencode($search) ?>&offset=<?php echo $offset ?>'
-						+ '&k=<?php echo $k ?>&archive=<?php echo $archive ?>&sort='
-						+ '<?php echo $sort?>&order_by=<?php echo $order_by ?>';
+				
+                    basePage = '<?php echo generateURL($baseurl . "/pages/download_progress.php",$urlparams); ?>&ext='
+						+ selectedFormat.toLowerCase() + profile + '&size=' + sizeInfo[index]['id'];
 
-				jQuery('a#convertDownload').attr('href', '<?php echo $baseurl_short;
-							if (!$direct_download)
-								{
-								echo 'pages/terms.php?ref=' . $ref . '&search=' . $search . '&k='
-										. $k . '&url=';
-								}
-						?>' + <?php echo $direct_download ? 'basePage' : 'encodeURIComponent(basePage)' ?>
+				jQuery('a#convertDownload').attr('href', <?php
+                        if (!$direct_download)
+                            {
+                            echo "'" . generateURL($baseurl . "/pages/terms.php",$urlparams) . "&url=' + encodeURIComponent(basePage)";
+                            }
+                        else
+                            {
+                            echo "basePage";
+                            }
+                        ?>
 						);
 			}
 			jQuery(document).ready(function() {

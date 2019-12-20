@@ -234,7 +234,7 @@ include "../include/header.php";
 if ($metadata_report && isset($exiftool_path))
 	{
 	?>
-	<script src="<?php echo $baseurl_short?>lib/js/metadata_report.js" type="text/javascript"></script>
+	<script src="<?php echo $baseurl ?>/lib/js/metadata_report.js" type="text/javascript"></script>
 	<?php
 	}
 
@@ -642,21 +642,21 @@ $urlparams= array(
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
 if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false)) { ?>
 <div class="backtoresults">
-<a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
+<a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
 <?php 
 if (!hook("viewallresults")) 
 	{
 	?>
-	<a class="upLink" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["viewallresults"]?></a>
+	<a class="upLink" href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["viewallresults"]?></a>
 	<?php 
 	} ?>
-<a class="nextLink fa fa-arrow-right" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["nextresult"]?>"></a>
+<a class="nextLink fa fa-arrow-right" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["nextresult"]?>"></a>
 
 <?php
 	if($modal)
 		{
 		?>
-		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
 		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 		<?php
 		}
@@ -669,7 +669,7 @@ else if($modal)
 	?>
 	<div class="backtoresults">
 		<?php if (!hook("replacemaxlink")) { ?>
-		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
 		<?php } ?>
 		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
@@ -792,7 +792,7 @@ elseif ($videojs && $use_mp3_player && file_exists($mp3realpath) && !hook("repla
 	if(file_exists($thumb_path))
 		{$thumb_url=get_resource_path($ref,false,"pre",false,"jpg"); }
 	else
-		{$thumb_url=$baseurl_short . "gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);}
+		{$thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);}
 	include "mp3_play.php";
 	if(isset($previewcaption))
 		{				
@@ -848,7 +848,7 @@ else if(1 == $resource['has_image'])
 	$imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
 	# Imageurl is the url version of the path and can point to 'scr' or 'pre' or 'thm' as a result of the above
 
-    $previewimagelink = generateURL("{$baseurl_short}pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
+    $previewimagelink = generateURL("{$baseurl}/pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
 
     // PDFjs works only for PDF files. Because this requires the PDF file itself, we can only use this mode if user has
@@ -862,7 +862,7 @@ else if(1 == $resource['has_image'])
         $hide_real_filepath = $hide_real_filepath_initial;
 
         $previewimagelink = generateURL(
-            "{$baseurl_short}lib/pdfjs-1.9.426/web/viewer.php",
+            "{$baseurl}/lib/pdfjs-1.9.426/web/viewer.php",
             array(
                 'ref'  => $ref,
                 'file' => $pdfjs_original_file_path
@@ -1281,19 +1281,19 @@ function get_display_price($ref, $size)
 
 function make_download_preview_link($ref, $size, $label)
 	{
-	global $direct_link_previews_filestore, $baseurl_short;
+	global $direct_link_previews_filestore, $baseurl;
 
 	if ($direct_link_previews_filestore)
 		$direct_link="" . get_resource_path($ref,false,$size['id'],false,$size['extension']);
 	else
-		$direct_link=$baseurl_short."pages/download.php?direct=1&amp;ref=$ref&amp;size=" . $size['id'] . "&amp;ext=" . $size['extension'];
+		$direct_link=$baseurl."/pages/download.php?direct=1&amp;ref=$ref&amp;size=" . $size['id'] . "&amp;ext=" . $size['extension'];
 
 	return "<a href='$direct_link' target='dl_window_$ref'>$label</a>";
 	}
 
 function add_download_column($ref, $size_info, $downloadthissize)
 	{
-	global $save_as, $direct_download, $order_by, $lang, $baseurl_short, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
+	global $save_as, $direct_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
 	if ($downloadthissize)
 		{
 		?><td class="DownloadButton"><?php
@@ -1307,7 +1307,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
 						. "&ext=" . $size_info["extension"])))
 					{
-					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+					echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
 					}
 					if($iOS_save)
 						{
@@ -1323,7 +1323,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 		else
 			{
 			?><a id="downloadlink" href="#" onclick="directDownload('<?php
-					echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref) ?>&size=<?php
+					echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref) ?>&size=<?php
 					echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
 					echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a><?php
 			}
@@ -1348,7 +1348,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				}
 			else
 				{
-				?><a href="<?php echo generateURL($baseurl_short . "pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
+				?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
 				}
 			echo $lang["action-request"]?></a></td><?php
 			}
@@ -1454,7 +1454,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 				<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 				?>
 				<td class="DownloadButton">
-				<a class="enterLink" id="previewlink" href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>"><?php echo $lang["action-view"]?></a>
+				<a class="enterLink" id="previewlink" href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>"><?php echo $lang["action-view"]?></a>
 				</td>
 				</tr>
 				<?php
@@ -1478,9 +1478,9 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 			<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
 			<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
 			<?php if (!$direct_download || $save_as){ ?>
-				<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams, array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"],"modal"=>"true")))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+				<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams, array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"],"modal"=>"true")))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 			<?php } else { ?>
-				<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl_short . "pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
+				<a href="#" onclick="directDownload('<?php echo  generateURL($baseur . "/pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
 			<?php } // end if direct_download ?>
 			</td>
 			</tr>
@@ -1548,7 +1548,7 @@ if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'
         );
         ?>
         <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
-            <a href="<?php echo generateURL($baseurl_short . 'pages/metadata_download.php', $generate_data_only_url_params); ?>"><?php echo $lang['action-generate_pdf']; ?></a>
+            <a href="<?php echo generateURL($baseurl . '/pages/metadata_download.php', $generate_data_only_url_params); ?>"><?php echo $lang['action-generate_pdf']; ?></a>
         </td>
         <?php
         }
@@ -1559,7 +1559,7 @@ if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'
             {
             ?>
             <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
-                <a href="<?php echo generateURL($baseurl_short . "pages/resource_request.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></a>
+                <a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></a>
             </td>
             <?php
             }
@@ -1575,7 +1575,7 @@ if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'
 	<?php
 	}
 	
-if (isset($flv_download) && $flv_download)
+if (isset($flv_download) && $flv_download && file_exists($flvfile))
 	{
 	# Allow the FLV preview to be downloaded. $flv_download is set when showing the FLV preview video above.
 	?>
@@ -1584,9 +1584,9 @@ if (isset($flv_download) && $flv_download)
 	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($flvfile))?></td>
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 	<?php if (!$direct_download || $save_as){?>
-		<a href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>generateURL("pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+		<a href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=>generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 	<?php } else { ?>
-		<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a>
+		<a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>')"><?php echo $lang["action-download"]?></a>
 	<?php } // end if direct_download ?></td>
 	</tr>
 	<?php
@@ -1623,7 +1623,7 @@ hook ("resourceactions") ?>
 	 if ($resource_contact_link)	
 	 	{ ?>
 		<li>
-		<a href="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
+		<a href="<?php echo $baseurl ?>/pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
 		<?php echo "<i class='fa fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
 		</a>
 		</li>
@@ -1657,7 +1657,7 @@ hook ("resourceactions") ?>
 	if (can_share_resource($ref,$access) && !$hide_resource_share_link) 
 		{ 
 		?>
-		<li><a href="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);" >
+		<li><a href="<?php echo $baseurl ?>/pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);" >
 		<?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . $lang["share"];?>
 		</a></li>
 		<?php 
@@ -1665,7 +1665,7 @@ hook ("resourceactions") ?>
 		}
 	if ($edit_access) 
 		{ ?>
-		<li><a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>"    onClick="return <?php echo ($resource_edit_modal_from_view_modal && $modal ? 'Modal' : 'CentralSpace')?>Load(this,true);">
+		<li><a href="<?php echo $baseurl ?>/pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>"    onClick="return <?php echo ($resource_edit_modal_from_view_modal && $modal ? 'Modal' : 'CentralSpace')?>Load(this,true);">
 			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-edit"]?>
 		</a></li>
 		<?php 
@@ -1673,7 +1673,7 @@ hook ("resourceactions") ?>
 			{
 			?>
 			<li>
-			<a href="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo urlencode($restypes); ?>" onClick="return ModalLoad(this,true);">
+			<a href="<?php echo $baseurl ?>/pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo urlencode($restypes); ?>" onClick="return ModalLoad(this,true);">
 			<?php 
 			if ($resource["archive"]==3)
 				{
@@ -1689,7 +1689,7 @@ hook ("resourceactions") ?>
 			}
 		if (!$disable_alternative_files && !checkperm('A')) 
 			{ ?>
-			<li><a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
+			<li><a href="<?php echo $baseurl ?>/pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
 			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
 			</a></li>
 			<?php 
@@ -1707,26 +1707,26 @@ hook ("resourceactions") ?>
 		}
 	if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))	
 		{ ?>
-		<li><a href="<?php echo $baseurl_short?>pages/metadata_download.php?ref=<?php echo urlencode($ref)?>" onClick="return CentralSpaceLoad(this,true);" >
+		<li><a href="<?php echo $baseurl ?>/pages/metadata_download.php?ref=<?php echo urlencode($ref)?>" onClick="return CentralSpaceLoad(this,true);" >
 		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
 		} 
 	if (checkperm('v')) 
 		{ ?>
-		<li><a href="<?php echo $baseurl_short?>pages/log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;search_offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
+		<li><a href="<?php echo $baseurl ?>/pages/log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;search_offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
 		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 
 		{ ?>
-		<li><a href="<?php echo $baseurl_short?>pages/request_log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
+		<li><a href="<?php echo $baseurl ?>/pages/request_log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
 		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}
 
     if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
         {
-        $find_in_pdf_url = generateURL("{$baseurl_short}pages/search_text_in_pdf.php", array( 'ref' => $ref));
+        $find_in_pdf_url = generateURL("{$baseurl}/pages/search_text_in_pdf.php", array( 'ref' => $ref));
         ?>
         <li>
             <a href="<?php echo $find_in_pdf_url; ?>" onClick="return ModalLoad(this, true, true);"><i class='fa fa-search'></i>&nbsp;<?php echo $lang['findtextinpdf']; ?></a>
@@ -1870,7 +1870,7 @@ if (!$disable_geocoding) {
 if ($view_resource_collections && !checkperm('b')){ ?>
 	<div id="resourcecollections"></div>
 	<script type="text/javascript">
-	jQuery("#resourcecollections").load('<?php echo $baseurl_short?>pages/resource_collection_list.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>'
+	jQuery("#resourcecollections").load('<?php echo $baseurl ?>/pages/resource_collection_list.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>'
 	<?php
 	if ($view_panels) {
 	?>
@@ -1988,9 +1988,9 @@ if (count($result)>0)
 				<!--Resource Panel-->
 				<div class="CollectionPanelShell">
 				<table border="0" class="CollectionResourceAlign"><tr><td>
-				<a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+				<a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
 				</tr></table>
-				<div class="CollectionPanelInfo"><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+				<div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
 				<?php hook("relatedresourceaddlink");?>
 				</div>
 				<?php		
@@ -1998,7 +1998,7 @@ if (count($result)>0)
 			}
 		?>
 		<div class="clearerleft"> </div>
-		<?php $count_extensions++; if ($count_extensions==count($related_file_extensions)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
+		<?php $count_extensions++; if ($count_extensions==count($related_file_extensions)){?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
 		</div>
 		</div>
 		</div>
@@ -2047,9 +2047,9 @@ if (count($result)>0)
 				<!--Resource Panel-->
 				<div class="CollectionPanelShell">
 				<table border="0" class="CollectionResourceAlign"><tr><td>
-				<a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+				<a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
 				</tr></table>
-				<div class="CollectionPanelInfo"><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+				<div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
 				<?php hook("relatedresourceaddlink");?>
 				</div>
 				<?php		
@@ -2057,7 +2057,7 @@ if (count($result)>0)
 			}
 		?>
 		<div class="clearerleft"> </div>
-		<?php $count_restypes++; if ($count_restypes==count($related_restypes)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
+		<?php $count_restypes++; if ($count_restypes==count($related_restypes)){?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
 		</div>
 		</div>
 		</div>
@@ -2104,16 +2104,16 @@ if (count($result)>0)
         	<!--Resource Panel-->
         	<div class="CollectionPanelShell">
             <table border="0" class="CollectionResourceAlign"><tr><td>
-            <a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+            <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
             </tr></table>
-            <div class="CollectionPanelInfo"><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+            <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
 				<?php hook("relatedresourceaddlink");?>       
        </div>
         <?php        
         }
     ?>
     <div class="clearerleft"> </div>
-        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
 
     </div>
     </div>
@@ -2143,7 +2143,7 @@ if (count($result)>0)
 		for ($n=0;$n<count($result);$n++)			
 			{
 			?>
-			<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
+			<a href="<?php echo $baseurl?>/pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
 			<?php		
 			}
 		?>
@@ -2183,7 +2183,7 @@ function <?php echo $context ?>UpdateFSResultCount()
 	}
 </script>
 
-<form method="post" action="<?php echo $baseurl_short?>pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
+<form method="post" action="<?php echo $baseurl ?>/pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
 <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
 <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
 <?php
@@ -2204,7 +2204,7 @@ if (count($keywords)!=0)
 		<div class="clearerleft"> </div>
 		<br />
 		<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-		<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
+		<iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
 		</form>
 		<?php
 	}
@@ -2229,17 +2229,17 @@ if($annotate_enabled)
     {
     ?>
     <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
 
     <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
     <?php
     if($facial_recognition)
         {
         ?>
-        <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
+        <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
         <?php
         }
         ?>
