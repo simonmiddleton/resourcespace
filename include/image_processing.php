@@ -1924,17 +1924,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $wm_scaled_width=$tmin*($wm_scale / 100);
                             $wm_scaled_height=$tmin*($wm_scale / 100);
                             }                 
-                        
+
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s' . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . ' -composite %s',
+                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %s -resize %s -composite %s',
                             $convert_fullpath,
                             escapeshellarg($file),
                             escapeshellarg($watermarkreal),
                             escapeshellarg($watermark_single_image['position']),
-                            escapeshellarg($wm_scaled_width),
-                            escapeshellarg($wm_scaled_height),
-                            escapeshellarg($tw),
-                            escapeshellarg($th),
+                            escapeshellarg("{$wm_scaled_width}x{$wm_scaled_height}+0+0"),
+                            escapeshellarg("{$tw}x{$th}" . ($previews_allow_enlarge && $id != "hpr" ? "" : ">")),
                             escapeshellarg($wmpath)
                         );
                         }
