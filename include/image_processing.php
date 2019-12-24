@@ -1884,8 +1884,24 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // Generate the command for a single watermark instead of a tiled one
                     if(isset($watermark_single_image))
                         {
-                        // Work out minimum of target dimensions, by calulating targets dimensions based on actual file ratio to get minimum dimension, essential to calulate correct values based on ratio of watermark
+                        if($id == "hpr" && ($tw > $sw || $th > $sh))
+                            {
+                            // reverse them as the watermark geometry should be as big as the image itself
+                            // hpr size is 999999 width/height - the geometry would be huge even if we are scaling it
+                            // for watermarks
+                            $temp_tw = $tw;
+                            $temp_th = $th;
 
+                            $tw = $sw;
+                            $th = $sh;
+
+                            $sw = $temp_tw;
+                            $sh = $temp_th;
+
+                            debug("create_previews: reversed sw - sh with tw - th : $sw - $sh with $tw - $th");
+                            }
+
+                        // Work out minimum of target dimensions, by calulating targets dimensions based on actual file ratio to get minimum dimension, essential to calulate correct values based on ratio of watermark
                         // Landscape
                         if ($sw > $sh)
                             {
