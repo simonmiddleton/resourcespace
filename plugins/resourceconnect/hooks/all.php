@@ -236,3 +236,17 @@ function HookResourceConnectAllAdvancedsearchlink()
         
     }
 */
+
+function HookResourceconnectAllGetResourcesToCheck($collection)
+    {
+    /* if resourceconnect is enabled there may be
+        1/ a collection with just remote resources 
+        2/ a collection containing a mix of local and remote resources 
+        access key check only relevant for local resources therefore retrieve local resources only
+    */   
+
+    # retrieve only local resources from collection for access key validation
+    $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
+    
+    return $resources;
+    }

@@ -4469,18 +4469,7 @@ function check_access_key_collection($collection, $key)
         return false;
         }
 
-    /* if resourceconnect is enabled there may be
-        1/ a collection with just remote resources 
-        2/ a collection containing a mix of local and remote resources 
-        access key check only relevant for local resources therefore retrieve local resources only
-    */   
-    // is resourceconnect plugin enabled?
-    $active_plugin_names = array_column($GLOBALS["active_plugins"], "name");
-    if( array_search('resourceconnect', $active_plugin_names) !== false)
-        {
-        # retrieve only local resources from collection for access key validation
-        $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
-        } 
+    $resources = (!hook("GetResourcesToCheck","",array($collection))) ? $resources : hook("GetResourcesToCheck","",array($collection));
 
     // only check access key when there are resources to check
     if (count($resources) > 0)
