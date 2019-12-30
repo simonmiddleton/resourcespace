@@ -26,19 +26,20 @@ if(!isset($selected_nodes))
         }
     }
 
-foreach($field['nodes'] as $node)
+foreach($selected_nodes as $node)
     {
-    if(!in_array($node['ref'], $selected_nodes) && !(isset($user_set_values[$field['ref']]) && in_array($node['ref'],$user_set_values[$field['ref']])))
+    $node_data = array();
+    if(get_node($node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
         {
         continue;
         }
 
-    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node['ref']}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node['ref']}\">";
+    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
 
     // Show previously searched options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars($node['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" . htmlspecialchars($node_data['name']) . "</span><br /></div>";
         }
     }
 

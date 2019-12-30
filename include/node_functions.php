@@ -216,6 +216,7 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', 
     $use_count = false, $order_by_translated_name = false)
     {
+    debug("get_nodes(resource_type_field = {$resource_type_field}, parent = {$parent}, recursive = {$recursive}, offset = {$offset}, rows = {$rows}, name = {$name}, use_count = {$use_count}, order_by_translated_name = {$order_by_translated_name});");
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
 
@@ -270,7 +271,6 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     $language_string_length = (strlen($language_in_use) + 2);
 
     $parent_sql = (trim($parent)=="") ? "parent IS NULL" : "parent = '" . escape_check($parent) . "'";
-
     $query = "
         SELECT 
             *,
@@ -862,7 +862,7 @@ function node_field_options_override(&$field,$resource_type_field=null)
 
     if ($field['type'] == 7)        // category tree
         {
-        $category_tree_nodes = get_nodes($field['ref'], null, true);
+        $category_tree_nodes = get_nodes($field['ref'], null, false);
         if (count($category_tree_nodes) > 0)
             {
             foreach ($category_tree_nodes as $node)

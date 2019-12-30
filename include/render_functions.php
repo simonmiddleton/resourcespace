@@ -355,11 +355,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             	$optionfields[]=$field["name"]; # Append to the option fields array, used by the AJAX dropdown filtering
             	}
 
-            $node_options = array();
-            foreach($field['nodes'] as $node)
-                {
-                $node_options[] = $node['name'];
-                }
+            $node_options = array_column($field["nodes"], "name");
 
             if((bool) $field['automatic_nodes_ordering'])
                 {
@@ -605,15 +601,16 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $treeonly                    = true;
             $status_box_elements         = '';
 
-            foreach($field['nodes'] as $node)
+            foreach($searched_nodes as $node)
                 {
-                if(!in_array($node['ref'], $searched_nodes))
+                $n_details = array();
+                if(get_node($node, $n_details) && $n_details["resource_type_field"] != $field["ref"])
                     {
                     continue;
                     }
 
                 // Show previously searched options on the status box
-                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$node['ref']}\">{$node['name']}</span><br />";
+                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$n_details['ref']}\">{$n_details['name']}</span><br />";
                 }
             ?>
 			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
@@ -1800,12 +1797,17 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			$field_nodes = array();
 			foreach($selected_nodes as $selected_node)
 				{
-				if(in_array($selected_node,array_column($field['nodes'],"ref")))
-					{
-					$field_nodes[] = $selected_node;
-					}
+                $node_data = array();
+                if(get_node($selected_node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
+                    {
+                    continue;
+                    }
+
+                $field_nodes[] = $selected_node;
 				natsort($field_nodes);
+                unset($node_data);
 				}
+
 			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
