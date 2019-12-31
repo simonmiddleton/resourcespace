@@ -4,12 +4,9 @@ if('cli' != PHP_SAPI)
     exit('This utility is command line only.');
     }
 
-include_once(__DIR__ . '/../../include/db.php');
-include_once(__DIR__ . '/../../include/resource_functions.php');
-
-define ('ECHOFEEDBACK', false); # Whether or not to echo progress; for testing of this test script
-$feedback = function($buffer) {
-    if(ECHOFEEDBACK) echo $buffer;
+$ECHOFEEDBACK = false; # Whether or not to echo progress; for testing of this test script
+$feedback = function($buffer) use ($ECHOFEEDBACK) {
+    if($ECHOFEEDBACK) echo $buffer;
 };
 
 $verify_watermark_check = function($expected, $wm_path, $wm_perm, $wm_access, $wm_open, $wm_open_search, $wm_page) use ($feedback) {
