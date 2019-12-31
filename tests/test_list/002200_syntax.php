@@ -1,38 +1,53 @@
 <?php
+# Simple syntax check of pages to ensure they all function at a very basic level and arrive at the footer.
 if('cli' != PHP_SAPI)
     {
     exit('This utility is command line only.');
     }
 
-# Simple syntax check of pages to ensure they all function at a very basic level and arrive at the footer.
+$TestPage = function($page) {
+    $html="";
+    global $php_path;
+    if (!isset($php_path)) {$php_path="/usr/bin";} # fair assumption, if not specifically set; means it will work on many systems
  
-# Build array of pages to scan.
+    # Run PHP in lint mode against the file.
+    $result=exec("cd " . escapeshellarg(dirname($page)). ";" . $php_path . "/php -l " . escapeshellarg(basename($page)) );
+    return (strpos($result,"No syntax errors")!==false);
+};
+ 
+$exclude_paths = array(
+    "/lib/",
+    "/filestore/",
+);
 $Directory = new RecursiveDirectoryIterator(dirname(__FILE__) . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);
 foreach ($Iterator as $i)
     {
-    $i=$i->getPathName();
- 
-    # Parse all PHP files but not those in the lib folder(s) which are external.
-    if (strpos($i,".php")!==false && strpos($i,"/lib/")===false) {$pages[]=$i;}
+    if($i->getExtension() !== "php")
+        {
+        continue;
+        }
+
+    $path = $i->getPathName();
+
+    foreach($exclude_paths as $ex_path)
+        {
+        if(strpos($path, $ex_path) !== false)
+            {
+            continue 2;
+            }
+        }
+
+    $pages[] = $path; 
     }
  
 # Test each page.
 foreach ($pages as $page)
     {
-    if (!TestPage($page)) {echo $page;return false;}
+    if (!$TestPage($page)) {echo $page;return false;}
     }
+
+// Teardown
+unset($TestPage);
+
 return true;
- 
-function TestPage($page)
-    {
-    $html="";
-    global $php_path;
-    if (!isset($php_path)) {$php_path="/usr/bin";} # fair assumption, if not specifically set; means it will work on many systems
- 
-    # echo "\n" . $page;
- 
-    # Run PHP in lint mode against the file.
-    $result=exec("cd " . escapeshellarg(dirname($page)). ";" . $php_path . "/php -l " . escapeshellarg(basename($page)) );
-    return (strpos($result,"No syntax errors")!==false);
-    }
