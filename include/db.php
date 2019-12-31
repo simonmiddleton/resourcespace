@@ -1398,9 +1398,14 @@ if (!function_exists("nicedate")) {
 * 
 * @uses offset_user_local_timezone()
 * 
+* @var  string   $date
+* @var  boolean  $time
+* @var  boolean  $wordy
+* @var  boolean  $offset_tz  Set to TRUE to offset based on time zone, FALSE otherwise
+* 
 * @return string Returns an empty string if date not set/invalid
 */
-function nicedate($date, $time = false, $wordy = true)
+function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
@@ -1410,7 +1415,7 @@ function nicedate($date, $time = false, $wordy = true)
         }
 
     $original_time_part = substr($date, 11, 5);
-    if($original_time_part !== false || $original_time_part != '')
+    if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
         {
         $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
         }

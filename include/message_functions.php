@@ -248,7 +248,7 @@ function message_send_unread_emails()
 				// Message applies to this user
 				$messageflag=true;
 				$usermail = $unreadmessage["email"];
-				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
+				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
 				$messagerefs[]=$unreadmessage["messageref"];
 				}
 			}
@@ -305,7 +305,7 @@ function message_send_unread_emails()
 					$editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
 					$viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
 					$message .= "<tr>";
-					$message .= "<td>" . nicedate($user_action["date"],true) . "</td>";
+					$message .= "<td>" . nicedate($user_action["date"], true, true, true) . "</td>";
 					$message .= "<td><a href=\"" . $editlink . "\" >" . $user_action["ref"] . "</a></td>";
 					$message .= "<td>" . tidy_trim(TidyList($user_action["description"]),$list_search_results_title_trim) . "</td>";
 					$message .= "<td>" . $lang["actions_type_" . $user_action["type"]] . "</td>";

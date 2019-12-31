@@ -1405,8 +1405,8 @@ function render_access_key_tr(array $record)
         <td><?php echo htmlspecialchars($type); ?></td>
         <td><?php echo htmlspecialchars(resolve_users($record['users'])); ?></td>
         <td><?php echo htmlspecialchars($record['emails']); ?></td>
-        <td><?php echo htmlspecialchars(nicedate($record['maxdate'], true)); ?></td>
-        <td><?php echo htmlspecialchars(nicedate($record['lastused'], true)); ?></td>
+        <td><?php echo htmlspecialchars(nicedate($record['maxdate'], true, true, true)); ?></td>
+        <td><?php echo htmlspecialchars(nicedate($record['lastused'], true, true, true)); ?></td>
         <td><?php echo htmlspecialchars(('' == $record['expires']) ? $lang['never'] : nicedate($record['expires'], false)); ?></td>
         <td><?php echo htmlspecialchars((-1 == $record['access']) ? '' : $lang['access' . $record['access']]); ?></td>
         <td>

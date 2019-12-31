@@ -43,7 +43,7 @@ if(empty($field_log_records)) {
             foreach ($field_log_records as $field_log_record) {
                 ?>
                 <tr>
-                    <td nowrap><?php echo nicedate($field_log_record['date'], true, true); ?></td>
+                    <td nowrap><?php echo nicedate($field_log_record['date'], true, true, true); ?></td>
                     <td><?php echo $field_log_record['user'] ?></td>
                     <td><?php echo nl2br(htmlspecialchars(strip_tags($field_log_record['diff']))); ?></td>
                 </tr>

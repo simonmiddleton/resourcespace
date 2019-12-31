@@ -221,7 +221,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 				$ws = $watched_searches[$i];
 				$view_search_url = search_notification_make_url($ws['search'],$ws['restypes'],$ws['archive']);
 				?><tr>
-					<td><?php echo nicedate(htmlspecialchars($ws["created"]),true); ?></td>
+					<td><?php echo nicedate(htmlspecialchars($ws["created"]), true, true, true); ?></td>
 					<td><?php echo highlightkeywords(htmlspecialchars($ws["username"]),$find); ?></td>
 					<td><a href="<?php echo $view_search_url; ?>"><?php echo highlightkeywords(htmlspecialchars($ws["title"]),$find); ?></a></td>
 					<td><a href="<?php echo $view_search_url; ?>"><?php echo htmlspecialchars($ws["checksum_matches"]); ?></a></td>
