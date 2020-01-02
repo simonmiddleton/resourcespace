@@ -406,7 +406,7 @@ elseif($restypes=='')
     if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "themes";}
     
     ?>
-    <input type="hidden" name="restypes" id="restypes" value="<?php echo $restypes?>" />
+    <input type="hidden" name="restypes" id="restypes" value="<?php echo htmlspecialchars($restypes); ?>" />
     <?php
     }
     
