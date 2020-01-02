@@ -286,7 +286,7 @@ $select_table_url = generateURL(
                 {
                 ?>
                 <tr>
-                    <td><?php echo htmlspecialchars(nicedate($record['datetime'], true)); ?></td>
+                    <td><?php echo htmlspecialchars(nicedate($record['datetime'], true, true, true)); ?></td>
                     <td><?php echo htmlspecialchars($record['user']); ?></td>
                     <td><?php echo htmlspecialchars($record['operation']); ?></td>
                     <td><?php echo hook("userdisplay","",array(array("access_key"=>$record['access_key'],'username'=>$record['user'])))?"":htmlspecialchars($record['notes']); ?></td>

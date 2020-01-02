@@ -72,7 +72,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	?>
 	<!--List Item-->
 	<tr>
-	<td><?php echo htmlspecialchars(nicedate($log[$n]["date"],true)) ?></td>
+	<td><?php echo htmlspecialchars(nicedate($log[$n]["date"],true, true, true)) ?></td>
 	<td><?php echo htmlspecialchars($log[$n]["fullname"])?></td>
 	<td><?php 
 		echo $lang["collectionlog-" . $log[$n]["type"]] ;

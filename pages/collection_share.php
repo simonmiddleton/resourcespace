@@ -295,8 +295,8 @@ include "../include/header.php";
 				<td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo htmlspecialchars($keys[$n]["access_key"]) ?></a></div></td>
 				<td><?php echo htmlspecialchars(resolve_users($keys[$n]["users"]))?></td>
 				<td><?php echo htmlspecialchars($keys[$n]["emails"]) ?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["maxdate"],true));	?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true)); ?></td>
+				<td><?php echo htmlspecialchars(nicedate($keys[$n]["maxdate"],true, true, true));	?></td>
+				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)); ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)) ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]); ?></td>
 				<?php

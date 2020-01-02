@@ -123,7 +123,7 @@ if ($request !== false)
 
         <div class="Question">
             <label><?php echo $lang["date"]?></label>
-            <div class="Fixed"><?php echo nicedate($request["created"],true,true)?></div>
+            <div class="Fixed"><?php echo nicedate($request["created"],true,true, true)?></div>
             <div class="clearerleft"></div>
         </div>
 
