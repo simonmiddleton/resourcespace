@@ -32,9 +32,11 @@ if($backurl=="")
     }
 
 $allow_reorder=false;
-// Allow sorting if we are ordering a single resource type, or if $use_order_by_tab_view is true (which means order_by values are across all resource types) and we can see all fields
-if($field_order_by=="order_by" &&  (($use_order_by_tab_view && $restypefilter=="") || (!$use_order_by_tab_view && $restypefilter!=""))){$allow_reorder=true;}
-
+// Allow sorting if we are ordering metadata fields for all resource types (ie Resource type == "All" and $restypefilter=="")
+if($restypefilter=="")
+    {
+    $allow_reorder=true;
+    }
 
 include "../../include/header.php";
 
@@ -118,24 +120,12 @@ $results=count($fields);
 </div>
 
 <?php
-if(!$allow_reorder && ($use_order_by_tab_view || $restypefilter!="" || $field_order_by!="order_by" ))
-  {
- ?>
-  <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_fields.php?restypefilter=" . (($use_order_by_tab_view)?"":$restypefilter) . "&field_order_by=order_by&field_sort=asc" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
-  <?php
-  }
-else
-    {
-    if($allow_reorder)
-    {   
-    echo "<p>" . $lang["admin_resource_type_field_reorder_information"] ."</p>";
-    }
-    else 
-    {
-    echo "<div id=\"PageInfo\"><p>" . $lang["admin_resource_type_field_reorder_select_restype"] ."</p></div>";
-    }
-    }
-  ?>
+ if($allow_reorder)
+    {  ?>
+<p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
+<a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_fields.php?restypefilter=" . (($use_order_by_tab_view)?"":$restypefilter) . "&field_order_by=order_by&field_sort=asc" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
+<?php
+    } ?>
 
 <form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"find" =>$find)) ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm"); ?>       
