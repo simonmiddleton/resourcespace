@@ -22,7 +22,7 @@ if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
      		{
      		?>
      		<script type="text/javascript">
-     		top.right.document.getElementById("<?php echo getval("callback","")?>").value="<?php echo $filename?>";
+     		top.right.document.getElementById("<?php echo getval("callback","")?>").value="<?php echo htmlspecialchars($filename); ?>";
      		</script>
 			<?php
     	 	}
