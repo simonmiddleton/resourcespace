@@ -207,7 +207,7 @@ for ($n=0;$n<count($fields);$n++)
             <div class="ListTools">
               
               <?php 
-            if($field_order_by=="order_by")
+            if($field_order_by=="order_by" && $allow_reorder)
                 {
                 ?>      
                 <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?><?php echo $lang['action-move-down'] ?></a>
