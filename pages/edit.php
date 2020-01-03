@@ -1814,10 +1814,8 @@ if (!hook("replaceaccessselector"))
  {
    $resource["access"]=$override_access_default;
 }
-/*
-    only use config var $show_access_on_upload to hide this field, if edit.php called from the upload form (when $upload_then_edit = false), otherwise show field (ie when editing existing resource, or $upload_then_edit = true)
-*/
-if ($ref<0 && ($show_access_on_upload == false || ($show_access_on_upload == true && !eval($show_access_on_upload_perm))))            # Upload template and the status and access fields are configured to be hidden on uploads.
+
+if ($ref<0 && (($show_status_and_access_on_upload== false && $show_access_on_upload == false) || ($show_access_on_upload == false || ($show_access_on_upload == true && !eval($show_access_on_upload_perm)))))            # Upload template and the status and access fields are configured to be hidden on uploads.
    {?>
    <input type=hidden name="access" value="<?php echo htmlspecialchars($resource["access"])?>"><?php
 }
