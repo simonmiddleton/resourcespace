@@ -5555,6 +5555,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                 $stripped_nodes = array_diff ($all_selected_nodes, $field_node_refs);
                 $locked_nodes = get_resource_nodes($lastedited, $locked_field);
                 $all_selected_nodes = array_merge($stripped_nodes, $locked_nodes);
+
                 if($save)
                     {
                     debug("- adding locked field nodes for resource " . $ref . ", field id: " . $locked_field);
@@ -5563,6 +5564,27 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                         {
                         add_resource_nodes($ref, $locked_nodes, false);
                         }
+
+                    # If this is a 'joined' field it still needs to add it to the resource column
+                    $joins=get_resource_table_joins();
+                    if (in_array($locked_field,$joins))
+                        {
+                        $node_vals = array();
+                        // Build new value:
+                        foreach($locked_nodes as $locked_node)
+                            {
+                            foreach ($field_nodes as $key => $val) 
+                                {
+                                if ($val['ref'] === $locked_node) 
+                                    {
+                                    array_push($node_vals, $field_nodes[$key]["name"]);
+                                    }
+                                }
+                            $resource_type_field=$field_nodes[$key]["resource_type_field"];
+                            $values_string = implode($node_vals,",");
+                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='$ref'");
+                            }
+                        } 
                     }
                 }
             else
