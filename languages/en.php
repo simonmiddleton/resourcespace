@@ -642,6 +642,7 @@ $lang['user_autoapproved']='Automatically approved';
 
 $lang["backtoresourceview"]="Back to resource view";
 $lang["backtoshareresource"]="Back to share resource";
+$lang["backtosharecollection"]="Back to share collection";
 $lang["continuetoresourceview"]="Continue to resource view";
 $lang["backtogeolocatecollection"]="Back to geolocate collection";
 

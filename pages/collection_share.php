@@ -8,8 +8,18 @@ include_once "../include/collections_functions.php";
 include_once '../include/render_functions.php';
 
 // Fetch vars
-$ref        = getvalescaped('ref', '', true);
-$user_group = getvalescaped('usergroup', '', true);
+
+$collection_url	= getvalescaped('collection', '', true);
+$col_order_by	= getvalescaped('col_order_by', '', true);
+$find			= getvalescaped('find', '', true);
+$offset			= getvalescaped('offset', '', true);
+$order_by		= getvalescaped('order_by', '', true);
+$ref			= getvalescaped('ref', '', true);
+$restypes		= getvalescaped('restypes', '', true);
+$search			= getvalescaped('search', '', true);
+$sort			= getvalescaped('sort', '', true);
+$starsearch		= getvalescaped('starsearch', '', true);
+$user_group		= getvalescaped('usergroup', '', true);
 
 # if bypass sharing page option is on, redirect to e-mail
 if ($bypass_share_screen)
@@ -117,7 +127,7 @@ include "../include/header.php";
 	
 	if(!$editing || $editexternalurl)
 		{?>
-		<?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref) ?>"><?php echo $lang["emailcollectiontitle"]?></a></li><?php } ?>
+		<?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&starsearch=<?php echo urlencode($starsearch); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo $lang["emailcollectiontitle"]?></a></li><?php } ?>
 
 		<?php
 		# Share as a dash tile.

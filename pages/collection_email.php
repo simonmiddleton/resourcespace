@@ -7,12 +7,19 @@ include "../include/resource_functions.php";
 include "../include/search_functions.php";
 include "../include/render_functions.php";
 
-$themeshare=getvalescaped("catshare","false");
-$themecount=0;
+$collection_url	= getvalescaped("collection","");
+$find			= getvalescaped('find', '');
+$offset 		= getvalescaped("offset","");
+$order_by 		= getvalescaped("order_by","");
+$sort 			= getvalescaped("sort","");
+$search 		= getvalescaped("search","");
+$starsearch		= getvalescaped('starsearch', '', true);
+$themeshare		= getvalescaped("catshare","false");
+$themecount		= 0;
 if(getvalescaped("subthemes","false")!="false"){$subthemes=true;}else{$subthemes=false;}
-$linksuffix="?";
-$ref=getvalescaped("ref","");
-$refArray[]=$ref;
+$linksuffix		= "?";
+$ref			= getvalescaped("ref","");
+$refArray[]		= $ref;
 
 
 # Check access
@@ -144,6 +151,8 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php if ($themeshare){echo $lang["email_theme_category"];} else {echo $lang["emailcollectiontitle"];}?></h1>
+
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/collection_share.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&collection=<?php echo urlencode($collection_url); ?>&starsearch=<?php echo urlencode($starsearch); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtosharecollection"]; ?></a></p>
 
 <p><?php 
 if ($themeshare && text("introtextthemeshare")!="")
