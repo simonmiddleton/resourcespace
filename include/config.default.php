@@ -1611,12 +1611,13 @@ $show_status_and_access_on_upload=false;
 # Set Permission required to show "access" and "status" fields on upload, evaluates PHP code so must be preceded with 'return' and end with a semicolon. False = No permission required.
 $show_status_and_access_on_upload_perm = "return !checkperm('F*');"; # Stack permissions= " return !checkperm('e0') && !checkperm('c')";
 
-#Access will be shown if this value is set to true. This option acts as an override for the status and access flag.
+# Access will be shown if this value is set to true. This option acts as an override for the status and access flag.
 # Show Status and Access = true && Show Access = true   - Status and Access Shown
 # Show Status and Access = false && Show Access = true  - Only Access Shown
 # Show Status and Access = true && Show Access = false - Only Status Shown
 # Show Status and Access = false && Show Access = false - Neither Shown
 # DEFAULT VALUE: = $show_status_and_access_on_upload;
+# Please note: add unset($show_access_on_upload); to config if you wish to honour true/false or false/true variations
 $show_access_on_upload = &$show_status_and_access_on_upload;
 
 # Permission required to show "access" field on upload, this evaluates PHP code so must be preceded with 'return'. True = No permission required. 
