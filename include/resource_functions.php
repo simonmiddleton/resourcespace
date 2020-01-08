@@ -1314,9 +1314,15 @@ function save_resource_data_multi($collection,$editsearch = array())
                         
             if (!hook('forbidsavearchive', '', array($errors)))
                 {
-                # Also update archive status   
                 $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
-                $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching                                
+                $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching
+                
+                $set_archive_state_hook = hook("save_resource_data_multi_set_archive_state", "", array($ref, $oldarchive));
+                if($set_archive_state_hook !== false && is_numeric($set_archive_state_hook))
+                    {
+                    $setarchivestate = $set_archive_state_hook;
+                    }
+
                 if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
                     {
                     $setarchivestate=$oldarchive;
@@ -2388,7 +2394,7 @@ function get_resource_log($resource, $fetchrows = -1)
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
                   WHERE r.resource = '{$resource}'
                GROUP BY r.ref
-               ORDER BY r.date DESC",
+               ORDER BY r.ref DESC",
         false,
         $fetchrows);
 

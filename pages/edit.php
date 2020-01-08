@@ -1771,10 +1771,13 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
          { ?>
          <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo $lang["status"]?></label></div>
          <?php
-         } ?>
+         }
+
+    hook("before_status_question");
+    ?>
       <div class="Question <?php if($lockable_fields && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
-         <?php echo $lang["status"];
+         <?php echo ($multiple ? "" : $lang["status"]);
          if ($lockable_fields)
             {
             renderLockButton('archive', $locked_fields);

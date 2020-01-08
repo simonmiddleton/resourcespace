@@ -26,7 +26,7 @@ if (!get_edit_access($resource))
     {
     # The user is not allowed to edit this resource or the resource doesn't exist.
     $error=$lang['error-permissiondenied'];
-    error_alert($error,true);
+    error_alert($error,true, 401);
     exit();
     }
 
