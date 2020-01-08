@@ -1881,7 +1881,7 @@ else
                    $editable= (!$ea3)?false:true;
                    if ($groups[$n]["access"]!="") {$access=$groups[$n]["access"];}
                    $perms=explode(",",$groups[$n]["permissions"]);
-                   if (in_array("v",$perms)) {$access=0;$editable=false;} ?>
+                   if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
                       <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>
 
@@ -1893,15 +1893,13 @@ else
                       <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access',this);"<?php } ?>></td>
 
-                      <td align=left valign=middle><?php echo $lang["access1"]?></td><?php
+                      <td align=left valign=middle><?php echo $lang["access1"]?></td>
 
-                      if (checkperm("v"))
-                        { ?>
                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
                      if ($edit_autosave) {?> onChange="AutoSave('Access',this);"<?php } ?>></td>
 
-                     <td align=left valign=middle><?php echo $lang["access2"]?></td><?php
-                  } ?>
+                     <td align=left valign=middle><?php echo $lang["access2"]?></td>
+
                   </tr><?php
                } ?>
             </table>
