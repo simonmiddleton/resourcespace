@@ -4469,7 +4469,9 @@ function check_access_key_collection($collection, $key)
         return false;
         }
 
-    $resources = (!hook("GetResourcesToCheck","",array($collection))) ? $resources : hook("GetResourcesToCheck","",array($collection));
+    # hook to retrieve alternative list of resources for access key check    
+    $resources_alt = hook("GetResourcesToCheck","",array($collection));
+    $resources = ($resources_alt !== false ) ? $resources_alt : $resources;
 
     // only check access key when there are resources to check
     if (count($resources) > 0)

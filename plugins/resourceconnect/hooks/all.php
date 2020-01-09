@@ -244,7 +244,7 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
         2/ a collection containing a mix of local and remote resources 
         access key check only relevant for local resources therefore retrieve local resources only
     */   
-
+    global $userrequestmode;
     # retrieve only local resources from collection for access key validation
     $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
     
