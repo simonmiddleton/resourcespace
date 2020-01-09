@@ -812,9 +812,9 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
   	<?php echo $count_result . " " . $lang["youfoundresources"]?><br />
   	</div>
     <?php
-	if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0)) { ?>
+	if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all)>0)) { ?>
 		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
-	<?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0) { ?>
+	<?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all)>0) { ?>
 	<a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
 	<?php }
      if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo $lang["sendfeedback"]?></a><?php } ?>
@@ -1161,11 +1161,12 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 		{
 		# Anonymous access, slightly different display
 		$tempcol=$cinfo;
+	
 		?>
 	<div id="CollectionMinTitle" class="ExternalShare"><h2><?php echo i18n_get_collection_name($tempcol)?></h2></div>
 	<div id="CollectionMinRightNav" class="ExternalShare">
 		<?php if(!hook("replaceanoncollectiontools")){ ?>
-		<?php if ((isset($zipcommand) || $collection_download) && $count_result>0) { ?>
+		<?php if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all) > 0) { ?>
 		<li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo $lang["action-download"]?></a></li>
 		<?php } ?>
 		<?php if ($feedback) {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo $lang["sendfeedback"]?></a></li><?php } ?>
