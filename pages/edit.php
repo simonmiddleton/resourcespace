@@ -1614,15 +1614,17 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 }
 
 if($tabs_on_edit)
-{
+    {
+    // group fields by tab_name to prevent multiple tabs with the same name
+    usort($fields, function ($a, $b) 
+        {
+        return $a["tab_name"] <=> $b["tab_name"];     
+        });
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;
   if (count($fields)>0 && $fields[0]["tab_name"]!="")
-  { 
-    ?>
-
-    <?php
+    { 
     $extra="";
     $tabname="";
     $tabcount=0;
