@@ -1626,6 +1626,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
 
+            // HPR? Use the original image size instead of the hpr.
+            if($ps[$n]["id"] == "hpr")
+                {
+                $ps[$n]["width"] = $sw;
+                $ps[$n]["height"] = $sh;
+                }
+
             # Locate imagemagick.
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
