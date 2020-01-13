@@ -1316,7 +1316,7 @@ $upload_add_to_new_collection_opt=true;
 $upload_do_not_add_to_new_collection_opt=true;
 # Batch Uploads, require that a collection name is entered, to override the Upload<timestamp> default behavior
 $upload_collection_name_required=false;
-#Batch uploads - always upload to My Collection
+#Batch uploads - always upload to Default Collection
 $upload_force_mycollection=false;
 #Batch Uploads, do not display hidden collections
 $hidden_collections_hide_on_upload=false;

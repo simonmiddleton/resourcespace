@@ -196,7 +196,7 @@ if ($deleteempty!="" && enforcePostRequest(false)) {
 	$deleted_usercoll = false;
 		
 	for ($n = 0; $n < count($collections); $n++) {
-		// if count is zero and not My Collection and collection is owned by user:
+		// if count is zero and not Default Collection and collection is owned by user:
 		if ($collections[$n]['count'] == 0 && $collections[$n]['cant_delete'] != 1 && $collections[$n]['user']==$userref) {
 			delete_collection($collections[$n]['ref']);
 			if ($collections[$n]['ref'] == $usercollection) {

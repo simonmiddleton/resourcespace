@@ -409,7 +409,7 @@ $lang["showthumbnails"]="Show thumbs";
 $lang["toggle"]="Toggle";
 $lang["resize"]="Resize";
 $lang["contactsheet"]="Contact sheet";
-$lang["mycollection"]="My Collection";
+$lang["mycollection"]="Default Collection";
 $lang["geolocatecollection"]="Geolocate collection";
 $lang["geoemptycollection"]="You provided an empty collection. Please add assets and try again.";
 $lang["editresearchrequests"]="Edit research requests";
@@ -1276,7 +1276,7 @@ $lang["setup-collectionbarforeground"]="Custom collection bar secondary colour";
 
 # Collection log - actions
 $lang["collectionlog"]="Collection log";
-$lang["collectionlogheader"]="Collection log - %collection"; # %collection will be replaced, e.g. Collection Log - My Collection
+$lang["collectionlogheader"]="Collection log - %collection"; # %collection will be replaced, e.g. Collection Log - Default Collection
 $lang["collectionlog-r"]="Removed resource";
 $lang["collectionlog-R"]="Removed all resources";
 $lang["collectionlog-D"]="Deleted all resources";
@@ -1311,7 +1311,7 @@ $lang["videoplaylist"]="Video playlist";
 $lang["collection"]="Collection";
 $lang["idecline"]="I decline"; # For terms and conditions
 
-$lang["mycollection_notpublic"]="You cannot make your 'My Collection' into a featured or public collection. Please create a new collection for this purpose.";
+$lang["mycollection_notpublic"]="You cannot make your 'Default Collection' into a featured or public collection. Please create a new collection for this purpose.";
 
 $lang["resourcemetadata"]="Resource metadata";
 $lang["columnheader-expires"]=$lang["expires"]="Expires";
@@ -1932,7 +1932,7 @@ $lang["gigabyte-symbol-binary"]="GiB";
 $lang["terabyte-symbol-binary"]="TiB";
 
 $lang["upload_files"]="Upload files";
-$lang["upload_files-to_collection"]="Upload files (to the collection '%collection')"; # %collection will be replaced, e.g. Upload Files (to the collection 'My Collection')
+$lang["upload_files-to_collection"]="Upload files (to the collection '%collection')"; # %collection will be replaced, e.g. Upload Files (to the collection 'Default Collection')
 
 $lang["ascending"] = "Ascending";
 $lang["descending"] = "Descending";
@@ -2280,7 +2280,7 @@ $lang["team_content__introtext"]="";
 $lang["team_copy__introtext"]="Enter the ID of the resource you would like to copy. Only the resource data will be copied - any uploaded file will not be copied.";
 $lang["team_home__introtext"]="Welcome to the admin area. Use the links below to administer resources, respond to resource requests, manage featured collections and alter system settings.";
 $lang["team_report__introtext"]="Please choose a report and a date range. The report can be opened in Microsoft Excel or similar spreadsheet application.";
-$lang["team_research__introtext"]="Organise and manage 'Research Requests'. <br /><br />Choose 'edit research' to review the request details and assign the research to a team member. It is possible to base a research request on a previous collection by entering the collection ID in the 'edit' screen. <br /><br />Once the research request is assigned, choose 'edit collection' to add the research request to 'My collection' panel. Using the standard tools, it is then possible to add resources to the research. <br /><br />Once the research is complete, choose 'edit research',  change the status to complete and an email is automatically  sent to the user who requested the research. The email contains a link to the research and it is also automatically added to their 'My Collection' panel.";
+$lang["team_research__introtext"]="Organise and manage 'Research Requests'. <br /><br />Choose 'edit research' to review the request details and assign the research to a team member. It is possible to base a research request on a previous collection by entering the collection ID in the 'edit' screen. <br /><br />Once the research request is assigned, choose 'edit collection' to add the research request to 'Default collection' panel. Using the standard tools, it is then possible to add resources to the research. <br /><br />Once the research is complete, choose 'edit research',  change the status to complete and an email is automatically  sent to the user who requested the research. The email contains a link to the research and it is also automatically added to their 'Default Collection' panel.";
 $lang["team_resource__introtext"]="Add individual resources or batch upload resources. To edit individual resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen.";
 $lang["team_stats__introtext"]="Charts are generated on demand based on live data. Tick the box to print all charts for your selected year.";
 $lang["team_user__introtext"]="Use this section to add, remove and modify users.";

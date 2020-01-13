@@ -83,7 +83,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		else if ($sort=="DESC"){usort($return,'collections_comparator_desc');}
 	}
 	
-	// To keep My Collection creation consistent: Check that user has at least one collection of his/her own  (not if collection result is empty, which may include shares), 
+	// To keep Default Collection creation consistent: Check that user has at least one collection of his/her own  (not if collection result is empty, which may include shares), 
 	$hasown=false;
 	for ($n=0;$n<count($return);$n++){
 		if ($return[$n]['user']==$user){
@@ -91,9 +91,9 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		}
 	}
 
-	if (!$hasown && $auto_create && $find=="") # User has no collections of their own, and this is not a search. Make a new 'My Collection'
+	if (!$hasown && $auto_create && $find=="") # User has no collections of their own, and this is not a search. Make a new 'Default Collection'
 		{
-		# No collections of one's own? The user must have at least one My Collection
+		# No collections of one's own? The user must have at least one Default Collection
 		global $usercollection;
 		$name=get_mycollection_name($user);
 		$usercollection=create_collection ($user,$name,0,1); // make not deletable
@@ -1776,18 +1776,18 @@ function relate_to_collection($ref,$collection)
 	
 function get_mycollection_name($userref)
 	{
-	# Fetches the next name for a new My Collection for the given user (My Collection 1, 2 etc.)
+	# Fetches the next name for a new Default Collection for the given user (Default Collection 1, 2 etc.)
 	global $lang;
 	for ($n=1;$n<500;$n++)
 		{
-		# Construct a name for this My Collection. The name is translated when displayed!
+		# Construct a name for this Default Collection. The name is translated when displayed!
 		if ($n==1)
 			{
-			$name = "My Collection"; # Do not translate this string!
+			$name = "Default Collection"; # Do not translate this string!
 			}
 		else
 			{
-			$name = "My Collection " . $n; # Do not translate this string!
+			$name = "Default Collection " . $n; # Do not translate this string!
 			}
 		$ref=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='$name'",0);
 		if ($ref==0)
@@ -1797,7 +1797,7 @@ function get_mycollection_name($userref)
 			}
 		}
 	# Tried nearly 500 names(!) so just return a standard name 
-	return "My Collection";
+	return "Default Collection";
 	}
 	
 function get_collection_comments($collection)
