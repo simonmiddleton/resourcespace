@@ -11,6 +11,15 @@ include_once '../include/rse_version_functions.php';
 
 $ref=getvalescaped("ref","");
 
+# Load log entry
+$log=sql_query("select resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref where resource_log.ref='$ref'");
+if (count($log)==0) 
+    {
+    exit($lang["rse_version_log_not_found"]);
+    }
+$log=$log[0];
+$resource=$log["resource"];
+
 if(is_valid_revert_state_request())
     {
     process_revert_state_form();
