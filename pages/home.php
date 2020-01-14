@@ -18,21 +18,24 @@ include "../include/header.php";
 
 if (!hook("replacehome")) { 
 function loadWelcomeText() 
-	{
-	global $welcome_text_picturepanel,$no_welcometext,$home_dash,$productversion;
-	if (!hook('homereplacewelcome') && !$no_welcometext)
-		{ ?>
-		<div class="BasicsBox <?php echo $home_dash ? 'dashtext':''; ?>" id="HomeSiteText">
-			<div id="HomeSiteTextInner">
-	    	<h1><?php 
-		# Include version number, but only when this isn't an SVN checkout. Also, show just the first two digits.
-		echo str_replace("[ver]",str_replace("SVN","",substr($productversion,0,strrpos($productversion,"."))),text("welcometitle")) ?></h1>
-	    	<p><?php echo text("welcometext")?></p>
-	    	</div>
-		</div>
-		<?php 
-		}
-	}
+    {
+    global $welcome_text_picturepanel,$no_welcometext,$home_dash,$productversion;
+    if (!hook('homereplacewelcome') && !$no_welcometext)
+        {
+        ?>
+        <div class="BasicsBox <?php echo $home_dash ? 'dashtext':''; ?>" id="HomeSiteText">
+            <div id="HomeSiteTextInner">
+                <h1>
+                    <?php # Include version number, but only when this isn't an SVN checkout. Also, show just the first two digits.
+                    echo str_replace("[ver]",str_replace("SVN","",substr($productversion,0,strrpos($productversion,"."))),text("welcometitle")) ?>
+                </h1>
+                <p><?php echo text("welcometext")?></p>
+            </div>
+            <?php hook('homeafterwelcometext') ?>
+        </div>
+        <?php 
+        }
+    }
 
 if (!hook("replaceslideshow"))
 	{
