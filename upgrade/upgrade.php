@@ -130,7 +130,7 @@ foreach($new_system_version_files as $new_system_version=>$files)
         {
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Started');
         $upgrade_progress_overall="Running {$total_processed} out of {$total_upgrade_files} (" .
-        round (($total_processed / $total_upgrade_files) * 100,2) . "%) {$file}";
+        round (($total_processed / $total_upgrade_files) * 100,2) . "%) {$file}" . PHP_EOL;
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL,$upgrade_progress_overall);
         if ($cli)
 		{
