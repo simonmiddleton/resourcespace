@@ -92,8 +92,8 @@ function i18n_get_collection_name($mixedcollection, $index="name")
             }
         }
 
-    # Check if it is a My Collection (n)
-    $name_translated = preg_replace('/(^My Collection)(|(\s\d+))$/', $lang["mycollection"] . '$2', $name_untranslated, -1, $translated);
+    # Check if it is a Default Collection (n)
+    $name_translated = preg_replace('/(^Default Collection)(|(\s\d+))$/', $lang["mycollection"] . '$2', $name_untranslated, -1, $translated);
     if ($translated==1) {return htmlspecialchars($name_translated);}
 
     # Check if it is a Upload YYMMDDHHMMSS
