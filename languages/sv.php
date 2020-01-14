@@ -1818,7 +1818,6 @@ $lang["tagcloud"]="Taggmoln";
 $lang["about__about"]="Din egen text för ’Om oss’ …";
 $lang["all__footer"]="<a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace</a>: Digital materialförvaltning (dam) med öppen källkod";
 $lang["all__researchrequest"]="Låt vårt team hitta materialen du är ute efter.";
-$lang["all__searchpanel"]="Sök efter material genom att ange beskrivning, nyckelord eller materialnr.";
 $lang["change_language__introtext"]="Välj ditt önskade språk nedan.";
 $lang["change_password__introtext"]="Skriv in ett nytt lösenord nedan om du vill byta lösenord.";
 $lang["collection_edit__introtext"]="Organisera och hantera dina material genom att dela upp dem i samlingar.\n\n<br />\n\nDu når alla dina samlingar från panelen <b>Mina&nbsp;samlingar</b> i nederkant av skärmen.\n\n<br /><br />\n\n<strong>Privat åtkomst</strong> tillåter endast dig och dina utvalda användare att se samlingen. Idealiskt om du vill samla material i projekt som du jobbar med enskilt eller i en grupp.\n\n<br /><br />\n\n<strong>Gemensam åtkomst</strong> tillåter alla interna användare att söka efter och se samlingen. Användbart om du vill dela materialet med andra som skulle kunna ha nytta av det. \n\n<br /><br />\n\nDu kan välja om du vill att de andra användarna ska kunna lägga till och ta bort material eller bara kunna visa materialen.";

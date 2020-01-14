@@ -1924,7 +1924,6 @@ $lang['action-move-down'] = 'Nach unten';
 
 $lang["about__about"]="Ihr Text zu \"Über uns\" hier.";
 $lang["all__researchrequest"]="Lassen Sie unser Team nach den benötigten Resourcen suchen.";
-$lang["all__searchpanel"]="Suche nach Beschreibung, Schlagworten und Ressourcen IDs";
 $lang["change_language__introtext"]="Bitte wählen Sie Ihre Sprache aus:";
 $lang["change_password__introtext"]="Neues Passwort unten eingeben, um es zu ändern.";
 $lang["collection_edit__introtext"]="Organisieren und verwalten Sie Ihre Arbeit, indem Sie Ressourcen in Gruppen zusammenstellen. Erstellen Sie Kollektionen wie Sie sie benötigen.\n\n<br />\n\nAlle Kollektionen in Ihrer Liste erscheinen im \"Meine Kollektionen\" Menü am unteren Ende des Fensters.\n\n<br /><br />\n\n<strong>Privater Zugriff</strong> erlaubt nur Ihnen und ausgewählten Benutzern, die Kollektion zu anzusehen. Ideal, um Ressourcen für die eigene Arbeit zusammenzustellen und im Team weiterzugeben.\n\n<br /><br />\n\n<strong>Öffentlicher Zugriff</strong> erlaubt allen Benutzern, die Kollektion zu finden und anzusehen.\n\n<br /><br />\n\nSie können aussuchen, ob Sie anderen Benutzern (öffentlicher Zugriff oder ausgewählte Benutzer beim privaten Zugriff) erlauben, Ressourcen hinzuzufügen oder zu löschen.";

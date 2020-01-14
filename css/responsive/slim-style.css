@@ -553,17 +553,20 @@ body {
         width: 90%;
         margin-left: auto;
         margin-right: auto;
-
     }
     
     #searchspace .SearchItem,  #searchspace input{
         clear: both;
-        width: 90%;
+        width: 100%;
         float: left;
         margin-left: auto;
         margin-right: auto;
         margin-top: 5px;
         margin-bottom: 5px;
+    }
+
+    .search-icon, .search-icon:hover, .search-icon:active {
+        display: none;
     }
 
 }
@@ -608,12 +611,7 @@ body {
     #SearchBarContainer {
         position: relative !important;
         height: auto !important;
-        width: 96% !important;
-        margin-left: 2% !important;
-        margin-right: 2% !important;
-        margin-top: 5px !important;
-        margin-bottom: 5px !important;
-        margin-top: 5px !important;
+        width: 100% !important;
         top:0px !important;        
     }
 

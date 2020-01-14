@@ -609,7 +609,6 @@ $lang["emailfromuser"]="Enviar el mail desde";
 $lang["about__about"]="Imágenes y Palabras pretende ser un lugar...";
 $lang["all__footer"]="Accionado por el <a href=\"https://www.resourcespace.com/\">ResourceSpace</a>";
 $lang["all__researchrequest"]="Let our resources team find the resources you need.";
-$lang["all__searchpanel"]="Search using descriptions, keywords and resource numbers";
 $lang["change_language__introtext"]="Por favor, selecciona el idioma en el que deseas trabajar.";
 $lang["change_password__introtext"]="Por favor introduzca una nueva contraseña.";
 $lang["collection_edit__introtext"]="Organiza tu trabajo agrupando recursos. Crea tantas colecciones como necesites.\n\n<br />\n\nTodas la colecciones aparecerán en tu panel \"Mis colecciones\" en la parte inferior de la pantalla.\n\n<br /><br />\n\n<strong>Acceso privado</strong> sólo permite a ti y a los usuarios que selecciones a visualizar la colección. <br /><br />\n\n<strong>Accesos público</strong> permite a todos los usuarios de la aplicación a visualizar la colección.\n\n<br /><br />\n\nTambién puedes elegir qué usuarios podrán modificar la colección o simplemente podrán visualizarla.";

@@ -878,7 +878,24 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     width: 150px;
     }
 
-#ssearchbox {margin-top:10px;}
+#ssearchbox {
+    margin-top:8px;
+    padding: 4px 30px 4px 6px;
+}
+
+.search-icon,
+.search-icon:hover,
+.search-icon:active {
+    float: left;
+    position: relative;
+    color: gray;
+    margin-top: -31px;
+    margin-left: 220px;
+    font-size: 17px;
+    background-color: unset;
+    box-shadow: none;
+    padding: 0 5px;
+}
 
 .CollectionsCompactToolsContainerDummy, .CollectionsCompactToolsContainer {display:inline-block;}
 #GeoDragMode{margin-bottom: 10px;}
