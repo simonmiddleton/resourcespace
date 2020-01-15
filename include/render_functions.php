@@ -213,7 +213,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                         {
                         $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
                         }
-						
 						?>
                     if(!newfield<?php echo $field['ref']; ?>show)
                         {
@@ -242,7 +241,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery(idname<?php echo $field['ref']; ?>).slideToggle();
+                    jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
+                        {
+                        jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
+                        });
 
                     if(jQuery(idname<?php echo $field['ref']; ?>).css('display') == 'block')
                         {
