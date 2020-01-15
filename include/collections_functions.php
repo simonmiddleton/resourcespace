@@ -2969,7 +2969,7 @@ function collection_download_get_archive_file($archiver, $settings_id, $usertemp
     return;
     }
 
-function collection_download_use_original_filenames_when_downloading(&$filename, $ref, $collection_download_tar, &$filenames)
+function collection_download_use_original_filenames_when_downloading(&$filename, $ref, $collection_download_tar, &$filenames,$id='')
     {
     if(trim($filename) === '')
         {
@@ -3034,7 +3034,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
     if(!($collection_download_tar || $use_zip_extension))
         {
         // the copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
-        $id = getval('id','');
         $newpath = get_temp_dir(false,$id) . '/' . $filename;
 
         if(!$copy && $exiftool_write_option)

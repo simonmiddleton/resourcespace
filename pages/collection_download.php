@@ -353,7 +353,7 @@ if ($submitted != "")
 					# Compute a filename for this resource		
 					$filename=get_download_filename($ref,$size,0,$pextension);	
 
-					collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames);
+					collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames,$id);
 					}
 
                 if (hook("downloadfilenamealt")) $filename=hook("downloadfilenamealt");

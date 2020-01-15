@@ -160,7 +160,7 @@ for($n = 0; $n < count($collection_resources); $n++)
 
     if($GLOBALS["original_filenames_when_downloading"])
         {
-        collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames);
+        collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames,$id);
         }
 
     if(hook("downloadfilenamealt"))
