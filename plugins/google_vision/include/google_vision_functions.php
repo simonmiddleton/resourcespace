@@ -168,7 +168,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
                     {
                     foreach($bply as $bpv)
                         {
-                        $faces[$f] .= "{x:" . $bpv["x"] . ",y:" . $bpv["y"] . "}";
+                        $faces[$f] .= "{x:" . (isset($bpv["x"]) ? $bpv["x"] : "0") . ",y:" . (isset($bpv["y"]) ? $bpv["y"] : "0") . "}";
                         }
                     }
                 $faces[$f] .= "\"";                
@@ -192,7 +192,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
                     {
                     foreach($fdbply as $fdbpv)
                         {
-                        $faces[$f] .= "{x:" . $fdbpv["x"] . ",y:" . $fdbpv["y"] . "}";
+                        $faces[$f] .= "{x:" . (isset($fdbpv["x"]) ? $fdbpv["x"] : "0") . ",y:" . (isset($fdbpv["y"]) ? $fdbpv["y"] : "0") . "}";
                         }
                     }
                 $faces[$f] .= "\"";                
@@ -214,7 +214,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
                 $faces[$f] .= "\"[";
                 foreach($face["landmarks"] as $lndmk)
                     {
-                    $faces[$f] .= "{type:" . $lndmk["type"] . ",x:" . $lndmk["position"]["x"] . ",y:" . $lndmk["position"]["y"] . ",z:" . $lndmk["position"]["z"] . "}";
+                    $faces[$f] .= "{type:" . $lndmk["type"] . ",x:" . (isset($lndmk["position"]["x"]) ? $lndmk["position"]["x"] : "0") . ",y:" . (isset($lndmk["position"]["y"]) ? $lndmk["position"]["y"] : "0") . ",z:" . (isset($lndmk["position"]["z"]) ? $lndmk["position"]["z"] : "0") . "}";
                     }
                 $faces[$f] .= "]\",";
                 unset($face["landmarks"]);
