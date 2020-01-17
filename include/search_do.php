@@ -1051,7 +1051,7 @@ function do_search(
             message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $usersearchfilter . "'",generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             
             // Successfully migrated - now use the new filter
-            if(isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='')
+            if(isset($userdata[0]["search_filter_override"]) && $userdata[0]["search_filter_override"]!='')
                 {
                 // This was a user override filter - update the user record
                 sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $userref . "'");
@@ -1067,7 +1067,7 @@ function do_search(
             {
             debug("FILTER MIGRATION: Error migrating filter: '" . $usersearchfilter . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
-            if(isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='')
+            if(isset($userdata[0]["search_filter_override"]) && $userdata[0]["search_filter_override"]!='')
                 {
                 sql_query("UPDATE user SET search_filter_o_id='-1' WHERE ref='" . $userref . "'");
                 }
