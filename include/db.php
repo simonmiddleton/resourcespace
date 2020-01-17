@@ -541,13 +541,13 @@ function set_sysvar($name,$value=null)
     {
     $name=escape_check($name);
     $value=escape_check($value);
-	db_begin_transaction();
+	db_begin_transaction("set_sysvar");
     sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
         sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
         }
-	db_end_transaction();
+	db_end_transaction("set_sysvar");
     }
 
 // get a system variable (which is received from the sysvars table)
@@ -676,15 +676,22 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 /**
 * Indicate that from now on we want to group together DML statements into one transaction.
 * 
+* @param string $name Savepoint name for the transaction.
+* 
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
-function db_begin_transaction()
+function db_begin_transaction($name)
 	{
 	global $db, $use_mysqli;
 
+    if(!is_string($name))
+        {
+        $name = null;
+        }
+
 	if($use_mysqli && function_exists('mysqli_begin_transaction'))
 		{
-		return mysqli_begin_transaction($db);
+		return mysqli_begin_transaction($db, 0, $name);
 		}
 
     return false;
@@ -726,15 +733,22 @@ function sql_query_prepared($sql,$bind_data)
 /**
 * Tell the database to commit the current transaction.
 * 
+* @param string $name Savepoint name for the transaction.
+* 
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
-function db_end_transaction()
+function db_end_transaction($name)
 	{
 	global $db, $use_mysqli;
 
+    if(!is_string($name))
+        {
+        $name = null;
+        }
+
 	if($use_mysqli && function_exists('mysqli_commit'))
 		{
-		return mysqli_commit($db);
+		return mysqli_commit($db, 0, $name);
 		}
 
     return false;
@@ -743,14 +757,22 @@ function db_end_transaction()
 /**
 * Tell the database to rollback the current transaction.
 * 
+* @param string $name Savepoint name for the transaction.
+* 
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
-function db_rollback_transaction()
+function db_rollback_transaction($name)
 	{
 	global $db, $use_mysqli;
+
+    if(!is_string($name))
+        {
+        $name = null;
+        }
+
 	if($use_mysqli && function_exists('mysqli_rollback'))
 		{
-		return mysqli_rollback($db);
+		return mysqli_rollback($db, 0, $name);
 		}
 
     return false;

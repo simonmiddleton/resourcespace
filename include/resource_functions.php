@@ -594,13 +594,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
        }
 
     // Update resource_node table
-    db_begin_transaction();
+    db_begin_transaction("update_resource_node");
     delete_resource_nodes($ref, $nodes_to_remove);
     if(0 < count($nodes_to_add))
         {
         add_resource_nodes($ref, $nodes_to_add, false);
         }
-    db_end_transaction();
+    db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
     autocomplete_blank_fields($ref, false);
@@ -1783,14 +1783,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             }
 
         # Update resource_node table
-        db_begin_transaction();
+        db_begin_transaction("update_field_{$field}");
         delete_resource_nodes($resource,$nodes_to_remove);
 
         if(count($nodes_to_add)>0)
             {
             add_resource_nodes($resource,$nodes_to_add, false);
             }
-        db_end_transaction();
+        db_end_transaction("update_field_{$field}");
         }
 
     if ($fieldinfo["keywords_index"])

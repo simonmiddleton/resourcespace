@@ -229,7 +229,7 @@ if($import_collections && isset($input_fh))
         exit(1);
         }
 
-    if(db_begin_transaction())
+    if(db_begin_transaction("resourceconnect_data_migration"))
         {
         logScript("MySQL - begin transaction...");
         }
@@ -328,7 +328,7 @@ if($import_collections && isset($input_fh))
         sql_query($rcr_insert_sql);
         }
 
-    if(!($dry_run || $rollback_transaction) && db_end_transaction())
+    if(!($dry_run || $rollback_transaction) && db_end_transaction("resourceconnect_data_migration"))
         {
         logScript("MySQL - Commit transaction");
         }

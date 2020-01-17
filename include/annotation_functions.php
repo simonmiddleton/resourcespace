@@ -284,7 +284,7 @@ function deleteAnnotation(array $annotation)
         $nodes_to_remove[] = $tag['ref'];
         }
 
-    db_begin_transaction();
+    db_begin_transaction("deleteAnnotation");
 
     if(0 < count($nodes_to_remove))
         {
@@ -294,7 +294,7 @@ function deleteAnnotation(array $annotation)
     sql_query("DELETE FROM annotation_node WHERE annotation = '{$annotation_ref}'");
     sql_query("DELETE FROM annotation WHERE ref = '{$annotation_ref}'");
 
-    db_end_transaction();
+    db_end_transaction("deleteAnnotation");
 
     return true;
     }
@@ -413,7 +413,7 @@ function updateAnnotation(array $annotation)
         $nodes_to_remove[] = $tag['ref'];
         }
 
-    db_begin_transaction();
+    db_begin_transaction("updateAnnotation");
 
     if(0 < count($nodes_to_remove))
         {
@@ -433,7 +433,7 @@ function updateAnnotation(array $annotation)
         add_resource_nodes($resource, array_column($prepared_tags, 'ref'), false);
         }
 
-    db_end_transaction();
+    db_end_transaction("updateAnnotation");
 
     return true;
     }

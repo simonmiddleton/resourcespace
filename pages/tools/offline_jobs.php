@@ -47,6 +47,11 @@ if($offline_job_queue)
 
     foreach($offlinejobs as $offlinejob)
         {
+        if(!empty($jobs) && !in_array($offlinejob["ref"], $jobs))
+            {
+            continue;
+            }
+
         $clear_job_process_lock = false;
         if(PHP_SAPI == 'cli' && $clear_lock && in_array($offlinejob['ref'], $jobs))
             {

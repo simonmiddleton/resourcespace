@@ -278,13 +278,13 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
         if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
             {
             # Update resource_node table
-            db_begin_transaction();
+            db_begin_transaction("api_update_field");
             delete_resource_nodes($resource,$nodes_to_remove);
             if(count($nodes_to_add)>0)
                 {
                 add_resource_nodes($resource,$nodes_to_add, false);
                 }
-            db_end_transaction();
+            db_end_transaction("api_update_field");
             
             // Update log
             // First use the node array to getnames with node id as key

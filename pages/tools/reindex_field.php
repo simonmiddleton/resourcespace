@@ -71,7 +71,7 @@ if (getval("submit","")!="" && enforcePostRequest(false))
 			$n=0;
 			$total=count($data);
 			
-			db_begin_transaction();
+			db_begin_transaction("reindex_field");
 
 			foreach ($data as $row)
 				{
@@ -98,7 +98,7 @@ if (getval("submit","")!="" && enforcePostRequest(false))
 				flush();
 				}
 
-			db_end_transaction();
+			db_end_transaction("reindex_field");
 			
 			$resourcecount = $resourcecount + $reindex_chunk_size;
 			}
