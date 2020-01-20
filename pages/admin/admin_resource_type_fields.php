@@ -94,7 +94,7 @@ function addColumnHeader($orderName, $labelKey)
     echo "<p>" . text("introtext") . "</p>";
     }
  
-$fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find);
+$fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
 $resource_types=sql_query("select ref, name from resource_type");
 $arr_restypes=array();
 foreach($resource_types as $resource_type)

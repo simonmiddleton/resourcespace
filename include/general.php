@@ -6170,13 +6170,24 @@ function get_indexed_resource_type_fields()
     return sql_array("select ref as value from resource_type_field where keywords_index=1");
     }
 
-function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array())
+function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
     // Gets all metadata fields, optionally for a specified array of resource types 
     $conditionsql="";
     if(is_array($restypes))
         {
         $conditionsql = " WHERE resource_type IN (" . implode(",",$restypes) . ")";
+        }
+    if ($include_inactive==false)
+        {
+        if($conditionsql != "")
+            {
+            $conditionsql .= " AND active=1 ";
+            }
+        else
+            {
+            $conditionsql .= " WHERE active=1 ";
+            }
         }
     if($find!="")
         {
