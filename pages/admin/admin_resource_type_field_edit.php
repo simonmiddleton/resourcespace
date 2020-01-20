@@ -294,7 +294,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
 $fieldcolumns = array(
-    'title'                    => array($lang['property-title'],'',0,1),
+	'active'				   => array($lang['property-field_active'],'',1,1),
+	'title'                    => array($lang['property-title'],'',0,1),
     'resource_type'            => array($lang['property-resource_type'],'',0,0),
     'type'                     => array($lang['property-field_type'],'',0,1),
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),

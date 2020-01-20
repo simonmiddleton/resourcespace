@@ -467,6 +467,7 @@ function get_resource_type_field($field)
                 personal_data,
                 include_in_csv_export,
                 browse_bar,
+                active,
                 read_only" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
@@ -6246,8 +6247,9 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                fits_field,
                personal_data,
                include_in_csv_export,
-               browse_bar
-          FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
+               browse_bar,
+               active
+          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort));
 
     return $allfields;
     }

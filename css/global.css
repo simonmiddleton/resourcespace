@@ -1788,3 +1788,9 @@ a.BrowseRefresh{
     font-size: 1rem;
     vertical-align: text-top;
 }
+
+.FieldDisabled
+    {
+    text-decoration: line-through;
+    }
+    

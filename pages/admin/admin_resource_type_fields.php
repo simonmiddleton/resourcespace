@@ -178,7 +178,7 @@ if (!hook('replacetabnamecolumnheader'))
 for ($n=0;$n<count($fields);$n++)
     {
     ?>
-    <tr class="resource_type_field_row" id="field_sort_<?php echo $fields[$n]["ref"];?>">
+    <tr class="resource_type_field_row <?php if ($fields[$n]["active"]==0) { ?>FieldDisabled<?php } ?>" id="field_sort_<?php echo $fields[$n]["ref"];?>">
         <td>
             <?php echo str_highlight ($fields[$n]["ref"],$find,STR_HIGHLIGHT_SIMPLE);?>
         </td>   
