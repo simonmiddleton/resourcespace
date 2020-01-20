@@ -4640,11 +4640,11 @@ function get_hidden_indexed_fields()
     if (is_array($hidden_fields_cache)){
         return $hidden_fields_cache;
     } else { 
-        $fields=sql_query("select ref from resource_type_field where length(name)>0");
+        $fields=sql_query("select ref,active from resource_type_field where length(name)>0");
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
-            if (metadata_field_view_access($fields[$n]["ref"]))
+            if ($fields[$n]["active"]==1 && metadata_field_view_access($fields[$n]["ref"]))
                 {
                 # Visible field
                 }
