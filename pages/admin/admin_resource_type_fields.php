@@ -17,7 +17,7 @@ $offset=getvalescaped("offset",0);
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
     
     
-$restypefilter=getvalescaped("restypefilter",0);
+$restypefilter=getvalescaped("restypefilter","");
 $restypesfilter=($restypefilter != "")?array($restypefilter):"";
 $field_order_by=getvalescaped("field_order_by","order_by");
 $field_sort=getvalescaped("field_sort","asc");
