@@ -140,12 +140,16 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=sql_query("select * from resource_type_field order by order_by");
+$fields=sql_query("select *,active from resource_type_field order by active desc,order_by");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
 		{
-		DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . "'" . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"));
+		# Render disabled fields with strikethrough
+		$fieldprefix="";$fieldsuffix="";
+		if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
+
+		DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'" . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"));
 		}
 	else
 		{
@@ -155,12 +159,16 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=sql_query("select * from resource_type_field order by order_by");
+$fields=sql_query("select * from resource_type_field order by active desc,order_by");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	
 		{
-		DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . "'"  . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"), false);
+		# Render disabled fields with strikethrough
+		$fieldprefix="";$fieldsuffix="";
+		if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
+
+		DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'"  . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"), false);
 		}
 	else
 		{
