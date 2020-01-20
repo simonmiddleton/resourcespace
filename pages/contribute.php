@@ -14,7 +14,7 @@ include "../include/header.php";
 	<div class="VerticalNav">
 	<ul>
 
-	<li><a onClick="return CentralSpaceLoad(this,true);"
+	<li><i class="fa fa-fw fa-upload"></i> <a onClick="return CentralSpaceLoad(this,true);"
 	<?php
 				#We need to point to the right upload sequence based on $upload_then_edit
 				if ($upload_then_edit==1){?>
@@ -40,8 +40,20 @@ foreach(get_workflow_states() as $workflow_state)
             'archive' => $workflow_state,
         ));
     $ws_a_text = str_replace('%workflow_state_name', $lang["status{$workflow_state}"], $lang["view_my_contributions_ws"]);
+    
+    # Some default icons for the standard workflow states
+    switch($workflow_state)
+        {
+        case -2: $icon="file-import"; break;
+        case -1: $icon="eye"; break;
+        case 0: $icon="check"; break;
+        case 1: $icon="clock"; break;
+        case 2: $icon="archive"; break;
+        case 3: $icon="trash"; break;
+        default: $icon="cogs"; # All additional workflow states show gears icon to indicate workflow
+        }
     ?>
-    <li><a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo htmlspecialchars($ws_a_text); ?></a></li>
+    <li><i class="fa fa-fw fa-<?php echo $icon ?>"></i> <a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo htmlspecialchars($ws_a_text); ?></a></li>
     <?php
     }
 
