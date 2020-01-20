@@ -51,7 +51,7 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_p
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
     $newfieldname = getvalescaped("newfield","");
-    $newfieldtype = getval("fieldtype",0,true);    
+    $newfieldtype = getval("field_type",0,true);    
     $newfieldrestype = getvalescaped("newfieldrestype",0,true);
     $new = create_resource_type_field($newfieldname, $newfieldrestype, $newfieldtype, "", true);
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
@@ -285,6 +285,20 @@ for ($n=0;$n<count($fields);$n++)
             <div class="tickset">
              <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>""/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
+
+            <div class="Inline"><select name="field_type" class="stdwidth">
+         
+            <?php
+            foreach($field_types as $field_type=>$field_type_description)
+                {
+                ?>
+                <option value="<?php echo $field_type ?>"><?php echo $lang[$field_type_description] ; ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            </div>
+
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"] ?>&nbsp;&nbsp;" /></div>
             </div>
             <div class="clearerleft"> </div>
