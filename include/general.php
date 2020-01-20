@@ -527,6 +527,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
           LEFT JOIN resource_data d
                  ON d.resource_type_field = f1.ref AND d.resource = '" . escape_check($ref) . "'
               WHERE (
+                            f1.active=1 and
                             f1.type NOT IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
                     )
@@ -546,6 +547,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
           LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '" . escape_check($ref) . "'
               WHERE (
+                            f2.active=1 and
                             f2.type IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f2.resource_type = 0 OR f2.resource_type = 999 OR f2.resource_type = '{$rtype}'") . ")
                     )
