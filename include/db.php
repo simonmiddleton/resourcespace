@@ -8,7 +8,8 @@
  */
 
 
-// Include core functions:
+include_once dirname(__FILE__) . "/config.security.php";
+
 // Functions used for debugging via System Console
 include_once 'debug_functions.php';
 
