@@ -226,8 +226,15 @@ foreach(tms_link_get_modules_mappings() as $module)
                     if($tms_link_field_id!="" && $tms_link_field_id!=0 && isset($tmsresult[$tms_link_column_name]))
                         {   
                         $existingval = get_data_by_field($tms_resources[$ri]["resource"], $tms_link_field_id);                                                                     
-
-                        if ($existingval !== $tmsresult[$tms_link_column_name])
+                        $newval     =$tmsresult[$tms_link_column_name];
+                        $resource_type_field_data = get_resource_type_field($tms_link_field_id);
+                        if($resource_type_field_data!==false && $resource_type_field_data['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
+                            {
+                            $newval = strip_tags($tmsresult[$tms_link_column_name]);
+                            $newval = str_replace('&nbsp;', ' ', $newval);
+                            }
+                            
+                        if ($existingval!== $newval)
                             {
                             if(!$tms_link_test_mode)
                                 {
