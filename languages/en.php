@@ -1768,7 +1768,7 @@ $lang["geographicsearch"]="Geographic search";
 $lang["geographicsearchresults"]="Geographic search results";
 
 $lang["geographicsearch_help"]="Drag to select a search area.";
-
+$lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server. Please check your \$geo_tile_servers configuration setting";
 $lang["purge"]="Purge";
 $lang["purgeuserstitle"]="Purge users";
 $lang["purgeusers"]="Purge users";
@@ -1829,7 +1829,6 @@ $lang["error-403-forbidden"] = "403 Forbidden.";
 $lang["error-plugin-not-activated"] = "Plugin not activated";
 $lang["error-failed-to-delete"] = "Failed to delete";
 $lang["error-failed-to-move"] = "Failed to move";
-
 
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources

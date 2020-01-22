@@ -2443,7 +2443,7 @@ $geo_layers="osm";
 $view_mapheight=200;
 
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-$geo_tile_caching=false;
+$geo_tile_caching=true;
 
 # Optional path to tile cache directory
 #$geo_tile_cache_directory="";
@@ -2459,6 +2459,12 @@ $geo_search_restrict=array
 
 # Add OpenLayers configuration options to this variable to overwrite all other options. 
 $geo_override_options = "";
+
+$geo_tile_servers = array();
+$geo_tile_servers[] = 'a.tile.openstreetmap.org';
+$geo_tile_servers[] = 'b.tile.openstreetmap.org';
+$geo_tile_servers[] = 'c.tile.openstreetmap.org';
+$geo_tile_cache_lifetime = 60*60*24*365; // 1 year by default to prevent hitting tile server 
 
 
 # QuickLook previews (Mac Only)
