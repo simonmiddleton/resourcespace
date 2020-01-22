@@ -983,26 +983,37 @@ var resource_ids_for_alternatives = [];
 function uploaderReference ()
     {
     this.object = null;
-    } 
-    plupload.addFileFilter('valid_filename', function(check_filename, file, cb) 
-        {
-        var fname = file.name;
-        if ((fname.match(/[<>"'&()]/) != null) && check_filename == true) 
-            {
-            styledalert("Resource cannot be uploaded", "Reason: invalid characters in filename" );
+    }
 
-            this.trigger('Error', 
-                {
-                code : self.FILE_NAME_ERROR,
-                message : ("File name error."),
-                file : file
-                });
-                cb(false);
-            } else 
+
+
+
+plupload.addFileFilter('valid_filename', function(check_filename, file, cb) 
+    {
+    var fname = file.name;
+
+    var pattern = "[<>]";
+    // escape file name
+    var fname_escaped = escape_HTML(fname);
+    file.name = fname_escaped;
+
+    if ((fname_escaped.match(pattern) != null) && check_filename == true) 
+        {
+        styledalert("Resource cannot be uploaded", "Reason: invalid characters in filename" );
+
+        this.trigger('Error', 
             {
-            cb(true);
-            } 
+            code : self.FILE_NAME_ERROR,
+            message : ("File name error."),
+            file : file
+            });
+            cb(false);
+        } else 
+        {
+        cb(true);
+        } 
     });
+
 plup = new uploaderReference
 
 var pluploadconfig = {
