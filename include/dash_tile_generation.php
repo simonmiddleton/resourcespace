@@ -439,26 +439,28 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
 	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
 	$resources = do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false);
-	$img_size="pre";
-	for ($i=0;$i<count($resources) && $i<4;$i++)
+    $img_size="pre";    
+    $count = is_array($resources) ? count($resources) : 0;
+
+    for ($i=0;$i<$count && $i<4;$i++)
         {
         $shadow=true;
-		$ref=$resources[$i]['ref'];
+        $ref=$resources[$i]['ref'];
         $previewpath=get_resource_path($ref, true, $img_size, false, "jpg", -1, 1, false);
         if (file_exists($previewpath))
-        	{
+            {
             $previewpath=get_resource_path($ref,false,$img_size,false,"jpg",-1,1,false,$resources[$i]["file_modified"]);
-        	}
+            }
         else 
-        	{
+            {
             $previewpath=$baseurl_short."gfx/".get_nopreview_icon($resources[$i]["resource_type"],$resources[$i]["file_extension"],"");$border=false;$shadow=false;
-        	}
+            }
         $modifiedurl=hook('searchpublicmodifyurl');
-		if($modifiedurl)
-			{
-			$previewpath=$modifiedurl;
-			$border=true;
-			}
+        if($modifiedurl)
+            {
+            $previewpath=$modifiedurl;
+            $border=true;
+            }
 
         $tile_working_space = ('' == $tile['tlsize'] ? 140 : 280);
 
@@ -467,7 +469,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
         ?>
         <img style="position: absolute; top:10px;left:<?php echo ($space*1.5) ?>px;height:100%;<?php if ($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20-($i *12) ?>deg);" src="<?php echo $previewpath?>">
         <?php				
-		}
+        }
 	
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
@@ -502,11 +504,15 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		<?php
 		}
 
-	if($tile["resource_count"])
+    if($count==0 && !$tile["resource_count"])
+		{
+		echo "<p class='no_resources'>" . htmlspecialchars($lang["noresourcesfound"]) . "</p>";
+        }
+    if($tile["resource_count"])
 		{?>
 		<p class="tile_corner_box">
 		<span aria-hidden="true" class="fa fa-clone"></span>
-		<?php echo count($resources); ?>
+		<?php echo $count; ?>
 		</p>
 		<?php
 		}
