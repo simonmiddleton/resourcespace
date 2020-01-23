@@ -2,12 +2,30 @@
 /**
 * Utility script to import files from a remote ResourceSpace system that is only accessible over HTTP/HTTPS
 *
-* The auto_login plugin can be used to enable temporary unauthenticated access from the receiving server's public IP
-* *** CAUTION SHOULD BE USED IF SERVER IS ON AN INTERNAL NETWORK ****
-* Optionally a minimum and maximum resource ID can be passed to test the behaviour for a few resources initially
+* Either a collection id or a minimum resource ID (and optionally a maximum) can be passed to test the behaviour for a set of resources
 *
-* Chnage $remotebaseurl to point to the old server
+* Add $remotebaseurl in include/config.php as below to point to the old server
+* 
+* e.g.
+* 
+* $remotebaseurl = 'https://old.resourcespaceurl.com';
+*
+* Add $retrievefilestestmode = true; to run script in testing mode to ensure script working as expected
+* $retrievefilestestmode=|true; 
+
+* Optionally set strings to replace in calculated URLs
+* 
+* $findurlpart = "filestore/acmecorp";
+* $replaceurlpart = "filestore";
+*
+*  Also set the following to true if the remote server has $hide_real_filepath = true; set (i.e. access to resoure files require authentication)
+*  
+* $remote_hidden_paths = true;
+* 
+*  If this is set then the auto_login plugin can be used to enable temporary unauthenticated access from the receiving server's public IP
+*  **** CAUTION SHOULD BE USED IF SERVER IS ON AN INTERNAL NETWORK ****
 */
+
 
 if('cli' != PHP_SAPI)
     {
@@ -15,79 +33,186 @@ if('cli' != PHP_SAPI)
     exit('Access denied - Command line only!');
     }
 
-
-### CHANGE THIS ####
-$remotebaseurl = 'http://old.resourcespaceurl.com';
-####################
-
-
 include __DIR__ . '/../../include/db.php';
 include_once __DIR__ . '/../../include/general.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
 set_time_limit(0);
 
-if(isset($argv[1]) && is_numeric($argv[1]))
+
+$orderby = "ASC";
+
+if(isset($argv[1]) && strtolower($argv[1]) == "collection" && isset($argv[2]) && is_numeric($argv[2]))
     {
-    $min = $argv[1];
-    if(isset($argv[2]) && is_numeric($argv[2]))
+    $collectionid = $argv[2];   
+    }
+elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) && is_numeric($argv[2]))
+    {
+    $min = $argv[2];
+    if(isset($argv[3]) && is_numeric($argv[3]))
         {
-        $max = $argv[2];
+	if($argv[3] < $min)
+            { 
+            $min = $argv[3];
+            $max = $argv[2];
+            $orderby = "DESC";
+            }
+        else 
+            {
+            $max = $argv[3];
+            }
         }
     }
-
-$conditions = array();
-if (isset($min))
+else
     {
-    $conditions[] = "ref >='" . escape_check($min) . "'";
+    echo "retrieve_files.php - fetch resource files for all/selected resources\n\n";
+    echo "- intended for use after database import when resource files are located on a server accessible ResourceSpace installation and the scramble key is known\n";
+    echo "USAGE:\n";
+    echo "php retrieve_files.php [collection|resource] [id] [maxref] \n\n";
+    echo "examples\n";
+    echo "php retrieve_files.php collection 4563\n";
+    echo "- this will retrieve files for all resources in collection #4563\n\n";
+    echo "php retrieve_files.php resource 19564\n";
+    echo "- this will retrieve resource files for all resources starting with resource ID #19564\n\n";
+    echo "php retrieve_files.php resource 19564 19800\n";
+    echo "- this will retrieve resource files for resources starting with resource ID #19564 and ending with resource 19800\n\n";
+    exit();
     }
-if (isset($max))
+
+$filtersql = "";
+$joinsql = "";
+
+if (!isset($collectionid))
     {
-    $conditions[] = "ref <='" . escape_check($max) . "'";
-    }
-$sql = "SELECT ref, file_path, file_extension FROM resource WHERE ref>0 " . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):"") . " ORDER BY ref DESC";
-
-$allresources = sql_query($sql);
-$errors = array();
-$missingdirs = array();
-$missingfiles = array();
-
-$hide_real_filepath = true;
-
-
-foreach($allresources as $resource)
-    {
-    $local_path= get_resource_path($resource["ref"],true,'',false,$resource["file_extension"],true);
-    echo "Checking for presence of file - " . $local_path . "\n";
-    if (!file_exists($local_path))
+    $filtersql .= " r.ref >='" . escape_check($min) . "'";
+    if (isset($max))
         {
-        echo " - File missing - checking URL\n";
-        $local_url = get_resource_path($resource["ref"],false,'',false,$resource["file_extension"],true);
-        $remote_url = str_replace($baseurl, $remotebaseurl, $local_url);
-        $file_headers = @get_headers($remote_url);
+        $filtersql .= "AND r.ref <='" . escape_check($max) . "'";
+        }
+    }
+else
+    {
+    $joinsql .= "RIGHT JOIN collection_resource cr ON cr.resource=r.ref";
+    $filtersql . "cr.collection='" . escape_check($collectionid) . "'";
+    }
 
-        if($file_headers[0] == 'HTTP/1.0 404 Not Found')
+$resources = sql_query("SELECT r.ref, r.file_path, r.file_extension  FROM resource r {$joinsql} WHERE {$filtersql} ORDER BY r.ref $orderby");
+
+$errors = array();
+$missingfiles = array();
+$copied = array();
+$sizearray = sql_array("select id value from preview_size",false);
+$sizearray[] = ""; // Add jpg version of original if present
+
+$hide_real_filepath = (isset($remote_hidden_paths) && $remote_hidden_paths) ? true : false;
+
+foreach($resources as $resource)
+    {
+    $resfiles = array();
+    $n=0;
+    
+    // Primary resource file
+    $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',true,$resource["file_extension"]);
+    $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,$resource["file_extension"]);
+    $n++;
+        
+    // Previews
+    foreach($sizearray as $size)
+        {
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,"jpg");
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,"jpg");
+        $n++;
+        }
+    
+    // Video previews
+    $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,$ffmpeg_preview_extension);
+    $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,$ffmpeg_preview_extension);
+    $n++;
+        
+    // Alternative files
+    $altfiles = get_alternative_files($resource["ref"]);
+    foreach($altfiles as $altfile)
+        {
+        // Primary alternative file
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,$altfile["file_extension"],true,-1,1,false,'',$altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,$altfile["file_extension"],true,-1,1,false,'',$altfile["ref"]);
+        $n++;
+        
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,'icc',true,-1,1,false,'',$altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,'icc',true,-1,1,false,'',$altfile["ref"]);
+        $n++;
+        
+        foreach($sizearray as $size)
             {
-             echo " - The remote file " . $resource["ref"]  . " does not exist\n";
-             $missingfiles[] = $resource["ref"];
+            $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,"jpg",true,-1,1,false,"",$altfile["ref"]);
+            $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,"jpg",true,-1,1,false,"",$altfile["ref"]);
+            $n++;
             }
-        else if ($file_headers[0] == 'HTTP/1.0 302 Found' && $file_headers[7] == 'HTTP/1.0 404 Not Found')
+        }
+    
+    // Now check if files exist
+    $i=0;    
+    for($i=0;$i<$n;$i++)
+        {
+        $localfile = $resfiles[$i]["local"];
+        echo "Checking for presence of file - " . $localfile . "\n";
+        if (!file_exists($localfile))
             {
-            echo " - The file  " . $resource["ref"]  . " does not exist, and I got redirected to a custom 404 page..\n";
-             $missingfiles[] = $resource["ref"];
-            }
-        else
-            {
-            echo " - Found remote file, ingesting\n";
-            global $get_resource_path_fpcache;
-            $get_resource_path_fpcache[$resource["ref"]] = ""; // Forces get_resource_path to ignore the file path 
-            $newpath = get_resource_path($resource["ref"],true,"",true,$resource["file_extension"],true,1,false,'');
-            copy($remote_url,$newpath);
-            echo str_pad(" - Copying file to " . $newpath . "\n",30);
+            $local_url = $resfiles[$i]["url"];
+            $remote_url = str_replace($baseurl, $remotebaseurl, $local_url);
+
+            $remote_url = str_replace($findurlpart, $replaceurlpart, $remote_url);
+
+            echo " - File missing - checking URL:-\n" .$remote_url . "\n";
+            $file_headers = @get_headers($remote_url);
+            if(strpos($file_headers[0],"200")  !== false)
+                {
+                echo " - Found remote file at " . $remote_url . ", ingesting\n";
+                if(!$retrievefilestestmode)
+                    {
+                    echo str_pad(" - Copying file to " . $localfile . "\n",30);
+                    $success = @copy($remote_url,$localfile);
+                    if($success)
+                        {
+                        echo str_pad(" - Copied ok\n",30);
+                        }
+                    else
+                        {
+                        $errors[] = $resource["ref"] . "Failed to copy from " . $remote_url . "\n";
+                        }
+                    }
+                $copied[] = $localfile;
+                }
+            elseif($i==0)
+                {
+                // Main file is missing - record this
+                if($file_headers[0] == 'HTTP/1.0 404 Not Found')
+                    {
+                    echo " - The remote file " . $resource["ref"]  . " does not exist\n";
+                    $missingfiles[] = $localfile;
+                    }
+                else if ($file_headers[0] == 'HTTP/1.0 302 Found' && $file_headers[7] == 'HTTP/1.0 404 Not Found')
+                    {
+                    echo " - The file  " . $resource["ref"]  . " does not exist, and I got redirected to a custom 404 page..\n";
+                    $missingfiles[] = $localfile;
+                    }
+                else
+                    {
+                    echo " - The remote file " . $resource["ref"]  . " could not be accessed\n";
+                    $missingfiles[] = $localfile;
+                    }
+                }
             }
         }
     ob_flush();
-    flush();
+    flush();            
     }
+    
+
+echo "\nCopied files: -\n";
+echo implode("\n",$copied) . "\n";
 
 echo "\nMissing files: -\n";
- echo implode(",",$missingfiles);
+echo implode("\n",$missingfiles) . "\n\n";
+
+echo "\nERRORS: -\n";
+echo implode("\n",$errors) . "\n\n";
