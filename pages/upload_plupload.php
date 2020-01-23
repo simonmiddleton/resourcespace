@@ -992,12 +992,12 @@ plupload.addFileFilter('valid_filename', function(check_filename, file, cb)
     {
     var fname = file.name;
 
-    var pattern = "[<>]";
+    var pattern = "[\"<>`=&]"; // regex pattern to escape characters in file name
     // escape file name
-    var fname_escaped = escape_HTML(fname);
+    var fname_escaped = escape_HTML(fname, pattern);
     file.name = fname_escaped;
 
-    if ((fname_escaped.match(pattern) != null) && check_filename == true) 
+    if ((fname.match(pattern) != null) && check_filename == true) 
         {
         styledalert("Resource cannot be uploaded", "Reason: invalid characters in filename" );
 
