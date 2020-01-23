@@ -152,7 +152,25 @@ include "../include/header.php";
 <div class="BasicsBox">
 <h1><?php if ($themeshare){echo $lang["email_theme_category"];} else {echo $lang["emailcollectiontitle"];}?></h1>
 
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/collection_share.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&collection=<?php echo urlencode($collection_url); ?>&starsearch=<?php echo urlencode($starsearch); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtosharecollection"]; ?></a></p>
+<?php
+
+	$link_array = array(
+		"ref"			=>	$ref,
+		"search"		=>	$search,
+		"offset"		=>	$offset,
+		"order_by"		=>	$order_by,
+		"sort"			=>	$sort,
+		"collection"	=>	$collection_url,
+		"starsearch"	=>	$starsearch,
+		"find"			=>	$find,
+		"k"				=>	$k
+	);
+
+	$link_back = generateURL($baseurl . "/pages/collection_share.php", $link_array);
+
+?>
+
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $link_back ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtosharecollection"]; ?></a></p>
 
 <p><?php 
 if ($themeshare && text("introtextthemeshare")!="")
