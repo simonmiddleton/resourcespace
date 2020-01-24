@@ -196,7 +196,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             });
 
         browseopen = remaining;
-        SetCookie('browseopen',browseopen);
+        SetCookie('browseopen',encodeURIComponent(browseopen));
         return true;
         }
         
@@ -262,7 +262,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             if (browseopen.indexOf(browse_id)==-1)
                 {
                 browseopen.push(browse_id);
-                SetCookie('browseopen',browseopen);
+                SetCookie('browseopen',encodeURIComponent(browseopen));
                 }
 
             openclose.removeClass("browse_closed");
@@ -327,7 +327,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
 function ReloadBrowseBar()
     {
-    var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
+    var allopen = jQuery.cookie("browseopen") ? decodeURIComponent(jQuery.cookie("browseopen")).split(/,/) : new Array();  
             
     browse_toload = allopen;   
     allopen.forEach(function (item)
