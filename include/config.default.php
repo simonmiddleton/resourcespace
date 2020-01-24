@@ -3676,3 +3676,6 @@ $contextual_help_links=true;
 // You may also wish to set the option $filestore_migrate=true; which will force the system to check for a file in the old location and move it in the event that it cannot be found.
 $filestore_evenspread=false;
 $filestore_migrate=false;
+
+// Option to have the front end show pop up error when and invalid date value or format is entered e.g. 31-02-2020 or bad partial dates, this configuration could be removed once a more subtle way of erroring this is found.
+$date_validator=false;

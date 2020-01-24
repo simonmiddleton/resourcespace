@@ -195,11 +195,19 @@ function check_date_format($date)
     // Check the format of the date to "yyyy-mm-dd hh:mm"
     if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2})$/", $date, $parts))
         {
+        if (!checkdate($parts[2], $parts[3], $parts[1]))
+            {
+            return str_replace("%date%", $date, $lang["invalid_date_error"]);
+            }
         return str_replace("%date%", $date, check_date_parts($parts));
         } 
     // Check the format of the date to "yyyy-mm-dd"
     elseif (preg_match ("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts))
         {
+        if (!checkdate($parts[2], $parts[3], $parts[1]))
+            {
+            return str_replace("%date%", $date, $lang["invalid_date_error"]);
+            }
         return str_replace("%date%", $date, check_date_parts($parts));
         } 
     // Check the format of the date to "yyyy-mm" pads with 01 to ensure validity
