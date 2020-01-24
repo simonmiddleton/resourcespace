@@ -79,10 +79,12 @@ if (!hook("renderresultthumb"))
                 $use_watermark=false;   
                 }
 
+            $image_size = $display == "xlthumbs" ? ($retina_mode ? "scr" : "pre") : ($retina_mode ? "pre" : "thm");
+
             $thm_url = get_resource_path(
                 $ref,
-                false,
-                ($display == "xlthumbs" ? ($retina_mode ? 'scr' : 'pre') : ($retina_mode ? 'pre' : 'thm')),
+                true,
+                $image_size,
                 false,
                 $result[$n]['preview_extension'],
                 true,
@@ -91,6 +93,22 @@ if (!hook("renderresultthumb"))
                 $result[$n]['file_modified']
             );
 
+            // If no screen size found try preview
+            if ($image_size == "scr" && !file_exists($thm_url))
+                {
+                $image_size = "pre";
+                $thm_url=get_resource_path($ref,true,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
+                }
+
+            // If no preview size found try thumbnail
+            if ($image_size == "pre" && !file_exists($thm_url))     
+                {
+                $image_size = "thm";
+                $thm_url=get_resource_path($ref,true,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
+                }
+
+            $thm_url=get_resource_path($ref,false,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
+                
             if(isset($result[$n]['thm_url']))
                 {
                 $thm_url = $result[$n]['thm_url'];
