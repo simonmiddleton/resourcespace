@@ -5578,7 +5578,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
                             $values_string = implode($node_vals,",");
-                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='$ref'");
+                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
                             }
                         } 
                     }
