@@ -12,12 +12,19 @@
 
         <?php hook("topnavlinksafterhome"); ?>
 
-        <?php if ($search_results_link && checkperm("s")) { ?>
+        <?php if ($search_results_link) { ?>
             <li class="HeaderLink">
-                      <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
+            <?php if((checkperm("s")) && ((isset($_COOKIE["search"]) && strlen($_COOKIE["search"])>0) || (isset($search) && (strlen($search)>0) && (strpos($search,"!")===false)))) { # active search present ?>
+                    <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-search"></i>
                         <?php echo $lang["searchresults"]?>
                     </a>
+                <?php } else { ?>
+                <a class="SearchResultsDisabled">
+                    <i aria-hidden="true" class="fa fa-fw fa-search"></i>
+                    <?php echo $lang["searchresults"]?>
+                </a>
+                <?php } ?>
             </li>
         <?php } ?>
 
