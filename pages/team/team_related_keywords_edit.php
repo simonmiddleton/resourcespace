@@ -50,7 +50,5 @@ include "../../include/header.php";
 </div>
 </form>
 </div>
-
-<?php		
+<?php
 include "../../include/footer.php";
-?>
