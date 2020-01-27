@@ -23,3 +23,4 @@ $lang["refineresults"]="Refine results"; # Define in case Refine Results plugin 
 $lang["additionalkeywords"]="Additional keywords"; # Define in case Refine Results plugin not installed.
 $lang["refine"]="Refine"; # Define in case Refine Results plugin not installed.
 
+$lang["resourceconnect_help"]="Add resource to a collection"; # help text

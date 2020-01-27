@@ -98,7 +98,7 @@ else
     </div>
     
     <div class="InpageNavLeftBlock"><a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();">+ <?php echo $lang["refineresults"] ?></a></div>
-
+    <div class="InpageNavLeftBlock">Resource sharing:<br><?php echo $lang["resourceconnect_help"] ?></div>
         
     <?php
     function rc_pager()
