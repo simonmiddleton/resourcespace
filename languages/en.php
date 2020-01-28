@@ -869,6 +869,8 @@ $lang['double_width'] = 'Double width';
 $lang['filter_by_table'] = 'Filter by table...';
 $lang['upload_here'] = "Upload here";
 $lang['help-tooltip'] = "Get more information on this page";
+$lang["unauthorized"] = "Unauthorized";
+$lang["warning_duplicate_shortname_fields"] = "There is already a resource type field with the same shortname. Please make it unique!";
 
 # Pager
 $lang["next"]="Next";

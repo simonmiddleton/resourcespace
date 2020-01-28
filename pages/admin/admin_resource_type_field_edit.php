@@ -87,6 +87,8 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
+    debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
+
 	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield;
 	if($propertyname=="linked_data_field")
 		{
@@ -266,6 +268,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			<input name="<?php echo $propertyname ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
 			<?php
 			}
+
 		if($helptext!="")
 				{
 				?>
@@ -275,9 +278,55 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				</div>
 				<?php
 				}
-				?>
-		<div class="clearerleft"> </div>
-	</div>
+
+    if($propertyname == "name")
+        {
+        ?>
+        <div id="shortname_err_msg" class="FormHelp DisplayNone" style="padding:0;clear:left;" >
+            <div class="FormHelpInner PageInformal"><?php echo $lang["warning_duplicate_shortname_fields"]; ?></div>
+        </div>
+        <script>
+        var validate_shortname_in_progress = false;
+        jQuery("input[name='name']").keyup(function(event)
+            {
+            if(validate_shortname_in_progress)
+                {
+                return;
+                }
+
+            validate_shortname_in_progress = true;
+
+            jQuery.get(
+                baseurl + "/pages/admin/ajax/validate_rtf_shortname.php",
+                {
+                ref: "<?php echo $ref; ?>",
+                new_shortname: event.target.value
+                },
+                function (response)
+                    {
+                    var err_msg_el = jQuery("#shortname_err_msg");
+                    if(err_msg_el.hasClass("DisplayNone") === false)
+                        {
+                        err_msg_el.addClass("DisplayNone");
+                        }
+
+                    if(typeof response.data !== "undefined" && !response.data.valid)
+                        {
+                        err_msg_el.removeClass("DisplayNone");
+                        }
+
+                    validate_shortname_in_progress = false;
+                    },
+                "json");
+
+            return;
+            });
+        </script>
+        <?php
+        }
+        ?>
+        <div class="clearerleft"></div>
+    </div>
 	<?php
 	}
 

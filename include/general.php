@@ -7159,10 +7159,27 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
         $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
         }
 
-    sql_query("insert into resource_type_field (title,resource_type, type, name, keywords_index) values ('" . escape_check($name) . "','" . escape_check($restype) . "','" . escape_check($type) . "','" . escape_check($shortname) . "'," . ($index ? "1" : "0") . ")");
-    $new=sql_insert_id();
-    log_activity(null,LOG_CODE_CREATED,$name,'resource_type_field','title',$new,null,'');
-    return $new;    
+    $duplicate = (boolean) sql_value(sprintf(
+        "SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = '%s'",
+        escape_check($shortname)), 0);
+
+    sql_query(sprintf("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES ('%s', '%s', '%s', '%s', %s)",
+        escape_check($name),
+        escape_check($restype),
+        escape_check($type),
+        escape_check($shortname),
+        ($index ? "1" : "0")
+    ));
+    $new = sql_insert_id();
+
+    if($duplicate)
+        {
+        sql_query(sprintf("UPDATE resource_type_field SET `name` = '%s' WHERE ref = '%s'", escape_check($shortname . $new), $new));
+        }
+
+    log_activity(null, LOG_CODE_CREATED, $name, 'resource_type_field', 'title', $new, null, '');
+
+    return $new;
     }
 
 
