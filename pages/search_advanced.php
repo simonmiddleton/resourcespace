@@ -820,6 +820,17 @@ if($advanced_search_media_section)
     render_split_text_question($lang["filesize"], array('media_filesizemin'=>$lang['from'],'media_filesizemax'=>$lang['to']),$lang["megabyte-symbol"], false, " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"", array('media_filesizemin'=>$media_filesizemin,'media_filesizemax'=>$media_filesizemax));
     render_text_question($lang["file_extension_label"], "media_fileextension", "",false," class=\"SearchWidth\" OnChange=\"UpdateResultCount();\"",$media_fileextension);
     render_dropdown_question($lang["previewimage"], "properties_haspreviewimage", array(""=>"","1"=>$lang["yes"],"0"=>$lang["no"]), $properties_haspreviewimage, " class=\"SearchWidth\" OnChange=\"UpdateResultCount();\"");
+    render_dropdown_question(
+        $lang["orientation"],
+        "properties_orientation",
+        array(
+            ""          => "",
+            "portrait"  => $lang["portrait"],
+            "landscape" => $lang["landscape"],
+            "square"    => $lang["square"]
+        ),
+        $properties_orientation,
+        "class=\"SearchWidth\" onchange=\"UpdateResultCount();\"");
     ?>
     </div><!-- End of AdvancedSearchMediaSection -->
     <?php
