@@ -527,10 +527,17 @@ foreach($checkparams as $checkparam)
     }
 
 
-if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
+if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11) )
     {
     rs_setcookie('search', $search,0,"","",false,false);
     }
+
+# set cookie when search form has been submitted - controls display of search results link in header_links.php
+if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
+    {
+    rs_setcookie('search_form_submit', true,0,"","",false,false);
+    } 
+
 
 hook('searchaftersearchcookie');
 if ($search_includes_resources || substr($search,0,1)==="!")
