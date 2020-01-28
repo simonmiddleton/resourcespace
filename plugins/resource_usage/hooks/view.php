@@ -1,22 +1,20 @@
 <?php
 function HookResource_usageViewCustompanels()
     {
-    global $lang,$baseurl_short,$ref,$edit_access,$k;
+    global $lang,$baseurl_short,$ref,$edit_access,$k, $resource;
     
     if($k != '')
         {
         return false;
         }
-    
-    $usages = sql_query("SELECT * FROM resource_usage WHERE resource = '$ref' ORDER BY ref");
-    ?>
 
+    $usages = sql_query("SELECT * FROM resource_usage WHERE resource = '" . escape_check($ref) . "' ORDER BY ref");
+    ?>
     <div class="RecordBox">
     <div class="RecordPanel">
     <div class="Title"><?php echo $lang['resource_usage']; ?></div>
-
     <?php
-    if($edit_access)
+    if(resource_download_allowed($ref, "", $resource["resource_type"]))
         {
         ?>    
         <p><?php echo LINK_CARET_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>

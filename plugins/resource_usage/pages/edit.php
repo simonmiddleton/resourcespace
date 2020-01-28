@@ -8,14 +8,6 @@ include_once "../../../include/resource_functions.php";
 $ref      = getvalescaped('ref', '');
 $resource = getvalescaped('resource', '');
 
-# Check access
-$edit_access = get_edit_access($resource);
-if(!$edit_access)
-    {
-    # Should never arrive at this page without edit access
-    exit("Access denied");
-    }
-
 # Set default values for the creation of a new record
 $new_record = true;
 $usage_data = array(
@@ -58,7 +50,8 @@ if(getval('submitted', '') != '' && enforcePostRequest(false))
         $usage_medium = escape_check(join(', ', $_POST['usage_medium']));
         }
 
-    if($new_record)
+    $resource_data = get_resource_data($resource);
+    if($new_record && $resource_data !== false && resource_download_allowed($resource, "", $resource_data["resource_type"]))
         {
         # New record 
         sql_query("INSERT INTO resource_usage(resource, usage_location, usage_medium, description, usage_date) VALUES ('$resource', '$usage_location', '$usage_medium', '$description', '$usage_date')");
@@ -67,7 +60,7 @@ if(getval('submitted', '') != '' && enforcePostRequest(false))
 
         resource_log($resource, '', '', $lang['new_usage'] . ' ' . $ref);
         }
-    else
+    else if(!$new_record && get_edit_access($resource))
         {
         # Existing record   
         sql_query("UPDATE resource_usage SET usage_location = '$usage_location', usage_medium = '$usage_medium', description = '$description', usage_date = '$usage_date' WHERE ref = '$ref' AND resource = '$resource'");
