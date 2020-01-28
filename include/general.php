@@ -5640,16 +5640,11 @@ function draw_performance_footer(){
 }
 }
 
-function sql_affected_rows(){
-    global $use_mysqli;
-    if ($use_mysqli){
-        global $db;
-        return mysqli_affected_rows($db);
+function sql_affected_rows()
+    {
+    global $db;
+    return mysqli_affected_rows($db["read_write"]);
     }
-    else {
-        return mysql_affected_rows();
-    }
-}
 
 function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 {

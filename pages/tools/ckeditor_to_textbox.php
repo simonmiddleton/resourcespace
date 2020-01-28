@@ -9,7 +9,12 @@ include_once "../../include/general.php";
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/resource_functions.php";
 
-if ($use_mysqli){$encoding=mysqli_character_set_name($db);} else {$encoding=mysql_client_encoding();}
+$encoding = mysqli_character_set_name($db["read_write"]);
+if(db_use_multiple_connection_modes())
+    {
+    $encoding = mysqli_character_set_name($db["read_only"]);
+    }
+
 if($encoding=="latin1"){$encoding="ISO-8859-1";}
 elseif($encoding=="utf8"){$encoding="utf-8";}
 

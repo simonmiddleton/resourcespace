@@ -35,7 +35,8 @@ if ((!isset($suppress_headers) || !$suppress_headers) && !isset($nocache))
 # Error handling
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
-    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages;
+    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages, $use_error_exception;
+
     if (!error_reporting()) 
         {
         return true;
@@ -44,7 +45,13 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     $error_note = "Sorry, an error has occurred. ";
     $error_info  = "$errfile line $errline: $errstr";
 
-    if (substr(PHP_SAPI, 0, 3) == 'cli')
+
+    if($use_error_exception === true)
+        {
+        $errline = ($errline == "N/A" || !is_numeric($errline) ? NULL : $errline);
+        throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
+        }
+    else if (substr(PHP_SAPI, 0, 3) == 'cli')
         {
         echo $error_note;
         if ($show_error_messages) 
@@ -72,6 +79,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         </div>
         <?php
         }
+
     if ($email_errors)
         {
         global $email_notify, $email_from, $email_errors_address, $applicationname;
@@ -179,66 +187,171 @@ set_time_limit($php_time_limit);
 if (!isset($storagedir)) {$storagedir=dirname(__FILE__)."/../filestore";}
 if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 
+
+/**
+* Check if ResourceSpace has been configured to run with differnt users (read-write and/or read-only)
+* 
+* @return boolean
+*/
+function db_use_multiple_connection_modes()
+    {
+    if(
+        isset($GLOBALS["read_only_db_username"]) && isset($GLOBALS["read_only_db_password"])
+        && is_string($GLOBALS["read_only_db_username"]) && is_string($GLOBALS["read_only_db_password"])
+        && trim($GLOBALS["read_only_db_username"]) !== ""
+    )
+        {
+        return true;
+        }
+
+    return false;
+    }
+
+
+/**
+* Used to force the database connection mode before running a particular SQL query
+* 
+* NOTE: this will generate a global variable that can be used to determine which mode is currently set.
+* 
+* IMPORTANT: It is the responsibility of each function to clear the current db mode once it finished running the query
+* as the variable is not meant to persist between queries.
+* 
+* @param string $name The name of the connection mode
+* 
+* @return void
+*/
+function db_set_connection_mode($name)
+    {
+    if(
+        !(is_string($name) && trim($name) !== "")
+        || !db_use_multiple_connection_modes()
+        || !array_key_exists($name, $GLOBALS["db"])
+    )
+        {
+        return;
+        }
+
+    // IMPORTANT: It is the responsibility of each function to clear the current db mode once it finished running the 
+    // query as the variable is not meant to persist between queries.
+    $GLOBALS["db_connection_mode"] = $name;
+
+    return;
+    }
+
+
+/**
+* Return the current DB connection mode
+* 
+* @return string
+*/
+function db_get_connection_mode()
+    {
+    if(
+        !db_use_multiple_connection_modes()
+        || !(isset($GLOBALS["db_connection_mode"]) && trim($GLOBALS["db_connection_mode"]) !== "")
+    )
+        {
+        return "";
+        }
+
+    return $GLOBALS["db_connection_mode"];
+    }
+
+
+/**
+* Clear the current DB connection mode that is in use to override the current SQL queries. @see db_set_connection_mode()
+* for more details.
+* 
+* @return void 
+*/
+function db_clear_connection_mode()
+    {
+    if(!db_use_multiple_connection_modes() || !isset($GLOBALS["db_connection_mode"]))
+        {
+        return;
+        }
+
+    unset($GLOBALS["db_connection_mode"]);
+
+    return;
+    }
+
+
+/**
+* @var  array  Holds database connections for different users (e.g read-write and/or read-only). NULL if no connection 
+*              has been registered.
+*/
 $db = null;
 function sql_connect() 
     {
-    global $use_mysqli,$db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
+    global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
            $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert;
-	# *** CONNECT TO DATABASE ***
-	if ($use_mysqli)
-	    {
-        $db = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
+
+    $init_connection = function(
+        $mysql_server, 
+        $mysql_server_port, 
+        $mysql_username, 
+        $mysql_password, 
+        $mysql_db) use ($use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert)
+        {
+        $db_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
 
         if($use_mysqli_ssl)
             {
-            mysqli_ssl_set($db, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
+            mysqli_ssl_set($db_connection, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
             }
-	    } 
-	else 
-	    {
-	    mysql_connect($mysql_server,$mysql_username,$mysql_password);
-	    mysql_select_db($mysql_db);
-	    }
-	    // If $mysql_charset is defined, we use it
-	    // else, we use the default charset for mysql connection.
-	if(isset($mysql_charset))
-	    {
-		if($mysql_charset)
-		    {
-			if ($use_mysqli)
-			    {
-			    mysqli_set_charset($db,$mysql_charset);
-				}
-			else 
-			    {
-				mysql_set_charset($mysql_charset);
-			    }
-			}
-		}
-	
-	# Group concat limit increased to support option based metadata with more realistic limit for option entries
-	# Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)	
-	sql_query("SET SESSION group_concat_max_len = 32767",false,-1,false,0); 
-	
-    # Set MySQL Strict Mode (if configured)    
-    if ($mysql_force_strict_mode)    
-        {
-        sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'",false,-1,false,0);	
-        }
-    else
-        {
-        # Determine MySQL version
-        $mysql_version = sql_query('select LEFT(VERSION(),3) as ver');
-        # Set sql_mode for MySQL 5.7+
-        if (version_compare($mysql_version[0]['ver'], '5.6', '>')) 
+
+        if(isset($mysql_charset) && is_string($mysql_charset) && trim($mysql_charset) !== "")
             {
-             $sql_mode_current = sql_query('select @@SESSION.sql_mode');
-             $sql_mode_string = implode(" ", $sql_mode_current[0]);
-             $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
-             $sql_mode_string_new = implode (",", $sql_mode_array_new);
-             sql_query("SET SESSION sql_mode = '$sql_mode_string_new'",false,-1,false,0);           
-             }
-        }    
+            mysqli_set_charset($db_connection, $mysql_charset);
+            }
+
+        return $db_connection;
+        };
+
+    $db["read_write"] = $init_connection($mysql_server, $mysql_server_port, $mysql_username, $mysql_password, $mysql_db);
+
+    if(db_use_multiple_connection_modes())
+        {
+        $db["read_only"] = $init_connection(
+            $mysql_server,
+            $mysql_server_port,
+            $GLOBALS["read_only_db_username"],
+            $GLOBALS["read_only_db_password"],
+            $mysql_db);
+        }
+
+    foreach($db as $db_connection_mode => $db_connection)
+        {
+        # Group concat limit increased to support option based metadata with more realistic limit for option entries
+        # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
+        db_set_connection_mode($db_connection_mode);
+        sql_query("SET SESSION group_concat_max_len = 32767", false, -1, false, 0); 
+
+        if ($mysql_force_strict_mode)    
+            {
+            db_set_connection_mode($db_connection_mode);
+            sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", false, -1, false, 0);
+            continue;
+            }
+
+        db_set_connection_mode($db_connection_mode);
+        $mysql_version = sql_query('SELECT LEFT(VERSION(), 3) AS ver');
+        if(version_compare($mysql_version[0]['ver'], '5.6', '>')) 
+            {
+            db_set_connection_mode($db_connection_mode);
+            $sql_mode_current = sql_query('select @@SESSION.sql_mode');
+            $sql_mode_string = implode(" ", $sql_mode_current[0]);
+            $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
+            $sql_mode_string_new = implode (",", $sql_mode_array_new);
+
+            db_set_connection_mode($db_connection_mode);
+            sql_query("SET SESSION sql_mode = '$sql_mode_string_new'", false, -1, false, 0);
+            }
+        }
+
+    db_clear_connection_mode();
+    return;
     }
 sql_connect();
 
@@ -683,16 +796,16 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 */
 function db_begin_transaction($name)
 	{
-	global $db, $use_mysqli;
+	global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if($use_mysqli && function_exists('mysqli_begin_transaction'))
+	if(function_exists('mysqli_begin_transaction'))
 		{
-		return mysqli_begin_transaction($db, 0, $name);
+		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
 
     return false;
@@ -716,7 +829,7 @@ function sql_query_prepared($sql,$bind_data)
             {
             $prepared_statement_cache=array();
             }
-        $prepared_statement_cache[$sql]=$db->prepare($sql);
+        $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
         if($prepared_statement_cache[$sql]===false)
             {
             die('Bad prepared SQL statement:' . $sql);
@@ -740,16 +853,16 @@ function sql_query_prepared($sql,$bind_data)
 */
 function db_end_transaction($name)
 	{
-	global $db, $use_mysqli;
+	global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if($use_mysqli && function_exists('mysqli_commit'))
+	if(function_exists('mysqli_commit'))
 		{
-		return mysqli_commit($db, 0, $name);
+		return mysqli_commit($db["read_write"], 0, $name);
 		}
 
     return false;
@@ -764,16 +877,16 @@ function db_end_transaction($name)
 */
 function db_rollback_transaction($name)
 	{
-	global $db, $use_mysqli;
+	global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if($use_mysqli && function_exists('mysqli_rollback'))
+	if(function_exists('mysqli_rollback'))
 		{
-		return mysqli_rollback($db, 0, $name);
+		return mysqli_rollback($db["read_write"], 0, $name);
 		}
 
     return false;
@@ -790,7 +903,8 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     # This has been added retroactively to support large result sets, yet a pager can work as if a full
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
-    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log, $mysql_verbatim_queries, $use_mysqli, $mysql_log_transactions;
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
+    $mysql_verbatim_queries, $mysql_log_transactions;
     
 	if (!isset($debug_log_override))
 		{
@@ -814,12 +928,16 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     if($mysql_log_transactions && !($logthis==0))
     	{	
 		global $mysql_log_location, $lang;
-		$requirelog=true;
+
+		$requirelog = true;
+
 		if($logthis==2)
 			{
 			// Ignore any SELECTs if the decision to log has not been indicated by function call, 	
-			if(strtoupper(substr(trim($sql),0,6))=="SELECT")
-				{$requirelog=false;}
+			if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
+				{
+                $requirelog = false;
+                }
 			}
 			
 		if($logthis==1 || $requirelog)
@@ -848,11 +966,30 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 			fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
 			fclose ($mlf);
 			}
-		
 		}
-    
-    # Execute query    
-	$result=$use_mysqli ? mysqli_query($db,$sql) : mysql_query($sql);
+
+    // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
+    // available using db_set_connection_mode(). An example use case for this can be reports.
+    $db_connection_mode = "read_write";
+    $db_connection = $db["read_write"];
+    if(
+        db_use_multiple_connection_modes()
+        && (
+            db_get_connection_mode() == "read_only"
+            || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
+        )
+    )
+        {
+        $db_connection_mode = "read_only";
+        $db_connection = $db["read_only"];
+
+        // In case it needs to retry and developer has forced a read-only
+        $logthis = 2;
+
+        db_clear_connection_mode();
+        }
+
+	$result = mysqli_query($db_connection, $sql);
 	
     if ($config_show_performance_footer){
     	# Stats
@@ -873,7 +1010,7 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		$querytime += $time_total;
 	}
 	
-	$error=$use_mysqli ? mysqli_error($db) : mysql_error();	
+	$error = mysqli_error($db_connection);
 	
 	$return_rows=array();
     if ($error!="")
@@ -890,32 +1027,34 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 			{
 			# SQL server connection has timed out or been killed. Try to reconnect and run query again.
 			sql_connect();
+            db_set_connection_mode($db_connection_mode);
 			return sql_query($sql,$cache,$fetchrows,$dbstruct,$logthis,false);
-			exit();
 			}
         else
         	{
         	# Check that all database tables and columns exist using the files in the 'dbstruct' folder.
         	if ($dbstruct) # should we do this?
         		{
+                db_clear_connection_mode();
 				check_db_structs();
-        		
+                db_set_connection_mode($db_connection_mode);
+
         		# Try again (no dbstruct this time to prevent an endless loop)
         		return sql_query($sql,$cache,$fetchrows,false,$reconnect);
-        		exit();
         		}
-        	
+
 	        errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
 	        }
-        exit;
+
+        exit();
         }
     elseif ($result===true)
-        {        
+        {
 		return $return_rows;		// no result set, (query was insert, update etc.) - simply return empty array.
         }
 	
 	$return_row_count=0;	
-	while (($fetchrows==-1 || $return_row_count<$fetchrows) && (($use_mysqli && ($result_row=mysqli_fetch_assoc($result))) || (!$use_mysqli && ($result_row=mysql_fetch_assoc($result)))))
+	while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result))
 		{
 		if ($mysql_verbatim_queries)		// no need to do clean up on every cell
 			{
@@ -951,66 +1090,85 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		$return_row_count++;
 		}
 
-	if ($fetchrows==-1)		// we do not care about the number of rows returned so get out of here
-		{
-        if($use_mysqli)
-            {
-            mysqli_free_result($result);
-            }
-		return $return_rows;
-		}
+    if($fetchrows == -1)
+        {
+        mysqli_free_result($result);
+        return $return_rows;
+        }
 	
 	# If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
 	# is still correct (even though these rows won't be shown).
 	
-	$query_returned_row_count=$use_mysqli ? mysqli_num_rows($result) : mysql_num_rows($result);		// get the number of rows returned from the query
+	$query_returned_row_count = mysqli_num_rows($result);
 
-    if($use_mysqli)
-        {
-        mysqli_free_result($result);
-        }
+    mysqli_free_result($result);
 	
 	if ($return_row_count<$query_returned_row_count)
 		{
 		$return_rows=array_pad($return_rows,$query_returned_row_count,0);		// if short then pad out
 		}
-	
-	return $return_rows;        
+
+    return $return_rows;        
     }
 	
-	
-function sql_value($query,$default)
+
+/**
+* Return a single value from a database query, or the default if no rows
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses sql_query()
+* 
+* @param string $query    SQL query
+* @param mixed  $default  Default value
+* 
+* @return string
+*/
+function sql_value($query, $default)
     {
-    # return a single value from a database query, or the default if no rows
-    # The value returned must have the column name aliased to 'value'
-    $result=sql_query($query,false,-1,true,0); // This is a select so we don't need to log this in the mysql log
-    if (count($result)==0) {return $default;} else {return $result[0]["value"];}
+    db_set_connection_mode("read_only");
+    $result = sql_query($query, false, -1, true, 0);
+
+    if(count($result) == 0)
+        {
+        return $default;
+        }
+
+        return $result[0]["value"];
     }
 
+
+/**
+* Like sql_value() but returns an array of all values found
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses sql_query()
+* 
+* @param string $query SQL query
+* 
+* @return array
+*/
 function sql_array($query)
 	{
-	# Like sql_value() but returns an array of all values found.
-    # The value returned must have the column name aliased to 'value'
-	$return=array();
-    $result=sql_query($query,false,-1,true,0); // This is a select so we don't need to log this in the mysql log
-    for ($n=0;$n<count($result);$n++)
+	$return = array();
+
+    db_set_connection_mode("read_only");
+    $result = sql_query($query, false, -1, true, 0);
+
+    for($n = 0; $n < count($result); $n++)
     	{
-    	$return[]=$result[$n]["value"];
+    	$return[] = $result[$n]["value"];
     	}
+
     return $return;
 	}
 
 function sql_insert_id()
 	{
-	# Return last inserted ID (abstraction)
-	global $use_mysqli;
-	if ($use_mysqli){
-		global $db;
-		return mysqli_insert_id($db);
-	}
-	else { 
-		return mysql_insert_id();
-	}
+    global $db;
+
+    return mysqli_insert_id($db["read_write"]);
 	}
 
 function check_db_structs($verbose=false)
@@ -1339,15 +1497,17 @@ function getuid()
 
 function escape_check($text) #only escape a string if we need to, to prevent escaping an already escaped string
     {
-    global $db,$use_mysqli;
-    if ($use_mysqli)
+    global $db;
+
+    $db_connection = $db["read_write"];
+    if(db_use_multiple_connection_modes() && db_get_connection_mode() == "read_only")
         {
-        $text=mysqli_real_escape_string($db,$text);
+        $db_connection = $db["read_only"];
+        db_clear_connection_mode();
         }
-    else 
-        {
-        $text=mysql_real_escape_string($text);
-        }
+
+    $text = mysqli_real_escape_string($db_connection, $text);
+
     # turn all \\' into \'
     while (!(strpos($text,"\\\\'")===false))
         {

@@ -94,7 +94,7 @@ function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_
 
 function populate_resource_nodes($startingref=0)
 	{
-	global $use_mysqli,$mysql_server,$mysql_username,$mysql_password,$mysql_db;
+	global $mysql_server,$mysql_username,$mysql_password,$mysql_db;
 	
 	// Populate resource_node with all resources that have resource_data matching 
 	// Also get hit count from resource_keyword if the normalised keyword matches

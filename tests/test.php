@@ -49,10 +49,10 @@ function create_new_db($db_name)
     global $db;
     # Create a database for testing purposes
     echo "Creating database $db_name\n";
-    mysqli_query($db,"drop database if exists `$db_name`");
-    mysqli_query($db,"create database `$db_name`");
-    mysqli_query($db,"CREATE TABLE `{$db_name}`.`sysvars`(`name` VARCHAR(50) NOT NULL, `value` TEXT NULL, PRIMARY KEY (`name`))");
-    mysqli_query($db,"INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
+    mysqli_query($db["read_write"], "drop database if exists `$db_name`");
+    mysqli_query($db["read_write"], "create database `$db_name`");
+    mysqli_query($db["read_write"], "CREATE TABLE `{$db_name}`.`sysvars`(`name` VARCHAR(50) NOT NULL, `value` TEXT NULL, PRIMARY KEY (`name`))");
+    mysqli_query($db["read_write"], "INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
     }
 
 // Used to check that search results return the expected resources

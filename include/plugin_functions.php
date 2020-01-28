@@ -323,7 +323,7 @@ function get_plugin_config($name){
  */
 function set_plugin_config($plugin_name, $config)
     {
-	global $db, $use_mysqli, $mysql_charset;
+	global $db, $mysql_charset;
     $config = config_clean($config);
     $config_ser_bin =  base64_encode(serialize($config));
     $config_ser_json = config_json_encode($config);
@@ -331,14 +331,8 @@ function set_plugin_config($plugin_name, $config)
         {
         $config_ser_json = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $config_ser_json);
         }
-    if ($use_mysqli)
-        {
-        $config_ser_json = mysqli_real_escape_string($db,$config_ser_json);
-        }
-    else
-        {
-        $config_ser_json = mysql_real_escape_string($config_ser_json);
-        }
+
+    $config_ser_json = mysqli_real_escape_string($db["read_write"], $config_ser_json);
 
     // We record the activity before running the query because log_activity() is trying to be clever and figure out the old value
     // which will make the new value also show up (incorrectly) as the old value.

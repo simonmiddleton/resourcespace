@@ -50,17 +50,13 @@ $mysql_verbatim_queries = false;
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use php-mysqli extension for interfacing with the mysql database
-# Only enable if the extension is present.
-$use_mysqli = function_exists('mysqli_connect');
-
 # Use prepared statements
 # Default is false until technology proven
-$use_mysqli_prepared = $use_mysqli && false;
+$use_mysqli_prepared = false;
 
 # Enable establishing secure connections using SSL
-# Requires $use_mysqli = true and setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
-$use_mysqli_ssl = $use_mysqli && false;
+# Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
+$use_mysqli_ssl = false;
 
 # $mysqli_ssl_server_cert = '/etc/ssl/certs/server.pem';
 # $mysqli_ssl_ca_cert     = '/etc/ssl/certs/ca_chain.pem';
