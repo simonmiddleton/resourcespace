@@ -11,10 +11,16 @@
  * 
  */
 
-function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc")
+function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$offset=0)
     {
     $fetchrows = ($fetchrows > 0 ? $fetchrows : -1);
+    $offset = (int)$offset;
 
+    if($offset>0 && $fetchrows!=-1)
+        {
+        $fetchrows = $fetchrows + $offset;
+        }
+    
     # Search capability.
     # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
         
@@ -29,15 +35,26 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
         {
         return array();
         }
-   
-    for ($n = 0; $n < count($results); $n++)
+    
+    $resultcount = count($results);
+    if($resultcount < $offset)
+        {
+        return array();
+        }
+
+    $resultset = array();
+    $i=0;
+    for($n = $offset; $n < $resultcount; $n++)
         {
         if (is_array($results[$n]))
             {
-            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            $resultset[$i] = array_map("i18n_get_translated",$results[$n]);
+            $i++;
             }
         }
-    return $results;
+    
+    $newresultcount = count($resultset);
+    return $resultset;
     }
    
 function api_search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$recent_search_daylimit="",$getsizes="",$previewext="jpg")
