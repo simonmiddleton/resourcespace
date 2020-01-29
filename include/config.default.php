@@ -27,6 +27,8 @@ $mysql_server      = 'localhost';
 $mysql_server_port = 3306;
 $mysql_username    = 'root';
 $mysql_password    = '';
+$read_only_db_username = "";
+$read_only_db_password = "";
 $mysql_db          = 'resourcespace';
 # $mysql_charset     = 'utf8';
 
