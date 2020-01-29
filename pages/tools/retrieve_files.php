@@ -92,7 +92,7 @@ if (!isset($collectionid))
 else
     {
     $joinsql .= "RIGHT JOIN collection_resource cr ON cr.resource=r.ref";
-    $filtersql . "cr.collection='" . escape_check($collectionid) . "'";
+    $filtersql .= "cr.collection='" . escape_check($collectionid) . "'";
     }
 
 $resources = sql_query("SELECT r.ref, r.file_path, r.file_extension  FROM resource r {$joinsql} WHERE {$filtersql} ORDER BY r.ref $orderby");
