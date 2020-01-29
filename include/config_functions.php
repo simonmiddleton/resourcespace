@@ -1229,3 +1229,28 @@ function get_header_image($full = false)
         
     return $header_img_src;
     }
+
+/**
+* Used to block deletion of 'core' fields. Any variable added to the $corefields array will be checked before a field is deleted and if the field is referenced by one of these core variables the deletion will be blocked
+* 
+* @param string $source Optional origin of variables e.g. 'Transform plugin'
+* @param array $varnames Array of variable names
+*
+* @return void
+*/
+function config_register_core_fieldvars($source="BASE", $varnames=array())
+    {
+    global $corefields;
+    if(!isset($corefields[$source]))
+        {
+        $corefields[$source] = array();
+        }    
+    
+    foreach($varnames as $varname)
+        {
+        if(preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/',$varname))
+            {
+            $corefields[$source][] = $varname;
+            }
+        }
+    }

@@ -11,4 +11,6 @@ $image_text_font="Arial-Regular";
 $image_text_position="east";
 $image_text_banner_position="bottom";
 
-
+// Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
+// These are added in hooks/all.php
+$image_text_fieldvars = array("image_text_field_select");

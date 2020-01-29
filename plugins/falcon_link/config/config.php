@@ -12,3 +12,8 @@ $falcon_link_permitted_extensions = array("jpg","jpeg","png","gif","tiff");
 $falcon_link_usergroups = array(3);
 $falcon_link_filter = "";
 $falcon_link_share_user = "falcon.io";
+
+// Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
+// These are added in hooks/all.php
+$falcon_link_fieldvars = array("falcon_link_tag_fields","falcon_link_text_field");
+

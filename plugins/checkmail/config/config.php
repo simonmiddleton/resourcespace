@@ -15,3 +15,7 @@
 // Any users with the required permissions to upload resources will also be able to email resources.
 // If set to true, the system will block the current selected users ($checkmail_users)
 $checkmail_allow_users_based_on_permission = false;
+
+// Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
+// These are added in hooks/all.php
+$checkmail_fieldvars = array("checkmail_subject_field","checkmail_body_field");

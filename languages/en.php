@@ -2158,6 +2158,7 @@ $lang["resource_type_field_new"]    = "New metadata field";
 
 $lang["admin_advanced_field_properties"]="Advanced field properties";
 $lang["admin_delete_field_confirm"]="There are %%AFFECTEDRESOURCES%% resource(s) with data in this field. Some of the affected resource IDs are listed below. The metadata associated with this field will be lost if you continue. Are you sure you want to proceed with deletion?";
+$lang["admin_delete_field_error"]="Unable to delete field. Please contact your system administrator. This field is used for the following configuration options:-";
 $lang["admin_resource_type_create"]="Create resource type called...";
 $lang["admin_resource_type_field"]="Manage metadata field";
 $lang["admin_resource_type_field_count"]="Metadata fields";

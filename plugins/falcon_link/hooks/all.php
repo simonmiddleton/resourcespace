@@ -1,5 +1,11 @@
 <?php
-    
+
+function HookFalcon_linkAllInitialise()
+    {
+    global $falcon_link_fieldvars;
+    config_register_core_fieldvars("Falcon link plugin",$falcon_link_fieldvars);
+    }
+
 function HookFalcon_linkAllRender_actions_add_collection_option($top_actions,$options,$collection_data)
     {
 	global $count_result,$lang,$baseurl_short, $usergroup, $falcon_link_usergroups;

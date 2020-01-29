@@ -1,5 +1,11 @@
 <?php 
 
+function HookCheckmailAllInitialise()
+    {
+    global $checkmail_fieldvars;
+    config_register_core_fieldvars("Checkmail plugin",$checkmail_fieldvars);
+    }
+
 function HookCheckmailAllAdditional_title_pages_array(){
         return array("upload");
 }

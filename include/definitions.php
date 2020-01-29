@@ -256,3 +256,38 @@ define ('ACTIONGROUP_EDIT',         3);
 define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
+
+$corefields = array(
+    "BASE" => array(
+        'filename_field',
+        'view_title_field',
+        'display_field_below_preview',
+        'date_field',
+        'reset_date_field',
+        'download_filename_field',
+        'extracted_text_field',
+        'facial_recognition_tag_field',
+        'speedtaggingfield',
+        'staticsync_filepath_to_field',
+        'staticsync_extension_mapping_append_values_fields',
+        'portrait_landscape_field',
+        'metadata_template_title_field',
+        'thumbs_display_fields',
+        'list_display_fields',
+        'sort_fields',
+        'xl_thumbs_display_fields',
+        'config_sheetlist_fields',
+        'config_sheetthumb_fields',
+        'config_sheetsingle_fields',
+        'zip_contents_field',
+        'related_search_searchcrumb_field',
+        'warn_field_request_approval',
+        'rating_field',
+        'iiif_identifier_field',
+        'iiif_description_field',
+        'iiif_license_field',
+        'iiif_sequence_field',
+        'facial_recognition_tag_field',
+        'join_fields'
+        )
+    );

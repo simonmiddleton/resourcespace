@@ -1,5 +1,11 @@
 <?php
 
+function HookRss2AllInitialise()
+    {
+    global $rss_fieldvars;
+    config_register_core_fieldvars("RSS2 plugin",$rss_fieldvars);
+    }
+
 function HookRss2AllPreheaderoutput()
 	{
 	if(!function_exists("get_api_key"))

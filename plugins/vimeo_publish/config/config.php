@@ -13,3 +13,7 @@ $vimeo_publish_vimeo_link_field        = 0;
 $vimeo_publish_video_title_field       = 0;
 $vimeo_publish_video_description_field = 0;
 $vimeo_publish_restypes                = array();
+
+// Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
+// These are added in hooks/all.php
+$vimeo_publish_fieldvars = array("vimeo_publish_vimeo_link_field","vimeo_publish_video_title_field","vimeo_publish_video_description_field");

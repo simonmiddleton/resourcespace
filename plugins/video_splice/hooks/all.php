@@ -1,4 +1,11 @@
 <?php 
+
+function HookVideo_spliceAllInitialise()
+    {
+    global $videosplice_fieldvars;
+    config_register_core_fieldvars("Video splice plugin",$videosplice_fieldvars);
+    }
+
 function HookVideo_spliceAllRender_actions_add_collection_option($top_actions,$options){
 	global $collection,$count_result,$lang,$pagename,$baseurl_short;
 	

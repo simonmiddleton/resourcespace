@@ -7957,3 +7957,63 @@ function check_script_last_ran($name, $fail_notify_allowance, &$last_ran_datetim
 
     return false;
     }
+
+/**
+* Delete the specified metadata field. Also delets any node or resource_data rows associated with that field
+* 
+* @param integer $ref Metadata field id (ref from resource_type_field)
+* @param array $varnames Array of variable names
+*
+* @return boolean|string Returns true on success or text on failure describing error
+*/
+function delete_resource_type_field($ref)
+    {
+    global $lang, $corefields;
+
+    if('cli' != php_sapi_name() && !checkperm('a'))
+        {
+        return $lang["error-permissiondenied"];
+        }
+
+    $fieldvars = array();
+    foreach ($corefields as $scope=>$scopevars)
+        {
+        foreach($scopevars as $varname)
+            {
+            global $$varname;
+            if(isset($$varname) && (is_array($$varname) && in_array($ref,$$varname) || ((int)$$varname==$ref)))
+                {
+                $fieldvars[] = $varname . ($scope != "BASE" ? " (" . $scope . ")" : "");
+                }
+            }
+        }
+
+    if(count($fieldvars) > 0)
+        {
+        return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
+        }
+
+    
+    $fieldinfo = get_resource_type_field($ref);
+    
+    // Delete the resource type field
+    sql_query("DELETE FROM resource_type_field WHERE ref='$ref'");
+
+    // Remove all data	    
+    sql_query("DELETE FROM resource_data WHERE resource_type_field='$ref'");
+
+    // Remove all resource nodes	    
+    sql_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='$ref'");
+
+    // Remove all nodes	    
+    sql_query("DELETE FROM node WHERE resource_type_field='$ref'");
+
+    // Remove all keywords	    
+    sql_query("DELETE FROM resource_keyword where resource_type_field='$ref'");
+
+    hook("after_delete_resource_type_field");
+
+    log_activity('Deleted metadata field "' . $fieldinfo["title"] . '" (' . $fieldinfo["ref"] . ')',LOG_CODE_DELETED,null,'resource_type_field',null,$ref);
+
+    return true;
+    }

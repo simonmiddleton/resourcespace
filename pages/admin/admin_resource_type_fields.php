@@ -17,13 +17,10 @@ $offset=getvalescaped("offset",0);
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
     
     
-$restypefilter=getvalescaped("restypefilter","");
-$restypesfilter=($restypefilter != "")?array($restypefilter):"";
+$restypefilter=getval("restypefilter","");
+$restypesfilter=($restypefilter != "")?array((int)$restypefilter):"";
 $field_order_by=getvalescaped("field_order_by","order_by");
 $field_sort=getvalescaped("field_sort","asc");
-
-//$url_params="ref=" . $ref . "&find=" . $find . "&restypefilter=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort;
-//$url=urlencode($baseurl . "/pages/admin/admin_resource_type_fields.php?" . $url_params);
 
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
@@ -75,13 +72,16 @@ function addColumnHeader($orderName, $labelKey)
     else
         $arrow = '';
         
+    $newparams = array();
+    $newparams["field_order_by"] = $orderName;
+    $newparams["field_sort"] = ($field_sort=="desc" || $field_order_by=="order_by") ? 'asc' : 'desc';
+
     ?>
-    <td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $restypefilter ?>&field_order_by=<?php echo $orderName ?>&field_sort=<?php echo ($field_sort=="desc" || $field_order_by=="order_by") ? 'asc' : 'desc';
-          ?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php
+    <td><a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,$newparams); ?>" onClick="return CentralSpaceLoad(this);"><?php
           echo $lang[$labelKey] . $arrow ?></a>
     </td>
     <?php
-      }
+    }
       
 ?>
 
@@ -123,11 +123,11 @@ $results=count($fields);
  if($allow_reorder)
     {  ?>
 <p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
-<a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_fields.php?restypefilter=" . (($use_order_by_tab_view)?"":$restypefilter) . "&field_order_by=order_by&field_sort=asc" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
+<a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("restypefilter" => (($use_order_by_tab_view) ? "" : $restypefilter),"field_order_by" => "order_by","fieldsort"=>"asc")); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
 <?php
     } ?>
 
-<form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"find" =>$find)) ?>" >
+<form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm"); ?>       
     <div class="Question">  
         <label for="restypefilter"><?php echo $lang["property-resource_type"]; ?></label>
@@ -184,7 +184,7 @@ for ($n=0;$n<count($fields);$n++)
         </td>   
         <td>
             <div class="ListTitle">
-                  <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $fields[$n]["ref"] . "&restype=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort . "&find=" . urlencode($find) . "&backurl=" . urlencode($url) ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),$find,STR_HIGHLIGHT_SIMPLE);?></span></a>
+                  <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),$find,STR_HIGHLIGHT_SIMPLE);?></span></a>
             </div>
         </td>
         <td>        
@@ -240,6 +240,10 @@ for ($n=0;$n<count($fields);$n++)
                                     redirect_link.href = "<?php echo $baseurl; ?>/pages/admin/admin_resource_type_fields.php?deleted=" + response.deleted + "&restypefilter=<?php echo urlencode($restypefilter)?>&field_order_by=<?php echo urlencode($field_order_by)?>&field_sort=<?php echo urlencode($field_sort)?>&find=<?php echo urlencode($find)?>";
                                     CentralSpaceLoad(redirect_link, true);
                                     }
+                                else
+                                    {
+                                    styledalert("<?php echo $lang["error"]; ?>",response.message);
+                                    }
                             }, "json"); 
 
                             return false;
@@ -261,7 +265,7 @@ for ($n=0;$n<count($fields);$n++)
 </div>
 
 
-<form method="post" id="AdminResourceTypeFieldForm2" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"restypefilter"=>$restypefilter)) ?>" >
+<form method="post" id="AdminResourceTypeFieldForm2" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm2"); ?>
     <div class="Question">
             <label for="find"><?php echo $lang["find"]?></label>
@@ -272,7 +276,7 @@ for ($n=0;$n<count($fields);$n++)
             if ($find!="")
                 {
                 ?>
-                <div class="Inline"><input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" onclick="CentralSpaceLoad('<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"restypefilter"=>$restypefilter,"find"=>"")) ?>',false);return false;" /></div>
+                <div class="Inline"><input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" onclick="CentralSpaceLoad('<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("find"=>"")); ?>',false);return false;" /></div>
                 <?php
                 }
             ?>
@@ -323,7 +327,7 @@ function ReorderResourceTypeFields(idsInOrder)
     
     jQuery.ajax({
         type: 'POST',
-        url: '<?php echo $baseurl_short?>pages/admin/ajax/update_resource_type_field_order.php?restypefilter=<?php echo $restypefilter ?>&reorder=true',
+        url: '<?php echo generateURL($baseurl_short . "pages/admin/ajax/update_resource_type_field_order.php",$url_params,array("reorder"=>"true")); ?>',
         data: {
         order:JSON.stringify(newOrder),
         <?php echo generateAjaxToken('reorder_resource_type_fields');?>

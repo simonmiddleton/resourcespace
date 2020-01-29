@@ -25,6 +25,6 @@ $youtube_publish_add_anchor=false;
 #Ability to configure chunk size used when uploading to YouTube (in MB)
 $youtube_chunk_size=10;
 
-
-
-?>
+// Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
+// These are added in hooks/all.php
+$youtube_publish_fieldvars = array("youtube_publish_title_field","youtube_publish_descriptionfields","youtube_publish_url_field");
