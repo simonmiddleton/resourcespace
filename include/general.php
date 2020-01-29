@@ -4393,27 +4393,14 @@ function check_access_key($resource,$key)
             
             if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
                 {
+
                 # Apply config override options
                 $config_options=trim($userinfo[0]["config_options"]);
-                if ($config_options!="")
-                    {
-                    $co=explode(";",$config_options);
-                    foreach($co as $ext_co)
-                        {
-                        $co_parts=explode("=",$ext_co);
-                        
-                        if($co_parts[0]!='' && isset($co_parts[1]))
-                            {
-                            $name=str_replace("$","",trim($co_parts[0]));
-                            $value=ltrim($co_parts[1]); 
-                            if(strtolower($value)=='false'){$value=0;}
-                            elseif(strtolower($value)=='true'){$value=1;}
-                            
-                            global $$name;
-                            $$name = $value;
-                            }
-                        }
-                    }
+
+                // We need to get all globals as we don't know what may be referenced here
+                extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+                eval($config_options);
+
                 }
         
         # Special case for anonymous logins.
