@@ -57,7 +57,10 @@ if($offline_job_queue)
             {
             $clear_job_process_lock = true;
             }
-
+        if($offlinejob["start_date"] > date('Y-m-d H:i:s',time()))
+            {
+            continue;
+            }
         job_queue_run_job($offlinejob, $clear_job_process_lock);	
         }
     }

@@ -265,4 +265,395 @@ function migrate_search_filter($filtertext)
     return $filterid;
     }
     
+
+/**
+* Utility function to generate a random UTF8 character
+*
+* @return string
+*/
+function random_char()
+    {
+    $hex_code = dechex(mt_rand(195, 202));    
+    $hex_code .= dechex(mt_rand(128, 175));
+    return pack('H*', $hex_code);
+    }
+
+/**
+* Utility function to check string is a valid date/time
+*
+* @param string $datestring       - date string
+* @param string $format           - DateTime format to compare
+* @return boolean
+*/
+function validateDatetime($datestring, $format = 'Y-m-d H:i:s')
+    {
+    $date = DateTime::createFromFormat($format, $datestring);
+    return $date && $date->format($format) == $datestring;
+    }
+
+/**
+* Utility function to randomly alter date by offset
+*
+* @param string $fromdate       - date string
+* @param int $maxoffset         - Maximum number of days to offset
+* @return string
+*/
+function mix_date($fromdate, $maxoffset=30)
+    {
+    global $mixcache;
+    if(isset($mixcache[md5($fromdate)]))
+        {
+        return $mixcache[md5($fromdate)];
+        }
+
+    if(trim($fromdate==""))
+        {
+        $tstamp = time();
+        }
+    else
+        {
+        $date = new DateTime($fromdate);
+        $tstamp = strtotime($fromdate);
+        }
+
+    $dateshift = 60*60*24*$maxoffset; // How much should dates be moved
+    $newstamp = $tstamp + (mt_rand(-$dateshift,$dateshift));
+    $newdate = gmdate('Y-m-d H:i:s',$newstamp);
+    debug("Converted date " . $fromdate . " to " . $newdate);
+
+    // Update cache
+    $mixcache[md5($fromdate)] = $newdate;
+
+    return $newdate;
+    }
+
+/**
+* Utility function to randomly scramble string
+*
+* @param string $string       - Text string to scramble
+* @param boolean $recurse     - Optionally prevent recursion (maybe called by another mix unction)
+* @return string
+*/
+function mix_text($string, $recurse=true)
+    {
+    global $mixcache, $mime_type_by_extension;
+    if(isset($mixcache[md5($string)]))
+        {
+        return $mixcache[md5($string)];
+        }
     
+    debug( "Converting string<br/>" . $string . ", recurse=" . ($recurse ? "TRUE" : "FALSE"));
+
+    // Check if another function is better
+    if(validateDatetime($string) && $recurse)
+        {
+        debug("This is a date - calling mix_date()");
+        return mix_date($string);
+        }
+    elseif(strpos($string,"http") === 0  && $recurse)
+        {
+        debug("This is a URL - calling mix_url()");
+        return mix_url($string);
+        }
+    elseif(in_array(mb_substr($string,strrpos($string,".")),$mime_type_by_extension) && $recurse)
+        {
+        debug("This is a filename - calling mix_filename()");
+        return mix_filename($string);
+        }
+    
+    $numbers = '0123456789';
+    $uppercons = 'BCDFGHJKLMNPQRSTVWXZ';
+    $uppervowels = 'AEIOUY';
+    $lowercons = 'bcdfghjklmnpqrstvwxz';
+    $lowervowels = 'aeiouy';
+    $noreplace = "'\".,<>#-_&\$£:;^?!@+()*% \n";
+
+    $newstring = "";
+    $bytelength = strlen($string);
+    $mbytelength = mb_strlen($string);
+
+    // Simple conversion if numbers
+    if($bytelength == $mbytelength && (string)(int)$string == $string)
+        {
+        $newstring =  mt_rand(0,(int)$string);
+        }
+    else
+        {
+        // Process each character
+        for($i=0;$i<$mbytelength;$i++)
+            {
+            $oldchar = mb_substr($string,$i,1);
+            //debug("Converting character #$i '" . $oldchar . "'"); 
+
+            if($i > 3 && strpos($noreplace,$oldchar) === false)
+                {
+                // Randomly add or remove character after first
+                $randaction = mt_rand(0,10);
+                if($randaction == 0)
+                    {
+                    // Skip a character
+                    $i++;
+                    }
+                elseif($randaction == 1)
+                    {
+                    // Add a character
+                    $i--;
+                    }
+                }
+          
+            if($i >= $mbytelength || $oldchar == "")
+                {
+                $newstring .=  substr(str_shuffle($lowervowels . $lowercons), 0,1);   
+                }
+            elseif(strpos($noreplace,$oldchar) !== false)
+                {
+                $newstring .= $oldchar;
+                }
+            elseif(strlen($oldchar)==1)
+                {
+                // Non- multibyte
+                if(strpos($lowercons,$oldchar) !== false)
+                    {
+                    $newchar = substr(str_shuffle($lowercons), 0,1);
+                    }
+                elseif(strpos($uppercons,$oldchar) !== false)
+                    {
+                    $newchar = substr(str_shuffle($uppercons), 0,1);
+                    }
+                elseif(strpos($lowervowels,$oldchar) !== false)
+                    {
+                    $newchar = substr(str_shuffle($lowervowels), 0,1);
+                    }
+                elseif(strpos($uppervowels,$oldchar) !== false)
+                    {
+                    $newchar = substr(str_shuffle($uppervowels), 0,1);
+                    }                    
+                elseif(strpos($numbers,$oldchar) !== false)
+                    {
+                    $newchar = substr(str_shuffle($numbers), 0,1);
+                    }
+                else
+                    {
+                    $newchar = substr(str_shuffle($noreplace), 0,1);
+                    }
+                //debug("New random character: $newchar");
+                $newstring .= $newchar;        
+                }                         
+            else
+                {
+                $newchar = random_char();
+                $newstring .= $newchar;   
+                //debug("New random character: " . $newchar);
+                } // End of multibyte conversion
+            }
+        }
+
+    // Update cache
+    $mixcache[md5($string)] = $newstring;
+    return $newstring;
+    }
+
+/**
+* Utility function to randomly scramble data array for exporting 
+*
+* @param array $row             - Array of data passed by reference
+* @param boolean $scramblecolumns - Optional array of columns to scramble
+* @return void
+*/
+function alter_data(&$row,$key,$scramblecolumns=array())
+    {
+    global $datetime_fields;
+    foreach($scramblecolumns as $scramblecolumn=>$scrambletype)
+        {
+        $row[$scramblecolumn] = call_user_func($scrambletype , $row[$scramblecolumn]);
+        }
+    }
+
+/**
+* Utility function to scramble a URL
+*
+* @param string $string           - URL to scramble
+* 
+* @return string
+*/
+function mix_url($string)
+    {
+    global $mixcache, $baseurl;
+    if(trim($string) == "")
+        {
+        return "";
+        }
+    if(isset($mixcache[md5($string)]))
+        {
+        return $mixcache[md5($string)];
+        }
+    if(strpos($string, "pages") === 0 || strpos($string, "/pages") === 0 || strpos($string,$baseurl) === 0)
+        {
+        // URL is a relative path within the system, don't scramble
+        return $string;
+        }
+    if(strpos($string, "://") !== false )
+        {
+        $urlparts = explode("://", $string);
+        return $urlparts[0] . "://" . mix_text($urlparts[1], false);
+        } 
+    return mix_text($string); 
+    }
+
+/**
+* Utility function to scramble a filename
+*
+* @param string $string           - filename to scramble
+* 
+* @return string
+*/
+function mix_filename($string)
+    {
+    global $mixcache;
+    if(trim($string) == "")
+        {
+        return "";
+        }
+    if(isset($mixcache[md5($string)]))
+        {
+        return $mixcache[md5($string)];
+        }
+
+    debug("filename: " . $string);
+    if(strpos($string,".") === false)
+        {
+        return mix_text($string, false);
+        }
+
+    $fileparts = pathinfo($string);
+    $newfilename = mix_text($fileparts["filename"], false) . "." . $fileparts["extension"];
+
+    debug("New filename: " . $newfilename);
+    return $newfilename;
+    }
+
+/**
+* Utility function to scramble an email address
+*
+* @param string $string           - email to scramble
+* 
+* @return string
+*/
+function mix_email($string)
+    {
+    global $mixcache;
+    if(isset($mixcache[md5($string)]))
+        {
+        return $mixcache[md5($string)];
+        }
+
+    $emailparts = explode("@",$string);
+    if(count($emailparts) < 2)
+        {
+        return mix_text($string);
+        }
+
+    $newemail = implode("@",array_map("mix_text",$emailparts));
+
+    // Update cache
+    $mixcache[md5($string)] = $newemail;
+
+    return $newemail;    
+    }
+
+/**
+* Utility function to escape and replace any empty strings with NULLS for exported SQL scripts 
+*
+* @param string $value           - value to check
+* 
+* @return string
+*/
+function safe_export($value)
+    {
+    return trim($value)=="" ? "NULL" : "'" . escape_check($value) . "'";
+    }
+
+/**
+* Get array of tables to export when exporting system config and data
+*
+* @param int $exportcollection      - Optional collection id to include resources and data from
+* 
+* @return array
+*/
+function get_export_tables($exportcollection=0)
+    {
+    if((string)(int)$exportcollection !== (string)$exportcollection)
+        {
+        $exportcollection=0;
+        }
+        
+    // Create array of tables to export
+    $exporttables = array();
+    $exporttables["sysvars"] = array();
+    $exporttables["preview_size"] = array();
+    $exporttables["archive_states"] = array();
+    $exporttables["workflow_actions"] = array();
+
+    $exporttables["user"] = array();
+    $exporttables["user"]["scramble"]=array("username"=>"mix_text","email"=>"mix_email","fullname"=>"mix_text","comments"=>"mix_text","created"=>"mix_date");
+    $exporttables["user_preferences"] = array();
+
+    $exporttables["usergroup"] = array();
+    $exporttables["usergroup"]["scramble"]=array("name"=>"mix_text","welcome_message"=>"mix_text","search_filter"=>"mix_text","edit_filter"=>"mix_text");
+
+
+    $exporttables["dash_tile"] = array();
+    $exporttables["dash_tile"]["scramble"]=array("title"=>"mix_text","txt"=>"mix_text","url"=>"mix_url");
+    $exporttables["user_dash_tile"] = array();
+    $exporttables["usergroup_dash_tile"] = array();
+
+    $exporttables["resource_type"] = array();
+    $exporttables["resource_type_field"] = array();
+    $exporttables["resource_type_field"]["scramble"]=array("title"=>"mix_text","name"=>"mix_text");
+
+    $exporttables["node"] = array();
+    $exporttables["node"]["scramble"]=array("name"=>"mix_text");
+
+    $exporttables["filter"] = array();
+    $exporttables["filter"]["scramble"]=array("name"=>"mix_text");
+    $exporttables["filter_rule"] = array();
+    $exporttables["filter_rule_node"] = array();
+
+    // Optional tables
+    if($exportcollection != 0)
+        {
+        // Collections 
+        $exporttables["collection"] = array();
+        $exporttables["collection"]["exportcondition"] = "WHERE ref = '$exportcollection'";    
+        $exporttables["collection"]["scramble"]=array("name"=>"mix_text","description"=>"mix_text","keywords"=>"mix_text","theme"=>"mix_text","theme2"=>"mix_text","theme3"=>"mix_text","theme4"=>"mix_text","theme5"=>"mix_text","created"=>"mix_date");
+
+        $exporttables["user_collection"] = array();
+        $exporttables["usergroup_collection"] = array();
+        $exporttables["collection_resource"] = array(); 
+        //  Resources and resource metadata
+        $exporttables["resource"] = array();
+        $exporttables["resource"]["scramble"]=array("field8"=>"mix_text","creation_date"=>"mix_date");
+        $exporttables["resource"]["exportcondition"] = " WHERE ref IN (SELECT resource FROM collection_resource WHERE collection='$exportcollection')";
+        $exporttables["resource_data"] = array();
+        $exporttables["resource_data"]["scramble"]=array("value");
+        $exporttables["resource_data"]["exportcondition"] = " WHERE resource IN (SELECT resource FROM collection_resource WHERE collection='$exportcollection')";
+        $exporttables["resource_data"]["scramble"]=array("value"=>"mix_text");
+
+        $exporttables["resource_node"] = array();
+        $exporttables["resource_custom_access"] = array();
+        $exporttables["resource_dimensions"] = array();
+        $exporttables["resource_related"] = array();
+        $exporttables["resource_alt_files"] = array();
+        $exporttables["resource_alt_files"]["scramble"]=array("name"=>"mix_text","description"=>"mix_text","file_name"=>"mix_filename");
+        $exporttables["annotation"] = array();
+        $exporttables["annotation_node"] = array();
+        }
+
+    $extra_tables = hook("export_add_tables");
+    if(is_array($extra_tables))
+        {
+        $exporttables = array_merge($exporttables,$extra_tables);
+        }
+    return $exporttables;
+    }
+

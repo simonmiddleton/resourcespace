@@ -90,4 +90,7 @@ function HookAnnotateAllAdditionalheaderjs(){
 </script>
 <?php }
 
-?>
+function HookAnnotateAllExport_add_tables()
+    {
+    return array("annotate_notes"=>array());
+    }

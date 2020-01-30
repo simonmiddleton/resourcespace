@@ -59,7 +59,7 @@ if('' != $userfiledownload)
     $ref            = (int)$filedetails[0];
     $downloadkey    = strip_extension($filedetails[1]);
     $ext            = safe_file_name(substr($filedetails[1], strlen($downloadkey) + 1));
-    $path           = get_temp_dir(false, 'user_downloads') . '/' . $ref . '_' . md5($username . $downloadkey . $scramble_key) . '.' . $ext;    
+    $path           = get_temp_dir(false, 'user_downloads') . '/' . $ref . '_' . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
     $rqstname       = getval("filename","");
     if($rqstname!="")
         {

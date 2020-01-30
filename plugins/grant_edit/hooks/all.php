@@ -17,4 +17,9 @@ function HookGrant_editAllModifysearcheditable($editable_filter, $user)
         }
     $editable_filter = " ( " . $editable_filter . " OR (r.ref IN (SELECT resource FROM grant_edit WHERE user='$user' AND (expiry IS null OR expiry>=NOW()))))";    
 	return $editable_filter;
-	}
+    }
+
+function HookGrant_editAllExport_add_tables()
+    {
+    return array("grant_edit"=>array());
+    }

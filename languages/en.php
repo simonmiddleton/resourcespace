@@ -1108,8 +1108,14 @@ $lang["newkeywordrelationship"]="Create new relationship for keyword...";
 $lang["searchkeyword"]="Search keyword";
 $lang["keywordfailedregexfilter"]="Keyword failed expression validation";
 
-$lang["exportdata"]="Export data";
+$lang["exportdata"]="Export system data";
+$lang['exportdata-instructions'] = "This will export system configuration data from your system for troubleshooting purposes. All data (field options, usernames, emails and metadata etc.) will be obfuscated unless permitted by your server administrator.</br>Select the information you want to export and click 'Export'. An offline job will be created and you will receive a notification when your download is ready.";
 $lang["exporttype"]="Export type";
+$lang["exportobfuscate"]="Obfuscate exported data?";
+$lang['export_separate_sql']  = "Create separate SQL export files for each database table?";
+$lang['exportcollection'] = "Include resources and associated metadata from this collection ID. Leave blank if no data required";
+$lang["exportcomplete"]="Your system configuration export is ready";
+$lang["exportfailed"]="Your system configuration export failed. Please contact your system administrator";
 
 $lang["managealternativefiles"]="Manage alternative files";
 $lang["managealternativefilestitle"]="Manage alternative files";
@@ -2759,6 +2765,8 @@ $lang["oj-collection-download-success-text"] = "Collection ready for download";
 $lang["oj-collection-download-failure-text"] = "Unable to prepare collection archive for download";
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
+$lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
+$lang["oj-creation-success"]                 = "Offline job created. You will be notified when it has completed";
 /* End of offline jobs */
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
@@ -2850,3 +2858,6 @@ $lang["unknown_date_format_error"]         = "Error: %row% '%date%' in [%field%]
 $lang["date_format_error"]                 = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
+
+$lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
+$lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";

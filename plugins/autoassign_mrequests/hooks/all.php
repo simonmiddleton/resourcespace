@@ -292,4 +292,8 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     return true;
 }
-?>
+
+function HookAutoassign_mrequestsAllExport_add_tables()
+    {
+    return array("assign_request_map"=>array());
+    }

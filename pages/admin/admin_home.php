@@ -49,10 +49,10 @@ include ("../../include/header.php");
             <?php
             }
 
-        if('' != $mysql_bin_path)
+        if('' != $mysql_bin_path && $system_download_config)
             {
             ?>
-            <li><i aria-hidden="true" class="fa fa-fw fa-database"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_export.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["exportdata"]?></a></li>
+            <li><i aria-hidden="true" class="fa fa-fw fa-database"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_download_config.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["exportdata"]?></a></li>
             <?php
             }
 

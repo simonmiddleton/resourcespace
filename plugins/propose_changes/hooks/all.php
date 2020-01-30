@@ -21,3 +21,7 @@ function HookPropose_changesAllShowfieldedit($field)
     return false;
     }
 
+function HookPropose_changesAllExport_add_tables()
+    {
+    return array("propose_changes_data"=>array("scramble"=>array("value")));
+    }

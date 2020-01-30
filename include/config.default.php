@@ -3676,3 +3676,12 @@ $filestore_migrate=false;
 
 // Option to have the front end show pop up error when and invalid date value or format is entered e.g. 31-02-2020 or bad partial dates, this configuration could be removed once a more subtle way of erroring this is found.
 $date_validator=false;
+
+// Set $system_download_config=true if you want to allow admin users to download the config.php file, user and configuration data from your server, optionally including resource data
+// Most data will be obfuscated unless you set $system_download_config_force_obfuscation = false
+// This requires offline jobs to be enabled
+//
+// Please note: due to the highly configurable nature of ResourceSpace this obfuscation cannot be guaranteed to remove all traces of sensitive data
+// and care must still be taken to keep secure any exported data.
+$system_download_config = false;
+$system_download_config_force_obfuscation = true;
