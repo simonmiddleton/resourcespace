@@ -15,10 +15,9 @@ function show_table_headers($showprice)
 
 function HookFormat_chooserViewReplacedownloadoptions()
 	{
-	global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as,
-			$direct_link_previews, $hide_restricted_download_sizes, $format_chooser_output_formats,
-            $baseurl_short, $search, $offset, $k, $order_by, $sort, $archive, $direct_download,$baseurl,
-            $urlparams;
+    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, $direct_link_previews, 
+           $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
+           $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download;
 
 	$inputFormat = $resource['file_extension'];
 
@@ -135,9 +134,10 @@ function HookFormat_chooserViewReplacedownloadoptions()
 			}
 
 		?></select><?php showProfileChooser(); ?></td>
-		<td class="DownloadButton"><a id="convertDownload" onClick="return CentralSpaceLoad(this,true);"><?php
-			echo $lang['action-download'] ?></a></td>
-		</tr><?php
+            <td class="DownloadButton">
+                <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang['action-download']; ?></a>
+            </td>
+        </tr><?php
 		}
 
 	hook("formatchooseraftertable");
@@ -158,10 +158,12 @@ function HookFormat_chooserViewReplacedownloadoptions()
 				},
 				<?php } ?>
 			};
+
 			function updateSizeInfo() {
 				var selected = jQuery('select#size').find(":selected").val();
 				jQuery('#sizeInfo').html(sizeInfo[selected]['info']);
 			}
+
 			function updateDownloadLink() {
 				var index = jQuery('select#size').find(":selected").val();
 				var selectedFormat = jQuery('select#format').find(":selected").val();
@@ -171,22 +173,29 @@ function HookFormat_chooserViewReplacedownloadoptions()
 				else
 					profile = '';
 
-				
-                    basePage = '<?php echo generateURL($baseurl . "/pages/download_progress.php",$urlparams); ?>&ext='
-						+ selectedFormat.toLowerCase() + profile + '&size=' + sizeInfo[index]['id'];
+                var basePage = "<?php echo generateURL("{$baseurl}/pages/download_progress.php", $urlparams); ?>";
+                    basePage += "&ext=" + selectedFormat.toLowerCase();
+                    basePage += profile;
+                    basePage += "&size=" + sizeInfo[index]["id"];
 
-				jQuery('a#convertDownload').attr('href', <?php
-                        if (!$direct_download)
-                            {
-                            echo "'" . generateURL($baseurl . "/pages/terms.php",$urlparams) . "&url=' + encodeURIComponent(basePage)";
-                            }
-                        else
-                            {
-                            echo "basePage";
-                            }
-                        ?>
-						);
+                
+                var terms_download = <?php echo ($terms_download ? "true" : "false"); ?>;
+                if(terms_download)
+                    {
+                    var terms_url = "<?php echo generateURL("{$baseurl}/pages/terms.php", $urlparams); ?>";
+                        terms_url += "&url=" + encodeURIComponent(basePage);
+                    
+                    jQuery("a#convertDownload").attr("href", terms_url);
+
+                    return;
+                    }
+
+                jQuery("a#convertDownload").attr("href", "#");
+                jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "')");
+
+                return;
 			}
+
 			jQuery(document).ready(function() {
 				updateSizeInfo();
 				updateDownloadLink();
@@ -274,7 +283,7 @@ if ($alt_access)
 		<?php if ($access==0){?>
 		<td class="DownloadButton">
 		<?php 		
-		if (!$direct_download || $save_as)
+		if ($terms_download || $save_as)
 			{
 			if(!hook("downloadbuttonreplace"))
 				{
@@ -283,7 +292,7 @@ if ($alt_access)
 			}
 		else { ?>
 			<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>')"><?php echo $lang["action-download"]?></a>
-		<?php } // end if direct_download ?></td></td>
+		<?php } ?></td></td>
 		<?php } else { ?>
 		<td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td>
 		<?php } ?>

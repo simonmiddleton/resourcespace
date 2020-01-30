@@ -2585,7 +2585,6 @@ $global_cookies=false;
 
 # Iframe-based direct download from the view page (to avoid going to download.php)
 # note this is incompatible with $terms_download and the $download_usage features, and is overridden by $save_as
-$direct_download=false;
 $debug_direct_download=false; // set to true to see the download iframe for debugging purposes.
 $direct_download_allow_ie7=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
 $direct_download_allow_ie8=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).

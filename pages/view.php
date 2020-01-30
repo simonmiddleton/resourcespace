@@ -214,12 +214,13 @@ if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_h
 daily_stat("Resource view",$ref);
 if ($log_resource_views) {resource_log($ref,'v',0);}
 
-if ($direct_download && !$save_as){	
-// check browser to see if forcing save_as 
-if (!$direct_download_allow_opera  && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
-if (!$direct_download_allow_ie7 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}	
-if (!$direct_download_allow_ie8 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
-}
+if(!$save_as)
+    {
+    // check browser to see if forcing save_as
+    if (!$direct_download_allow_opera  && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
+    if (!$direct_download_allow_ie7 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}	
+    if (!$direct_download_allow_ie8 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
+    }
 
 # downloading a file from iOS should open a new window/tab to prevent a download loop
 $iOS_save=false;
@@ -238,10 +239,26 @@ if ($metadata_report && isset($exiftool_path))
 	<?php
 	}
 
-if ($direct_download && !$save_as){
-?>
-<iframe id="dlIFrm" frameborder=0 scrolling="auto" <?php if ($debug_direct_download){?>width="600" height="200" style="display:block;"<?php } else { ?>style="display:none"<?php } ?>> This browser can not use IFRAME. </iframe>
-<?php }
+if(!$save_as)
+    {
+    ?>
+    <iframe id="dlIFrm"
+            frameborder=0
+            scrolling="auto"
+            <?php
+            if($debug_direct_download)
+                {
+                ?>width="600" height="200" style="display:block;"
+                <?php
+                }
+            else 
+                {
+                ?>style="display:none"
+                <?php
+                }
+                ?>> This browser can not use IFRAME.</iframe>
+    <?php
+    }
 
 if($resource_contact_link && ($k=="" || $internal_share_access))
 		{?>
@@ -1299,11 +1316,13 @@ function make_download_preview_link($ref, $size, $label)
 
 function add_download_column($ref, $size_info, $downloadthissize)
 	{
-	global $save_as, $direct_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
+	global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
 	if ($downloadthissize)
 		{
-		?><td class="DownloadButton"><?php
-		if (!$direct_download || $save_as)
+		?>
+        <td class="DownloadButton">
+        <?php
+		if($terms_download || $save_as)
 			{
 			global $size_info_array;
 			$size_info_array = $size_info;
@@ -1334,7 +1353,9 @@ function add_download_column($ref, $size_info, $downloadthissize)
 					echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a><?php
 			}
 			unset($size_info_array);
-			?></td><?php
+			?>
+        </td>
+        <?php
 		}
 	else if (checkperm("q"))
 		{
@@ -1476,23 +1497,27 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		{
 		$counter++;
 		hook("beforesingledownloadsizeresult");
-			if(!hook("origdownloadlink"))
-			{
-			?>
-			<tr class="DownloadDBlend">
-			<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
-			<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
-			<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
-			<?php if (!$direct_download || $save_as){ ?>
-				<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams, array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"],"modal"=>"true")))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+		if(!hook("origdownloadlink"))
+		{
+		?>
+		<tr class="DownloadDBlend">
+		<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
+		<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+		<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
+		<?php
+        if(!$terms_download || $save_as)
+            {
+            ?>
+			<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams, array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"],"modal"=>"true")))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 			<?php } else { ?>
-				<a href="#" onclick="directDownload('<?php echo  generateURL($baseur . "/pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
-			<?php } // end if direct_download ?>
+				<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl . "/pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
+			<?php }
+            ?>
 			</td>
 			</tr>
-			<?php # hook origdownloadlink
+			<?php
 			}
-		}
+        }
 	else
 		{
 		$nodownloads=true;
@@ -1589,11 +1614,11 @@ if (isset($flv_download) && $flv_download && file_exists($flvfile))
 	<td class="DownloadFileName"><h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2></td>
 	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($flvfile))?></td>
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
-	<?php if (!$direct_download || $save_as){?>
+	<?php if ($terms_download || $save_as){?>
 		<a href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=>generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 	<?php } else { ?>
 		<a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>')"><?php echo $lang["action-download"]?></a>
-	<?php } // end if direct_download ?></td>
+	<?php } ?></td>
 	</tr>
 	<?php
 	}

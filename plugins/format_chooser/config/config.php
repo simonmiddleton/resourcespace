@@ -9,8 +9,6 @@ $format_chooser_output_formats = array('JPG', 'TIF', 'PNG');
 
 # If non-empty allows you to change the color profile used for the download files
 # The empty string will be replaced with "remove profile", IOW you can disallow removing profiles.
-#$format_chooser_profiles = array('' => '',
-#	'RGB' => 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc',
-#	'CMYK' => 'iccprofiles/ISOcoated_v2_bas.icc');
-
-?>
+/*$format_chooser_profiles = array('' => '',
+    'RGB' => 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc',
+    'CMYK' => 'iccprofiles/ISOcoated_v2_bas.icc');*/

@@ -18,7 +18,7 @@ $usagecomment=getval("usagecomment","");
 $download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) . "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative);
 $download_url_suffix.= hook("addtodownloadquerystring");
 
-if ($download_usage && getval("usage","")=="" && !$direct_download)
+if ($download_usage && getval("usage","")=="" && $terms_download)
 	{
 	redirect($baseurl_short."pages/download_usage.php".$download_url_suffix);
 	}

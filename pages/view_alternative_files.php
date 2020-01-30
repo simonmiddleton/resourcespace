@@ -74,7 +74,7 @@ if ($alt_access)
 		<?php if ($access==0 && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])){?>
 		<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 		<?php 		
-		if (!$direct_download || $save_as)
+		if ($terms_download || $save_as)
 			{
 			if(!hook("downloadbuttonreplace"))
 				{
@@ -83,7 +83,7 @@ if ($alt_access)
 			}
 		else { ?>
             <a href="#" onclick="directDownload('<?php echo generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"><?php echo $lang["action-download"]?></a>
-		<?php } // end if direct_download ?></td></td>
+		<?php } ?></td></td>
 		<?php } else { ?>
 		<td class="DownloadButton"><?php
 			if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
