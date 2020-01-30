@@ -724,7 +724,7 @@ div.autocomplete ul li {
     border-radius:5px;
     }
 
-.plupload_container {min-height:500px;}
+.plupload_container {min-height:450px;}
 .plupload_droptext {font-size:20px;line-height:400px;}
 .plupload_wrapper, .plupload_header_title {font-family: inherit;}
 .plupload_header {display:none;}
@@ -1089,10 +1089,6 @@ a.HomePanel:hover {
     text-transform: capitalize;
     text-align: center;
     font-size: 100px;
-}
-
-.ui-state-active, .ui-state-hover {
-    opacity: 0.5 !important;
 }
 
 div.video-js {margin:auto;}
