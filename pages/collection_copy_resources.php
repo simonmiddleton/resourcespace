@@ -66,7 +66,7 @@ include "../include/header.php";
                 }
 
             #show only active collections if a start date is set for $active_collections 
-            if (strtotime($list[$n]['created']) > ((isset($active_collections)) ? strtotime($active_collections) : 1) || ($list[$n]['name']=="My Collection" && $list[$n]['user']==$userref))
+            if (strtotime($list[$n]['created']) > ((isset($active_collections)) ? strtotime($active_collections) : 1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                     {
                     echo "<option value='" . $list[$n]["ref"] . "'>" . htmlspecialchars(i18n_get_collection_name($list[$n])) . "</option>\n";
                     }

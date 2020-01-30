@@ -2219,7 +2219,7 @@ function get_session_collections($rs_session,$userref="",$create=false)
 	$collectionrefs=sql_array("select ref value from collection where session_id='" . escape_check($rs_session) . "' " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
-		$collectionrefs[0]=create_collection($userref,"My Collection",0,1); # Do not translate this string!	
+		$collectionrefs[0]=create_collection($userref,"Default Collection",0,1); # Do not translate this string!	
 		}		
 	return $collectionrefs;	
 	}
@@ -2727,7 +2727,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
 
 		// Hide Collection
-		$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='My Collection' order by ref limit 1","");
+		$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
 		// check that this collection is not hidden. use first in alphabetical order otherwise
 		if(in_array($user_mycollection,$hidden_collections)){
 			$hidden_collections_list=implode(",",array_filter($hidden_collections));

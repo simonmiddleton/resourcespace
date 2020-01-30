@@ -131,7 +131,7 @@ if ($on_upload || $ref<0)
             
             if ($upload_force_mycollection)
                 {
-                $list=get_user_collections($userref,"My Collection");}
+                $list=get_user_collections($userref,"Default Collection");}
             else
                 {
                 //If the user is attached to a collection that is not allowed to add resources to,
@@ -207,7 +207,7 @@ if ($on_upload || $ref<0)
                 if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null))
                     {
                     #show only active collections if a start date is set for $active_collections 
-                    if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="My Collection" && $list[$n]['user']==$userref))
+                    if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                         { if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
                         if($hide_collection)
                             {

@@ -2405,7 +2405,7 @@ function setup_user($userdata)
 		if($validcollection==0)
 			{
 			// Not a valid collection - switch to user's primary collection if there is one
-			$usercollection=sql_value("select ref value from collection where user='$userref' and name like 'My Collection%' order by created asc limit 1",0);
+			$usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
 			if ($usercollection!=0)
 				{
 				# set this to be the user's current collection
@@ -2419,7 +2419,7 @@ function setup_user($userdata)
 			global $lang;
 			include_once "collections_functions.php"; # Make sure collections functions are included before create_collection
 			# The collection name is translated when displayed!
-			$usercollection=create_collection($userref,"My Collection",0,1); # Do not translate this string!
+			$usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
 			# set this to be the user's current collection
 			sql_query("update user set current_collection='$usercollection' where ref='$userref'");
 			}

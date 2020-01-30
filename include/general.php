@@ -2142,7 +2142,7 @@ function new_user($newuser, $usergroup = 0)
         }
     
     # Create a collection for this user, the collection name is translated when displayed!
-    $new=create_collection($newref,"My Collection",0,1); # Do not translate this string!
+    $new=create_collection($newref,"Default Collection",0,1); # Do not translate this string!
     # set this to be the user's current collection
     sql_query("update user set current_collection='$new' where ref='$newref'");
     log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
