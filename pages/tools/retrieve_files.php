@@ -13,7 +13,7 @@
 * Add $retrievefilestestmode = true; to run script in testing mode to ensure script working as expected
 * $retrievefilestestmode=|true; 
 
-* Optionally set strings to replace in calculated URLs
+* Optionally set the following to replace strings in calculated URLs
 * 
 * $findurlpart = "filestore/acmecorp";
 * $replaceurlpart = "filestore";
@@ -50,7 +50,7 @@ elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) 
     $min = $argv[2];
     if(isset($argv[3]) && is_numeric($argv[3]))
         {
-	if($argv[3] < $min)
+	    if($argv[3] < $min)
             { 
             $min = $argv[3];
             $max = $argv[2];
@@ -94,7 +94,7 @@ else
     $joinsql .= "RIGHT JOIN collection_resource cr ON cr.resource=r.ref";
     $filtersql .= "cr.collection='" . escape_check($collectionid) . "'";
     }
-
+    
 $resources = sql_query("SELECT r.ref, r.file_path, r.file_extension  FROM resource r {$joinsql} WHERE {$filtersql} ORDER BY r.ref $orderby");
 
 $errors = array();
@@ -160,7 +160,10 @@ foreach($resources as $resource)
             $local_url = $resfiles[$i]["url"];
             $remote_url = str_replace($baseurl, $remotebaseurl, $local_url);
 
-            $remote_url = str_replace($findurlpart, $replaceurlpart, $remote_url);
+            if(isset($findurlpart) && isset($replaceurlpart))
+                {
+                $remote_url = str_replace($findurlpart, $replaceurlpart, $remote_url);
+                }
 
             echo " - File missing - checking URL:-\n" .$remote_url . "\n";
             $file_headers = @get_headers($remote_url);
