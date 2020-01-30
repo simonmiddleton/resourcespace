@@ -59,8 +59,12 @@ if('' != $userfiledownload)
     $ref            = (int)$filedetails[0];
     $downloadkey    = strip_extension($filedetails[1]);
     $ext            = safe_file_name(substr($filedetails[1], strlen($downloadkey) + 1));
-    $path           = get_temp_dir(false, 'user_downloads') . '/' . $ref . '_' . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
-
+    $path           = get_temp_dir(false, 'user_downloads') . '/' . $ref . '_' . md5($username . $downloadkey . $scramble_key) . '.' . $ext;    
+    $rqstname       = getval("filename","");
+    if($rqstname!="")
+        {
+        $filename   = safe_file_name($rqstname) . "." . $ext;
+        }
     hook('modifydownloadpath');
     }
 elseif(getval("slideshow",0,true) != 0)
@@ -214,7 +218,10 @@ if('' == $noattach)
         }
     
     // We compute a file name for the download.
-    $filename = get_download_filename($ref, $size, $alternative, $ext);
+    if(!isset($filename) || $filename == "")
+        {
+        $filename = get_download_filename($ref, $size, $alternative, $ext);
+        }
     }
 
 // Set appropriate headers for attachment or streamed file

@@ -3,16 +3,13 @@
 Job handler to process collection downloads
 
 Requires the following job data:
-$job_data['k'] - Share key
 $job_data['collection'] - 
 $job_data['result'] - Search result of !collectionX
 $job_data['size'] - 
 $job_data['exiftool_write_option']
-$job_data['usertempdir'] - temporary directory for this download
 $job_data['useoriginal'] - 
 $job_data['id'] - 
 $job_data['includetext'] - 
-$job_data['progress_file'] - 
 $job_data['count_data_only_types'] - 
 $job_data['usage'] - 
 $job_data['usagecomment'] - 
@@ -26,8 +23,9 @@ include_once __DIR__ . '/../collections_functions.php';
 include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
 
-global $lang, $baseurl, $offline_job_delete_completed, $exiftool_write_option, $progress_file, $k, $usage, $usagecomment,
-$text, $collection_download_settings, $pextension;
+global $lang, $baseurl, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
+$text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
+$collection_download_settings;
 
 foreach($job_data as $arg => $value)
     {
@@ -42,6 +40,7 @@ if(isset($job_data["ext"]))
 
 // Set up the user who requested the collection download as it needs to be processed in its name
 $user_data = validate_user("u.ref = '{$job['user']}'", true);
+
 if(count($user_data) > 0)
     {
     setup_user($user_data[0]);
@@ -69,7 +68,12 @@ if($GLOBALS['zipped_collection_textfile'] == true && $includetext == "true")
     }
 
 // Define the archive file
-collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, $zip, $zipfile);
+$usertempdir=get_temp_dir(false,"rs_" . $user_data[0]["ref"] . "_" . $id);
+$randstring=md5(rand() . microtime());
+$zippath = get_temp_dir(false,'user_downloads');
+$zipfile = $zippath . "/" . $user_data[0]["ref"] . "_" . md5($user_data[0]["username"] . $randstring . $scramble_key) . ".zip";
+$zip = new ZipArchive();
+$zip->open($zipfile, ZIPARCHIVE::CREATE);
 
 $path = "";
 $deletion_array = array();
@@ -227,6 +231,8 @@ if($include_csv_file == 'yes')
 
 collection_download_process_command_to_file($GLOBALS['use_zip_extension'], false, $id, $collection, $size, $path);
 
+$archiver = ($archiver_fullpath!=false) && (isset($archiver_listfile_argument)) && (isset($collection_download_settings) ? is_array($collection_download_settings) : false);
+
 if($archiver)
     {
     $suffix = '.' . $collection_download_settings[$settings_id]['extension'];
@@ -242,10 +248,6 @@ collection_download_process_archive_command(false, $zip, $filename, $usertempdir
 
 collection_download_clean_temp_files($deletion_array);
 
-$downloadable_zipfile = str_replace(basename($zipfile), $filename, $zipfile);
-
-rename($zipfile, $downloadable_zipfile);
-
 if($offline_job_delete_completed)
     {
     job_queue_delete($jobref);
@@ -255,10 +257,11 @@ else
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
     }
 
-$download_url = convert_path_to_url($downloadable_zipfile);
-$download_url = str_replace(
-    array('\\', 'include/../'),
-    array('/', ''),
-    $download_url);
-
+$download_url   = $baseurl . "/pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $randstring . $suffix . "&filename=" . pathinfo($filename,PATHINFO_FILENAME);
 message_add($job["user"], $job_success_text, $download_url);
+
+$delete_job_data=array();
+$delete_job_data["file"]=$zipfile;
+$delete_date = date('Y-m-d H:i:s',time()+(60*60*24)); // Delete file after 1 day
+$job_code=md5($zipfile);
+job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);

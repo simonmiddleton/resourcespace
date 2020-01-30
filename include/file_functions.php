@@ -7,7 +7,7 @@
  */
 function safe_file_name($name)
     {
-    // Returns a file name stipped of all non alphanumeric values
+    // Returns a file name stripped of all non alphanumeric values
     // Spaces are replaced with underscores
     $alphanum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-';
     $name = str_replace(' ', '_', $name);

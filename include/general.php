@@ -6697,7 +6697,9 @@ function form_value_display($row,$name,$default="")
 function get_download_filename($ref,$size,$alternative,$ext)
     {
     # Constructs a filename for download
-    global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
+    global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
+    $download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,
+    $prefix_filename_string, $filename,$server_charset;
     
     $filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
     
@@ -6783,6 +6785,15 @@ function get_download_filename($ref,$size,$alternative,$ext)
     $altfilename=hook("downloadfilenamealt");
     if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
     else $filename=$altfilename;
+
+    # Convert $filename to the charset used on the server.
+    if (!isset($server_charset)) {$to_charset = 'UTF-8';}
+    else
+        {
+        if ($server_charset!="") {$to_charset = $server_charset;}
+        else {$to_charset = 'UTF-8';}
+        }
+    $filename = mb_convert_encoding($filename, $to_charset, 'UTF-8');
 
     hook("downloadfilename");
     return $filename;
