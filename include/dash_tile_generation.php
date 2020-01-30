@@ -96,7 +96,7 @@ function tile_config_theme($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-th-large'></span><?php echo htmlspecialchars($lang["themes"]); ?></h2>
+	<h2><span class='fa fa-folder'></span><?php echo htmlspecialchars($lang["themes"]); ?></h2>
 	<p><?php echo htmlspecialchars(text("themes"));?></p>
 	<?php
 	}
@@ -373,7 +373,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		}
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
-		{$icon="th-large";}
+		{$icon="cube";}
 	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else{$icon="search";}
@@ -473,7 +473,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
-		{$icon="th-large";}
+		{$icon="cube";}
 	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else
@@ -553,7 +553,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 	
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
-		{$icon="th-large";}
+		{$icon="cube";}
 	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else{$icon="search";}

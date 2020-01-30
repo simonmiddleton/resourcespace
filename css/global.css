@@ -1743,7 +1743,7 @@ select.MultiSelect:before {
     content: "\f02b";
 } 
 .BrowseTypeCol:after {
-    content: "\f009";
+    content: "\f1b2";
 } 
 .BrowseTypeNew:after {
     content: "\f055";
