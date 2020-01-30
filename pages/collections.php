@@ -777,9 +777,9 @@ else if ($basket)
 	<form action="<?php echo $baseurl_short?>pages/purchase.php">
 
 	<?php if ($count_result==0) { ?>
-	<p><br /><?php echo $lang["yourbasketisempty"] ?></p><br /><br /><br />
+	<p><?php echo $lang["yourbasketisempty"] ?></p><br /><br /><br />
 	<?php } else { ?>
-	<p><br /><?php if ($count_result==1) {echo $lang["yourbasketcontains-1"];} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
+	<p><?php if ($count_result==1) {echo $lang["yourbasketcontains-1"];} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
 
 	<?php if ($basket_stores_size) {
 	# If they have already selected the size, we can show a total price here.
@@ -1133,7 +1133,7 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 		# ------------------------ Basket Mode ----------------------------------------
 		?>
 		<div id="CollectionMinTitle"><h2><?php echo $lang["yourbasket"] ?></h2></div>
-		<div id="CollectionMinRightNav">
+		<div id="CollectionMinRightNav" class="CollectionBasket">
 		<form action="<?php echo $baseurl_short?>pages/purchase.php">
 		<ul>
 		
@@ -1192,23 +1192,15 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 	else
 		{
 		?>
-		<div id="CollectionMinTitle" class="ExternalShare">
-		<?php
-		if(!hook('replacecollectiontitle') && !hook('replacecollectiontitlemin'))
-			{
-			?>
-			<h2><a onclick="return CentralSpaceLoad(this, true);" href="<?php echo $baseurl_short; ?>pages/collection_manage.php"><?php echo $lang['mycollections']; ?></a></h2>
-			<?php
-			}
-			?>
+		<div class="ToggleThumbsContainer">
+			<a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang['showthumbnails']; ?></a>
 		</div>
+
+		<?php hook('aftertogglethumbs'); ?>
 
 		<!--Menu-->	
 		<div id="CollectionMinRightNav">
-        	<a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang['showthumbnails']; ?></a>
     	<?php
-    	hook('aftertogglethumbs');
-
 	    // Render dropdown actions
 		render_actions($cinfo, false, false, "min",$results_all);
 		?>
