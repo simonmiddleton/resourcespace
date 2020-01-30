@@ -194,8 +194,9 @@ function migrate_search_filter($filtertext)
         $logtext .= "FILTER MIGRATION: -- Parsing filter rule #" . $n . " : '" . $filter_rule . "'\n";
         $rule_parts = explode("=",$filter_rule);
         $rulefields = $rule_parts[0];
-        $rulevalues = explode("|",trim($rule_parts[1]));
-        
+        if (isset($rule_parts[1])){$rulevalues = explode("|",trim($rule_parts[1]));}
+        else{$errors[]="Invalid filter, no values are set.";return $errors;}
+
         // Create filter_rule
         $logtext .=  "FILTER MIGRATION: -- Creating filter_rule for '" . $filter_rule . "'\n";
         sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
