@@ -264,7 +264,7 @@ else
 
 function render_advanced_search_buttons() {
  global $lang, $swap_clear_and_search_buttons;
- ?><div class="QuestionSubmit">
+ ?><div class="QuestionSubmit QuestionSticky">
  <label for="buttons"> </label>
 <?php if ($swap_clear_and_search_buttons){?>
  <input name="dosearch" class="dosearch" type="submit" value="<?php echo $lang["action-viewmatchingresults"]?>" />

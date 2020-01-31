@@ -427,6 +427,14 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 #CentralSpaceLogin form {margin:0;padding:0;}
 .Question{padding: 0.7em 0em 0.7em 0.5em;}
 .QuestionSubmit{ padding: 1em 0em 1em 0.5em;}
+.QuestionSubmit.QuestionSticky {
+    position: -webkit-sticky; 
+    position: sticky;
+    bottom: 0;
+    background-color: #f2f2f2;
+    border-top: 1px solid #c1c1c1;
+    box-shadow: 0px -12px 15px -12px #bbbbbb;
+}
 .Question label, .QuestionSubmit label{ width: 300px;float: left;margin-top: 0.3em;padding-right:10px;}
 .Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
@@ -473,11 +481,13 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     margin-left:2px;
     border-left: none;
 }
+.BackToResultsContainer {display: inline;}
 .backtoresults .nextLink,.backtoresults .prevLink,.backtoresults .maxLink {font-size:1.1em;}
 .backtoresults .maxLink {padding-left:20px;}
 .backtoresults .closeLink {padding-left:5px;font-size:1.3em;}
 
 .backtoresults .prevLink:hover,.backtoresults .nextLink:hover,.backtoresults .closeLink:hover,.backtoresults .maxLink:hover {text-decoration:none;}
+.RequiredFieldLabel {display: inline-block; margin-left: 10px;}
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
@@ -764,13 +774,13 @@ div.autocomplete ul li {
 
 h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     {
-    padding: 0.1em 0 0.5em 0;
+    padding: 0.7em 0 0.5em 0;
     }
 
 .CollapsibleSection 
     {
     margin-bottom: 10px;
-    margin:10px 15px 15px 0;
+    margin:10px 15px 0 0;
     }
 
 /* Resource commenting */

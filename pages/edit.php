@@ -936,7 +936,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
     {
     global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode, $urlparams;
     ?>
-    <div class="backtoresults"> 
+    <div class="BackToResultsContainer"><div class="backtoresults"> 
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
@@ -954,12 +954,12 @@ function EditNav() # Create a function so this can be repeated at the end of the
         &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
         <?php
         } ?>
-    </div><?php
+    </div></div><?php
   }
   
-function SaveAndClearButtons($extraclass="")
+function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
-    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave;
+    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave, $is_template, $show_required_field_label, $modal;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
@@ -968,26 +968,40 @@ function SaveAndClearButtons($extraclass="")
         }
     ?>
     <div class="QuestionSubmit <?php echo $extraclass ?>">
-    <?php
-    if($ref < 0 || $upload_review_mode)
-        {
-        echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
-        }
-        ?>
+        <?php
+        if($ref < 0 || $upload_review_mode)
+            {
+            echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
+            }
+            ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
                name="save"
                class="editsave"
                type="submit"
                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
-    <?php
-    if($upload_review_mode)
-        {
-        ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
         <?php
-        }
-        ?>
-        <br /><br />
-        <div class="clearerleft"> </div>
+        if($upload_review_mode)
+            {
+            ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            <?php
+            }
+
+        if(!$is_template && $show_required_field_label && $requiredfields)
+            {
+            ?>
+            <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>
+            <?php
+            } 
+
+        # Duplicate navigation
+        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
+            {
+            EditNav();
+            }
+            ?>
+        
+            <br />
+            <div class="clearerleft"> </div>
     </div>
     <?php 
     }
@@ -1240,13 +1254,6 @@ else
     
     <?php
  }
-// Upload template: Show the required fields note at the top of the form.
-if(!$is_template && $show_required_field_label)
-    {
-    ?>
-    <p class="greyText noPadding"><sup>*</sup> <?php echo $lang['requiredfield']; ?></p>
-    <?php
-    }
 
 # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
 
@@ -1590,12 +1597,6 @@ if($multiple)// this is closing a div that can be omitted via hook("replaceeditt
 hook('editbeforesectionhead');
 
 global $collapsible_sections;
-if($collapsible_sections)
-{
-  ?>
-  <div id="CollapsibleSections">
-     <?php
-  }
  
  if ($display_any_fields)
  {
@@ -2126,27 +2127,11 @@ if (!$edit_upload_options_at_top && display_upload_options()){include '../includ
 </div>
 
 <?php 
-# Duplicate navigation
-if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav")) {EditNav();}
-
 if(!hook('replacesubmitbuttons'))
     {
-    SaveAndClearButtons("NoPaddingSaveClear");
+    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
     }
 
-if(!$is_template && $show_required_field_label)
-    {
-    ?>
-    <p><sup>*</sup> <?php echo $lang['requiredfield']; ?></p>
-    <?php
-    } 
-
-if($collapsible_sections)
-{
-  ?>
-</div><!-- end of collapsible section -->
-<?php
-}
 hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBox -->
