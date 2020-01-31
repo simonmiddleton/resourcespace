@@ -784,6 +784,33 @@ if (getval("ajax","") == "")
 	}
 	
 	</script>
+
+	<script>
+
+		/* Destroy tagEditor if below breakpoint window size (doesn't work in responsize mode */
+
+		window_width = jQuery(window).width();
+		window_width_breakpoint = 1100;
+
+		/* Page load */
+
+		if(window_width <= window_width_breakpoint)
+			{
+			jQuery('#ssearchbox').tagEditor('destroy');
+			}
+
+		/* Page resized to below breakpoint */
+		
+		jQuery(window).resize(function() 
+			{
+			window_width = jQuery(window).width();
+			if(window_width <= window_width_breakpoint)
+				{
+				jQuery('#ssearchbox').tagEditor('destroy');
+				}
+			});
+
+	</script>
 	
 	<?php if ($chosen_dropdowns)
 		{ ?>
