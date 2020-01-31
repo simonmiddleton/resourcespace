@@ -54,6 +54,7 @@ ert?    Can always edit resources of the specified resource type in any archive 
         have access to the admin area for delegation of publishing control.
 i       Can manage archive resources.
 n       Can tag resources using 'Speed Tagging' (must be enabled in config).
+A       Can manage alternative files
 
 Featured collection / Collections
 ---------------------------------

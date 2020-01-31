@@ -21,12 +21,36 @@ $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
+$starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getvalescaped("archive","");
+$per_page=getvalescaped("per_page",0,true);
+$default_sort_direction="DESC";
+if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
+$sort=getval("sort",$default_sort_direction);
+$previewresource=getval("previewref",0,true);
+$previewresourcealt=getval("previewalt",-1,true);
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
+$curpos=getvalescaped("curpos","");
+$go=getval("go","");
+
+$urlparams= array(
+    'ref'				        => $ref,
+    'search'			        => $search,
+    'order_by'			        => $order_by,
+    'offset'			        => $offset,
+    'restypes'			        => $restypes,
+    'starsearch'		        => $starsearch,
+    'archive'			        => $archive,
+    'default_sort_direction'    => $default_sort_direction,
+    'sort'				        => $sort,
+    'curpos'			        => $curpos,
+    'refreshcollectionframe'    => 'true'
+);
+
 
 #handle posts
 if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
@@ -34,7 +58,17 @@ if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
 	$status=upload_preview($ref);
     if($status !== false)
         {
-        redirect($baseurl_short."pages/edit.php?refreshcollectionframe=true&ref=" . urlencode($ref)."&search=".urlencode($search)."&offset=".urlencode($offset)."&order_by=".urlencode($order_by)."&sort=".urlencode($sort)."&archive=".urlencode($archive));
+        redirect(generateurl($baseurl . "/pages/edit.php", $urlparams));
+        exit();
+        }
+    $error = true;
+    }
+elseif($previewresource > 0 && enforcePostRequest(false))
+    {
+    $status=replace_preview_from_resource($ref,$previewresource,$previewresourcealt);
+    if($status !== false)
+        {
+        redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
         exit();
         }
     $error = true;
