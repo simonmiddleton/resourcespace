@@ -74,7 +74,7 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 		foreach ($fields_tab_names as $tabname) { ?>
 
 			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
-				<a href="#" onclick="Select<?php echo ($modal ? "Modal" : "")?>Tab(<?php echo $tabcount; ?>);return false;"><?php echo i18n_get_translated($tabname)?></a>
+				<a href="#"><?php echo i18n_get_translated($tabname)?></a>
 			</div>
 		
 		<?php 
