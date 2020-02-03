@@ -292,7 +292,7 @@ function sql_connect()
         $mysql_server_port, 
         $mysql_username, 
         $mysql_password, 
-        $mysql_db) use ($use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert)
+        $mysql_db) use ($mysql_charset, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert)
         {
         $db_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
 
