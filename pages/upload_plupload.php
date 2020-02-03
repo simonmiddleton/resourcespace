@@ -1569,7 +1569,7 @@ if ($allowed_extensions!="" && $alternative==''){
 </div>	
 <?php
 hook ("beforepluploadform");
-if(($replace_resource != '' || $replace != '' || $upload_then_edit) && (display_upload_options() || $replace_resource_preserve_option))
+if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($alternative) && (int) $alternative > 0) && (display_upload_options() || $replace_resource_preserve_option))
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>

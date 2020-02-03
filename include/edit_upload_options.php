@@ -108,7 +108,7 @@ if ($on_upload || $ref<0)
         { 
         $non_col_options=0;
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
-        if ($enable_add_collection_on_upload && ($pagename == "edit" || !(isset($alternative) && (int) $alternative > 0)))
+        if ($enable_add_collection_on_upload)
             {
             $collection_add=getvalescaped("collection_add","");
             ?>
