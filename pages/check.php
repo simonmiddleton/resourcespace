@@ -75,9 +75,28 @@ if ($phpversion<'4.4') {$result=$lang["status-fail"] . ": " . str_replace("?", "
 
 # Check MySQL version
 $mysqlversion = mysqli_get_server_info($db["read_write"]);
-if ($mysqlversion<'5') {$result=$lang["status-fail"] . ": " . str_replace("?", "5", $lang["shouldbeversion"]);} else {$result=$lang["status-ok"];}
+if($mysqlversion < '5')
+    {
+    $result = $lang["status-fail"] . ": " . str_replace("?", "5", $lang["shouldbeversion"]);
+    }
+else
+    {
+    $result = $lang["status-ok"];
+    }
 $encoding = mysqli_character_set_name($db["read_write"]);
-?><tr><td><?php echo str_replace("?", "MySQL", $lang["softwareversion"]); ?></td><td><?php echo $mysqlversion . "&ensp;&ensp;" . str_replace("%encoding", $encoding, $lang["client-encoding"]); ?></td><td><b><?php echo $result?></b></td></tr><?php
+if(!(isset($mysql_charset) && is_string($mysql_charset) && trim($mysql_charset) !== ""))
+    {
+    $encoding = sql_value("
+        SELECT default_character_set_name AS `value`
+          FROM information_schema.SCHEMATA
+         WHERE `schema_name` = '" . escape_check($mysql_db) . "';", $encoding);
+    }
+?>
+<tr>
+    <td><?php echo str_replace("?", "MySQL", $lang["softwareversion"]); ?></td>
+    <td><?php echo $mysqlversion . "&ensp;&ensp;" . str_replace("%encoding", $encoding, $lang["client-encoding"]); ?></td>
+    <td><b><?php echo $result; ?></b></td>
+</tr><?php
 
 # Check GD installed
 if (function_exists("gd_info"))
