@@ -54,11 +54,6 @@ if (getval("newfield","")!="" && enforcePostRequest(false))
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
     }
     
-if(getval("deleted","")!="")
-    {
-    $error_text=$lang["admin_field_deleted"] . "# " . htmlspecialchars(getval("deleted",""));   
-    }
-    
     
     
 function addColumnHeader($orderName, $labelKey)
@@ -219,40 +214,6 @@ for ($n=0;$n<count($fields);$n++)
             
                 <a href="<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
                 <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
-                <a href="#"
-                   onClick='
-                        event.preventDefault();
-
-                        if(confirm("<?php echo $lang["confirm-deletion"]; ?>"))
-                            {
-                            var post_data = {
-                                ajax: true,
-                                ref: <?php echo urlencode($fields[$n]['ref']); ?>,
-                                delete: <?php echo urlencode($fields[$n]['ref']); ?>,
-                                confirmdelete: true,
-                                <?php echo generateAjaxToken('delete_metadata_field'); ?>
-                            };
-
-                            jQuery.post("<?php echo $baseurl; ?>/pages/admin/admin_resource_type_field_edit.php", post_data, function(response) {
-                                if(response.deleted)
-                                    {
-                                    var redirect_link = document.createElement("a");
-                                    redirect_link.href = "<?php echo $baseurl; ?>/pages/admin/admin_resource_type_fields.php?deleted=" + response.deleted + "&restypefilter=<?php echo urlencode($restypefilter)?>&field_order_by=<?php echo urlencode($field_order_by)?>&field_sort=<?php echo urlencode($field_sort)?>&find=<?php echo urlencode($find)?>";
-                                    CentralSpaceLoad(redirect_link, true);
-                                    }
-                                else
-                                    {
-                                    styledalert("<?php echo $lang["error"]; ?>",response.message);
-                                    }
-                            }, "json"); 
-
-                            return false;
-                            }
-                        else
-                            {
-                            return false;
-                            }
-                    '><?php echo LINK_CARET ?><?php echo $lang["action-delete"] ?></a>
                  
             </div>
         </td>
