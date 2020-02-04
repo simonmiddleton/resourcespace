@@ -84,17 +84,17 @@ else
     $result = $lang["status-ok"];
     }
 $encoding = mysqli_character_set_name($db["read_write"]);
-if(!(isset($mysql_charset) && is_string($mysql_charset) && trim($mysql_charset) !== ""))
-    {
-    $encoding = sql_value("
-        SELECT default_character_set_name AS `value`
-          FROM information_schema.SCHEMATA
-         WHERE `schema_name` = '" . escape_check($mysql_db) . "';", $encoding);
-    }
+$encoding_str = str_replace("%encoding", $encoding, $lang["client-encoding"]);
+$db_encoding = sql_value("
+    SELECT default_character_set_name AS `value`
+      FROM information_schema.SCHEMATA
+     WHERE `schema_name` = '" . escape_check($mysql_db) . "';", $lang["unknown"]);
+$db_encoding_str = str_replace("%encoding", $db_encoding, $lang["db-default-encoding"]);
+$encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str}";
 ?>
 <tr>
     <td><?php echo str_replace("?", "MySQL", $lang["softwareversion"]); ?></td>
-    <td><?php echo $mysqlversion . "&ensp;&ensp;" . str_replace("%encoding", $encoding, $lang["client-encoding"]); ?></td>
+    <td><?php echo $encoding_output; ?></td>
     <td><b><?php echo $result; ?></b></td>
 </tr><?php
 
