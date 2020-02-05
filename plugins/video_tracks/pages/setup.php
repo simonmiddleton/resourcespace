@@ -17,7 +17,7 @@ $video_tracks_output_formats=unserialize(base64_decode($video_tracks_output_form
 $errorfields=array();
 
 // Save column/field mappings here as we can't do it using standard plugin functions
-if (getval("submit","")!="" || getval("save","")!="")
+if (getval("submit","")!="" || getval("save","")!="" && !$execution_lockout)
 	{
 	// Decode the mappings variable so we can amend it
 	
@@ -46,56 +46,70 @@ if (getval("submit","")!="" || getval("save","")!="")
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Now we need to  add all the mappings
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 $video_trackshtml="<div class='Question'>
 <h3>" .  $lang['video_tracks_options'] . "</h3>
 <table id='video_tracks_optiontable'>
 <tr><th>
-	<strong>" . $lang['video_tracks_option_name'] . "</strong>
-	</th><th>
-	<strong>" . $lang['video_tracks_command'] . "</strong>
-	</th><th>
-	<strong>" . $lang['file_extension_label'] . "</strong>
-	</th>
-	</tr>";
+    <strong>" . $lang['video_tracks_option_name'] . "</strong>
+    </th><th>
+    <strong>" . $lang['video_tracks_command'] . "</strong>
+    </th><th>
+    <strong>" . $lang['file_extension_label'] . "</strong>
+    </th>
+    </tr>";
 
 $fields=sql_query('select * from resource_type_field order by title, name');
 
-foreach ($video_tracks_output_formats as $video_tracks_output_index=>$video_tracks_output_option)
-	{
-	$rowid = "row" . htmlspecialchars($video_tracks_output_index);
-	$video_trackshtml.="<tr id ='" . $rowid . "'><td>
-	<input type='text' name='video_tracks_index[]' value='" . $video_tracks_output_index . "' />
-	</td><td>
-	<input type='text' name='video_tracks_command[]' value='" . $video_tracks_output_option["command"] . "' />
-	</td><td>
-	<input type='text' name='video_tracks_extension[]' value='" . $video_tracks_output_option["extension"] . "' />
-	</td>
-	</tr>";
-	}
-$video_trackshtml.="<tr id ='newrow'><td>
-<input type='text' name='video_tracks_index[]' value='' />
-</td><td>
-<input type='text' name='video_tracks_command[]' value='' />
-</td><td>
-<input type='text' name='video_tracks_extension[]' value='' />
-</td>
-</tr>
-</table>
-<a onclick='addVideo_tracksOptionRow()'>" . $lang["action-add-new"] . "</a>
-</div>
+$inputconfig = $execution_lockout ? " disabled=true " : "";
 
-<script>
- function addVideo_tracksOptionRow() {
- 
-            var table = document.getElementById('video_tracks_optiontable');
- 
-            var rowCount = table.rows.length;
-            var row = table.insertRow(rowCount);
- 
-            row.innerHTML = document.getElementById('newrow').innerHTML;
-        }
-</script>
-";
+foreach ($video_tracks_output_formats as $video_tracks_output_index=>$video_tracks_output_option)
+    {
+    $rowid = "row" . htmlspecialchars($video_tracks_output_index);
+    $video_trackshtml .="<tr id ='" . $rowid . "'><td>
+    <input type='text' name='video_tracks_index[]' value='" . $video_tracks_output_index . "'" . $inputconfig . " />
+    </td><td>
+    <input type='text' name='video_tracks_command[]' value='" . $video_tracks_output_option["command"] . "'" . $inputconfig . " />
+    </td><td>
+    <input type='text' name='video_tracks_extension[]' value='" . $video_tracks_output_option["extension"] . "'" . $inputconfig . " />
+    </td>
+    </tr>";
+    }
+if($execution_lockout)
+    {
+    $video_trackshtml .= "
+    </td>
+    </tr>
+    </table><div class='PageInformal'><h3>" .  $lang['video_tracks_config_blocked'] . "</h3></div>";
+    }
+else
+    {
+    $video_trackshtml.="<tr id ='newrow'><td>
+    <input type='text' name='video_tracks_index[]' value='' />
+    </td><td>
+    <input type='text' name='video_tracks_command[]' value='' />
+    </td><td>
+    <input type='text' name='video_tracks_extension[]' value='' />
+    </td>
+    </tr>
+    </table>
+    <a onclick='addVideo_tracksOptionRow()'>" . $lang["action-add-new"] . "</a>
+    </div>
+
+    <script>
+    function addVideo_tracksOptionRow() {
+
+                var table = document.getElementById('video_tracks_optiontable');
+
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+
+                row.innerHTML = document.getElementById('newrow').innerHTML;
+            }
+    </script>
+    ";
+    }
 
 $page_def[] = config_add_html("<h2>" . $lang['video_tracks_intro'] . "</h2>");
 $page_def[] = config_add_boolean_select('video_tracks_convert_vtt', $lang['video_tracks_convert_vtt']);
