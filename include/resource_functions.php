@@ -3915,259 +3915,48 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 		}
 	else
 		{
-        # An edit filter has been set. Perform edit filter processing to establish if the user can edit this resource.
-        		
+		# An edit filter has been set. Perform edit filter processing to establish if the user can edit this resource.
+		
 		# Always load metadata, because the provided metadata may be missing fields due to permissions.
-        $metadata=get_resource_field_data($resource,false,false);
-        
-        $filter = strtolower($usereditfilter);
-        $filtered_array = parse_edit_filter_to_array($filter);
-        $final_result = filter_match_array($filtered_array, $metadata);
-        $match = ($final_result === true ? 2 : 1);
-
-        if ($match == 1) { return false; } # The match for this field was incorrect, always fail in this event.
-        if ($match == 2) { $gotmatch = true; } # The match for this field was correct.
+		$metadata=get_resource_field_data($resource,false,false);
+				
+		for ($n=0;$n<count($metadata);$n++)
+			{
+			$name=$metadata[$n]["name"];
+			$value=$metadata[$n]["value"];			
+			if ($name!="")
+				{
+				$match=filter_match(trim($usereditfilter),$name,$value);
+				if ($match==1) {return false;} # The match for this field was incorrect, always fail in this event.
+				if ($match==2) {$gotmatch=true;} # The match for this field was correct.
+				}
+			}
 
 		# Also check resource type, if specified.
 		if (strpos($usereditfilter,"resource_type")!==false)
 			{
-			$resource_type = $resourcedata['resource_type'];
-			$match = filter_match(trim($usereditfilter),"resource_type",$resource_type);
-			if ($match == 1) { return false; } # Resource type was specified but the value did not match. Disallow edit access.
-			if ($match == 2) { $gotmatch = true; }
-			}
+			$resource_type=$resourcedata['resource_type'];
+
+			$match=filter_match(trim($usereditfilter),"resource_type",$resource_type);
+			if ($match==1) {return false;} # Resource type was specified but the value did not match. Disallow edit access.
+			if ($match==2) {$gotmatch=true;}
+			}			
 		}
 	
-        if ($gotmatch) 
-            {
-            $gotmatch = !hook("denyafterusereditfilter");
-            }
-        
-        if(checkperm("ert" . $resourcedata['resource_type']))
-            {
-            return true;
-            }
+    if ($gotmatch)
+        {
+	    $gotmatch = !hook("denyafterusereditfilter");
+	    }
+    
+    if(checkperm("ert" . $resourcedata['resource_type']))
+        {
+    return true;
+        }
 
 	# Default after all filter operations, allow edit.
-    return $gotmatch;
-    
-    }
-    
-/* PARSE EDIT FILTER - Transforms $filter like 'country|emotion=France|thoughtful' into an array */
+	return $gotmatch;
+	}
 
-function parse_edit_filter_to_array($filter)
-    {        
-    $cleaned_array = array();
-    $temp_array = array();
-
-    # First seperate that colon, if not add to temp array anyway
-    if(strpos($filter, ';') !== false)
-        { 
-        $explode_colon = explode(';', $filter);
-        foreach($explode_colon as $string)
-            {
-            $temp_array[] = $string;
-            }
-        }
-    else
-        {
-        $temp_array[] = $filter;
-        }
-    foreach($temp_array as $key => $item_string) 
-        {
-        $part_array = array();
-        $equals_num = substr_count($item_string, '=');
-        
-        if(strpos($item_string, '!=') !== false) 
-            { 
-            $the_symbol = '!='; 
-            } 
-        else 
-            { 
-            $the_symbol = '='; 
-            }
-
-        $dash_num = substr_count($item_string, '|');
-
-        # Work on the lobsided dashes
-        if($dash_num > 0) 
-            {
-            $exploded_equals = explode($the_symbol, $item_string);
-
-            # Now work on the | and whether it's one sided or not (country|emotion=Albania|Brazil|Happy)
-            $dashes_left_num = substr_count($exploded_equals[0], '|');
-            $dashes_right_num = substr_count($exploded_equals[1], '|');  
-
-            # Dashes            
-            if($dashes_left_num > 0) 
-                { 
-                $names = explode("|", $exploded_equals[0]); 
-                } 
-            else 
-                { 
-                $names = array($exploded_equals[0]); 
-                }  
-
-            # Now we need to explode the right-hand-side and then match up to the left                
-            if($dashes_right_num > 0) 
-                { 
-                $values = explode("|", $exploded_equals[1]); 
-                } 
-            else 
-                { 
-                $values = array($exploded_equals[1]); 
-                } 
-
-            # So now loop through all the lefts and populate with all the rights                
-            foreach($names as $name) 
-                {
-                foreach($values as $val) 
-                    {
-                    $build_string = $name . $the_symbol . $val;
-                    $part_array[] = $build_string;
-                    }
-                }
-            $cleaned_array[] = $part_array;
-            }
-        else
-            {
-            $cleaned_array[] = array($item_string);
-            }
-        }
-    return $cleaned_array;
-    }
-
-/* FILTER MATCH ARRAY - Match metadata against the parsed filter */
-
-function filter_match_array($filtered_array, $metadata) 
-    {
-    $filtered_array_count = count($filtered_array);
-    $equals_found = array();
-    $not_equals_found = array();
-    $symbols_array = array();
-    
-    # For each of the metadata, test against the array for a match
-    for($n = 0; $n < count($metadata); $n++) 
-        {
-        $name = strtolower($metadata[$n]["name"]);
-        $value = strtolower($metadata[$n]["value"]);
-        foreach($filtered_array as $i => $sub) 
-            {
-            foreach($sub as $item_string) 
-                {
-                if(strpos($item_string, '!=') !== false) 
-                    { 
-                    $the_symbol = '!='; 
-                    } 
-                else 
-                    { 
-                    $the_symbol = '='; 
-                    }
-
-                if($i == 0) 
-                    { 
-                    $symbols_array[0] = $the_symbol; 
-                    }
-                
-                if($i == 1) 
-                    { 
-                    $symbols_array[1] = $the_symbol; 
-                    }
-
-                $explode_item = explode($the_symbol, $item_string);
-                $filter_name = strtolower($explode_item[0]);
-                $filter_value = strtolower($explode_item[1]);
-                if($filter_name == $name && $filter_value == $value) 
-                    { 
-                    $result = 1;
-                    if($the_symbol == '=') 
-                        { 
-                        $equals_found[] = 1; 
-                        } 
-                    else 
-                        { 
-                        $not_equals_found[] = 1; 
-                        }    
-                    } 
-                else 
-                    { 
-                    $result = 0; 
-                    }
-                }
-            }
-        }
-
-    $equals_found_count = count($equals_found);
-    $not_equals_found_count = count($not_equals_found);
-
-    # false === bad, true === good, single/multi
-    $final_result = false;
-
-    # 0
-    if($filtered_array_count == 0) 
-        {
-        $final_result = false;
-        }
-
-    # 1
-    if($filtered_array_count == 1) 
-        {
-        if($symbols_array[0] == '=')
-            {
-            if($equals_found_count == 1) 
-                { 
-                $final_result = true; 
-                }
-            }
-        else
-            {
-            if($equals_found_count >= 0) 
-                { 
-                $final_result = true; 
-                }
-
-            if($not_equals_found_count > 0) 
-                { 
-                $final_result = false; 
-                }
-            }
-        }
-
-    # 2
-    if($filtered_array_count == 2) 
-        {
-        if($symbols_array[0] == '=' && $symbols_array[1] == '=')
-            {
-            if($equals_found_count == 2) 
-                { 
-                $final_result = true; 
-                }
-            }
-        elseif($symbols_array[0] == '=' && $symbols_array[1] == '!=' xor $symbols_array[0] == '!=' && $symbols_array[1] == '=')
-            {
-            if($equals_found_count >= 0) 
-                { 
-                $final_result = true; 
-                }
-            if($not_equals_found_count > 0) 
-                {
-                $final_result = false; 
-                }
-            if($equals_found_count == 0 && $not_equals_found_count == 0) 
-                { 
-                $final_result = false; 
-                }
-            }
-        else
-            {
-            if($equals_found_count == 0 && $not_equals_found_count == 0) 
-                { 
-                $final_result = true; 
-                }
-            }
-        }
-    return $final_result;
-    }
 
 function filter_match($filter,$name,$value)
 	{
