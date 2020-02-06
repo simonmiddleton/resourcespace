@@ -553,7 +553,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
       
    # Save related resource field if value for Related input field is autosaved, or if form has been submitted by user
-    if (($autosave_field=="") || ($autosave_field=="Related"))
+    if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
          # save related resources field
          sql_query("delete from resource_related where resource='$ref' or related='$ref'"); # remove existing related items
