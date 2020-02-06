@@ -385,8 +385,9 @@ function set_user_collection($user,$collection)
 if (!function_exists("create_collection")){	
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
+    debug_function_call("create_collection", func_get_args());
+
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$allowchanges = {$allowchanges}, \$cant_delete = {$cant_delete}, \$ref = {$ref}, \$public = {$public}, \$categories = " . str_replace(PHP_EOL, "", print_r($categories, true)));
 	if($username==$anonymous_login && $anonymous_user_session_collection)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
