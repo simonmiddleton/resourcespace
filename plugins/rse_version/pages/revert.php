@@ -9,6 +9,15 @@ include_once '../../../include/image_processing.php';
 include_once '../../../include/collections_functions.php';
 include_once '../include/rse_version_functions.php';
 
+if(is_valid_revert_state_request())
+    {
+    process_revert_state_form();
+    include "../../../include/header.php";
+    render_revert_state_form();
+    include "../../../include/footer.php";
+    exit();
+    }
+
 $ref=getvalescaped("ref","");
 
 # Load log entry
@@ -19,16 +28,6 @@ if (count($log)==0)
     }
 $log=$log[0];
 $resource=$log["resource"];
-
-if(is_valid_revert_state_request())
-    {
-    process_revert_state_form();
-    include "../../../include/header.php";
-    render_revert_state_form();
-    include "../../../include/footer.php";
-    exit();
-    }
-
 
 # Check edit permission.
 if (!get_edit_access($resource))
