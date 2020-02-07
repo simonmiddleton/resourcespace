@@ -868,8 +868,17 @@ function email_resource_request($ref,$details)
     # E-mails a basic resource request for a single resource (posted) to the team
     # (not a managed request)
     
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days;
     
+    if(intval($user_dl_limit) > 0)
+        {
+        $download_limit_check = get_user_downloads($userref,$user_dl_days);
+        if($download_limit_check >= $user_dl_limit)
+            {
+            $details = str_replace(array("%%DOWNLOADED%%","%%LIMIT%%"),array($download_limit_check,$user_dl_limit),$lang['download_limit_request_text']) . "\n" . $details;
+            }
+        }
+
     $resourcedata=get_resource_data($ref);
     $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
     if (!file_exists($templatevars['thumbnail'])){

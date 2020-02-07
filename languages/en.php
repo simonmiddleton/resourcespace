@@ -2118,7 +2118,8 @@ $lang['group_download_limit_title'] = "Resource download limit. Set to 0 for no 
 $lang['group_download_limit_period'] = "Download limit period (limit in last X days). Set to 0 for absolute download limit";
 $lang['download_limit_error'] = "Your download limit has been reached.";
 $lang['download_limit_collection_error'] = "This collection download would exceed your download limit.";
-$lang['download_limit_summary'] = "You have downloaded %%DOWNLOADED%% resources.";
+$lang['download_limit_summary'] = "You have downloaded %%DOWNLOADED%%/%%LIMIT%% resources.";
+$lang['download_limit_request_text'] = "Download limit reached: %%DOWNLOADED%%/%%LIMIT%%";
 
 # User group management edit
 $lang['page-title_user_group_management_edit'] = "Edit user group";
