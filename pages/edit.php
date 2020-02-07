@@ -565,6 +565,10 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             // Create new collection if necessary
                             if($collection_add=="new") 
                                 {
+                                if($uploadparams["entercolname"] == "")
+                                    {
+                                    $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    }
                                 $collection_add = create_collection($userref,$uploadparams["entercolname"]);    
                                 }
                             if(is_numeric($collection_add))
