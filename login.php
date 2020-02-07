@@ -135,6 +135,7 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
 
     # Also blank search related cookies
     rs_setcookie('search', '');
+    rs_setcookie('search_form_submit', '');
     rs_setcookie('saved_offset', '');
     rs_setcookie('saved_archive', '');
     rs_setcookie('restypes', '');

@@ -429,7 +429,7 @@ elseif($restypes=='')
 
     if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"&nbsp;&nbsp;".$lang['clearbutton']."&nbsp;&nbsp;\" onClick=\"";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"&nbsp;&nbsp;".$lang['clearbutton']."&nbsp;&nbsp;\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
 
         if($simple_search_pills_view)
             {
