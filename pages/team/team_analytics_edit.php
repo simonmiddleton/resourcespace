@@ -9,6 +9,7 @@ include '../../include/authenticate.php';
 include_once '../../include/collections_functions.php';
 
 $ref=getvalescaped("ref","",true);
+$print=(getval("print","")!=""); # Print mode?
 
 if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
     {
@@ -81,13 +82,41 @@ if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(g
 
 # Define a list of activity types for which "object_ref" refers to the resource ref and therefore collection filtering will work.
 $resource_activity_types=array("Add resource to collection","Create resource","E-mailed resource","Print story","Removed resource from collection","Resource download","Resource edit","Resource upload","Resource view");
-    
-include dirname(__FILE__)."/../../include/header.php";
+
+if ($print)
+    {
+    include_once("../../include/render_functions.php");
+
+    ?><html><head>
+        <style>
+        a,.CollapsibleSectionHead {display:none;}
+        </style>
+
+    <link href="<?php echo $baseurl ?>/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
+    <link href="<?php echo $baseurl ?>/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
+
+    <script src="<?php echo $baseurl ?>/lib/js/jquery-3.3.1.min.js?css_reload_key=152"></script>
+    <script src="<?php echo $baseurl ?>/lib/js/jquery-ui-1.12.1.min.js?css_reload_key=152" type="text/javascript"></script>
+    <!-- FLOT for graphs -->
+    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.js"></script> 
+    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.time.js"></script> 
+    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.pie.js"></script>
+    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.tooltip.min.js"></script>
+
+    </head><body onload="window.setTimeout('window.print();',3000);"><?php
+    }
+else
+    {
+    include dirname(__FILE__)."/../../include/header.php";
+    }
 ?>
 
 
 
-<div class="BasicsBox"><p><a href="<?php echo $baseurl_short ?>pages/team/team_analytics.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK . $lang["rse_analytics"]?></a></p>
+<div class="BasicsBox"><p><a href="<?php echo $baseurl_short ?>pages/team/team_analytics.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK . $lang["rse_analytics"]?></a><br />
+<a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
+
+</p>
 
 <h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
 
@@ -219,6 +248,8 @@ for ($n=0;$n<count($list);$n++)
 </div>
 
 <div class="ReportSheet">
+<div style="page-break-inside: avoid;">
+
 <?php
 
 # ------------------ Draw selected graphs
@@ -290,7 +321,7 @@ for ($n=0;$n<count($types);$n++)
                 }
             ?>
             
-            <?php if ($activity_type=="") { ?><hr style="clear:both;" /><?php } ?>
+            <?php if ($activity_type=="") { ?></div><hr style="clear:both;" /><div style="page-break-inside: avoid;"><?php } ?>
             <script>
             jQuery(function () {
             <?php if ($show_breakdown) { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pie&<?php echo $graph_params ?>");<?php } ?>
@@ -307,6 +338,7 @@ for ($n=0;$n<count($types);$n++)
         }
 if ($counter==0) {echo "<p>" . $lang["report_no_matching_activity_types"] . "</p>";}
 ?>
+</div>
 <div style="clear:both;"> </div>
 </div>
 
@@ -316,4 +348,11 @@ if ($counter==0) {echo "<p>" . $lang["report_no_matching_activity_types"] . "</p
 
 </div>
 <?php
-include dirname(__FILE__)."/../../include/footer.php";
+if ($print)
+    {
+    ?></body></html><?php
+    }
+else
+    {
+    include dirname(__FILE__)."/../../include/footer.php";
+    }
