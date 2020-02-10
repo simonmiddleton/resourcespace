@@ -79,7 +79,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
-           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template;
+           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -480,7 +480,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
             // If all good so far, then save the data
 			if(
-                !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES)
+                !in_array($fields[$n]['type'], $NODE_FIELDS)
                 && str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
             )
 				{
