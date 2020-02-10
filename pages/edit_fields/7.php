@@ -32,9 +32,6 @@ foreach($selected_nodes as $node)
     if(get_node($node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
         {
         continue;
-        } else
-        {
-        break;    
         }
 
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
