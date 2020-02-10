@@ -52,6 +52,11 @@
 	width:20%;
 	max-width:20%;
 }
+.ProposeChangesQuestion .FormHelp {
+    clear: left;
+    margin: 0 0 10px 295px;
+    padding-top: 5px;
+}
 @media(max-width:1120px) {
     .ProposeChangesLabel, .ProposeChangesCurrent, .ProposeChangesProposed {
         width:80%;
