@@ -3940,23 +3940,22 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 			$match=filter_match(trim($usereditfilter),"resource_type",$resource_type);
 			if ($match==1) {return false;} # Resource type was specified but the value did not match. Disallow edit access.
 			if ($match==2) {$gotmatch=true;}
-			}			
+			}
 		}
-	
-    if ($gotmatch)
-        {
-	    $gotmatch = !hook("denyafterusereditfilter");
-	    }
-    
-    if(checkperm("ert" . $resourcedata['resource_type']))
-        {
-    return true;
-        }
+
+        if ($gotmatch) 
+            {
+            $gotmatch = !hook("denyafterusereditfilter");
+            }
+        
+        if(checkperm("ert" . $resourcedata['resource_type']))
+            {
+            return true;
+            }
 
 	# Default after all filter operations, allow edit.
-	return $gotmatch;
-	}
-
+    return $gotmatch;
+    }
 
 function filter_match($filter,$name,$value)
 	{
