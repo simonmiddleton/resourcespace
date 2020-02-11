@@ -2007,7 +2007,8 @@ function get_collection_log($collection, $fetchrows = -1)
         }
 
 	return sql_query("
-                 SELECT c.date,
+                 SELECT c.ref,
+                        c.date,
                         u.username,
                         u.fullname,
                         c.type,
@@ -2019,7 +2020,7 @@ function get_collection_log($collection, $fetchrows = -1)
         LEFT OUTER JOIN user AS u ON u.ref = c.user
         LEFT OUTER JOIN resource AS r ON r.ref = c.resource
                   WHERE collection = '{$collection}'
-               ORDER BY c.date DESC", false, $fetchrows);
+               ORDER BY c.ref DESC", false, $fetchrows);
 	}
 	
 function get_collection_videocount($ref)

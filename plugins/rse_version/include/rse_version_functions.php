@@ -4,12 +4,10 @@ namespace RseVersion;
 function is_valid_revert_state_request()
     {
     $collection = (int) getval("collection", 0, true);
-    $date = getval("date", "");
-    $resource = (int) getval("resource", 0, true);
+    $ref        = (int) getval("ref", 0, true);
 
-    if(
-        ($collection > 0 && $resource > 0 && trim($date) != "")
-        || ($collection > 0 && $resource == 0 && trim($date) != ""))
+    // Reverting state is done for collections only
+    if($collection > 0 && $ref > 0)
         {
         return true;
         }
@@ -23,13 +21,9 @@ function render_revert_state_form()
     global $lang, $baseurl_short;
 
     $collection = (int) getval("collection", 0, true);
-    $date = getval("date", "");
-    $resource = (int) getval("resource", 0, true);
+    $ref        = (int) getval("ref", 0, true);
 
-    $change_summary = str_replace(
-        array("%COLLECTION", "%DATE", "%RESOURCE"),
-        array($collection, nicedate($date, true), $resource), 
-        $lang['rse_version_rstate_changes']);
+    $change_summary = str_replace("%COLLECTION", $collection, $lang['rse_version_rstate_changes']);
     ?>
     <div class="BasicsBox">
         <p>
@@ -43,8 +37,7 @@ function render_revert_state_form()
               id="rse_version_revert_state_form"
               action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onsubmit="CentralSpacePost(this, true); return false;">
             <input type="hidden" name="collection" value="<?php echo $collection; ?>">
-            <input type="hidden" name="date" value="<?php echo $date; ?>">
-            <input type="hidden" name="resource" value="<?php echo $resource; ?>">
+            <input type="hidden" name="ref" value="<?php echo $ref; ?>">
             <input type="hidden" name="action" value="revert_state">
             <?php generateFormToken("rse_version_revert_state_form"); ?>
             <div class="QuestionSubmit">
@@ -67,33 +60,33 @@ function process_revert_state_form()
         }
 
     $collection = (int) getval("collection", 0, true);
-    $date = getval("date", "");
-    $resource = (int) getval("resource", 0, true);
+    $ref        = (int) getval("ref", 0, true);
 
-    revert_collection_state($collection, $date, $resource);
+    revert_collection_state($collection, $ref);
 
     return;
     }
 
 
-function revert_collection_state($collection, $date, $resource)
+function revert_collection_state($collection, $ref)
     {
     global $baseurl;
 
     $collection_escaped = escape_check($collection);
-    $date_escaped = escape_check($date);
-    $resource_escaped = escape_check($resource);
+    $ref_escaped = escape_check($ref);
 
     $logs = sql_query("
-          SELECT `date`, `type`, resource
+          SELECT `ref`, `type`, resource
             FROM collection_log
            WHERE collection = '{$collection_escaped}'
              AND (
                 `type` = 'a' AND BINARY `type` <> BINARY UPPER(`type`)
-                OR `type` = 'r'
+                # Ignore LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES (R) as individual logs will be available
+                # as LOG_CODE_COLLECTION_REMOVED_RESOURCE (r)
+                OR `type` = 'r' AND BINARY `type` <> BINARY UPPER(`type`)
              )
-             AND `date` < '{$date_escaped}'
-        ORDER BY `date` ASC;
+             AND `ref` < '{$ref_escaped}'
+        ORDER BY `ref` ASC;
     ");
 
     if(count($logs) == 0)
@@ -105,7 +98,7 @@ function revert_collection_state($collection, $date, $resource)
 
     foreach($logs as $log)
         {
-        if($log["date"] == $date && $log["resource"] == $resource)
+        if($log["ref"] == $ref)
             {
             break;
             }

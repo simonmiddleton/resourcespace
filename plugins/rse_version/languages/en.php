@@ -14,4 +14,4 @@ $lang["rse_version_configuration"]  = "Resource Versioning (rse_version) configu
 $lang["rse_version_override_groups"]= "API calls by the following user groups can bypass the preservation of the existing file when replacing a resource";
 $lang["rse_version_log_not_found"]  = "Log entry not found";
 $lang["rse_version_revert_state"]   = "Revert state";
-$lang["rse_version_rstate_changes"] = "Reverting state for collection #%COLLECTION by replaying events up to, but not including '%DATE' for resource #%RESOURCE.";
+$lang["rse_version_rstate_changes"] = "Reverting state for collection #%COLLECTION by replaying events up to, but not including selected record.";
