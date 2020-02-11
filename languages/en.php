@@ -2636,8 +2636,6 @@ $lang["report-graph-by-summary"]="summary";
 $lang["update_report"]="Update report";
 $lang["save_report"]="Save report";
 $lang["save_report_as"]="Save report as...";
-$lang["print_report"]="Print report";
-
 
 $lang["report_graph_types"]="Graph types";
 $lang["report_no_data"]="No data for the selected criteria";

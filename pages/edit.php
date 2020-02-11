@@ -1633,7 +1633,7 @@ if($tabs_on_edit)
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;
-  if (count($fields)>0 && $fields[0]["tab_name"]!="")
+  if (count($fields)>0 && ($n==0 || $fields[0]["tab_name"]!=""))
     { 
     $extra="";
     $tabname="";
@@ -1644,14 +1644,15 @@ if($tabs_on_edit)
       $value=$fields[$n]["value"];
 
             # draw new tab?
-      if ($tabname!=$fields[$n]["tab_name"] && is_field_displayed($fields[$n]))
+      if ($n==0 || ($tabname!=$fields[$n]["tab_name"] && is_field_displayed($fields[$n])))
       {
+        $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
         if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
         $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
-        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  i18n_get_translated($fields[$n]["tab_name"]) . "</a></div>";
+        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  i18n_get_translated($newtabname) . "</a></div>";
         $tabcount++;
-        $tabname=$fields[$n]["tab_name"];
+        $tabname=$newtabname;
      }
   }
 
