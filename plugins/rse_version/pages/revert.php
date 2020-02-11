@@ -50,9 +50,9 @@ $b_fixed_field=in_array($log['resource_type_field_type'],$FIXED_LIST_FIELD_TYPES
 // resolve node changes
 if($b_fixed_field)
     {
-
+    $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
     $nodes_available=array();
-    foreach(get_nodes($log['resource_type_field']) as $available_node)
+    foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
         {
         $nodes_available[$available_node['ref']]=$available_node['name'];
         }
