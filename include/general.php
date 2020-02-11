@@ -498,7 +498,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     global $view_title_field;
 
     # Find the resource type.
-    if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
+    if (is_null($originalref)) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
     $rtype = sql_value("select resource_type value FROM resource WHERE ref='" . escape_check($originalref) . "'",0);
 
     # If using metadata templates, 
