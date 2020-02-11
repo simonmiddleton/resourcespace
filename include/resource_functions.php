@@ -2685,8 +2685,7 @@ function write_metadata($path, $ref, $uniqid="")
             $command = stripMetadata(null) . ' ';
             }
 
-        //$write_to = get_exiftool_fields($resource_type); # Returns an array of exiftool fields for the particular resource type, which are basically fields with an 'exiftool field' set.
-        $metadata_all=get_resource_field_data($ref, false,true,-1,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
+        $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
         $read_only_fields = array_column(array_filter($metadata_all, function($value) {
             return ((bool) $value['read_only'] == true);
         }), 'ref');
@@ -5375,7 +5374,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                 debug(" - checking field values for last resource " . $lastedited . " field id: " . $locked_field);
                 if(!isset($last_fields))
                     {
-                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),-1,"",$tabs_on_edit);
+                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
                     }
                 
                 $addkey = array_search($locked_field, array_column($last_fields, 'ref'));

@@ -447,7 +447,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 }
                                 
                             // Load resource metadata
-                            $fields=get_resource_field_data($ref,$multiple,!hook("customgetresourceperms"),-1,"",$tabs_on_edit);
+                            $fields=get_resource_field_data($ref,$multiple,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
                             $all_selected_nodes = get_resource_nodes($ref);
                             
                             // Update resource data with locked resource data from last edited resource
@@ -1515,7 +1515,7 @@ if (getval("copyfrom","")!="")
   if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
     {
     $use=$copyfrom;
-    $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
+    $original_fields=get_resource_field_data($ref,$multiple,true,NULL,"",$tabs_on_edit);
     $original_nodes = get_resource_nodes($ref);
     }
   }
@@ -1523,7 +1523,7 @@ if (getval("copyfrom","")!="")
 if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
     {
     $use             = $metadatatemplate;
-    $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
+    $original_fields = get_resource_field_data($ref, $multiple, true, NULL, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
     copyAllDataToResource($use, $ref);
     }

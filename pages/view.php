@@ -308,7 +308,7 @@ if(isset($related_type_show_with_data)) {
 }
 
 # Load field data
-$fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),-1,($k!="" && !$internal_share_access),$use_order_by_tab_view);
+$fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
 
 # Load edit access level (checking edit permissions - e0,e-1 etc. and also the group 'edit filter')
@@ -1843,7 +1843,7 @@ function RenderPushedMetadata($resource)
 	{
 	global $k,$view_title_field,$lang, $internal_share_access;
 	$ref=$resource["ref"];
-	$fields=get_resource_field_data($ref,false,!hook("customgetresourceperms"),-1,($k!="" && !$internal_share_access),false);
+	$fields=get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
 	$access=get_resource_access($ref);
 	?>
 	<div class="RecordBox">
