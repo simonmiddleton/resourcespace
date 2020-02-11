@@ -29,7 +29,7 @@ if(!isset($selected_nodes))
 foreach($selected_nodes as $node)
     {
     $node_data = array();
-    if(get_node($node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
+    if($node == "" || (get_node($node, $node_data) && $node_data["resource_type_field"] != $field["ref"]))
         {
         continue;
         }
