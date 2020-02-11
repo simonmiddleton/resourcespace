@@ -6,21 +6,28 @@ function HookVideo_spliceAllInitialise()
     config_register_core_fieldvars("Video splice plugin",$videosplice_fieldvars);
     }
 
-function HookVideo_spliceAllRender_actions_add_collection_option($top_actions,$options){
+function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, array $options){
 	global $collection,$count_result,$lang,$pagename,$baseurl_short;
-	
-	$c=count($options);
-	
+
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
 	if ($pagename=="collections" && $count_result!=0)
 		{
-		$data_attribute['url'] = sprintf('%splugins/video_splice/pages/splice.php?collection=%s',
-            $baseurl_short,
-            urlencode($collection)
+        $option = array(
+            "value" => "video_splice",
+            "label" => $lang["action-splice"],
+            "data_attr" => array(
+                "url" => generateURL("{$baseurl_short}plugins/video_splice/pages/splice.php", array("collection" => $collection)),
+            ),
+            "category" => ACTIONGROUP_ADVANCED
         );
-        $options[$c]['value']='video_splice';
-		$options[$c]['label']=$lang["action-splice"];
-		$options[$c]['data_attr']=$data_attribute;
-		
+
+        $options[] = $option;
+
 		return $options;
 	}
 }
