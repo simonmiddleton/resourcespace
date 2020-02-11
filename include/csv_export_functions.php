@@ -33,7 +33,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             $resources_fields_data[$resource['ref']]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
             }
 
-        foreach(get_resource_field_data($resource['ref'], false, true, -1, '' != getval('k', '')) as $field_data)
+        foreach(get_resource_field_data($resource['ref'], false, true, NULL, '' != getval('k', '')) as $field_data)
             {
             // If $personal=true, return personal_data fields only.
             // If $alldata=false, return only fields marked as 'Include in CSV export'

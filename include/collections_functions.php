@@ -3070,7 +3070,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
         else
             {
             // External shares should take into account fields that are not meant to show in that case
-            $fields = get_resource_field_data($ref, false, true, -1, true);
+            $fields = get_resource_field_data($ref, false, true, NULL, true);
             }
         $commentdata=get_collection_resource_comment($ref,$collection);
         if (count($fields)>0)
@@ -3142,7 +3142,7 @@ function collection_download_process_data_only_types(array $result, $id, $collec
                 'resource_type_name' => get_resource_type_name($result[$n]['resource_type'])
             );
 
-            $metadata = get_resource_field_data($result[$n]['ref'], false, true, -1, '' != $k);
+            $metadata = get_resource_field_data($result[$n]['ref'], false, true, NULL, '' != $k);
 
             foreach($metadata as $metadata_field)
                 {
