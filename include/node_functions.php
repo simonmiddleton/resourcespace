@@ -216,7 +216,7 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', 
     $use_count = false, $order_by_translated_name = false)
     {
-    debug("get_nodes(resource_type_field = {$resource_type_field}, parent = {$parent}, recursive = {$recursive}, offset = {$offset}, rows = {$rows}, name = {$name}, use_count = {$use_count}, order_by_translated_name = {$order_by_translated_name});");
+    debug_function_call("get_nodes", func_get_args());
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
 

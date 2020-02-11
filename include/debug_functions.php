@@ -63,6 +63,12 @@
 */
 function debug_function_call($name, array $args)
     {
+    global $debug_log, $debug_log_override;
+    if(!$debug_log && !$debug_log_override)
+        {
+        return false;
+        }
+
     $stringify = function($value)
         {
         if(is_bool($value))
