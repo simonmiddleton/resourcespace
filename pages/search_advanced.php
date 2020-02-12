@@ -270,7 +270,7 @@ else
 	$button_reset = "<input name=\"resetform\" class=\"resetform\" type=\"submit\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "')\" value=\"". $lang["clearbutton"] . "\" />";
 		
 	$html= '
-	   	<div class="QuestionSubmit">
+	   	<div class="QuestionSubmit QuestionSticky">
 	   	<label for="buttons"> </label>
 	   	{button1}
 	   	&nbsp;
