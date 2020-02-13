@@ -50,7 +50,7 @@ group by k.ref order by Searches desc
 "
 3,"Resource download summary","
 select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
+(SELECT `value` FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Title', 
 count(*) Downloads 
 from resource_log rl
 join resource r on rl.resource=r.ref
