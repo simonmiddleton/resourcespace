@@ -9,26 +9,35 @@ $modal=(getval("modal","")=="true");
 // -----------------------  Tab calculation -----------------
 $fields_tab_names = array();
 	
-foreach ($fields as $field) {
-	$fields_tab_names[] = $field['tab_name'];
-	$resources_per_tab_name[$field['tab_name']][] = $field['ref'];
-}
+foreach ($fields as $field)
+    {
+    $fieldtabname =  $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
+    $fields_tab_names[] = $fieldtabname;
+    $resources_per_tab_name[$fieldtabname][] = $field['ref'];
+    }
 
 $fields_tab_names = array_values(array_unique($fields_tab_names));
 
 // Clean the tabs by removing the ones that would just be empty:
 $tabs_with_data = array();
-foreach ($fields_tab_names as $tabname) {
-	for ($i = 0; $i < count($fields); $i++) { 
-		
-		$displaycondition = check_view_display_condition($fields, $i);
-	
-		if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$field['hide_when_restricted']))) {
-			$tabs_with_data[] = $tabname;
-		}
+foreach ($fields_tab_names as $tabname)
+    {
+    for ($i = 0; $i < count($fields); $i++)
+        {
+        if (trim($fields[$i]['tab_name']) == "")
+            {
+            $fields[$i]["tab_name"] = $lang["default"];
+            }
 
-	}
-}
+        $displaycondition = check_view_display_condition($fields, $i);
+
+        if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$field['hide_when_restricted'])))
+            {
+            $tabs_with_data[] = $tabname;
+            }
+    	}
+    }
+
 $fields_tab_names = array_intersect($fields_tab_names, $tabs_with_data);
 
 if ($sort_tabs)
