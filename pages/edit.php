@@ -1650,7 +1650,7 @@ if($tabs_on_edit)
         if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
         $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
-        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab();return false;\">" .  i18n_get_translated($newtabname) . "</a></div>";
+        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
         $tabcount++;
         $tabname=$newtabname;
      }
