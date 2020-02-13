@@ -355,19 +355,33 @@ if (!hook('collectionaccessmode')) {
 
 <td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref'] ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
 
-<?php hook('beforecollectiontoolscolumn'); ?>
-	<td class="tools">	
-        <div class="ListTools">
-        <?php
-		hook('legacy_list_tools', '', array($collections[$n]));
-		render_actions($collections[$n], false, false);
-		?>
-		</div>
-	</td>
-	</tr>
-	<input type=hidden name="deleteempty" id="collectiondeleteempty" value="">
-	<?php
+<?php hook('beforecollectiontoolscolumn');
+$action_selection_id = 'collections_action_selection' . $collections[$n]['ref'] ;
+hook('render_collections_list_tools', '', array($collections[$n])); ?>
+<td class="tools">	
+  <div class="ListTools">
+    <?php hook('legacy_list_tools', '', array($collections[$n])); ?>
+    <div class="ActionsContainer">
+      <select class="collectionactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+        <option>
+          <?php echo $lang["actions-select"]?>
+        </option>
+      </select>                 
+    </div>
+  </div>
+</td>
+</tr>
+<script>
+  jQuery('#<?php echo $action_selection_id ?>').bind({
+    mouseenter:function(e){
+      LoadActions('collections','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]['ref'] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"collection_actions"); ?>');
     }
+  }
+                                                    );
+</script>
+<input type=hidden name="deleteempty" id="collectiondeleteempty" value="">
+<?php
+}
 ?>
 </table>
 </div>
