@@ -892,7 +892,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
                 }
             }
-        elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
+        elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
             {hook("search_all_workflow_states_filter");}   
         elseif (count($archive) == 0 || $archive_standard)
             {
@@ -1441,7 +1441,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);
 
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
-            {   
+            {
             $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='" . $fieldref . "'";
             $sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
