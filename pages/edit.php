@@ -1650,7 +1650,7 @@ if($tabs_on_edit)
         if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
         $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
-        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  i18n_get_translated($newtabname) . "</a></div>";
+        $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab();return false;\">" .  i18n_get_translated($newtabname) . "</a></div>";
         $tabcount++;
         $tabname=$newtabname;
      }
@@ -1662,22 +1662,6 @@ if($tabs_on_edit)
    echo "</div><!-- end of TabBar -->";
 }
 
-if ($tabcount>1)
-   {?>
-<script type="text/javascript">
-function SelectTab(tab)
-{
-                // Deselect all tabs
-                <?php for ($n=0;$n<$tabcount;$n++) { ?>
-                 document.getElementById("tab<?php echo $n?>").style.display="none";
-                 document.getElementById("tabswitch<?php echo $n?>").className="Tab";
-                 <?php } ?>
-                 document.getElementById("tab" + tab).style.display="block";
-                 document.getElementById("tabswitch" + tab).className="Tab TabSelected";
-              }
-              </script>
-              <?php
-           }
         }
 
 

@@ -74,7 +74,7 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 		foreach ($fields_tab_names as $tabname) { ?>
 
 			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
-				<a href="#"><?php echo i18n_get_translated($tabname)?></a>
+				<a href="#" onclick="SelectTab();"><?php echo i18n_get_translated($tabname)?></a>
 			</div>
 		
 		<?php 
@@ -82,17 +82,6 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 		} ?>
 
 	</div> <!-- end of TabBar -->
-	<script type="text/javascript">
-	function Select<?php echo ($modal ? "Modal" : "")?>Tab(tab) {
-		// Deselect all tabs
-		<?php for($n = 0; $n < $tabcount; $n++) { ?>
-		document.getElementById("<?php echo ($modal ? "Modal" : "")?>tab<?php echo $n; ?>").style.display="none";
-		document.getElementById("<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $n; ?>").className="Tab";
-		<?php } ?>
-		document.getElementById("<?php echo ($modal ? "Modal" : "")?>tab" + tab).style.display="block";
-		document.getElementById("<?php echo ($modal ? "Modal" : "")?>tabswitch" + tab).className="Tab TabSelected";
-	}
-	</script>
 
 <?php
 } ?>
