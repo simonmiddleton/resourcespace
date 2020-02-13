@@ -89,6 +89,8 @@ if ($print)
 
     ?><html><head>
         <style>
+        .pie {transform: scale(0.45);transform-origin: 0 0;}
+        .line {transform: scale(0.35);transform-origin: 0 0;}
         a,.CollapsibleSectionHead {display:none;}
         </style>
 
@@ -276,25 +278,25 @@ for ($n=0;$n<count($types);$n++)
             if ($show_breakdown)
                 {
                 ?>
-                <div id="pie<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
+                <div class="pie" id="pie<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
                 <?php
                 }
             if ($show_piegroup)
                 {
                 ?>
-                <div id="piegroup<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
+                <div class="pie" id="piegroup<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
                 <?php
                 }
             if ($show_pieresourcetype)
                 {
                 ?>
-                <div id="pieresourcetype<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
+                <div class="pie" id="pieresourcetype<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
                 <?php
                 }
             if ($show_line)
                 {
                 ?>
-                <div id="line<?php echo $n ?>" style="float:left;width:<?php
+                <div class="line" id="line<?php echo $n ?>" style="float:left;width:<?php
                 // Set width of line graph based on number of pie charts
                 $pie_counter = 0;
                 $line_width = 99;
