@@ -15,8 +15,7 @@ $related=strtolower(getvalescaped("related",""));
 
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
-	# Save data
-	save_related_keywords($keyword,$related);
+	save_related_keywords($keyword, $related);
 	redirect ($baseurl_short."pages/team/team_related_keywords.php?nc=" . time());
 	}
 
