@@ -44,9 +44,14 @@ function HookRse_versionCollection_logLog_extra_columns_row($log, array $collect
 
 function HookRse_versionCollection_logCollection_log_extra_fields()
     {
-    return ",
+    return sprintf(",
             IF(
-                   (`type` = 'a' AND BINARY `type` <> BINARY UPPER(`type`))
-                OR `type` = 'r', true, false
-            ) AS revert_state_enabled";
+                   (`type` = '%s' AND BINARY `type` <> BINARY UPPER(`type`))
+                OR `type` = '%s'
+                OR (`type` = '%s' AND BINARY `type` = BINARY UPPER(`type`)), true, false
+            ) AS revert_state_enabled",
+        LOG_CODE_COLLECTION_ADDED_RESOURCE,
+        LOG_CODE_COLLECTION_REMOVED_RESOURCE,
+        LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES
+    );
     }

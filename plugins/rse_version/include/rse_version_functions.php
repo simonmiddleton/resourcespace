@@ -72,22 +72,25 @@ function revert_collection_state($collection, $ref)
     {
     global $baseurl;
 
-    $collection_escaped = escape_check($collection);
-    $ref_escaped = escape_check($ref);
-
-    $logs = sql_query("
-          SELECT `ref`, `type`, resource
+    $logs = sql_query(sprintf("
+        SELECT `ref`, `type`, resource
             FROM collection_log
-           WHERE collection = '{$collection_escaped}'
+           WHERE collection = '%s'
              AND (
-                `type` = 'a' AND BINARY `type` <> BINARY UPPER(`type`)
+                `type` = '%s' AND BINARY `type` <> BINARY UPPER(`type`)
                 # Ignore LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES (R) as individual logs will be available
                 # as LOG_CODE_COLLECTION_REMOVED_RESOURCE (r)
-                OR `type` = 'r' AND BINARY `type` <> BINARY UPPER(`type`)
+                OR `type` = '%s' AND BINARY `type` <> BINARY UPPER(`type`)
+                OR `type` = '%s' AND BINARY `type` = BINARY UPPER(`type`)
              )
-             AND `ref` < '{$ref_escaped}'
-        ORDER BY `ref` ASC;
-    ");
+             AND `ref` < '%s'
+        ORDER BY `ref` ASC;",
+        escape_check($collection),
+        LOG_CODE_COLLECTION_ADDED_RESOURCE,
+        LOG_CODE_COLLECTION_REMOVED_RESOURCE,
+        LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES,
+        escape_check($ref)
+    ));
 
     if(count($logs) == 0)
         {
@@ -103,18 +106,27 @@ function revert_collection_state($collection, $ref)
             break;
             }
 
-        if($log["type"] === LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES)
+        switch ($log["type"])
             {
-            continue;
-            }
+            case LOG_CODE_COLLECTION_ADDED_RESOURCE:
+                add_resource_to_collection($log['resource'], $collection);
+                break;
 
-        if($log["type"] === LOG_CODE_COLLECTION_ADDED_RESOURCE)
-            {
-            add_resource_to_collection($log['resource'], $collection);
-            }
-        else if($log["type"] === LOG_CODE_COLLECTION_REMOVED_RESOURCE)
-            {
-            remove_resource_from_collection($log['resource'], $collection);
+            case LOG_CODE_COLLECTION_REMOVED_RESOURCE:
+                remove_resource_from_collection($log['resource'], $collection);
+                break;
+
+            case LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES:
+                /*We remove all resources rather than delete all again because the user is just replaying events and 
+                if we are deleting all at this point it will have undesired side effects such as deleting permanently
+                the resources or moving to Deleted state when the resources were meant to be in a different state*/
+                remove_all_resources_from_collection($collection);
+                break;
+
+            default:
+                // Always move on to the next log if we didn't explictly handled it
+                continue 2;
+                break;
             }
         }
 
