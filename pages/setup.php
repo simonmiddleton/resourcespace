@@ -846,6 +846,10 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 	
 		# Check for path
 		$path="../plugins/".$structural_plugin."/dbstruct/";
+        if(realpath($path) === false || !is_dir($path))
+            {
+            return trigger_error("Attempted path traversal, path was: '{$path}'");
+            }
 		
 		# Tables first.
 		# Load existing tables list
