@@ -880,6 +880,9 @@ function ShowHelp(field)
         {
         if(preventautosave) return false;
       
+        // disable save button as error conflicts can occur if clicked during autosave    
+        jQuery('.editsave').attr("disabled", true); 
+        jQuery('.editsave').attr("style", 'opacity:0.5');
         // add div and change css to prevent user from clicking on input elements while database update underway
         jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","relative");
         jQuery('#AutoSaveStatus' + field).parents(".Question").append("<div id=\"prevent_edit_conflict\" style=\"position:absolute; left:0; right:0; top:0; bottom:0;background-color:transparent;\"></div>");
@@ -929,7 +932,9 @@ function ShowHelp(field)
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }        
                 });
-        // once autosave has completed, reset css and remove the div that prevents user input      
+        // once autosave has completed, reset css and remove the div that prevents user input    
+        jQuery('.editsave').attr("disabled", false);  // re-enable save button
+        jQuery('.editsave').attr("style", "opacity:1.0");
         jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","");
         jQuery('#prevent_edit_conflict').remove();
 	    }
