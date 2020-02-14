@@ -128,7 +128,7 @@ for ($n=0;$n<count($uploadfiles);$n++)
 		error_reporting(0);
 		                 
         # PLUpload - file was sent chunked and reassembled - use the reassembled file location
-        $result=copy($folder . DIRECTORY_SEPARATOR . $uploadfiles[$n], $localpath);
+        $result=copy($folder . DIRECTORY_SEPARATOR . safe_file_name($uploadfiles[$n]), $localpath);
 
         if ($result===false) 
 			{
