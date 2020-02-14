@@ -7,11 +7,13 @@ include_once "../include/collections_functions.php";
 include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
+include_once "../include/ajax_functions.php";
 include_once "../include/api_bindings.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}
 
 debug("API:");
+define("API_CALL", true);
 
 # Get parameters
 $user=getvalescaped("user","");
@@ -28,8 +30,13 @@ if(!check_api_key($user, $query, $sign))
     exit("Invalid signature");
     }
 
-# Log them in.
-setup_user(get_user(get_user_by_username($user)));
+# Log user in (if permitted)
+$validuser = setup_user(get_user(get_user_by_username($user)));
+if(!$validuser)
+    {
+    ajax_permission_denied();
+    }
+
 debug("API: set up user '{$user}' signed with '{$sign}'");
 
 # Run the requested query

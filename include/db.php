@@ -2326,19 +2326,25 @@ function checkPermission_dashcreate()
 					($unmanaged_home_dash_admins && checkPermission_dashadmin())
 				);
 	}
-	
+
+/**
+*
+* Given an array of user data loaded from the user table, set up all necessary global variables for this user
+* including permissions, current collection, config overrides and so on.
+* 
+* @param  array  $userdata  Array of user data obtained by validate_user() from user/usergroup tables
+* 
+* @return boolean           success/failure flag - used for example to prevent certain users from making API calls
+*/
 function setup_user($userdata)
-	{
-        # Given an array of user data loaded from the user table, set up all necessary global variables for this user
-        # including permissions, current collection, config overrides and so on.
-        
+	{        
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days;
+           $user_dl_limit,$user_dl_days, $allow_share, $search_filter_nodes;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -2358,26 +2364,26 @@ function setup_user($userdata)
 		foreach($actions_permissions as $actions_permission)
 			{
 			if(in_array($actions_permission,$userpermissions))
-					{
-					$actions_on=true;
-					break;
-					}
+                {
+                $actions_on=true;
+                break;
+                }
 			}
 		}
 	
 	$usergroup=$userdata["usergroup"];
 	$usergroupname=$userdata["groupname"];
-        $usergroupparent=$userdata["parent"];
-        $useremail=$userdata["email"];
-        $userpassword=$userdata["password"];
-        $userfullname=$userdata["fullname"];
-        $userorigin=$userdata["origin"];
-        $usersession = $userdata["session"];
+    $usergroupparent=$userdata["parent"];
+    $useremail=$userdata["email"];
+    $userpassword=$userdata["password"];
+    $userfullname=$userdata["fullname"];
+    $userorigin=$userdata["origin"];
+    $usersession = $userdata["session"];
 
-        $ip_restrict_group=trim($userdata["ip_restrict_group"]);
-        $ip_restrict_user=trim($userdata["ip_restrict_user"]);
-        
-        if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
+    $ip_restrict_group=trim($userdata["ip_restrict_group"]);
+    $ip_restrict_user=trim($userdata["ip_restrict_user"]);
+    
+    if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
 		{
 		if (!function_exists("get_user_collections"))
 			{
@@ -2416,7 +2422,6 @@ function setup_user($userdata)
 		if ($usercollection==0 || !is_numeric($usercollection))
 			{
 			# Create a collection for this user
-			global $lang;
 			include_once "collections_functions.php"; # Make sure collections functions are included before create_collection
 			# The collection name is translated when displayed!
 			$usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
@@ -2425,7 +2430,6 @@ function setup_user($userdata)
 			}
 		}
 
-        global $search_filter_nodes;
         $newfilter = false;
         if ($search_filter_nodes)
             {
@@ -2457,6 +2461,17 @@ function setup_user($userdata)
         $user_dl_limit=trim($userdata["download_limit"]);
         $user_dl_days=trim($userdata["download_log_days"]);
 
+        if((int)$user_dl_limit > 0)
+            {
+            // API cannot be used by these users as would open up opportunities to bypass limits
+            if(defined("API_CALL"))
+                {
+                return false;
+                }
+            // Limited download users could bypass download limit by sharing externally before limit is reached
+            $allow_share = false;
+            }
+
     	$userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';") : FALSE;
     	$userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
 
@@ -2487,6 +2502,7 @@ function setup_user($userdata)
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
             eval($config_options);
             }
+    return true;
 	}
 
 /**
