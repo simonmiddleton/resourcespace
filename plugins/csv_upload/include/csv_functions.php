@@ -311,6 +311,12 @@ $csv_field_definitions = array(
 								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);
 								$update_dynamic_field=true;
 								}
+							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_RANGE)
+								{
+								// Need to add to options table
+								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);
+								$update_dynamic_field=true;
+								}
 							else
 								{
 								array_push($messages, "Error: Value \"{$cell_actual_value}\" not found in lookup for \"{$field_name}\" required field - found on line {$line_count}");					
