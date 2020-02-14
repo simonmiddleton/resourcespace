@@ -199,7 +199,7 @@ for ($n=0;$n<count($uploadfiles);$n++)
 
 		if ($use_local)
 			{
-			$result=copy($folder . DIRECTORY_SEPARATOR . $uploadfiles[$n],$localpath);
+			$result=copy($folder . DIRECTORY_SEPARATOR . safe_file_name($uploadfiles[$n]),$localpath);
 			}
 		else
 			{
