@@ -53,7 +53,7 @@ function do_search(
     $returnsql = false
 )
     {
-    debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only=" . ($editable_only?"true":"false"));
+    debug_function_call("do_search", func_get_args());
         
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
