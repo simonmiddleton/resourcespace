@@ -9,7 +9,7 @@
           if($edit_autosave)
             {
             ?>
-            onChange="AutoSave('<?php echo $field["ref"]; ?>',this);"
+            onChange="AutoSave('<?php echo $field["ref"]; ?>');"
             <?php
             }
         ?>

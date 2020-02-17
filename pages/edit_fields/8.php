@@ -50,7 +50,7 @@ editor.on('blur',function(e)
 	if(editor.checkDirty())
 		{
 		editor.updateElement();
-		AutoSave('<?php echo $field["ref"]?>',this);
+		AutoSave('<?php echo $field["ref"]?>');
 		}
 	});
 
