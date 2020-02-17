@@ -711,6 +711,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     // use query strings here as this is used to render elements and sometimes it
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
+    $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
     ?>
     <select id="sort_order_selection" onChange="UpdateResultOrder();">
     
@@ -761,9 +762,11 @@ function render_sort_order(array $order_fields,$default_sort_order)
         hook('render_sort_order_add_option', '', array($options));
         echo $options;
     ?>
-    
     </select>
-    &nbsp;<a href="#" onClick="UpdateResultOrder(true);"><i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo strtolower(safe_file_name($sort)) ?>"></i></a>
+    &nbsp;
+    <a href="#" onClick="UpdateResultOrder(true);">
+        <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
+    </a>
 
     <script>
     function UpdateResultOrder(toggle_order)
