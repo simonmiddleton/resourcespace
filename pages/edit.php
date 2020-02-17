@@ -876,16 +876,26 @@ function ShowHelp(field)
         });
         
 
-    function AutoSave(field, obj)
+    function AutoSave(field, stop_recurrence)
         {
-        if(preventautosave) return false;
-      
-        // disable save button as error conflicts can occur if clicked during autosave    
-        jQuery('.editsave').attr("disabled", true); 
-        jQuery('.editsave').attr("style", 'opacity:0.5');
-        // add div and change css to prevent user from clicking on input elements while database update underway
-        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","relative");
-        jQuery('#AutoSaveStatus' + field).parents(".Question").append("<div id=\"prevent_edit_conflict\" style=\"position:absolute; left:0; right:0; top:0; bottom:0;background-color:transparent;\"></div>");
+        stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
+
+        // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
+        // lead to edit conflicts.
+        if(!preventautosave && !stop_recurrence)
+            {
+            setTimeout(function()
+                {
+                AutoSave(field, true);
+                }, 150);
+
+            return false;
+            }
+
+        if(preventautosave)
+            {
+            return false;
+            }
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
@@ -895,7 +905,8 @@ function ShowHelp(field)
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
-                    // update checksum hidden field values   
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
                         for (var i in saveresult['checksums']) 
@@ -909,14 +920,10 @@ function ShowHelp(field)
                                  jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
                                  }
                             }
-                        }
-                    // notify user that value has been saved    	
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                        }					
                     }
                 else
-                    {
-                    // display error messages       
+                    {   
                     saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
                     if (typeof(saveresult['errors']) !== undefined)
                         {
@@ -926,18 +933,12 @@ function ShowHelp(field)
                             saveerrors += saveresult['errors'][i] + "<br />";
                             }
                         }
-                    // inline error message    
                     jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
-                    // alert box with error message
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
-                    }        
+                    }
                 });
-        // once autosave has completed, reset css and remove the div that prevents user input    
-        jQuery('.editsave').attr("disabled", false);  // re-enable save button
-        jQuery('.editsave').attr("style", "opacity:1.0");
-        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","");
-        jQuery('#prevent_edit_conflict').remove();
-	    }
+	}
 <?php } 
 
 # Resource next / back browsing.
@@ -1812,7 +1813,7 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
 			{
 			echo "<input id='status_checksum' name='status_checksum' type='hidden' value='" . $setarchivestate . "'>";
 			}?>
-         <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status',this);"<?php } ?>><?php
+         <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
          for ($n=-2;$n<=3;$n++)
             {
             if (checkperm("e" . $n) || $n==$setarchivestate) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo $lang["status" . $n]?></option><?php }
@@ -1866,7 +1867,7 @@ else
 			{
 			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $resource["access"] . "'>";
 			}?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access',this);<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
                     {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo $lang["access" . $n]?></option><?php }
@@ -1907,17 +1908,17 @@ else
                       <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>
 
                       <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
-                      if ($edit_autosave) {?> onChange="AutoSave('Access',this);"<?php } ?>></td>
+                      if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo $lang["access0"]?></td>
 
                       <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
-                      if ($edit_autosave) {?> onChange="AutoSave('Access',this);"<?php } ?>></td>
+                      if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo $lang["access1"]?></td>
 
                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
-                     if ($edit_autosave) {?> onChange="AutoSave('Access',this);"<?php } ?>></td>
+                     if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                      <td align=left valign=middle><?php echo $lang["access2"]?></td>
 
@@ -1949,7 +1950,7 @@ else
           if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
           <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
-          if ($edit_autosave) {?>onChange="AutoSave('Related', this);"<?php } ?>><?php
+          if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
           
           $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
           $related = get_related_resources($relatedref);
@@ -1968,7 +1969,7 @@ else
       $single_user_select_field_id = "created_by";
 	  $autocomplete_user_scope = "created_by";
       $single_user_select_field_value = $resource["created_by"];
-      if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by',this);"; }
+      if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
       if ($multiple) { ?><div class="Question"><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
       <div class="Question" id="question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
         <label><?php echo $lang["contributedby"] ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
