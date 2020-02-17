@@ -397,10 +397,6 @@ function config_clean($config)
             {
             $config = '';
             }
-        if (get_magic_quotes_gpc())
-            {
-            $config = stripslashes($config);
-            }
         }
     return $config;
     }
