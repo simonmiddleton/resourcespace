@@ -2344,7 +2344,7 @@ function setup_user($userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $allow_share, $search_filter_nodes;
+           $user_dl_limit,$user_dl_days, $search_filter_nodes;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -2468,8 +2468,6 @@ function setup_user($userdata)
                 {
                 return false;
                 }
-            // Limited download users could bypass download limit by sharing externally before limit is reached
-            $allow_share = false;
             }
 
     	$userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';") : FALSE;
