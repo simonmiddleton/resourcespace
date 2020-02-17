@@ -634,7 +634,10 @@ hook("initialise");
 
 # Load the language specific stemming algorithm, if one exists
 $stemming_file=dirname(__FILE__) . "/../lib/stemming/" . safe_file_name($defaultlanguage) . ".php"; # Important - use the system default language NOT the user selected language, because the stemmer must use the system defaults when indexing for all users.
-if (file_exists($stemming_file)) {include ($stemming_file);}
+if(file_exists($stemming_file))
+    {
+    include_once $stemming_file;
+    }
 
 # Global hook cache and related hits counter
 $hook_cache = array();
