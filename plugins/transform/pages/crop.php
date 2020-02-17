@@ -562,20 +562,24 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 	unlink($crop_pre_file);
 	}
 else
-	{
+    {
     // we are supposed to download
-	# Output file, delete file and exit
-	$filename.="." . $new_ext;
-	header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-	header("Content-Type: application/octet-stream");
+    # Output file, delete file and exit
+    $filename.="." . $new_ext;
+    header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+    header("Content-Type: application/octet-stream");
 
-	set_time_limit(0);
-	readfile($newpath);
-	unlink($newpath);	
-	unlink($crop_pre_file);
+    set_time_limit(0);
+
+    daily_stat('Resource download', $ref);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
+
+    readfile($newpath);
+    unlink($newpath);	
+    unlink($crop_pre_file);
 
     exit();
-}
+    }
 hook("aftercropfinish");
 
 // If other pages request us to go back to them rather then on the view page, do so
