@@ -737,7 +737,7 @@ function compile_search_actions($top_actions)
     if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
         $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
-        
+
         if (is_array($editable_resources) && $resources_count == count($editable_resources))
             {
             $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
@@ -992,6 +992,12 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     if($editable_only)
         {       
         $editable_filter = "";
+
+        if(!checkperm("v") && !$access_override)
+            {
+            $editable_filter .= "(r.access <> 1 OR (r.access = 1 AND ((rca.access IS NOT null AND rca.access <> 1) OR (rca2.access IS NOT null AND rca2.access <> 1)))) AND ";
+            }
+
         # Construct resource type exclusion based on 'ert' permission 
         # look for all 'ert' permissions and append to the exclusion array.
         $rtexclusions=array();
