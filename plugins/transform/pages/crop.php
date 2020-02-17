@@ -12,7 +12,23 @@ include_once "../include/transform_functions.php";
 
 global $cropper_allowed_extensions;
 
-$ref = getval("ref",true,0);
+$ref        = getval("ref",0);
+$search     = getval("search","");
+$offset     = getval("offset",0,true);
+$order_by   = getval("order_by","");
+$sort       = getval("sort","");
+$k          = getval("k","");
+
+// Build view url for redirect
+$urlparams = array(
+    "ref"       =>  $ref,
+    "search"    =>  $search,
+    "offset"    =>  $offset,
+    "order_by"  =>  $order_by,
+    "sort"      =>  $sort,
+    "k"         =>  $k
+);
+$view_url = generateURL($baseurl_short . 'pages/view.php',$urlparams);
 
 if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
@@ -244,7 +260,8 @@ if ($download && $terms_download){
     if('on'!=$terms_accepted)
         {
         $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
-        $redirect_to_terms_url="pages/terms.php?ref=".$ref."&url=".urlencode($crop_url);
+        $url_params["url"]=$crop_url;
+        $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
         redirect($redirect_to_terms_url);
         }
 }
@@ -534,7 +551,7 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
         redirect($return_to_url);
         }
 
-    redirect("pages/view.php?ref=$ref");
+    redirect($view_url);
     exit;
 
 } elseif (getval("slideshow","")!="" && !$cropperestricted)
@@ -589,8 +606,7 @@ if('' !== $return_to_url)
     }
 
 // send user back to view page
-header("Location:../../../pages/view.php?ref=$ref\n\n");
-exit;
+redirect($view_url);
 
 } else {
 
@@ -1006,7 +1022,7 @@ if ($cropper_debug){
 }
 ?>
     <p style='text-align:right;margin-top:15px;' id='transform_actions'>
-      <input type='button' value="<?php echo $lang['cancel']; ?>" onclick="javascript:return CentralSpaceLoad('<?php echo $baseurl_short . "pages/view.php?ref=" . $ref ?>',true);" />
+      <input type='button' value="<?php echo $lang['cancel']; ?>" onclick="javascript:return CentralSpaceLoad('<?php echo $view_url ?>',true);" />
       <?php if ($original){ ?>
              <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>" />
       <?php } else { ?>
