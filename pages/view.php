@@ -891,6 +891,7 @@ else if(1 == $resource['has_image'])
 
         $previewimagelink = generateURL(
             "{$baseurl}/lib/pdfjs-1.9.426/web/viewer.php",
+            $urlparams,
             array(
                 'ref'  => $ref,
                 'file' => $pdfjs_original_file_path
