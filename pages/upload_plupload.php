@@ -106,12 +106,20 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		}
 	}
 if ($upload_then_edit && $replace == "" && $replace_resource == "")
-	{
-	# Switch to the user's special upload collection.
-	$upload_review_col = 0-$userref;
-	$ci=get_collection($upload_review_col);
-	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
-
+    {
+    # Switch to the user's special upload collection.
+    $upload_review_col = 0-$userref;
+    $ci=get_collection($upload_review_col);
+    if ($ci===false)
+        {
+        create_collection($userref,"New uploads",1,1,0-$userref);
+        }
+        
+    if($queue_index == 0)
+        {        
+        // Clear out review collection before new uploads are added to prevent inadvertent edits of old uploads
+        remove_all_resources_from_collection(0-$userref);
+        }
     $redirecturl_extra_params = array();
 
 	# Set the redirect after upload to the start of the edit process
