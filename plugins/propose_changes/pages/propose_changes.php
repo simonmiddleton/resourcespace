@@ -381,7 +381,6 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
 
 function propose_changes_display_field($n, $field)
 	{
-	
 	global $ref, $original_fields, $multilingual_text_fields,
     $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
     $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
@@ -528,7 +527,7 @@ function propose_changes_display_field($n, $field)
                 $name = "field_{$field['ref']}";
                 }
 
-            $selected_nodes = explode(', ', $proposed_value);
+            $selected_nodes = (trim($proposed_value) != "" ? explode(', ', $proposed_value) : array());
 
             if(!$editaccess && '' == $proposed_value)
                 {
