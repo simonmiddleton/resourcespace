@@ -579,9 +579,15 @@ function do_search(
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
 
+                            // Attempt related keywords for the original keyword before determining there were no keywords matched
+                            if($keyref === false)
+                                {
+                                $original_related = get_related_keywords(resolve_keyword(str_replace('*', '', $keyword), false, true, false));
+                                $keyref = (!empty($original_related) && isset($original_related[0]) ? $original_related[0] : false);
+                                }
+
                             if ($keyref === false && !$omit && !$empty && count($wildcards) == 0 && !$field_short_name_specified)
                                 {
-    
                                 // ********************************************************************************
                                 //                                                                     No wildcards
                                 // ********************************************************************************
@@ -599,7 +605,7 @@ function do_search(
                                     }
                                 }
                             else
-                                {    
+                                {
                                 // ********************************************************************************
                                 //                                                                  Found wildcards
                                 // ********************************************************************************
