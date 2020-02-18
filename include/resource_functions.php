@@ -3,6 +3,7 @@
 # Functions to create, edit and index resources
 
 include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
+include_once __DIR__ . '/metadata_functions.php';
 
 function create_resource($resource_type,$archive=999,$user=-1)
     {
@@ -343,7 +344,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                     if ($date_validator && !$val == "")
                         {
-                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_Date_Format($val));
+                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($val));
                         $valid_date = str_replace("%row% ", "", $valid_date);
                         if ($valid_date && !$valid_date == "") 
                             {
