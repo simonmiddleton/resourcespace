@@ -937,8 +937,9 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
 if (!function_exists("resolve_keyword")){
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     {
+    debug_function_call("resolve_keyword", func_get_args());
+
     global $quoted_string, $stemming;
-    debug("resolve_keyword(\$keyword = '{$keyword}', \$create = " . ($create ? "true" : "false") . ", \$normalize = " . ($normalize ? "true" : "false") . ", \$stem = " . ($stem ? "true" : "false") . ");");
     $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
             
     if(!$quoted_string && $normalize)
@@ -960,7 +961,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     if ($return===false && $create)
         {
         # Create a new keyword.
-        debug("Creating new keyword for " . $keyword);
+        debug("resolve_keyword: Creating new keyword for " . $keyword);
         sql_query("insert into keyword (keyword,soundex,hit_count) values ('" . escape_check($keyword) . "',left('".soundex(escape_check($keyword))."',10),0)");
         $return=sql_insert_id();
         }
@@ -3752,6 +3753,8 @@ function check_password($password)
 
 function get_related_keywords($keyref)
     {
+    debug_function_call("get_related_keywords", func_get_args());
+
     # For a given keyword reference returns the related keywords
     # Also reverses the process, returning keywords for matching related words
     # and for matching related words, also returns other words related to the same keyword.
@@ -3774,6 +3777,8 @@ function get_related_keywords($keyref)
     
 function get_grouped_related_keywords($find="",$specific="")
     {
+    debug_function_call("get_grouped_related_keywords", func_get_args());
+
     # Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
     $sql="";
     if ($find!="") {$sql="where k1.keyword='" . escape_check($find) . "' or k2.keyword='" . escape_check($find) . "'";}
@@ -3790,12 +3795,12 @@ function get_grouped_related_keywords($find="",$specific="")
 
 function save_related_keywords($keyword,$related)
     {
-    debug("save_related_keywords(\$keyword = $keyword, \$related = $related)");
+    debug_function_call("save_related_keywords", func_get_args());
+
     $keyref = resolve_keyword($keyword, true, false, false);
     $s=trim_array(explode(",",$related));
 
-    # Blank existing relationships.
-    sql_query("delete from keyword_related where keyword='$keyref'");
+    sql_query("DELETE FROM keyword_related WHERE keyword = '$keyref'");
     if (trim($related)!="")
         {
         for ($n=0;$n<count($s);$n++)
