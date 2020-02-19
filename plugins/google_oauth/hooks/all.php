@@ -1,4 +1,18 @@
 <?php
+function HookGoogle_oauthAllAfterregisterplugin()
+    {
+    global $google_oauth_dependencies_ready, $google_oauth_lib_autoload;
+
+    if(file_exists($google_oauth_lib_autoload))
+        {
+        require_once $google_oauth_lib_autoload;
+        $google_oauth_dependencies_ready = true;
+        }
+
+    return;
+    }
+
+
 function HookGoogle_oauthAllPreheaderoutput()
     {
     global $baseurl, $pagename, $google_oauth_standard_login, $google_oauth_use_standard_login_by_default;
