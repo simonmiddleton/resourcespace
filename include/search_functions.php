@@ -995,7 +995,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 
         if(!checkperm("v") && !$access_override)
             {
-            $editable_filter .= "(r.access <> 1 OR (r.access = 1 AND ((rca.access IS NOT null AND rca.access <> 1) OR (rca2.access IS NOT null AND rca2.access <> 1)))) AND ";
+            $editable_filter .= "(r.access <> 1 OR (r.access = 1 AND ((rca.access IS NOT null AND rca.access <> 1) OR (rca2.access IS NOT null AND rca2.access <> 1)))) ";
             }
 
         # Construct resource type exclusion based on 'ert' permission 
@@ -1030,6 +1030,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         // Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission
         if(!checkperm("t"))
             {
+            if ($editable_filter!="") {$editable_filter .= " AND ";}
             $editable_filter.="(archive NOT IN (-2,-1) OR (created_by='" . $userref . "' ";
             if(count($rtexclusions)>0)
                 {
