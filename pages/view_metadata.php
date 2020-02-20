@@ -8,10 +8,24 @@ $modal=(getval("modal","")=="true");
 
 // -----------------------  Tab calculation -----------------
 $fields_tab_names = array();
+
+$tabs_set = false;
+
+foreach ($fields as $field)
+    {
+    $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
+    }
 	
 foreach ($fields as $field)
     {
-    $fieldtabname =  $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
+    if ($tabs_set === true)
+        {
+        $fieldtabname = $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
+        }
+    else
+        {
+        $fieldtabname = "";
+        }
     $fields_tab_names[] = $fieldtabname;
     $resources_per_tab_name[$fieldtabname][] = $field['ref'];
     }
