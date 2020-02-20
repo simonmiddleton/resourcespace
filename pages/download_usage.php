@@ -61,16 +61,6 @@ if (getval("save",'') != '' && enforcePostRequest(false))
     redirect($redirect_url . $download_url_suffix);
     }
 
-    // If this page is called from an iframe e.g. via download link, break out
-    ?>
-    <script>
-    if (top.location!= self.location) 
-        {
-        top.location = self.location.href;
-        }
-    </script>
-    <?php
-
 include "../include/header.php";
 
 

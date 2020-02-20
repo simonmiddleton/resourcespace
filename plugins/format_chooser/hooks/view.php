@@ -188,8 +188,15 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     jQuery("a#convertDownload").attr("href", terms_url);
 
                     return;
-                    }
+					}
+				// load usage form into main page	
+				if ($terms_download)
+					{
+					jQuery("a#convertDownload").attr("href", basePage);
 
+                	return;	
+					}	
+	
                 jQuery("a#convertDownload").attr("href", "#");
                 jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "')");
 
@@ -290,6 +297,12 @@ if ($alt_access)
 				?><a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) { ?>href="<?php echo $baseurl_short?>pages/terms.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search) ?>&url=<?php echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&alternative=" . $altfiles[$n]["ref"] . "&search=" . urlencode($search) . "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by=" . urlencode($order_by))?>"<?php } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a><?php 
 				}
 			}
+		elseif ($download_usage)
+		// download usage form displayed - load into main window
+			{ ?>
+		<a href="<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>"><?php echo $lang["action-download"]?></a>
+		<?php
+						}
 		else { ?>
 			<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>')"><?php echo $lang["action-download"]?></a>
 		<?php } ?></td></td>
