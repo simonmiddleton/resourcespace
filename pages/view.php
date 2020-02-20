@@ -738,7 +738,7 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 
 if(!hook('replaceviewtitle'))
     {
-    echo highlightkeywords(htmlspecialchars(i18n_get_translated(strip_tags_and_attributes(get_data_by_field($resource['ref'], $title_field)))), $search);
+		echo highlightkeywords(htmlspecialchars(i18n_get_translated(strip_tags_and_attributes(get_data_by_field($resource['ref'], $title_field)), false)), $search);
     } /* end hook replaceviewtitle */
     ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
