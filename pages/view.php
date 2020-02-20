@@ -2294,29 +2294,4 @@ if($annotate_enabled)
 	}
 	?>
 
-<script>
-
-/* Manage .TabBar clicks so the show/hide the correct .TabbedPanel within .TabBar */
-
-jQuery('document').ready(function() 
-{	
-	jQuery('.TabBar').each(function(i)
-	{
-		jQuery(this).find('div.Tab').each(function(j) 
-		{
-			jQuery(this).find('a').click(function() 
-			{
-				//console.log('Clicked group ' + i + ' and ' + j + ' button');
-				jQuery(this).parent().siblings('div.Tab').removeClass('TabSelected');
-				jQuery(this).parent().addClass('TabSelected');
-				jQuery(this).parent().parent().siblings('div.TabbedPanel').hide();
-				jQuery(this).parent().parent().siblings('div.TabbedPanel').eq(j).show();
-
-			});
-		});
-	});
-});
-
-</script>
-
 <?php include "../include/footer.php"; ?>
