@@ -17,7 +17,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 	{
     global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, $direct_link_previews, 
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
-           $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download;
+           $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
 
 	$inputFormat = $resource['file_extension'];
 
@@ -189,11 +189,15 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
                     return;
 					}
-				// load usage form into main page	
-				if ($terms_download)
-					{
-					jQuery("a#convertDownload").attr("href", basePage);
 
+				var download_usage = <?php echo ($download_usage ? "true" : "false"); ?>;
+				if (download_usage)
+					{
+                    var usage_url = "<?php echo generateURL("{$baseurl}/pages/download_usage.php", $urlparams); ?>";
+                        usage_url += "&ext=" + selectedFormat.toLowerCase();
+                        usage_url += profile;
+                        usage_url += "&size=" + sizeInfo[index]["id"];
+                        jQuery("a#convertDownload").attr("href", usage_url);
                 	return;	
 					}	
 	
@@ -300,9 +304,9 @@ if ($alt_access)
 		elseif ($download_usage)
 		// download usage form displayed - load into main window
 			{ ?>
-		<a href="<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>"><?php echo $lang["action-download"]?></a>
+		<a href="<?php echo $baseurl_short?>pages/download_usage.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>"><?php echo $lang["action-download"]?></a>
 		<?php
-						}
+			}
 		else { ?>
 			<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>')"><?php echo $lang["action-download"]?></a>
 		<?php } ?></td></td>
