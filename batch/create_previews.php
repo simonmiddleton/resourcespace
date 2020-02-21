@@ -184,37 +184,8 @@ foreach($resources as $resource) // For each resources
 
       $start_time = microtime(true);
 
-        // For each fork, we need a new connection to database.
-        if($use_mysqli)
-            {
-            $db = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
-
-            if($use_mysqli_ssl)
-                {
-                mysqli_ssl_set($db, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
-                }
-            }
-        else
-            {
-            mysql_connect($mysql_server,$mysql_username,$mysql_password,TRUE);
-            mysql_select_db($mysql_db);
-            }
-
-      // If $mysql_charset is defined, we use it
-      // else, we use the default charset for mysql connection.
-		if(isset($mysql_charset))
-			{
-			if($mysql_charset)
-				{
-				if ($use_mysqli){
-					global $db;
-					mysqli_set_charset($db,$mysql_charset);
-					}
-				else {
-					mysql_set_charset($mysql_charset);
-					}
-				}
-			}
+      // For each fork, we need a new connection to database.
+      sql_connect();
 		
 		# Below added to catch an issue with previews failing when large video files were taking a long time to copy to StaticSync location
 		echo "Created at: " . $resource['creation_date'] . "\nTime now: " . date("Y-m-d H:i:s") . "\n";
