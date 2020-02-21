@@ -1658,6 +1658,7 @@ if($tabs_on_edit)
 
             # draw new tab?
       if ($n==0 || ($tabname!=$fields[$n]["tab_name"] && $fields[$n]["tab_name"]!="" && is_field_displayed($fields[$n])))
+      {
         if ($tabs_set === true)
             {
             $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
