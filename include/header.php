@@ -438,7 +438,7 @@ else
     if(!hook('replaceheaderfullnamelink'))
         {
         ?>
-        <li>
+        <li class="AdminLink">
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
             <?php
 			if (isset($header_include_username) && $header_include_username)
@@ -463,7 +463,7 @@ else
         </li>
 	
 	<!-- Admin menu link -->
-	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
+	<?php if (checkperm("t")) { ?><li class="AdminLink"><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
 	<?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
 			{
 			# Show pill count if there are any pending requests
