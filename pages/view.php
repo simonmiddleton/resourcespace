@@ -1328,7 +1328,7 @@ function make_download_preview_link($ref, $size, $label)
 
 function add_download_column($ref, $size_info, $downloadthissize)
 	{
-	global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
+    global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
 	if ($downloadthissize)
 		{
 		?>
@@ -1356,6 +1356,16 @@ function add_download_column($ref, $size_info, $downloadthissize)
 						}
 					?>><?php echo $lang["action-download"]?></a><?php
 				}
+			}
+		elseif ($download_usage)
+			// download usage form displayed - load into main window
+			{ ?>
+						
+			<a id="downloadlink" href="<?php
+				echo $baseurl ?>/pages/download_usage.php?ref=<?php echo urlencode($ref) ?>&size=<?php
+				echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
+				echo urlencode($k)?>"><?php echo $lang["action-download"]?></a>							
+			<?php 
 			}
 		else
 			{
@@ -1516,14 +1526,10 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
 		<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
 		<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
-		<?php
-        if(!$terms_download || $save_as)
-            {
-            ?>
-			<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams, array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"],"modal"=>"true")))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
-			<?php } else { ?>
-				<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl . "/pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
-			<?php }
+            <?php
+                $size_info = array('id' => '', 'extension' => $resource['file_extension']);
+                $downloadthissize=resource_download_allowed($ref,'',$resource["resource_type"]);
+                add_download_column($ref,$size_info, $downloadthissize);
             ?>
 			</td>
 			</tr>
@@ -1628,7 +1634,15 @@ if (isset($flv_download) && $flv_download && file_exists($flvfile) && resource_d
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 	<?php if ($terms_download || $save_as){?>
 		<a href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=>generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
-	<?php } else { ?>
+	<?php } 
+	
+	elseif ($download_usage)
+	// download usage form displayed - load into main window
+		{ ?>
+			<a href="<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>"><?php echo $lang["action-download"]?></a>				
+		<?php
+		}
+	else { ?>
 		<a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>')"><?php echo $lang["action-download"]?></a>
 	<?php } ?></td>
 	</tr>
