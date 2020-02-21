@@ -1645,14 +1645,27 @@ if($tabs_on_edit)
     $tabname="";
     $tabcount=0;
     $tabtophtml="";
+    $tabs_set = false;
+
+    foreach ($fields as $field)
+    {
+    $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
+    }
+
     for ($n=0;$n<count($fields);$n++)
     {   
       $value=$fields[$n]["value"];
 
             # draw new tab?
-      if ($n==0 || ($tabname!=$fields[$n]["tab_name"] && is_field_displayed($fields[$n])))
-      {
-        $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+      if ($n==0 || ($tabname!=$fields[$n]["tab_name"] && $fields[$n]["tab_name"]!="" && is_field_displayed($fields[$n])))
+        if ($tabs_set === true)
+            {
+            $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+            }
+        else
+            {
+            $newtabname = "";
+            }
         if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
         $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
