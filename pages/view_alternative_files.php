@@ -86,7 +86,7 @@ if ($alt_access)
 			// download usage form displayed - load into main window
 				{ 
 				?>
-					<a href="<?php echo generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>"><?php echo $lang["action-download"]?></a>			
+					<a href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>"><?php echo $lang["action-download"]?></a>			
 				<?php
 				}	
 		else { ?>
