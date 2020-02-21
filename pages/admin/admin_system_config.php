@@ -82,7 +82,7 @@ $page_def[] = config_add_colouroverride_input(
     '',
     null,
     true,
-    "jQuery('#HeaderNav1 a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
+    "jQuery('#HeaderNav1 li.AdminLink a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
 );
 $page_def[] = config_add_colouroverride_input(
     'home_colour_style_override',

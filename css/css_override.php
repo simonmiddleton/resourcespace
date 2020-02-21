@@ -34,7 +34,7 @@ if ((isset($header_colour_style_override) && $header_colour_style_override != ''
 if ((isset($header_link_style_override) && $header_link_style_override != ''))
     {
     ?>
-    #HeaderNav1, #HeaderNav1 li a, #HeaderNav2 li a
+    #HeaderNav1 li.AdminLink, #HeaderNav1 li.AdminLink a, #HeaderNav2 li a
         {
         color: <?php echo $header_link_style_override; ?>;
         }
@@ -42,6 +42,7 @@ if ((isset($header_link_style_override) && $header_link_style_override != ''))
         {
         border-color: <?php echo $header_link_style_override; ?>;
         }
+    
     <?php
     }
 
