@@ -14,7 +14,9 @@ $lang['google_oauth_use_standard_login_by_default_label'] = 'Prefer standard log
 
 // Errors
 $lang['google_oauth_php_requirement_error'] = '"google_oauth" plugin requires PHP 5.4 or higher!';
+$lang['google_oauth_lib_not_exists_error'] = "Library not installed";
 
 // General use
+$lang['google_oauth_plugin'] = "Plugin: Google OAuth";
 $lang['google_oauth_log_in_with_google'] = 'Use Google to log in';
 $lang['google_oauth_user_comment'] = 'Created by Google OAuth plugin';
