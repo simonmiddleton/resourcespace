@@ -54,7 +54,7 @@ if (file_exists($imagepath)){?>
 
 <?php if (!hook("replacecollectioncommentform")) { ?>
 
-<form method="post" action="<?php echo $baseurl_short?>pages/collection_comment.php"  onSubmit="return CentralSpacePost(this,true);">
+<form method="post" action="<?php echo $baseurl_short?>pages/collection_comment.php"  onSubmit="return CentralSpacePost(this, true, false, false);">
     <?php generateFormToken("collection_comment"); ?>
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>">
 <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
