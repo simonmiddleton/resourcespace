@@ -294,6 +294,31 @@ if($export && isset($folder_path))
             )
         ),
         array(
+            "name" => "user",
+            "formatted_name" => "users",
+            "filename" => "users",
+            "record_feedback" => array(
+                "text" => "User #%ref '%fullname' (Username: %username | E-mail: %email)",
+                "placeholders" => array("ref", "fullname", "username", "email")
+            ),
+            "sql" => array(
+                "select" => "*",
+                "from"  => "user",
+                "where" => "
+                    username IS NOT NULL AND trim(username) <> ''
+                    AND usergroup IS NOT NULL AND trim(usergroup) <> ''",
+            ),
+            "additional_process" => function($record) {
+                $user_preferences = array();
+                if(get_config_options($record["ref"], $user_preferences))
+                    {
+                    logScript("Found user preferences");
+                    $record["user_preferences"] = $user_preferences;
+                    }
+                return $record;
+            },
+        ),
+        array(
             "name" => "resource_type",
             "formatted_name" => "resource types",
             "filename" => "resource_types",
@@ -513,34 +538,6 @@ if($export && isset($folder_path))
 
         fclose($export_fh);
         }
-
-
-    # USERS & USER PREFERENCES
-    ##########################
-    logScript("");
-    logScript("Exporting users and their preferences...");
-
-    $users_export_fh = $get_file_handler($folder_path . DIRECTORY_SEPARATOR . "users_export.json", "w+b");
-    foreach(get_users(0, "", "u.ref ASC", false, -1, 1, false, "") as $user)
-        {
-        logScript("User #{$user["ref"]} '{$user["fullname"]}' (Username: {$user["username"]} | E-mail: {$user["email"]})");
-
-        // Check user preferences and save for processing it later
-        $user_preferences = array();
-        if(get_config_options($user["ref"], $user_preferences))
-            {
-            logScript("Found user preferences");
-            $user["user_preferences"] = $user_preferences;
-            }
-
-        if($dry_run)
-            {
-            continue;
-            }
-
-        fwrite($users_export_fh, json_encode($user, JSON_NUMERIC_CHECK) . PHP_EOL);
-        }
-    fclose($users_export_fh);
 
 
     # ARCHIVE STATES
