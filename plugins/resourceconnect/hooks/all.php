@@ -177,11 +177,9 @@ function HookResourceconnectAllGenerateurl($url)
      * 
      */
 
-    function HookResourceconnectAllreplace_get_collection_resources($params)
+    function HookResourceconnectAllreplace_get_collection_resources($collection)
         {
-       
-        $collection = $params[0];
-    
+           
         $sql = "
     
     SELECT 
