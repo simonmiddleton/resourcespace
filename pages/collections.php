@@ -499,7 +499,7 @@ if ($add!="")
 			{
 			hook("preaddtocollection");
 			#add to current collection		
-			if (add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
+			if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
 				{ ?>
 				<script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
 				}
@@ -565,7 +565,7 @@ if ($addsearch!=-1)
 
     $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
 
-    if (!collection_writeable($usercollection))
+    if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
         <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
         }
