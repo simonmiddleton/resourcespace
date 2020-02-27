@@ -9,7 +9,7 @@ for ($n=0;$n<count($collections);$n++)
 	if ($hook_result!==false) {$resources=$hook_result;}
 	
 	$pub_url="search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]);
-	if ($display=="thumbs")
+	if ($display=="thumbs" || $display=="xlthumbs")
 		{
 		?>
 
