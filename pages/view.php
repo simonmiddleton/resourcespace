@@ -2308,4 +2308,12 @@ if($annotate_enabled)
 	}
 	?>
 
+<script>
+/* Call SelectTab upon page load to select first tab*/
+jQuery('document').ready(function() 
+	{       
+	SelectTab();
+	});
+</script>
+
 <?php include "../include/footer.php"; ?>
