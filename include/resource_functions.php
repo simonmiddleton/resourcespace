@@ -29,14 +29,18 @@ function create_resource($resource_type,$archive=999,$user=-1)
             }
         }
 
-	if ($archive==-2 || $archive==-1 || (isset($always_record_resource_creator) and $always_record_resource_creator))
+	if($user == -1
+        && (
+            $archive == -2
+            || $archive == -1
+            || (isset($always_record_resource_creator) && $always_record_resource_creator)
+        )
+    )
 		{
 		# Work out user ref - note: only for content in status -2 and -1 (user submitted / pending review).
 		global $userref;
-		$user=$userref;
+		$user = $userref;
 		}
-    else
-        {$user=-1;}
         
 	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
 	

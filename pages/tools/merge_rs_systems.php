@@ -260,6 +260,10 @@ if(isset($user))
         logScript("ERROR: Unable to validate user ID #{$user}!");
         exit(1);
         }
+
+    // Reset any "maintenance mode" config options the system might be configured with
+    $global_permissions_mask = "";
+
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
     }
@@ -700,7 +704,7 @@ if($import && isset($folder_path))
     $usernames_mapping = (isset($usernames_mapping) ? $usernames_mapping : array());
     $users_not_created = (isset($users_not_created) ? $users_not_created : array());
     $src_users = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "users_export.json", "r+b"));
-    $process_user_preferences = function($user_ref, $user_data) use ($progress_fh)
+    $process_user_preferences = function($user_ref, $user_data) use ($progress_fh, &$usernames_mapping)
         {
         db_begin_transaction(TX_SAVEPOINT);
         if(isset($user_data["user_preferences"]) && is_array($user_data["user_preferences"]) && !empty($user_data["user_preferences"]))
