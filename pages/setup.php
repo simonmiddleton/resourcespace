@@ -516,15 +516,15 @@ h2#dbaseconfig{  min-height: 32px;}
         $admin_username = 'admin';
         $admin_password = '';
 
-    $db_connection_modes = array(
+        $db_connection_modes = array(
             "read_write" => array(
-                "mysql_username" => ""),
-                "mysql_password" => ""),
+                "mysql_username" => "",
+                "mysql_password" => "",
             ),
             "read_only" => array(
-                "mysql_username" => ""),
-                "mysql_password" => ""),
-            ),
+                "mysql_username" => "",
+                "mysql_password" => "",
+            )
         );
 	}
 	else { //Form was submitted, lets do it!
