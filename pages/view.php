@@ -1334,50 +1334,51 @@ function add_download_column($ref, $size_info, $downloadthissize)
 		?>
         <td class="DownloadButton">
         <?php
-		if($terms_download || $save_as)
+		global $size_info_array;
+		$size_info_array = $size_info;
+		if(!hook("downloadbuttonreplace"))
 			{
-			global $size_info_array;
-			$size_info_array = $size_info;
-			if(!hook("downloadbuttonreplace"))
+			if($terms_download || $save_as)
 				{
 				?><a id="downloadlink" <?php
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
-						. "&ext=" . $size_info["extension"])))
-					{
-					echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
-					}
-					if($iOS_save)
+							. "&ext=" . $size_info["extension"])))
 						{
-						echo " target=\"_blank\"";
+						echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
 						}
-					else
-						{
-						echo " onClick=\"return CentralSpaceLoad(this,true);\"";
-						}
-					?>><?php echo $lang["action-download"]?></a><?php
+						if($iOS_save)
+							{
+							echo " target=\"_blank\"";
+							}
+						else
+							{
+							echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+							}
+						?>><?php echo $lang["action-download"]?></a><?php
+					
 				}
-			}
-		elseif ($download_usage)
-			// download usage form displayed - load into main window
-			{ ?>
-						
-			<a id="downloadlink" href="<?php
-				echo $baseurl ?>/pages/download_usage.php?ref=<?php echo urlencode($ref) ?>&size=<?php
-				echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
-				echo urlencode($k)?>"><?php echo $lang["action-download"]?></a>							
-			<?php 
-			}
-		else
-			{
-			?><a id="downloadlink" href="#" onclick="directDownload('<?php
-					echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref) ?>&size=<?php
+			elseif ($download_usage)
+				// download usage form displayed - load into main window
+				{ ?>
+							
+				<a id="downloadlink" href="<?php
+					echo $baseurl ?>/pages/download_usage.php?ref=<?php echo urlencode($ref) ?>&size=<?php
 					echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
-					echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a><?php
+					echo urlencode($k)?>"><?php echo $lang["action-download"]?></a>							
+				<?php 
+				}
+			else
+				{
+				?><a id="downloadlink" href="#" onclick="directDownload('<?php
+						echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref) ?>&size=<?php
+						echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
+						echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a><?php
+				}
+				unset($size_info_array);
+				?>
+			</td>
+			<?php
 			}
-			unset($size_info_array);
-			?>
-        </td>
-        <?php
 		}
 	else if (checkperm("q"))
 		{
