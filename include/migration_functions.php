@@ -582,6 +582,7 @@ function safe_export($value)
 */
 function get_export_tables($exportcollection=0)
     {
+    global $plugins;
     if((string)(int)$exportcollection !== (string)$exportcollection)
         {
         $exportcollection=0;
@@ -591,8 +592,12 @@ function get_export_tables($exportcollection=0)
     $exporttables = array();
     $exporttables["sysvars"] = array();
     $exporttables["preview_size"] = array();
-    $exporttables["archive_states"] = array();
     $exporttables["workflow_actions"] = array();
+    
+    if(in_array("rse_workflow",$plugins))
+        {
+        $exporttables["archive_states"] = array();
+        }
 
     $exporttables["user"] = array();
     $exporttables["user"]["scramble"]=array("username"=>"mix_text","email"=>"mix_email","fullname"=>"mix_text","comments"=>"mix_text","created"=>"mix_date");
