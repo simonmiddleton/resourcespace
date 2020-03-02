@@ -1494,14 +1494,31 @@ function do_search(
     # Can only search for resources that belong to themes
     if (checkperm("J"))
         {
+        global $theme_category_levels;
         $collection_join = " JOIN collection_resource jcr ON jcr.resource=r.ref JOIN collection jc ON jcr.collection=jc.ref  ";
-
         $themes=sql_query("select * from collection where public=1");
         $allowed_themes=array();
         for ($n=0;$n<count($themes);$n++)
-            {		
-            if ((checkperm("j*") || checkperm("j" . $themes[$n]["theme"])) && (!checkperm ("j-". $themes[$n]["theme"])))
+            {
+            if (checkperm("j*"))
                 {
+                // Access to all themes
+                $allowed_themes[]=$themes[$n]["ref"];
+                }
+            else if (checkperm("j" . $themes[$n]["theme"]))
+                {
+                $theme_path=$themes[$n]["theme"];
+                for ($x=2;$x<$theme_category_levels +1;$x++)
+                    {
+                    if ($themes[$n]["theme".$x]==NULL){break;}
+                    if (checkperm("j-" . $theme_path . "|" . $themes[$n]["theme".$x]))
+                        {
+                        // Access to this branch is blocked for this usergroup
+                        continue 2;
+                        }
+                    $theme_path.= "|" . $themes[$n]["theme".$x];
+                    }
+                
                 $allowed_themes[]=$themes[$n]["ref"];
                 }
             }
