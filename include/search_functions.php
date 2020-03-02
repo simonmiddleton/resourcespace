@@ -995,7 +995,8 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 
         if(!checkperm("v") && !$access_override)
             {
-            $editable_filter .= "(r.access <> 1 OR (r.access = 1 AND ((rca.access IS NOT null AND rca.access <> 1) OR (rca2.access IS NOT null AND rca2.access <> 1)))) ";
+            // following condition added 2020-03-02 so that resources without an entry in the resource_custom_access table are included in the search results - "OR (rca.access IS NULL AND rca2.access IS NULL)"    
+            $editable_filter .= "(r.access <> 1 OR (r.access = 1 AND ((rca.access IS NOT null AND rca.access <> 1) OR (rca2.access IS NOT null AND rca2.access <> 1) OR (rca.access IS NULL AND rca2.access IS NULL)))) ";
             }
 
         # Construct resource type exclusion based on 'ert' permission 
@@ -1242,7 +1243,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $searchsql=$collectionsearchsql;
             }
-        
+    
+
         if($returnsql){return $searchsql;}
         
         if($return_refs_only)
@@ -1540,6 +1542,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
 
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+
+      
 
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
