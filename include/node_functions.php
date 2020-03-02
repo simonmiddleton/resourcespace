@@ -1555,7 +1555,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 * @return           false = not found
 *                   integer = node ID of matching keyword.
 */
-function get_node_id(string $value,$resource_type_field)
+function get_node_id($value,$resource_type_field)
     {
     $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'");
     if (count($node)>0)
