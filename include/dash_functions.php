@@ -1640,9 +1640,9 @@ function render_upgrade_available_tile($user)
 
 function generate_dash_tile_toolbar(array $tile, $tile_id)
     {
-    global $baseurl_short, $lang;
+    global $baseurl_short, $lang, $managed_home_dash;
     $editlink = $baseurl_short . "pages/dash_tile.php?edit=" . $tile['ref'];
-    if(checkPermission_dashadmin() || checkPermission_dashuser())
+    if(!$managed_home_dash && (checkPermission_dashadmin() || checkPermission_dashuser()))
         {
         ?>
         <div id="DashTileActions_<?php echo substr($tile_id, 18); ?>" class="DashTileActions"  style="display:none;">
