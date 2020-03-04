@@ -1748,10 +1748,9 @@ $order_by_resource_id=false;
 # Enable find similar search?
 $enable_find_similar=true;
 
-##  The URL that goes in the bottom of the 'emaillogindetails' / 'emailreminder' email templates (save_user function in general.php)
+##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
-$email_url_remind_user = ""; //emailreminder
 
 # edit.php - disable links to upload preview and manage alternative files
 $disable_upload_preview = false;

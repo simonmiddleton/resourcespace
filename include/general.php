@@ -1748,43 +1748,19 @@ function email_user_welcome($email,$username,$password,$usergroup)
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
     $templatevars['username'] = $username;
-    $templatevars['password'] = ''; // DO NOT SEND PASSWORD IN PLAIN TEXT - DEPRECATED!
 
-        if (trim($email_url_save_user)!=""){$templatevars['url']=$email_url_save_user;}
-        else {$templatevars['url']=$baseurl;}
-        $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
+    if (trim($email_url_save_user)!="")
+        {
+        $templatevars['url']=$email_url_save_user;
+        }
+    else
+        {
+        $templatevars['url']=$baseurl;
+        }
+    $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
             
     send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
     }
-        
-
-
-if (!function_exists("email_reminder")){
-function email_reminder($email)
-    {
-    # Send a password reminder.
-    global $password_brute_force_delay, $allow_password_email;
-    if ($allow_password_email || $email=="") {return false;}
-    $details=sql_query("select username from user where email like '$email' and approved=1");
-    if (count($details)==0) {sleep($password_brute_force_delay);return false;}
-    $details=$details[0];
-    global $applicationname,$email_from,$baseurl,$lang,$email_url_remind_user;
-    $password=make_password();
-    $password_hash=md5("RS" . $details["username"] . $password);
-    
-    sql_query("update user set password='$password_hash' where username='" . escape_check($details["username"]) . "'");
-    
-    $templatevars['username']=$details["username"];
-    $templatevars['password']=$password;
-    if (trim($email_url_remind_user)!=""){$templatevars['url']=$email_url_remind_user;}
-    else {$templatevars['url']=$baseurl;}
-
-    
-    $message=$lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $lang["password"] . ": " . $templatevars['password'] . "\n\n". $templatevars['url'];
-    send_mail($email,$applicationname . ": " . $lang["newpassword"],$message,"","","emailreminder",$templatevars);
-    return true;
-    }
-}
 
 if (!function_exists("email_reset_link")){
 function email_reset_link($email,$newuser=false)
