@@ -1624,17 +1624,33 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
+
 if($tabs_on_edit)
     {
-        
-    // group fields by tab_name to prevent multiple tabs with the same name
-    usort($fields, function ($a, $b) 
+    // get list of unique tab names from the fields array
+    $tab_names = array_unique(array_column($fields,'tab_name'));
+
+    // sort tab names alphabetically if $sort_tabs config option set to true
+    if ($sort_tabs)
+        {  
+        //alphabetical sort    
+        sort($tab_names);  
+        }
+
+    // create new array of fields, maintaining field order, and the tab order as defined above
+    $fields_tab_ordered = array();
+
+    // append fields that do not have a tab name and that will be displayed in the default tab
+    $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", "", $fields_tab_ordered);
+
+    foreach($tab_names as $tab_name)
         {
-        # convert to string value - result of strcmp unpredictable if vars are not strings
-        $taba = strval($a["tab_name"]);
-        $tabb = strval($b["tab_name"]);
-        return strcmp($taba,$tabb);
-        });
+        // get relevant fields from $fields using tab name
+        $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered);
+        }
+
+    // update $fields array with re-ordered fields array, ready to display   
+    $fields = $fields_tab_ordered;   
         
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
@@ -1656,7 +1672,7 @@ if($tabs_on_edit)
     {   
       $value=$fields[$n]["value"];
 
-            # draw new tab?
+        # draw new tab?
       if ($n==0 || ($tabname!=$fields[$n]["tab_name"] && $fields[$n]["tab_name"]!="" && is_field_displayed($fields[$n])))
       {
         if ($tabs_set === true)

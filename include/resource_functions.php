@@ -5837,3 +5837,31 @@ function get_resource_all_image_sizes($ref)
 
     return array_values($all_image_sizes);
     }
+
+
+/**
+ * Function can be used to order a multi-dimensional array using a key and corresponding value
+ * 
+ * @param   array   $array2search   multi-dimensional array in which the key/value pair may be present
+ * @param   string  $search_key     key of the key/value pair used for search
+ * @param   string  $search_value   value of the key/value pair to search
+ * @param   array   $return_array   array to which the atching elements in the search array are pushed - also returned by function
+ * 
+ * @return  array   $return_array
+ * 
+ */
+
+function search_array_by_keyvalue($array2search, $search_key, $search_value, $return_array)    
+    {
+    // loop through array to search    
+    foreach($array2search as $sub_array)
+        {
+        // if the search key exists and its value matches the search value    
+        if (array_key_exists($search_key, $sub_array) && ($sub_array[$search_key] == $search_value))
+            {
+            // push the sub array to the return array    
+            array_push($return_array, $sub_array);
+            }
+        } 
+        return $return_array; 
+    }
