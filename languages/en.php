@@ -2863,4 +2863,5 @@ $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
+$lang["filechecksum"]                       = "File checksum";
 
