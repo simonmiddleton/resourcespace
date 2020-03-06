@@ -4,6 +4,7 @@
 
 include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
 include_once __DIR__ . '/metadata_functions.php';
+include_once __DIR__ . '/search_functions.php';
 
 function create_resource($resource_type,$archive=999,$user=-1)
     {
