@@ -7,16 +7,8 @@ global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hi
 $modal=(getval("modal","")=="true");
 
 // -----------------------  Tab calculation -----------------
-$fields_tab_names = array();
-	
-foreach ($fields as $field)
-    {
-    $fieldtabname =  $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
-    $fields_tab_names[] = $fieldtabname;
-    $resources_per_tab_name[$fieldtabname][] = $field['ref'];
-    }
 
-$fields_tab_names = array_values(array_unique($fields_tab_names));
+$fields_tab_names = tab_names($fields);
 
 // Clean the tabs by removing the ones that would just be empty:
 $tabs_with_data = array();
@@ -63,6 +55,13 @@ foreach ($fields_tab_names as $key => $value) {
 
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
         
+//ensure there is a default tab as the first tab
+//append default string in tab name array
+array_unshift($fields_tab_names, $lang['default']);
+//remove any other instances of default string in tab name array
+$fields_tab_names = array_unique($fields_tab_names);
+
+
 ?>
         
         

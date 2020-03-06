@@ -1626,15 +1626,28 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 
 if($tabs_on_edit)
     {
-        
-    // group fields by tab_name to prevent multiple tabs with the same name
-    usort($fields, function ($a, $b) 
+    $tab_names = tab_names($fields);
+
+    // if config option set do case-sensitive alphabetical sort
+    if ($sort_tabs)
         {
-        # convert to string value - result of strcmp unpredictable if vars are not strings
-        $taba = strval($a["tab_name"]);
-        $tabb = strval($b["tab_name"]);
-        return strcmp($taba,$tabb);
-        });
+        sort($tab_names);
+        }
+   
+    // create new array of fields, maintaining field order, and the tab order as defined above
+    $fields_tab_ordered = array();
+
+    // append fields that do not have a tab name and that will be displayed in the default tab
+    $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", "", $fields_tab_ordered);
+
+    foreach($tab_names as $tab_name)
+        {
+        // get relevant fields from $fields using tab name
+        $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered);
+        }
+
+    // update $fields array with re-ordered fields array, ready to display  
+    $fields = $fields_tab_ordered;  
         
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
