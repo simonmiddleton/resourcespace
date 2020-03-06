@@ -1626,17 +1626,15 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 
 
 if($tabs_on_edit)
-    {
-    // get list of unique tab names from the fields array
-    $tab_names = array_unique(array_column($fields,'tab_name'));
+    {  
+    $tab_names = tab_names($fields);
 
-    // sort tab names alphabetically if $sort_tabs config option set to true
+    // if config option set do case-sensitive alphabetical sort
     if ($sort_tabs)
-        {  
-        //alphabetical sort    
-        sort($tab_names);  
-        }
-
+    {
+        sort($tab_names);
+    }
+    
     // create new array of fields, maintaining field order, and the tab order as defined above
     $fields_tab_ordered = array();
 
@@ -1651,7 +1649,7 @@ if($tabs_on_edit)
 
     // update $fields array with re-ordered fields array, ready to display   
     $fields = $fields_tab_ordered;   
-        
+
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;

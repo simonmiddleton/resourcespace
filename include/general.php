@@ -8039,3 +8039,82 @@ function delete_resource_type_field($ref)
 
     return true;
     }
+
+
+/**
+ * Function to return a list of tab names retrieved from $fields array containing metadata fields
+ * 
+ * if there is at least one field with a value for tab_name, then if there is at another field that does not have a tab_name value, it is assigned the value "Default"
+ * 
+ * @param   array   fields  array of metadata fields to display
+ * @global  array   lang    array of config-defined language strings
+ * 
+ * @return  array   $fields_tab_names   array of unique tab names contained in the $fields array
+ */
+
+function tab_names($fields)
+    {
+    global $lang; // language strings
+
+    $fields_tab_names = array();
+    $tabs_set = false; // by default no tabs set
+    
+    // loop through fields array and identify whether to use tabs
+    foreach ($fields as $field)
+        {
+        $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
+        }
+        
+    // loop through fields and create list of tab names, including default string if any fields present with empty string values for tab_name  
+    foreach ($fields as $field)
+        {   
+        if ($tabs_set === true)
+            {
+            $fieldtabname = $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
+            }
+        else
+            {
+            $fieldtabname = "";
+            }
+        $fields_tab_names[] = $fieldtabname;
+        }
+    
+    // get list of unique tab names
+    $fields_tab_names = array_values(array_unique($fields_tab_names));
+
+    // return list of tab names
+    return $fields_tab_names;
+    }
+
+/**
+ * Function can be used to order a multi-dimensional array using a key and corresponding value
+ * 
+ * @param   array   $array2search   multi-dimensional array in which the key/value pair may be present
+ * @param   string  $search_key     key of the key/value pair used for search
+ * @param   string  $search_value   value of the key/value pair to search
+ * @param   array   $return_array   array to which the matching elements in the search array are pushed - also returned by function
+ * 
+ * @return  array   $return_array
+ */
+
+function search_array_by_keyvalue($array2search, $search_key, $search_value, $return_array)    
+    {
+    
+    if (!isset($search_key,$search_value,$array2search,$return_array) || !is_array($array2search) || !is_array($return_array))
+        {
+        exit("Error: invalid input to search_array_by_keyvalue function");
+        }    
+
+    // loop through array to search    
+    foreach($array2search as $sub_array)
+        {
+        // if the search key exists and its value matches the search value    
+        if (array_key_exists($search_key, $sub_array) && ($sub_array[$search_key] == $search_value))
+            {
+            // push the sub array to the return array    
+            array_push($return_array, $sub_array);
+            }
+        }
+
+    return $return_array; 
+    }    
