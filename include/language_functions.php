@@ -133,7 +133,7 @@ function i18n_get_collection_name($mixedcollection, $index="name")
     //if ($translated==1) {return htmlspecialchars($lang["research"] . ": " . $name_translated);}
 
     # Ordinary collection - translate with i18n_get_translated
-    return htmlspecialchars(i18n_get_translated($name_untranslated));
+    return htmlspecialchars(i18n_get_translated($name_untranslated, false));
     }
 
 if (!function_exists("i18n_get_indexable")) {
