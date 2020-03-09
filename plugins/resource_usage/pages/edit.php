@@ -2,7 +2,7 @@
 include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/authenticate.php";
-
+include_once "../../../include/search_functions.php";
 include_once "../../../include/resource_functions.php";
 
 $ref      = getvalescaped('ref', '');
