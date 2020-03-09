@@ -328,27 +328,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                     {
-                    # date type, construct the value from the date/time dropdowns
-                    $year=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
-                    $month=getval("field_" . $fields[$n]["ref"] . "-m","");
-                    $day=getval("field_" . $fields[$n]["ref"] . "-d","");
-                    $hour=getval("field_" . $fields[$n]["ref"] . "-h","");
-                    $minute=getval("field_" . $fields[$n]["ref"] . "-i","");
-                    $val="";
-
-                    $year!=""&&$year!="0000"?$val.=$year:$val.="year";
-                    $month!=""?$val.="-".$month:$val.="-month";
-                    $day!=""?$val.="-".$day:$val.="-day";
-                    $hour!=""?$val.=" ".$hour:$val.=" hh";
-                    $minute!=""?$val.=":".$minute:$val.=":mm";
-                    strpos($val, "year-month-day")!==false?$val=str_replace("year-month-day", "", $val):$val=$val;
-                    strpos($val, "-month-day")!==false?$val=str_replace("-month-day", "", $val):$val=$val;
-                    strpos($val, "-day")!==false&&$month!=""?$val=str_replace("-day", "", $val):$val=$val;
-                    strpos($val, " hh:mm")!==false?$val=str_replace(" hh:mm", "", $val):$val=$val;
+                    # date type, construct the value from the date/time dropdowns to be used in DB
+                    $val=sanitize_date($fields[$n]["ref"], false);
 
                     if ($date_validator && !$val == "")
                         {
-                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($val));
+                        # date type, construct the value from the date/time dropdowns to be used in date validator
+                        $check_date_val=sanitize_date($fields[$n]["ref"], true);
+
+                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($check_date_val));
                         $valid_date = str_replace("%row% ", "", $valid_date);
                         if ($valid_date && !$valid_date == "") 
                             {
@@ -5836,4 +5824,38 @@ function get_resource_all_image_sizes($ref)
         }
 
     return array_values($all_image_sizes);
+    }
+
+function sanitize_date($date, $validate=false)
+    {
+    $year=sprintf("%04d", getvalescaped("field_" . $date . "-y",""));
+    $month=getval("field_" . $date . "-m","");
+    $day=getval("field_" . $date . "-d","");
+    $hour=getval("field_" . $date . "-h","");
+    $minute=getval("field_" . $date . "-i","");
+    $val="";
+    $year!=""&&$year!="0000"?$val.=$year:$val.="year";
+    $month!=""?$val.="-".$month:$val.="-month";
+    $day!=""?$val.="-".$day:$val.="-day";
+    $hour!=""?$val.=" ".$hour:$val.=" hh";
+    $minute!=""?$val.=":".$minute:$val.=":mm";
+
+    if($validate==false)
+        {
+        # Provides dates padded appropriatly for the DB e.g. 2020-00-00, 2020-00-29 etc
+        strpos($val, "year")!==false?$val=str_replace("year", "0000", $val):$val=$val;
+        strpos($val, "-month")!==false?$val=str_replace("-month", "-00", $val):$val=$val;
+        strpos($val, "-day")!==false?$val=str_replace("-day", "-00", $val):$val=$val;
+        strpos($val, " hh:mm")!==false?$val=str_replace(" hh:mm", "", $val):$val=$val;
+        }
+    elseif($validate==true) 
+        {
+        # Provides dates padded appropriatly for the date validator e.g. 2020, 2020-month-29 etc
+        strpos($val, "year-month-day")!==false?$val=str_replace("year-month-day", "", $val):$val=$val;
+        strpos($val, "-month-day")!==false?$val=str_replace("-month-day", "", $val):$val=$val;
+        strpos($val, "-day")!==false&&$month!=""?$val=str_replace("-day", "", $val):$val=$val;
+        strpos($val, " hh:mm")!==false?$val=str_replace(" hh:mm", "", $val):$val=$val;
+        }
+
+    return $val;
     }

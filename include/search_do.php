@@ -383,7 +383,7 @@ function do_search(
                                 }
                             elseif('basicyear' == $kw[0])
                                 {
-                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '" . $keystring . "-__-__%' ";
+                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '" . $keystring . "%' ";
                                 $c++;
                                 }
                             }
