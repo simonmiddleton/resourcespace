@@ -1164,7 +1164,6 @@ if($simpleview && $themes_show_background_image)
     <script>
     var SlideshowImages = new Array();
     var SlideshowCurrent = -1;
-    var SlideshowTimer = 0;
     var big_slideshow_timer = <?php echo $slideshow_photo_delay; ?>;
 
 <?php
