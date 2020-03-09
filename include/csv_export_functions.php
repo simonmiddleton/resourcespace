@@ -11,7 +11,7 @@
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
     {
-    global $lang, $csv_export_add_original_size_url_column;
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums;
     $return                 = '';
     $csv_field_headers      = array();
     $resources_fields_data  = array();
@@ -31,6 +31,12 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             {
             $csv_field_headers["created_by"] = $lang["contributedby"];
             $resources_fields_data[$resource['ref']]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+            }
+
+        if ($alldata && $file_checksums)
+            {
+            $csv_field_headers["file_checksum"] = $lang["filechecksum"];
+            $resources_fields_data[$resource['ref']]["file_checksum"] = $resdata["file_checksum"];
             }
 
         foreach(get_resource_field_data($resource['ref'], false, true, NULL, '' != getval('k', '')) as $field_data)
