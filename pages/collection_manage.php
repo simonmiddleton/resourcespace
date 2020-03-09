@@ -360,17 +360,16 @@ $action_selection_id = 'collections_action_selection' . $collections[$n]['ref'] 
 hook('render_collections_list_tools', '', array($collections[$n])); ?>
 <td class="tools">	
     <div class="ListTools">
-        <?php hook('legacy_list_tools', '', array($collections[$n])); ?>
-            <div class="ActionsContainer">
-                <div class="DropdownActionsLabel">Actions:</div>
-                    <select class="collectionactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
-                    <option>
-                        <?php echo $lang["actions-select"]?>
-                    </option>
-                </select>                 
-            </div>
+    <?php hook('legacy_list_tools', '', array($collections[$n])); ?>
+        <div class="ActionsContainer">
+            <select class="collectionactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+            <option>
+                <?php echo $lang["actions-select"]?>
+            </option>
+            </select>
         </div>
     </div>
+</div>
 </td>
 </tr>
 <script>
