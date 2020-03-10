@@ -1,7 +1,9 @@
 <?php
 
 if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections)) {
-    
+	
+$shownresults=false;
+
 for ($n=0;$n<count($collections);$n++)
 	{
 	$resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);	
@@ -11,6 +13,7 @@ for ($n=0;$n<count($collections);$n++)
 	$pub_url="search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]);
 	if ($display=="thumbs" || $display=="xlthumbs")
 		{
+		$shownresults=true;
 		?>
 
 		<div class="ResourcePanel"
@@ -109,5 +112,12 @@ for ($n=0;$n<count($collections);$n++)
 		</tr>
 	<?php } ?>		
 	
-<?php } ?>
+<?php } 
+
+if (($display=="thumbs" || $display=="xlthumbs") && $shownresults)
+	{
+	# If any collection results were displayed, carriage return before the results so the collections are visibly separate.
+	?><br style="clear:both;" /><?php
+	}
+?>
 <?php } /* end if not a collection search */ ?>
