@@ -23,7 +23,7 @@ foreach ($fields_tab_names as $tabname)
 
         $displaycondition = check_view_display_condition($fields, $i);
 
-        if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$field['hide_when_restricted'])))
+        if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted'])))
             {
             $tabs_with_data[] = $tabname;
             }
