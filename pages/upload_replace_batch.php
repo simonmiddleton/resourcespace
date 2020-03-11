@@ -129,7 +129,7 @@ if (isset($info_text))
 
 <div class="Question">
     <label for="no_exif"><?php echo $lang["no_exif"]?></label>
-    <input type="checkbox" <?php if($metadata_read_default == true) { ?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+    <input type=checkbox checked id="no_exif" name="no_exif" value="yes">
     <div class="clearerleft"> </div>
 </div>
 
