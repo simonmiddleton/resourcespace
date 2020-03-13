@@ -2545,7 +2545,15 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Share
-    if(0 < $count_result && ($k=="" || $internal_share_access) && $manage_collections_share_link && $allow_share && (checkperm('v') || checkperm ('g') || (collection_min_access($collection_data['ref'])<=1 && $restricted_share))) 
+    if(0 < $count_result
+        && ($k=="" || $internal_share_access) 
+        && $manage_collections_share_link
+        && $allow_share
+        && (checkperm('v')
+            || checkperm ('g') 
+            || collection_min_access($collection_data['ref'])<=1 
+            || $restricted_share)
+        ) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_share.php",$urlparams);
         $options[$o]['value']='share_collection';

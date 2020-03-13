@@ -3756,7 +3756,11 @@ function get_resource_access($resource)
 				}
 			}
 			
-		if($matchedfilter){$access=0;}
+        if($matchedfilter)
+            {
+            $access=0;
+            $customgroupaccess = true;
+            }
         }
 		
 	return (int) $access;
