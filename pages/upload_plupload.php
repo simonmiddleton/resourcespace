@@ -614,7 +614,7 @@ if ($_FILES)
                             # Save alternative file data.
                             sql_query("update resource_alt_files set file_name='" . escape_check($plfilename) . "',file_extension='" . escape_check($extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$alternative' and ref='$aref'");
                             
-                            if ($alternative_file_previews_batch)
+                            if ($alternative_file_previews)
                                     {
                                     create_previews($alternative,false,$extension,false,false,$aref);
                                     }
