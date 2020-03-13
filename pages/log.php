@@ -149,8 +149,18 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
     if ($log[$n]["usageoption"]!="-1" && $log[$n]["usageoption"]!="")
         {
         // if usageoption is set to -1 when logging, you can avoid the usage description here
-        echo (($log[$n]["notes"]=="" || $log[$n]["notes"]=="-1")? $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]])) :
-            $lang["usage"] . ": " . nl2br(htmlspecialchars($log[$n]["notes"])) . "<br />" . $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]])));
+        // Check that the value in the table is valid first
+        if (isset($download_usage_options[$log[$n]["usageoption"]]))
+            {
+            if ($log[$n]["notes"]=="" || $log[$n]["notes"]=="-1")
+                { 
+                echo $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]])); 
+                }
+            else
+                {
+                echo $lang["usage"] . ": " . nl2br(htmlspecialchars($log[$n]["notes"])) . "<br />" . $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
+                }
+            }
 	    }
 
 	# For purchases, append size and price
