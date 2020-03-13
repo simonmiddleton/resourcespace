@@ -89,7 +89,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     text-align: center;
 }
 
-#ResourceDownloadOptions td.DownloadFileName a 
+#ResourceDownloadOptions td.DownloadFileName.AlternativeFile a 
 {
     background-color: transparent;
     border-top: none;
