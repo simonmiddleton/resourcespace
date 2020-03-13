@@ -6815,11 +6815,11 @@ function get_download_filename($ref,$size,$alternative,$ext)
             $filename = trim(nl2br(strip_tags($newfilename)));
             if($size != "" && !$download_filenames_without_size)
                 {
-                $filename = strip_extension(mb_basename(substr($filename, 0, 200))) . '-' . $size . '.' . $ext;
+                $filename = mb_basename(substr($filename, 0, 200)) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                $filename = strip_extension(mb_basename(substr($filename, 0, 200))) . '.' . $ext;
+                $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
                 }
 
             if($prefix_resource_id_to_filename)
