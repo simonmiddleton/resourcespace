@@ -34,7 +34,7 @@ resource_type_config_override($resource["resource_type"]);
 
 $resource_title = '';
 
-if(intval($user_dl_limit) > 0)
+if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
     {
     $download_limit_check = get_user_downloads($userref,$user_dl_days);
     if($download_limit_check >= $user_dl_limit)
