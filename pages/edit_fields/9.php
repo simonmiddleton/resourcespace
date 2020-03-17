@@ -123,17 +123,24 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         UpdateResultCount();
         }
 
+
     <?php
     if($edit_autosave)
         {
         ?>
         if(user_action)
             {
-            AutoSave('<?php echo $field["ref"]; ?>');
+            AutoSave('<?php echo $field["ref"]; ?>', document.getElementById('field_<?php echo $field["ref"]; ?>_selector'));
             }
             <?php
         }
         ?>
+ 
+    // show input fields for dynamic keyword list input type
+    jQuery("input.ui-autocomplete-input").removeAttr("readonly");     
+      
+
+
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
     jQuery('[name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]"]').each(function(index, element)
@@ -144,6 +151,14 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {
+
+    // prevent user from entering new value in the input block input:text field
+    jQuery("#nodes_" + node_id).parents(".Question").find("input.ui-autocomplete-input").attr("readonly", "readonly");   
+
+    // hide keyword "x" link so that user cannot remove another value before the database has been updated
+    // do not need to use .show() later as the DOM is updated
+    jQuery("#nodes_" + node_id).parents(".Question").find(".RemoveKeyword").hide();
+        
     // Save existing keywords array    
     var saved_Keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
 
@@ -163,6 +178,8 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
 	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
+    
+    
     }
 
 function addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword)

@@ -97,7 +97,7 @@ if(!hook('customchkboxes', '', array($field)))
                                 if($edit_autosave)
                                     {
                                     ?>
-                                    onChange="AutoSave('<?php echo $field['ref']; ?>');"
+                                    onChange="AutoSave('<?php echo $field['ref']; ?>',this);"
                                     <?php
                                     }
                                     ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
@@ -152,7 +152,7 @@ if(!hook('customchkboxes', '', array($field)))
                     if($edit_autosave)
                         {
                         ?>
-                        onChange="AutoSave('<?php echo $field['ref']; ?>');"
+                        onChange="AutoSave('<?php echo $field['ref']; ?>',this);"
                         <?php
                         }
                         ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>

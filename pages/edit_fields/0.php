@@ -79,7 +79,7 @@ if($show_merge_options)
 <?php } ?>
 
 <input <?php if ($field['field_constraint']==1){?>type=number<?php } ?> class="stdwidth" type=text name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo htmlspecialchars($value); ?>" <?php echo $help_js; ?>
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>',this);"<?php } ?>
 >
 
 <?php 

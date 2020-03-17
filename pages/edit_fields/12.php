@@ -131,7 +131,7 @@ if($display_as_radiobuttons)
                         if($edit_autosave)
                             {
                             ?>
-                            onChange="AutoSave('<?php echo $field["ref"]; ?>');"
+                            onChange="AutoSave('<?php echo $field["ref"]; ?>',this);"
                             <?php
                             }
                         if($autoupdate)

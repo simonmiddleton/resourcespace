@@ -80,7 +80,7 @@ if($show_merge_options)
 <?php } ?>
 
 <textarea class="stdwidth MultiLine" rows=6 cols=50 name="<?php echo $name?>" id="<?php echo $name?>" <?php echo $help_js; ?>
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>',this);"<?php } ?>
 ><?php echo htmlspecialchars($value)?></textarea>
 
 <?php 

@@ -29,7 +29,7 @@ if((bool) $field['automatic_nodes_ordering'])
         if($edit_autosave)
             {
             ?>
-            onChange="AutoSave('<?php echo $field['ref']; ?>');"
+            onChange="AutoSave('<?php echo $field['ref']; ?>',this);"
             <?php
             }
             ?>>
