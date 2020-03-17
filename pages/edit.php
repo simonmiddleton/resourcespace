@@ -990,7 +990,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <input onClick="javascript:parent.location.href='<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>'" 
             name="save"
             class="editsave"
-            type="submit"
+            type="button"
             value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
             <?php
             } else 
