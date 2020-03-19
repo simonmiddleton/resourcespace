@@ -791,10 +791,11 @@ if (getval("ajax","") == "")
 
 		window_width = jQuery(window).width();
 		window_width_breakpoint = 1100;
+		simple_search_pills_view = <?php if($simple_search_pills_view) { echo "true"; } else { echo "false"; } ?>;
 
 		/* Page load */
 
-		if(window_width <= window_width_breakpoint)
+		if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
 			{
 			jQuery('#ssearchbox').tagEditor('destroy');
 			}
@@ -804,7 +805,7 @@ if (getval("ajax","") == "")
 		jQuery(window).resize(function() 
 			{
 			window_width = jQuery(window).width();
-			if(window_width <= window_width_breakpoint)
+			if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
 				{
 				jQuery('#ssearchbox').tagEditor('destroy');
 				}
