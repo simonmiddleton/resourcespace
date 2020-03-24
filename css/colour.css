@@ -407,6 +407,16 @@ a.ui-button.plupload_button.ui-button-disabled {
     background-image: url("smoothness/images/ui-icons_777777_256x240.png");
 }
 
+/* Firefox on macOS optgroup background styling fix */
+@supports (-moz-osx-font-smoothing: auto) {
+    #CollectionDiv select optgroup {
+        color: initial;
+    }
+    #CollectionDiv select optgroup option {
+        color: #fff;    
+    }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar:vertical {width:12px;}
 ::-webkit-scrollbar:horizonal {height:12px;}
