@@ -2185,6 +2185,9 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 # ------------------------------------------------------------------------------------------------------------------
 # StaticSync (staticsync.php)
 # The ability to synchronise ResourceSpace with a separate and stand-alone filestore.
+# Amend the following to set the ref of the user account that staticsync resources will be 'created by' 
+$staticsync_userref=1;
+
 # ------------------------------------------------------------------------------------------------------------------
 $syncdir="/dummy/path/to/syncfolder"; # The sync folder
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
@@ -2236,10 +2239,6 @@ $staticsync_ignore_deletion_states = array(2, 3);
 
 # staticsync_revive_state - if this is set then deleted items that later reappear will be moved to this archive state
 # $staticsync_revive_state=-1;
-
-# Uncomment and set to the ref of the user account that the staticsync resources will be 'created by' 
-# $staticsync_userref=-1;
-
 #
 # StaticSync Path to metadata mapping
 # ------------------------
