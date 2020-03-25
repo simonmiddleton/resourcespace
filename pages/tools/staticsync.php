@@ -96,6 +96,21 @@ foreach($syncedresources as $syncedresource)
 // Set up an array to monitor processing of new alternative files
 $alternativefiles=array();
 
+if (isset($numeric_alt_suffixes) && $numeric_alt_suffixes > 0)
+    {
+	// Add numeric suffixes to $staticsync_alt_suffix_array to support additional suffixes
+	$newsuffixarray = array();
+    foreach ($staticsync_alt_suffix_array as $suffix => $description)
+        {
+        $newsuffixarray[$suffix] = $description;
+        for ($i = 1; $i < $numeric_alt_suffixes; $i++)
+            {
+            $newsuffixarray[$suffix . $i] = $description . " (" . $i . ")";
+		    }
+	    }
+	$staticsync_alt_suffix_array = $newsuffixarray;
+    }
+
 // Add all the synced alternative files to the list of completed
 if(isset($staticsync_alternative_file_text) && (!$staticsync_ingest || $staticsync_ingest_force))
     {
@@ -185,7 +200,8 @@ function ProcessFolder($folder)
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
-           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents;
+           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
+           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age;
     
     $collection = 0;
     $treeprocessed=false;
@@ -210,28 +226,7 @@ function ProcessFolder($folder)
 
         $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
-        $shortpath_parts = explode('/', $shortpath);
-        
-        if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false && !$staticsync_ingest_force)
-            {
-            // Set a flag so we can process this later in case we don't processs this along with a primary resource file (it may be a new alternative file for an existing resource)
-            $alternativefiles[]=$syncdir . '/' . $shortpath;
-            continue;
-            }
             
-        # Work out extension
-        $extension = explode(".", $file);
-        if(count($extension)>1)
-            {
-            $extension = trim(strtolower($extension[count($extension)-1]));
-            }
-        else
-            {
-            //No extension
-            $extension="";
-            }
-       
-        
         if ($staticsync_mapped_category_tree && !$treeprocessed)
             {
             $path_parts = explode("/", $shortpath);
@@ -263,8 +258,42 @@ function ProcessFolder($folder)
 
         # -------FILES---------------
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
-            {                
-			
+            {
+            if (isset($staticsync_file_minimum_age) && (time() -  filectime($folder . "/" . $file) < $staticsync_file_minimum_age))
+                {
+                // Don't process this file yet as it is too new
+                echo $file . " is too new (" . (time() -  filectime($folder . "/" . $file)) . " seconds), skipping\n";
+                continue;
+                }
+
+            # Work out extension
+            $fileparts  = pathinfo($file);
+            $extension  = $fileparts["extension"];
+            $filename   = $fileparts["filename"];
+
+            if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false && !$staticsync_ingest_force)
+                {
+                // Set a flag so we can process this later in case we don't process this along with a primary resource file (it may be a new alternative file for an existing resource)
+                $alternativefiles[]=$syncdir . '/' . $shortpath;
+                continue;
+                }
+            elseif(isset($staticsync_alt_suffixes) && $staticsync_alt_suffixes && is_array($staticsync_alt_suffix_array))
+                {
+                // Check if this is a file with a suffix defined in the $staticsync_alt_suffixes array and then process at the end
+                foreach($staticsync_alt_suffix_array as $altsfx=>$altname)
+                    {
+                    $altsfxlen = mb_strlen($altsfx);
+                    $checksfx = substr($filename,-$altsfxlen) == $altsfx;
+                    // $ss_nametocheck = substr($file,0,strlen($file)-strlen($extension)-1);
+                    if($checksfx == $altsfx)
+                        {
+                        echo "Adding to \$alternativefiles array " . $file . "\n";
+                        $alternativefiles[]=$syncdir . '/' . $shortpath;
+                        continue 2;
+                        }
+                    }
+                }
+
 			$modified_extension = hook('staticsync_modify_extension', 'staticsync', array($fullpath, $shortpath, $extension));
 			if ($modified_extension !== false) { $extension = $modified_extension; }
 
@@ -503,6 +532,7 @@ function ProcessFolder($folder)
                                                     }
                                                 }
                                             update_field ($r, $field, $value);
+
                                             if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
                                                 {
                                                 $value=$given_value;
@@ -581,7 +611,7 @@ function ProcessFolder($folder)
                             }
 
 						continue;
-						}
+                        }
 
                     # Add to collection
                     if ($staticsync_autotheme)
@@ -614,7 +644,7 @@ function ProcessFolder($folder)
                 echo "File already imported - $shortpath (resource #$existing, alternative #$alternative). Ingesting.." . PHP_EOL;
                
                 $get_resource_path_fpcache[$existing] = ""; // Forces get_resource_path to ignore the syncdir file_path
-                $extension=pathinfo($shortpath, PATHINFO_EXTENSION);
+                //$extension=pathinfo($shortpath, PATHINFO_EXTENSION);
                 $destination=get_resource_path($existing,true,"",true,$extension,-1,1,false,"",$alternative);
                 $result=rename($syncdir . "/" . $shortpath,$destination);
                 if ($result===false)
@@ -716,21 +746,45 @@ function ProcessFolder($folder)
 function staticsync_process_alt($alternativefile, $ref="", $alternative="")
     {
     // Process an alternative file
-    global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews, $done, $filename_field, $view_title_field, $staticsync_title_includes_path;
+    global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews,
+    $done, $filename_field, $view_title_field, $staticsync_title_includes_path, $staticsync_alt_suffixes, $staticsync_alt_suffix_array;
 	
     $shortpath = str_replace($syncdir . '/', '', $alternativefile);
 	if(!isset($done[$shortpath]))
 		{
-		$alt_parts=pathinfo($alternativefile);
-		$altfilenameparts = explode($staticsync_alternative_file_text,$alt_parts['filename']);
-		$altbasename=$altfilenameparts[0];
+        $alt_parts=pathinfo($alternativefile);
+        
+        if(isset($staticsync_alternative_file_text) && strpos($alternativefile,$staticsync_alternative_file_text) !== false)
+		    {
+            $altfilenameparts = explode($staticsync_alternative_file_text,$alt_parts['filename']);
+            $altbasename=$altfilenameparts[0];
+            $altdesc = $altfilenameparts[1];
+            $altname = str_replace("?", strtoupper($alt_parts["extension"]), $lang["fileoftype"]);
+            }
+        elseif(isset($staticsync_alt_suffixes) && $staticsync_alt_suffixes && is_array($staticsync_alt_suffix_array))
+            {
+            // Check for files with a suffix defined in the $staticsync_alt_suffixes array
+            foreach($staticsync_alt_suffix_array as $altsfx=>$altname)
+                {
+                $altsfxlen = mb_strlen($altsfx);
+                if(substr($alt_parts['filename'],-$altsfxlen) == $altsfx)
+                    {
+                    $altbasename = substr($alt_parts['filename'],0,-$altsfxlen);
+                    $altdesc = strtoupper($alt_parts['extension']) . " " . $lang["file"];
+                    break;
+                    }
+                }
+            }
+        
 		if($ref=="")
 			{
-			// We need to find which resource this relates to
+			// We need to find which resource this alternative file relates to
 			echo "Searching for primary resource related to " . $alternativefile . "  in " . $alt_parts['dirname'] . '/' . $altbasename . "." .  PHP_EOL;
 			foreach($done as $syncedfile=>$synceddetails)
 				{
-				if(strpos($syncdir . '/' . $syncedfile,$alt_parts['dirname'] . '/' . $altbasename . ".")!==false)
+                $syncedfile_parts=pathinfo($syncedfile);
+                if(strpos($syncdir . '/' . $syncedfile,$alt_parts['dirname'] . '/' . $altbasename . ".")!==false
+                || (isset($altsfx) && $syncdir . '/' . $syncedfile_parts["filename"] . $altsfx . "." . $syncedfile_parts["extension"] ==  $alternativefile))
 					{
 					// This synced file has the same base name as the resource
 					$ref= $synceddetails["ref"];
@@ -741,7 +795,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         
         if($ref=="")
             {
-            //Primary resource file may have been ingested on a previous run
+            //Primary resource file may have been ingested on a previous run - try to locate it
             $ingested = sql_array("SELECT resource value FROM resource_data WHERE resource_type_field=" . $filename_field . " AND value LIKE '" . $altbasename . "%'");
             
             if(count($ingested) < 1)
@@ -753,51 +807,50 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
             
             if(count($ingested) == 1)
                 {
-        echo "Found matching resource: " . $ingested[0] . PHP_EOL;
+                echo "Found matching resource: " . $ingested[0] . PHP_EOL;
                 $ref = $ingested[0];
-                return false;
+                //return false;
                 }
             else
                 {
                 if($staticsync_title_includes_path)
                     {
-            $title_find = array('/',   '_');
-                        $title_repl = array(' - ', ' ');
-                        $parentpath = ucfirst(str_ireplace($title_find, $title_repl, $shortpath));
+                    $title_find = array('/',   '_');
+                    $title_repl = array(' - ', ' ');
+                    $parentpath = ucfirst(str_ireplace($title_find, $title_repl, $shortpath));
 
                     echo "This file has path: " . $parentpath . PHP_EOL;
                     foreach($ingested as $ingestedref)
                         {
                         $ingestedpath = get_data_by_field($ingestedref, $view_title_field);
                         echo "Found resource with same name. Path: " . $ingestedpath . PHP_EOL;
-           if(strpos($parentpath,$ingestedpath) !== false)
+                        if(strpos($parentpath,$ingestedpath) !== false)
                             {
-               echo "Found matching resource: " . $ingestedref . PHP_EOL;
-               $ref = $ingestedref;
+                           echo "Found matching resource: " . $ingestedref . PHP_EOL;
+                            $ref = $ingestedref;
                             break;
                             }
                         }
                     }
-       if($ref=="")
-            {
-                   echo "Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file" . PHP_EOL;
-                   debug("staticsync - Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file");
-                   return false;
-            }
+                if($ref=="")
+                    {
+                    echo "Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file" . PHP_EOL;
+                    debug("staticsync - Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file");
+                    return false;
+                    }
                 }
             }
          
         echo "Processing alternative file - '" . $alternativefile . "' for resource #" . $ref . PHP_EOL;
 		
-		$alt["file_size"]   = filesize_unlimited($alternativefile);
-		$altparts = explode(".", $alternativefile);
-		$alt["extension"] = $altparts[count($altparts)-1];
-		
 		if($alternative=="")
 			{
-			// Create a new alternative file
-			$alt["altdescription"] = $altfilenameparts[1];
-			$alt["name"] = str_replace("?", strtoupper($alt["extension"]), $lang["fileoftype"]);
+            // Create a new alternative file
+            $alt["file_size"]   = filesize_unlimited($alternativefile);
+            $alt["extension"] = $alt_parts["extension"];                            
+            $alt["altdescription"]  = $altdesc;
+            $alt["name"]            = $altname;            
+
 			$alt["ref"] = add_alternative_file($ref, $alt["name"], $alt["altdescription"], $alternativefile, $alt["extension"], $alt["file_size"]);
 			
 			echo "Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref . PHP_EOL;
