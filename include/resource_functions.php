@@ -5840,11 +5840,10 @@ function sanitize_date_field_input($date, $validate=false)
     
     // Construct value, replacing missing parts with placeholders
     $val  = ($year != "" && $year != "0000") ? $year : "year";
-    $val .= ($month != "") ? $month : "month";
-    $val .= ($day != "") ? $day : "day";
-    $val .= " " . ($hour != "") ? $hour : "hh";
-    $val .= ":" . ($minute != "") ? $minute : "mm";
-    
+    $val .= "-" . ($month != "" ? $month : "month");
+    $val .= "-" . ($day != "" ? $day : "day");
+    $val .= " " . ($hour != "" ? $hour : "hh");
+    $val .= ":" . ($minute != "" ? $minute : "mm");
     if($validate) 
         {
         # Format dates for the date validator e.g. 2020, 2020-month-29 by stripping unused placeholders
