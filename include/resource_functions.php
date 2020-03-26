@@ -5852,9 +5852,9 @@ function sanitize_date_field_input($date, $validate=false)
         }
     else
         {
-        # Format for database entry e.g. 2020-00-00, 2020-00-29 
-        $removedates = array("year","month","day"," hh:mm","hh","mm");
-        $subdates = array("0000","00","00","","00","");
+        # Format for database entry e.g. 2020-00-00, 2020-00-29, if nothing is set replace with a null string
+        $removedates = array("year-month-day hh:mm","year","month","day"," hh:mm","hh","mm");
+        $subdates = array("","0000","00","00","","00","");
         $val = str_replace($removedates,$subdates,$val);
         }
 
