@@ -174,6 +174,7 @@ if ($submitted != "")
         {
         $collection_download_job_data = array(
             'collection'            => $collection,
+            'collectiondata'        => $collectiondata,
             'result'                => $result,
             'size'                  => $size,
             'exiftool_write_option' => $exiftool_write_option,

@@ -4,6 +4,7 @@ Job handler to process collection downloads
 
 Requires the following job data:
 $job_data['collection'] - 
+$job_data['collectiondata'] - 
 $job_data['result'] - Search result of !collectionX
 $job_data['size'] - 
 $job_data['exiftool_write_option']
@@ -51,7 +52,11 @@ else
     return;
     }
 
-$collectiondata = get_collection($collection);
+if(!isset($collectiondata))
+    {
+    $collectiondata = get_collection($collection);
+    }
+
 $collection_resources = $result;
 $modified_collection_resources = hook("modifycollectiondownload");
 if(is_array($modified_collection_resources))
