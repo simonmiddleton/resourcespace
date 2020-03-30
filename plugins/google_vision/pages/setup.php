@@ -32,6 +32,12 @@ $page_def[] = config_add_boolean_select("google_vision_face_detect_fullface", $l
 $page_def[] = config_add_boolean_select("google_vision_face_detect_verbose", $lang["google_vision_face_detect_verbose"],'',300);
 
 
+$page_def[] = config_add_section_header($lang["google_vision_translation"]);
+$page_def[] = config_add_text_input("google_vision_translation_api_key",$lang["google_vision_translation_api_key"]);
+$page_def[] = config_add_text_input("google_vision_translation_languages",$lang["google_vision_translation_languages"]);
+$page_def[] = config_add_boolean_select("google_vision_translation_keep_english", $lang["google_vision_translation_keep_english"],'',300);
+
+
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

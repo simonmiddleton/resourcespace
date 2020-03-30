@@ -16,3 +16,8 @@ $lang["google_vision_face_detect_fullface"] = "If storing face data, detect full
 $lang["google_vision_face_detect_verbose"] = "Store verbose face detection data (includes all face data, locations of facial features and emotion detection information)";
 $lang["google_vision_face_dependent_field"] = "Select a metadata field that will be hidden when facial recognition data field is empty (optional)";
 
+$lang["google_vision_translation"]="Multilingual translation";
+$lang["google_vision_translation_intro"]="Google Vision only returns English keywords. The separate translation API can be used to translate these to other languages. Ensure the Translation API is enabled in the Google console.";
+$lang["google_vision_translation_api_key"]="Enable translation of Vision keywords via translation API by entering a valid Google API key";
+$lang["google_vision_translation_languages"]='Comma separated list of language codes, e.g. "no,es"';
+$lang["google_vision_translation_keep_english"]="Keep the original English keywords?";

@@ -100,11 +100,24 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     if (isset($result["responses"][0]["labelAnnotations"]))      
         {
         # Keywords found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
-        foreach ($result["responses"][0]["labelAnnotations"] as $label)
+
+        # Form labels into array.
+        $labels_raw=$result["responses"][0]["labelAnnotations"];
+        $labels=array();
+        foreach ($labels_raw as $label) {$labels[]=$label["description"];}
+
+        # Translation option
+        global $google_vision_translation_api_key;
+        if (isset($google_vision_translation_api_key) && $google_vision_translation_api_key!="")
+            {
+            $labels=google_visionTranslate($labels);
+            }
+
+        foreach ($labels as $label)
             {
             # Create new or fetch existing node
-            $nodes[]=set_node(null, $google_vision_label_field, ucfirst($label["description"]), null, 9999,true);  #set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting=false)
-           if ($title=="") {$title=$label["description"];}
+            $nodes[]=set_node(null, $google_vision_label_field, ucfirst($label), null, 9999,true);  
+           if ($title=="") {$title=$label;}
             }
                 
         add_resource_nodes($resource,$nodes);
@@ -251,4 +264,56 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     sql_query("update resource set google_vision_processed=1 where ref='" . escape_check($resource) . "'");
     
     return true;
+    }
+
+
+function google_visionTranslate($labels)
+    {
+    // Google Vision only returns English keywords. The separate translation API can be used to translate these to other languages.
+    global $google_vision_translation_api_key,$google_vision_translation_keep_english,$google_vision_translation_languages;
+
+    $labels_joined=join(" :: ",$labels);
+    $languages=explode(",",$google_vision_translation_languages);
+
+    # Start from scratch or create new?
+    if ($google_vision_translation_keep_english) {$new_labels=$labels;} else {$new_labels=array();}
+
+    foreach ($languages as $language)
+        {
+        # API URL
+        $url="https://translation.googleapis.com/language/translate/v2?key=" . $google_vision_translation_api_key;
+
+        # Form the JSON request.
+        $request='{
+            "q": "' . $labels_joined . '",
+            "source": "en",
+            "target": "' . trim($language) . '",
+            "format": "text"
+        }';
+        
+        debug("google_vision: \$request = {$request}");
+        
+        # Build a HTTP request, and fetch results.
+        $opts = array('http' =>
+            array(
+                'method'  => 'POST',
+                'header'  => 'Content-type: application/json',
+                'content' => $request,
+                'ignore_errors' => true
+            )
+        );
+        $context  = stream_context_create($opts);
+        $result = file_get_contents($url, false, $context);
+    
+        debug("google_vision: \$result = " . print_r($result, true));
+  
+        $result=json_decode($result);
+        #print_r($result);
+        if (isset($result->data->translations[0]->translatedText))
+            {
+            $new_labels=array_merge($new_labels,explode(" :: ",$result->data->translations[0]->translatedText));
+            }
+        }
+
+    return $new_labels;
     }

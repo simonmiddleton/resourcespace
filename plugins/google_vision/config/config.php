@@ -19,3 +19,12 @@ $google_vision_fieldvars = array("google_vision_label_field",
     "google_vision_text_field",
     "google_vision_face_detect_field",
     "google_vision_face_dependent_field");
+
+// Enable translation of Vision keywords via translation API by entering a valid key
+$google_vision_translation_api_key="";
+
+// Comma separated list of language codes, e.g. "no,es"
+$google_vision_translation_languages="";
+
+// Option to keep the original English keywords
+$google_vision_translation_keep_english=false;
