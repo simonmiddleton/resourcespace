@@ -743,6 +743,7 @@ $lang["researchrequestassignedmessage"]="Your research request has been assigned
 $lang["researchrequestassigned"]="Research request assigned";
 $lang["researchrequestcompletemessage"]="Your research request is complete and has been added to your 'my collections' page.";
 $lang["researchrequestcomplete"]="Research request completed";
+$lang["researchrequest_custom_field_required"] = "Required custom field '%field' missing";
 
 
 # Misc / global

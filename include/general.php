@@ -8042,6 +8042,30 @@ function delete_resource_type_field($ref)
 
 
 /**
+* Counting errors found in a collection of items. An error is found when an item has an "error" key.
+* 
+* @param  array  $a  Collection of items that may contain errors.
+* 
+* @return integer
+*/
+function count_errors(array $a)
+    {
+    return array_reduce(
+        $a,
+        function($carry, $item)
+            {
+            if(isset($item["error"]))
+                {
+                return ++$carry;
+                }
+
+            return $carry;
+            },
+        0);
+    }
+
+
+/**
  * Function to return a list of tab names retrieved from $fields array containing metadata fields
  * 
  * if there is at least one field with a value for tab_name, then if there is at another field that does not have a tab_name value, it is assigned the value "Default"
@@ -8051,7 +8075,6 @@ function delete_resource_type_field($ref)
  * 
  * @return  array   $fields_tab_names   array of unique tab names contained in the $fields array
  */
-
 function tab_names($fields)
     {
     global $lang; // language strings
@@ -8096,10 +8119,8 @@ function tab_names($fields)
  * 
  * @return  array   $return_array
  */
-
 function search_array_by_keyvalue($array2search, $search_key, $search_value, $return_array)    
     {
-    
     if (!isset($search_key,$search_value,$array2search,$return_array) || !is_array($array2search) || !is_array($return_array))
         {
         exit("Error: invalid input to search_array_by_keyvalue function");
@@ -8117,4 +8138,4 @@ function search_array_by_keyvalue($array2search, $search_key, $search_value, $re
         }
 
     return $return_array; 
-    }    
+    }

@@ -2883,3 +2883,124 @@ function render_help_link($page='',$return_string=false)
     if ($return_string===false) {echo $help_link_html;return;}
     else {return $help_link_html;}
     }
+
+
+/**
+* Render generic Question div (including clearleft)
+* 
+* @var  string    $id              Div ID if required. Set to empty string if not needed.
+* @var  callable  $render_content  Content renderer
+* 
+* @return void
+*/
+function render_question_div($id, callable $render_content)
+    {
+    $id = (trim($id) !== "" ? 'id="' . htmlspecialchars(trim($id)) . '"' : "");
+    ?>
+    <div <?php echo $id; ?> class="Question">
+        <?php $render_content(); ?>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render custom fields (NOT metadata fields)
+* 
+* @param  array  $cfs  Custom fields information (as returned by process_custom_fields_submission function)
+* 
+* @return true
+*/
+function render_custom_fields(array $cfs)
+    {
+    return array_walk($cfs, function($field, $i)
+        {
+        render_question_div("Question_{$field["html_properties"]["id"]}", function() use ($field)
+            {
+            $field_id    = $field["html_properties"]["id"];
+            $field_name  = $field["html_properties"]["name"];
+            $field_value = $field["value"];
+
+            global $FIXED_LIST_FIELD_TYPES;
+            $selected_options_hashes = array_map(function($opt) use ($field_id)
+                {
+                return md5("{$field_id}_{$opt}");
+                }, (in_array($field["type"], $FIXED_LIST_FIELD_TYPES) ? $field["selected_options"] : array()));
+
+            $required_html = ($field["required"] ? "<sup>*</sup>" : "");
+            ?>
+            <label for="custom_<?php echo $field_id; ?>"><?php echo htmlspecialchars(i18n_get_translated($field["title"])) . $required_html; ?></label>
+            <?php
+            switch($field["type"])
+                {
+                case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
+                    ?>
+                    <textarea id="<?php echo $field_id; ?>"
+                              class="stdwidth MultiLine"
+                              name="<?php echo $field_name; ?>"
+                              rows=6
+                              cols=50><?php echo htmlspecialchars($field_value); ?></textarea>
+                    <?php
+                    break;
+
+                case FIELD_TYPE_DROP_DOWN_LIST:
+                    ?>
+                    <select id="<?php echo $field_id; ?>" class="stdwidth" name="<?php echo $field_name; ?>">
+                    <?php
+                    foreach($field["options"] as $f_option)
+                        {
+                        $computed_value = md5("{$field_id}_{$f_option}");
+                        $label = htmlspecialchars(i18n_get_translated($f_option));
+                        $extra_attributes = (in_array($computed_value, $selected_options_hashes) ? " selected" : "");
+
+                        echo render_dropdown_option($computed_value, $label, array(), $extra_attributes);
+                        }
+                    ?>
+                    </select>
+                    <?php
+                    break;
+
+                case FIELD_TYPE_CHECK_BOX_LIST:
+                    ?>
+                    <div>
+                    <?php
+                    foreach($field["options"] as $f_option)
+                        {
+                        $computed_value = md5("{$field_id}_{$f_option}");
+                        $label = htmlspecialchars(i18n_get_translated($f_option));
+                        $checked = (in_array($computed_value, $selected_options_hashes) ? " checked" : "");
+                        ?>
+                        <div class="Inline">
+                            <input type="checkbox" name="<?php echo $field_name; ?>" value="<?php echo $computed_value; ?>"<?php echo $checked; ?>>&nbsp;<?php echo $label; ?>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="clearerleft"></div>
+                    </div>
+                    <?php
+                    break;
+
+                case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
+                default:
+                    ?>
+                    <input type=text
+                           id="<?php echo $field_id; ?>"
+                           class="stdwidth"
+                           name="<?php echo $field_name; ?>"
+                           value="<?php echo htmlspecialchars($field_value); ?>">
+                    <?php
+                    break;
+                }
+
+            if(isset($field["error"]) && trim($field["error"]) != "")
+                {
+                ?>
+                <div class="FormError"><?php echo htmlspecialchars($field["error"]); ?></div>
+                <?php
+                }
+            });
+        });
+    }

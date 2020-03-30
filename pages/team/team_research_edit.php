@@ -8,7 +8,8 @@
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php"; if (!checkperm("r")) {exit ("Permission denied.");}
-include "../../include/research_functions.php";
+include_once "../../include/research_functions.php";
+include_once "../../include/request_functions.php";
 
 $ref=getvalescaped("ref","",true);
 
@@ -68,13 +69,34 @@ include "../../include/header.php";
 <?php if (!hook("replaceresearcheditnoresources")){?>
 <div class="Question"><label><?php echo $lang["noresourcesrequired"]?></label><div class="Fixed"><?php echo $research["noresources"]?></div>
 <div class="clearerleft"> </div></div>
-<?php } ?>
+<?php }
 
-<?php if (!hook("replaceresearcheditshape")){?>
-<div class="Question"><label><?php echo $lang["shaperequired"]?></label><div class="Fixed"><?php echo $research["shape"]?></div>
-<div class="clearerleft"> </div></div>
-<?php } ?>
+if(!hook("replaceresearcheditshape"))
+    {
+    ?>
+    <div class="Question"><label><?php echo $lang["shaperequired"]?></label><div class="Fixed"><?php echo $research["shape"]?></div>
+    <div class="clearerleft"> </div></div>
+    <?php
+    }
 
+// Render research request custom fields
+$rr_cfields = gen_custom_fields_html_props(
+    get_valid_custom_fields(
+        json_decode($research["custom_fields_json"], true)
+    )
+);
+array_walk($rr_cfields, function($field, $i)
+    {
+    render_question_div("Question_{$field["html_properties"]["id"]}", function() use ($field)
+        {
+        $field_id = $field["html_properties"]["id"];
+        ?>
+        <label for="custom_<?php echo $field_id; ?>"><?php echo htmlspecialchars(i18n_get_translated($field["title"])); ?></label>
+        <div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($field["value"], false)); ?></div>
+        <?php
+        });
+    });
+?>
 <div class="Question"><label><?php echo $lang["assignedtoteammember"]?></label>
 <select class="shrtwidth" name="assigned_to"><option value="0"><?php echo $lang["requeststatus0"]?></option>
 <?php $users=get_users_with_permission("r");

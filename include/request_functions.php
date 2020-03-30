@@ -1019,3 +1019,113 @@ function email_resource_request($ref,$details)
     sql_query("update resource set request_count=request_count+1 where ref='$ref'");
     }
 
+
+/**
+* Get collection of valid custom fields. A valid fields has at least the expected field properties
+* 
+* IMPORTANT: these fields are not metadata fields - they are configured through config options such as custom_researchrequest_fields
+* 
+* @param  array  $fields  List of custom fields. Often this will simply be the global configuratio option (e.g custom_researchrequest_fields)
+* 
+* @return array
+*/
+function get_valid_custom_fields(array $fields)
+    {
+    return array_filter($fields, function($field)
+        {
+        global $lang, $FIXED_LIST_FIELD_TYPES;
+
+        $expected_field_properties = array("id", "title", "type", "required");
+        $available_properties      = array_keys($field);
+        $missing_required_fields   = array_diff(
+            $expected_field_properties,
+            array_intersect($expected_field_properties, $available_properties));
+
+        if(count($missing_required_fields) > 0)
+            {
+            debug("get_valid_custom_fields: custom field misconfigured. Missing properties: "
+                . implode(", ", array_values($missing_required_fields)));
+            return false;
+            }
+
+        // options property required for fixed list fields type
+        if(in_array($field["type"], $FIXED_LIST_FIELD_TYPES) && !array_key_exists("options", $field))
+            {
+            debug("get_valid_custom_fields: custom fixed list field misconfigured. Missing the 'options' property!");
+            return false;
+            }
+
+        return true;
+        });
+    }
+
+
+/**
+* Generate HTML properties for custom fields. These properties can then be used by other functions
+* like render_custom_fields or process_custom_fields_submission
+* 
+* @param  array  $fields  List of custom fields as returned by get_valid_custom_fields(). Note: At this point code 
+* assumes fields have been validated
+* 
+* @return array Returns collection items with the extra "html_properties" key
+*/
+function gen_custom_fields_html_props(array $fields)
+    {
+    return array_map(function($field)
+        {
+        $field["html_properties"] = array(
+            "id"   => "custom_field_{$field["id"]}",
+            "name" => (!empty($field["options"]) ? "custom_field_{$field["id"]}[]" : "custom_field_{$field["id"]}"),
+        );
+        return $field;
+        }, $fields);
+    }
+
+
+/**
+* Process posted custom fields
+* 
+* @param  array    $fields     List of custom fields
+* @param  boolean  $submitted  Processing submitted fields?
+* 
+* @return array Returns collection of items with the extra "html_properties" key
+*/
+function process_custom_fields_submission(array $fields, $submitted)
+    {
+    return array_map(function($field) use ($submitted)
+        {
+        global $lang, $FIXED_LIST_FIELD_TYPES;
+
+        $field["value"] = trim(getval($field["html_properties"]["name"], ""));
+
+        if(in_array($field["type"], $FIXED_LIST_FIELD_TYPES))
+            {
+            // The HTML id and name are basically identical (@see gen_custom_fields_html_props() ). If field is of fixed 
+            // list type, then the name prop will be appended with "[]". For this reason, when we call getval() we need 
+            // to use the elements' ID instead.
+            $submitted_data = getval($field["html_properties"]["id"], array());
+
+            // Find the selected options
+            $field["selected_options"] = array_filter($field["options"], function($option) use ($field, $submitted_data)
+                {
+                $computed_value = md5("{$field["html_properties"]["id"]}_{$option}");
+                if(in_array($computed_value, $submitted_data))
+                    {
+                    return true;
+                    }
+
+                return false;
+                });
+
+            $field["value"] = implode(", ", $field["selected_options"]);
+            }
+
+        if($submitted && $field["required"] && $field["value"] == "")
+            {
+            $field["error"] = str_replace("%field", i18n_get_translated($field["title"]), $lang["researchrequest_custom_field_required"]);
+            return $field;
+            }
+
+        return $field;
+        }, gen_custom_fields_html_props(get_valid_custom_fields($fields)));
+    }

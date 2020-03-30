@@ -3,30 +3,50 @@ include_once "../include/db.php";
 include_once "../include/general.php";
 include_once "../include/authenticate.php";
 include_once "../include/research_functions.php";
+include_once "../include/request_functions.php";
 
 $name        = getval('name', '');
 $email       = getval('email', '');
 $description = getval('description', '');
+$save        = getval("save","") != "" && enforcePostRequest(false);
+$processed_rr_cfields = process_custom_fields_submission($custom_researchrequest_fields, $save);
 
-if (getval("save","") != "" && enforcePostRequest(false))
+if ($save)
     {
-    $errors=false;
-    if ($name == "") {$errors=true;$error_name=true;}
-    if ($description == "") {$errors=true;$error_description=true;}
-    if (isset($anonymous_login) && $anonymous_login==$username && $email == "") {$errors=true;$error_email=true;}
+    $errors = false;
+    if ($name == "")
+        {
+        $errors = true;
+        $error_name = true;
+        }
+
+    if ($description == "")
+        {
+        $errors = true;
+        $error_description = true;
+        }
+
+    if (isset($anonymous_login) && $anonymous_login == $username && $email == "")
+        {
+        $errors = true;
+        $error_email = true;
+        }
+
+    if(count_errors($processed_rr_cfields) > 0)
+        {
+        $errors = true;
+        }
+
     if ($errors == false) 
         {
-        # Log this
         daily_stat("New research request",0);
-
-        send_research_request();
+        send_research_request($processed_rr_cfields);
         redirect($baseurl_short."pages/done.php?text=research_request");
         }
     }
 
 include "../include/header.php";
 ?>
-
 <div class="BasicsBox">
     <h1><?php echo $lang["researchrequest"]?></h1>
     <p class="tight"><?php echo text("introtext");render_help_link("resourceadmin/user-research-requests");?></p>
@@ -148,10 +168,15 @@ include "../include/header.php";
             </select>
             <div class="clearerleft"></div>
         </div>
+        <?php
+        render_custom_fields($processed_rr_cfields);
 
-        <?php if (file_exists(dirname(__FILE__) . "/../plugins/research_request.php")) { include dirname(__FILE__) . "/../plugins/research_request.php"; } ?>
-
-
+        // Legacy plugins
+        if(file_exists(dirname(__FILE__) . "/../plugins/research_request.php"))
+            {
+            include dirname(__FILE__) . "/../plugins/research_request.php";
+            }
+        ?>
         <div class="QuestionSubmit">
             <label for="buttons"> </label>          
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["sendrequest"]?>&nbsp;&nbsp;" />
@@ -160,7 +185,5 @@ include "../include/header.php";
     </form>
     <?php } # end hook('replace_research_request_form') ?>
 </div>
-
 <?php
 include "../include/footer.php";
-?>

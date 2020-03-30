@@ -3,7 +3,7 @@
 # Functions to accomodate research requests
 
 if (!function_exists("send_research_request")){
-function send_research_request()
+function send_research_request(array $rr_cfields)
 	{
 	# Insert a search request into the requests table.
 	
@@ -11,16 +11,27 @@ function send_research_request()
 	$rt="";
 	$types=get_resource_types();for ($n=0;$n<count($types);$n++) {if (getval("resource" . $types[$n]["ref"],"")!="") {if ($rt!="") {$rt.=", ";} $rt.=$types[$n]["ref"];}}
 	
-	global $userref;
+	global $userref, $custom_researchrequest_fields;
 	$as_user=getvalescaped("as_user",$userref,true); # If userref submitted, use that, else use this user
-	
-	# Insert the request
-	sql_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape)
+
+    /**
+    * @var string JSON representation of custom research request fields after removing the generated HTML properties we 
+    *             needed during form processing
+    * @see gen_custom_fields_html_props()
+    */
+    $rr_cfields_json = json_encode(array_map(function($v) { unset($v["html_properties"]); return $v; }, $rr_cfields), JSON_UNESCAPED_UNICODE);
+    if(json_last_error() !== JSON_ERROR_NONE)
+        {
+        trigger_error(json_last_error_msg());
+        }
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "NULL" : "'" . escape_check($rr_cfields_json) . "'");
+
+	sql_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
 	values (now(),'$as_user','" . getvalescaped("name","") . "','" . getvalescaped("description","") . "'," .
 	((getvalescaped("deadline","")=="")?"null":"'" . getvalescaped("deadline","") . "'") . 
 	",'" . getvalescaped("contact","") . "','" . getvalescaped("email","") . "','" . getvalescaped("finaluse","") . "','" . $rt . "'," .
 	((getvalescaped("noresources","")=="")?"null":"'" . getvalescaped("noresources","") . "'") . 
-	",'" . getvalescaped("shape","") . "')");
+	",'" . getvalescaped("shape","") . "', {$rr_cfields_json_sql})");
 	
 	# E-mails a resource request (posted) to the team
 	global $applicationname,$email_from,$baseurl,$email_notify,$username,$userfullname,$useremail,$lang, $admin_resource_access_notifications;
@@ -78,6 +89,7 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 if (!function_exists("get_research_request")){
 function get_research_request($ref)
 	{
+    $ref = escape_check($ref);
 	$return=sql_query("select *,email,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref='$ref'");
 	return $return[0];
 	}
@@ -191,43 +203,4 @@ function set_research_collection($research,$collection)
 	{
 	sql_query("update research_request set collection='$collection' where ref='$research'");
 	}
-}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-?>
+}
