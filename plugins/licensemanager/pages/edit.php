@@ -16,8 +16,14 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	# Save license data
 	
 	# Construct expiry date
-	$expires=getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
+	$expires="'" . getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","") . "'";
 	
+	# No expiry date ticked? Insert null
+	if (getval("no_expiry_date","")=="yes")
+		{
+		$expires="null";
+		}
+
 	# Construct usage
 	$license_usage="";
 	if (isset($_POST["license_usage"])) {$license_usage=escape_check(join(", ",$_POST["license_usage"]));}
@@ -25,7 +31,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	if ($ref=="new")
 		{
 		# New record 
-		sql_query("insert into resource_license (resource,outbound,holder,license_usage,description,expires) values ('" . getvalescaped("resource","") . "', '" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', '$expires')");	
+		sql_query("insert into resource_license (resource,outbound,holder,license_usage,description,expires) values ('" . getvalescaped("resource","") . "', '" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
 		$ref=sql_insert_id();
 		
 		resource_log($resource,"","",$lang["new_license"] . " " . $ref);
@@ -33,7 +39,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	else
 		{
 		# Existing record	
-		sql_query("update resource_license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires='$expires' where ref='$ref' and resource='$resource'");
+		sql_query("update resource_license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref' and resource='$resource'");
 		
 		resource_log($resource,"","",$lang["edit_license"] . " " . $ref);
 		}
@@ -116,7 +122,9 @@ foreach ($license_usage_mediums as $medium)
 
 
 <div class="Question"><label><?php echo $lang["fieldtitle-expiry_date"]?></label>
-	<select name="expires_day" class="SearchWidth" style="width:98px;">
+
+
+	<select id="expires_day" name="expires_day" class="SearchWidth" style="width:98px;">
 	  <?php
 	  for ($n=1;$n<=31;$n++)
 		{
@@ -126,7 +134,7 @@ foreach ($license_usage_mediums as $medium)
 	  ?>
 	</select>
 
-	<select name="expires_month" class="SearchWidth" style="width:98px;">
+	<select id="expires_month" name="expires_month" class="SearchWidth" style="width:98px;">
 	  <?php
 	  for ($n=1;$n<=12;$n++)
 		{
@@ -136,7 +144,7 @@ foreach ($license_usage_mediums as $medium)
 	  ?>
 	</select>
 	
-	<select name="expires_year" class="SearchWidth" style="width:98px;">
+	<select id="expires_year" name="expires_year" class="SearchWidth" style="width:98px;">
 	  <?php
 	  $y=date("Y")+30;
 	  for ($n=$minyear;$n<=$y;$n++)
@@ -145,6 +153,15 @@ foreach ($license_usage_mediums as $medium)
 		}
 	  ?>
 	</select>
+
+	<!-- Option for no expiry date -->
+	&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($license["expires"]=="") { ?>checked<?php } ?>
+	onChange="jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',this.checked);"
+	/><?php echo $lang["no_expiry_date"] ?>
+	<?php if ($license["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
+
+
+
 <div class="clearerleft"> </div></div>
 
 

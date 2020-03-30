@@ -18,3 +18,4 @@ $lang["outbound_license_description"]="(we are the copyright holders)";
 
 $lang["inbound"]="Inbound";
 $lang["inbound_license_description"]="(they are the copyright holders)";
+$lang["no_expiry_date"]="No expiry date";

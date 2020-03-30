@@ -54,7 +54,7 @@ function HookLicensemanagerViewCustompanels()
 				?>
 			</td>
 			<td><?php echo $license["description"] ?></td>
-			<td><?php echo nicedate($license["expires"]) ?></td>
+			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
 		
 			<?php if ($edit_access) { ?>
 			<td><div class="ListTools">
