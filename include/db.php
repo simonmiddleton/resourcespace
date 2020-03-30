@@ -489,7 +489,7 @@ if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {head
 # ----------------------------------------------------------------------------------------------------------------------
 # Basic CORS and CSRF protection
 #
-if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers)
+if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagename,$CSRF_exempt_pages))
     {
     /*
     Based on OWASP: General Recommendations For Automated CSRF Defense

@@ -3622,6 +3622,7 @@ $migrating_scrambled = false;
 ##################################################
 $CSRF_enabled = true;
 $CSRF_token_identifier = "CSRFToken";
+$CSRF_exempt_pages = array("login");
 // Allow other systems to make cross-origin requests. The elements of this configuration option should follow the 
 // "<scheme>://<hostname>" syntax
 $CORS_whitelist = array();
