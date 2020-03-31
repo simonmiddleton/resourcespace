@@ -472,29 +472,46 @@ if ($add!="")
 	// If we provide a collection ID use that one instead
 	$to_collection = getvalescaped('toCollection', '');
 
-	if(checkperm("noex"))
-		{
-		// If collection has been shared externally users with this permission can't add resources
-		$externalkeys=get_collection_external_access(($to_collection === '') ? $usercollection : $to_collection);
-		if(count($externalkeys)>0)
-				{
-				$allowadd=false;				
-				?>
-				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
-				<?php
-				}
-		}
+	if(strpos($add,",")>0)
+        {
+        $addarray=explode(",",$add);
+        }
+    else
+        {
+        $addarray[0]=$add;
+        unset($add);
+        }	
+
+	// If collection has been shared externally need to check access and permissions
+    $externalkeys=get_collection_external_access(($to_collection === '') ? $usercollection : $to_collection);
+    if(count($externalkeys) > 0)
+        {
+        if(checkperm("noex"))
+            {
+            $allowadd=false;
+            }
+        else
+            {
+            foreach ($addarray as $add)
+                {
+                $resaccess = get_resource_access($add);
+                // Not permitted if share is open and access is restricted
+                if(min(array_column($externalkeys,"access")) < $resaccess)
+                    {
+                    $allowadd=false;
+                    }
+                }
+            }
+        if(!$allowadd)
+            {			
+            ?>
+            <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+            <?php
+            }
+        }
+
 	if($allowadd)
 		{
-		if(strpos($add,",")>0)
-			{
-			$addarray=explode(",",$add);
-			}
-		else
-			{
-			$addarray[0]=$add;
-			unset($add);
-			}	
 		foreach ($addarray as $add)
 			{
 			hook("preaddtocollection");
