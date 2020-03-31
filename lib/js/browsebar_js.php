@@ -13,7 +13,9 @@ header("Content-type: text/javascript");
 
 function ToggleBrowseBar(forcestate, noresize) 
 	{
+    console.debug("ToggleBrowseBar(forcestate = %o, noresize = %o)", forcestate, noresize);
     var browseopen = (typeof browse_show === "undefined" || browse_show == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
+    console.debug("browseopen = %o", browseopen);
 	if (browseopen)
 		{
         jQuery('#BrowseBar').show();
@@ -103,6 +105,7 @@ function renderBrowseItem(node, parent)
 
 function toggleBrowseElements(browse_id, reload, useraction)
     {
+    console.debug("toggleBrowseElements(browse_id = %o, reload = %o, useraction = %o)", browse_id, reload, useraction);
     if (typeof reload === 'undefined') {reload = false;}
     if (typeof useraction === 'undefined') {useraction = false;}
 
@@ -217,6 +220,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
     refreshicon.addClass("fa-spin");
     b_loading.push(browse_id);
+    console.debug("b_loading = %o", b_loading);
     
     if(typeof browsepostload === "undefined")
         {
@@ -289,19 +293,19 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
             browsepostload[browse_id].forEach(function (childitem)
                 {
-                //console.log('Finished loading ' + browse_id + ', loading child item ' + childitem);
+                console.debug("Finished loading %o, loading child item %o", browse_id, childitem);
                 toggleBrowseElements(childitem, true);
                 });
                 
             if(browse_toload.length == 0)
                 {
-                //console.log("Finished browse_bar reload, initialising drop"); 
+                console.debug("Finished browse_bar reload, initialising drop"); 
                 BrowseBarInit();
                 browse_clicked = false;
                 }
             else
                 {
-                //console.log("Still to load: " + browse_toload);
+                console.debug("Still to load: %o", browse_toload);
                 }
             })
         .fail(function(xhr, status, error)
@@ -327,9 +331,12 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
 function ReloadBrowseBar()
     {
+    console.debug("ReloadBrowseBar()");
     var allopen = jQuery.cookie("browseopen") ? decodeURIComponent(jQuery.cookie("browseopen")).split(/,/) : new Array();  
-            
+    console.debug("allopen = %o", allopen);
+
     browse_toload = allopen;   
+    console.debug("browse_toload = %o", browse_toload);
     allopen.forEach(function (item)
         {
         toggleBrowseElements(item, true);
