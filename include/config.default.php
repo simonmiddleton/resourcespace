@@ -1642,6 +1642,7 @@ $mime_type_by_extension = array(
     'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
     'odp'  => 'application/vnd.oasis.opendocument.presentation',
     'svg'  => 'image/svg+xml',
+    'pdf'  => 'application/pdf',
   );
 
 # PHP execution time limit
