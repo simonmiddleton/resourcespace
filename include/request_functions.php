@@ -1009,7 +1009,7 @@ function email_resource_request($ref,$details)
             }
         else
             {
-            $sender =  (!empty($useremail))? $useremail : (!empty($templatevars["formemail"]))? $templatevars["formemail"] :"";
+            $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
             
             if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL)){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
             }
