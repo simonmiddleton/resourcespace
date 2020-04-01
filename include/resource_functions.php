@@ -4105,16 +4105,26 @@ function download_summary($resource)
 	# Returns a summary of downloads by usage type
 	return sql_query("select usageoption,count(*) c from resource_log where resource='$resource' and type='D' group by usageoption order by usageoption");
 	}
-	
-function check_use_watermark(){
-	# This function checks whether or not to use watermarks
-	# Note that access status must be available prior to calls to this function
 
-    global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search;
+/*
+* Check if watermark is required. 
+*
+* @param string $download_key  Optional - download key used when $terms_download and $watermark_open are enabled
+* @param string $resource      Optional - resource ID to check download key is valid for
+* 
+* * @return boolean
+*/
+function check_use_watermark($download_key = "", $resource="")
+    {
+    debug_function_call("check_use_watermark", func_get_args());
+	# This function checks whether or not to use watermarks
+    # Note that access status must be available prior to calls to this function    
+
+    global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search, $terms_download;
 
     # Cannot watermark without a watermark
     if(!isset($watermark))
-        { 
+        {
         return false; 
         }
 
@@ -4132,11 +4142,12 @@ function check_use_watermark(){
         return true; 
         }
 
-    # Watermark if open override is present    
+    # Watermark if open override is present 
     if(    $watermark_open  
         && (    ($pagename == "preview") 
              || ($pagename == "view") 
              || ($pagename == "search" && $watermark_open_search)
+             || ($pagename == "download" && $terms_download && !download_link_check_key($download_key, $resource))
            ) )
         { 
         return true; 
@@ -5859,4 +5870,47 @@ function sanitize_date_field_input($date, $validate=false)
         }
 
     return $val;
+    }
+
+/**
+* Create a temporary download key for a specific user or key and resource combination
+* Used when both $watermark_open and $terms_download are enabled 
+*
+* @param string $id                 Key identifier e.g. user ID or external access key
+* @param integer $resource          Resource ID
+* 
+* @return string
+*/
+function download_link_generate_key($id,$resource)
+    {
+    global $scramble_key, $usersession;
+    $remote_ip = get_ip();
+    return $id . ":" . hash('sha256',$id . $usersession . $scramble_key . $resource . $remote_ip);
+    }
+
+/**
+* Check the download key for a specific user/resource combination
+* 
+* @param string  $download_key      Download key
+* @param integer $resource          Resource ID
+* 
+* @return string
+*/
+function download_link_check_key($download_key, $resource)
+    {
+    $download_link_parts = explode(":", $download_key);
+
+    if(count($download_link_parts) != 2)
+        {
+        return false;
+        }
+    
+    $download_link_id   = $download_link_parts[0];
+    $keycheck = download_link_generate_key($download_link_id,$resource);
+    if($keycheck != $download_key)
+        {
+        return false;
+        }
+
+    return true;
     }

@@ -6984,7 +6984,7 @@ function generateSecureKey($length = 64)
  * @param  string               $spamcode The antispam hash to check against
  * @param  string               $usercode The antispam code the user entered
  * @param  string               $spamtime The antispam timestamp
- * @return boolean              Returnd tru if the code was successfully validated, otherwise false
+ * @return boolean              Return true if the code was successfully validated, otherwise false
  */ 
 function verify_antispam($spamcode="",$usercode="",$spamtime=0)
     {

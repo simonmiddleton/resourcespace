@@ -118,8 +118,8 @@ else
         }
 
     // additional access check, as the resource download may be allowed, but access restriction should force watermark.  
-    $access        = get_resource_access($ref);  
-    $use_watermark = check_use_watermark($ref);
+    $access        = get_resource_access($ref);
+    $use_watermark = check_use_watermark(getval("dl_key",""),$ref);
 
     // If no extension was provided, we fallback to JPG.
     if('' == $ext)

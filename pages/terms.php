@@ -2,6 +2,7 @@
 include_once "../include/db.php";
 include_once "../include/general.php";
 include_once "../include/collections_functions.php";
+include_once "../include/resource_functions.php";
 
 # External access support (authenticate only if no key provided)
 $k=getvalescaped("k","");
@@ -46,7 +47,13 @@ if('' != $terms_save && enforcePostRequest(false))
 		$terms_url_accepted=(strpos($url, "?")?"&":"?") . "iaccept=".$terms_iaccept;
         }
 
-	$url.=$terms_url_accepted;
+    $url.=$terms_url_accepted;
+    
+    if(strpos($url, 'download_progress.php') !== false)
+        {
+        $temp_download_key = download_link_generate_key((isset($userref) ? $userref : $k),$ref);
+        rs_setcookie("dl_key",$temp_download_key,1, $baseurl_short, "", substr($baseurl,0,5)=="https", true);
+        }
 
     if(false !== strpos($url, 'http'))
         {
@@ -55,8 +62,7 @@ if('' != $terms_save && enforcePostRequest(false))
         }
     else
         {
-		redirect($url);
-		
+		redirect($url);		
         }
     }
 
@@ -89,6 +95,7 @@ include "../include/header.php";
 		onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
 	<?php generateFormToken("terms"); ?>
     <input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
+    <input type=hidden name="ref" value="<?php echo htmlspecialchars($ref)?>">
 	
 	<div class="Question">
 	<label for="iaccept"><?php echo $lang["iaccept"] ?></label>
