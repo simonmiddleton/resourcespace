@@ -1525,7 +1525,7 @@ function do_search(
 
         if(!empty($allowed_themes)) 
             {
-            $collection_join .= "AND jc.ref IN (" . implode($allowed_themes,', ') . ") ";
+            $collection_join .= "AND jc.ref IN (" . implode(', ',$allowed_themes) . ") ";
             }
         else
             {
