@@ -367,3 +367,49 @@ function message_user_remove($usermessage)
 
     sql_query("DELETE FROM user_message WHERE user = {$userref} AND ref = '{$usermessage}'");
     }
+
+/**
+* Send a system notification or email to the system administrators according to preference
+* 
+* @param string  $message      Message text
+* @param string  $url          Optional URL
+* 
+* @return void
+*/ 
+function system_notification($message, $url="")
+    {
+    global $lang, $applicationname;
+    $admin_notify_emails = array();
+    $admin_notify_users = array();
+    $notify_users=get_notification_users("SYSTEM_ADMIN");
+    $subject = str_replace("%%APPLICATION_NAME%%", $applicationname, $lang["system_notification"]);
+    foreach($notify_users as $notify_user)
+        {
+        get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);
+        if($send_message==false)
+            {
+            $continue;
+            }
+        get_config_option($notify_user['ref'],'email_user_notifications', $send_email);
+        if($send_email && $notify_user["email"]!="")
+            {
+            $admin_notify_emails[] = $notify_user['email'];
+            }
+        else
+            {
+            $admin_notify_users[]=$notify_user["ref"];
+            }
+        }
+    foreach($admin_notify_emails as $admin_notify_email)
+        {
+        $template = "system_notification_email";
+        $templatevars = array("message"=>$message,"url"=>$url);
+        $messageplain = $message . "<br/><br/><a href='" . $url . "' >" . $url . "</a>";
+        send_mail($admin_notify_email,$subject,$messageplain,'','',$template,$templatevars);
+        }
+
+    if (count($admin_notify_users)>0)
+        {
+        message_add($admin_notify_users,escape_check($message),$url, 0);
+        }
+    }

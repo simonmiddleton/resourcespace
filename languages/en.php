@@ -2865,4 +2865,6 @@ $lang["error_server_missing_module"]        = "The server is missing the require
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
 $lang["filechecksum"]                       = "File checksum";
+$lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
+$lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 
