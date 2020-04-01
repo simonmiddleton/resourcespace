@@ -2,8 +2,8 @@
 
 namespace SimpleSAML\Store;
 
-use \SimpleSAML_Configuration as Configuration;
-use \SimpleSAML\Store;
+use SimpleSAML\Configuration;
+use SimpleSAML\Store;
 
 /**
  * A memcache based data store.
@@ -39,10 +39,10 @@ class Memcache extends Store
      */
     public function get($type, $key)
     {
-        assert('is_string($type)');
-        assert('is_string($key)');
+        assert(is_string($type));
+        assert(is_string($key));
 
-        return \SimpleSAML_Memcache::get($this->prefix . '.' . $type . '.' . $key);
+        return \SimpleSAML\Memcache::get($this->prefix . '.' . $type . '.' . $key);
     }
 
 
@@ -52,19 +52,20 @@ class Memcache extends Store
      * @param string $type The data type.
      * @param string $key The key.
      * @param mixed $value The value.
-     * @param int|NULL $expire  The expiration time (unix timestamp), or NULL if it never expires.
+     * @param int|null $expire The expiration time (unix timestamp), or NULL if it never expires.
+     * @return void
      */
     public function set($type, $key, $value, $expire = null)
     {
-        assert('is_string($type)');
-        assert('is_string($key)');
-        assert('is_null($expire) || (is_int($expire) && $expire > 2592000)');
+        assert(is_string($type));
+        assert(is_string($key));
+        assert($expire === null || (is_int($expire) && $expire > 2592000));
 
         if ($expire === null) {
             $expire = 0;
         }
 
-        \SimpleSAML_Memcache::set($this->prefix . '.' . $type . '.' . $key, $value, $expire);
+        \SimpleSAML\Memcache::set($this->prefix . '.' . $type . '.' . $key, $value, $expire);
     }
 
 
@@ -73,12 +74,13 @@ class Memcache extends Store
      *
      * @param string $type The data type.
      * @param string $key The key.
+     * @return void
      */
     public function delete($type, $key)
     {
-        assert('is_string($type)');
-        assert('is_string($key)');
+        assert(is_string($type));
+        assert(is_string($key));
 
-        \SimpleSAML_Memcache::delete($this->prefix . '.' . $type . '.' . $key);
+        \SimpleSAML\Memcache::delete($this->prefix . '.' . $type . '.' . $key);
     }
 }

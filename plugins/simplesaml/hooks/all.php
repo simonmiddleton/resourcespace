@@ -3,13 +3,12 @@ include_once __DIR__ . '/../../../include/collections_functions.php';
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
 function HookSimplesamlAllPreheaderoutput()
-    {
-    if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
+    {        
+    if(!simplesaml_config_check())
         {
-        debug("simplesaml: plugin not configured.");
         return false;
         }
-        
+       
 	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login, $simplesaml_allow_standard_login,
     $anonymous_login, $pagename, $baseurl;
    
@@ -98,10 +97,9 @@ function HookSimplesamlAllPreheaderoutput()
 
 
 function HookSimplesamlAllProvideusercredentials()
-        {
-    	if(!file_exists(simplesaml_get_lib_path() . '/config/config.php'))
+        {        
+        if(!simplesaml_config_check())
             {
-            debug("simplesaml: plugin not configured.");
             return false;
             }
           
@@ -439,13 +437,12 @@ function HookSimplesamlAllProvideusercredentials()
         }
 
 function HookSimplesamlAllLoginformlink()
-        {
-        if(!file_exists(simplesaml_get_lib_path() . '/config/config.php'))
+        {        
+        if(!simplesaml_config_check())
             {
-            debug("simplesaml: plugin not configured.");
             return false;
             }
-			
+        
 		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
 		global $baseurl, $lang, $simplesaml_login;
 		
@@ -460,7 +457,11 @@ function HookSimplesamlAllLoginformlink()
 
 
 function HookSimplesamlLoginPostlogout()
-        {
+        {        
+        if(!simplesaml_config_check())
+            {
+            return false;
+            }
 		global $simplesaml_login;
 		
 		if($simplesaml_login && simplesaml_is_authenticated()) 
@@ -468,7 +469,11 @@ function HookSimplesamlLoginPostlogout()
         }
 
 function HookSimplesamlLoginPostlogout2()
-        {
+        {     
+        if(!simplesaml_config_check())
+            {
+            return false;
+            }
 		global $baseurl,$simplesaml_login;
 		if (getval("logout","")!="" && $simplesaml_login && simplesaml_is_authenticated())
 			{
@@ -490,7 +495,12 @@ function HookSimplesamlAllCheckuserloggedin()
 * 
 */
 function HookSimplesamlAllReplaceheadernav1anon()
-    {
+    {         
+    if(!simplesaml_config_check())
+        {
+        return false;
+        }
+
     global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
 
     // Don't show any link if signed in via SAML already and standard logins have been disabled
@@ -533,6 +543,10 @@ function HookSimplesamlAllReplaceheadernav1anon()
     
 function HookSimplesamlCollection_emailReplacecollectionemailredirect()
     {
+    if(!simplesaml_config_check())
+        {
+        return false;
+        }
     global $baseurl_short, $userref;
     
     redirect($baseurl_short . "pages/done.php?text=collection_email");
@@ -540,13 +554,21 @@ function HookSimplesamlCollection_emailReplacecollectionemailredirect()
 
 function HookSimplesamlResource_emailReplaceresourceemailredirect()
     {
+    if(!simplesaml_config_check())
+        {
+        return false;
+        }
     global $baseurl_short, $userref, $ref, $search, $offset, $order_by, $sort, $archive;
     
-  redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive));
+    redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive));
     }
 
 function HookSimplesamlAllCheck_access_key()
     {
+    if(!simplesaml_config_check())
+        {
+        return false;
+        }
     global $external_share_view_as_internal, $simplesaml_login;
 
     /*

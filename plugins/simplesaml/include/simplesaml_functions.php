@@ -165,3 +165,28 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         message_add($message_users,str_replace($baseurl . "/", $baseurl_short, $message), $messageurl);
         }    
     }
+
+function simplesaml_config_check()
+	{
+    global $simplesaml_version, $lang;
+	if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
+
+    require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+	$config = SimpleSAML_Configuration::getInstance();
+    $version = $config->getVersion();
+    if($version != $simplesaml_version)
+        {
+        if(get_sysvar("SAML_UPGRADE_REQUIRED",0) == 0)
+            {
+            system_notification($lang['simplesaml_authorisation_version_error'], "https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade");
+            // Set flag so this is not sent multiple times
+            set_sysvar("SAML_UPGRADE_REQUIRED",1);
+            }
+        return false;
+        }
+	return true;
+	}

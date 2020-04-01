@@ -49,3 +49,4 @@ $lang['simplesaml_authorisation_rules_description'] = 'Enable ResourceSpace to b
 $lang['simplesaml_authorisation_claim_name_label'] = 'Attribute (assertion/ claim) name';
 $lang['simplesaml_authorisation_claim_value_label'] = 'Attribute (assertion/ claim) value';
 $lang['simplesaml_authorisation_login_error'] = "You don't have access to this application! Please contact the administrator for your account!";
+$lang['simplesaml_authorisation_version_error'] = "The current SimpleSAML configuration needs to be updated. Please refer to the <a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade' target='_blank'> Upgrading SimpleSAML </a> section of the Knowledge Base for more information";

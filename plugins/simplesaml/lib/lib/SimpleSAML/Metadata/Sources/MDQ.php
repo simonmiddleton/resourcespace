@@ -2,8 +2,12 @@
 
 namespace SimpleSAML\Metadata\Sources;
 
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
+use SimpleSAML\Configuration;
+use SimpleSAML\Error;
 use SimpleSAML\Logger;
-use SimpleSAML\Utils\HTTP;
+use SimpleSAML\Metadata\SAMLParser;
+use SimpleSAML\Utils;
 
 /**
  * This class implements SAML Metadata Query Protocol
@@ -13,9 +17,9 @@ use SimpleSAML\Utils\HTTP;
  * @author Tamas Frank, NIIFI
  * @package SimpleSAMLphp
  */
-class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
-{
 
+class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
+{
     /**
      * The URL of MDQ server (url:port)
      *
@@ -30,6 +34,11 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      * @var string|null
      */
     private $validateFingerprint;
+
+    /**
+     * @var string
+     */
+    private $validateFingerprintAlgorithm;
 
     /**
      * The cache directory, or null if no cache directory is configured.
@@ -65,10 +74,10 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      */
     protected function __construct($config)
     {
-        assert('is_array($config)');
+        assert(is_array($config));
 
         if (!array_key_exists('server', $config)) {
-            throw new \Exception(__CLASS__.": the 'server' configuration option is not set.");
+            throw new \Exception(__CLASS__ . ": the 'server' configuration option is not set.");
         } else {
             $this->server = $config['server'];
         }
@@ -78,9 +87,14 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
         } else {
             $this->validateFingerprint = null;
         }
+        if (isset($config['validateFingerprintAlgorithm'])) {
+            $this->validateFingerprintAlgorithm = $config['validateFingerprintAlgorithm'];
+        } else {
+            $this->validateFingerprintAlgorithm = XMLSecurityDSig::SHA1;
+        }
 
         if (array_key_exists('cachedir', $config)) {
-            $globalConfig = \SimpleSAML_Configuration::getInstance();
+            $globalConfig = Configuration::getInstance();
             $this->cacheDir = $globalConfig->resolvePath($config['cachedir']);
         } else {
             $this->cacheDir = null;
@@ -104,7 +118,7 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
     public function getMetadataSet($set)
     {
         // we don't have this metadata set
-        return array();
+        return [];
     }
 
 
@@ -118,11 +132,15 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      */
     private function getCacheFilename($set, $entityId)
     {
-        assert('is_string($set)');
-        assert('is_string($entityId)');
+        assert(is_string($set));
+        assert(is_string($entityId));
+
+        if ($this->cacheDir === null) {
+            throw new Error\ConfigurationError("Missing cache directory configuration.");
+        }
 
         $cachekey = sha1($entityId);
-        return $this->cacheDir.'/'.$set.'-'.$cachekey.'.cached.xml';
+        return $this->cacheDir . '/' . $set . '-' . $cachekey . '.cached.xml';
     }
 
 
@@ -138,8 +156,8 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      */
     private function getFromCache($set, $entityId)
     {
-        assert('is_string($set)');
-        assert('is_string($entityId)');
+        assert(is_string($set));
+        assert(is_string($entityId));
 
         if (empty($this->cacheDir)) {
             return null;
@@ -150,9 +168,9 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
             return null;
         }
         if (!is_readable($cachefilename)) {
-            throw new \Exception(__CLASS__.': could not read cache file for entity ['.$cachefilename.']');
+            throw new \Exception(__CLASS__ . ': could not read cache file for entity [' . $cachefilename . ']');
         }
-        Logger::debug(__CLASS__.': reading cache ['.$entityId.'] => ['.$cachefilename.']');
+        Logger::debug(__CLASS__ . ': reading cache [' . $entityId . '] => [' . $cachefilename . ']');
 
         /* Ensure that this metadata isn't older that the cachelength option allows. This
          * must be verified based on the file, since this option may be changed after the
@@ -160,25 +178,26 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
          */
         $stat = stat($cachefilename);
         if ($stat['mtime'] + $this->cacheLength <= time()) {
-            Logger::debug(__CLASS__.': cache file older that the cachelength option allows.');
+            Logger::debug(__CLASS__ . ': cache file older that the cachelength option allows.');
             return null;
         }
 
         $rawData = file_get_contents($cachefilename);
         if (empty($rawData)) {
+            /** @var array $error */
             $error = error_get_last();
             throw new \Exception(
-                __CLASS__.': error reading metadata from cache file "'.$cachefilename.'": '.$error['message']
+                __CLASS__ . ': error reading metadata from cache file "' . $cachefilename . '": ' . $error['message']
             );
         }
 
         $data = unserialize($rawData);
         if ($data === false) {
-            throw new \Exception(__CLASS__.': error unserializing cached data from file "'.$cachefilename.'".');
+            throw new \Exception(__CLASS__ . ': error unserializing cached data from file "' . $cachefilename . '".');
         }
 
         if (!is_array($data)) {
-            throw new \Exception(__CLASS__.': Cached metadata from "'.$cachefilename.'" wasn\'t an array.');
+            throw new \Exception(__CLASS__ . ': Cached metadata from "' . $cachefilename . '" wasn\'t an array.');
         }
 
         return $data;
@@ -193,12 +212,13 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      * @param array  $data The associative array with the metadata for this entity.
      *
      * @throws \Exception If metadata cannot be written to cache.
+     * @return void
      */
     private function writeToCache($set, $entityId, $data)
     {
-        assert('is_string($set)');
-        assert('is_string($entityId)');
-        assert('is_array($data)');
+        assert(is_string($set));
+        assert(is_string($entityId));
+        assert(is_array($data));
 
         if (empty($this->cacheDir)) {
             return;
@@ -206,9 +226,9 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
 
         $cachefilename = $this->getCacheFilename($set, $entityId);
         if (!is_writable(dirname($cachefilename))) {
-            throw new \Exception(__CLASS__.': could not write cache file for entity ['.$cachefilename.']');
+            throw new \Exception(__CLASS__ . ': could not write cache file for entity [' . $cachefilename . ']');
         }
-        Logger::debug(__CLASS__.': Writing cache ['.$entityId.'] => ['.$cachefilename.']');
+        Logger::debug(__CLASS__ . ': Writing cache [' . $entityId . '] => [' . $cachefilename . ']');
         file_put_contents($cachefilename, serialize($data));
     }
 
@@ -216,15 +236,15 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
     /**
      * Retrieve metadata for the correct set from a SAML2Parser.
      *
-     * @param \SimpleSAML_Metadata_SAMLParser $entity A SAML2Parser representing an entity.
+     * @param \SimpleSAML\Metadata\SAMLParser $entity A SAML2Parser representing an entity.
      * @param string                         $set The metadata set we are looking for.
      *
      * @return array|NULL  The associative array with the metadata, or NULL if no metadata for
      *                     the given set was found.
      */
-    private static function getParsedSet(\SimpleSAML_Metadata_SAMLParser $entity, $set)
+    private static function getParsedSet(SAMLParser $entity, $set)
     {
-        assert('is_string($set)');
+        assert(is_string($set));
 
         switch ($set) {
             case 'saml20-idp-remote':
@@ -240,7 +260,7 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
                 return $ret[0];
 
             default:
-                Logger::warning(__CLASS__.': unknown metadata set: \''.$set.'\'.');
+                Logger::warning(__CLASS__ . ': unknown metadata set: \'' . $set . '\'.');
         }
 
         return null;
@@ -248,7 +268,7 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
 
 
     /**
-     * Overriding this function from the superclass SimpleSAML_Metadata_MetaDataStorageSource.
+     * Overriding this function from the superclass \SimpleSAML\Metadata\MetaDataStorageSource.
      *
      * This function retrieves metadata for the given entity id in the given set of metadata.
      * It will return NULL if it is unable to locate the metadata.
@@ -260,19 +280,26 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
      * @param string $index The entityId or metaindex we are looking up.
      * @param string $set The set we are looking for metadata in.
      *
-     * @return array An associative array with metadata for the given entity, or NULL if we are unable to
+     * @return array|null An associative array with metadata for the given entity, or NULL if we are unable to
      *         locate the entity.
-     * @throws \Exception If an error occurs while downloading metadata, validating the signature or writing to cache.
+     * @throws \Exception If an error occurs while validating the signature or the metadata is in an
+     *         incorrect set.
      */
     public function getMetaData($index, $set)
     {
-        assert('is_string($index)');
-        assert('is_string($set)');
+        assert(is_string($index));
+        assert(is_string($set));
 
-        Logger::info(__CLASS__.': loading metadata entity ['.$index.'] from ['.$set.']');
+        Logger::info(__CLASS__ . ': loading metadata entity [' . $index . '] from [' . $set . ']');
 
         // read from cache if possible
-        $data = $this->getFromCache($set, $index);
+        try {
+            $data = $this->getFromCache($set, $index);
+        } catch (\Exception $e) {
+            Logger::error($e->getMessage());
+            // proceed with fetching metadata even if the cache is broken
+            $data = null;
+        }
 
         if ($data !== null && array_key_exists('expires', $data) && $data['expires'] < time()) {
             // metadata has expired
@@ -281,44 +308,67 @@ class MDQ extends \SimpleSAML_Metadata_MetaDataStorageSource
 
         if (isset($data)) {
             // metadata found in cache and not expired
-            Logger::debug(__CLASS__.': using cached metadata for: '.$index.'.');
+            Logger::debug(__CLASS__ . ': using cached metadata for: ' . $index . '.');
             return $data;
         }
 
         // look at Metadata Query Protocol: https://github.com/iay/md-query/blob/master/draft-young-md-query.txt
-        $mdq_url = $this->server.'/entities/'.urlencode($index);
+        $mdq_url = $this->server . '/entities/' . urlencode($index);
 
-        Logger::debug(__CLASS__.': downloading metadata for "'.$index.'" from ['.$mdq_url.']');
+        Logger::debug(__CLASS__ . ': downloading metadata for "' . $index . '" from [' . $mdq_url . ']');
         try {
-            $xmldata = HTTP::fetch($mdq_url);
+            $xmldata = Utils\HTTP::fetch($mdq_url);
         } catch (\Exception $e) {
-            Logger::warning('Fetching metadata for '.$index.': '.$e->getMessage());
+            // Avoid propagating the exception, make sure we can handle the error later
+            $xmldata = false;
         }
 
         if (empty($xmldata)) {
             $error = error_get_last();
-            throw new \Exception(
-                'Error downloading metadata for "'.$index.'" from "'.$mdq_url.'": '.$error['message']
-            );
+            Logger::info('Unable to fetch metadata for "' . $index . '" from ' . $mdq_url . ': ' .
+                (is_array($error) ? $error['message'] : 'no error available'));
+            return null;
         }
 
         /** @var string $xmldata */
-        $entity = \SimpleSAML_Metadata_SAMLParser::parseString($xmldata);
-        Logger::debug(__CLASS__.': completed parsing of ['.$mdq_url.']');
+        $entity = SAMLParser::parseString($xmldata);
+        Logger::debug(__CLASS__ . ': completed parsing of [' . $mdq_url . ']');
 
         if ($this->validateFingerprint !== null) {
-            if (!$entity->validateFingerprint($this->validateFingerprint)) {
-                throw new \Exception(__CLASS__.': error, could not verify signature for entity: '.$index.'".');
+            if (
+                !$entity->validateFingerprint(
+                    $this->validateFingerprint,
+                    $this->validateFingerprintAlgorithm
+                )
+            ) {
+                throw new \Exception(__CLASS__ . ': error, could not verify signature for entity: ' . $index . '".');
             }
         }
 
         $data = self::getParsedSet($entity, $set);
         if ($data === null) {
-            throw new \Exception(__CLASS__.': no metadata for set "'.$set.'" available from "'.$index.'".');
+            throw new \Exception(__CLASS__ . ': no metadata for set "' . $set . '" available from "' . $index . '".');
         }
 
-        $this->writeToCache($set, $index, $data);
+        try {
+            $this->writeToCache($set, $index, $data);
+        } catch (\Exception $e) {
+            // Proceed without writing to cache
+            Logger::error('Error writing MDQ result to cache: ' . $e->getMessage());
+        }
 
         return $data;
+    }
+
+    /**
+     * This function loads the metadata for entity IDs in $entityIds. It is returned as an associative array
+     * where the key is the entity id. An empty array may be returned if no matching entities were found
+     * @param array $entityIds The entity ids to load
+     * @param string $set The set we want to get metadata from.
+     * @return array An associative array with the metadata for the requested entities, if found.
+     */
+    public function getMetaDataForEntities(array $entityIds, $set)
+    {
+        return $this->getMetaDataForEntitiesIndividually($entityIds, $set);
     }
 }
