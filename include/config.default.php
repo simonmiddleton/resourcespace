@@ -2906,9 +2906,6 @@ $order_by_resource_type=true;
 # Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top=false;
 
-# Option to select metadata field that will be used for downloaded filename (do not include file extension)
-#$download_filename_field=8;
-
 # option to always send emails from the logged in user
 $always_email_from_user=false;
 
@@ -3650,6 +3647,9 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
+# Option to select metadata field that will be used for downloaded filename (do not include file extension)
+#$download_filename_field=8;
+
 /*
 Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
 resource title, its ID and file extension.
@@ -3669,6 +3669,16 @@ $download_filename_field = 8; # Set this to the $view_title_field value
 $prefix_filename_string = "";
 $prefix_resource_id_to_filename = false;
 */
+
+// When uncommented the extensions listed will be removed from any metadata string at the point it is used in generating a download filename. 
+// This will not alter the stored metadata value but provides an option to strip from it given file extensions. 
+// It is recommended that metadata containing file extensions is not used in a filename to avoid the administration of this option.
+// $download_filename_strip_extensions = array(
+//  	'jpg',
+//   	'jpeg',
+//   	'tif',
+//   	'png');
+
 $auto_generated_resource_title_format = '';
 
 // List of extensions for which ResourceSpace should only generate the internal preview sizes.

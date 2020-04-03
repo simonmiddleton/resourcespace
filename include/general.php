@@ -4829,15 +4829,36 @@ function mb_basename($file)
  * @access public
  * @return string Return the file name without the extension part.
  */
-function strip_extension($name)
+function strip_extension($name,$use_ext_list=false)
     {
-    $ext = strrchr($name, '.');
-    if($ext !== false)
-        {
-        $name = substr($name, 0, -strlen($ext));
-        }
-    return $name;
-    } // strip_extension()
+         $ext = strrchr($name, '.');
+         if ($use_ext_list != false)
+         {
+            // Use list of specified extensions if requested.
+             global $download_filename_strip_extensions;
+             $fn_extension=substr(strrchr($name, '.'),1);
+             if ($use_ext_list == true && isset($download_filename_strip_extensions) && in_array(strtolower($fn_extension),$download_filename_strip_extensions))
+                 {
+                 $filename_new = substr($name, 0, -strlen(".".$fn_extension));
+                 return $filename_new;
+                 }
+             // The extension specified was not in config $download_filename_strip_extensions. Just return the original value.
+             return $name;
+         }
+         else
+         {
+             // Attempt to remove file extension from string where download_filename_strip_extensions is not available.
+             if($ext !== false)
+                {
+                    $name = substr($name, 0, -strlen($ext));
+                }
+             return $name;     
+         }
+    }
+ // strip_extension()
+
+
+
 
 
 
@@ -6754,11 +6775,11 @@ function get_download_filename($ref,$size,$alternative,$ext)
             # append preview size to base name if not the original
             if($size != '' && !$download_filenames_without_size)
                 {
-                $filename = strip_extension(mb_basename($origfile)) . '-' . $size . '.' . $ext;
+                    $filename = strip_extension(mb_basename($origfile),true) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                $filename = strip_extension(mb_basename($origfile)) . '.' . $ext;
+                    $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
                 }
 
             if($prefix_resource_id_to_filename)
@@ -6791,11 +6812,11 @@ function get_download_filename($ref,$size,$alternative,$ext)
             $filename = trim(nl2br(strip_tags($newfilename)));
             if($size != "" && !$download_filenames_without_size)
                 {
-                $filename = mb_basename(substr($filename, 0, 200)) . '-' . $size . '.' . $ext;
+                    $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
+                    $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '.' . $ext;
                 }
 
             if($prefix_resource_id_to_filename)

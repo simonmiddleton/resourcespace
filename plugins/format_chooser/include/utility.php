@@ -43,6 +43,7 @@ function getTargetFilename($ref, $ext, $size)
 
 	# Get filename - first try title, then original filename, and finally use the resource ID
 	$filename = get_data_by_field($ref, $view_title_field);
+	$filename = strip_extension($filename,true);
 	if (empty($filename))
 		{
 		$filename = get_data_by_field($ref, $filename_field);
