@@ -280,7 +280,21 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
   if($conn)
     {
     // Check if we already have a TMS ID
-    $tms_object_id=get_data_by_field($resource, $tms_link_object_id_field);
+    $modules_mappings = tms_link_get_modules_mappings();
+    foreach($modules_mappings as $module)
+        {
+        if($module['tms_uid_field'] == "ObjectID")
+            {
+            $idfield = $module['rs_uid_field'];
+            break;
+            }
+        }
+
+    if(!isset($idfield))
+        {
+        return false;
+        }
+    $tms_object_id = get_data_by_field($resource, $idfield);
     if($tms_object_id==""){return false;} // No TMS ID found, we can't add the image to TMS    
 	
 	// Get TMS Path ID of filestore path
