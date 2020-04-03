@@ -8038,6 +8038,8 @@ function delete_resource_type_field($ref)
 
     
     $fieldinfo = get_resource_type_field($ref);
+
+    $ref = escape_check($ref);
     
     // Delete the resource type field
     sql_query("DELETE FROM resource_type_field WHERE ref='$ref'");
@@ -8045,10 +8047,9 @@ function delete_resource_type_field($ref)
     // Remove all data	    
     sql_query("DELETE FROM resource_data WHERE resource_type_field='$ref'");
 
-    // Remove all resource nodes	    
+    // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
     sql_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='$ref'");
-
-    // Remove all nodes	    
+    sql_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = '$ref'");
     sql_query("DELETE FROM node WHERE resource_type_field='$ref'");
 
     // Remove all keywords	    
