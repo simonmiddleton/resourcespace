@@ -4,7 +4,6 @@ include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
 
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$override="",$max_error_count=100,$processcsv=false)
 	{
-
 	/*
 from definitions.php
 
@@ -35,7 +34,7 @@ $csv_field_definitions = array(
   // Ensure /r line endings (such as those created in MS Excel) are handled correctly
 	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
 
-  global $FIXED_LIST_FIELD_TYPES;
+  global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS;
 
 	$file=fopen($filename,'r');
 	$line_count=0;
@@ -217,9 +216,9 @@ $csv_field_definitions = array(
 					
 		
 		// Now process the actual data
-		
+
 		foreach ($header as $field_name)	
-			{			
+			{	
 			if($field_name=="RESOURCE_TYPE"){$cell_count++;continue;}							
 			
 			//echo "Getting data for " . $field_name . "<br>";
@@ -260,7 +259,6 @@ $csv_field_definitions = array(
 				continue;
 				}
 				
-			
 			if (!isset($meta[$resource_type][$field_name])) // field name not found (and is not required for this type) so skip to the next one
 				{
 				if(isset($meta[0][$field_name])) // This maps to a global field, not a resource type specific one
@@ -268,7 +266,7 @@ $csv_field_definitions = array(
 					$field_resource_type=0;
 					}
 				else
-					{
+					{	
 					//echo "Field not found : " . $field_name . "<br>";
 					continue;
 					}
@@ -280,122 +278,98 @@ $csv_field_definitions = array(
 			
 			if(!($field_name=="ACCESS" || $field_name=="RESOURCE_TYPE" || $field_name=="STATUS"))
 				{
-				// Check for multiple options
-				if(strpos($cell_value,",")>0 && count($meta[$field_resource_type][$field_name]['options'])>0 && !in_array($meta[$field_resource_type][$field_name]['type'],array(3,12))) // cell value may be a series of values, but not for radio or drop down types
+				# metadata field definition from $meta array
+				$field_def 		= $meta[$field_resource_type][$field_name];
+				$field_type 	= $field_def['type'];
+				$field_options 	= $field_def['options'];
+				$required 		= $field_def['required'];
+
+				# raise error if it's a required field and has an empty or null value
+				// this field is null or empty string
+				if (in_array($cell_value,  array(null,"") ))	
+					{
+					// raise error if required field
+					if ($required) 
 						{
-						$cell_values=explode(",",$cell_value);
+						array_push($messages, "Error: \"{$field_name}\" is a required field - empty value - line {$line_count}");
+						$error_count++;
+						}
+					continue;
+					}
+
+				// Check for multiple options
+				// cell value may be a series of values, but not for radio or drop down types
+				if(strpos($cell_value,",")>0 && in_array($field_type, $NODE_FIELDS) && !in_array($field_type,array(3,12))) 
+						{
+						$cell_value_array =explode(",",$cell_value);
 						}
 					else
 						{
 						// Make single value into a dummy array
-						$cell_values=array($cell_value);
+						$cell_value_array=array($cell_value);
 						}
 				$update_dynamic_field=false;
 				
-				
-				if ($meta[$field_resource_type][$field_name]['required'])		// this field is required
+				# validate option against multiple option list 
+				foreach ($cell_value_array as $cell_value_item)
 					{
-					if ($cell_value==null or $cell_value=="")		// this field is empty
-							{
-							array_push($messages, "Error: Empty value for \"{$field_name}\" required field not allowed - found on line {$line_count}");
-							$error_count++;
-							continue;
-							}
-					foreach($cell_values as $cell_actual_value)
+					$cell_value_item = trim($cell_value_item); # strip whitespace from beginning and end of string
+
+					#if the field type has options and the value is not in the current option list:
+					if (in_array($field_type,$NODE_FIELDS) && (array_search($cell_value_item,$field_options)===false))	
 						{
-						if (count($meta[$field_resource_type][$field_name]['options'])>0 && (array_search($cell_actual_value,$meta[$field_resource_type][$field_name]['options'])===false))	// there are options but value does not match any of them
+						switch ($field_type)    
 							{
-							if($meta[$field_resource_type][$field_name]['type']==9)
-								{
-								// Need to add to options table
-								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);
-								$update_dynamic_field=true;
-								}
-							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_RANGE)
-								{
-								// Need to add to options table
-								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);
-								$update_dynamic_field=true;
-								}
-							else
-								{
-								array_push($messages, "Error: Value \"{$cell_actual_value}\" not found in lookup for \"{$field_name}\" required field - found on line {$line_count}");					
+							case (FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) :
+								# add option
+								$field_def['options'][]=trim($cell_value_item);
+								$update_dynamic_field=true;	
+							break;
+								
+							case (FIELD_TYPE_DATE_RANGE):
+								# date range has format date/date
+								$dates = explode("/", $cell_value_item);
+								foreach($dates as $date_value)
+									{
+									# valid date if empty string returned	
+									$valid_date = check_date_format($date_value);
+									if ($valid_date == "") 
+										{
+										$field_def['options'][]=trim($date_value);
+										$update_dynamic_field=true;
+										}
+									else 
+										{
+										# raise error - invalid date format
+										$error_count++;
+										$messages[] = str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_date );
+										}	
+									}
+							break;
+								
+							default:
+								# field doesn't allow options to be added so raise error
 								$error_count++;
-								continue;
-								}
-							}							
+								$messages[] = "Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
+							}			
+						}
+
+					# validate date field excluding date range field  - $DATE_FIELD_TYPES global var in definitions.php
+					elseif(in_array($field_type, $DATE_FIELD_TYPES) and $field_type != FIELD_TYPE_DATE_RANGE)
+						{
+						# valid date if empty string returned		
+						$valid_date = check_date_format($cell_value_item);
+
+						if ($valid_date != "")
+							{
+							# raise error - invalid date format
+							$error_count++;
+							$messages[] = str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_date );
+							}		
 						}
 					}
-				else	// field is not required
-					{
-					if ($cell_value==null or $cell_value=="")		// a value wasn't specified for non-required field so move on
-						{
-						continue;
-						}		
-					foreach($cell_values as $cell_actual_value)
-						{
-						// there are options but value does not match any of them
-						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false)
-							{
-							if($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
-								{
-								// Need to add to options table
-								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);						
-								$update_dynamic_field=true;
-								array_push($messages,"Adding option for field " . $meta[$field_resource_type][$field_name]['remote_ref'] . ": " . $cell_actual_value);
-								}
-							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_RANGE)
-								{
-								/* date range field - want to extract two date values and add as options*/
-								$dates = explode("/",$cell_actual_value);
-								foreach($dates as $date)
-									{
-									$meta[$field_resource_type][$field_name]['options'][]=trim($date);						
-									$update_dynamic_field=true;
-									}
-								}
-							elseif(in_array($meta[$field_resource_type][$field_name]['type'], $csv_field_definitions) )
-							{
-								# field types that have options but do not display as a controlled list input field, e.g. drop-down
-								# do not raise error if the cell value does not match one of the optoins 
-							} 	
-							else
-								{
-								array_push($messages, "Error: Value \"{$cell_actual_value}\" not found in lookup for \"{$field_name}\" field - found on line {$line_count}");
-								$error_count++;
-								continue;
-								}		
-							}
-							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_EXPIRY_DATE ||$meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE)
-							{
-								# Check a valid date has been given if not log errors
-								$valid_date = str_replace("%field%", $field_name, check_date_format($cell_actual_value));
-								$valid_date = str_replace("%row%", "row " . ($line_count + 1), $valid_date);
-								if ($valid_date) 
-								{
-									array_push($messages, $valid_date);
-								}
-							}
-						}
-					}				
-
-                if($processcsv)
-                    {
-                    if(is_null($cell_value) || '' == $cell_value)
-                        {
-                        continue;
-                        }
-
-                    $cell_value = mb_convert_encoding($cell_value, 'UTF-8');
-
-                    // Prefix value with comma as this is required for indexing and rendering selected options
-                    if(in_array($meta[$field_resource_type][$field_name]['type'], $FIXED_LIST_FIELD_TYPES) && substr($cell_value, 0, 1) <> ',')
-                        {
-                        $cell_value = ',' . $cell_value;
-                        }
-
-                    update_field($newref, $meta[$field_resource_type][$field_name]['remote_ref'], $cell_value);
-                    }
+				# update $meta global var
+				$meta[$field_resource_type][$field_name] = $field_def;
 				}
 				
 		ob_flush();	
