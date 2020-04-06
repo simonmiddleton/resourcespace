@@ -1094,10 +1094,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
 
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews']);
-
-    # Debug
-    debug("create_previews(ref = {$ref}, thumbonly = {$thumbonly}, extension = {$extension}, previewonly = {$previewonly}, previewbased = {$previewbased}, alternative = {$alternative}, ignoremaxsize = {$ignoremaxsize}, ingested = {$ingested}, checksum_required = {$checksum_required})");
-
+    debug_function_call("create_previews", func_get_args());
+    
     if (!$previewonly) {
         // make sure the extension is the same as the original so checksums aren't done for previews
         $o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
