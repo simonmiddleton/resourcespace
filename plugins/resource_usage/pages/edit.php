@@ -105,13 +105,14 @@ include "../../../include/header.php";
 
     <div class="Question">
         <label><?php echo $lang['usage_medium']; ?></label>
+        <fieldset class="MultiRTypeSelect">
         <?php
         $s = trim_array(explode(',', $usage_data['usage_medium']));
         foreach($resource_usage_mediums as $medium)
             {
             ?>
             <input type="checkbox" name="usage_medium[]" value="<?php echo $medium; ?>" <?php if(in_array($medium, $s)) { ?>checked<?php } ?>>&nbsp;<?php echo $medium; ?>
-            &nbsp;&nbsp;&nbsp;
+            <br>
             <?php
             }
 
@@ -123,11 +124,12 @@ include "../../../include/header.php";
                 {
                 ?>
                 <input type="checkbox" name="usage_medium[]" value="<?php echo $old_medium; ?>" checked>&nbsp;<?php echo $old_medium; ?>
-                &nbsp;&nbsp;&nbsp;
+                <br>
                 <?php
                 }
             }
         ?>
+        </fieldset>
         <div class="clearerleft"></div>
     </div>
 
