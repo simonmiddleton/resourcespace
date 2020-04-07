@@ -26,7 +26,7 @@ function get_user_requests($excludecompleted=false,$returnsql=false)
 function save_request($request)
     {
     # Use the posted form to update the request
-    global $applicationname,$baseurl,$lang,$request_senduserupdates,$admin_resource_access_notifications;
+    global $applicationname,$baseurl,$lang,$request_senduserupdates,$admin_resource_access_notifications,$userref;
         
     $status=getvalescaped("status","",true);
     $expires=getvalescaped("expires","");
@@ -35,7 +35,8 @@ function save_request($request)
     $assigned_to=getvalescaped("assigned_to","");
     $reason=getvalescaped("reason","");
     $reasonapproved=getvalescaped("reasonapproved","");
-    
+
+    $approved_declined=false;
     
     # --------------------- User Assignment ------------------------
     # Process an assignment change if this user can assign requests to other users
@@ -95,6 +96,7 @@ function save_request($request)
         # --------------- APPROVED -------------
         # Send approval e-mail
         // $reasonapproved=str_replace(array("\\r","\\n"),"\n",$reasonapproved);$reasonapproved=str_replace("\n\n","\n",$reasonapproved); # Fix line breaks.
+        $approved_declined = true;
         $reasonapproved = unescape($reasonapproved);
         $message=$lang["requestapprovedmail"] . "\n\n" . $lang["approvalreason"]. ": " . $reasonapproved . "\n\n" ;
         $message.="$baseurl/?c=" . $currentrequest["collection"] . "\n";
@@ -130,7 +132,7 @@ function save_request($request)
         {
         # --------------- DECLINED -------------
         # Send declined e-mail
-
+        $approved_declined = true;
         $reason = unescape($reason);
         $message=$lang["requestdeclinedmail"] . "\n\n" . $lang["declinereason"] . ": ". $reason . "\n\n$baseurl/?c=" . $currentrequest["collection"] . "\n";
                
@@ -170,6 +172,12 @@ function save_request($request)
 
     # Save status
     sql_query("update request set status='$status',expires=" . ($expires==""?"null":"'$expires'") . ",reason='$reason',reasonapproved='$reasonapproved' where ref='$request'");
+
+    # Set user that approved or declined the request
+    if ($approved_declined)
+        {
+        sql_query("update request set approved_declined_by='" . escape_check($userref) . "' where ref='" . escape_check($request) . "'");
+        }
 
     if (getval("delete","")!="")
         {
