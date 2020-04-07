@@ -1106,10 +1106,17 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 
     mysqli_free_result($result);
 	
-	if ($return_row_count<$query_returned_row_count)
-		{
-		$return_rows=array_pad($return_rows,$query_returned_row_count,0);		// if short then pad out
-		}
+    if($return_row_count < $query_returned_row_count)
+        {
+        // array_pad has a hardcoded limit of 1,692,439 elements. If we need to pad the results more than that, we do it in
+        // 1,000,000 elements batches.
+        while(count($return_rows) < $query_returned_row_count)
+            {
+            $padding_required = $query_returned_row_count - count($return_rows);
+            $pad_by = ($padding_required > 1000000 ? 1000000 : $query_returned_row_count);
+            $return_rows = array_pad($return_rows, $pad_by, 0);
+            }
+        }
 
     return $return_rows;        
     }
