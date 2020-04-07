@@ -2809,15 +2809,17 @@ function write_metadata($path, $ref, $uniqid="")
     }
 
 function delete_exif_tmpfile($tmpfile)
-{
-	if(file_exists($tmpfile)){unlink ($tmpfile);}
-}
+    {
+    if(file_exists($tmpfile)){unlink ($tmpfile);}
+    }
 
 function update_resource($r, $path, $type, $title, $ingest=false, $createPreviews=true, $extension='',$after_upload_processing=false)
-	{
-	# Update the resource with the file at the given path
+    {
+    # Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
-	global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue;
+    global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue, $lang,
+        $extracted_text_field, $offline_job_queue, $offline_job_in_progress, $autorotate_ingest, $enable_thumbnail_creation_on_upload,
+        $userref, $lang, $upload_then_process_holding_state;
 
     if($upload_then_process && !$offline_job_queue)
         {
@@ -2829,7 +2831,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 		{
 		$extension=pathinfo($path, PATHINFO_EXTENSION);
 		}
-	
+
     if($extension!=='')
     	{
     	$extension=trim(strtolower($extension));
@@ -2849,7 +2851,6 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if (!$ingest)
             {
             # This file remains in situ; store the full path in file_path to indicate that the file is stored remotely.
-            global $filename_field;
             if (isset($filename_field))
                 {
 
@@ -2865,7 +2866,6 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             $s=explode("/",$path);
             $filename=end($s);
 
-            global $filename_field;
             if (isset($filename_field))
                 {
                 update_field($r,$filename_field,$filename);
@@ -2874,7 +2874,6 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             # Move the file
             if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
                 {
-                global $syncdir;
                 $destination=get_resource_path($r,true,"",true,$extension);
                 $result=rename($syncdir . "/" . $path,$destination);
                 if ($result===false)
@@ -2911,10 +2910,8 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             }
 		
         # Extract text from documents (e.g. PDF, DOC)
-        global $extracted_text_field;
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
-            global $offline_job_queue, $offline_job_in_progress;
             if($offline_job_queue && !$offline_job_in_progress)
                 {
                 $extract_text_job_data = array(
@@ -2936,10 +2933,8 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if ($createPreviews)
             {
             # Attempt autorotation
-            global $autorotate_ingest;
             if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
             # Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
-            global $enable_thumbnail_creation_on_upload;
             if($enable_thumbnail_creation_on_upload)
                 {
                 create_previews($r, false, $extension, false, false, -1, false, $ingest);
@@ -2966,16 +2961,13 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         
         if($upload_then_process && !$after_upload_processing)
             {
-            # Add this to the job queue for offline processing
-            global $userref, $lang;
-            
+            # Add this to the job queue for offline processing            
             $job_data=array();
             $job_data["r"]=$r;
             $job_data["title"]=$title;
             $job_data["ingest"]=$ingest;
             $job_data["createPreviews"]=$createPreviews;
         
-            global $upload_then_process_holding_state;
             if(isset($upload_then_process_holding_state))
                 {
                 $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
