@@ -1998,6 +1998,8 @@ function collection_log($collection,$type,$resource,$notes = "")
     
 function get_collection_log($collection, $fetchrows = -1)
 	{
+    debug_function_call("get_collection_log", func_get_args());
+
 	global $view_title_field;
 
     $extra_fields = hook("collection_log_extra_fields");
