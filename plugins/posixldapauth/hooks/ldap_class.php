@@ -95,7 +95,7 @@ class ldapAuth
 		{
 			$username = $username . "@" . $this->ldapconfig['addomain'];
 		}
-		$this->userName = $username;
+		$this->userName = ldap_escape($username, "", LDAP_ESCAPE_DN);
 		$this->ldappass = $pass;
 		
 		
@@ -111,7 +111,7 @@ class ldapAuth
 		if ($ldapType == 1)
 		{
 			// Active Directory, format is user@domain
-			$this->ldaprdn = $username ;//."@".$userContainer;	
+			$this->ldaprdn = ldap_escape($username, "", LDAP_ESCAPE_DN);//."@".$userContainer;	
 			if ($this->ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . " Auth to AD with " . $this->ldaprdn); }
 			
 		} else {
@@ -131,7 +131,7 @@ class ldapAuth
 				// set the search filter * attributes we want
 				
 				// removed to specify user principal name as this might be more reliable. April 2014
-				$filter="(samaccountname=".$usercn.")";
+				$filter="(samaccountname=" . ldap_escape($usercn, "", LDAP_ESCAPE_FILTER) . ")";
 				
 				//$filter="(userprincipalname=".$username.")";
 				$attributes=array("dn","cn");
@@ -152,7 +152,7 @@ class ldapAuth
 					// user portion of the userPrincipalName.
 					if ($this->ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . " Num entries returned = " . $number_returned ); }
 					if ($this->ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . " searching on userPrincipalName " . $username ); }
-					$filter="(userprincipalname=".$username.")";
+					$filter="(userprincipalname=" . ldap_escape($username, "", LDAP_ESCAPE_FILTER) . ")";
 					
 					// search
 					if (!($search = ldap_search($this->ldapconn, $this->ldapconfig['basedn'], $filter,$attributes))) {
