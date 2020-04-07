@@ -731,6 +731,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
 
             job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+            $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         else
             {
