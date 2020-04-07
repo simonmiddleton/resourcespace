@@ -21,7 +21,7 @@ foreach ($fields_tab_names as $tabname)
             $fields[$i]["tab_name"] = $lang["default"];
             }
 
-        $displaycondition = check_view_display_condition($fields, $i);
+        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
         if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted'])))
             {
@@ -126,7 +126,7 @@ foreach($fields_tab_names as $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
         {
-        $displaycondition = check_view_display_condition($fields, $i);
+        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
         if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'])
             {
@@ -165,7 +165,7 @@ if(empty($fields_tab_names))
     {
     for($i = 0; $i < count($fields); $i++)
         {
-        $displaycondition = check_view_display_condition($fields, $i);
+        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
         if($displaycondition)
             {

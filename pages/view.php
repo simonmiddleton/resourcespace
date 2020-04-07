@@ -307,6 +307,9 @@ if(isset($related_type_show_with_data)) {
 	$multi_fields = TRUE;
 }
 
+// Get all fields without checking permissions (for later dependency checking)
+$fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
+
 # Load field data
 $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
@@ -315,7 +318,7 @@ $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($mo
 $edit_access=get_edit_access($ref,$resource["archive"],$fields,$resource);
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
-function check_view_display_condition($fields,$n)	
+function check_view_display_condition($fields,$n,$fields_all)		
 	{
 	#Check if field has a display condition set
 	$displaycondition=true;
@@ -328,13 +331,13 @@ function check_view_display_condition($fields,$n)
 			{
 			$displayconditioncheck=false;
 			$s=explode("=",$condition);
-			for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
+			for ($cf=0;$cf<count($fields_all);$cf++) # Check each field to see if needs to be checked
 				{
-				if ($s[0]==$fields[$cf]["name"]) # this field needs to be checked
+				if ($s[0]==$fields_all[$cf]["name"]) # this field needs to be checked
 					{					
 					$checkvalues=$s[1];
 					$validvalues=explode("|",strtoupper($checkvalues));
-					$v=trim_array(explode(",",strtoupper($fields[$cf]["value"])));
+					$v=trim_array(explode(",",strtoupper($fields_all[$cf]["value"])));
 					foreach ($validvalues as $validvalue)
 						{
 						if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value						
