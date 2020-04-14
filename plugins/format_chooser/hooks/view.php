@@ -101,7 +101,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 					&& ($closestSize == 0 || $closestSize > (int)$sizes[$n]['width']))
 				$closestSize = (int)$sizes[$n]['width'];
 			}
-		for ($n = 0; $n < count($sizes); $n++)
+        $all_sizes=$sizes;			
+		for ($n = 0; $n < count($all_sizes); $n++)
 			{
 			if (intval($sizes[$n]['width']) != $closestSize
 					&& intval($sizes[$n]['width']) > intval($originalSize['width'])
