@@ -1,7 +1,5 @@
 <?php 
 $download_summary=download_summary($ref);
-
-# Work out total.
 $total=0;
 foreach ($download_summary as $usage)
 	{ 
@@ -12,10 +10,20 @@ foreach ($download_summary as $usage)
 			$total+=$usage['c'];
 		}
 	}
-	
 
+$rl_url = "{$baseurl}/pages/log.php";
+$rl_params = array(
+    "ref" => $ref,
+    "search" => $search,
+    "order_by" => $order_by,
+    "sort" => $sort,
+    "archive" => $archive,
+    "filter_by_type" => "d",
+);
+$rl_params_override = array(
+    "filter_by_usageoption" => null,
+);
 ?>
-
 <div class="RecordDownload" id="RecordDownloadSummary" style="margin-right:10px;">
 <div class="RecordDownloadSpace">
 
@@ -23,7 +31,11 @@ foreach ($download_summary as $usage)
 
 
 <table cellpadding="0" cellspacing="0">
-<tr><td colspan=2><?php echo $lang["usagetotal"] ?></td></tr>
+<tr>
+    <td colspan=2>
+        <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo $lang["usagetotal"]; ?></a>
+    </td>
+</tr>
 <tr class="DownloadDBlend" >
 <td><?php echo $lang["usagetotalno"] ?></td>
 <td width="20%"><?php echo $total ?></th>		
@@ -36,9 +48,12 @@ foreach ($download_summary as $usage)
 	{ 
 	if (array_key_exists($usage["usageoption"],$download_usage_options))
 		{
+        $rl_params_override["filter_by_usageoption"] = $usage["usageoption"];
 		?>
-		<tr class="DownloadDBlend" >
-		<td><?php echo htmlspecialchars($download_usage_options[$usage["usageoption"]]) ?></td>
+		<tr>
+		<td>
+            <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo htmlspecialchars($download_usage_options[$usage["usageoption"]]); ?></a>
+        </td>
 		<td width="20%"><?php echo $usage["c"]?></th>		
 		</tr>
 		<?php
@@ -47,6 +62,5 @@ foreach ($download_summary as $usage)
 ?>
 </table>
 <?php } ?>
-
 </div>
 </div>

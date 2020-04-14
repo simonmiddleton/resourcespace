@@ -8161,3 +8161,42 @@ function search_array_by_keyvalue($array2search, $search_key, $search_value, $re
 
     return $return_array; 
     }
+
+
+/**
+* Temporary bypass access controls for a particular function
+* 
+* When functions check for permissions internally, in order to keep backwards compatibility it may be better if we 
+* temporarily bypass the permissions instead of adding a parameter to the function for this. It will allow developers to 
+* keep the code clean.
+* 
+* IMPORTANT: never make this function public to the API.
+* 
+* Example code:
+* $log = bypass_permissions(array("v"), "get_resource_log", array($ref));
+* 
+* @param array     $perms  Permission list to be bypassed
+* @param callable  $f      Callable that we need to bypas permissions for
+* @param array     $p      Parameters to be passed to the callable if required
+* 
+* @return mixed
+*/
+function bypass_permissions(array $perms, callable $f, array $p = array())
+    {
+    global $userpermissions;
+
+    if(empty($perms))
+        {
+        return call_user_func_array($f, $p);
+        }
+
+    // fake having these permissions temporarily
+    $o_perm = $userpermissions;
+    $userpermissions = array_values(array_merge($userpermissions, $perms));
+
+    $result = call_user_func_array($f, $p);
+
+    $userpermissions = $o_perm;
+
+    return $result;
+    }
