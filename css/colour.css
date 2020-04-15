@@ -414,3 +414,9 @@ a.ui-button.plupload_button.ui-button-disabled {
 ::-webkit-scrollbar-thumb {background:rgba(0,0,0,0.3);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:active{background:rgba(0,0,0,0.4);border-radius: 6px;}
+
+.FeaturedSimpleTile .FeaturedSimpleTileContents h2
+    {
+    background-color: rgba(0,0,0,0.4);
+    padding-bottom: 5px;
+    }
