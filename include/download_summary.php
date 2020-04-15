@@ -33,7 +33,7 @@ $rl_params_override = array(
 <table cellpadding="0" cellspacing="0">
 <tr>
     <td colspan=2>
-        <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo $lang["usagetotal"]; ?></a>
+        <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo LINK_CARET . $lang["usagetotal"]; ?></a>
     </td>
 </tr>
 <tr class="DownloadDBlend" >
@@ -52,7 +52,7 @@ $rl_params_override = array(
 		?>
 		<tr>
 		<td>
-            <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo htmlspecialchars($download_usage_options[$usage["usageoption"]]); ?></a>
+            <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo LINK_CARET . htmlspecialchars($download_usage_options[$usage["usageoption"]]); ?></a>
         </td>
 		<td width="20%"><?php echo $usage["c"]?></th>		
 		</tr>
