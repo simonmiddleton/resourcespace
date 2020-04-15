@@ -402,6 +402,7 @@ $lang['hiddencollections_hide']="Hide hidden collections";
 $lang['hiddencollections_show']="Show hidden collections";
 $lang['hide_collection']="Hide from collection bar";
 $lang["viewall"]="View all";
+$lang["selectall"]="Select all";
 $lang['view_all_resources'] = 'View all resources';
 $lang["action-editall"]="Edit all";
 $lang['edit_all_resources'] = 'Edit all resources';
