@@ -1033,7 +1033,7 @@ function email_resource_request($ref,$details)
 * 
 * IMPORTANT: these fields are not metadata fields - they are configured through config options such as custom_researchrequest_fields
 * 
-* @param  array  $fields  List of custom fields. Often this will simply be the global configuratio option (e.g custom_researchrequest_fields)
+* @param  array  $fields  List of custom fields. Often this will simply be the global configuration option (e.g custom_researchrequest_fields)
 * 
 * @return array
 */
