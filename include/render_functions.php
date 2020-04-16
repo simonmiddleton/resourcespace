@@ -1259,7 +1259,7 @@ function render_user_group_checkbox_select($name, array $current = array(), $sty
     <table id="<?php echo $name; ?>"<?php if('' !== $style) { ?>style="<?php echo $style; ?>"<?php } ?>>
         <tbody>
     <?php
-    foreach(get_usergroups() as $group)
+    foreach(get_usergroups(true) as $group)
         {
         ?>
         <tr>
