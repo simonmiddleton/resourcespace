@@ -867,8 +867,6 @@ if ($_FILES)
                                                 {
                                                 die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Failed to replace resource file"}, "id" : "' . htmlspecialchars($replaced) . '"}');
                                                 }
-                                            
-                                            unlink($plupload_upload_location);
                                             if(file_exists($plupload_processed_filepath))
                                                 {
                                                 unlink($plupload_processed_filepath);
