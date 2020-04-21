@@ -167,7 +167,7 @@ switch ($returntype)
             $fielddata = get_resource_type_field($returnid);
             if(!$fielddata["browse_bar"] || !metadata_field_view_access($returnid) || !in_array($fielddata["type"],$FIXED_LIST_FIELD_TYPES) || $fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
                 {
-                continue;
+                break;
                 }
 
             if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
@@ -226,7 +226,7 @@ switch ($returntype)
             $fielddata = get_resource_type_field($browse_field);            
             if(!$fielddata["browse_bar"] || !metadata_field_view_access($browse_field) || !in_array($fielddata["type"],$FIXED_LIST_FIELD_TYPES) || $fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
                 {
-                continue;
+                break;
                 }
 
             if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
