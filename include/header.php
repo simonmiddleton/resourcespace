@@ -38,7 +38,7 @@ if ($include_rs_header_info)
     ResourceSpace version <?php echo $productversion?>
 
     For copyright and license information see documentation/licenses/resourcespace.txt
-    http://www.resourcespace.org/
+    https://www.resourcespace.com
     -->
     <?php 
     }
