@@ -447,7 +447,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
 .Question .Lineup {margin: 3px 0px;}
-.Question .stdwidth,.stdwidth{width: 420px;font-size: 1em;margin: 3px 0px;}
+.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;margin: 3px 0px;}
 .Question select {margin: 3px 0px;}
 .Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0px;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0px;}
