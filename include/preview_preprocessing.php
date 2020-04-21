@@ -1029,7 +1029,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     else
         {
         # Not a PDF file, so single extraction only.
-            create_previews_using_im($ref,false,$extension,$previewonly,false,$alternative);
+            create_previews_using_im($ref,false,$extension,$previewonly,false,$alternative,$ingested, $onlysizes);
             }
     }
 
