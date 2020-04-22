@@ -90,6 +90,7 @@ function isPathWhitelisted($path, array $whitelisted_paths)
 */
 function get_checksum($path)
     {
+    debug("get_checksum( \$path = {$path} );");
     global $file_checksums_50k;
     if (!is_readable($path))
         {

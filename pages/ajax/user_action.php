@@ -14,6 +14,9 @@ $return['status'] = 400; // set to default
 switch ($action)
     {
     case 'submitpending':
+        // prevent search from returning all contributed resources (archive filter will not be ignored in this case)
+        $search_all_workflow_states = false;
+
         $pending_items=do_search("!contributions" . $userref,"","",-2,-1,"desc",false,0,false,false,"",false,false,true);
         
         // If using '$pending_submission_prompt_review and have added to collection, only submit these resources
