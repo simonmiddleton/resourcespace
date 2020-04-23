@@ -6352,7 +6352,16 @@ function notify_resource_change($resource)
             if($send_message==false){continue;}     
             
             get_config_option($download_user['ref'],'email_user_notifications', $send_email);
-            if($send_email && $download_user["email"]!="")
+            get_config_option($download_user['ref'],'email_and_user_notifications', $send_email_and_notify);
+            if($send_email_and_notify)
+                {
+                $message_users[]=$download_user["ref"];
+                if($download_user["email"]!="")
+                    {
+                    send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
+                    }
+                }
+            else if($send_email && $download_user["email"]!="")
                 {
                 send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
                 }
