@@ -1,17 +1,16 @@
 <?php
 include_once __DIR__ . '/../../../include/collections_functions.php';
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
-
 function HookSimplesamlAllPreheaderoutput()
-    {        
-    if(!simplesaml_config_check())
+    {      
+    if(!simplesaml_php_check())
         {
         return false;
         }
-       
+
 	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login, $simplesaml_allow_standard_login,
     $anonymous_login, $pagename, $baseurl;
-   
+
     if($simplesaml_login && simplesaml_is_authenticated())
         {
         // Prevent password change if SAML authenticated and signed in to RS with SAML
@@ -22,7 +21,7 @@ function HookSimplesamlAllPreheaderoutput()
         $session_autologout = false;
         return true;
         }
-        
+
     if($pagename == "login" && !$simplesaml_allow_standard_login && ($simplesaml_login || trim($anonymous_login) !== ''))
         {
         // Shouldn't be able to see the login page, unless misconfigured in which case show to avoid a redirect loop and allow user to log in and recover
@@ -30,7 +29,7 @@ function HookSimplesamlAllPreheaderoutput()
         redirect($baseurl);
         exit();
         }
-        
+
     // If normal user is logged in and allowing standard logins do nothing and return
     if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
         {
@@ -48,9 +47,9 @@ function HookSimplesamlAllPreheaderoutput()
     if(!$simplesaml_allow_standard_login)
         {
         global $show_anonymous_login_panel;
-        $show_anonymous_login_panel = false;    
-        }                
-                
+        $show_anonymous_login_panel = false;
+        }
+
 	// If not blocking site completely and allowing standard logins but not on login page, do nothing and return
 	if (!$simplesaml_site_block && $simplesaml_allow_standard_login)
         {
@@ -67,7 +66,7 @@ function HookSimplesamlAllPreheaderoutput()
         (
             // Hard to determine at this stage what we consider a collection/ resource ID so we
             // use the most general ones
-            check_access_key_collection(str_replace('!collection', '', getvalescaped('search', '')), $k) || 
+            check_access_key_collection(str_replace('!collection', '', getvalescaped('search', '')), $k) ||
             check_access_key(getvalescaped('ref', ''), $k)
         )
     )
@@ -97,19 +96,19 @@ function HookSimplesamlAllPreheaderoutput()
 
 
 function HookSimplesamlAllProvideusercredentials()
-        {        
-        if(!simplesaml_config_check())
+        {       
+        if(!simplesaml_php_check())
             {
             return false;
             }
-          
+
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
         $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
         $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify, $simplesaml_authorisation_claim_name, 
         $simplesaml_authorisation_claim_value, $usercredentialsprovided;
-        
+
         // Don't authenticate if this hook has already been handled by another higher priority plugin
         if(isset($usercredentialsprovided) && $usercredentialsprovided)
             {
@@ -148,18 +147,18 @@ function HookSimplesamlAllProvideusercredentials()
             debug("simplesaml: site block enabled, performing SAML authentication");
             simplesaml_authenticate();
             }
-        
+
         if((isset($_COOKIE['user']) && $simplesaml_allow_standard_login) || (!$simplesaml_login && simplesaml_is_authenticated() ))
             {
             return true;
             }
-		
+
 		// Return false if not already authenticated and local login option is preferred
 		if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
 			{
             return false;
 			}
-                           
+
         if(!simplesaml_is_authenticated())
             {
             if($pagename == "done" && !isset($_COOKIE["SimpleSAMLAuthToken"]))
@@ -182,17 +181,17 @@ function HookSimplesamlAllProvideusercredentials()
             debug("simplesaml: authenticating");
             simplesaml_authenticate();
             }
-            
+
 		$attributes = simplesaml_getattributes();
-        
+
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
 		    {
 		    $username_attributes=explode(",",$simplesaml_username_attribute);
 		    $username ="";
 		    foreach ($username_attributes as $username_attribute)
                 {
-                if($username!=""){$username.=$simplesaml_username_separator;}   
-                $username.=  $attributes[$username_attribute][0]; 				
+                if($username!=""){$username.=$simplesaml_username_separator;}
+                $username.=  $attributes[$username_attribute][0];
                 }
 		    $username= $username . $simplesaml_username_suffix;
 		    }
@@ -223,20 +222,20 @@ function HookSimplesamlAllProvideusercredentials()
             ?>
             <script>
             top.location.href = "<?php echo generateURL("{$baseurl}/login.php", array('error' => 'simplesaml_authorisation_login_error')); ?>";
-            </script>   
+            </script>
             <?php
             return false;
             }
 
         if(strpos($simplesaml_fullname_attribute,",")!==false) // Do we have to join two fields together?
 		    {
-		    $fullname_attributes=explode(",",$simplesaml_fullname_attribute);		   
+		    $fullname_attributes=explode(",",$simplesaml_fullname_attribute);
 		    }
 		else // Previous version used semi-colons
-		    { 
+		    {
 	        $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
 		    }
-        
+
         $displayname ="";
         foreach ($fullname_attributes as $fullname_attribute)
             {
@@ -247,9 +246,9 @@ function HookSimplesamlAllProvideusercredentials()
                 return false;
                 }
             debug("simplesaml: constructing fullname FROM attribute " . $fullname_attribute . ": "  . $attributes[$fullname_attribute][0]);
-            $displayname.=  $attributes[$fullname_attribute][0]; 				
+            $displayname.=  $attributes[$fullname_attribute][0];
             }
-        
+
 		$displayname=trim($displayname);
 		debug("simplesaml: constructed fullname : "  . $displayname);
 
@@ -335,9 +334,9 @@ function HookSimplesamlAllProvideusercredentials()
             // User authenticated, but does not exist
             // First see if there is a matching account
             $email_matches=sql_query("SELECT ref, username, fullname, origin FROM user WHERE email='" . escape_check($email) . "'");				
-			
+
             if(count($email_matches)>0)
-				{			
+				{
 				if(count($email_matches)==1 && $simplesaml_create_new_match_email)
 					{
                     // We want adopt this matching account - update the username and details to match the new login credentials
@@ -347,7 +346,7 @@ function HookSimplesamlAllProvideusercredentials()
 					$comment = $lang["simplesaml_usermatchcomment"]; 
                     }
 				else
-                    {   
+                    {
                     if(!$simplesaml_allow_duplicate_email)
                         {
                         if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso","") != "")
@@ -426,8 +425,8 @@ function HookSimplesamlAllProvideusercredentials()
                 }
 
 			$sql .= " WHERE ref = '$userid'";
-			sql_query($sql);			
-           
+			sql_query($sql);
+
 			$user_select_sql="and u.username='" . escape_check($username) . " '";
             $allow_password_change = false;
             $session_autologout = false;
@@ -437,40 +436,42 @@ function HookSimplesamlAllProvideusercredentials()
         }
 
 function HookSimplesamlAllLoginformlink()
-        {        
-        if(!simplesaml_config_check())
+        {
+        if(!simplesaml_php_check())
             {
             return false;
             }
-        
+
 		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
 		global $baseurl, $lang, $simplesaml_login;
 		
 		// Don't show link to use SSO to login if this has been disabled
-		if(!$simplesaml_login) {return false;}
-		
+        if(!$simplesaml_login)
+            {
+            return false;
+            }
         ?>
 		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo  LINK_CARET . $lang['simplesaml_use_sso']; ?></a>
 		<?php
         }
 
-
-
 function HookSimplesamlLoginPostlogout()
         {        
-        if(!simplesaml_config_check())
+        if(!simplesaml_php_check())
             {
             return false;
             }
 		global $simplesaml_login;
-		
-		if($simplesaml_login && simplesaml_is_authenticated()) 
-			{simplesaml_signout();}
+
+		if($simplesaml_login && simplesaml_is_authenticated())
+			{
+            simplesaml_signout();
+            }
         }
 
 function HookSimplesamlLoginPostlogout2()
-        {     
-        if(!simplesaml_config_check())
+        {
+        if(!simplesaml_php_check())
             {
             return false;
             }
@@ -478,7 +479,7 @@ function HookSimplesamlLoginPostlogout2()
 		if (getval("logout","")!="" && $simplesaml_login && simplesaml_is_authenticated())
 			{
 			simplesaml_signout();
-			header( 'Location: '.$baseurl ) ;
+			header('Location: '.$baseurl);
 			}
         }
 
@@ -495,8 +496,8 @@ function HookSimplesamlAllCheckuserloggedin()
 * 
 */
 function HookSimplesamlAllReplaceheadernav1anon()
-    {         
-    if(!simplesaml_config_check())
+    {
+    if(!simplesaml_php_check())
         {
         return false;
         }
@@ -540,21 +541,21 @@ function HookSimplesamlAllReplaceheadernav1anon()
 
     return true;
     }
-    
+
 function HookSimplesamlCollection_emailReplacecollectionemailredirect()
     {
-    if(!simplesaml_config_check())
+    if(!simplesaml_php_check())
         {
         return false;
         }
     global $baseurl_short, $userref;
-    
+
     redirect($baseurl_short . "pages/done.php?text=collection_email");
     }
 
 function HookSimplesamlResource_emailReplaceresourceemailredirect()
     {
-    if(!simplesaml_config_check())
+    if(!simplesaml_php_check())
         {
         return false;
         }
@@ -565,7 +566,7 @@ function HookSimplesamlResource_emailReplaceresourceemailredirect()
 
 function HookSimplesamlAllCheck_access_key()
     {
-    if(!simplesaml_config_check())
+    if(!simplesaml_php_check())
         {
         return false;
         }

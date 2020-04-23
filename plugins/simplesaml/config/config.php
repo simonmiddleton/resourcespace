@@ -1,5 +1,6 @@
 <?php
 $simplesaml_version = "1.18.5";
+$simplesaml_check_phpversion = "7.1";
 $simplesaml_site_block=false;
 $simplesaml_login=true;
 $simplesaml_allow_public_shares=true;
