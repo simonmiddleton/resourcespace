@@ -6347,8 +6347,6 @@ function notify_resource_change($resource)
         global $applicationname, $lang, $baseurl;
         foreach ($download_users as $download_user)
             {
-            var_dump($download_user['ref']);
-            exit;
             if($download_user['ref']==""){continue;}
             get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);       
             if($send_message==false){continue;}     
