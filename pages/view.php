@@ -977,14 +977,6 @@ else if(1 == $resource['has_image'])
                 var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
                 var tools_options = tools_wrapper.find('.ToolsOptionLink');
 
-                // If any of the tools are enabled do not close Preview tools box
-                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
-                    {
-                    tools_wrapper.removeClass('Hidden');
-
-                    return false;
-                    }
-
                 tools_wrapper.toggleClass('Hidden');
 
                 return false;
@@ -1045,17 +1037,8 @@ else if(1 == $resource['has_image'])
                     <?php
                     }
                     ?>
-
-                        rs_tagging_plugin_added = true;
+			 rs_tagging_plugin_added = true;
 						
-					 	// We have to wait for initialisation process to finish as this does ajax calls
-                        // in order to set itself up
-                        setTimeout(function ()
-                            {
-                            toggleAnnotationsOption(element);
-                            }, 
-                            3000);
-                        return false;
                         }
 
                     // Feature enabled? Then disable it.
@@ -1095,23 +1078,6 @@ else if(1 == $resource['has_image'])
 
                     return false;
                     }
-
-                <?php
-                if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
-                    {
-                    ?>
-                    jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
-                        {
-                        setTimeout(function ()
-                            {
-                            showHidePreviewTools();
-                            }, 
-                            3000);
-                        toggleAnnotationsOption(jQuery('.AnnotationsOption'));
-                        });
-                    <?php
-                    }
-                    ?>
                 </script>
                 <?php
                 }
