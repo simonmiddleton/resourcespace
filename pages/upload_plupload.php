@@ -1267,7 +1267,20 @@ var pluploadconfig = {
                                   uploader.bind('UploadComplete', function(up, files) {
                                         jQuery('.plupload_done').slideUp('2000', function() {
                                                         uploader.splice();
-                                                        window.location.href='<?php echo $baseurl_short . "pages/search.php?search=!contributions" . urlencode($userref) . "&archive=" . urlencode($setarchivestate) . (($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))?"&promptsubmit=true":"") . (($collection_add!="false")?"&collection_add=" . $collection_add:""); ?>';
+                                                        <?php
+                                                        $redirect_url_params = array(
+                                                            'search'   => '!contributions'.urlencode($userref),
+                                                            'order_by' => 'resourceid',
+                                                            'sort'     => 'DESC',
+                                                            'archive'  => urlencode($setarchivestate)
+                                                        );
+
+                                                        if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1")) {$redirect_url_params["promptsubmit"] = 'true';}
+                                                        if ($collection_add !='false'){$redirect_url_params['collection_add'] = $collection_add;}
+
+                                                        $redirect_url = generateURL($baseurl_short . 'pages/search.php',$redirect_url_params);
+                                                        ?>
+                                                        window.location.href='<?php echo $redirect_url; ?>';
                                                         
                                         });
                                   });
