@@ -544,6 +544,7 @@ $lang["filedimensions"]="File dimensions";
 $lang["options"]="Options";
 $lang["previousresult"]="Previous result";
 $lang["viewallresults"]="View all results";
+$lang["vieworiginalresource"]="View original resource";
 $lang["nextresult"]="Next result";
 $lang["pixels"]="pixels";
 $lang["download"]="Download";

@@ -37,6 +37,42 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 if($sort != 'ASC' && $sort != 'DESC') {$sort = $default_sort_direction;}
 
+# Get alternative files and configure next and previous buttons relative to the current file
+if($alternative != "-1")
+	{
+        $alt_order_by="";$alt_sort="";
+        if ($alt_types_organize)
+            {
+                $alt_order_by="alt_type";
+                $alt_sort="asc";
+            }
+        $altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
+        for ($n=0;$n<count($altfiles);$n++)			
+			{	
+                if ($altfiles[$n]["ref"] == $alternative)
+                {
+                    if ($n == count($altfiles) - 1)
+                    {
+                        $alt_next = $altfiles[$n]["ref"];
+                    }
+                    else
+                    {
+                        $alt_next = $altfiles[++$n]["ref"];
+                        --$n;
+                    }
+                    if ($n == "0")
+                    {
+                        $alt_previous = $altfiles[$n]["ref"];
+                    }
+                    else
+                    {
+                        $alt_previous = $altfiles[--$n]["ref"];
+                        ++$n;
+                    }
+                }
+            }
+    }
+
 # next / previous resource browsing
 $go=getval("go","");
 if ($go!="")
@@ -171,19 +207,32 @@ if($annotate_enabled)
 }
 ?>
 
-
 <?php 
-# View All Results buttons will not be shown for a single resource available to external users
-if ($search != "" || ($search == "" && $k == "")) 
-{
-?>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo $lang["previousresult"]?>"></a>
-    &nbsp;
-    <a  class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?<?php if (strpos($search,"!")!==false) {?>search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php } ?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&<?php echo hook("searchextraurl") ?>"><?php echo $lang["viewallresults"]?></a>
-    &nbsp;
-    <a class="nextLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo $lang["nextresult"] ?>"></a><?php
-}
+# If viewing alternative files allow tabbing through them, else tab through resources in the collection
+if ($alternative != "-1")
+    {
+         ?>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alt_previous) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>" title="<?php echo $lang["previousresult"]?>"></a>
+         &nbsp;
+         <a class="enterLink" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>"><?php echo $lang["vieworiginalresource"]?></a>
+         &nbsp;
+         <a class="nextLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alt_next) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>" title="<?php echo $lang["nextresult"] ?>"></a><?php
+    }
+else
+    {
+      # View All Results buttons will not be shown for a single resource available to external users
+     if ($search != "" || ($search == "" && $k == "")) 
+         {
+         ?>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo $lang["previousresult"]?>"></a>
+          &nbsp;
+         <a  class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?<?php if (strpos($search,"!")!==false) {?>search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php } ?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&<?php echo hook("searchextraurl") ?>"><?php echo $lang["viewallresults"]?></a>
+          &nbsp;
+         <a class="nextLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo $lang["nextresult"] ?>"></a><?php
+         }
+    }
 ?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
