@@ -42,6 +42,7 @@ $download           = getval('download', '') != '';
 $download_file_type = getval('fileType_option', '');
 $language           = getval('language', 'en');
 $language           = resolve_pdf_language();
+$modal              = (getval("modal", "") == "true");
 
 $data_only          = 'true' === trim(getval('data_only', ''));
 $pdf_template       = getvalescaped('pdf_template', '');
@@ -190,8 +191,14 @@ include "../include/header.php";
 
 <body>
 	<div class="BasicsBox">
-	<p><a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&archive=<?php echo urlencode($archive); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
-
+    <?php
+    if(!$modal)
+        {
+        ?>
+        <p><a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&archive=<?php echo urlencode($archive); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+        <?php
+        }
+        ?>
 	<h1><?php echo $lang["downloadingmetadata"]?></h1>
 
 	<p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>

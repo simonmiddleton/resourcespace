@@ -3191,9 +3191,6 @@ $resource_view_modal=true;
 # Option to show other standard pages e.g. resource requests in a modal
 $modal_default=false;
 
-# Show the resource edit in a modal when accessed from resource view modal.
-$resource_edit_modal_from_view_modal=false;
-
 # Use the "preview" size on the resource view page
 $resource_view_use_pre = false;
 

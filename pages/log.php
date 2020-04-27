@@ -8,6 +8,7 @@ include_once "../include/collections_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $k=getvalescaped("k","");
+$modal = (getval("modal", "") == "true");
 
 $filter_by_type = trim(getval("filter_by_type", ""));
 $filter_by_usageoption = getval("filter_by_usageoption", null, true);
@@ -101,23 +102,40 @@ if ($go!="")
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<?php
+if(!$modal)
+    {
+    ?>
+    <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <?php
+    }
+?>
+    <div class="RecordHeader">
+        <div class="BackToResultsContainer">
+            <div class="backtoresults">
+                <a href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params), array("search_go" => "previous")) . hook("nextpreviousextraurl"); ?>" onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
+                <?php 
+                hook("viewallresults");
+                if ($k=="") { ?>
+                |
+                <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);"><?php echo $lang["viewallresults"]?></a>
+                <?php } ?>
+                |
+                <a href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params), array("search_go" => "next")) . hook("nextpreviousextraurl"); ?>" onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);"><?php echo $lang["nextresult"]?>&nbsp;<?php echo LINK_CARET ?></a>
+                <?php
+                if($modal)
+                    {
+                    ?>
+                    &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);"></a>
+                    &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();"></a>
+                    <?php
+                    }
+                ?>
+            </div>
+        </div>
+        <h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  htmlspecialchars($ref);render_help_link("user/logs");?></h1>
+    </div>
 
-
-<div class="backtoresults">
-<a href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params), array("search_go" => "previous")) . hook("nextpreviousextraurl"); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
-<?php 
-hook("viewallresults");
-if ($k=="") { ?>
-|
-<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewallresults"]?></a>
-<?php } ?>
-|
-<a href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params), array("search_go" => "next")) . hook("nextpreviousextraurl"); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["nextresult"]?>&nbsp;<?php echo LINK_CARET ?></a>
-</div>
-
-<h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  htmlspecialchars($ref);render_help_link("user/logs");?></h1>
-</div>
 <?php
 $fetchrows = $offset + $per_page;
 
@@ -153,9 +171,9 @@ $url = generateURL(
 <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
 	<?php 
 	for($n=0;$n<count($list_display_array);$n++){?>
-	<?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
+	<?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);" href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
 	<?php } ?>
-	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list=99999"><?php echo $lang["all"]?></a><?php } ?>
+	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);" href="<?php echo $url; ?>&per_page_list=99999"><?php echo $lang["all"]?></a><?php } ?>
 	</div> <?php pager(false); ?></div>
 
 
@@ -261,9 +279,8 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	}
 ?>
 </table>
-</div>
+</div> <!-- end of BasicsBox -->
 
 <div class="BottomInpageNav"><?php pager(false); ?></div>
-
 <?php
 include "../include/footer.php";
