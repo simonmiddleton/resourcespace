@@ -13,10 +13,6 @@ $resourcec=create_resource(2,0);
 $resourced=create_resource(2,0);
 $resourcee=create_resource(3,0);
 
-// Create two users so we can test edit access for resources
-$editor_a=new_user("editora");
-$editor_a=new_user("editorb");
-
 debug("Resource A: " . $resourcea);
 debug("Resource B: " . $resourceb);
 debug("Resource C: " . $resourcec);
@@ -53,11 +49,15 @@ add_resource_nodes($resourced,array($customerb_node, $productone_node, $productt
 // Add node to resource e
 add_resource_nodes($resourcee,array($customerc_node));
 
+$userdata = array();
+$userdata[0]["edit_filter"] = "";
+$userdata[0]["edit_filter_id"] = "";
 
 // SUBTEST A
 // ----- Equals (=)(Equals Character) -----
 $usersearchfilter='';
 $usereditfilter='subject=producttwo';
+$userdata[0]["edit_filter"] = $usereditfilter;
 $results=do_search('','','',0,-1,"desc",false,0,false,false,'',false,false,false,true);  // this should return 3 assets:  b, c and d
 if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref'])
 	||
@@ -72,6 +72,7 @@ if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 // SUBTEST B
 // ----- Or (|)(Pipe character) -----
 $usereditfilter='subject=productone|producttwo';
+$userdata[0]["edit_filter"] = $usereditfilter;
 $results=do_search('','','',0,-1,"desc",false,0,false,false,'',false,false,false,true);  // this should return 4 assets:  a,b, c and d
 if(count($results)!=4 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) || !isset($results[3]['ref'])
 	||
@@ -85,7 +86,7 @@ if(count($results)!=4 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 // SUBTEST C
 // ----- Not (!=)(Exclamation Mark and Equals Characters combined) -----
 $usereditfilter='subject!=producttwo';
-
+$userdata[0]["edit_filter"] = $usereditfilter;
 $results=do_search('@@' . $productone_node,'','',0,-1,"desc",false,0,false,false,'',false,false,false,true);  // this should return 1 asset:  a
 
 if (count($results)!=1 || !in_array($resourcea,array_column($results,'ref')))
@@ -93,6 +94,8 @@ if (count($results)!=1 || !in_array($resourcea,array_column($results,'ref')))
     echo "ERROR - SUBTEST C ";
     return false;
     }
-    
+
+// Revert changes
+$userdata = array();
 
 return true;

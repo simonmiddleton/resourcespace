@@ -1,6 +1,7 @@
 <?php
-// Delete all users first
-sql_query("delete from user");
+// Count existing users first
+$existingusers=get_users("","","username",true,-1,1);
+$usercount = count($existingusers);
 
 $user1=new_user("user1");
 $user2=new_user("user2");
@@ -23,6 +24,6 @@ save_user($user2);
 // Get only approved users
 $testusers=get_users("","","username",true,-1,1);
 
-if(count($testusers)!=1){return false;}
+if(count($testusers) != $usercount + 1){return false;}
 
 return true;

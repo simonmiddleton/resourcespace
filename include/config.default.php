@@ -3689,7 +3689,10 @@ $ghostscript_extensions = array('ps', 'pdf');
 $non_image_types_generate_preview_only = true;
 
 // Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
-// Once enabled the filters will gradually be updated as users search. To update all the filter immediately run upgrade/scripts/005_migrate_search_filters.php
+// Once enabled the filters will gradually be updated as users search.
+// NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
+// To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
+// To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
 $search_filter_nodes = false;
 
 // Browse bar 

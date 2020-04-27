@@ -59,7 +59,8 @@ function do_search(
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
            $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
-           $open_access_for_contributor;
+           $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
+           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl;
 		   
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -165,8 +166,16 @@ function do_search(
             $search_params=substr($search,$s+1); # Extract search params
             }
         }
-        
-    $keywords=split_keywords($search_params,false,false,false,false,true);
+    
+    if($search_params!="")
+        {
+        $keywords=split_keywords($search_params,false,false,false,false,true);
+        }
+    else
+        {
+        $keywords = array();
+        }
+
     foreach (get_indexed_resource_type_fields() as $resource_type_field)
         {
         add_verbatim_keywords($keywords,$search,$resource_type_field,true);      // add any regex matched verbatim keywords for those indexed resource type fields
@@ -1041,23 +1050,22 @@ function do_search(
     //
     // *******************************************************************************
 
-    global $usersearchfilter;
-
-    // New search filter support
-    global $search_filter_nodes;
-    
-    # Option for custom access to override search filters.
-    global $custom_access_overrides_search_filter;
-    
-    if($search_filter_nodes && strlen($usersearchfilter) > 0 && intval($usersearchfilter) == 0)
+    if($search_filter_nodes 
+        && strlen(trim($usersearchfilter)) > 0
+        && !is_numeric($usersearchfilter)
+        && (
+            (trim($userdata[0]["search_filter_override"]) != "" && $userdata[0]["search_filter_o_id"] != -1)
+            || 
+            (trim($userdata[0]["search_filter"]) != "" && $userdata[0]["search_filter_id"] != -1)
+            )
+        )
         {
-        // Migrate unless marked not to due to failure (flag will be reset if group is edited)
-        $migrateresult = migrate_search_filter($usersearchfilter);
+        // Migrate old style filter unless previously failed attempt
+        $migrateresult = migrate_filter($usersearchfilter);
         $notification_users = get_notification_users();
-        global $userdata, $lang, $baseurl;
         if(is_numeric($migrateresult))
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $usersearchfilter . "'",generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $usersearchfilter . "'",generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             
             // Successfully migrated - now use the new filter
             if(isset($userdata[0]["search_filter_override"]) && $userdata[0]["search_filter_override"]!='')
@@ -1085,74 +1093,18 @@ function do_search(
                 sql_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref='" . $usergroup . "'");
                 }
                 
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_search_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
         
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
-        $filter         = get_filter($usersearchfilter);
-        $filterrules    = get_filter_rules($usersearchfilter);
-
-        $modfilterrules=hook("modifysearchfilterrules");
-        if ($modfilterrules)
+        $search_filter_sql = get_filter_sql($usersearchfilter);
+        if($search_filter_sql)
             {
-            $filterrules = $modfilterrules;
-            }
-            
-        $filtercondition = $filter["filter_condition"];
-        $filters = array();
-        $filter_ors = array(); // Allow filters to be overridden in certain cases
-            
-        foreach($filterrules as $filterrule)
-            {
-            $filtersql = "";
-            if(count($filterrule["nodes_on"]) > 0)
-                {
-                $filtersql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filterrule["nodes_on"]) . "')) ";
-                }
-            if(count($filterrule["nodes_off"]) > 0)
-                {
-                if($filtersql != "") {$filtersql .= " OR ";}
-                $filtersql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? "" : " NOT") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filterrule["nodes_off"]) . "')) ";
-                }
-                
-            $filters[] = "(" . $filtersql . ")";
-            }
-        
-        if (count($filters) > 0)
-            {   
-            if($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_NONE)
-                {
-                $glue = " AND ";
-                }
-            else 
-                {
-                // This is an OR filter
-                $glue = " OR ";
-                }
-            
-            // Bracket the filters to ensure that there is no hanging OR to create an unintentional disjunct
-            $filter_add = "( " . implode($glue, $filters) . " )";
-            
-            # If custom access has been granted for the user or group, nullify the search filter, effectively selecting "true".
-            if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
-                {
-                $filter_ors[] = "(rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2)";
-                }
-
-            if($open_access_for_contributor)
-                {
-                $filter_ors[] = "(r.created_by='$userref')";
-                }
-            
-            if(count($filter_ors) > 0)
-                {
-                $filter_add = "((" . $filter_add . ") OR (" . implode(") OR (",$filter_ors) . "))";
-                }
-
-            if ($sql_filter != ""){$sql_filter .= " AND ";}
-            $sql_filter .=  $filter_add;
+            if ($sql_filter != "")
+                {$sql_filter .= " AND ";}
+            $sql_filter .=  $search_filter_sql;
             }
         }
     elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
@@ -1286,16 +1238,54 @@ function do_search(
 
     if ($editable_only)
 		{
-		global $usereditfilter;			
-		if(strlen($usereditfilter)>0)
-			{
+        if($search_filter_nodes 
+            && strlen(trim($usereditfilter)) > 0
+            && !is_numeric($usereditfilter)
+            && trim($userdata[0]["edit_filter"]) != ""
+            && $userdata[0]["edit_filter_id"] != -1
+        )
+            {
+            // Migrate unless marked not to due to failure
+            $usereditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions);
+            $migrateresult = migrate_filter($usereditfilter);
+            if(is_numeric($migrateresult))
+                {
+                debug("Migrated . " . $migrateresult);
+                // Successfully migrated - now use the new filter
+                sql_query("UPDATE usergroup SET edit_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
+                $usereditfilter = $migrateresult;
+                }
+            elseif(is_array($migrateresult))
+                {
+                debug("FILTER MIGRATION: Error migrating filter: '" . $usersearchfilter . "' - " . implode('\n' ,$migrateresult));
+                // Error - set flag so as not to reattempt migration and notify admins of failure
+                sql_query("UPDATE usergroup SET edit_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                $notification_users = get_notification_users();
+                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+                }
+            }
+
+        if ($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
+            {
+            $edit_filter_sql = get_filter_sql($usereditfilter);
+            if($edit_filter_sql)
+                {
+                if ($sql_filter != "")
+                    {$sql_filter .= " AND ";}
+                $sql_filter .=  $edit_filter_sql;
+                }
+            }
+        elseif (strlen($usereditfilter)>0 && !is_numeric($usereditfilter))
+            {
+            // Old style edit filter
 			$ef=explode(";",$usereditfilter);
 			for ($n=0;$n<count($ef);$n++)
 				{
 				$s=explode("=",$ef[$n]);
 				if (count($s)!=2)
 					{
-					exit ("Edit filter is not correctly configured for this user group.");
+					return $lang["error_edit_filter_invalid"];
 					}
 				
 				# Support for "NOT" matching. Return results only where the specified value or values are NOT set.
@@ -1586,7 +1576,8 @@ function do_search(
         {
         $max_results=$fetchrows;
         }
-    $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by limit $max_results" . $sql_suffix;
+
+    $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
 
     # Debug
     debug('$results_sql=' . $results_sql);

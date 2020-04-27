@@ -35,7 +35,11 @@ if ($on_upload || $ref<0)
             for($n = 0; $n < count($types); $n++)
                 {
                 // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
-                if((checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types)))
+                if(checkperm("XU{$types[$n]['ref']}") 
+                    || 
+                    in_array($types[$n]['ref'], $hide_resource_types)
+                    || (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
+                    )
                     {
                     continue;
                     }

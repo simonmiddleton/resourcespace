@@ -204,8 +204,23 @@ foreach ($rtypes as $rtype)
 # ------------ Edit access to resource types (in any archive state to which the group has access)
 foreach ($rtypes as $rtype)
 	{
-	DrawOption("ert" . $rtype["ref"], $lang["can_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
-	}
+	DrawOption("ert" . $rtype["ref"], $lang["force_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
+    }
+    
+foreach ($rtypes as $rtype)
+    {
+    DrawOption("XE" . $rtype["ref"], $lang["deny_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
+    }
+
+DrawOption("XE", $lang["deny_edit_all_resource_types"],false, true);
+# ------------ Allow edit access to specified resource types
+if (in_array("XE",$permissions))	
+		{
+        foreach ($rtypes as $rtype)
+            {
+            DrawOption("XE-" . $rtype["ref"], str_replace("%%RESOURCETYPE%%","'" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'",$lang["can_edit_resource_type"]));
+            }
+        }
 
 ?>				<tr class="ListviewTitleStyle">
 					<td colspan=3 class="permheader"><?php echo $lang["resource_creation_and_management"] ?></td>

@@ -18,10 +18,10 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
             }
             
         // Migrate unless marked not to due to failure (flag will be reset if group is edited)
-        $migrateresult = migrate_search_filter($filtertext);        
+        $migrateresult = migrate_filter($filtertext);        
         if(is_numeric($migrateresult))
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
             // Successfully migrated - now use the new filter
             sql_query("UPDATE usergroup SET search_filter_id='" . $migrateresult . "' WHERE ref='" . $group["ref"] . "'");
             }
@@ -31,7 +31,7 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
             // Error - set flag so as not to reattempt migration and notify admins of failure
             sql_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref='" . $group["ref"] . "'");
                 
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_search_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
         
@@ -43,20 +43,20 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
             {
             continue;
             }
-        // Migrate unless marked not to due to failure (flag will be reset if group is edited)
-        $migrateresult = migrate_search_filter($filtertext);
+        // Migrate unless marked not to due to failure
+        $migrateresult = migrate_filter($filtertext);
         if(is_numeric($migrateresult))
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
             // Successfully migrated - now use the new filter
             sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $user["ref"] . "'");
             }
         elseif(is_array($migrateresult))
             {
             debug("FILTER MIGRATION: Error migrating filter: '" . $filtertext . "' - " . implode('\n' ,$migrateresult));
-            // Error - set flag so as not to reattempt migration and notify admins of failure
-            sql_query("UPDATE user SET search_filter_o_id='-1' WHERE ref='" . $user["ref"] . "'");
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_search_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            // Error - set flag so as not to reattempt migration and notify admins of failure to be sorted manually
+            sql_query("UPDATE user SET search_filter_o_id='0' WHERE ref='" . $user["ref"] . "'");
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }            
         }
     

@@ -1743,6 +1743,9 @@ $lang["can_edit_field"]="Can edit field";
 $lang["can_see_resource_type"]="Can see resource type '%TYPE'. Unchecking this <strong>adds</strong> the 'T%REF' permission";
 $lang["restricted_access_only_to_resource_type"]="Restricted access only to resource type";
 $lang["restricted_upload_for_resource_of_type"]="Restricted upload for resource of type";
+$lang["deny_edit_resource_type"]="Deny edit access to resource of type";
+$lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by XE- permissions below";
+$lang["can_edit_resource_type"]="Can edit resources of type %%RESOURCETYPE%%. Ignored if XE permission is not present";
 $lang["edit_access_to_workflow_state"]="Edit access to workflow state";
 $lang["edit_access_to_access"]="Edit access to Access state '%STATE'. Unchecking this <strong>adds</strong> the 'ea%REF' permission";
 $lang["can_create_resources_and_upload_files-admins"]="Can create resources / upload files<br>(admin users; resources go to 'Active' state)";
@@ -2670,7 +2673,7 @@ $lang["collection_restype_blocked"]="The following resource types cannot be adde
 $lang["retina_mode"]="Retina mode";
 
 $lang["private-api-key"]="Private API key";
-$lang["can_edit_resource_type"] = "Force edit access to resource type: ";
+$lang["force_edit_resource_type"] = "Force edit access to resource type: ";
 
 $lang["userpreference_headersize"]="Header size";
 $lang["headersmall"]="Small";
@@ -2786,9 +2789,9 @@ $lang['error-duplicatesfound'] = "Duplicate found: resource(s) %resourceref% mat
 $lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang["edit_copy_from_field"]       = "Copy data from field";
 // Filter rules 
 $lang["filter_migration"]           = "Filter migration";
-$lang["filter_search_success"]      = "Search filter has been successfully migrated.";
-$lang["filter_search_error"]        = "An error was encountered migrating a search filter. Please check the search filter.";
-$lang["filter_search_delete_error"] = "Filter is in use by the following users or groups";
+$lang["filter_migrate_success"]     = "Filter has been successfully migrated.";
+$lang["filter_migrate_error"]       = "An error was encountered migrating a filter. Please check the filter.";
+$lang["filter_delete_error"]        = "Filter is in use by the following users or groups";
 $lang["filter_manage"]              = "Manage filters";
 $lang["filter_edit"]                = "Edit filter";
 $lang["filter_new"]                 = "New filter";
@@ -2870,3 +2873,4 @@ $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 
+$lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";

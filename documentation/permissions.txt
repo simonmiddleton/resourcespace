@@ -35,6 +35,9 @@ X?_$    RESTRICT access to resources with the given resource type ID AND the giv
         restricts access to the screen size download for photo resources.
 P?      Allows edit only access to a specific field on the upload form only. Allows a user to provide a field on upload 
         that is otherwise hidden from them (e.g. confidential information such as subject name).
+XE?     DENY edit access to given resource type
+XE      DENY edit access to ALL resource types by default, to be used in conjuction with the XE? permission
+XE-?    Only for usergroups with XE permisssion, ALLOW edit access to resources of the given resource type
 
 Resource creation
 -----------------

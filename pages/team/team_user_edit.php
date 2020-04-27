@@ -215,11 +215,11 @@ if($search_filter_nodes)
         $search_filter_set      = true;
 
         // Attempt to migrate filter
-        $migrateresult = migrate_search_filter($user['search_filter_override']);
+        $migrateresult = migrate_filter($user['search_filter_override']);
         $notification_users = get_notification_users();
         if(is_numeric($migrateresult))
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $user['search_filter_override'] . "'",generateURL($baseurl . "/pages/team/team_user_edit.php",array("ref"=>$user['ref'])));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $user['search_filter_override'] . "'",generateURL($baseurl . "/pages/team/team_user_edit.php",array("ref"=>$user['ref'])));
             
             // Successfully migrated - now use the new filter
             sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $user['ref'] . "'");
@@ -237,10 +237,11 @@ if($search_filter_nodes)
         }
     }
 
-if ($search_filter_nodes && ($search_filter_set == false || $search_filter_migrated == true))
+if ($search_filter_nodes)
     {
     // Show filter selector if already migrated or no filter has been set
-    $search_filters = get_filters($order = "name", $sort = "ASC");
+    $search_filters = get_filters("name","ASC");
+    $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
     ?>
     <div class="Question">
         <label for="search_filter_o_id"><?php echo $lang["searchfilteroverride"]; ?></label>
@@ -256,13 +257,12 @@ if ($search_filter_nodes && ($search_filter_set == false || $search_filter_migra
     </div>
     <?php	
     }
-else
+if((strlen($user['search_filter_override']) != "" && (!(is_numeric($user['search_filter_o_id']) || $user['search_filter_o_id'] < 1))) || !$search_filter_nodes)
     {
     ?>
-    <input type="hidden" name="search_filter_o_id" value="0" />
     <div class="Question">
         <label for="search_filter"><?php echo $lang["searchfilteroverride"]; ?></label>
-        <input name="search_filter_override" type="text" class="stdwidth" value="<?php echo form_value_display($user,"search_filter_override")?>">
+        <input name="search_filter_override" type="text" class="stdwidth" <?php echo ($search_filter_nodes ? "readonly" : "");?>value="<?php echo form_value_display($user,"search_filter_override")?>">
         <div class="clearerleft"></div>
     </div>
     <?php

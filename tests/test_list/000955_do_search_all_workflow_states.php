@@ -6,7 +6,8 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // Check for searching using $search_all_workflow_states=false;
 
 // Set a few options  that could affect test
-
+$saved_userref = $userref;
+$savedpermissions = $userpermissions;
 $pending_review_visible_to_all = false;
 $search_all_workflow_states = false;
 $pending_submission_searchable_to_all=false;
@@ -27,7 +28,6 @@ $search_all_workflow_states = false;
 // SUBTEST A
 // Add a new resource in pending archive state and check not returned
 $userref = 999;
-$savedpermissions = $userpermissions;
 $resourcea = create_resource(1,1);
 $userref = 1;
 $userpermissions = array("s","g","f*");
@@ -102,7 +102,7 @@ if(count($results) != $allcount + 1)
 $allcount++;
 
 // Reset to standard settings
-$userref=1;
+$userref = $saved_userref;
 $userpermissions = $savedpermissions;
 $pending_review_visible_to_all=false;
 $pending_submission_searchable_to_all=false;

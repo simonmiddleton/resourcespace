@@ -2463,8 +2463,9 @@ function setup_user($userdata)
             $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
             }
             
-        $usereditfilter=$userdata["edit_filter"];
-        $userderestrictfilter=$userdata["derestrict_filter"];
+        $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
+        $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
+
         $hidden_collections=explode(",",$userdata["hidden_collections"]);
         $userresourcedefaults=$userdata["resource_defaults"];
         $userrequestmode=trim($userdata["request_mode"]);
@@ -2574,7 +2575,9 @@ function validate_user($user_select_sql, $getuserdata=true)
                        u.session,
                        g.search_filter_id,
                        g.download_limit,
-                       g.download_log_days
+                       g.download_log_days,
+                       g.edit_filter_id,
+                       g.derestrict_filter_id
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref

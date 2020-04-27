@@ -62,7 +62,7 @@ if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
         {
         $response   = array('deleted' => false);
         $response["errors"] = array();
-        $response["errors"][] = $lang["filter_search_delete_error"] . ":- ";
+        $response["errors"][] = $lang["filter_delete_error"] . ":- ";
         foreach($result["groups"] as $group)
             {
             $response["errors"][] = $lang["group"] . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . $group . "' target='_blank' >" . $group . "</a>";

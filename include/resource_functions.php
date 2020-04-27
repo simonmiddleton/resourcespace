@@ -3591,6 +3591,10 @@ function add_field_option($field,$option)
 if (!function_exists("get_resource_access")){	
 function get_resource_access($resource)
 	{
+    global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
+        $prevent_open_access_on_edit_for_active, $search_filter_nodes, $open_access_for_contributor,
+        $userref,$usergroup, $usersearchfilter, $search_filter_strict, $search_all_workflow_states,
+        $userderestrictfilter, $userdata;
 	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.	
 		
 	# Returns the access that the currently logged-in user has to $resource.
@@ -3608,28 +3612,25 @@ function get_resource_access($resource)
 	if (is_array($resource) && !isset($resource['group_access']) && !isset($resource['user_access'])){$resource=$resource['ref'];}
 	
 	if (!is_array($resource))
-                {
-                $resourcedata=get_resource_data($resource,true);
-                }
+        {
+        $resourcedata=get_resource_data($resource,true);
+        }
 	else
-                {
-                $resourcedata=$resource;
-                $passthru="yes";
-                }
+        {
+        $resourcedata=$resource;
+        $passthru="yes";
+        }
                 
 	$ref=$resourcedata['ref'];
 	$access=$resourcedata["access"];
 	$resource_type=$resourcedata['resource_type'];
 	
 	// Set a couple of flags now that we can check later on if we need to check whether sharing is permitted based on whether access has been specifically granted to user/group
-    global $customgroupaccess,$customuseraccess;
-	$customgroupaccess=false;
+    $customgroupaccess=false;
 	$customuseraccess=false;
 	
-	global $k;
 	if('' != $k)
 		{
-        global $internal_share_access;
 
 		# External access - check how this was shared.
 		$extaccess = sql_value("SELECT access `value` FROM external_access_keys WHERE resource = '{$ref}' AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
@@ -3640,7 +3641,6 @@ function get_resource_access($resource)
             }
 		}
 	
-	global $uploader_view_override, $userref;
 	if (checkperm("z" . $resourcedata['archive']) && !($uploader_view_override && $resourcedata['created_by'] == $userref))
 		{
 		// User has no access to this archive state 
@@ -3659,7 +3659,6 @@ function get_resource_access($resource)
 		$customgroupaccess=true;
 		# Load custom access level
 		if ($passthru=="no"){ 
-			global $usergroup;
 			$access=get_custom_access($resource,$usergroup);
 			} 
 		else {
@@ -3667,14 +3666,12 @@ function get_resource_access($resource)
 		}
 	}
 
-	global $prevent_open_access_on_edit_for_active;
 	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],false,$resourcedata) && !$prevent_open_access_on_edit_for_active)
 		{
 		# If access is restricted and user has edit access, grant open access.
 		$access = 0;
 		}
 
-	global $open_access_for_contributor;
 	if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
 		{
 		# If user has contributed resource, grant open access and ignore any further filters.
@@ -3682,8 +3679,7 @@ function get_resource_access($resource)
 		}
 
 	# Check for user-specific and group-specific access (overrides any other restriction)
-	global $userref,$usergroup;
-
+	
 	// We need to check for custom access either when access is set to be custom or
 	// when the user group has restricted access to all resource types or specific resource types
 	// are restricted
@@ -3718,19 +3714,17 @@ function get_resource_access($resource)
 		return 2;
 		}
 		
-	global $usersearchfilter, $search_filter_strict; 
 	if ((trim($usersearchfilter)!="") && $search_filter_strict)
-		{
+        {
 		# A search filter has been set. Perform filter processing to establish if the user can view this resource.		
-                # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
+        # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
 
-                global $search_all_workflow_states;
-                $search_all_workflow_states_cache = $search_all_workflow_states;
-                $search_all_workflow_states = TRUE;
-                $results=do_search("!resource" . $ref);
-                $search_all_workflow_states = $search_all_workflow_states_cache;
-                if (count($results)==0) {return 2;} # Not found in results, so deny
-                }
+        $search_all_workflow_states_cache = $search_all_workflow_states;
+        $search_all_workflow_states = TRUE;
+        $results=do_search("!resource" . $ref);
+        $search_all_workflow_states = $search_all_workflow_states_cache;
+        if (count($results)==0) {return 2;} # Not found in results, so deny
+        }
 
     /*
     Restricted access to all available resources
@@ -3748,29 +3742,62 @@ function get_resource_access($resource)
         $access = 1;
         }
 
-	// Check for a derestrict filter, this allows exeptions for users without the 'g' permission who normally have restricted accesss to all available resources)
-	global $userderestrictfilter;
+	// Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
 	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim($userderestrictfilter) != "")
 		{
-		# A filter has been set to derestrict access when certain metadata criteria are met
-		if(!isset($metadata))
+        if($search_filter_nodes 
+            && strlen(trim($userderestrictfilter)) > 0
+            && !is_numeric($userderestrictfilter)
+            && trim($userdata[0]["derestrict_filter"]) != ""
+            && $userdata[0]["derestrict_filter_id"] != -1
+        )
             {
-            #  load metadata if not already loaded
-            $metadata=get_resource_field_data($ref,false,false);
+            // Migrate unless marked not to due to failure (flag will be reset if group is edited)
+            $migrateresult = migrate_filter($userderestrictfilter);
+            $notification_users = get_notification_users();
+            global $userdata, $lang, $baseurl;
+            if(is_numeric($migrateresult))
+                {
+                // Successfully migrated - now use the new filter
+                sql_query("UPDATE usergroup SET derestrict_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                debug("FILTER MIGRATION: Migrated derestrict_filter_id filter - '" . $userderestrictfilter . "' filter id#" . $migrateresult);
+                $userderestrictfilter = $migrateresult;
+                }
+            elseif(is_array($migrateresult))
+                {
+                debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n' ,$migrateresult));
+                // Error - set flag so as not to reattempt migration and notify admins of failure
+                sql_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+                }
             }
-		$matchedfilter=false;
-		for ($n=0;$n<count($metadata);$n++)
-			{
-			$name=$metadata[$n]["name"];
-			$value=$metadata[$n]["value"];
-			if ($name!="")
-				{
-				$match=filter_match($userderestrictfilter,$name,$value);
-				if ($match==1) {$matchedfilter=false;break;}
-				if ($match==2) {$matchedfilter=true;} 
-				}
-			}
-			
+
+        if($search_filter_nodes && is_numeric($userderestrictfilter) && $userderestrictfilter > 0)
+            {
+            $matchedfilter = filter_check($userderestrictfilter, get_resource_nodes($ref));
+            }
+        else
+            {
+            # Old style filter 
+            if(!isset($metadata))
+                {
+                #  load metadata if not already loaded
+                $metadata=get_resource_field_data($ref,false,false);
+                }
+
+            $matchedfilter=false;
+            for ($n=0;$n<count($metadata);$n++)
+                {
+                $name=$metadata[$n]["name"];
+                $value=$metadata[$n]["value"];
+                if ($name!="")
+                    {
+                    $match=filter_match($userderestrictfilter,$name,$value);
+                    if ($match==1) {$matchedfilter=false;break;}
+                    if ($match==2) {$matchedfilter=true;} 
+                    }
+                }
+            }
         if($matchedfilter)
             {
             $access=0;
@@ -3883,8 +3910,8 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	# For the provided resource and metadata, does the current user have edit access to this resource?
     # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
 	
-    global $userref,$usereditfilter,$edit_access_for_contributor;
-
+    global $userref,$usergroup, $usereditfilter,$edit_access_for_contributor,
+    $search_filter_nodes, $userpermissions, $lang, $baseurl, $userdata;
     $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
     if($plugincustomeditaccess)
@@ -3905,7 +3932,15 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
         
     # Must have edit permission to this resource first and foremost, before checking the filter.
-    if (!checkperm("e" . $status) && !checkperm("ert" . $resourcedata['resource_type'])) {return false;} 
+    if ((!checkperm("e" . $status) && !checkperm("ert" . $resourcedata['resource_type']))
+        ||
+        (checkperm("XE" . $resourcedata['resource_type']))
+        ||
+        (checkperm("XE") && !checkperm("XE-" . $resourcedata['resource_type']))
+        )
+        {
+        return false;
+        }
     
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
@@ -3919,16 +3954,47 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         return false;
         } 
 	
-	$gotmatch=false;
-	if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
+    $gotmatch=false;
+    
+    if($search_filter_nodes 
+        && strlen(trim($usereditfilter)) > 0
+        && !is_numeric($usereditfilter)
+        && trim($userdata[0]["edit_filter"]) != ""
+        && $userdata[0]["edit_filter_id"] != -1
+        )
+        {
+        // Migrate unless marked not to due to failure (flag will be reset if group is edited)
+        $migrateeditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions, true);
+        $migrateresult = migrate_filter($migrateeditfilter); 
+        $notification_users = get_notification_users();
+        if(is_numeric($migrateresult))
+            {
+            // Successfully migrated - now use the new filter
+            sql_query("UPDATE usergroup SET edit_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+            debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
+            $usereditfilter = $migrateresult;
+            }
+        elseif(is_array($migrateresult))
+            {
+            debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n' ,$migrateresult));
+            // Error - set flag so as not to reattempt migration and notify admins of failure
+            sql_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref='" . $usergroup . "'");
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            }
+        }
+    
+    if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
-	else
+    elseif($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
+        {
+        $gotmatch = filter_check($usereditfilter, get_resource_nodes($resource));
+        }
+    else
 		{
-		# An edit filter has been set. Perform edit filter processing to establish if the user can edit this resource.
-		
-		# Always load metadata, because the provided metadata may be missing fields due to permissions.
+		# An old style edit filter has been set. Perform edit filter processing to establish if the user can edit this resource.
+        # Always load metadata, because the provided metadata may be missing fields due to permissions.
 		$metadata=get_resource_field_data($resource,false,false);
 				
 		for ($n=0;$n<count($metadata);$n++)
@@ -4005,7 +4071,6 @@ function filter_match($filter,$name,$value)
 		}
 	return 0;
 	}
-
 
 /**
 * Check changes made to a metadata field and create a nice user friendly summary
@@ -5928,4 +5993,62 @@ function download_link_check_key($download_key, $resource)
         }
 
     return true;
+    }
+
+/**
+* Check if a given set of nodes meets the conditions set for the provided filter
+* NOte that all resource_nodes for a resource should be passed to check if a filter is matched
+*  
+* @param integer    $ref        Filter ID
+* @param array      $nodes      Array of nodes
+* 
+* @return boolean
+*/
+function filter_check($filterid,$nodes)
+    {
+    $filterdata         = get_filter($filterid);
+    $filterrules        = get_filter_rules($filterid);
+    $filtercondition    = $filterdata["filter_condition"];
+
+    // Used for RS_FILTER_ALL type
+    $filtersfailed  = 0;
+    $filtersok      = 0;
+
+    foreach($filterrules as $filterrule)
+        {
+        // Check if any nodes are present that shouldn't be, or nodes not present that need to be 
+        $badnodes   = array_intersect($filterrule["nodes_off"],$nodes);
+        $goodnodes  = array_intersect($filterrule["nodes_on"],$nodes); 
+        $rulemet    = count($badnodes) == 0 && (count($filterrule["nodes_on"]) == 0 || count($goodnodes) > 0);
+        // Can return now if filter successfully matched and RS_FILTER_ANY or RS_FILTER_NONE,
+        // or if filter not matched and RS_FILTER_ALL
+        if($rulemet)
+            {
+            if($filtercondition == RS_FILTER_ANY)
+                {
+                return true;
+                }
+            elseif($filtercondition == RS_FILTER_NONE)
+                {
+                return false;
+                }
+            $filtersok++;
+            }
+        else
+            {
+            if($filtercondition == RS_FILTER_ALL)
+                {
+                return false;
+                }            
+            $filtersfailed++;
+            }
+        // Need to check subsequent rules if RS_FILTER_ALL and filter rule met        
+        }
+        
+    if($filtercondition == RS_FILTER_ALL && $filtersfailed == 0 && $filtersok == count($filterrules))
+        {
+        return true;
+        }
+
+    return false;
     }

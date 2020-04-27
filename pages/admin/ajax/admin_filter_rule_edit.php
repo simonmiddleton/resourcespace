@@ -28,7 +28,7 @@ else
 $allfields = get_resource_type_fields();
 $saveparams = array();
 $saveparams["ref"] = $filterid;
-$saveurl = generateURL($baseurl . "/pages/admin/admin_filter_rule.php",$saveparams);
+$saveurl = generateURL($baseurl . "/pages/admin/admin_filter_rule_edit.php",$saveparams);
     
 ?>
 
@@ -38,7 +38,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_rule.php",$savepara
 <div class="BasicsBox">
     <h1><?php echo $lang["filter_rule_add"] ?></h1>
     <h2><?php echo $lang["filter_rule_edit_text"] ?></h2>
-    <form id="filter_edit_form" name="filter_edit_form" method="post" action="" onSubmit="processFilterRules();CentralSpacePost('<?php echo $saveurl; ?>');">
+    <form id="filter_edit_form" name="filter_edit_form" method="post" action="<?php echo $saveurl; ?>" onSubmit="processFilterRules();return CentralSpacePost(this,true);">
     <input type="hidden" name="filter_rule" value="<?php echo $ruleid; ?>" />
     <input type="hidden" name="filter" value="<?php echo $filterid; ?>" />
     <input type="hidden" name="filter_rule_data" id="filter_rule_data" value="" />

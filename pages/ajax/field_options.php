@@ -5,15 +5,7 @@ include dirname(__FILE__) . '/../../include/authenticate.php';
 include_once dirname(__FILE__) . '/../../include/render_functions.php';
 include_once dirname(__FILE__) . '/../../include/node_functions.php';
 
-// TODO - remove
-//include dirname(__FILE__) . '/../../include/header.php';
-
-/*?>
-<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
-<?php
-*/
-// Provides html for search field 
+// Used to obtain JSON encoded list of options for given fixed list field
 $fieldref = getvalescaped('field', 0, true);
 
 // Prevent access to fields to which user does not have access to

@@ -130,5 +130,5 @@ if (!is_array($results)
 
 //End of tests
 
-$saved_userref = $userref;
+$userref = $saved_userref;
 $userpermissions = $savedpermissions;
