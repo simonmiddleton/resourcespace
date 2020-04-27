@@ -225,10 +225,10 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		</script>
 		<?php
 		}
-		global $access,$alt_types_organize,$alternative_file_previews,$userrequestmode;
+		global $access,$alt_types_organize,$alternative_file_previews,$userrequestmode,$alt_files_visible_when_restricted;
 	# Alternative files listing
 $alt_access=hook("altfilesaccess");
-if ($access==0) $alt_access=true; # open access (not restricted)
+if ($access==0 || $alt_files_visible_when_restricted) $alt_access=true; # open access (not restricted)
 if ($alt_access) 
 	{
 	$alt_order_by="";$alt_sort="";
@@ -311,7 +311,13 @@ if ($alt_access)
 		else { ?>
 			<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>')"><?php echo $lang["action-download"]?></a>
 		<?php } ?></td></td>
-		<?php } else { ?>
+		<?php } 
+		else if (checkperm("q"))
+		{
+			?><td class="DownloadButton"><a href="<?php echo generateURL($baseurl_short."/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></td></td><?php
+		}
+		else 
+		{ ?>
 		<td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td>
 		<?php } ?>
 		</tr>
