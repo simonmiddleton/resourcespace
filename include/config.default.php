@@ -2065,6 +2065,9 @@ $collection_frame_height=153;
 # Ability to hide error messages
 $show_error_messages=true;
 
+# Include detail of errors to user
+$show_detailed_errors=false;
+
 # Ability to set that the 'request' button on resources adds the item to the current collection (which then can be requested) instead of starting a request process for this individual item.
 $request_adds_to_collection=false;
 
