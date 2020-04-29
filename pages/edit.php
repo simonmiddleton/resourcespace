@@ -882,7 +882,8 @@ function ShowHelp(field)
         if(preventautosave) return false;
       
         // add div to prevent user from clicking on input elements while database update underway
-        jQuery("#mainform").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;opacity:0.2;background-color:#000;\"></div>");
+        jQuery('.BasicsBox').css("position","relative");
+        jQuery(".BasicsBox").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;opacity:0.2;background-color:#000;\"></div>");
  
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
@@ -928,8 +929,9 @@ function ShowHelp(field)
                     // alert box with error message
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }   
-                // once autosave has completed, remove the div that prevents user input    
-                jQuery('#prevent_edit_conflict').remove();     
+                // once autosave has completed, remove the div that prevents user input
+                jQuery('.BasicsBox').css("position","relative");    
+                jQuery('.BasicsBox div#prevent_edit_conflict').remove();     
                 });
         
 	    }
@@ -978,11 +980,10 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
 
-        # if autosave enabled use a dummy save button to prevent edit conflicts
+        # only display save button if autosave is not enabled
         if (!$edit_autosave)
             {        
             ?>
-
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
                name="save"
                class="editsave"
