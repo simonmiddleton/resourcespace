@@ -15,7 +15,6 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
         jQuery(document).on('click', '#previewlink', function(event) {
             event.preventDefault();
             jQuery('#previewimage').click(); 
-            ModalClose();
         });
     </script>
     <?php
@@ -52,8 +51,7 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
             ?>
             <a href="<?php echo $preview_url; ?>"
                 data-lightbox='lightbox<?php echo $resource['ref']; ?>'
-                data-title="<?php echo str_replace(array("\r","\n")," ", htmlspecialchars(strip_tags(i18n_get_translated($title)))); ?>"
-                onmouseup="closeModalOnLightBoxEnable();">
+                data-title="<?php echo str_replace(array("\r","\n")," ", htmlspecialchars(strip_tags(i18n_get_translated($title)))); ?>">
             </a>
         <?php
         }

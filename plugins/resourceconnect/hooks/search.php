@@ -129,7 +129,7 @@ function HookResourceConnectSearchThumblistextras()
     $title = $resource["field8"]; // image title
     ?>
     <!-- Full screen preview -->
-    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
+    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection"></a>
     
     <!-- Share resource -->
     <a aria-hidden="true" class="fa fa-share-alt"
