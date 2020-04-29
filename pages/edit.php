@@ -881,13 +881,9 @@ function ShowHelp(field)
         {
         if(preventautosave) return false;
       
-        // disable save button as error conflicts can occur if clicked during autosave    
-        jQuery('.editsave').attr("disabled", true); 
-        jQuery('.editsave').attr("style", 'opacity:0.5');
-        // add div and change css to prevent user from clicking on input elements while database update underway
-        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","relative");
-        jQuery('#AutoSaveStatus' + field).parents(".Question").append("<div id=\"prevent_edit_conflict\" style=\"position:absolute; left:0; right:0; top:0; bottom:0;background-color:transparent;\"></div>");
-
+        // add div to prevent user from clicking on input elements while database update underway
+        jQuery("#mainform").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;opacity:0.2;background-color:#000;\"></div>");
+ 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
@@ -931,13 +927,11 @@ function ShowHelp(field)
                     jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
                     // alert box with error message
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
-                    }        
+                    }   
+                // once autosave has completed, remove the div that prevents user input    
+                jQuery('#prevent_edit_conflict').remove();     
                 });
-        // once autosave has completed, reset css and remove the div that prevents user input    
-        jQuery('.editsave').attr("disabled", false);  // re-enable save button
-        jQuery('.editsave').attr("style", "opacity:1.0");
-        jQuery('#AutoSaveStatus' + field).parents(".Question").css("position","");
-        jQuery('#prevent_edit_conflict').remove();
+        
 	    }
 <?php } 
 
@@ -985,17 +979,8 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             }
 
         # if autosave enabled use a dummy save button to prevent edit conflicts
-        if ($edit_autosave)
+        if (!$edit_autosave)
             {        
-            ?>
-            <input onClick="javascript:parent.location.href='<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>'" 
-            name="save"
-            class="editsave"
-            type="button"
-            value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
-            <?php
-            } else 
-            {   
             ?>
 
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
