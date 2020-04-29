@@ -4,14 +4,25 @@ include_once "../../../include/general.php";
 include "../../../include/authenticate.php";
 include "../../../include/resource_functions.php";
 
+# Check if it's necessary to upgrade the database structure
+include dirname(__FILE__) . "/../upgrade/upgrade.php";
+
 $ref=getvalescaped("ref","");
 $resource=getvalescaped("resource","");
 
 # Check access
-$edit_access=get_edit_access($resource);
-if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+if ($resource!="")
+	{
+	$edit_access=get_edit_access($resource);
+	if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+	}
+else
+	{
+	# Editing all licenses via Manage Licenses - admin only
+	if (!checkperm("a")) {exit("Access denied");} 
+	}
 
-if (getval("submitted","")!="" && enforcePostRequest(false))
+if (getval("submitted","")!="")
 	{
 	# Save license data
 	
@@ -31,20 +42,57 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	if ($ref=="new")
 		{
 		# New record 
-		sql_query("insert into resource_license (resource,outbound,holder,license_usage,description,expires) values ('" . getvalescaped("resource","") . "', '" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
+		sql_query("insert into license (outbound,holder,license_usage,description,expires) values ('" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
 		$ref=sql_insert_id();
-		
-		resource_log($resource,"","",$lang["new_license"] . " " . $ref);
+
+		# Add to all the selected resources
+		if (getvalescaped("resources","")!="")
+			{
+			$resources=explode(", ",getvalescaped("resources",""));
+			foreach ($resources as $r)
+				{
+				$r=trim($r);
+				if (is_numeric($r))
+					{
+					sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+					resource_log($r,"","",$lang["new_license"] . " " . $ref);
+					}
+				}
+			}
 		}
 	else
 		{
 		# Existing record	
-		sql_query("update resource_license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref' and resource='$resource'");
-		
-		resource_log($resource,"","",$lang["edit_license"] . " " . $ref);
+		sql_query("update license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref'");
+
+		# Add all the selected resources
+		sql_query("delete from resource_license where license='$ref'");
+		$resources=explode(",",getvalescaped("resources",""));
+
+		if (getvalescaped("resources","")!="")
+			{
+			foreach ($resources as $r)
+				{
+				$r=trim($r);
+				if (is_numeric($r))
+					{
+					sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+					resource_log($r,"","",$lang["new_license"] . " " . $ref);
+					}
+				}
+			}
 		}
 
-	redirect("pages/view.php?ref=" . $resource);
+	# Added from resource page?
+	if ($resource!="") 
+		{
+		redirect("pages/view.php?ref=" . $resource);
+		}
+	else
+		{
+		# Addded from Manage Licenses
+		redirect("plugins/licensemanager/pages/list.php");
+		}
 	}
 
 # Fetch license data
@@ -52,26 +100,32 @@ if ($ref=="new")
 	{
 	# Set default values for the creation of a new record.
 	$license=array(
-		"resource"=>$resource,
 		"outbound"=>1,
 		"holder"=>"",		
 		"license_usage"=>"",
 		"description"=>"",
 		"expires"=>date("Y-m-d")
 		);
+	if ($resource=="") {$resources=array();} else {$resources=array($resource);}
 	}
 else
 	{
-	$license=sql_query("select * from resource_license where ref='$ref'");
+	$license=sql_query("select * from license where ref='$ref'");
 	if (count($license)==0) {exit("License not found.");}
 	$license=$license[0];
-	$resource=$license["resource"];
+	$resources=sql_array("select distinct resource value from resource_license where license='$ref' order by resource");
 	}
 		
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
+
+<?php if ($resource!="") { ?>
 <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $resource ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<?php } else { ?>
+<p><a href="<?php echo $baseurl_short?>plugins/licensemanager/pages/list.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<?php } ?>
+
 
 <h1><?php echo ($ref=="new"?$lang["new_license"]:$lang["edit_license"]) ?></h1>
 
@@ -80,8 +134,6 @@ include "../../../include/header.php";
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("licensemanager_edit"); ?>
-<div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($license["resource"])?></div>
-<div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo ($ref=="new"?$lang["licensemanager_new"]:htmlspecialchars($ref))?></div>
 <div class="clearerleft"> </div></div>
@@ -165,22 +217,14 @@ onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($all
 	/><?php echo $lang["no_expiry_date"] ?>
 	<?php if ($license["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
 
-
-
 <div class="clearerleft"> </div></div>
 
 
-
-
-<?php /*
-<div class="Question"><label><?php echo $lang["status"]?></label>
-<div class="tickset">
-<?php for ($n=0;$n<=2;$n++) { ?>
-<div class="Inline"><input type="radio" name="status" value="<?php echo $n?>" <?php if ($research["status"]==$n) { ?>checked <?php } ?>/><?php echo $lang["requeststatus" . $n]?></div>
-<?php } ?>
-</div>
-<div class="clearerleft"> </div></div>
-*/ ?>
+<div class="Question">
+		<label for="resources"><?php echo $lang["linkedresources"]?></label>
+		<textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
+		<div class="clearerleft"> </div>
+	</div>
 
 
 <div class="QuestionSubmit">

@@ -6,7 +6,10 @@ function HookLicensemanagerViewCustompanels()
 	
 	if($k!=""){return false;}
 	
-	$licenses=sql_query("select ref,outbound,holder,license_usage,description,expires from resource_license where resource='$ref' order by ref");
+	# Check if it's necessary to upgrade the database structure
+	include dirname(__FILE__) . "/../upgrade/upgrade.php";
+
+	$licenses=sql_query("select license.ref,license.outbound,license.holder,license.license_usage,license.description,license.expires from license join resource_license on license.ref=resource_license.license where resource_license.resource='$ref' order by ref");
 	?>
     <!-- Begin Geolocation Section -->
     <div class="RecordBox">
@@ -59,7 +62,7 @@ function HookLicensemanagerViewCustompanels()
 			<?php if ($edit_access) { ?>
 			<td><div class="ListTools">
 			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/delete.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>
 			</div></td>
 			<?php } ?>
 						
