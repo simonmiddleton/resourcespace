@@ -13,7 +13,7 @@ function HookVideo_timestamp_linksViewFooterbottom()
         // There's a video tag.
 
         // For each field...
-        var mfields=jQuery(".item p,.itemNarrow p,.CommentBody");console.log(mfields);
+        var mfields=jQuery(".item p,.itemNarrow p,.CommentBody");
         mfields.each(function(index)
             {
             var newtext=this.innerHTML.replace(/([0-9][0-9]:[0-9][0-9]:[0-9][0-9])/gim,'<a href="#" onClick="VideoJumpTo(\'$1\');return false;">$1</a>');
