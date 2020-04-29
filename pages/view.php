@@ -971,7 +971,7 @@ else if(1 == $resource['has_image'])
     		}
         	?>
         <!-- Available tools to manipulate previews -->
-        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+        <div id="PreviewTools">
             <script>
             function showHidePreviewTools()
                 {
@@ -988,7 +988,7 @@ else if(1 == $resource['has_image'])
                 jQuery(element).toggleClass('Enabled');
                 }
             </script>
-            <div id="PreviewToolsOptionsWrapper" class="Hidden">
+            <div id="PreviewToolsOptionsWrapper">
             <?php
             if($annotate_enabled && file_exists($imagepath))
                 {
