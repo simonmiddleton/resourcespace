@@ -6,19 +6,21 @@ function HookVideo_timestamp_linksViewFooterbottom()
     <script>
     // Find timestamps in fields and replace with links to jump the video.
 
+   window.setTimeout(function () {
     var video=jQuery(".videojscontent video");
     if (video.length==1)
         {
         // There's a video tag.
 
         // For each field...
-        var mfields=jQuery(".item p,.itemNarrow p");
+        var mfields=jQuery(".item p,.itemNarrow p,.CommentBody");console.log(mfields);
         mfields.each(function(index)
             {
             var newtext=this.innerHTML.replace(/([0-9][0-9]:[0-9][0-9]:[0-9][0-9])/gim,'<a href="#" onClick="VideoJumpTo(\'$1\');return false;">$1</a>');
             this.innerHTML=newtext;
             });   
         }
+	},1000);
 
     function VideoJumpTo(timestamp)
         {
@@ -29,6 +31,9 @@ function HookVideo_timestamp_linksViewFooterbottom()
         //Target the video and set the time.
         var video=jQuery(".videojscontent video")[0];
         video.currentTime=ts;video.play();
+
+	document.getElementById('previewimagewrapper').scrollIntoView();
+
         }
     </script>
     <?php
