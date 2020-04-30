@@ -23,6 +23,27 @@ $reports=sql_query("select ref, name from report" . ($find=="" ? "" : " where re
 	<h1><?php echo $lang['page-title_report_management']; ?></h1>
 	<p><?php echo $lang['page-subtitle_report_management_edit'];render_help_link("resourceadmin/reports-and-statistics"); ?></p>
 
+	<!--code for copy report link -->
+	<!-- form #copy_report -->
+<form method="post"  
+	id="copy_report" 
+	action="admin_report_management_edit.php"
+	onsubmit="return CentralSpacePost(this, true);">
+	<input type="hidden" name="copyreport" value="true">
+	<input type="hidden" name="ref" value="">
+	<?php generateFormToken("copy_report"); ?>
+</form>
+<!-- javascript - submits form #copy_report -->
+<script>
+function copyReport(ref)
+	{
+	frm = document.forms["copy_report"];
+	frm.ref.value=ref;
+	frm.submit();	
+	}
+	</script>
+<!-- end code for copy report link -->	
+
 <?php
 function addColumnHeader($orderName, $labelKey)
 	{
@@ -68,7 +89,7 @@ function addColumnHeader($orderName, $labelKey)
 					<div class="ListView" align="right">
 						<?php echo LINK_CARET ?><a href="<?php echo $view_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-view"]?></a>
 						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-edit"]?></a>
-						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>&copyreport=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["copy"]?></a>
+						<?php echo LINK_CARET ?><a  href="javascript:copyReport('<?php echo $report["ref"] ?>')"><?php echo $lang["copy"]?></a>
 					</div>
 				</td>
 			</tr>
