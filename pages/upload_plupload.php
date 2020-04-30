@@ -1269,10 +1269,10 @@ var pluploadconfig = {
                                                         uploader.splice();
                                                         <?php
                                                         $redirect_url_params = array(
-                                                            'search'   => '!contributions'.urlencode($userref),
+                                                            'search'   => '!contributions' . $userref,
                                                             'order_by' => 'resourceid',
                                                             'sort'     => 'DESC',
-                                                            'archive'  => urlencode($setarchivestate)
+                                                            'archive'  => $setarchivestate
                                                         );
 
                                                         if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1")) {$redirect_url_params["promptsubmit"] = 'true';}
