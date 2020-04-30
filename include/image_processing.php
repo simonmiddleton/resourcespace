@@ -1168,12 +1168,15 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
     # Handle alternative image file generation.
     global $image_alternatives;
+    # Check against the resource extension as extension might refer to a jpg preview file
+    $resource_extension = sql_value('SELECT file_extension value FROM resource WHERE ref=' . $ref . ';','');
+    
     if(isset($image_alternatives) && $alternative == -1)
         {
         for($n = 0; $n < count($image_alternatives); $n++)
             {
             $exts = explode(',', $image_alternatives[$n]['source_extensions']);
-            if(in_array($extension, $exts))
+            if(in_array($resource_extension, $exts))
                 {
                 # Remove any existing alternative file(s) with this name.
                 $existing = sql_query("SELECT ref FROM resource_alt_files WHERE resource = '$ref' AND name = '" . escape_check($image_alternatives[$n]['name']) . "'");
