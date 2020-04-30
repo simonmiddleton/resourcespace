@@ -28,7 +28,7 @@ if ($new_report_name!="" && enforcePostRequest(false))
 	redirect($baseurl_short."pages/admin/admin_report_management_edit.php?ref={$ref}{$url_params}");	// redirect to prevent repost and expose form data
 	exit;
 	}
-elseif ($copyreport!="")
+elseif ($copyreport!="" && enforcePostRequest(false))
 	{
 	// Copy report?
 	sql_query("insert into report (name, query) select concat('" . $lang["copy_of"] . " ',name), query from report where ref='$ref'");
