@@ -28,7 +28,7 @@ else
 $allfields = get_resource_type_fields();
 $saveparams = array();
 $saveparams["ref"] = $filterid;
-$saveurl = generateURL($baseurl . "/pages/admin/admin_filter_rule_edit.php",$saveparams);
+$saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$saveparams);
     
 ?>
 
