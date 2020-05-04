@@ -55,12 +55,6 @@ foreach ($fields_tab_names as $key => $value) {
 
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
         
-//ensure there is a default tab as the first tab
-//append default string in tab name array 
-array_unshift($fields_tab_names, $lang['default']);
-//remove any other instances of default string in tab name array
-$fields_tab_names = array_unique($fields_tab_names);
-
 ?>
         
         
