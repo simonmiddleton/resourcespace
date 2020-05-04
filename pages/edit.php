@@ -884,9 +884,6 @@ function ShowHelp(field)
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
-
-        CentralSpaceShowLoading(); // show image to indicate autosave activity
-
          // add transparent div to prevent user from clicking on input elements while autosave underway
         jQuery('.BasicsBox').css("position","relative");
         jQuery(".BasicsBox").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;background-color:transparent;\"></div>");
@@ -931,7 +928,6 @@ function ShowHelp(field)
                     }
 
                 // once autosave has completed, remove the div that prevents user input, and re-enable save button
-                CentralSpaceHideLoading();
                 jQuery('.BasicsBox').css("position","");   
                 jQuery('.BasicsBox div#prevent_edit_conflict').remove();  
                 jQuery("input.editsave").removeAttr("disabled");  
