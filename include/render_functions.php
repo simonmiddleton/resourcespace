@@ -20,7 +20,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     {
     node_field_options_override($field);
 	
-	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES;
+	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
     
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
@@ -529,6 +529,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
               <option value=""><?php echo $lang["anyyear"]?></option>
               <?php
               $y=date("Y");
+              $y += $maxyear_extends_current;
               for ($d=$y;$d>=$minyear;$d--)
                 {
                 ?><option <?php if ($d==$found_year) { ?>selected<?php } ?>><?php echo $d?></option><?php
@@ -1928,7 +1929,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
 	{
 	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar;
+	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
 	if($forsearch)
 		{
 		// Get the start/end date from the string
@@ -2085,6 +2086,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
                 <?php
                 $y=date("Y");
+                $y += $maxyear_extends_current;
                 for ($d=$y;$d>=$minyear;$d--)
                     {
                     ?><option <?php if ($d==$found_start_year) { ?>selected<?php } ?>><?php echo $d?></option><?php
@@ -2204,6 +2206,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
               <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]?></option>
               <?php
               $y=date("Y");
+              $y += $maxyear_extends_current;
               for ($d=$y;$d>=$minyear;$d--)
                 {
                 ?><option <?php if ($d==$found_end_year ) { ?>selected<?php } ?>><?php echo $d?></option><?php

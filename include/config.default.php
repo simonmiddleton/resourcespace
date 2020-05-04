@@ -1836,6 +1836,9 @@ $view_title_field=8;
 # Searchable Date Field:
 $date_field=12; 
 
+# Search for dates into the future. Allows the specified number of years ahead of this year to be added to the year drop down used by simple and advanced search.
+$maxyear_extends_current=0;
+
 # Data Joins -- Developer's tool to allow adding additional resource field data to the resource table for use in search displays.
 # ex. $data_joins=array(13); to add the expiry date to the general search query result.  
 $data_joins=array();
