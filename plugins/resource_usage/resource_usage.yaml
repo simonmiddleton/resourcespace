@@ -1,5 +1,7 @@
 name: resource_usage
+title: Resource Usage
 desc: [Advanced] Adds the capability to log resource usage via resource view page
+icon: fa fa-list-ul
 author: Montala Limited
 version: 1.0
 default_priority: 100

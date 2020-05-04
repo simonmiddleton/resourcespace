@@ -1,5 +1,7 @@
 name: accessibility
+title: Accessibility
 desc: An accessible display for users with limited vision
+icon: fa fa-universal-access
 author: Montala Limited
 version: 1.02
 default_priority: 100

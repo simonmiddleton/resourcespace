@@ -1,5 +1,7 @@
 name: vimeo_publish
+title: Vimeo Publish
 desc: Publish resources to Vimeo using OAuth 2.0
+icon: fab fa-vimeo
 author: Alin Cota, Montala Limited
 version: 1.0
 default_priority: 100

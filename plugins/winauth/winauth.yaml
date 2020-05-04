@@ -1,7 +1,9 @@
 name        : winauth
+title       : WinAuth
 author      : Montala Limited
 version     : 1.0
 desc        : [Advanced] Windows Integrated Authentication
+icon        : fab fa-windows
 info_url    : https://www.resourcespace.com/knowledge-base/user/plugin-winauth
 config_url  : /plugins/winauth/pages/setup.php
 category    : authentication

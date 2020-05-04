@@ -1,5 +1,7 @@
 name: falcon_link
+title: Falcon Link
 desc: [Advanced] Publish resources to Falcon.io
+icon: fa fa-share-alt
 author: Montala Limited
 version: 1.0
 config_url: /plugins/falcon_link/pages/setup.php

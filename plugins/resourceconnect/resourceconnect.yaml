@@ -1,5 +1,7 @@
 name: resourceconnect
+title: ResourceConnect
 desc: Connects ResourceSpace installations together to allow cross-installation searching
+icon: fa fa-exchange-alt
 author: Montala Limited
 version: 1.0
 config_url: /plugins/resourceconnect/pages/setup.php

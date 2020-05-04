@@ -20,130 +20,130 @@ if(!checkperm('a'))
     }
 
 if (isset($_REQUEST['activate']) && enforcePostRequest(false))
-   {
-   $inst_name = trim(getvalescaped('activate',''), '#');
-   if ($inst_name != '' && !in_array($inst_name,$disabled_plugins))
-      {
-      activate_plugin($inst_name);   
-      }
-   redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually activated. 
-   }
+    {
+    $inst_name = trim(getvalescaped('activate',''), '#');
+    if ($inst_name != '' && !in_array($inst_name,$disabled_plugins))
+        {
+        activate_plugin($inst_name);   
+        }
+    redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually activated. 
+    }
 elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
-   { # Deactivate a plugin
-   # Strip the leading hash mark added by javascript.
-   $remove_name = trim(getvalescaped('deactivate',''), "#");
-   if ($remove_name!='')
-      {
-       deactivate_plugin($remove_name); 
-      }
-   redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually deactivated.
-   }
- elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
-   { # Purge a plugin's configuration (if stored in DB)
-   # Strip the leading hash mark added by javascript.
-   $purge_name = trim(getvalescaped('purge',''), '#');
-   if ($purge_name!='')
-      {
-      purge_plugin_config($purge_name);
-      }
-   }
+    { # Deactivate a plugin
+    # Strip the leading hash mark added by javascript.
+    $remove_name = trim(getvalescaped('deactivate',''), "#");
+    if ($remove_name!='')
+        {
+        deactivate_plugin($remove_name); 
+        }
+    redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually deactivated.
+    }
+elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
+    { # Purge a plugin's configuration (if stored in DB)
+    # Strip the leading hash mark added by javascript.
+    $purge_name = trim(getvalescaped('purge',''), '#');
+    if ($purge_name!='')
+        {
+        purge_plugin_config($purge_name);
+        }
+    }
 elseif ($enable_plugin_upload && isset($_REQUEST['submit']) && enforcePostRequest(false))
-   { # Upload a plugin .rsp file. 
-   if (($_FILES['pfile']['error'] == 0) && (pathinfo($_FILES['pfile']['name'], PATHINFO_EXTENSION)=='rsp'))
-      {
-      require "../../lib/pcltar/pcltar.lib.php";
+    { # Upload a plugin .rsp file. 
+    if (($_FILES['pfile']['error'] == 0) && (pathinfo($_FILES['pfile']['name'], PATHINFO_EXTENSION)=='rsp'))
+        {
+        require "../../lib/pcltar/pcltar.lib.php";
 
-      # Create tmp folder if not existing
-      # Since get_temp_dir() method does this, omit: if (!file_exists(dirname(__FILE__).'/../../filestore/tmp')) {mkdir(dirname(__FILE__).'/../../filestore/tmp',0777);}
+        # Create tmp folder if not existing
+        # Since get_temp_dir() method does this, omit: if (!file_exists(dirname(__FILE__).'/../../filestore/tmp')) {mkdir(dirname(__FILE__).'/../../filestore/tmp',0777);}
 
-      $tmp_file = get_temp_dir() . '/'.basename($_FILES['pfile']['name'].'.tgz');
-      if(move_uploaded_file($_FILES['pfile']['tmp_name'], $tmp_file)==true)
-         {
-         $rejected = false;
-         $filelist = PclTarList($tmp_file);
-         if(is_array($filelist))
+        $tmp_file = get_temp_dir() . '/'.basename($_FILES['pfile']['name'].'.tgz');
+        if(move_uploaded_file($_FILES['pfile']['tmp_name'], $tmp_file)==true)
             {
-            foreach($filelist as $key=>$value)
-               { # Loop through the file list to create an array we can use php's functions with.
-               $filearray[] = $value['filename'];
-               }
-            # Some security checks.
-            foreach ($filearray as $filename)
-               {
-               if ($filename[0]=='/' || $filename[0] =='\\')
-                  { # Paths are absolute.  Reject the plugin.
+            $rejected = false;
+            $filelist = PclTarList($tmp_file);
+            if(is_array($filelist))
+                {
+                foreach($filelist as $key=>$value)
+                    { # Loop through the file list to create an array we can use php's functions with.
+                    $filearray[] = $value['filename'];
+                    }
+                # Some security checks.
+                foreach ($filearray as $filename)
+                    {
+                    if ($filename[0]=='/' || $filename[0] =='\\')
+                        { # Paths are absolute.  Reject the plugin.
+                        $rejected = true;
+                        $rej_reason = $lang['plugins-rejrootpath'];
+                        break; 
+                        }
+                    }
+                if (array_search('..', $filearray)!==false) 
+                    {# Archive may contain ../ directories (Security risk)
                     $rejected = true;
-                    $rej_reason = $lang['plugins-rejrootpath'];
-                    break; 
-                  }
-               }
-            if (array_search('..', $filearray)!==false) 
-               {# Archive may contain ../ directories (Security risk)
-               $rejected = true;
-               $rej_reason = $lang['plugins-rejparentpath'];
-               }
-            if(!$rejected)
-               {
-               # Locate the plugin name based on highest directory in structure.
-               # This loop will also look for the .yaml file (to avoid having to loop twice).
-               $exp_path = explode('/',$filearray[0]);
-               $yaml_index = false;
-               $u_plugin_name = $exp_path[0];
-               foreach ($filearray as $key=>$value)
-                  {
-                  $test = explode('/',$value);
-                  if ($u_plugin_name != $test[0])
-                     {
-                     $rejected = true;
-                     $rej_reason = $lang['plugins-rejmultpath'];
-                     break;
-                     }
-                  # TODO: This should be a regex to make sure the file is in the right position (<pluginname>/<pluginname>.yaml)
-                  if (strpos($value,$u_plugin_name.'.yaml')!==false)
-                     {
-                     $yaml_index = $key;
-                     }
-                  }
-               # TODO: We should extract the yaml file if it exists and validate it.
-               if ($yaml_index===false)
-                  {
-                  $rejected = true;
-                  $rej_reason = $lang['plugins-rejmetadata'];
-                  }
-               if (!$rejected)
-		  {
-                  # Uploaded plugins live in the filestore folder.		  
-		  $phar = new PharData($tmp_file);
-                  try {
-		      $phar->extractTo($storagedir . "/plugins/", null, true);
-		      activate_plugin($u_plugin_name);
-                      redirect($baseurl_short.'pages/team/team_plugins.php');
-		      }
-		  catch (Exception $e) 
-			{
-			$rejected = true;
-                        $rej_reason = $lang['plugins-rejarchprob'];
-			}
-		  }
-                  
-               }
+                    $rej_reason = $lang['plugins-rejparentpath'];
+                    }
+                if(!$rejected)
+                    {
+                    # Locate the plugin name based on highest directory in structure.
+                    # This loop will also look for the .yaml file (to avoid having to loop twice).
+                    $exp_path = explode('/',$filearray[0]);
+                    $yaml_index = false;
+                    $u_plugin_name = $exp_path[0];
+                    foreach ($filearray as $key=>$value)
+                        {
+                        $test = explode('/',$value);
+                        if ($u_plugin_name != $test[0])
+                            {
+                            $rejected = true;
+                            $rej_reason = $lang['plugins-rejmultpath'];
+                            break;
+                            }
+                        # TODO: This should be a regex to make sure the file is in the right position (<pluginname>/<pluginname>.yaml)
+                        if (strpos($value,$u_plugin_name.'.yaml')!==false)
+                            {
+                            $yaml_index = $key;
+                            }
+                        }
+                    # TODO: We should extract the yaml file if it exists and validate it.
+                    if ($yaml_index===false)
+                        {
+                        $rejected = true;
+                        $rej_reason = $lang['plugins-rejmetadata'];
+                        }
+                    if (!$rejected)
+                        {
+                        # Uploaded plugins live in the filestore folder.		  
+                        $phar = new PharData($tmp_file);
+                        try
+                            {
+                            $phar->extractTo($storagedir . "/plugins/", null, true);
+                            activate_plugin($u_plugin_name);
+                            redirect($baseurl_short.'pages/team/team_plugins.php');
+                            }
+                        catch (Exception $e) 
+                            {
+                            $rejected = true;
+                            $rej_reason = $lang['plugins-rejarchprob'];
+                            }
+                        }
+                    }
+                }
+            else 
+                {
+                $rejected = true;
+                $rej_reason = $lang['plugins-rejfileprob'];
+                }	 
             }
-         else 
-            {
-            $rejected = true;
-            $rej_reason = $lang['plugins-rejfileprob'];
-            }	 
-         }
-      }
-   else 
-      {
-      $rejected = true;
-      $rej_reason  = $lang['plugins-rejfileprob'];
-      }
-   }
+        }
+    else 
+        {
+        $rejected = true;
+        $rej_reason  = $lang['plugins-rejfileprob'];
+        }
+    }
 
- $inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
-    'inst_version, update_url, info_url, enabled_groups, disable_group_select ' .
+$inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
+    'inst_version, update_url, info_url, enabled_groups, disable_group_select, title, icon ' .
     'FROM plugins WHERE inst_version>=0 order by name');
 /**
  * Ad hoc function for array_walk through plugins array.
@@ -156,13 +156,13 @@ elseif ($enable_plugin_upload && isset($_REQUEST['submit']) && enforcePostReques
  * @param string $key Array key. 
  */
 function legacy_check(&$i_plugin, $key)
-   {
-   global $legacy_plugins;
-   if (array_search($i_plugin['name'], $legacy_plugins)!==false)
-      {
-      $i_plugin['legacy_inst'] = true;
-      }
-   }
+    {
+    global $legacy_plugins;
+    if (array_search($i_plugin['name'], $legacy_plugins)!==false)
+        {
+        $i_plugin['legacy_inst'] = true;
+        }
+    }
 
 for ($n=0;$n<count($inst_plugins)-1;$n++)
     {
@@ -181,46 +181,46 @@ array_walk($inst_plugins, 'legacy_check');
 $plugins_avail = array();
 
 function load_plugins($plugins_dir)
- {
- global $plugins_avail;
- 
- $dirh = opendir($plugins_dir);
- while (false !== ($file = readdir($dirh))) 
     {
-    if (is_dir($plugins_dir.$file)&&$file[0]!='.')
-       {
-       #Check if the plugin is already activated.
-       $status = sql_query('SELECT inst_version, config FROM plugins WHERE name="'.$file.'"');
-       if ((count($status)==0) || ($status[0]['inst_version']==null))
-          {
-          # Look for a <pluginname>.yaml file.
-          $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
-          foreach ($plugin_yaml as $key=>$value)
-             {
-             $plugins_avail[$file][$key] = $value ;
-             }
-          $plugins_avail[$file]['config']=(sql_value("SELECT config AS value FROM plugins WHERE name='$file'",'') != '');
-          # If no yaml, or yaml file but no description present, 
-          # attempt to read an 'about.txt' file
-          if ($plugins_avail[$file]["desc"]=="")
-             {
-             $about=$plugins_dir.$file.'/about.txt';
-             if (file_exists($about)) 
+    global $plugins_avail;
+ 
+    $dirh = opendir($plugins_dir);
+    while (false !== ($file = readdir($dirh))) 
+        {
+        if (is_dir($plugins_dir.$file)&&$file[0]!='.')
+            {
+            #Check if the plugin is already activated.
+            $status = sql_query('SELECT inst_version, config FROM plugins WHERE name="'.$file.'"');
+            if ((count($status)==0) || ($status[0]['inst_version']==null))
                 {
-                $plugins_avail[$file]["desc"]=substr(file_get_contents($about),0,95) . "...";
-                }
-             }
-          }        
-       }
+                # Look for a <pluginname>.yaml file.
+                $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
+                foreach ($plugin_yaml as $key=>$value)
+                    {
+                    $plugins_avail[$file][$key] = $value ;
+                    }
+                $plugins_avail[$file]['config']=(sql_value("SELECT config AS value FROM plugins WHERE name='$file'",'') != '');
+                # If no yaml, or yaml file but no description present, 
+                # attempt to read an 'about.txt' file
+                if ($plugins_avail[$file]["desc"]=="")
+                    {
+                    $about=$plugins_dir.$file.'/about.txt';
+                    if (file_exists($about)) 
+                        {
+                        $plugins_avail[$file]["desc"]=substr(file_get_contents($about),0,95) . "...";
+                        }
+                    }
+                }        
+            }
+        }
+    closedir($dirh);
     }
- closedir($dirh);
- }
 
 load_plugins(dirname(__FILE__) . '/../../plugins/');
 if(!file_exists($storagedir . '/plugins/'))
-   {
-   mkdir($storagedir . '/plugins/');
-   }
+    {
+    mkdir($storagedir . '/plugins/');
+    }
 load_plugins($storagedir . '/plugins/');
 
 ksort ($plugins_avail);
@@ -326,6 +326,7 @@ if($searching)
         <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr class="ListviewTitleStyle">
+                    <td><?php echo $lang['plugins-icon']; ?></td>
                     <td><?php echo $lang['name']; ?></td>
                     <td><?php echo $lang['description']; ?></td>
                     <td><?php echo $lang['plugins-author']; ?></td>
@@ -375,6 +376,7 @@ if($searching)
             }
         ?>
             <tr>
+                <td><i class="fa fa-users"></td>
                 <td><?php echo htmlspecialchars($plugin["name"]); ?></td>
                 <td><?php echo htmlspecialchars($plugin_description); ?></td>
                 <td><?php echo htmlspecialchars($plugin["author"]); ?></td>
@@ -442,6 +444,7 @@ if (count($inst_plugins)>0)
    <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
       <thead>
          <tr class="ListviewTitleStyle">
+         <td><?php echo $lang['plugins-icon']; ?></td>
          <td><?php echo $lang['name']; ?></td>
          <td><?php echo $lang['description']; ?></td>
          <td><?php echo $lang['plugins-author']; ?></td>
@@ -477,7 +480,9 @@ if (count($inst_plugins)>0)
                   }
                }
             echo '<tr>';
-            echo "<td>{$p['name']}</td><td>{$p['descrip']}</td><td>{$p['author']}</td><td>".$formatted_inst_version."</td>";
+            echo '<td><i class="plugin-icon ' . $p['icon'] . '"></td>';
+            echo ($p['title'] != '' ? "<td>{$p['title']}</td>" : "<td>{$p['name']}</td>");
+            echo "<td>{$p['descrip']}</td><td>{$p['author']}</td><td>".$formatted_inst_version."</td>";
             hook('additional_plugin_column_data');
             echo '<td><div class="ListTools">';
             if (isset($p['legacy_inst']))
@@ -538,7 +543,16 @@ if (count($plugins_avail)>0)
             continue;
             }
 
-      $plugin_row = '<tr><td>'.$p['name'].'</td><td>'.$p['desc'].'</td><td>'.$p['author'].'</td>';
+      $plugin_row = '<tr><td>'.'<i class="plugin-icon '.$p['icon'].'">'.'</td>';
+      if ($p['title'] != '')
+        {
+        $plugin_row .= '<td>'.$p['title'].'</td>';
+        }
+      else
+        {
+        $plugin_row .= '<td>'.$p['name'].'</td>';
+        }
+      $plugin_row .= '<td>'.$p['desc'].'</td><td>'.$p['author'].'</td>';
       if ($p['version'] == 0)
          {
          $plugin_row .= '<td>' . $lang["notavailableshort"] . '</td>';
@@ -615,6 +629,7 @@ function display_plugin_category($plugins,$category,$header=true)
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                 <thead>
                     <tr class="ListviewTitleStyle">
+                    <td><?php echo $lang['plugins-icon']; ?></td>
                     <td><?php echo $lang['name']; ?></td>
                     <td><?php echo $lang['description']; ?></td>
                     <td><?php echo $lang['plugins-author']; ?></td>

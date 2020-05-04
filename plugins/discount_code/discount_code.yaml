@@ -1,5 +1,7 @@
 name: discount_code
+title: Discount Code
 desc: Discount code e-commerce extension
+icon: fa fa-credit-card
 author: Montala Limited
 version: 1.0
 config_url: /plugins/discount_code/pages/setup.php

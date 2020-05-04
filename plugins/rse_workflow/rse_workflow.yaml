@@ -1,5 +1,7 @@
 name: rse_workflow
+title: Advanced Workflow
 desc: ResourceSpace Enterprise - Workflow 
+icon: fa fa-check-square
 author: Montala Limited
 version: 1.0
 default_priority: 100

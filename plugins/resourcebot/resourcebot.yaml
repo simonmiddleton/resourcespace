@@ -1,6 +1,8 @@
 name: resourcebot
+title: Resource Bot
 author: Montala Ltd.
 version: 1.0
 desc: In-application chat bot for tutorials and assistance
+icon: fa fa-robot
 category: User Interface
 disable_group_select: 0

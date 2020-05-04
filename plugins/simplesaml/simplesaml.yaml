@@ -1,5 +1,7 @@
 name: simplesaml
+title: Simple SAML
 desc: [Advanced] Require SAML authentication to access ResourceSpace
+icon: fa fa-key
 author: Montala Limited
 version: 1.0
 config_url: /plugins/simplesaml/pages/setup.php

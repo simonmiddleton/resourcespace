@@ -1,7 +1,9 @@
 name    : emu
+title   : EMu
 author  : Montala Ltd.
 version : 1.1
 desc    : [Advanced] Allows resource metadata to be extracted from EMu database. 
+icon    : fa fa-university
 info_url: http://www.resourcespace.com/knowledge-base/user/plugin-emu
 config_url: /plugins/emu/pages/setup.php
 default_priority: 100

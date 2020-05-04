@@ -32,29 +32,31 @@ function activate_plugin($name)
                 }
             }
             
-    # escape the plugin information
-    $plugin_yaml_esc = array();
-    foreach (array_keys($plugin_yaml) as $thekey)
-        {
-        $plugin_yaml_esc[$thekey] = escape_check($plugin_yaml[$thekey]);
-        }
+        # escape the plugin information
+        $plugin_yaml_esc = array();
+        foreach (array_keys($plugin_yaml) as $thekey)
+            {
+            $plugin_yaml_esc[$thekey] = escape_check($plugin_yaml[$thekey]);
+            }
     
-
-
         # Add/Update plugin information.
         # Check if the plugin is already in the table.
         $c = sql_value("SELECT name as value FROM plugins WHERE name='$name'",'');
+
         if ($c == '')
             {
             sql_query("INSERT INTO plugins(name) VALUE ('$name')");
             }
+
         sql_query("UPDATE plugins SET config_url='{$plugin_yaml_esc['config_url']}', " .
-                  "descrip='{$plugin_yaml_esc['desc']}', author='{$plugin_yaml_esc['author']}', " .
-                  "inst_version='{$plugin_yaml_esc['version']}', " .
-                  "priority='{$plugin_yaml_esc['default_priority']}', " .
-                  "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
-                  "disable_group_select='{$plugin_yaml_esc['disable_group_select']}' " .
-                  "WHERE name='{$plugin_yaml_esc['name']}'");
+            "descrip='{$plugin_yaml_esc['desc']}', author='{$plugin_yaml_esc['author']}', " .
+            "inst_version='{$plugin_yaml_esc['version']}', " .
+            "priority='{$plugin_yaml_esc['default_priority']}', " .
+            "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
+            "disable_group_select='{$plugin_yaml_esc['disable_group_select']}', " .
+            "title='{$plugin_yaml_esc['title']}', " .
+            "icon='{$plugin_yaml_esc['icon']}'" .
+            "WHERE name='{$plugin_yaml_esc['name']}'");
 
         log_activity(null, LOG_CODE_ENABLED, $plugin_yaml_esc['version'], 'plugins', 'inst_version', $plugin_yaml_esc['name'], 'name', '', null, true);
 
@@ -128,6 +130,8 @@ function get_plugin_yaml($path, $validate=true)
     $plugin_yaml['desc'] = '';
     $plugin_yaml['default_priority'] = '999';
     $plugin_yaml['disable_group_select'] = '0';
+    $plugin_yaml['title'] = '';
+    $plugin_yaml['icon'] = '';
     if ($yaml_file_ptr!=false)
         {
         while (($line = fgets($yaml_file_ptr))!='')

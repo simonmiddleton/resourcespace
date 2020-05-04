@@ -1,5 +1,7 @@
 name    : ref_urls
+title   : Reference URLs
 author  : Axel Dörfler
 version : 1.0
 desc    : [Advanced] Serves resource files via URL and ref (only for logged in users)
+icon    : fa fa-link
 category: system

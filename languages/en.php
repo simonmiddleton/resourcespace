@@ -1421,6 +1421,7 @@ $lang['plugins-search-results-header'] = 'Plugins search results';
 $lang['plugins-author'] = 'Author';
 $lang['plugins-version'] = 'Version';
 $lang['plugins-instversion'] = 'Installed version';
+$lang['plugins-icon'] = 'Icon';
 $lang['plugins-uploadheader'] = 'Upload plugin';
 $lang['plugins-uploadtext'] = 'Select a .rsp file to install.';
 $lang['plugins-deactivate'] = 'Deactivate';

@@ -1076,6 +1076,13 @@ a.HomePanel:hover {
     font-size: 0.7em;
 }
 
+/* Plugin icon styling */
+.plugin-icon {
+    font-size: 28px;
+    width: 100%;
+    text-align: center;
+}
+
 /* Maintenance Page */
 #system_down_container {
         width: 500px;

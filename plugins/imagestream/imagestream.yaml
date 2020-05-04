@@ -1,6 +1,8 @@
 name    : imagestream
+title   : Image Stream
 author  : Montala Ltd.
 version : 1.01
 desc    : [Advanced] Enables upload of multiple image files as a single zipped resource, with video preview and download
+icon    : fa fa-file-archive
 config_url: /plugins/imagestream/pages/setup.php
 category: asset processing

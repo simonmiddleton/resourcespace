@@ -1,5 +1,7 @@
 name: video_bookend
+title: Video Bookend
 author: Dan Huby
 version: 1.1
 desc: Adds the ability to download a video with a title and end graphic
+icon: fa fa-photo-video
 category: Asset processing

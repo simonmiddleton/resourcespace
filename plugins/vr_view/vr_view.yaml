@@ -1,6 +1,8 @@
 name: vr_view
+title: VR View
 author: Montala Ltd
 version: 1.0
 desc: Google VR View - 360 degree image and video previews (equirectangular format)
+icon: fa fa-vr-cardboard
 config_url: /plugins/vr_view/pages/setup.php
 category: User interface
