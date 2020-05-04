@@ -101,7 +101,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     exit();
     }
 
-error_reporting(E_ALL);
+error_reporting($config_error_reporting);
 set_error_handler("errorhandler");
 
 # *** LOAD CONFIG ***

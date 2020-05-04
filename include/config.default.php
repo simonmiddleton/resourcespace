@@ -93,6 +93,9 @@ $scramble_key="abcdef123";
 # global number of installations, users and resources.
 $send_statistics=true;
 
+# The level of PHP error reporting to use. By default, hide warnings.
+$config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE;
+
 # Enable work-arounds required when installed on Microsoft Windows systems
 $config_windows=false;
 
