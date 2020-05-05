@@ -1654,7 +1654,7 @@ if($tabs_on_edit)
     foreach($tab_names as $tab_name)
         {
         // get relevant fields from $fields using tab name
-        $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered);
+        $fields_tab_ordered = ($tab_name != "") ? search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered) : $fields_tab_ordered;
         }
 
     // update $fields array with re-ordered fields array, ready to display   
