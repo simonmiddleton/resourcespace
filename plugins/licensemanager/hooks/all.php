@@ -16,6 +16,12 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
         return array();
         }
 
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
     $data_attr_url = generateURL(
         $baseurl_short . "plugins/licensemanager/pages/batch.php",
         array(
