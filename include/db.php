@@ -101,7 +101,6 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     exit();
     }
 
-error_reporting($config_error_reporting);
 set_error_handler("errorhandler");
 
 # *** LOAD CONFIG ***
@@ -111,6 +110,7 @@ if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FIL
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
 
+error_reporting($config_error_reporting);
 
 
 # -------------------------------------------------------------------------------------------
