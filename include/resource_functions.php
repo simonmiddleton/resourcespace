@@ -5677,7 +5677,7 @@ function get_default_archive_state($requestedstate = "")
         # Set the modified default status
         return $modified_defaultstatus;
         }
-    elseif ($override_status_default)
+    elseif ($override_status_default !== false)
         {
         # Set the default status if set in config.
         return $override_status_default;
