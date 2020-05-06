@@ -80,7 +80,6 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						if(file_exists(get_resource_path($theme_image,true,"pre",false)))
 							{
 							$theme_image_path=get_resource_path($theme_image,false,"pre",false);
-							$theme_image_detail= get_resource_data($theme_image);
 							break;
 							}
 						}
@@ -577,8 +576,6 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
                             if(file_exists(get_resource_path($theme_image,true,"pre",false)))
                                 {
                                 $theme_image_path=get_resource_path($theme_image,false,"pre",false);
-                                
-                                $theme_image_detail= get_resource_data($theme_image);
                                 break;
                                 }
                             }
@@ -991,7 +988,6 @@ if ($header=="" && !isset($themes[0]))
                                 if(file_exists(get_resource_path($theme_image,true,"pre",false)))
                                     {
                                     $theme_image_path=get_resource_path($theme_image,false,"pre",false);
-                                    $theme_image_detail= get_resource_data($theme_image);
                                     break;
                                     }
                                 }

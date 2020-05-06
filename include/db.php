@@ -908,15 +908,39 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     # sql_query(sql) - execute a query and return the results as an array.
 	# Database functions are wrapped in this way so supporting a database server other than MySQL is 
 	# easier.
-	# $cache is not used at this time - it was intended for disk based results caching which may be added in the future.
+	
+	# $cache - disk based caching - cache the results on disk.
+	# At the moment this is basic and ignores $fetchrows and $fetch_specific_columns so isn't useful for queries employing those parameters
+
     # If $fetchrows is set we don't have to loop through all the returned rows. We
     # just fetch $fetchrows row but pad the array to the full result set size with empty values.
     # This has been added retroactively to support large result sets, yet a pager can work as if a full
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions;
-    
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key;
+	
+	// Check cache for this query
+	if ($cache)
+		{
+		$cache_location=$storagedir . "/tmp/querycache";
+		$cache_file=$cache_location . "/" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
+		if (file_exists($cache_file))
+			{
+			$cachedata=json_decode(file_get_contents($cache_file),true);
+			if (!is_null($cachedata)) // JSON decode success
+				{
+				if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
+					{
+					if (time()-$cachedata["time"]<(60*30)) // Less than 30 mins old?
+						{
+						return $cachedata["results"];
+						}
+					}
+				}
+			}
+		}
+
 	if (!isset($debug_log_override))
 		{
 		check_debug_log_override();
@@ -1101,6 +1125,18 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		$return_row_count++;
 		}
 
+	// Write to the cache
+	if ($cache)
+		{
+		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777);}
+		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}
+		$cachedata=array();
+		$cachedata["query"]=$sql;
+		$cachedata["time"]=time();
+		$cachedata["results"]=$return_rows;
+		file_put_contents($cache_file,json_encode($cachedata));
+		}
+
     if($fetchrows == -1)
         {
         mysqli_free_result($result);
@@ -1142,10 +1178,10 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 * 
 * @return string
 */
-function sql_value($query, $default)
+function sql_value($query, $default, $cache=false)
     {
     db_set_connection_mode("read_only");
-    $result = sql_query($query, false, -1, true, 0);
+    $result = sql_query($query, $cache, -1, true, 0, true, false);
 
     if(count($result) == 0)
         {
@@ -1167,12 +1203,12 @@ function sql_value($query, $default)
 * 
 * @return array
 */
-function sql_array($query)
+function sql_array($query,$cache=false)
 	{
 	$return = array();
 
     db_set_connection_mode("read_only");
-    $result = sql_query($query, false, -1, true, 0);
+    $result = sql_query($query, $cache, -1, true, 0, true, false);
 
     for($n = 0; $n < count($result); $n++)
     	{

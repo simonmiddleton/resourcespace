@@ -27,6 +27,7 @@ if (time()-strtotime($last_delete_tmp_files) < 24*60*60)
 $folderstoscan = array();
 $folderstoscan[] = get_temp_dir(false);
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "plupload";
+$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "querycache";
 
 $modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
 if(is_array($modified_folderstoscan) && !empty($modified_folderstoscan))

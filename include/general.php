@@ -291,13 +291,17 @@ function get_resource_path(
         $file.='.icc';
         }
 
-# Append modified date/time to the URL so the cached copy is not used if the file is changed.
+    # Append modified date/time to the URL so the cached copy is not used if the file is changed.
     if (!$getfilepath && $includemodified)
-        {
+        {        
         if ($file_modified=="")
             {
-            $data=get_resource_data($ref);
-            $file .= "?v=" . urlencode($data['file_modified']);
+            # Work out the value from the file on disk
+            $disk_path=get_resource_path($ref,true,$size,false,$extension,$scramble,$page,$watermarked,'',$alternative,false);
+            if (file_exists($disk_path))
+                {  
+                $file .= "?v=" . urlencode(filemtime($disk_path));
+                }
             }
         else
             {

@@ -1683,9 +1683,8 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	
 		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti "
 		       .$orderby . " limit " . escape_check($theme_images_number);
-
-        $images=sql_array($sql,0);
-
+			   
+        $images=sql_array($sql,true);
         }
     if (count($images)>0) {return $images;}
 	return false;
