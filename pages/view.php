@@ -123,12 +123,23 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
 # Should the page use a larger resource preview layout?
 $use_larger_layout = true;
 if (isset($resource_view_large_ext))
-	{
-	if (!in_array($resource["file_extension"], $resource_view_large_ext))
-		{
-		$use_larger_layout = false;
-		}
-	}
+    {
+    if (!in_array($resource["file_extension"], $resource_view_large_ext))
+        {
+        $use_larger_layout = false;
+        }
+    }
+else
+    {
+    if (isset($resource_view_large_orientation) && $resource_view_large_orientation == true)
+        {
+        if ($resource["has_image"] == 1 && ($resource["thumb_height"] >= $resource["thumb_width"]))
+            {
+            # Portrait or square image
+            $use_larger_layout = false;
+            }
+        }
+    }
 
 // Set $use_mp3_player switch if appropriate
 $use_mp3_player = (

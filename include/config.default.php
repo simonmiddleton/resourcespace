@@ -3206,6 +3206,10 @@ $resource_view_use_pre = false;
 # Only use use the larger layout on the view page for certain file extensions.
 # $resource_view_large_ext = array("jpg", "jpeg", "tif", "tiff", "gif", "png", "svg");
 
+# Use the larger layout on the view page for landscape images, smaller layout for portrait images.
+# NOTE: Enabling $resource_view_large_ext will override this.
+$resource_view_large_orientation = false;
+
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
 
