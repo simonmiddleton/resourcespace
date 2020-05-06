@@ -130,7 +130,7 @@ include "../../include/header.php";
     // Default Display
     $default_display_array = array();
 
-	$default_display_array['thumbs'] = $lang['largethumbstitle'];
+    $default_display_array['thumbs'] = $lang['largethumbstitle'];
 	if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
 		{
 		$default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
@@ -139,6 +139,7 @@ include "../../include/header.php";
 		{
 		$default_display_array['list'] = $lang['listtitle'];
 		}
+    $default_display_array['strip']  = $lang['striptitle'];
 	
     $page_def[] = config_add_single_select(
         'default_display',
