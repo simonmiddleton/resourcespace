@@ -16,8 +16,7 @@ if(0 >= strlen($path))
 
 
 // Check actual paths/ URLs
-sql_query('UPDATE resource SET file_modified = "2017-04-06 17:31:31" WHERE ref = 1');
-$file_modified = '2017-04-06+17%3A31%3A31';
+$file_modified =  filemtime($path);
 
 $original_scramble_key = $scramble_key;
 $scramble_key          = 'c8cf6994c288cf9d75c64017c57d16b24a0fdb4f0b826c66bfa7da19541178e9';
