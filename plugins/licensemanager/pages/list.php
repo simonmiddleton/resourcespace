@@ -17,7 +17,7 @@ $delete=getvalescaped("delete","");
 if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete license
-	sql_query("delete from license where ref='" , escape_check($delete) . "'");
+	sql_query("delete from license where ref='" . escape_check($delete) . "'");
 	}
 
 
