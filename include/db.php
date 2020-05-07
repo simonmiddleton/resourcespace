@@ -652,8 +652,6 @@ $hook_cache = array();
 $hook_cache_hits = 0;
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
-// Note: We should really guard against this by using set_sysvar() and get_sysvar() instead.
-
 $systemvars = sql_query("SELECT name, value FROM sysvars");
 $sysvars = array();
 foreach($systemvars as $systemvar)
@@ -678,6 +676,11 @@ function set_sysvar($name,$value=null)
 // get a system variable (which is received from the sysvars table)
 function get_sysvar($name, $default=false)
     {
+	// Check the global array first.
+	global $sysvars;
+	if (isset($sysvars) && array_key_exists($name,$sysvars)) {return $sysvars[$name];}
+
+	// Load manually
     $name=escape_check($name);
     return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
     }
