@@ -48,6 +48,7 @@ if (getval("save", "") != "" && enforcePostRequest(false))
 	# Update database
 	log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
 	sql_query("update plugins set enabled_groups='$access' where name='$plugin'","");
+	clear_query_cache("plugins");
 	redirect("pages/team/team_plugins.php");
 	}
 

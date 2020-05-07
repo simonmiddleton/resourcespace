@@ -2472,7 +2472,7 @@ function setup_user($userdata)
 		{	
 		$usercollection=$userdata["current_collection"];
 		// Check collection actually exists
-		$validcollection=sql_value("select ref value from collection where ref='$usercollection'",0);
+		$validcollection=$userdata["current_collection_valid"];
 		if($validcollection==0)
 			{
 			// Not a valid collection - switch to user's primary collection if there is one
@@ -2608,6 +2608,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.parent,
                        u.usergroup,
                        u.current_collection,
+					   (select count(*) from collection where ref=u.current_collection) as current_collection_valid,
                        u.last_active,
                        timestampdiff(second, u.last_active, now()) AS idle_seconds,
                        u.email,
