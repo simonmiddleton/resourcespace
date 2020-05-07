@@ -93,6 +93,9 @@ $scramble_key="abcdef123";
 # global number of installations, users and resources.
 $send_statistics=true;
 
+# Query cache time in minutes. How long before the disk cache is refreshed for a given result set. Should not be necessary to change this.
+$query_cache_expires_minutes=30;
+
 # The level of PHP error reporting to use. By default, hide warnings.
 $config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE;
 

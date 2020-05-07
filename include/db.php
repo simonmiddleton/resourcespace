@@ -917,7 +917,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key;
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes;
 	
 	// Check cache for this query
 	if ($cache!="")
@@ -931,7 +931,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 				{
 				if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
 					{
-					if (time()-$cachedata["time"]<(60*30)) // Less than 30 mins old?
+					if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
 						{
 						return $cachedata["results"];
 						}
