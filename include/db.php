@@ -1234,6 +1234,12 @@ function get_query_cache_location()
 function clear_query_cache($cache)
 	{
 	// Clear all cached queries for cache group $cache
+
+	// If we've already done this on this page load, don't do it again as it will only add to the load in the case of batch operations.
+	global $query_cache_already_completed_this_time;
+	if (!isset($query_cache_already_completed_this_time)) {$query_cache_already_completed_this_time=array();}
+	if (in_array($cache,$query_cache_already_completed_this_time)) {return false;}
+
 	$cache_location=get_query_cache_location();
 	$cache_files=scandir($cache_location);
 	foreach ($cache_files as $file)
@@ -1243,6 +1249,9 @@ function clear_query_cache($cache)
 			unlink($cache_location . "/" . $file);
 			}
 		}
+	
+	$query_cache_already_completed_this_time[]=$cache;
+	return true;
 	}
 
 function check_db_structs($verbose=false)
