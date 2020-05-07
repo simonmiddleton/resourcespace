@@ -397,7 +397,7 @@ if ($use_plugins_manager)
 		{
 		if ($plugin_name!='')
 			{
-			if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'')=='')
+			if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'',"plugins")=='')
 				{
 				# Installed plugin isn't marked as installed in the DB.  Update it now.
 				# Check if there's a plugin.yaml file to get version and author info.
@@ -2537,7 +2537,7 @@ function setup_user($userdata)
                 }
             }
 
-    	$userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';") : FALSE;
+    	$userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';","preferences") : FALSE;
     	$userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
 
         # Some alternative language choices for basket mode / e-commerce

@@ -2450,7 +2450,7 @@ function save_site_text($page,$name,$language,$group)
 
     // Clear cache
     clear_query_cache("sitetext");
-    
+
     }
     
 function string_similar($string1,$string2)
@@ -5630,7 +5630,12 @@ function draw_performance_footer(){
     <tr><td>Dupes</td><td><?php echo $dupes?></td></tr>
     <tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;"><?php echo LINK_CARET ?>details</a></td></tr>
     </table>
-    
+    <table class="InfoTable" style="float: right;margin-right: 10px;display:none;" id="querylog<?php echo $performance_footer_id?>">
+    <?php foreach ($querylog as $query=>$details) { ?>
+    <tr><td><?php echo($query) ?></td></tr>
+    <?php } ?>
+    </table>
+    </div>
     </div>
     <?php
     }

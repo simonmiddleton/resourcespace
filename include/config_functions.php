@@ -236,6 +236,9 @@ function set_config_option($user_id, $param_name, $param_value)
 
     sql_query($query);
 
+    // Clear disk cache
+    clear_query_cache("preferences");
+
     return true;
     }
 
