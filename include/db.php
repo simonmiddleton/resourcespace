@@ -413,7 +413,7 @@ if ($use_plugins_manager)
     # Need verbatim queries for this query
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
-	$active_plugins = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE inst_version>=0 order by priority");
+	$active_plugins = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE inst_version>=0 order by priority","plugins");
     $mysql_verbatim_queries = $mysql_vq;
 
     $active_yaml = array();
@@ -585,7 +585,7 @@ $pagefilter="AND (page = '" . $pagename . "' OR page = 'all' OR page = '' " .  (
 if ($pagename=="admin_content") {$pagefilter="";} # Special case for the team content manager. Pull in all content from all pages so it's all overridden.
 
 $site_text=array();
-$results=sql_query("select language,name,text from site_text where (page='$pagename' or page='all' or page='') and (specific_to_group is null or specific_to_group=0)");
+$results=sql_query("select language,name,text from site_text where (page='$pagename' or page='all' or page='') and (specific_to_group is null or specific_to_group=0)","sitetext");
 for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];}
 
 $query = sprintf('
@@ -1241,6 +1241,7 @@ function clear_query_cache($cache)
 	if (in_array($cache,$query_cache_already_completed_this_time)) {return false;}
 
 	$cache_location=get_query_cache_location();
+	if (!file_exists($cache_location)) {return false;} // Cache has not been used yet.
 	$cache_files=scandir($cache_location);
 	foreach ($cache_files as $file)
 		{

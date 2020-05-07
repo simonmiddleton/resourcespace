@@ -60,6 +60,9 @@ function activate_plugin($name)
 
         log_activity(null, LOG_CODE_ENABLED, $plugin_yaml_esc['version'], 'plugins', 'inst_version', $plugin_yaml_esc['name'], 'name', '', null, true);
 
+        // Clear query cache
+        clear_query_cache("plugins");
+
         hook("after_activate_plugin","",array($name));
         return true;
         }
@@ -92,6 +95,10 @@ function deactivate_plugin($name)
 
         log_activity(null, LOG_CODE_DISABLED, '', 'plugins', 'inst_version', $name, 'name', $inst_version, null, true);
         }
+
+    // Clear query cache
+    clear_query_cache("plugins");
+
     }
 
 /**
@@ -107,6 +114,9 @@ function deactivate_plugin($name)
 function purge_plugin_config($name)
     {
     sql_query("UPDATE plugins SET config=NULL, config_json=NULL where name='$name'");
+
+    // Clear query cache
+    clear_query_cache("plugins");
     }
 /**
  * Load plugin .yaml file.
@@ -344,6 +354,9 @@ function set_plugin_config($plugin_name, $config)
 
     sql_query("UPDATE plugins SET config='$config_ser_bin', config_json='$config_ser_json' WHERE name='$plugin_name'");
 
+    // Clear query cache
+    clear_query_cache("plugins");
+
     return true;
     }
 
@@ -357,7 +370,7 @@ function set_plugin_config($plugin_name, $config)
  */
 function is_plugin_activated($name)
     {
-    $activated = sql_query("SELECT name FROM plugins WHERE name='$name' and inst_version IS NOT NULL");
+    $activated = sql_query("SELECT name FROM plugins WHERE name='$name' and inst_version IS NOT NULL","plugins");
     if (is_array($activated) && count($activated)>0)
         {
         return true;
