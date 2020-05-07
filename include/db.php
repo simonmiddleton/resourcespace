@@ -903,13 +903,13 @@ function db_rollback_transaction($name)
     return false;
 	}        
 
-function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
+function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     # sql_query(sql) - execute a query and return the results as an array.
 	# Database functions are wrapped in this way so supporting a database server other than MySQL is 
 	# easier.
 	
-	# $cache - disk based caching - cache the results on disk.
+	# $cache - disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
 	# At the moment this is basic and ignores $fetchrows and $fetch_specific_columns so isn't useful for queries employing those parameters
 
     # If $fetchrows is set we don't have to loop through all the returned rows. We
@@ -921,10 +921,10 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key;
 	
 	// Check cache for this query
-	if ($cache)
+	if ($cache!="")
 		{
-		$cache_location=$storagedir . "/tmp/querycache";
-		$cache_file=$cache_location . "/" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
+		$cache_location=get_query_cache_location();
+		$cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
 		if (file_exists($cache_file))
 			{
 			$cachedata=json_decode(file_get_contents($cache_file),true);
@@ -1126,7 +1126,7 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		}
 
 	// Write to the cache
-	if ($cache)
+	if ($cache!="")
 		{
 		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777);}
 		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}
@@ -1178,7 +1178,7 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 * 
 * @return string
 */
-function sql_value($query, $default, $cache=false)
+function sql_value($query, $default, $cache="")
     {
     db_set_connection_mode("read_only");
     $result = sql_query($query, $cache, -1, true, 0, true, false);
@@ -1203,7 +1203,7 @@ function sql_value($query, $default, $cache=false)
 * 
 * @return array
 */
-function sql_array($query,$cache=false)
+function sql_array($query,$cache="")
 	{
 	$return = array();
 
@@ -1223,6 +1223,26 @@ function sql_insert_id()
     global $db;
 
     return mysqli_insert_id($db["read_write"]);
+	}
+
+function get_query_cache_location()
+	{
+	global $storagedir;
+	return $storagedir . "/tmp/querycache";
+	}
+
+function clear_query_cache($cache)
+	{
+	// Clear all cached queries for cache group $cache
+	$cache_location=get_query_cache_location();
+	$cache_files=scandir($cache_location);
+	foreach ($cache_files as $file)
+		{
+		if (substr($file,0,strlen($cache)+1)==$cache . "_")
+			{
+			unlink($cache_location . "/" . $file);
+			}
+		}
 	}
 
 function check_db_structs($verbose=false)
