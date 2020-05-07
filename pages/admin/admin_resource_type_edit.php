@@ -59,7 +59,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
                inherit_global_fields = '{$inherit_global_fields}'
          WHERE ref = '$ref'
      ");
-	
+     clear_query_cache("schema");
+
 	redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
 	}
 	
@@ -84,7 +85,8 @@ if (getval("delete","")!="" && enforcePostRequest(false))
 		    {update_resource_type($affectedresource,$targettype);}
 		}
 	    // Delete the resource type
-	    sql_query("delete from resource_type where ref='$ref'");
+        sql_query("delete from resource_type where ref='$ref'");
+        clear_query_cache("schema");
 		redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
 	    }
 	

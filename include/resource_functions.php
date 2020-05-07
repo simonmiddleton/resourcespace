@@ -4913,7 +4913,7 @@ function resource_type_config_override($resource_type)
     if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
         {
         # Look for config and execute.
-        $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","");
+        $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
         if ($config_options!="")
             {
             # Switch to global context and execute.

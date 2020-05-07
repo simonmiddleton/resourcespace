@@ -667,7 +667,7 @@ function get_resource_types($types = "", $translate = true)
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select * from resource_type $sql order by order_by,ref");
+    $r=sql_query("select * from resource_type $sql order by order_by,ref","schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -4612,7 +4612,7 @@ function get_hidden_indexed_fields()
     if (is_array($hidden_fields_cache)){
         return $hidden_fields_cache;
     } else { 
-        $fields=sql_query("select ref,active from resource_type_field where length(name)>0");
+        $fields=sql_query("select ref,active from resource_type_field where length(name)>0","schema");
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
@@ -4677,7 +4677,7 @@ function get_fields_for_search_display($field_refs)
     }
 
     # Executes query.
-    $fields = sql_query("select *, ref, name, type, title, keywords_index, partial_index, value_filter from resource_type_field where ref in ('" . join("','",$field_refs) . "')");
+    $fields = sql_query("select *, ref, name, type, title, keywords_index, partial_index, value_filter from resource_type_field where ref in ('" . join("','",$field_refs) . "')","schema");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -6164,7 +6164,7 @@ function validate_html($html)
 
 function get_indexed_resource_type_fields()
     {
-    return sql_array("select ref as value from resource_type_field where keywords_index=1");
+    return sql_array("select ref as value from resource_type_field where keywords_index=1","schema");
     }
 
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
@@ -7197,6 +7197,8 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     log_activity(null, LOG_CODE_CREATED, $name, 'resource_type_field', 'title', $new, null, '');
 
+    clear_query_cache("schema");
+
     return $new;
     }
 
@@ -8037,6 +8039,8 @@ function delete_resource_type_field($ref)
     hook("after_delete_resource_type_field");
 
     log_activity('Deleted metadata field "' . $fieldinfo["title"] . '" (' . $fieldinfo["ref"] . ')',LOG_CODE_DELETED,null,'resource_type_field',null,$ref);
+
+    clear_query_cache("schema");
 
     return true;
     }

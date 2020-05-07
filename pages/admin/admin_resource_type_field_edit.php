@@ -463,6 +463,8 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
     $sql .= " WHERE ref = '{$ref}'";
 
 	sql_query($sql);
+	clear_query_cache("schema");
+
 	if($sync_field!="" && $sync_field>0)
 		{
 		$syncsql.=" where ref='$sync_field' or sync_field='$ref'";

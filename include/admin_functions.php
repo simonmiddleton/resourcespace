@@ -14,6 +14,7 @@ function update_resource_type_field_order($neworder)
 	}
 	$updatesql.= "else order_by END)";
 	sql_query($updatesql);
+	clear_query_cache("schema");
 	log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
 	}
 	
@@ -32,5 +33,6 @@ function update_resource_type_order($neworder)
 	}
 	$updatesql.= "else order_by END)";
 	sql_query($updatesql);
+	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
