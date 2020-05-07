@@ -82,7 +82,7 @@ function execute_api_call($query,$pretty=false)
     
     debug("API - calling api_" . $function);
     $result = call_user_func_array("api_" . $function, $setparams);
-    $result = mb_convert_encoding($result,"UTF-8","UTF-8"); //Make sure this data is UTF-8 to avoid JSON errors
+    $result = mb_convert_encoding($result,"UTF-8"); //Make sure this data is UTF-8 to avoid JSON errors
     if($pretty)
         {
             debug("API: json_encode() using JSON_PRETTY_PRINT");
