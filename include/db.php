@@ -917,11 +917,13 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes;
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_already_completed_this_time;
 	
 	// Check cache for this query
-	if ($cache!="")
+	$cache_write=false;
+	if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
 		{
+		$cache_write=true;
 		$cache_location=get_query_cache_location();
 		$cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
 		if (file_exists($cache_file))
@@ -1125,7 +1127,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 		}
 
 	// Write to the cache
-	if ($cache!="")
+	if ($cache_write)
 		{
 		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777);}
 		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}

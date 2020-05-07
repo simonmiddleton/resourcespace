@@ -118,7 +118,8 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
 
         return $new_ref;
         }
-
+    
+    clear_query_cache("schema");
     }
 
 
@@ -142,6 +143,8 @@ function delete_node($ref)
 
     remove_all_node_keyword_mappings($ref);
 
+    clear_query_cache("schema");
+
     return;
     }
 
@@ -161,6 +164,8 @@ function delete_nodes_for_resource_type_field($ref)
         }
 
     sql_query("DELETE FROM node WHERE resource_type_field = '" . escape_check($ref) . "';");
+
+    clear_query_cache("schema");
 
     return;
     }
@@ -459,6 +464,7 @@ function reorder_node(array $nodes_new_order)
     $query .= 'ELSE order_by END);';
 
     sql_query($query);
+    clear_query_cache("schema");
 
     return;
     }
@@ -509,6 +515,7 @@ function reorder_nodes(array $unordered_nodes)
             }
         }
 
+    clear_query_cache("schema");
     return $reordered_nodes;
     }
 
@@ -940,6 +947,8 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
 
     log_activity("Keyword {$keyword_ref} added for node ID #{$node}", LOG_CODE_CREATED, $keyword, 'node_keyword');
 
+    clear_query_cache("schema");
+
     return true;
     }
 
@@ -983,6 +992,8 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 
     log_activity("Keyword ID {$keyword_ref} removed for node ID #{$node}", LOG_CODE_DELETED, null, 'node_keyword', null, null, null, $keyword);
 
+    clear_query_cache("schema");
+
     return;
     }
 
@@ -997,6 +1008,7 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 function remove_all_node_keyword_mappings($node)
     {
     sql_query("DELETE FROM node_keyword WHERE node = '" . escape_check($node) . "'");
+    clear_query_cache("schema");
 
     return;
     }
@@ -1029,6 +1041,7 @@ function check_node_indexed(array $node, $partial_index = false)
     // (re-)index node
     remove_all_node_keyword_mappings($node['ref']);
     add_node_keyword_mappings($node, $partial_index);
+    clear_query_cache("schema");
 
     return;
     }
@@ -1083,6 +1096,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false)
         add_node_keyword($node['ref'], $keywords[$n], $keyword_position);
         }
     db_end_transaction("add_node_keyword_mappings");
+    clear_query_cache("schema");
 
     return true;
     }
@@ -1136,6 +1150,7 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
         remove_node_keyword($node['ref'], $keywords[$n], $keyword_position);
         }
 
+    clear_query_cache("schema");
     return true;
     }
 
