@@ -19,6 +19,7 @@ $userpermissions[]='f-' . $hidefield;
 // Set variables that could cause false results
 unset($hidden_fields_cache);
 $autocomplete_search_min_hitcount = 1;
+clear_query_cache("schema");
 
 $input = substr($sensitivename,0,5);
 $keywords=get_suggested_keywords($input);
@@ -40,6 +41,7 @@ $userpermissions[]='f-' . $hidenodefield;
 // Set variables that could cause false results
 unset($hidden_fields_cache);
 $autocomplete_search_min_hitcount = 1;
+clear_query_cache("schema");
 
 $input = substr($sensitivenodename,0,5);
 $keywords=get_suggested_keywords($input);
