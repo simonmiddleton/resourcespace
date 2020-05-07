@@ -2447,6 +2447,10 @@ function save_site_text($page,$name,$language,$group)
                 sql_query("delete from site_text where page='$page' and name='$name' and language!='$defaultlanguage' and trim(text)='" . trim(escape_check($defaulttext)) . "'");
                 
         }
+
+    // Clear cache
+    clear_query_cache("sitetext");
+    
     }
     
 function string_similar($string1,$string2)

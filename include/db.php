@@ -602,7 +602,7 @@ $query = sprintf('
 	escape_check($defaultlanguage),
 	$pagefilter
 );
-$results=sql_query($query);
+$results=sql_query($query,"sitetext");
 
 // Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
 $customsitetext=array();
@@ -1903,24 +1903,6 @@ function text($name)
 	$key=$pagename . "__" . $name;	
 	if (array_key_exists($key,$lang)) {return $lang[$key];}
 	else if(array_key_exists("all__" . $name,$lang)) {return $lang["all__" . $name];}
-
-	/*
-		Old method, commented for reference; look directly in the site content table.
-	
-	# Returns site text with name $name, or failing that returns dummy text.
-	global $site_text,$pagename,$language,$languages,$usergroup;
-	if (array_key_exists($language . "-" . $name,$site_text)) {return $site_text[$language . "-" .$name];} 
-	
-	# Can't find the language key? Look for it in other languages.
-	reset($languages);foreach ($languages as $key=>$value)
-		{
-		if (array_key_exists($key . "-" . $name,$site_text)) {return $site_text[$key . "-" . $name];} 		
-		}
-	if (!array_key_exists('en', $languages))
-		{
-		if (array_key_exists("en-" . $name,$site_text)) {return $site_text["en-" . $name];}
-		}
-	*/
 	
 	return "";
 	}
