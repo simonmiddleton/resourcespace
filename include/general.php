@@ -3867,7 +3867,6 @@ function get_simple_search_fields()
 * @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
 * @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
 * 
-* TODO: split rendering the JS parts into different function(s)
 * 
 * @return boolean Returns TRUE if no display condition or if field shoud be displayed or FALSE if field should not be displayed.
 */
@@ -4112,7 +4111,6 @@ function check_display_condition($n, array $field, array $fields, $render_js)
             // Assume field will not be displayed
             newfield<?php echo $field['ref']; ?>status = 'none';
             newfield<?php echo $field['ref']; ?>show   = false;
-            // TODO Explain meaning of provisional
             newfield<?php echo $field['ref']; ?>provisional = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
@@ -4131,7 +4129,6 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     )
                 */
                 ?>
-                // TODO Explain meaning of subcheck
                 newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
                 <?php
@@ -4171,7 +4168,6 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <?php
                     }
                 ?>
-                // TODO Explain this
                 if(!newfield<?php echo $field['ref']; ?>subcheck)
                     {
                     newfield<?php echo $field['ref']; ?>provisional = false;
@@ -5630,46 +5626,7 @@ function draw_performance_footer(){
     <tr><td>Dupes</td><td><?php echo $dupes?></td></tr>
     <tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;"><?php echo LINK_CARET ?>details</a></td></tr>
     </table>
-    <table class="InfoTable" id="querylog<?php echo $performance_footer_id?>" style="display: none; float: <?php if ($pagename=='collections'){?>left<?php } else {?>right<?php }?>; margin: 10px;">
-    <?php
-
-        foreach($querylog as $query=>$values){
-        if (substr($query,0,7)!="explain" && $query!="show warnings"){
-        $show_warnings=false;
-        if (strtolower(substr($query,0,6))=="select"){
-            $explain=sql_query("explain extended ".$query);
-            /*$warnings=sql_query("show warnings");
-            $show_warnings=true;*/
-        }
-        ?>
-        <tr><td align="left"><div style="word-wrap: break-word; width:350px;"><?php echo $query?><?php if ($show_warnings){ foreach ($warnings as $warning){echo "<br /><br />".$warning['Level'].": ".htmlentities($warning['Message']);}}?></div></td><td>&nbsp;
-        <table class="InfoTable">
-        <?php if (strtolower(substr($query,0,6))=="select"){
-            ?><tr>
-            <?php
-            foreach ($explain[0] as $explainitem=>$value){?>
-                <td align="left">   
-                <?php echo $explainitem?><br /></td><?php 
-                }
-            ?></tr><?php
-
-            for($n=0;$n<count($explain);$n++){
-                ?><tr><?php
-                foreach ($explain[$n] as $explainitem=>$value){?>
-                <td align="left">   
-                    <?php echo str_replace(",",", ",$value)?></td><?php 
-                    }
-                ?></tr><?php    
-                }
-            }   ?>
-        </table>
-        </td><td><?php echo round($values['time'],4)?></td>
-        </td><td><?php echo ($values['dupe']>1)?''.$values["dupe"].'X':'1'?></td></tr>
-        <?php   
-        }
-        }
-    ?>
-    </table>
+    
     </div>
     <?php
     }
@@ -8002,7 +7959,6 @@ function check_script_last_ran($name, $fail_notify_allowance, &$last_ran_datetim
 
     if('' != $script_last_ran)
         {
-        // @todo: potentially inject a date format value if it turns out to be required
         $last_ran_datetime = date('l F jS Y @ H:m:s', strtotime($script_last_ran));
 
         // It's been less than user allows it to last run, meaning it is all good!
