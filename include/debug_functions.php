@@ -11,8 +11,8 @@
 
 		$debug_log_override = false;
 
-		$debug_user = sql_value("SELECT value FROM sysvars WHERE name='debug_override_user'", "");
-		$debug_expires = sql_value("SELECT value FROM sysvars WHERE name='debug_override_expires'", "");
+		$debug_user = get_sysvar('debug_override_user');
+		$debug_expires = get_sysvar('debug_override_expires');
 
 		if ($debug_user == "" || $debug_expires == "")
 			{

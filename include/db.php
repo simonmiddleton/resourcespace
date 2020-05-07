@@ -676,13 +676,9 @@ function set_sysvar($name,$value=null)
 // get a system variable (which is received from the sysvars table)
 function get_sysvar($name, $default=false)
     {
-	// Check the global array first.
+	// Check the global array.
 	global $sysvars;
 	if (isset($sysvars) && array_key_exists($name,$sysvars)) {return $sysvars[$name];}
-
-	// Load manually
-    $name=escape_check($name);
-    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
     }
 
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
