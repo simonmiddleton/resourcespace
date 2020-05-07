@@ -49,7 +49,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                            bcc_admin,
                            simple_search_flag
                       FROM archive_states
-                  ORDER BY code ASC");
+                  ORDER BY code ASC","workflow");
 
             global $additional_archive_states, $lang;
             $states=array();
@@ -86,6 +86,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                         $statename=$lang['status' . $additional_archive_state];
                         }
                     sql_query("insert into archive_states set code='" . escape_check($additional_archive_state) . "', name='" . escape_check($statename) . "'");
+                    clear_query_cache("workflow");
                     $states[$additional_archive_state]['name']=$lang['status' . $additional_archive_state];
                     $states[$additional_archive_state]['fixed']=true;
                     }
@@ -105,6 +106,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                                 SET code = '" . escape_check($workflow_state) . "',
                                     name = '" . escape_check($workflow_state_name) . "',
                                     simple_search_flag = '{$simple_search_flag}'");
+                    clear_query_cache("workflow");
                     }
 
                 $states[$workflow_state]['name'] = $workflow_state_name;
@@ -120,6 +122,7 @@ if (!function_exists("rse_workflow_delete_state")){
         {		
         sql_query("update resource set archive='" . escape_check($newstate) . "' where archive='" . escape_check($state) . "'");
         sql_query("delete from archive_states where code='" . escape_check($state) . "'");
+        clear_query_cache("workflow");
         return true;  
         }
     } 

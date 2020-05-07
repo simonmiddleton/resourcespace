@@ -98,7 +98,8 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                        simple_search_flag = '$simple_search_escaped'
                  WHERE code = '$code'");
             }
-
+        
+        clear_query_cache("workflow");
         $saved=true;
         }
     
