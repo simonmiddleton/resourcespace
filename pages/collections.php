@@ -303,7 +303,6 @@ else { ?>
 
 					jQuery('#trash_bin').hide();
 					// AddResourceToCollection includes a reload of CollectionDiv 
-					//  TODO: Why doesn't it use CollectionDivLoad function to do the reload?
 					AddResourceToCollection(event, resource_id, '');
 					}
 			});
@@ -413,7 +412,6 @@ else { ?>
 					if(class_of_drag.indexOf("CollectionPanelShell") >= 0)
 						{
 						// Handle different cases such as Saved searches
-						// TODO: Explain why?
 						if(ui.draggable.data('savedSearch') === 'yes')
 							{
 							CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?removesearch=' + resource_id + '&nc=<?php echo time(); ?>');
