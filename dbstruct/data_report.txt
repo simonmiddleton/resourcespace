@@ -382,3 +382,9 @@ WHERE
 
 c.created>=date('[from-y]-[from-m]-[from-d]') and c.created<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 order by c.created DESC;"
+19,"File integrity check report","
+SELECT * FROM 
+(SELECT 'Oldest' AS State, ref 'Resource', ifnull(last_verified,'NEVER') 'Verified' FROM resource WHERE ref>0 ORDER BY last_verified ASC LIMIT 1) AS a 
+UNION ALL 
+SELECT * FROM 
+(SELECT 'Newest' AS State, ref 'Resource', ifnull(last_verified,'NEVER') 'Verified' FROM resource WHERE ref>0 ORDER BY last_verified DESC LIMIT 1) AS b;"
