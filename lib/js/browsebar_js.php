@@ -20,6 +20,7 @@ function ToggleBrowseBar(forcestate, noresize)
 		if(typeof noresize === 'undefined' || noresize == false)
             {
             myLayout.sizePane("west", <?php echo $browse_default_width; ?>);
+            jQuery('#BrowseBarContent').width(browse_width-40);
             }
 		browse_show = 'show';
         SetCookie('browse_show', 'show');
