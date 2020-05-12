@@ -6,7 +6,6 @@ include_once "../include/resource_functions.php";
 
 # External access support (authenticate only if no key provided)
 $k=getvalescaped("k","");
-
 $k_shares_collection=getvalescaped("collection","");
 $k_shares_ref=getvalescaped("ref","");
 $ref=getvalescaped("ref","");
@@ -91,7 +90,7 @@ include "../include/header.php";
 	<div class="clearerleft"> </div>
 	</div>
 	
-	<form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>" 
+	<form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>&collection=<?php echo urlencode($k_shares_collection); ?>" 
 		onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
 	<?php generateFormToken("terms"); ?>
     <input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
