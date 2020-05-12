@@ -809,7 +809,6 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                 {
                 echo "Found matching resource: " . $ingested[0] . PHP_EOL;
                 $ref = $ingested[0];
-                //return false;
                 }
             else
                 {
