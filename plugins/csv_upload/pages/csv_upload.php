@@ -199,10 +199,9 @@ else
 			{
 		    mkdir($csvdir,0777,true);
 		    }
-	    
 		$result=move_uploaded_file($_FILES[$fd]['tmp_name'], $csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv");
 		?>	
-		<form method="POST" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">		
+		<form method="POST" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" onsubmit="jQuery('input#submit_process_csv').prop('disabled',true);jQuery('input#submit_process_csv').prop('value','<?php echo $lang['saving'] ?>');CentralSpacePost(this,true);return false;">		
 		<?php
         generateFormToken("csv_upload_process");
         foreach ($override_fields as $s)
@@ -219,7 +218,7 @@ else
 
 		<input type="hidden" id="add_to_collection" name="add_to_collection" value="<?php echo htmlspecialchars($add_to_collection) ?>">			
 		<input type="hidden" id="process_csv"  name="process_csv" value="1" > 			
-		<input type="submit" value="Process CSV" name="process_csv" onClick="CentralSpacePost(this,true);return false;">
+		<input type="submit" value="Process CSV" name="process_csv" id="submit_process_csv">
 		</form>
 		<?php
 	
