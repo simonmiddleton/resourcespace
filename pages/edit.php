@@ -892,7 +892,6 @@ function ShowHelp(field)
         if (jQuery("#autosaveCounter").length == 0)
             {
             jQuery(".BasicsBox").append("<div class='autosaveCounter' id='autosaveCounter' style='visibility:hidden'>1</div>");
-            var autosaveCounter = 1;
             } else
             {
             var autosaveCounter = parseInt(jQuery("#autosaveCounter").text()) + 1; // increment autosaveCounter
