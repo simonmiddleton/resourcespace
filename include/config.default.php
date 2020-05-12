@@ -745,6 +745,11 @@ $archive_search=false;
 # Allows users to request resources via a form, which is e-mailed.
 $research_request=false;
 
+# custom research request fields
+# see https://www.resourcespace.com/knowledge-base/resourceadmin/user-research-requests
+$custom_researchrequest_fields = array();
+
+
 # Country search in the right nav? (requires a field with the short name 'country')
 $country_search=false;
 
