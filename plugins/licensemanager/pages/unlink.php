@@ -11,19 +11,31 @@ $resource=getvalescaped("resource","");
 $edit_access=get_edit_access($resource);
 if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
 
+$url_params = array(
+    'ref'        => $resource,
+    'search'     => getval('search',''),
+    'order_by'   => getval('order_by',''),
+    'collection' => getval('collection',''),
+    'order_by'   => getval('order_by',''),
+    'offset'     => getval('offset',''),
+    'restypes'   => getval('restypes',''),
+    'archive'    => getval('archive','')
+);
+$redirect_url = generateURL($baseurl_short . "/pages/view.php",$url_params);
+
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	sql_query("delete from resource_license where license='$ref' and resource='$resource'");
 	
 	resource_log($resource,"","",$lang["unlink_license"] . " " . $ref);
 	
-	redirect("pages/view.php?ref=" . $resource);
+	redirect($redirect_url);
 	}
 		
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $resource ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 
 <h1><?php echo $lang["unlink_license"] ?></h1>
 

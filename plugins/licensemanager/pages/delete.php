@@ -13,8 +13,18 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	sql_query("delete from license where ref='$ref'");
 	sql_query("delete from resource_license where license='$ref'");
-	
-	redirect("/plugins/licensemanager/pages/list.php");
+    $url_params = array(
+        'ref'        => $ref,
+        'search'     => getval('search',''),
+        'order_by'   => getval('order_by',''),
+        'collection' => getval('collection',''),
+        'order_by'   => getval('order_by',''),
+        'offset'     => getval('offset',''),
+        'restypes'   => getval('restypes',''),
+        'archive'    => getval('archive','')
+    );
+    $redirect_url = generateURL($baseurl_short . "/plugins/licesemanager/pages/list.php",$url_params);
+	redirect($redirect_url);
 	}
 		
 include "../../../include/header.php";

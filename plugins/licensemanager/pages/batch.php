@@ -14,6 +14,17 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
     $resources=get_collection_resources($collection);
     $ref=getvalescaped("ref","");
+    $url_params = array(
+        'ref'        => $ref,
+        'search'     => getval('search',''),
+        'order_by'   => getval('order_by',''),
+        'collection' => getval('collection',''),
+        'order_by'   => getval('order_by',''),
+        'offset'     => getval('offset',''),
+        'restypes'   => getval('restypes',''),
+        'archive'    => getval('archive','')
+    );
+    $redirect_url = generateURL($baseurl_short . "/plugins/licesemanager/pages/edit.php",$url_params);
 
     foreach ($resources as $resource)
         {
@@ -27,7 +38,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         resource_log($resource,"","",$lang[($unlink?"un":"") . "linklicense"] . " " . $ref);
         }
 
-	redirect("plugins/licensemanager/pages/edit.php?ref=" . $ref);
+	redirect($redirect_url);
 	}
 		
 include "../../../include/header.php";
