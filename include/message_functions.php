@@ -404,7 +404,7 @@ function system_notification($message, $url="")
         {
         $template = "system_notification_email";
         $templatevars = array("message"=>$message,"url"=>$url);
-        $messageplain = $message . "<br/><br/><a href='" . $url . "' >" . $url . "</a>";
+        $messageplain = $message . "\n\n" . $url;
         send_mail($admin_notify_email,$subject,$messageplain,'','',$template,$templatevars);
         }
 
