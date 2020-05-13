@@ -1342,7 +1342,7 @@ function build_dash_tile_list($dtiles_available)
   					{
 					if(isset($lang[strtolower($tile['txt'])]))
 						{
-						$tile['txt'] = htmlspecialchars($lang[strtolower($tile["txt"])]);
+						$tile['txt'] = htmlspecialchars_decode($lang[strtolower($tile["txt"])]);
 						}
 					else
 						{
@@ -1365,7 +1365,7 @@ function build_dash_tile_list($dtiles_available)
   					href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? htmlspecialchars($tile["link"]): $baseurl."/".htmlspecialchars($tile["link"]);?>"
   					target="_blank"
   				>
-  					<?php echo htmlspecialchars($lang["dashtilevisitlink"]); ?>
+  					<?php echo htmlspecialchars_decode($lang["dashtilevisitlink"]); ?>
   				</a>
   			</td>
   			<td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
