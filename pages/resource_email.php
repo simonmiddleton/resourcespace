@@ -29,7 +29,6 @@ $minaccess=get_resource_access($ref);
 if (!can_share_resource($ref,$minaccess)) {exit($lang["error-permissiondenied"]);}
 
 $user_select_internal=checkperm("noex") ||  intval($user_dl_limit) > 0;
-$modal = (getval("modal", "") == "true");
 
 $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
@@ -107,30 +106,15 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<?php
-if(!$modal)
-    {
-    ?>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoshareresource"]; ?></a></p>
-    <?php
-    }
-    ?>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoshareresource"]; ?></a></p>
+
 <h1><?php echo $lang["emailresourcetitle"]?></h1>
 
 <p><?php echo text("introtext");render_help_link("user/sharing-resources");?></p>
 
-<form method=post id="resourceform" action="<?php echo $baseurl_short?>pages/resource_email.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>"
-    onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(this, true);">
+<form method=post id="resourceform" action="<?php echo $baseurl_short?>pages/resource_email.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>">
 <input type=hidden name=ref value="<?php echo htmlspecialchars($ref)?>">
-<?php
-if($modal)
-    {
-    ?>
-    <input type="hidden" name="modal" value="true">
-    <?php
-    }
-generateFormToken("resourceform");
-?>
+<?php generateFormToken("resourceform"); ?>
 <div class="Question">
 <label><?php echo $lang["resourcetitle"]?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource["field".$view_title_field]))?></div>
 <div class="clearerleft"> </div>

@@ -134,7 +134,7 @@ if($editing && !$editexternalurl)
                     {
                     if ($email_sharing) 
                         { ?>
-                        <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
+                        <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
                         <?php 
                         }
                     }
