@@ -376,8 +376,8 @@ if($searching)
             }
         ?>
             <tr>
-                <td><i class="fa fa-users"></td>
-                <td><?php echo htmlspecialchars($plugin["name"]); ?></td>
+                <td><?php echo '<i class="plugin-icon ' . htmlspecialchars($plugin["icon"]) . '"></i>'; ?></td>
+                <td><?php echo $plugin["title"] != "" ? htmlspecialchars($plugin["title"]) : htmlspecialchars($plugin["name"]); ?></td>
                 <td><?php echo htmlspecialchars($plugin_description); ?></td>
                 <td><?php echo htmlspecialchars($plugin["author"]); ?></td>
                 <td><?php echo htmlspecialchars($plugin_version); ?></td>
