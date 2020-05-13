@@ -96,8 +96,8 @@ function tile_config_theme($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-folder'></span><?php echo htmlspecialchars_decode($lang["themes"]); ?></h2>
-	<p><?php echo htmlspecialchars_decode(text("themes"));?></p>
+	<h2><span class='fa fa-folder'></span><?php echo htmlspecialchars($lang["themes"]); ?></h2>
+	<p><?php echo htmlspecialchars(text("themes"));?></p>
 	<?php
 	}
 function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
@@ -142,8 +142,8 @@ function tile_config_mycollection($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-shopping-bag'></span><?php echo htmlspecialchars_decode($lang["mycollections"]); ?></h2>
-	<p><?php echo htmlspecialchars_decode(text("mycollections")); ?></p>
+	<h2><span class='fa fa-shopping-bag'></span><?php echo htmlspecialchars($lang["mycollections"]); ?></h2>
+	<p><?php echo htmlspecialchars(text("mycollections")); ?></p>
 	<?php
 	}
 function tile_config_advancedsearch($tile,$tile_id,$tile_width,$tile_height) 
@@ -151,8 +151,8 @@ function tile_config_advancedsearch($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-search'></span><?php echo htmlspecialchars_decode($lang["advancedsearch"]); ?></h2>
-	<p><?php echo htmlspecialchars_decode(text("advancedsearch")); ?></p>
+	<h2><span class='fa fa-search'></span><?php echo htmlspecialchars($lang["advancedsearch"]); ?></h2>
+	<p><?php echo htmlspecialchars(text("advancedsearch")); ?></p>
 	<?php
 	}
 function tile_config_mycontributions($tile,$tile_id,$tile_width,$tile_height) 
@@ -160,8 +160,8 @@ function tile_config_mycontributions($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-user'></span><?php echo htmlspecialchars_decode($lang["mycontributions"]); ?></h2>
-	<p><?php echo htmlspecialchars_decode(text("mycontributions"));?></p>
+	<h2><span class='fa fa-user'></span><?php echo htmlspecialchars($lang["mycontributions"]); ?></h2>
+	<p><?php echo htmlspecialchars(text("mycontributions"));?></p>
 	<?php
 	}
 function tile_config_helpandadvice($tile,$tile_id,$tile_width,$tile_height) 
@@ -169,8 +169,8 @@ function tile_config_helpandadvice($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename;
 	$pagename="home";
 	?>
-	<h2><span class='fa fa-book'></span><?php echo htmlspecialchars_decode($lang["helpandadvice"]); ?></h2>
-	<p><?php echo htmlspecialchars_decode(text("help")); ?></p>
+	<h2><span class='fa fa-book'></span><?php echo htmlspecialchars($lang["helpandadvice"]); ?></h2>
+	<p><?php echo htmlspecialchars(text("help")); ?></p>
 	<?php
 	}
 function tile_config_custom($tile,$tile_id,$tile_width,$tile_height) 
@@ -234,7 +234,7 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 	else if(!empty($tile['txt']) && isset($lang[strtolower($tile['txt'])]))
 		{
 		?>
-		<h2 class="title notitle"><?php echo htmlspecialchars_decode($lang[strtolower($tile['txt'])]); ?></h2>
+		<h2 class="title notitle"><?php echo htmlspecialchars($lang[strtolower($tile['txt'])]); ?></h2>
 		<?php
 		}
 	else if(!empty($tile['txt']) && !isset($lang[strtolower($tile['txt'])]))
@@ -249,7 +249,7 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 		if(isset($lang[strtolower($tile['txt'])]))
 			{
 		?>
-		<p><?php echo htmlspecialchars_decode($lang[strtolower($tile['txt'])]); ?></p>
+		<p><?php echo htmlspecialchars($lang[strtolower($tile['txt'])]); ?></p>
 		<?php
 			}
 		else
@@ -404,7 +404,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 
 	if(!$found_resources && !$tile["resource_count"])
 		{
-		echo "<p class='no_resources'>" . htmlspecialchars_decode($lang["noresourcesfound"]) . "</p>";
+		echo "<p class='no_resources'>" . htmlspecialchars($lang["noresourcesfound"]) . "</p>";
 		}
 	if($tile["resource_count"])
 		{?>
@@ -506,7 +506,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 
     if($count==0 && !$tile["resource_count"])
 		{
-		echo "<p class='no_resources'>" . htmlspecialchars_decode($lang["noresourcesfound"]) . "</p>";
+		echo "<p class='no_resources'>" . htmlspecialchars($lang["noresourcesfound"]) . "</p>";
         }
     if($tile["resource_count"])
 		{?>
@@ -585,7 +585,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 
 	if($count==0 && !$tile["resource_count"])
 		{
-		echo "<p class='no_resources'>" . htmlspecialchars_decode($lang["noresourcesfound"]) . "</p>";
+		echo "<p class='no_resources'>" . htmlspecialchars($lang["noresourcesfound"]) . "</p>";
 		}
 	if($tile["resource_count"])
 		{?>
