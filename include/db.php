@@ -678,7 +678,12 @@ function get_sysvar($name, $default=false)
     {
 	// Check the global array.
 	global $sysvars;
-	if (isset($sysvars) && array_key_exists($name,$sysvars)) {return $sysvars[$name];}
+    if (isset($sysvars) && array_key_exists($name,$sysvars))
+        {
+        return $sysvars[$name];
+        }
+    // Value not set, return default
+    return $default;
     }
 
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)

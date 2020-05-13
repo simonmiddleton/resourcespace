@@ -11,8 +11,8 @@
 
 		$debug_log_override = false;
 
-		$debug_user = get_sysvar('debug_override_user');
-		$debug_expires = get_sysvar('debug_override_expires');
+		$debug_user = get_sysvar('debug_override_user','');
+		$debug_expires = get_sysvar('debug_override_expires','');
 
 		if ($debug_user == "" || $debug_expires == "")
 			{
@@ -29,7 +29,6 @@
 			{
 			$debug_log_override = true;
 			}
-
 		}
 
 	function create_debug_log_override($debug_user = -1, $debug_expires = 60)
