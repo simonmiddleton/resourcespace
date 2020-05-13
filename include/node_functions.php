@@ -1306,7 +1306,7 @@ function delete_resource_nodes($resourceid,$nodes=array())
 
     foreach ($field_nodes_arr as $key => $value)
         {
-        resource_log($resourceid,"e",$key,"",implode(",",$value),"");
+        resource_log($resourceid,"e",$key,"","," . implode(",",$value),'');
         }
     }
 

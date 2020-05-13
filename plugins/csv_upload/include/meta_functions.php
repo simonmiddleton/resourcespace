@@ -54,13 +54,3 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 	
 	return $meta;	
 }
-
-function meta_get_resource_types()		// returns associative array of resource_type->name
-{
-	$resource_types = array();	
-	foreach (sql_query("select name,ref from resource_type order by ref") as $resource_type) 
-	{
-		$resource_types[$resource_type['ref']]=$resource_type['name'];
-	}
-	return $resource_types;
-}

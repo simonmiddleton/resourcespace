@@ -128,7 +128,7 @@ input[readonly] {
     background: gray;
     text-transform: uppercase;
 }
-.ListviewTitleStyle td, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
+.ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
     color: #fff;
     font-size: 0.875rem;
 }

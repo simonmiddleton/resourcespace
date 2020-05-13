@@ -3007,3 +3007,31 @@ function render_custom_fields(array $cfs)
             });
         });
     }
+
+// Render a select input for a user's collections
+function render_user_collection_select($name = "collection", $collections=array(), $selected=0, $classes = "", $onchangejs = "")
+    {
+    global $userref,$hidden_collections,$active_collections,$lang;
+    if(count($collections) == 0)
+        {
+        $collections = get_user_collections($userref);   
+        }
+    
+    echo "<select name=\"" . $name . "\" id=\"" . $name . "\" " . ($onchangejs != "" ? (" onchange=\"" . htmlspecialchars($onchangejs) . "\"") : "") . ($classes != "" ? (" class=\"" . htmlspecialchars($classes) . "\"") : "")  . ">";
+    echo "<option value=\"0\">" . $lang["select"] . "</option>";
+    for ($n=0;$n<count($collections);$n++)
+        {
+        if(in_array($collections[$n]['ref'],$hidden_collections))
+            {
+            continue;
+            }
+        
+        #show only active collections if a start date is set for $active_collections 
+        if (strtotime($collections[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1))
+            {
+            echo "<option value=\"" . $collections[$n]["ref"] . "\" " . ($selected==$collections[$n]["ref"] ? "selected" : "") . ">" . i18n_get_collection_name($collections[$n]) . "</option>";
+            }
+        }
+           
+	echo "</select>";
+    }
