@@ -36,6 +36,8 @@ if(0 == len(images)):
 (major, minor, _) = cv2.__version__.split(".")
 if (major<3 and minor<7) or minor<3:
     model = cv2.createLBPHFaceRecognizer(2, 10, 10, 10)
+elif int(major)==4 and int(minor)==2:
+    model = cv2.face.LBPHFaceRecognizer_create(2, 10, 10, 10)
 else:
     cv2.face
     model = cv2.face.createLBPHFaceRecognizer(2, 10, 10, 10)

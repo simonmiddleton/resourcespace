@@ -20,11 +20,14 @@ if not os.path.isfile(IMAGE_PATH):
 
 if (major<3 and minor<7) or minor<3:
     model = cv2.createLBPHFaceRecognizer()
+    model.load(LBPH_MODEL_PATH)
+elif int(major)==4 and int(minor)==2:
+    model = cv2.face.LBPHFaceRecognizer_create()
+    model.read(LBPH_MODEL_PATH)
 else:
     cv2.face
     model = cv2.face.createLBPHFaceRecognizer()
-
-model.load(LBPH_MODEL_PATH)
+    model.load(LBPH_MODEL_PATH)
 
 testImage = cv2.imread(IMAGE_PATH, 0)
 
