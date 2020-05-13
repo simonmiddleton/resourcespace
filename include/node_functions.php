@@ -275,7 +275,8 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     // Get length of language string + 2 (for ~ and :) for usuage in SQL below
     $language_string_length = (strlen($language_in_use) + 2);
 
-    $parent_sql = (trim($parent)=="") ? "parent IS NULL" : "parent = '" . escape_check($parent) . "'";
+    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = '" . escape_check($parent) . "'");
+   
     $query = "
         SELECT 
             *,
@@ -312,7 +313,8 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         array_push($return_nodes, $node);
 
-        if($recursive)
+        // No need to recurse if no parent was specified as we already have all nodes
+        if($recursive && (int)$parent > 0)
             {
             foreach(get_nodes($resource_type_field, $node['ref'], TRUE) as $sub_node)
                 {
