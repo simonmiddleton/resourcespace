@@ -200,7 +200,7 @@ $lang["myrequests"]="Meine Anfragen";
 $lang["collections"]="Kollektionen";
 $lang["mycontributions"]="Meine Beiträge";
 $lang["researchrequest"]="Suchanfrage";
-$lang["helpandadvice"]="Hilfe &amp; Unterstützung";
+$lang["helpandadvice"]="Wissensdatenbank";
 $lang["teamcentre"]="Administration";
 # footer link
 $lang["aboutus"]="Über uns";
