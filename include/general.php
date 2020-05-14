@@ -369,7 +369,7 @@ function get_resource_data($ref,$cache=true)
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
     truncate_cache_arrays();
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
-    $resource=sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
+    $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
         if ($ref>0)
@@ -391,7 +391,7 @@ function get_resource_data($ref,$cache=true)
 
                 $default_archive_state = escape_check(get_default_archive_state());
                 $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
-                $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
+                $resource = sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
                 }
             }
         }

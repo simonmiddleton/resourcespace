@@ -328,6 +328,10 @@ $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($mo
 # Load edit access level (checking edit permissions - e0,e-1 etc. and also the group 'edit filter')
 $edit_access = ($access==0 && get_edit_access($ref,$resource["archive"],$fields,$resource));
 
+# Check if resource is locked
+$resource_locked = (int)$resource["lock_user"] != 0;
+$unlock_option = checkperm("a") || ($userref == $resource["lock_user"] && $userref != $anonymous_login);
+
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
 function check_view_display_condition($fields,$n,$fields_all)		
@@ -1703,36 +1707,40 @@ hook ("resourceactions") ?>
 		hook('aftersharelink', '', array($ref, $search, $offset, $order_by, $sort, $archive));
 		}
 	if ($edit_access) 
-		{ ?>
-		<li><a href="<?php echo $baseurl ?>/pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onclick="return ModalLoad(this, true);">
-			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-edit"]?>
-		</a></li>
-		<?php 
+		{
+        echo "<li><a href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
+        if($resource_locked)
+            {
+            echo "class='DisabledLink LockedResource' disabled='disabled'";
+            }
+        echo "><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-edit"] . "</a></li>";
+
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
 			{
-			?>
-			<li>
-			<a href="<?php echo $baseurl ?>/pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return ModalLoad(this, true);">
-			<?php 
-			if ($resource["archive"]==3)
+            echo "<li><a href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
+            if($resource_locked)
+                {
+                echo "class='DisabledLink LockedResource' disabled='disabled'";
+                }
+            
+            if ($resource["archive"]==3)
 				{
-				echo "<i class='fa fa-trash'></i>&nbsp;" .$lang["action-delete_permanently"];
+				echo "><i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete_permanently"] . "</a></li>";
 				} 
 			else 
 				{
-				echo "<i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete"];
-				}?>
-			</a>
-			</li>
-			<?php 
+				echo "><i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete"] . "</a></li>";
+				} 
 			}
 		if (!$disable_alternative_files && !checkperm('A')) 
-			{ ?>
-			<li><a href="<?php echo $baseurl ?>/pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onclick="return ModalLoad(this, true);">
-			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
-			</a></li>
-			<?php 
-			}
+			{ 
+            echo "<li><a href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
+            if($resource_locked)
+                {
+                echo "class='DisabledLink LockedResource' disabled='disabled'";
+                }
+            echo "><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a></li>";
+            }
 		} 
 	// At least one field should be visible to the user otherwise it makes no sense in using this feature
 	$can_see_fields_individually = false;
