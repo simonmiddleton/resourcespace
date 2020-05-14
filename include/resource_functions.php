@@ -6052,3 +6052,44 @@ function filter_check($filterid,$nodes)
 
     return false;
     }
+
+/*
+* Update the lock status of the current resource
+* 
+* @param  int       $ref            Resource ID
+* @param  int       $lockaction     Lock action (1 = Lock, 0 = Unlock)
+* @param  int       $newlockuser    User ID to set lock for. Will default to current user if not passed
+* @param  boolean   $accesschecked  Has access to the resource already been checked (false by default)?
+* 
+* @return boolean   Success/failure
+*/
+function update_resource_lock($ref,$lockaction,$newlockuser=0,$accesschecked = false)
+    {
+    global $userref;
+
+    if($newlockuser==0)
+        {
+        $newlockuser = $userref;
+        }
+
+    if(!$accesschecked)
+        {
+        $resource_data = get_resource_data($resource);
+        $lockeduser=  $resource_data["lock_user"];
+        $edit_access = get_edit_access($resource,false,$resource_data);
+        if(!checkperm("a")
+            &&
+            $lockeduser != $userref
+            &&
+            !($edit_access && $lockeduser == 0 && !checkperm("nolock"))
+            )
+            {
+            return false;
+            }
+        }
+
+    sql_query("UPDATE resource SET lock_user='" . ($lockaction ? $newlockuser : "0") . "' WHERE ref='" . (int)$ref . "'");
+    resource_log($ref,($lockaction ? LOG_CODE_LOCKED : LOG_CODE_UNLOCKED),0);
+    return true;
+    }
+

@@ -3035,3 +3035,40 @@ function render_user_collection_select($name = "collection", $collections=array(
            
 	echo "</select>";
     }
+
+/*
+* Render the resource lock/unlock link for resource tools
+* 
+* @param  int       $ref         Resource ID
+* @param  int       $lock_user   ID of the user that locked the resource
+* @param  boolean   $editaccess  Does the user have edit access to the resource?
+* 
+* @return void
+*/
+function render_resource_lock_link($ref,$lockuser,$editaccess)
+    {
+    global $userref, $anonymous_login, $lang;
+    
+    $resource_locked = (int)$lockuser > 0;
+    if(!$resource_locked && checkperm('noex'))
+        {
+        // User is not permitted to lock resource
+        return;
+        }
+
+    $unlock_option = checkperm("a") || ($userref == $lockuser && $userref != $anonymous_login);
+    
+    echo "<li><a href='#' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' "; 
+   
+    echo "class='" . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
+    
+    if($resource_locked)
+        {
+        $locktext = $lockuser ==$userref ? $lang["action_unlock"] : $lang["status_locked"];
+        }
+    else
+        {
+        $locktext = $lang["action_lock"];
+        }    
+    echo "&nbsp;" . $locktext . "</a></li>";
+    }

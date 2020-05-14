@@ -97,6 +97,8 @@ define ('LOG_CODE_VIEWED',				'v');
 define ('LOG_CODE_DELETED',				'x');
 define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
+define ('LOG_CODE_LOCKED',              'X');
+define ('LOG_CODE_UNLOCKED',            'Y');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
 define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');

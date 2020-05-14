@@ -589,76 +589,95 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
         echo '<link href="' . $baseurl . $custom_stylesheet_external_share_path . '" rel="stylesheet" type="text/css" media="screen,projection,print" />';
     }
 }
-if ($view_panels) {
+
 ?>
-<script type="text/javascript">
+<script>
+var resource_lock_status = <?php echo (int)$resource_locked ?>;
 
-
-jQuery(document).ready(function () {		
-    
-	var comments_marker='<?php echo $comments_view_panel_show_marker?>';
-	var comments_resource_enable='<?php echo $comments_resource_enable?>';
-	var resource_comments='<?php echo $resource_comments?>';
-    
-    jQuery("#Metadata").appendTo("#Panel1");
-    jQuery("#Metadata").addClass("TabPanel");
-    
-	
-	jQuery("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo("#Titles1");
-	jQuery("#CommentsPanelHeaderRowTitle").remove();
-	jQuery("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
-	removePanel=jQuery("#Comments").parents(".RecordBox");
-	jQuery("#Comments").appendTo("#Panel1").addClass("TabPanel").hide();
-	removePanel.remove();
-	if(comments_marker==true && comments_resource_enable==true && resource_comments>'0'){
-		jQuery("[panel='Comments']").append("&#42;");
-	}
-
-    jQuery("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo("#Titles2");
-    removePanel=jQuery("#RelatedResources").parents(".RecordBox");
-    jQuery("#RelatedResources").appendTo("#Panel2").addClass("TabPanel");
-    removePanel.remove();
-    
-
-    jQuery("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo("#Titles2");
-    removePanel=jQuery("#SearchSimilar").parents(".RecordBox");
-    jQuery("#SearchSimilar").appendTo("#Panel2").addClass("TabPanel").hide();
-    removePanel.remove();
-    // if there are no related resources
-    if (jQuery("#RelatedResources").length==0) {
-        jQuery("#SearchSimilar").show();
-        jQuery("div[panel='SearchSimilar']").addClass("Selected"); 
-    }    
-    
-    // if there are no collections and themes
-    if (jQuery("#resourcecollections").is(':empty')) {
-       jQuery("div[panel='CollectionsThemes']").addClass("Selected"); 
-       jQuery("#CollectionsThemes").show(); 
-    }
-    
-    jQuery(".ViewPanelTitles").children(".Title").click(function(){
-    // function to switch tab panels
-        jQuery(this).parent().parent().children(".TabPanel").hide();
-        jQuery(this).parent().children(".Title").removeClass("Selected");
-        jQuery(this).addClass("Selected");
-        jQuery("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px");
-        jQuery("#"+jQuery(this).attr("panel")).show();
-        if (jQuery(this).attr("panel")=="Comments") {
-        jQuery("#CommentsContainer").load(
-        	"../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
-        	function() {
-        	if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
-        		jQuery(window.location.hash)[0].scrollIntoView();
-        	}						
-        );	
+function updateResourceLock(resource,lockstatus)
+    {
+    // Fire an ajax call to update the lock state and update resource tools if successful
+    jQuery.ajax({
+        type: 'POST',
+        url: '<?php echo $baseurl_short; ?>pages/ajax/user_action.php',
+        data: {
+            ajax: 'true',
+            action: 'updatelock',
+            ref: resource,
+            lock: lockstatus,
+            <?php echo generateAjaxToken('UpdateLock'); ?>
         }
     });
-    
-   
-});
+    }
+
+<?php
+if ($view_panels)
+    {
+    ?>
+    jQuery(document).ready(function () {		
+        
+        var comments_marker='<?php echo $comments_view_panel_show_marker?>';
+        var comments_resource_enable='<?php echo $comments_resource_enable?>';
+        var resource_comments='<?php echo $resource_comments?>';
+        
+        jQuery("#Metadata").appendTo("#Panel1");
+        jQuery("#Metadata").addClass("TabPanel");
+        
+        
+        jQuery("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo("#Titles1");
+        jQuery("#CommentsPanelHeaderRowTitle").remove();
+        jQuery("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
+        removePanel=jQuery("#Comments").parents(".RecordBox");
+        jQuery("#Comments").appendTo("#Panel1").addClass("TabPanel").hide();
+        removePanel.remove();
+        if(comments_marker==true && comments_resource_enable==true && resource_comments>'0'){
+            jQuery("[panel='Comments']").append("&#42;");
+        }
+
+        jQuery("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo("#Titles2");
+        removePanel=jQuery("#RelatedResources").parents(".RecordBox");
+        jQuery("#RelatedResources").appendTo("#Panel2").addClass("TabPanel");
+        removePanel.remove();
+        
+
+        jQuery("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo("#Titles2");
+        removePanel=jQuery("#SearchSimilar").parents(".RecordBox");
+        jQuery("#SearchSimilar").appendTo("#Panel2").addClass("TabPanel").hide();
+        removePanel.remove();
+        // if there are no related resources
+        if (jQuery("#RelatedResources").length==0) {
+            jQuery("#SearchSimilar").show();
+            jQuery("div[panel='SearchSimilar']").addClass("Selected"); 
+        }    
+        
+        // if there are no collections and themes
+        if (jQuery("#resourcecollections").is(':empty')) {
+        jQuery("div[panel='CollectionsThemes']").addClass("Selected"); 
+        jQuery("#CollectionsThemes").show(); 
+        }
+        
+        jQuery(".ViewPanelTitles").children(".Title").click(function(){
+        // function to switch tab panels
+            jQuery(this).parent().parent().children(".TabPanel").hide();
+            jQuery(this).parent().children(".Title").removeClass("Selected");
+            jQuery(this).addClass("Selected");
+            jQuery("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px");
+            jQuery("#"+jQuery(this).attr("panel")).show();
+            if (jQuery(this).attr("panel")=="Comments") {
+            jQuery("#CommentsContainer").load(
+                "../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
+                function() {
+                if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
+                    jQuery(window.location.hash)[0].scrollIntoView();
+                }						
+            );	
+            }
+        });
+    });
+    <?php
+    }?>
 
 </script>
-<?php } ?>
 <!--Panel for record and details-->
 <div class="RecordBox">
 <div class="RecordPanel<?php echo $use_larger_layout ? ' RecordPanelLarge' : ''; ?>">
@@ -1741,6 +1760,9 @@ hook ("resourceactions") ?>
                 }
             echo "><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a></li>";
             }
+
+        // Show the lock/unlock links only if edit access
+        render_resource_lock_link($ref,$resource['lock_user'], true);
 		} 
 	// At least one field should be visible to the user otherwise it makes no sense in using this feature
 	$can_see_fields_individually = false;
@@ -1780,7 +1802,6 @@ hook ("resourceactions") ?>
         </li>
         <?php 
         }
-
     } /* End replaceresourceactions */ 
 hook("afterresourceactions");
 hook("afterresourceactions2");

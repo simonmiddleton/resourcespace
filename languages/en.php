@@ -2873,5 +2873,7 @@ $lang["useaspreviewimage"]                  = "Use as preview image";
 $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
+$lang["action_lock"]                        = "Lock";
+$lang["action_unlock"]                      = "Unlock";
+$lang["status_locked"]                      = "Locked";
