@@ -9,7 +9,7 @@
 	$lang['doi_info_wikipedia'] = "https://de.wikipedia.org/wiki/Digital_Object_Identifier";
 	$lang['doi_info_link'] = 'zu <a target="_blank" href="https://de.wikipedia.org/wiki/Digital_Object_Identifier">DOIs generell</a>.';
 	$lang['doi_info_metadata_schema'] = 'zur Registrierung von DOIs bei DataCite finden sie in der <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Datacite-Metadaten-Schema-Dokumentation</a>.';
-	$lang['doi_info_mds_api'] = 'zur unterliegenden API von DataCite finden sie in der <a target="_blank" href="https://mds.datacite.org/static/apidoc">Datacite-API-Dokumentation</a>.';
+	$lang['doi_info_mds_api'] = 'zur unterliegenden API von DataCite finden sie in der <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite-API-Dokumentation</a>.';
 
 	$lang['doi_plugin_heading'] = 'Dieses Plugin erzeugt <a target="_blank" href="https://de.wikipedia.org/wiki/Digital_Object_Identifier">DOIs</a> für unveränderliche Sammlungsobjekte und Kollektionen und registriert diese bei <a target="_blank" href="https://www.datacite.org/about-datacite">DataCite</a>.';
 	$lang['doi_further_information'] = 'Weiterführende Informationen';
