@@ -879,6 +879,7 @@ function ShowHelp(field)
             preventautosave = false;    
             }
         });
+        
 
     function AutoSave(field)
         {
@@ -886,48 +887,10 @@ function ShowHelp(field)
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
-        
-        // counter to track number of ajax autosave operations underway
-        // if autosaveCounter does not exists - create and set value to 1, otherwise increment
-        if (jQuery("#autosaveCounter").length == 0)
-            {
-            jQuery(".BasicsBox").append("<div class='autosaveCounter' id='autosaveCounter' style='visibility:hidden'>1</div>");
-            } else
-            {
-            var autosaveCounter = parseInt(jQuery("#autosaveCounter").text()) + 1; // increment autosaveCounter
-            jQuery("#autosaveCounter").text(autosaveCounter);
-            }
+         // add transparent div to prevent user from clicking on input elements while autosave underway
+        jQuery('.BasicsBox').css("position","relative");
+        jQuery(".BasicsBox").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;background-color:transparent;\"></div>");
 
-        // add transparent div to prevent user from changing input value during autosave 
-        
-        // patterns for label @for attribute
-        var labelPattern = new Array(
-            "label[for='field_" + field + "_selector']",
-            "label[for='field_" + field + "']",
-            "label[for='field_" + field + "-d']",
-            "label[for='" + field.toLowerCase() + "']"
-             );
-
-        // get div.Question element that surrounds the input field making the AutoSave() function call using label pattern array
-        var divQuestion = "";
-        for (i = 0; i < labelPattern.length; i++) 
-            {
-            var pattern = labelPattern[i];
-            if (jQuery(pattern).length)
-                {
-                divQuestion =  jQuery(pattern).parent("div.Question");
-                break;   
-                }
-            }
-
-        // if Question element found, append transparent div overlay
-        if (divQuestion.length) 
-            {
-            divQuestion.css("position","relative");
-            var divPreventEditConflict = "preventEditConflict"  + field;
-            divQuestion.append("<div class=\"preventEditConflict\" id=\""  + divPreventEditConflict + "\"></div>");
-            }
-        
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
             function(data)
                 {
@@ -967,21 +930,10 @@ function ShowHelp(field)
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
 
-                // once autosave has completed, remove the div that prevents user input
-                if (divQuestion.length)
-                    {
-                    jQuery("div[id='" + divPreventEditConflict + "']").remove(); 
-                    jQuery(divQuestion).css("position",""); 
-                    }
-                
-                // autosave completed, decrement autosave counter
-                var autosaveCounter = parseInt(jQuery("#autosaveCounter").text()) - 1 ;
-                jQuery("#autosaveCounter").text(autosaveCounter);   
-                // if no other autosave operations underway, re-enable save button
-                if (autosaveCounter == 0) 
-                    {
-                    jQuery("input.editsave").removeAttr("disabled");  // re-enable save button
-                    }
+                // once autosave has completed, remove the div that prevents user input, and re-enable save button
+                jQuery('.BasicsBox').css("position","");   
+                jQuery('.BasicsBox div#prevent_edit_conflict').remove();  
+                jQuery("input.editsave").removeAttr("disabled");  
                 });
 	    }
 <?php 
@@ -1036,23 +988,15 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
                 type="submit"
                 value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
 
-        <?php
-        
-        // disable form save button on input form field value change
-        // only needed with regular resource edit when autosave enabled
-        if(($ref > 0) && !$upload_review_mode && $edit_autosave)
-            {
-        ?>
             <script>
-            // input fields, on change, disable submit button, prevent edit conflict 
+            <!-- input fields, on change, disable submit button, prevent edit conflict -->
             jQuery(document).ready(function(){
-                jQuery("div.BasicsBox").find("input,textarea,select").change(function (e)
+                jQuery("input,textarea,select").change(function (e)
                     {  jQuery("input.editsave").attr("disabled", true);    });
                     });
             </script>
 
         <?php
-            }
             
         if($upload_review_mode)
             {
