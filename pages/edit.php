@@ -774,7 +774,6 @@ registerCollapsibleSections();
 
 jQuery(document).ready(function()
 {
-
    <?php
    if($ctrls_to_save)
      {?>
@@ -881,16 +880,29 @@ function ShowHelp(field)
         });
         
 
-    function AutoSave(field)
+    function AutoSave(field, stop_recurrence)
         {
-        if(preventautosave) return false;
+        stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
+
+        // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
+        // lead to edit conflicts.
+        if(!preventautosave && !stop_recurrence)
+            {
+            setTimeout(function()
+                {
+                AutoSave(field, true);
+                }, 150);
+
+            return false;
+            }
+
+        if(preventautosave)
+            {
+            return false;
+            }
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
-         // add transparent div to prevent user from clicking on input elements while autosave underway
-        jQuery('.BasicsBox').css("position","relative");
-        jQuery(".BasicsBox").append("<div id=\"prevent_edit_conflict\" style=\"z-index:10000;position:absolute;left:0;right:0;top:0;bottom:0;background-color:transparent;\"></div>");
-
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
             function(data)
                 {
@@ -898,7 +910,7 @@ function ShowHelp(field)
                 if (saveresult['result']=="SAVED")
                     {
                     jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow'); 
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
                         for (var i in saveresult['checksums']) 
@@ -929,15 +941,9 @@ function ShowHelp(field)
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
-
-                // once autosave has completed, remove the div that prevents user input, and re-enable save button
-                jQuery('.BasicsBox').css("position","");   
-                jQuery('.BasicsBox div#prevent_edit_conflict').remove();  
-                jQuery("input.editsave").removeAttr("disabled");  
                 });
-	    }
-<?php 
-    } 
+	}
+<?php } 
 
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
@@ -981,23 +987,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             {
             echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
-            ?>  
+            ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
-                name="save"
-                class="editsave"
-                type="submit"
-                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
-
-            <script>
-            <!-- input fields, on change, disable submit button, prevent edit conflict -->
-            jQuery(document).ready(function(){
-                jQuery("input,textarea,select").change(function (e)
-                    {  jQuery("input.editsave").attr("disabled", true);    });
-                    });
-            </script>
-
+               name="save"
+               class="editsave"
+               type="submit"
+               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
         <?php
-            
         if($upload_review_mode)
             {
             ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
@@ -2201,6 +2197,7 @@ hook('aftereditcollapsiblesection');
                         value: "true" }));}
                 );
 </script>
+
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
@@ -2215,7 +2212,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   </script>
   <?php
   }
-   
+
 hook("autolivejs");
 
 include "../include/footer.php";
