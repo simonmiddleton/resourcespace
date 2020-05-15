@@ -903,7 +903,11 @@ function ShowHelp(field)
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
-        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
+        
+        formdata = jQuery('#mainform').serialize();
+        // Clear checksum to prevent edit conflicts for this field if they perform multiple subsequent edits
+        jQuery("#field_" + field + "_checksum").val('');
+        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,formdata,
             function(data)
                 {
                 saveresult=JSON.parse(data);
