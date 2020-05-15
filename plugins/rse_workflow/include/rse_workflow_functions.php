@@ -126,3 +126,40 @@ if (!function_exists("rse_workflow_delete_state")){
         return true;  
         }
     } 
+
+/**
+* Validate list of actions for a resource or a batch of resources. For a batch of 
+* resources, an action is valid if 
+* 
+* @param array $actions List of workflow actions (@see rse_workflow_get_actions())
+* 
+* @return array
+*/
+function rse_workflow_get_valid_actions(array $actions)
+    {
+    // $resource, $edit_access are used only on the view page to determine valid actions for a resource
+    global $resource, $edit_access;
+
+    return array_filter($actions, function($action) use ($resource, $edit_access)
+        {
+        $valid_states = explode(',', $action['statusfrom']); 
+
+        // todo: cater for batch of resources (we don't check in that case)
+        // @todo: establish how we handle the UX:
+        // 1. provide options even if action will affect just a subset? Also display how many it will affect
+        // 2. show options only when all criteria match for all resources (e.g allow_multi_edit and all resources in Active state)
+        $resource_in_valid_state = in_array($resource['archive'], $valid_states);
+        $check_edit_access = ($edit_access && checkperm("e{$action['statusto']}"));
+
+        // if checking valid actions for batch
+        // $check_valid_states = ;
+        // $check_edit_access = false; # 
+
+        // Provide workflow action option if user has access to it without having edit access to resource
+        // Use case: a particular user group doesn't have access to the archive state but still needs to be
+        // able to move the resource to a different state.
+        $checkperm_wf = checkperm("wf{$action['ref']}");
+
+        return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
+        });
+    }

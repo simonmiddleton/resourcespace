@@ -202,3 +202,73 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         }
     /*****END OF NOTIFY CONTRIBUTOR*****/    
     }
+
+
+function HookRse_workflowAllRender_actions_add_collection_option($top_actions, array $options)
+    {
+    global $baseurl_short, $lang, $pagename, $collection, $count_result;
+
+    if($pagename == "collections" && $count_result == 0)
+        {
+        return false;
+        }
+
+    // @todo: establish how we handle the UX:
+    // 1. provide options even if action will affect just a subset? Also display how many it will affect
+    // 2. show options only when all criteria match for all resources (e.g allow_multi_edit and all resources in Active state)
+
+    // $resources = array();
+    // foreach(get_collection_resources($collection) as $resource_ref)
+    //     {
+    //     $resource_data = get_resource_data($resource_ref);
+    //     if(!get_edit_access($resource_ref, $resource_data["archive"], false, $resource_data))
+    //         {
+    //         continue;
+    //         }
+
+    //     $resources[] = $resource_data;
+    //     }
+
+    // or use global $edit_access = allow_multi_edit($collection);
+
+
+    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions());
+    if(empty($valid_actions))
+        {
+        return false;
+        }
+
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
+    foreach($valid_actions as $action)
+        {
+        $option = array(
+            "value" => "unified_action_collection_wf_{$action["ref"]}",
+            "label" => i18n_get_translated($action["buttontext"]),
+            "data_attr" => array(
+                "url" => generateURL("{$baseurl_short}plugins/video_splice/pages/splice.php", array("collection" => $collection)),
+            ),
+            "category" => ACTIONGROUP_EDIT
+        );
+
+        $options[] = $option;
+        }
+
+    return $options;
+    }
+
+function HookRse_workflowAllRender_actions_add_option_js_case()
+    {
+    // implement handler for valid actions
+    // use a dialog for confirmation and make request to edit.php to batch edit resources.
+    ?>
+    case 'HookRse_workflowAllRender_actions_add_option_js_case':
+        console.log("NOT implemented");
+        break;
+    <?php
+    return;
+    }
