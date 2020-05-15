@@ -363,7 +363,10 @@ function get_resource_path(
 $GLOBALS['get_resource_data_cache'] = array();
 function get_resource_data($ref,$cache=true)
     {
-    if ($ref==""){return false;}
+    if ((string)(int)$ref != (string)$ref)
+        {
+        return false;
+        }
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
