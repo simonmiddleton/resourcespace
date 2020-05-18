@@ -255,7 +255,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             $resourcerefs = array($newref);
             }
         
-        array_push($messages," - " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs));
+        array_push($messages," Line " . $line_count . ": " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs));
         
 		$cell_count=-1;
 		$workflow_states = get_editable_states($userref);
@@ -464,7 +464,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $nodes_to_remove    = array();
                 if ($processcsv)
                     {
-                    //echo "" . ($processcsv ? "Updating" : "Update") . " resource " . $resource_id . ", field '" . $fieldid . "' with value '" . $cell_value . "'<br/>";
+                    array_push($messages, " - Updated field '" . $fieldid . "' (" . $field_def['title'] . ") with value '" . $cell_value . "'");
                     if($field_def['type']==FIELD_TYPE_DATE_RANGE)
                         {
                         # each value will be a node so we end up with a pair of nodes to represent the start and end dates
@@ -563,7 +563,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                         $joins = get_resource_table_joins();
                         if(in_array($fieldid, $joins))
                             {
-                            sql_query("UPDATE resource SET field{$fieldid} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
+                            sql_query("UPDATE resource SET field{$fieldid} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$resource_id}'");
                             }
                         }
                     }
@@ -595,7 +595,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 		return false;
         }
 
-	array_push($messages,"Info: data successfully validated");
+	array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
 
 	ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 	return true;
