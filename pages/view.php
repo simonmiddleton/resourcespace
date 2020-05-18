@@ -2054,7 +2054,7 @@ if (count($result)>0)
 				// Don't show this type again.
 				continue;
 				}
-        $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","");
+        $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","", "schema");
 		$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 		?><!--Panel for related resources-->
 		<div class="RecordBox">

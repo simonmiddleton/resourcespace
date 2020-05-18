@@ -1010,7 +1010,7 @@ function extract_exif_comment($ref,$extension="")
             #echo "<pre>IPTC\n";print_r($iptc);exit();
 
             # Look for iptc fields, and insert.
-            $fields=sql_query("select * from resource_type_field where length(iptc_equiv)>0");
+            $fields=sql_query("select * from resource_type_field where length(iptc_equiv)>0", "schema");
             for ($n=0;$n<count($fields);$n++)
                 {
                 $iptc_equiv=$fields[$n]["iptc_equiv"];

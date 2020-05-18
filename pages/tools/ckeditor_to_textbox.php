@@ -30,7 +30,7 @@ if ($fieldrefs==0){
 else {
 	$fields=explode(",",$fieldrefs);
 	foreach ($fields as $field){
-		$field_data=sql_query("select * from resource_type_field where ref=$field");
+		$field_data=sql_query("select * from resource_type_field where ref=$field", "schema");
 		if(!empty($field_data)){
 			$field_data=$field_data[0];
 		}

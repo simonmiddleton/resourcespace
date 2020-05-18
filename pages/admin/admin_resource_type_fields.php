@@ -90,7 +90,7 @@ function addColumnHeader($orderName, $labelKey)
     }
  
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
-$resource_types=sql_query("select ref, name from resource_type");
+$resource_types=sql_query("select ref, name from resource_type", "schema");
 $arr_restypes=array();
 foreach($resource_types as $resource_type)
     {

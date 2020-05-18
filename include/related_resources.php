@@ -28,14 +28,14 @@ if ($enable_related_resources)
 				}
 
 			// Show only related resource types that match the tab name:
-			$resource_type_tab_name = sql_value('SELECT tab_name AS value FROM resource_type WHERE ref = ' . $rtype, '');
+			$resource_type_tab_name = sql_value('SELECT tab_name AS value FROM resource_type WHERE ref = ' . $rtype, '', "schema");
 			if($tabname !== $resource_type_tab_name)
 				{
 				continue;
 				}
 			
 			
-			$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","");
+			$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","", "schema");
 			$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 				
 			if(isset($related_type_thumbnail_view) && in_array($rtype,$related_type_thumbnail_view))

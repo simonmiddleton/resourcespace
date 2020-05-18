@@ -1010,7 +1010,7 @@ if ($count_result>0)
 				$title_field=$metadata_template_title_field;
 				}	
 			}	
-		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","");
+		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
 		if($field_type==8){
 			$title=strip_tags($title);
 			$title=str_replace("&nbsp;"," ",$title);

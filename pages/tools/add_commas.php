@@ -15,7 +15,7 @@ if('cli' != PHP_SAPI)
     }
 include "../../include/resource_functions.php";
 
-$resource_type_fields=sql_query("select ref from resource_type_field where type=3");
+$resource_type_fields=sql_query("select ref from resource_type_field where type=3", "schema");
 $joins=get_resource_table_joins();
 
 for($n=0;$n<count($resource_type_fields);$n++){

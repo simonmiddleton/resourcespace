@@ -1348,7 +1348,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     // NOTE: this does not apply to user template resources (negative ID resource)
     if($resourcefrom > 0)
         {
-        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", 0);
+        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
         $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
         }
 
@@ -1393,7 +1393,7 @@ function copy_resource_type_field_nodes($from, $to)
     global $FIXED_LIST_FIELD_TYPES;
 
     // Since field has been copied, they are both the same, so we only need to check the from field
-    $type = sql_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = '{$from}'", 0);
+    $type = sql_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = '{$from}'", 0, "schema");
 
     if(!in_array($type, $FIXED_LIST_FIELD_TYPES))
         {

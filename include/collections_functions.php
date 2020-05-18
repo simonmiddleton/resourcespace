@@ -1057,7 +1057,7 @@ function get_themes($themes=array(""),$subthemes=false)
 function get_smart_theme_headers()
 	{
 	# Returns a list of smart theme headers, which are basically fields with a 'smart theme name' set.
-	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name");
+	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "schema");
 	}
 
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null)

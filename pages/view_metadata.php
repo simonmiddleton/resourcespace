@@ -39,7 +39,7 @@ if ($sort_tabs)
 
 if(isset($related_type_show_with_data)) {
 	// Get resource type tab names, excluding the current resource type (if any set):
-	$resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type WHERE ref<>'" . $resource['resource_type'] . "'", "");
+	$resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type WHERE ref<>'" . $resource['resource_type'] . "'", "schema");
 	$resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
 
 	// These are the tab names which will be rendered for the resource specified:

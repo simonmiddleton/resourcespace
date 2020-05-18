@@ -2622,7 +2622,7 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
 		}
         
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name");
+    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
     
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";

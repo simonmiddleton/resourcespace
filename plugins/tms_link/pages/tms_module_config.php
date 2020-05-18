@@ -155,7 +155,7 @@ include '../../../include/header.php';
                             <select class="medwidth" name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][rs_field]">
                                 <option value=""><?php echo $lang['select']; ?></option>
                         <?php
-                        $fields = sql_query('SELECT * FROM resource_type_field ORDER BY title, name');
+                        $fields = sql_query('SELECT * FROM resource_type_field ORDER BY title, name', "schema");
                         foreach($fields as $field)
                             {
                             $selected = ($tms_rs_mapping['rs_field'] == $field['ref'] ? ' selected' : '');
@@ -199,7 +199,7 @@ include '../../../include/header.php';
                 new_row_html += '<td><select class="medwidth" name="tms_rs_mappings[' + row_index + '][rs_field]">';
                 new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
                 <?php
-                $fields = sql_query('SELECT * FROM resource_type_field ORDER BY title, name');
+                $fields = sql_query('SELECT * FROM resource_type_field ORDER BY title, name', "schema");
                 foreach($fields as $field)
                     {
                     $option_text = lang_or_i18n_get_translated($field['title'], 'fieldtitle-');

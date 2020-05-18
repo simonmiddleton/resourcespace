@@ -71,7 +71,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 	global $lang;
  	
 	$addconstraint=true;
-	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);
+	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0, "schema");
 	?>
 		<div class="clearerleft"></div>
 	</div> <!-- end question -->
@@ -540,7 +540,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=sql_query("select ref, name from resource_type");
+$resource_types=sql_query("select ref, name from resource_type", "schema");
 foreach($resource_types as $resource_type)
 	{
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
