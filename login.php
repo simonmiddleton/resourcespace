@@ -128,6 +128,13 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
         trigger_error($lang["error-csrf-verification-failed"]);
         }
 
+    // Clear out special "COLLECTION_TYPE_SELECTION" collection
+    $user_selection_collection = get_user_selection_collection(sql_value("SELECT ref AS `value` FROM user WHERE session = '{$session}'", null));
+    if(!is_null($user_selection_collection) && count(get_collection_resources($user_selection_collection)) > 0)
+        {
+        remove_all_resources_from_collection($user_selection_collection);
+        }
+
     sql_query("UPDATE user SET logged_in = 0, session = NULL, csrf_token = NULL WHERE session = '{$session}'");
     hook("removeuseridcookie");
     #blank cookie
@@ -145,7 +152,7 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     rs_setcookie('saved_offset', '', 0, $baseurl_short . 'pages');
     rs_setcookie('saved_archive', '', 0, $baseurl_short . 'pages');
     rs_setcookie('restypes', '', 0, $baseurl_short . 'pages');
-    
+
     unset($username);
 	
 	hook("postlogout");

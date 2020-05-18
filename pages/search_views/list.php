@@ -1,25 +1,31 @@
-<?php 
+<?php
+$class = array();
+if($use_selection_collection && in_array($ref, $selection_collection_resources))
+    {
+    $class[] = "Selected";
+    }
+
+$html_class = (empty($class) ? "" : 'class="' . implode(" ", $class) . '"');
+
 if (!hook("replacelistitem")) 
     { ?>
     <!--List Item-->
-    <tr id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php hook("listviewrowstyle");?>>
+    <tr id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo $html_class; hook("listviewrowstyle");?>>
     <?php 
     if(!hook("listcheckboxes"))
         {
-        if ($use_checkboxes_for_selection)
+        if ($use_selection_collection)
             {
             if(!in_array($result[$n]['resource_type'],$collection_block_restypes))
                 {?>
                 <td width="30px">
                     <input 
                         type="checkbox" 
-                        style="position:relative;margin-bottom:-4px;top:-3px;height:21px;" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect" 
-                        <?php 
-                        if (in_array($ref,$collectionresources))
-                            { ?>checked<?php } ?> 
-                        onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')==false) { RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); <?php if (isset($collection)){?>document.location.href='?search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&offset=<?php echo urlencode($offset)?>';<?php } ?> }"
+                        data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
+                        <?php if (in_array($ref, $selection_collection_resources)) { ?> checked <?php } ?> 
+                        onclick="return ToggleCollectionResourceSelection(event, <?php echo $USER_SELECTION_COLLECTION; ?>);"
                     >
                 </td>
                 <?php 
@@ -27,8 +33,7 @@ if (!hook("replacelistitem"))
             else
                 {
                 ?>
-                <td width="30px">
-                </td>
+                <td width="30px"></td>
                 <?php
                 }
             }

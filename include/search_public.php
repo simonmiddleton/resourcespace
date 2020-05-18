@@ -78,7 +78,7 @@ for ($n=0;$n<count($collections);$n++)
 		?>
 		<tr <?php hook("collectionlistrowstyle");?>>
 		<?php hook ("listsearchpubliccheckboxes");
-		if ($use_checkboxes_for_selection){echo "<td></td>";}
+		if ($use_selection_collection){echo "<td></td>";}
 		if (!isset($collections[$n]['savedsearch'])||(isset($collections[$n]['savedsearch'])&&$collections[$n]['savedsearch']==null))
 			{
 			$collection_prefix = $lang["collection"] . ": ";

@@ -151,7 +151,6 @@ include "../../include/header.php";
         true
     );
     
-    $page_def[] = config_add_boolean_select('use_checkboxes_for_selection', $lang['userpreference_use_checkboxes_for_selection_label'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_html('</div>');
 

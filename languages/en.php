@@ -517,6 +517,7 @@ $lang["youfound"]="You found"; # e.g. you found 17 resources
 $lang["youfoundresources"]="resources"; # e.g. you found 17 resources
 $lang["youfoundresource"]="resource"; # e.g. you found 1 resource
 $lang["youfoundresults"]="results"; # e.g. you found 17 resources
+$lang["selected"] = "selected";
 $lang["youfoundresult"]="result"; # e.g. you found 1 resource
 $lang["display"]="Display"; # e.g. Display: thumbnails / list
 $lang["sortorder"]="Sort order";
@@ -875,6 +876,8 @@ $lang['upload_here'] = "Upload here";
 $lang['help-tooltip'] = "Get more information on this page";
 $lang["unauthorized"] = "Unauthorized";
 $lang["warning_duplicate_shortname_fields"] = "There is already a resource type field with the same shortname. Please make it unique!";
+$lang["edit_selected"] = "Edit selected";
+$lang["clear_selected"] = "Clear selected";
 
 # Pager
 $lang["next"]="Next";
@@ -928,6 +931,7 @@ $lang["plugin_field_fmt"]="%A (%B)"; // %A and %B are replaced by content define
 
 #Sharing
 $lang["share"]="Share";
+$lang["share_selected"] = "Share selected";
 $lang["sharecollection"]="Share collection";
 $lang["sharecollection-name"]="Share collection - %collectionname"; # %collectionname will be replaced, e.g. Share Collection - Cars
 $lang["share_theme_category"]="Share featured collection category";
@@ -975,7 +979,9 @@ $lang['email_error_user_list_not_valid'] = 'No valid emails to send to (users mi
 
 # New for 1.3
 $lang["savesearchitemstocollection"]="Save results to collection";
+$lang["add_selected_to_collection"] = "Add selected to collection";
 $lang["removeallresourcesfromcollection"]="Remove all resources from this collection";
+$lang["remove_selected_from_collection"] = "Remove selected from collection";
 $lang['deleteallresourcesfromcollection'] = 'Delete all resources';
 $lang["deleteallsure"]="Are you sure you wish to DELETE these resources? This will delete the resources themselves, not just remove them from this collection.";
 $lang["batchdonotaddcollection"]="(do not add to a collection)";
@@ -1033,6 +1039,7 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang["relate_selected_resources"] = "Relate selected resources";
 $lang['relateallresources_confirmation'] = 'All resources in this collection are now related';
 
 # New for 1.5
@@ -1847,6 +1854,8 @@ $lang["error-403-forbidden"] = "403 Forbidden.";
 $lang["error-plugin-not-activated"] = "Plugin not activated";
 $lang["error-failed-to-delete"] = "Failed to delete";
 $lang["error-failed-to-move"] = "Failed to move";
+$lang["error-request-missing-key"] = "Request missing the '%key' parameter."; # %key will be replaced with the missing POST param name required
+$lang["error-collection-unreadable"] = "Your user doesn't have read access to collection #%ref."; # %ref will be replaced with the actual collection ref
 
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
@@ -1913,6 +1922,7 @@ $lang["requestassignedtoyoumail"]="A resource request has been assigned to you f
 
 $lang["manageresources-overquota"]="Resource management disabled - you have exceeded your disk usage quota";
 $lang["searchitemsdiskusage"]="Disk space used by results";
+$lang["selected_items_disk_usage"] = "Disk space used by selected";
 $lang['collection_disk_usage'] = 'Disk space used by all resources';
 $lang["matchingresourceslabel"]="Matching resources";
 

@@ -66,9 +66,6 @@ if($emptycollection!='' && getvalescaped("submitted","")=='removeall' && getval(
     {
     remove_all_resources_from_collection($emptycollection);
     }
-    
-# Disable checkboxes for external users.
-if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
 
 if(!isset($thumbs))
     {
@@ -738,38 +735,6 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 			}
 		}
 	}
-
-if(!hook("clearmaincheckboxesfromcollectionframe")){
-	if ($use_checkboxes_for_selection ){?>
-	
-	<script>
-	var checkboxes=jQuery('input.checkselect');
-	//clear all
-	checkboxes.each(function(box){
-		jQuery(checkboxes[box]).prop('checked',false);
-		jQuery(checkboxes[box]).change();
-	});
-	</script>
-<?php }
-} // end hook clearmaincheckboxesfromcollectionframe
-
-if(!hook("updatemaincheckboxesfromcollectionframe")){
-		
-	if ($use_checkboxes_for_selection){?>
-	<script><?php
-	# update checkboxes in main window
-	for ($n=0;$n<count($results_all);$n++)			
-		{
-		$ref=$results_all[$n]["ref"];
-		?>
-		if (jQuery('#check<?php echo htmlspecialchars($ref) ?>')){
-		jQuery('#check<?php echo htmlspecialchars($ref) ?>').prop('checked',true);
-		}
-			
-	<?php }
-	} ?></script><?php
-}# end hook updatemaincheckboxesfromcollectionframe
-
 ?><div><?php
 
 if (true) { // draw both

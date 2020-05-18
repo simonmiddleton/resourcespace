@@ -2434,9 +2434,6 @@ $site_text_custom_create=false;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
-# Use checkboxes for selecting resources 
-$use_checkboxes_for_selection=false;
-
 # allow player for mp3 files
 # player docs at http://flash-mp3-player.net/players/maxi/
 # Updated October 2015 so will use VideoJS if enabled ($videojs=true;)

@@ -2416,7 +2416,7 @@ function setup_user($userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $search_filter_nodes;
+           $user_dl_limit,$user_dl_days, $search_filter_nodes, $USER_SELECTION_COLLECTION;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -2476,7 +2476,9 @@ function setup_user($userdata)
 			}		
 		}
 	else
-		{	
+		{
+        include_once "collections_functions.php";
+
 		$usercollection=$userdata["current_collection"];
 		// Check collection actually exists
 		$validcollection=$userdata["current_collection_valid"];
@@ -2494,12 +2496,18 @@ function setup_user($userdata)
 		if ($usercollection==0 || !is_numeric($usercollection))
 			{
 			# Create a collection for this user
-			include_once "collections_functions.php"; # Make sure collections functions are included before create_collection
 			# The collection name is translated when displayed!
 			$usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
 			# set this to be the user's current collection
 			sql_query("update user set current_collection='$usercollection' where ref='$userref'");
 			}
+
+        $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
+        if(is_null($USER_SELECTION_COLLECTION))
+            {
+            $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
+            update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
+            }
 		}
 
         $newfilter = false;

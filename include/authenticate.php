@@ -390,11 +390,12 @@ if(
 
     if(filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN))
         {
+        include_once dirname(__FILE__) . "/ajax_functions.php";
         $return['error'] = array(
             'title'  => $lang["error-csrf-verification"],
             'detail' => $lang["error-csrf-verification-failed"]);
 
-        echo json_encode($return);
+        echo json_encode(array_merge($return, ajax_response_fail(ajax_build_message($lang["error-csrf-verification-failed"]))));
         exit();
         }
 

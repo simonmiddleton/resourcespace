@@ -37,7 +37,16 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
  
 		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
 		}
-    
+
+    if($sql == "")
+        {
+        $sql = "WHERE c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
+        }
+    else
+        {
+        $sql .= "AND c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
+        }
+
     # Include themes in my collecions? 
     # Only filter out themes if $themes_in_my_collections is set to false in config.php
    	global $themes_in_my_collections;
@@ -3463,4 +3472,71 @@ function relate_all_collection($collection, $checkperms = true)
             }
         }
     return true;
+    }
+
+
+/**
+* Update collection type for one collection or batch
+* 
+* @param  integer|array  $cid   Collection ID -or- list of collection IDs
+* @param  integer        $type  Collection type. @see include/definitions.php for available options
+* 
+* @return boolean
+*/
+function update_collection_type($cid, $type)
+    {
+    debug_function_call("update_collection_type", func_get_args());
+
+    if(!is_array($cid))
+        {
+        $cid = array($cid);
+        }
+
+    $cid = array_filter($cid, "is_numeric");
+
+    if(empty($cid))
+        {
+        return false;
+        }
+
+    if(!in_array($type, definitions_get_by_prefix("COLLECTION_TYPE")))
+        {
+        return false;
+        }
+
+    foreach($cid as $ref)
+        {
+        collection_log($ref, LOG_CODE_EDITED, "", "Update collection type to '{$type}'");
+        }
+
+    $cid_list = "'" . implode("', '", $cid) . "'";
+
+    sql_query("UPDATE collection SET `type` = '{$type}' WHERE ref IN ({$cid_list})");
+
+    return true;
+    }
+
+
+/**
+* Get a users' collection of type SELECTION.
+* 
+* There can only be one collection of this type per user. If more, the first one found will be used instead.
+* 
+* @param integer  $user  User ID
+* 
+* @return null|integer  Returns NULL if none found or the collection ID
+*/
+function get_user_selection_collection($user)
+    {
+    if(!is_numeric($user))
+        {
+        return null;
+        }
+
+    $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' ORDER BY ref ASC",
+        escape_check($user),
+        COLLECTION_TYPE_SELECTION
+    );
+
+    return sql_value($sql, null);
     }
