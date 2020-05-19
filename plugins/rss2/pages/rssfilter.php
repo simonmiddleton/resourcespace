@@ -135,7 +135,7 @@ for ($n=0;$n<count($result);$n++)
 	{
 	$ref=$result[$n]["ref"];
 	$title=xml_entities(i18n_get_translated($result[$n]["field".$view_title_field]));
-	$creation_date=$result[$n]["field".$date_field];
+	$creation_date=$result[$n]["creation_date"];
 	
 	//echo $time = time();//date("r");
 	
