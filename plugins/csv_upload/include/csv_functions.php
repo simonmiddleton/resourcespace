@@ -604,7 +604,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
 function csv_upload_get_info($filename, &$messages)
 	{
-	//$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");
+	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");
 
     global $lang;
 
