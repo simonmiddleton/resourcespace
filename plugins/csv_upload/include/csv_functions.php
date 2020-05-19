@@ -105,9 +105,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             // Check that this is a valid resource type    
             if(trim($resource_type_set) != "" && !in_array($resource_type_set,array_keys($resource_types)))
                 {
-                array_push ($messages,"Error: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line));
+                array_push ($messages,"Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line));
                 $error_count++;
-                continue;
+                $resource_type_set = $csv_set_options["resource_type_default"];
                 }
 
             $processed_columns[] = $csv_set_options["resource_type_column"];
