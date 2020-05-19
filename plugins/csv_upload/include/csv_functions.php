@@ -288,13 +288,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     (
                     $resource_type_set != 0
                     &&
-                    !in_array($resource_type_set,$allfields[$field["ref"]]["resource_types"])
+                    isset($allfields[$csv_set_options["fieldmapping"][$column_id]])
+                    &&
+                    !in_array($resource_type_set,$allfields[$csv_set_options["fieldmapping"][$column_id]]["resource_types"])
                     )
                 )
                 {
                 $cell_count++;
 
-                //array_push($messages, "skipping column  " . $column_id . "(" . implode(",",$allfields[$field["ref"]]["resource_types"]));
+                //array_push($messages, "skipping column  " . $column_id . " as it does not apply to this resource type");
                 continue;
                 }
 
