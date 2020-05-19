@@ -1753,7 +1753,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     $welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
     if (trim($welcome)!="") {$welcome.="\n\n";}
 
-    $templatevars['welcome']  = i18n_get_translated($welcome);
+    $templatevars['welcome']  = i18n_get_translated($welcome, false);
     $templatevars['username'] = $username;
 
     if (trim($email_url_save_user)!="")
@@ -1809,7 +1809,7 @@ function email_reset_link($email,$newuser=false)
             $welcome .= "\n\n";
             }
 
-        $templatevars['welcome']=i18n_get_translated($welcome);
+        $templatevars['welcome']=i18n_get_translated($welcome, false);
 
         $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
         send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
