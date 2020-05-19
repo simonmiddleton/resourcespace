@@ -34,10 +34,10 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 <?php 
 if ($include_rs_header_info)
     {?>
-    <!--<?php hook("copyrightinsert");?>
+    <!--
     ResourceSpace version <?php echo $productversion?>
 
-    For copyright and license information see documentation/licenses/resourcespace.txt
+    For copyright and license information see /documentation/licenses/resourcespace.txt
     https://www.resourcespace.com
     -->
     <?php 
