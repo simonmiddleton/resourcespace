@@ -207,9 +207,6 @@ $linkedheaderimgsrc="";
 # Change the Header Logo link to another address by uncommenting and setting the variable below
 # $header_link_url=http://my-alternative-header-link
 
-# Include ResourceSpace version header in View Source
-$include_rs_header_info=true;
-
 # Used for specifying custom colours for header 
 $header_colour_style_override='';
 $header_link_style_override='';
