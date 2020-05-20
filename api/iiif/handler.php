@@ -415,7 +415,7 @@ else
             {
             //$errorcode=404;
             $errors[] = "Missing or invalid identifier";
-            //$errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode("",$preview_tile_scale_factors) . ".";
+            //$errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
             iiif_error(404,$errors);
             }
         } // End of image API
