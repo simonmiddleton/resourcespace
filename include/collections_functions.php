@@ -337,7 +337,12 @@ function collection_readable($collection)
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
 	$collectiondata=get_collection($collection);
-	
+
+    if($collectiondata === false)
+        {
+        return false;
+        }
+
 	# Load a list of attached users
 	$attached=sql_array("select user value from user_collection where collection='$collection'");
 	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
