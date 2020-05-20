@@ -106,7 +106,7 @@ $restypedata=sql_query ("
         FROM resource_type
        WHERE ref = '{$ref}'
     ORDER BY `name`
-");
+", "schema");
 $restypedata=$restypedata[0];
 
 $inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ? 'checked' : '');

@@ -48,10 +48,15 @@ if (!hook("renderresultthumb"))
         $br = '<br />';
         }; 
 
+    $class = array();
+    if($use_selection_collection && in_array($ref, $selection_collection_resources))
+        {
+        $class[] = "Selected";
+        }
     ?>
 
     <!--Resource Panel -->    
-    <div class="ResourcePanel <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
+    <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
     >
         <?php  
@@ -346,12 +351,12 @@ if (!hook("renderresultthumb"))
         ?>
         <!-- Checkboxes -->
         <div class="ResourcePanelIcons">
-            <?php
-            hook("thumblistextras");  // add icons for resourceconnect
+        <?php
+        hook("thumblistextras");  // add icons for resourceconnect
 
-            if(!hook("thumbscheckboxes"))
+        if($use_selection_collection)
             {
-            if ($use_checkboxes_for_selection)
+            if(!hook("thumbscheckboxes"))
                 {
                 if(!in_array($result[$n]['resource_type'],$collection_block_restypes))  
                     {?>
@@ -359,24 +364,25 @@ if (!hook("renderresultthumb"))
                         type="checkbox" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect" 
+                        data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
                         <?php 
-                        if (in_array($ref,$collectionresources))
+                        if (in_array($ref, $selection_collection_resources))
                             { ?>
                             checked
                             <?php 
                             } ?> 
-                        onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')==false){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+                        onclick="return ToggleCollectionResourceSelection(event, <?php echo $USER_SELECTION_COLLECTION; ?>);"
                     >
                     <?php 
                     }
                 else
                     {
                     ?>
-                    <input type="checkbox" style="opacity: 0;">
+                    <input type="checkbox" class="checkselect" style="opacity: 0;">
                     <?php
                     }
-                }
-            } # end hook thumbscheckboxes
+                } # end hook thumbscheckboxes
+            }
         if(!hook("replacethumbsidinthumbnail"))
             {
             if ($display_resource_id_in_thumbnail && $ref>0) 

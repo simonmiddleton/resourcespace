@@ -891,17 +891,38 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     }
                 }
     
-            $actions_array = array_merge($collection_actions_array, $search_actions_array);
-            
+            /**
+            * @var A global variable that allows other parts in ResourceSpace to append extra options to the actions 
+            * unified dropdown (plugins can use existing hooks). It is recommended to unset it after calling render_actions()
+            */
+            $render_actions_extra_options = array();
+            if(
+                isset($GLOBALS["render_actions_extra_options"])
+                && is_array($GLOBALS["render_actions_extra_options"])
+                && !empty($GLOBALS["render_actions_extra_options"]))
+                {
+                $render_actions_extra_options = $GLOBALS["render_actions_extra_options"];
+                }
+
+            $actions_array = array_merge($collection_actions_array, $search_actions_array, $render_actions_extra_options);
+
             $modify_actions_array = hook('modify_unified_dropdown_actions_options', '', array($actions_array,$top_actions));
 
-	if(!empty($modify_actions_array))
+            if(!empty($modify_actions_array))
                 {
                 $actions_array = $modify_actions_array;
                 }
 
+            /**
+            * @var A global variable that allows other parts in ResourceSpace to filter actions options (plugins can use 
+            * existing hooks). It is recommended to unset it after calling render_actions()
+            */
+            if(isset($GLOBALS["render_actions_filter"]) && is_callable($GLOBALS["render_actions_filter"]))
+                {
+                $actions_array = array_filter($actions_array, $GLOBALS["render_actions_filter"]);
+                }
+
             // Sort array into category groups
-           
             usort($actions_array, function($a, $b){
                if(isset($a['category']) && isset($b['category']))
                     {
@@ -1174,7 +1195,22 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
                 default:
                     var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
-                    CentralSpaceLoad(option_url, true);
+                    var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
+
+                    // If action option has a defined data-callback attribute, then we can call it
+                    // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
+                    // generate the callbacks - key point is "generate"
+                    if(typeof option_callback !== "undefined")
+                        {
+                        eval(option_callback);
+                        }
+
+                    // If action option has a defined data-url attribute, then we can CentralSpaceLoad it
+                    if(typeof option_url !== "undefined")
+                        {
+                        CentralSpaceLoad(option_url, true);
+                        }
+    
                     break;
                 }
 				
@@ -2586,7 +2622,7 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
 		}
         
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name");
+    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
     
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
@@ -2607,16 +2643,16 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 * Render a filter bar button
 * 
 * @param string $text Button text
-* @param string $text The onclick attribute for the button
+* @param string $attr Button attributes
 * @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
 * 
 * @return void
 */
-function render_filter_bar_button($text, $on_click, $icon)
+function render_filter_bar_button($text, $attr, $icon)
     {
     ?>
     <div class="InpageNavLeftBlock">
-        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo $icon . htmlspecialchars($text); ?></button>
+        <button type="button" <?php echo $attr; ?>><?php echo $icon . htmlspecialchars($text); ?></button>
     </div>
     <?php
     return;
@@ -2737,9 +2773,9 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         }
         
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
-    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+    $attributes = "onclick=\"CentralSpaceLoad('{$upload_here_url}');\"";
 
-    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
     }
 
 /**
@@ -3007,6 +3043,160 @@ function render_custom_fields(array $cfs)
             });
         });
     }
+
+
+/**
+* Generates HTML for the "X Selected" in the search results found part pointing to the special collection COLLECTION_TYPE_SELECTION
+* 
+* @param integer $i Counter to display
+* 
+* @return string  Returns HTML
+*/
+function render_selected_resources_counter($i)
+    {
+    global $baseurl, $lang, $USER_SELECTION_COLLECTION;
+
+    $url = generateURL("{$baseurl}", array("c" => $USER_SELECTION_COLLECTION));
+
+    $x_selected = '<span class="Selected">' . number_format($i) . "</span> {$lang["selected"]}";
+    $return = "<a href=\"{$url}\" class=\"SelectionCollectionLink\" onclick=\"return CentralSpaceLoad(this, true);\">{$x_selected}</a>";
+
+    return $return;
+    }
+
+
+/**
+* Renders the "Edit selected" button. This is using the special 'COLLECTION_TYPE_SELECTION' collection
+* 
+* @return void
+*/
+function render_edit_selected_btn()
+    {
+    global $baseurl_short, $lang, $USER_SELECTION_COLLECTION, $restypes, $archive;
+
+    $search = "!collection{$USER_SELECTION_COLLECTION}";
+    $editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, true);
+    $non_editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
+
+    if(!is_array($editable_resources) || !is_array($non_editable_resources))
+        {
+        return;
+        }
+
+    $editable_resources_count = count($editable_resources);
+    $non_editable_resources_count = count($non_editable_resources);
+
+    if($editable_resources_count == 0 || $non_editable_resources_count == 0)
+        {
+        return;
+        }
+
+    // If not all resources are editable, don't show the batch edit button
+    if($editable_resources_count != $non_editable_resources_count)
+        {
+        return;
+        }
+
+    $batch_edit_url = generateURL(
+        "{$baseurl_short}pages/edit.php",
+        array(
+            "search"            =>  $search,
+            "collection"        =>  $USER_SELECTION_COLLECTION,
+            "restypes"          =>  $restypes,
+            "order_by"          =>  "resourceid",
+            "archive"           =>  $archive,
+            "sort"              =>  "desc",
+            "daylimit"          =>  "",
+            "editsearchresults" => "true",
+        ));
+
+    $attributes  = " id=\"EditSelectedResourcesBtn\"";
+    $attributes .= " onclick=\"CentralSpaceLoad('{$batch_edit_url}', true);\"";
+
+    return render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+    }
+
+
+/**
+* Renders the "Clear selected" button. This is using the special 'COLLECTION_TYPE_SELECTION' collection
+* 
+* @return void
+*/
+function render_clear_selected_btn()
+    {
+    global $lang, $USER_SELECTION_COLLECTION, $CSRF_token_identifier, $usersession;
+
+    $attributes  = " id=\"ClearSelectedResourcesBtn\" class=\"ClearSelectedButton\"";
+    $attributes .= " onclick=\"ClearSelectionCollection(this);\"";
+    $attributes .= " data-csrf-token-identifier=\"{$CSRF_token_identifier}\"";
+    $attributes .= " data-csrf-token=\"" . generateCSRFToken($usersession, "clear_selected_btn_{$USER_SELECTION_COLLECTION}") . "\"";
+
+    return render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+    }
+
+
+/**
+* Render the actions specific to when a user selected resources (using the special "COLLECTION_TYPE_SELECTION" collection)
+* 
+* @return void
+*/
+function render_selected_collection_actions()
+    {
+    global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
+           $render_actions_extra_options, $render_actions_filter, $resources_count;
+
+    $orig_search = $search;
+    $search = "!collection{$USER_SELECTION_COLLECTION}";
+
+    $selected_resources = get_collection_resources($USER_SELECTION_COLLECTION);
+    $resources_count = count($selected_resources);
+    $usercollection_resources = get_collection_resources($usercollection);
+    $refs_to_remove = count(array_intersect($selected_resources, $usercollection_resources));
+    $collection_data = get_collection($USER_SELECTION_COLLECTION);
+
+    $valid_selection_collection_actions = array(
+        "relate_all",
+        "save_search_items_to_collection",
+        "remove_selected_from_collection",
+        "search_items_disk_usage",
+        "csv_export_results_metadata",
+        "share_collection",
+    );
+
+    if($refs_to_remove > 0)
+        {
+        $callback_csrf_token = generateCSRFToken($usersession, "remove_selected_from_collection");
+        $render_actions_extra_options = array(
+            array(
+                "value" => "remove_selected_from_collection",
+                "label" => $lang["remove_selected_from_collection"],
+                "data_attr" => array(
+                    "callback" => "RemoveSelectedFromCollection('{$CSRF_token_identifier}', '{$callback_csrf_token}');",
+                ),
+                "category" => ACTIONGROUP_COLLECTION,
+            ),
+        );
+        }
+    $render_actions_filter = function($action) use ($valid_selection_collection_actions)
+        {
+        return in_array($action["value"], $valid_selection_collection_actions);
+        };
+
+    // override the language for actions as it's now specific to a selection of resources
+    $lang["relateallresources"] = $lang["relate_selected_resources"];
+    $lang["savesearchitemstocollection"] = $lang["add_selected_to_collection"];
+    $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
+    $lang["share"] = $lang["share_selected"];
+
+    render_actions($collection_data, true, false);
+
+    $search = $orig_search;
+    unset($render_actions_extra_options);
+    unset($render_actions_filter);
+
+    return;
+    }
+
 
 // Render a select input for a user's collections
 function render_user_collection_select($name = "collection", $collections=array(), $selected=0, $classes = "", $onchangejs = "")

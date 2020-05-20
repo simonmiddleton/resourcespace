@@ -94,7 +94,7 @@ $fields = sql_query(
     'SELECT ref, 
             title 
        FROM resource_type_field 
-   ORDER BY title, name;'
+   ORDER BY title, name;', "schema"
 );
 $users = get_users();
 

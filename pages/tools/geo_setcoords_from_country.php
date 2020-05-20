@@ -5,7 +5,7 @@ $coords=build_coords();
 $codes=build_codes();
 
 # Find country field
-$country_field=sql_query("select ref,type from resource_type_field where name='country'");
+$country_field=sql_query("select ref,type from resource_type_field where name='country'", "schema");
 if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
 	{
     if('cli' == PHP_SAPI)

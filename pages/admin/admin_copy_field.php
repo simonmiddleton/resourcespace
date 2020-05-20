@@ -10,7 +10,7 @@ include_once '../../include/resource_functions.php';
 
 $ref    = getvalescaped('ref', '');
 $copied = '';
-$title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref = '{$ref}'", '');
+$title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref = '{$ref}'", '', "schema");
 
 # Perform copy
 if (getval("saveform","")!="" && enforcePostRequest(false))

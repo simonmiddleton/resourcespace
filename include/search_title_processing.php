@@ -23,7 +23,7 @@ if ($refinements[0]!=""){
 			$node_id=substr(ltrim($string), 2);
 			$node_data=array();
 			get_node($node_id, $node_data);
-			$field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '');
+			$field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
 			return $field_title . ":" . $node_data['name'];
 			}
 		return $string;
@@ -49,7 +49,7 @@ if ($refinements[0]!=""){
 		if (!$search_titles_shortnames){
 			$search_title_element=explode(":", search_title_node_processing($refinements[$n]));
 			if (isset($search_title_element[1])){
-			$datefieldinfo=sql_query("select ref from resource_type_field where name='" . trim(escape_check($search_title_element[0])) . "' and type IN (4,6,10)",0);
+			$datefieldinfo=sql_query("select ref from resource_type_field where name='" . trim(escape_check($search_title_element[0])) . "' and type IN (4,6,10)", "schema");
 			if (count($datefieldinfo)) 
 			    {
 			    $search_title_element[1]=str_replace("|", "-", $search_title_element[1]);
@@ -68,10 +68,10 @@ if ($refinements[0]!=""){
 			$search_title_elementq=trim(str_replace("!empty","",rawurldecode($search_title_element)));
 			if (is_numeric($search_title_elementq)){
 				$fref=$search_title_elementq;
-				$ftitle=sql_value("select title value from resource_type_field where ref='" .$search_title_elementq . "'","");
+				$ftitle=sql_value("select title value from resource_type_field where ref='" .$search_title_elementq . "'","", "schema");
 				}
 			else {
-				$ftitleref=sql_query("select title,ref from resource_type_field where name='" . $search_title_elementq . "'","");
+				$ftitleref=sql_query("select title,ref from resource_type_field where name='" . $search_title_elementq . "'", "schema");
 				if (!isset($ftitleref[0])){exit ("invalid !empty search. No such field: $search_title_elementq");}
 				$ftitle=$ftitleref[0]['title'];
 				$fref=$ftitleref[0]['ref'];

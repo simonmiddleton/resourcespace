@@ -202,7 +202,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-                        $new_nodes_val = implode($new_nodevals,",");
+                        $new_nodes_val = implode(",", $new_nodevals);
                         sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
                         }
 					}
@@ -569,7 +569,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         global $index_resource_type;
         if ($index_resource_type)
                 {
-                $restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","");
+                $restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","", "schema");
                 remove_all_keyword_mappings_for_field($ref,-2);
                 add_keyword_mappings($ref,$restypename,-2);
                 }
@@ -725,7 +725,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
         $field_default_value = $rule_detail[1];
 
         // Find field(s) - multiple fields can be returned to support several fields with the same name
-        $fields = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE name = '{$field_shortname}'");
+        $fields = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE name = '{$field_shortname}'", "schema");
 
         if(0 === count($fields))
             {
@@ -1620,11 +1620,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
         {
-        $field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '');
+        $field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '', "schema");
         }
 
     // Fetch some information about the field
-    $fieldinfo = sql_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = '$field'");
+    $fieldinfo = sql_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = '$field'", "schema");
 
     if(0 == count($fieldinfo))
         {
@@ -2415,7 +2415,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='$type'",""),"resourcetype-");
+	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='$type'","", "schema"),"resourcetype-");
 	}
 	
 function get_resource_custom_access($resource)
@@ -2547,7 +2547,7 @@ function update_resource_type($ref,$type)
     global $index_resource_type;
     if ($index_resource_type)
             {
-            $restypename=sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","");
+            $restypename=sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","","schema");
             remove_all_keyword_mappings_for_field($ref,-2);
             add_keyword_mappings($ref,$restypename,-2);
             }
@@ -2586,7 +2586,7 @@ function get_exiftool_fields($resource_type)
             WHERE length(exiftool_field) > 0
               AND (resource_type = '$resource_type' OR resource_type = '0')
          GROUP BY f.ref
-         ORDER BY exiftool_field");
+         ORDER BY exiftool_field", "schema");
     }
 
 /**
@@ -3395,7 +3395,7 @@ function get_field($field)
                automatic_nodes_ordering
           FROM resource_type_field
          WHERE ref = '{$field_escaped}'
-     ");
+     ", "schema");
 
     # Translates the field title if the searched field is found.
     if(0 == count($r))
@@ -4271,7 +4271,7 @@ function autocomplete_blank_fields($resource, $force_run)
           FROM resource_type_field
          WHERE (resource_type = 0 || resource_type = '{$resource_type}')
            AND length(autocomplete_macro) > 0
-    ");
+    ", "schema");
 
     foreach($fields as $field)
         {
@@ -5273,7 +5273,7 @@ function copyResourceDataValues($from, $to)
     // NOTE: this does not apply to user template resources (negative ID resource)
     if($from > 0)
         {
-        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", 0);
+        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
         $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
         }
 
@@ -5451,7 +5451,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                     }
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
-                            $values_string = implode($node_vals,",");
+                            $values_string = implode(",",$node_vals);
                             sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
                             }
                         } 

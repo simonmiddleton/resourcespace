@@ -105,9 +105,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             // Check that this is a valid resource type    
             if(trim($resource_type_set) != "" && !in_array($resource_type_set,array_keys($resource_types)))
                 {
-                array_push ($messages,"Error: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line));
+                array_push ($messages,"Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line));
                 $error_count++;
-                continue;
+                $resource_type_set = $csv_set_options["resource_type_default"];
                 }
 
             $processed_columns[] = $csv_set_options["resource_type_column"];
@@ -255,7 +255,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             $resourcerefs = array($newref);
             }
         
-        array_push($messages," - " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs));
+        array_push($messages," Line " . $line_count . ": " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs));
         
 		$cell_count=-1;
 		$workflow_states = get_editable_states($userref);
@@ -288,13 +288,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     (
                     $resource_type_set != 0
                     &&
-                    !in_array($resource_type_set,$allfields[$field["ref"]]["resource_types"])
+                    isset($allfields[$csv_set_options["fieldmapping"][$column_id]])
+                    &&
+                    !in_array($resource_type_set,$allfields[$csv_set_options["fieldmapping"][$column_id]]["resource_types"])
                     )
                 )
                 {
                 $cell_count++;
 
-                //array_push($messages, "skipping column  " . $column_id . "(" . implode(",",$allfields[$field["ref"]]["resource_types"]));
+                //array_push($messages, "skipping column  " . $column_id . " as it does not apply to this resource type");
                 continue;
                 }
 
@@ -464,7 +466,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $nodes_to_remove    = array();
                 if ($processcsv)
                     {
-                    //echo "" . ($processcsv ? "Updating" : "Update") . " resource " . $resource_id . ", field '" . $fieldid . "' with value '" . $cell_value . "'<br/>";
+                    array_push($messages, " - Updated field '" . $fieldid . "' (" . $field_def['title'] . ") with value '" . $cell_value . "'");
                     if($field_def['type']==FIELD_TYPE_DATE_RANGE)
                         {
                         # each value will be a node so we end up with a pair of nodes to represent the start and end dates
@@ -563,7 +565,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                         $joins = get_resource_table_joins();
                         if(in_array($fieldid, $joins))
                             {
-                            sql_query("UPDATE resource SET field{$fieldid} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
+                            sql_query("UPDATE resource SET field{$fieldid} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$resource_id}'");
                             }
                         }
                     }
@@ -595,7 +597,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 		return false;
         }
 
-	array_push($messages,"Info: data successfully validated");
+	array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
 
 	ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 	return true;
@@ -604,7 +606,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
 function csv_upload_get_info($filename, &$messages)
 	{
-	//$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");
+	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");
 
     global $lang;
 

@@ -121,7 +121,7 @@ function do_search(
             exit("Order field incorrect.");
             }
         # Check for field type
-        $field_order_check=sql_value("SELECT field_constraint value FROM resource_type_field WHERE ref=".str_replace("field","",$order_by),"");
+        $field_order_check=sql_value("SELECT field_constraint value FROM resource_type_field WHERE ref=".str_replace("field","",$order_by),"", "schema");
         # Establish sort order (numeric or otherwise)
         # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
         if ($field_order_check==1)
@@ -318,12 +318,12 @@ function do_search(
                             }
                         else
                             {
-                            $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE name = '" . escape_check($fieldname) . "'", 0);
+                            $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE name = '" . escape_check($fieldname) . "'", "schema");
 
                             // Checking for date from Simple Search will result with a fieldname like 'year' which obviously does not exist
                             if(0 === count($fieldinfo) && ('basicyear' == $kw[0] || 'basicmonth' == $kw[0] || 'basicday' == $kw[0]))
                                 {
-                                $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE ref = '{$date_field}'", 0);
+                                $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE ref = '{$date_field}'", "schema");
                                 }
 							if(0 === count($fieldinfo))
 								{
@@ -348,7 +348,7 @@ function do_search(
                             }
                         else
                             {
-                            $datefieldinfo=sql_query("SELECT ref FROM resource_type_field WHERE name='" . escape_check($fieldname) . "' AND type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")",0);
+                            $datefieldinfo=sql_query("SELECT ref FROM resource_type_field WHERE name='" . escape_check($fieldname) . "' AND type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")", "schema");
                             $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
     
@@ -466,7 +466,7 @@ function do_search(
                         // Text field numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
 						$c++;
                         $rangefield=$fieldname;
-                        $rangefieldinfo=sql_query("SELECT ref FROM resource_type_field WHERE name='" . escape_check($fieldname) . "' AND type IN (0)",0);
+                        $rangefieldinfo=sql_query("SELECT ref FROM resource_type_field WHERE name='" . escape_check($fieldname) . "' AND type IN (0)", "schema");
                         $rangefieldinfo=$rangefieldinfo[0];
                         $rangefield=$rangefieldinfo["ref"];
                         $rangestring=substr($keystring,8);
@@ -544,7 +544,7 @@ function do_search(
     
                             if (!is_numeric($nodatafield))
                                 {
-                                $nodatafield = sql_value("SELECT ref value FROM resource_type_field WHERE name='" . escape_check($nodatafield) . "'", "");
+                                $nodatafield = sql_value("SELECT ref value FROM resource_type_field WHERE name='" . escape_check($nodatafield) . "'", "", "schema");
                                 }
     
                             if ($nodatafield == "" || !is_numeric($nodatafield))
@@ -749,7 +749,7 @@ function do_search(
                                             return false;
                                             }
                                             
-                                        $rtype = sql_value("SELECT resource_type value FROM resource_type_field WHERE ref='$nodatafield'", 0);
+                                        $rtype = sql_value("SELECT resource_type value FROM resource_type_field WHERE ref='$nodatafield'", 0, "schema");
                                         if ($rtype != 0)
                                             {
                                             if ($rtype == 999)
@@ -771,7 +771,7 @@ function do_search(
                                             $restypesql = "";
                                             }
 										
-										$nodatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$nodatafield}'", 0);	
+										$nodatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$nodatafield}'", 0, "schema");	
 										
                                         if(in_array($nodatafieldtype,$FIXED_LIST_FIELD_TYPES))
                                             {   
@@ -1130,7 +1130,7 @@ function do_search(
             $filterfields=explode("|",escape_check($filterfield));
 
             # Find field(s) - multiple fields can be returned to support several fields with the same name.
-            $f=sql_query("SELECT ref, type FROM resource_type_field WHERE name IN ('" . join("','",$filterfields) . "')");
+            $f=sql_query("SELECT ref, type FROM resource_type_field WHERE name IN ('" . join("','",$filterfields) . "')", "schema");
             if (count($f)==0)
                 {
                 exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");
@@ -1309,7 +1309,7 @@ function do_search(
 				$filterfields=explode("|",escape_check($filterfield));
 
 				# Find field(s) - multiple fields can be returned to support several fields with the same name.
-				$f=sql_query("SELECT ref, type FROM resource_type_field WHERE name IN ('" . join("','",$filterfields) . "')");
+				$f=sql_query("SELECT ref, type FROM resource_type_field WHERE name IN ('" . join("','",$filterfields) . "')", "schema");
 				if (count($f)==0)
 					{
 					exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");

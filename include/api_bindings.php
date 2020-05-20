@@ -155,7 +155,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
     if(!is_numeric($field))
         {
         // Name may have been passed    
-        $field = sql_value("select ref value from resource_type_field where name='" . escape_check($field) . "'","");
+        $field = sql_value("select ref value from resource_type_field where name='" . escape_check($field) . "'","", "schema");
         }
         
     if(!$editaccess || !metadata_field_edit_access($field))
@@ -534,7 +534,7 @@ function api_get_field_options($ref, $nodeinfo = false)
     if(!is_numeric($ref))
         {
         // Name may have been passed    
-        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","");
+        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","", "schema");
         }
         
     if(!metadata_field_view_access($ref))

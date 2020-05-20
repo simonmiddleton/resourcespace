@@ -141,7 +141,7 @@ else
 					$RS_field_ref=$resourcefields[$group.":".$tag]['ref'];
                     $resourcefields[$group.":".$tag]['listed'] = true;
                     }
-				$RS_field_name=sql_query("select title from resource_type_field where ref = $RS_field_ref");
+				$RS_field_name=sql_query("select title from resource_type_field where ref = $RS_field_ref", "schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
 				echo "<td>". str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name']) . "</td><td>$group</td><td>$tag $tagprops</td>";
@@ -216,7 +216,7 @@ else
                 WHERE length(rtf.fits_field) > 0
                   AND (rtf.resource_type = '{$resource_type}' OR rtf.resource_type = 0)
              ORDER BY fits_field;
-        ");
+        ", "schema");
 
         ?>
         <tr>
@@ -285,7 +285,7 @@ else
                     {
                     $RS_field_ref=$resourcefields[$group.":".$tag]['ref'];
                     }
-                $RS_field_name = sql_query("select title from resource_type_field where ref = $RS_field_ref");
+                $RS_field_name = sql_query("select title from resource_type_field where ref = $RS_field_ref", "schema");
                 $RS_field_name = lang_or_i18n_get_translated($RS_field_name[0]['title'], "fieldtitle-");
                 # Display the RS resource field ref, title, exiftool group, tag and properties.
                 echo "<td>". str_replace(array('%ref%', '%name%'), array($RS_field_ref, $RS_field_name), $lang['field_ref_and_name']) . "</td><td>$group</td><td>$tag $tagprops</td>"; 

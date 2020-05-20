@@ -19,7 +19,7 @@ function HookAction_datesCronCron()
     global $userref;
     $userref=0;
 
-	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)");
+	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
 	
 	# Check that this is a valid date field to use
 	if(in_array($action_dates_restrictfield, $allowable_fields))

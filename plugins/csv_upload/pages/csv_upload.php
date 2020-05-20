@@ -102,6 +102,7 @@ $csvuploaded = file_exists($csvfile);
 $csvstep = $csvuploaded ? getval("csvstep",1,true) : 1;
 if($csvuploaded)
     {
+    $messages = array();
     $csv_info = csv_upload_get_info($csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv",$messages);
     }
 

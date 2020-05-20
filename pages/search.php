@@ -42,8 +42,13 @@ if ($k=="" || $internal_share_access)
             }
         }
     }
-# Disable checkboxes for external users.
-if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
+
+// Disable checkboxes for external users.
+$use_selection_collection = true;
+if($k != "" && !$internal_share_access)
+    {
+    $use_selection_collection = false;
+    }
 
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
@@ -93,7 +98,7 @@ foreach($keywords as $keyword)
         }
 
     $field_shortname = escape_check($field_shortname);
-    $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+    $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0, "schema");
 
     if(0 == $resource_type_field)
         {
@@ -412,10 +417,13 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 $allow_reorder=false;
 
 # get current collection resources to pre-fill checkboxes
-if ($use_checkboxes_for_selection){
-$collectionresources=get_collection_resources($usercollection);
-}
-    $hiddenfields=getvalescaped("hiddenfields","");
+if($use_selection_collection)
+    {
+    $selection_collection_resources = get_collection_resources(get_user_selection_collection($userref));
+    $selection_collection_resources_count = count($selection_collection_resources);
+    }
+
+$hiddenfields=getvalescaped("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
 if (getvalescaped("resetrestypes","")=="")
@@ -615,6 +623,14 @@ if($k=="" || $internal_share_access)
     <?php
     }
 
+if($use_selection_collection)
+    {
+    ?>
+    <script>
+    var searchparams = <?php echo json_encode($searchparams); ?>;
+    </script>
+    <?php
+    }
 
 // Allow Drag & Drop from collection bar to CentralSpace only when special search is "!collection"
 if($collectionsearch && collection_writeable(substr($search, 11)))
@@ -962,10 +978,16 @@ if($responsive_ui)
     <div class="ResponsiveResultDisplayControls">
         <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
         <div id="ResponsiveResultCount" style="display:none;">
-            <span class="Selected">
         <?php
-        if(isset($collections)) 
+        if($use_selection_collection && $selection_collection_resources_count > 0)
             {
+            echo render_selected_resources_counter(count($selection_collection_resources));
+            }
+        else if(isset($collections)) 
+            {
+            ?>
+            <span class="Selected">
+            <?php
             echo number_format($results_count);
             ?>
             </span>
@@ -974,6 +996,9 @@ if($responsive_ui)
             } 
         else
             {
+            ?>
+            <span class="Selected">
+            <?php
             echo number_format($resources_count);
             ?>
             </span>
@@ -987,14 +1012,24 @@ if($responsive_ui)
     }
     hook('responsiveresultoptions');
     ?>
-    <div id="SearchResultFound" class="InpageNavLeftBlock"><span class="Selected">
+    <div id="SearchResultFound" class="InpageNavLeftBlock">
     <?php
-    if (isset($collections)) 
+    if($use_selection_collection && $selection_collection_resources_count > 0)
         {
+        echo render_selected_resources_counter(count($selection_collection_resources));
+        }
+    else if (isset($collections)) 
+        {
+        ?>
+        <span class="Selected">
+        <?php
         echo number_format($results_count)?> </span><?php echo ($results_count==1) ? $lang["youfoundresult"] : $lang["youfoundresults"];
-        } 
+        }
     else
         {
+        ?>
+        <span class="Selected">
+        <?php
         echo number_format($resources_count)?> </span><?php echo ($resources_count==1)? $lang["youfoundresource"] : $lang["youfoundresources"];
         }
      ?></div>
@@ -1203,13 +1238,26 @@ if($responsive_ui)
             }
 
         $url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
-        render_actions($collectiondata,true,false);
+        if($use_selection_collection && $selection_collection_resources_count > 0)
+            {
+            render_selected_collection_actions();
+            }
+        else
+            {
+            render_actions($collectiondata, true, false);
+            }
 
         hook("search_header_after_actions");
 
         if(isset($is_authenticated) && $is_authenticated)
             {
             render_upload_here_button($searchparams);
+
+            if($use_selection_collection && $selection_collection_resources_count > 0)
+                {
+                render_edit_selected_btn();
+                render_clear_selected_btn();
+                }
             }
         
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
@@ -1367,7 +1415,7 @@ if($responsive_ui)
         <?php if(!hook("replacelistviewtitlerow")){?>   
         <tr class="ListviewTitleStyle">
         <?php if (!hook("listcheckboxesheader")){?>
-        <?php if ($use_checkboxes_for_selection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
+        <?php if ($use_selection_collection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
         <?php } # end hook listcheckboxesheader 
 
         for ($x=0;$x<count($df);$x++)

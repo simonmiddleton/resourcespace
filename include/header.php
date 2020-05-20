@@ -31,18 +31,15 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 	
 ?><!DOCTYPE html>
 <html lang="<?php echo $language ?>">	
-<?php 
-if ($include_rs_header_info)
-    {?>
-    <!--<?php hook("copyrightinsert");?>
-    ResourceSpace version <?php echo $productversion?>
 
-    For copyright and license information see documentation/licenses/resourcespace.txt
-    https://www.resourcespace.com
-    -->
-    <?php 
-    }
-?>
+<!--
+
+ ResourceSpace version <?php echo $productversion?>
+
+ For copyright and license information see /documentation/licenses/resourcespace.txt
+ https://www.resourcespace.com
+ -->
+
 <head>
 <?php if(!hook("customhtmlheader")): ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

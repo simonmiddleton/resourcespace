@@ -483,7 +483,7 @@ function get_resource_type_field($field)
     if($modified_rtf_query!==false){
         $rtf_query=$modified_rtf_query;
     }
-    $return = sql_query($rtf_query);
+    $return = sql_query($rtf_query, "schema");
 
     if(0 == count($return))
         {
@@ -570,7 +570,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $fields = sql_query($fieldsSQL);
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type');
+    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
 
     # Support archive and global.
     $validtypes[] = 0;
@@ -578,7 +578,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     // Resource types can be configured to not have global fields in which case we only present the user fields valid for
     // this resource type
-    $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = {$rtype}", true);
+    $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = {$rtype}", true, "schema");
     if(!$inherit_global_fields && !$multi)
         {
         $validtypes = array($rtype);
@@ -1272,7 +1272,7 @@ function get_field_options($ref,$nodeinfo = false)
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
         {
-        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","");
+        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","", "schema");
         }
         
     $options = get_nodes($ref, null, true);
@@ -1332,7 +1332,7 @@ function get_data_by_field($resource, $field)
         // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
-        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
+        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null, "schema");
         }
 
     if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
@@ -1753,7 +1753,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     $welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
     if (trim($welcome)!="") {$welcome.="\n\n";}
 
-    $templatevars['welcome']  = i18n_get_translated($welcome);
+    $templatevars['welcome']  = i18n_get_translated($welcome, false);
     $templatevars['username'] = $username;
 
     if (trim($email_url_save_user)!="")
@@ -1809,7 +1809,7 @@ function email_reset_link($email,$newuser=false)
             $welcome .= "\n\n";
             }
 
-        $templatevars['welcome']=i18n_get_translated($welcome);
+        $templatevars['welcome']=i18n_get_translated($welcome, false);
 
         $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
         send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
@@ -4584,7 +4584,7 @@ function get_fields($field_refs)
                onchange_macro
           FROM resource_type_field
          WHERE ref IN ('" . join("','",$field_refs) . "')
-      ORDER BY order_by");
+      ORDER BY order_by", "schema");
 
     $return = array();
     foreach($fields as $field)
@@ -4641,7 +4641,7 @@ function get_category_tree_fields()
     if (is_array($cattreefields_cache)){
         return $cattreefields_cache;
     } else {
-        $fields=sql_query("select name from resource_type_field where type=7 and length(name)>0 order by order_by");
+        $fields=sql_query("select name from resource_type_field where type=7 and length(name)>0 order by order_by", "schema");
         $cattreefields=array();
         foreach ($fields as $field){
             $cattreefields[]=$field['name'];
@@ -4658,7 +4658,7 @@ function get_OR_fields()
     if (is_array($orfields_cache)){
         return $orfields_cache;
     } else {
-        $fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by");
+        $fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by", "schema");
         $orfields=array();
         foreach ($fields as $field){
             $orfields[]=$field['name'];
@@ -4713,11 +4713,11 @@ function verify_extension($filename,$allowed_extensions=""){
 
 function get_allowed_extensions($ref){
     $type = sql_value("select resource_type value from resource where ref=$ref","");
-    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","");
+    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","", "schema");
     return $allowed_extensions;
 }
 function get_allowed_extensions_by_type($resource_type){
-    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","");
+    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","", "schema");
     return $allowed_extensions;
 }
 
@@ -6262,7 +6262,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                include_in_csv_export,
                browse_bar,
                active
-          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort));
+          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), "schema");
 
     return $allfields;
     }
@@ -7182,7 +7182,7 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     $duplicate = (boolean) sql_value(sprintf(
         "SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = '%s'",
-        escape_check($shortname)), 0);
+        escape_check($shortname)), 0, "schema");
 
     sql_query(sprintf("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES ('%s', '%s', '%s', '%s', %s)",
         escape_check($name),

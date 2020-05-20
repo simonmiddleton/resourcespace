@@ -31,6 +31,12 @@ if ($collection===false)
 	error_alert($error);
 	exit();
 	}
+
+if($collection["type"] != COLLECTION_TYPE_STANDARD)
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 401));
+    }
+
 $resources=do_search("!collection".$ref);
 $colcount=count($resources);
 
