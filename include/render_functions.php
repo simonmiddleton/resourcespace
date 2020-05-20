@@ -3047,28 +3047,46 @@ function render_user_collection_select($name = "collection", $collections=array(
 */
 function render_resource_lock_link($ref,$lockuser,$editaccess)
     {
-    global $userref, $anonymous_login, $lang;
+    global $userref, $lang;
     
     $resource_locked = (int)$lockuser > 0;
-    if(!$resource_locked && checkperm('noex'))
+
+    $edit_lock_option = false;
+    if(checkperm("a") 
+        ||
+        $userref == $lockuser
+        ||
+        (!$resource_locked && !checkperm("noex") && $editaccess)
+        )
+        {
+        $edit_lock_option = true;
+        }
+
+    if(!$resource_locked && !$edit_lock_option)
         {
         // User is not permitted to lock resource
         return;
-        }
+        }    
+    
+    $lock_details = get_resource_lock_message($lockuser);
 
-    $unlock_option = checkperm("a") || ($userref == $lockuser && $userref != $anonymous_login);
-    
-    echo "<li><a href='#' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' "; 
-   
-    echo "class='" . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
-    
-    if($resource_locked)
+    if($edit_lock_option)
         {
-        $locktext = $lockuser ==$userref ? $lang["action_unlock"] : $lang["status_locked"];
+        echo "<li><a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
+        echo "title='" .  $lock_details . "'";
+        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
+        if($resource_locked)
+            {
+            $locktext = (checkperm("a") || ($lockuser == $userref)) ? $lang["action_unlock"] : $lang["status_locked"];
+            }
+        else
+            {
+            $locktext = $lang["action_lock"];
+            }
+        echo $locktext . "</a></li>";
         }
     else
         {
-        $locktext = $lang["action_lock"];
-        }    
-    echo "&nbsp;" . $locktext . "</a></li>";
+        echo "<li><div  class='ResourceLocked' title='" .  $lock_details . "' >" . $lang["status_locked"] . "</div></li>";
+        }
     }

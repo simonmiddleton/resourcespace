@@ -331,6 +331,7 @@ $edit_access = ($access==0 && get_edit_access($ref,$resource["archive"],$fields,
 # Check if resource is locked
 $resource_locked = (int)$resource["lock_user"] != 0;
 $unlock_option = checkperm("a") || ($userref == $resource["lock_user"] && $userref != $anonymous_login);
+$lock_details = get_resource_lock_message($resource["lock_user"]);
 
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
@@ -594,6 +595,18 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 <script>
 var resource_lock_status = <?php echo (int)$resource_locked ?>;
 
+<?php 
+if($resource_locked && $resource['lock_user'] != $userref)
+    {?>
+    jQuery(document).ready(function ()
+        {
+        jQuery('.LockedResourceAction').each(function(){
+            jQuery(this).attr("title","<?php echo $lock_details; ?>");
+            });
+        });
+        <?php
+    }?>
+
 function updateResourceLock(resource,lockstatus)
     {
     // Fire an ajax call to update the lock state and update resource tools if successful
@@ -606,7 +619,39 @@ function updateResourceLock(resource,lockstatus)
             ref: resource,
             lock: lockstatus,
             <?php echo generateAjaxToken('UpdateLock'); ?>
-        }
+        },
+        success: function(response,status,xhr)
+            {
+            jQuery('#lock_link_' + resource).toggleClass("ResourceLocked");
+            jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
+            if(lockstatus==1)
+                {         
+                alert("LOCKED " + resource);       
+                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_unlock"] ;?>');
+                jQuery('#lock_link_' + resource).attr("title","<?php echo $lang["status_locked_self"]; ?>");
+                }
+            else
+                {
+                alert("UNLOCKED " + resource); 
+                jQuery('#lock_link_' + resource).removeAttr('title');
+                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_lock"] ;?>');
+
+                console.log("jQuery('#lock_link_" + resource + "').attr('title','');");
+                }
+            resource_lock_status = !resource_lock_status;
+            },
+        error: function(xhr, status, error)
+            {
+            if(status == 400)
+                {
+                // no access
+                return false;
+                }
+            else
+                {
+                styledalert('<?php echo $lang["error"]; ?>',error);
+                }
+            }
     });
     }
 
@@ -1727,38 +1772,43 @@ hook ("resourceactions") ?>
 		}
 	if ($edit_access) 
 		{
-        echo "<li><a href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
-        if($resource_locked)
+        echo "<li>";
+        if($resource_locked && $resource['lock_user'] != $userref)
             {
-            echo "class='DisabledLink LockedResource' disabled='disabled'";
+            echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-edit"] . "</div>";
             }
-        echo "><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-edit"] . "</a></li>";
+        else
+            {
+            echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-edit"] . "</a>";
+            }
+        echo "</li>";
 
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
 			{
-            echo "<li><a href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
-            if($resource_locked)
+            $deletetext = (isset($resource_deletion_state) && $resource["archive"] == $resource_deletion_state) ? $lang["action-delete_permanently"] : $lang["action-delete"];
+            echo "<li>";
+            if($resource_locked && $resource['lock_user'] != $userref)
                 {
-                echo "class='DisabledLink LockedResource' disabled='disabled'";
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</div>";
                 }
-            
-            if ($resource["archive"]==3)
-				{
-				echo "><i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete_permanently"] . "</a></li>";
-				} 
-			else 
-				{
-				echo "><i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete"] . "</a></li>";
-				} 
-			}
+            else
+                {
+                echo "<a id='delete_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</a>";
+                }
+            echo "</li>";
+            }
 		if (!$disable_alternative_files && !checkperm('A')) 
 			{ 
-            echo "<li><a href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' onclick='return ModalLoad(this, true);' "; 
-            if($resource_locked)
+            echo "<li>";
+            if($resource_locked && $resource['lock_user'] != $userref)
                 {
-                echo "class='DisabledLink LockedResource' disabled='disabled'";
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</div>";
                 }
-            echo "><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a></li>";
+            else
+                {
+                echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a>";
+                }
+            echo "</li>";
             }
 
         // Show the lock/unlock links only if edit access

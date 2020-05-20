@@ -6074,9 +6074,9 @@ function update_resource_lock($ref,$lockaction,$newlockuser=0,$accesschecked = f
 
     if(!$accesschecked)
         {
-        $resource_data = get_resource_data($resource);
-        $lockeduser=  $resource_data["lock_user"];
-        $edit_access = get_edit_access($resource,false,$resource_data);
+        $resource_data  = get_resource_data($resource);
+        $lockeduser     =  $resource_data["lock_user"];
+        $edit_access    = get_edit_access($resource,false,$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref
@@ -6091,5 +6091,37 @@ function update_resource_lock($ref,$lockaction,$newlockuser=0,$accesschecked = f
     sql_query("UPDATE resource SET lock_user='" . ($lockaction ? $newlockuser : "0") . "' WHERE ref='" . (int)$ref . "'");
     resource_log($ref,($lockaction ? LOG_CODE_LOCKED : LOG_CODE_UNLOCKED),0);
     return true;
+    }
+
+/*
+* Get a message to indicate the lock status 
+* 
+* @param  int       id of the locking user
+* 
+* @return string    Text to display
+*/
+function get_resource_lock_message($lockuser)
+    {
+    global $lang, $userref;
+    // Check if user can see details of locking user
+    $visible_users = get_users(0,"","u.username",true);
+    if($lockuser == 0)
+        {
+        return $lang["status_unlocked"];
+        }
+    elseif($lockuser == $userref)
+        {
+        return $lang["status_locked_self"];
+        }
+    elseif(in_array($lockuser,array_column($visible_users,"ref")))
+        {
+        $lock_user_data = get_user($lockuser);
+        $lock_username = $lock_user_data["fullname"] != "" ? $lock_user_data["fullname"] : $lock_user_data["username"];
+        return str_replace("%%USER%%", $lock_username, $lang["status_locked_by"]);
+        }
+    else
+        {
+        return $lang["error_locked_other_user"];
+        }
     }
 

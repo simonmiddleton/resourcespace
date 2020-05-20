@@ -305,6 +305,13 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource))
   exit();
 }
 
+if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resource["lock_user"]);
+    error_alert($error,!$modal);
+    exit();
+    }
+
 if (getval("regen","")!="" && enforcePostRequest($ajax))
 {
   sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");

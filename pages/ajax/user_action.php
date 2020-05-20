@@ -51,11 +51,10 @@ switch ($action)
         
         if(((string)(int)$resource != (string)$resource) || !$resource_data)
             {
-                exit("HERE");
             $return['message'] = $lang["error_invalid_input"] ;
             break;
             }
-        $edit_access = get_edit_access($resource,false,$resource_data);
+        $edit_access = get_edit_access($resource,$resource_data["archive"],false,$resource_data);
         $lockuser=  $resource_data["lock_user"];
         if(checkperm("a")
             ||

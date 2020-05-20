@@ -1430,7 +1430,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     // Return users in both user's user group and children groups
-    if ($usepermissions && checkperm('U') && !$U_perm_strict) {
+    if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict))) {
         $sql .= sprintf('
                 %1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))
             ',
