@@ -213,26 +213,8 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
         return false;
         }
 
-    // @todo: establish how we handle the UX:
-    // 1. provide options even if action will affect just a subset? Also display how many it will affect
-    // 2. show options only when all criteria match for all resources (e.g allow_multi_edit and all resources in Active state)
-
-    // $resources = array();
-    // foreach(get_collection_resources($collection) as $resource_ref)
-    //     {
-    //     $resource_data = get_resource_data($resource_ref);
-    //     if(!get_edit_access($resource_ref, $resource_data["archive"], false, $resource_data))
-    //         {
-    //         continue;
-    //         }
-
-    //     $resources[] = $resource_data;
-    //     }
-
-    // or use global $edit_access = allow_multi_edit($collection);
-
-
-    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions());
+    // Validate actions without going through all resources to not impact performance on huge sets
+    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), array());
     if(empty($valid_actions))
         {
         return false;
@@ -247,10 +229,15 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     foreach($valid_actions as $action)
         {
         $option = array(
-            "value" => "unified_action_collection_wf_{$action["ref"]}",
+            "value" => "rse_workflow_move_to_workflow",
             "label" => i18n_get_translated($action["buttontext"]),
             "data_attr" => array(
-                "url" => generateURL("{$baseurl_short}plugins/video_splice/pages/splice.php", array("collection" => $collection)),
+                "url" => generateURL(
+                    "{$baseurl_short}plugins/rse_workflow/pages/batch_action.php",
+                    array(
+                        "collection" => $collection,
+                        "action" => $action["ref"],
+                    )),
             ),
             "category" => ACTIONGROUP_EDIT
         );
@@ -261,13 +248,12 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     return $options;
     }
 
-function HookRse_workflowAllRender_actions_add_option_js_case()
+function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_id)
     {
-    // implement handler for valid actions
-    // use a dialog for confirmation and make request to edit.php to batch edit resources.
     ?>
-    case 'HookRse_workflowAllRender_actions_add_option_js_case':
-        console.log("NOT implemented");
+    case 'rse_workflow_move_to_workflow':
+        var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+        ModalLoad(option_url, true, true);
         break;
     <?php
     return;
