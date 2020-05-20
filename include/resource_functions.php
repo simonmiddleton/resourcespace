@@ -202,7 +202,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-                        $new_nodes_val = implode($new_nodevals,",");
+                        $new_nodes_val = implode(",", $new_nodevals);
                         sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
                         }
 					}
@@ -5451,7 +5451,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                     }
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
-                            $values_string = implode($node_vals,",");
+                            $values_string = implode(",",$node_vals);
                             sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
                             }
                         } 
