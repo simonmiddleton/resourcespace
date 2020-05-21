@@ -769,7 +769,7 @@ function compile_search_actions($top_actions)
         }
 
     // Add extra search actions or modify existing options through plugins
-    $modified_options = hook('render_search_actions_add_option','',array($options));
+    $modified_options = hook('render_search_actions_add_option','',array($options, $urlparams));
     if($top_actions && !empty($modified_options))
         {
         $options=$modified_options;

@@ -196,3 +196,12 @@ function rse_workflow_validate_action(array $action, array $resource)
 
     return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
     }
+
+
+/**
+* 
+*/
+function rse_workflow_render_actions()
+    {
+    return;
+    }
