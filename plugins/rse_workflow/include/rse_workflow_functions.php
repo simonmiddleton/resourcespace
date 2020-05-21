@@ -129,61 +129,43 @@ if (!function_exists("rse_workflow_delete_state")){
 
 /**
 * Validate list of actions for a resource or a batch of resources. For a batch of 
-* resources, an action is valid if 
+* resources, an action is valid only if using the 'wf' permission is set for that action.
 * 
-* @param array $actions List of workflow actions (@see rse_workflow_get_actions())
+* @param array $actions          List of workflow actions (@see rse_workflow_get_actions())
+* @param bool  $use_wf_perm_only Validate actions only using 'wf' permissions
 * 
 * @return array
 */
-function rse_workflow_get_valid_actions(array $actions, array $resources)
+function rse_workflow_get_valid_actions(array $actions, $use_wf_perm_only)
     {
-    // $resource, $edit_access are used only on the view page to determine valid actions for a resource
+    /** $resource, $edit_access are used on the view page to determine valid actions for a resource where we run a 
+    * proper action validation (@see rse_workflow_validate_action())
+    */
     global $resource, $edit_access;
 
-    /*valid actions use cases:
-    done - per resource (how it works on the view page) -> valid_states, edit_access, checkperm_wf
-    - for list of resources (to display in the unified dropdown actions) -> edit_access?, checkperm_wf
-    - for list of resources (to inform users how many resources will be affected) -> valid_states, edit_access, checkperm_wf @ for each resource*/
-    $filter_list_generically = function($action) use ($resources)
+    if($use_wf_perm_only)
         {
-        return checkperm("wf{$action['ref']}");
-        };
-
-    $filter_for_resource = function($action) use ($resources)
-        {
-        return false;
-        };
-
-    if(empty($resources))
-        {
-        return array_filter($actions, $filter_list_generically);
+        return array_filter($actions, function($action)
+            {
+            return checkperm("wf{$action['ref']}");
+            });
         }
 
     return array_filter($actions, function($action) use ($resource, $edit_access)
         {
-        $valid_states = explode(',', $action['statusfrom']); 
-
-        // todo: cater for batch of resources (we don't check in that case)
-        // @todo: establish how we handle the UX:
-        // 1. provide options even if action will affect just a subset? Also display how many it will affect
-        // 2. show options only when all criteria match for all resources (e.g allow_multi_edit and all resources in Active state)
-        $resource_in_valid_state = in_array($resource['archive'], $valid_states);
-        $check_edit_access = ($edit_access && checkperm("e{$action['statusto']}"));
-
-        // if checking valid actions for batch
-        // $check_valid_states = ;
-        // $check_edit_access = false; # 
-
-        // Provide workflow action option if user has access to it without having edit access to resource
-        // Use case: a particular user group doesn't have access to the archive state but still needs to be
-        // able to move the resource to a different state.
-        $checkperm_wf = checkperm("wf{$action['ref']}");
-
-        return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
+        $resource["edit_access"] = $edit_access;
+        return rse_workflow_validate_action($action, $resource);
         });
     }
 
-
+/**
+* Validate a workflow action for a particular resource
+* 
+* @param array $action   Workflow action structure (@see rse_workflow_get_actions())
+* @param array $resource Resource structure (@see get_resource_data() or do_search())
+* 
+* @return bool
+*/
 function rse_workflow_validate_action(array $action, array $resource)
     {
     if(empty($action) || empty($resource))
@@ -198,8 +180,11 @@ function rse_workflow_validate_action(array $action, array $resource)
     // if action is validated for a list of resources (3k+) that we had to iterate over
     if(!isset($resource["edit_access"]))
         {
-        // $edit_access = ($access==0 && get_edit_access($resource_ref, $resource["archive"], false, $resource));
         $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], false, $resource));
+        }
+    else
+        {
+        $edit_access = $resource["edit_access"];
         }
 
     $check_edit_access = ($edit_access && checkperm("e{$action['statusto']}"));

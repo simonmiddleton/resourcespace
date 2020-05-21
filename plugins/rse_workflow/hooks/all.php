@@ -214,7 +214,7 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
         }
 
     // Validate actions without going through all resources to not impact performance on huge sets
-    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), array());
+    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);
     if(empty($valid_actions))
         {
         return false;

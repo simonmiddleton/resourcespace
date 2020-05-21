@@ -80,8 +80,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 
     global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos;
     
-    $validactions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), array($resource));
-
+    $validactions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), false);
     if(count($validactions)>0)
         {?>
         <div class="RecordDownload" id="ResourceWorkflowActions">
