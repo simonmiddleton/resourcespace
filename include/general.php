@@ -375,7 +375,7 @@ function get_resource_data($ref,$cache=true)
     $resource=sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
-        if ($ref>0)
+        if ($ref>=0)
             {
             return false;
             }
