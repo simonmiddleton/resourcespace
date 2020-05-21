@@ -51,7 +51,7 @@ function HookRse_workflowViewPageevaluation()
                        )
                     )
                     {
-                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);;
+                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
                     hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
                                                 
                     if (checkperm("z" . $workflowaction["statusto"]))
