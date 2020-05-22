@@ -308,9 +308,23 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             $field_type 	= $field_def['type'];
             $required 		= $field_def['required'];
 
-            // Get all current field options, including translations
-            if (in_array($field_type,$NODE_FIELDS))
+            if ($field_type == FIELD_TYPE_CATEGORY_TREE)
                 {
+                // For category trees user must be using the same language as the CSV
+                $currentoptions = array();
+                $field_nodes   = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
+                $node_options = get_tree_strings($field_nodes, true);
+                $node_trans_arr[$fieldid] = array();
+                foreach($node_options as $noderef => $nodestring)
+                    {
+                    $node_trans_arr[$fieldid][$noderef] = array($nodestring);
+                    $currentoptions[] = mb_strtolower($nodestring);
+                    }
+
+                }
+            elseif (in_array($field_type,$NODE_FIELDS))
+                {
+                // Get all current field options, including translations
                 $currentoptions = array();
                 $field_nodes   = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
                 $node_trans_arr[$fieldid] = array();
@@ -367,9 +381,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
             // Check for multiple options
             // cell value may be a series of values, but not for radio or drop down types
-            if(strpos($cell_value,",") > 0 && in_array($field_type, $NODE_FIELDS) && !in_array($field_type,array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS))) 
+            if(in_array($field_type, $NODE_FIELDS) && !in_array($field_type,array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS))) 
                     {
-                    $cell_value_array =array_filter(array_map('trim', explode(",",$cell_value)));
+                    // Replace curly quotes with standard quotes and use split_keywords() to get separate entries
+                    $cell_value_array = str_getcsv($cell_value);
                     }
                 elseif(trim($cell_value) != "")
                     {
@@ -395,7 +410,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 #if the field type has options and the value is not in the current option list:
                 if (in_array($field_type,$NODE_FIELDS))
                     {
-                    // Check nodes are valid for this field
+                    // Check nodes are valid for this field, remove quotes 
+                    //echo "Checking for '" . htmlspecialchars($cell_value_item) . "' in ('" . implode("','",$currentoptions) . "')<br/>";
+                                    
+
                     if('' != $cell_value_item && !in_array(mb_strtolower($cell_value_item), $currentoptions))
                         {
                         switch ($field_type)
@@ -510,6 +528,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 						}
                     elseif (in_array($field_type,$NODE_FIELDS))
                         {
+
+
                         // Get currently selected nodes for this field 
                         $setnodes = array();
                         $current_field_nodes = $csv_set_options["update_existing"] ? get_resource_nodes($resource_id, $fieldid) : array();
@@ -519,7 +539,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                                 {
                                 foreach($translations as $translation)
                                     {
-                                    //echo "Checking for '" . htmlspecialchars($node_translation) . "' in ('" . implode("','",$cell_value_array) . "')<br/>";
+                                    // echo "Checking for '" . htmlspecialchars($node_translation) . "' in ('" . implode("','",$cell_value_array) . "')<br/>";
                                     // Add to array of nodes, unless it has been added to array already as a parent for a previous node
                                     if (in_array($translation, $cell_value_array))
                                         {

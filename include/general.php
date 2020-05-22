@@ -518,7 +518,13 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $return           = array();
     $order_by_sql     = ($ord_by ? 'order_by, resource_type, ref' : 'resource_type, order_by, ref');
-    $node_fields_list = implode(',', $NODE_FIELDS);
+    
+    
+    // Remove Category tree fields as these need special handling
+
+    $node_fields_exclude = implode(',', $NODE_FIELDS);
+    $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
+    $node_fields_list = implode(',', $node_fields);
 
     $fieldsSQL = "
              SELECT d.value,
@@ -535,7 +541,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                  ON d.resource_type_field = f1.ref AND d.resource = '" . escape_check($ref) . "'
               WHERE (
                             f1.active=1 and
-                            f1.type NOT IN ({$node_fields_list})
+                            f1.type NOT IN ({$node_fields_exclude})
                         AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
                     )
 
@@ -568,6 +574,21 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }
 
     $fields = sql_query($fieldsSQL);
+
+
+    $tree_fields = get_resource_type_fields('',"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    foreach($tree_fields as $tree_field)
+        {
+        $addfield= $tree_field;
+
+        $treenodes = get_resource_nodes($ref, $tree_field["ref"], true);
+        $treetext_arr = get_tree_strings($treenodes);
+
+        $addfield["value"] = count($treetext_arr) > 0 ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : "";
+        $addfield["resource_type_field"] = $tree_field["ref"];
+        $addfield["fref"] = $tree_field["ref"];
+        $fields[] = $addfield;
+        }
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
     $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');

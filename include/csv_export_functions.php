@@ -103,7 +103,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                 {
                 if($column_header == $field_name)
                     {
-                    $csv_row .= '"' . str_replace(array("\n","\r","\""),"",tidylist(i18n_get_translated($field_value))) . '",';
+                    $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
                     }
                 }
             }
