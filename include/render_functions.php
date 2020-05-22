@@ -893,7 +893,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
     
             /**
             * @var A global variable that allows other parts in ResourceSpace to append extra options to the actions 
-            * unified dropdown (plugins can use existing hooks). It is recommended to unset it after calling render_actions()
+            * unified dropdown (plugins can use existing hooks).
             */
             $render_actions_extra_options = array();
             if(
@@ -905,6 +905,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 }
 
             $actions_array = array_merge($collection_actions_array, $search_actions_array, $render_actions_extra_options);
+            unset($render_actions_extra_options);
 
             $modify_actions_array = hook('modify_unified_dropdown_actions_options', '', array($actions_array,$top_actions));
 
@@ -915,11 +916,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             /**
             * @var A global variable that allows other parts in ResourceSpace to filter actions options (plugins can use 
-            * existing hooks). It is recommended to unset it after calling render_actions()
+            * existing hooks).
             */
             if(isset($GLOBALS["render_actions_filter"]) && is_callable($GLOBALS["render_actions_filter"]))
                 {
                 $actions_array = array_filter($actions_array, $GLOBALS["render_actions_filter"]);
+                unset($GLOBALS["render_actions_filter"]);
                 }
 
             // Sort array into category groups
@@ -3143,12 +3145,15 @@ function render_clear_selected_btn()
 function render_selected_collection_actions()
     {
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
-           $render_actions_extra_options, $render_actions_filter, $resources_count;
+           $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
 
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
-    $selected_resources = get_collection_resources($USER_SELECTION_COLLECTION);
+    $orig_result = $result;
+    $result = do_search($search, '', 'relevance', 0, -1, 'desc', false, '', false, '');
+
+    $selected_resources = array_column($result, "ref");
     $resources_count = count($selected_resources);
     $usercollection_resources = get_collection_resources($usercollection);
     $refs_to_remove = count(array_intersect($selected_resources, $usercollection_resources));
@@ -3191,8 +3196,7 @@ function render_selected_collection_actions()
     render_actions($collection_data, true, false);
 
     $search = $orig_search;
-    unset($render_actions_extra_options);
-    unset($render_actions_filter);
+    $result = $orig_result;
 
     return;
     }
