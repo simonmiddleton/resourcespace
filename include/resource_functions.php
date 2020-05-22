@@ -3023,7 +3023,7 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
         return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
 	}
 
-function get_alternative_files($resource,$order_by="",$sort="")
+function get_alternative_files($resource,$order_by="",$sort="",$type="")
 	{
 	# Returns a list of alternative files for the given resource
 	if ($order_by!="" && $sort!=""){
@@ -3031,7 +3031,11 @@ function get_alternative_files($resource,$order_by="",$sort="")
 	} else {
 		$ordersort="";
 	}
-	$extrasql=hook("get_alternative_files_extra_sql","",array($resource));
+    $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
+    
+    # Filter by type, if provided.
+    if ($type!="") {$extrasql.= " and alt_type='" . escape_check($type) . "'";}
+
 	return sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='".escape_check($resource)."' $extrasql order by ".escape_check($ordersort)." name asc, file_size desc");
 	}
 	
