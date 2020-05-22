@@ -2316,7 +2316,16 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	{
 		$order_by = $default_collection_sort;
 		}
-	
+    
+    if($pagename == 'collection_manage') 
+        {
+        $min_access = collection_min_access($collection_data['ref']);
+        }
+    else
+        {
+        $min_access = collection_min_access($result);
+        }
+
     // If resourceconnect plugin activated, need to consider if resource connect resources exist in the collection - if yes display view all resources link	
 	$count_resourceconnect_resources = hook("countresult","", array($urlparams["collection"],0));
 	$count_resourceconnect_resources = is_numeric($count_resourceconnect_resources) ? $count_resourceconnect_resources : 0;
@@ -2346,15 +2355,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     
     // Download option
-    if($pagename == 'collection_manage') 
-        {
-        $min_access = collection_min_access($collection_data['ref']);
-        }
-    else
-        {
-        $min_access = collection_min_access($result);
-        }
-
     if($min_access == 0 )
         {
         if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
@@ -2621,14 +2621,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
 		# Ability to request a whole collection (only if user has restricted access to any of these resources)
-		if($pagename == 'collection_manage') 
-			{
-			$min_access = collection_min_access($collection_data['ref']);
-			}
-		else
-		    {
-			$min_access = collection_min_access($result);
-			}
         if($min_access != 0)
             {                
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
