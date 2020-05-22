@@ -204,21 +204,16 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     }
 
 
-function HookRse_workflowAllRender_actions_add_collection_option($top_actions, array $options)
+function HookRse_workflowAllRender_actions_add_collection_option($top_actions, array $options, $collection_data, $urlparams)
     {
-    global $baseurl_short, $lang, $pagename, $collection, $count_result;
+    global $baseurl_short, $lang, $pagename, $count_result;
 
     if($pagename == "collections" && $count_result == 0)
         {
         return false;
         }
 
-    // Validate actions without going through all resources to not impact performance on huge sets
-    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);
-    if(empty($valid_actions))
-        {
-        return false;
-        }
+    $wf_actions_options = rse_workflow_compile_actions($urlparams);
 
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
@@ -226,26 +221,7 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
         $options = $GLOBALS["hook_return_value"];
         }
 
-    foreach($valid_actions as $action)
-        {
-        $option = array(
-            "value" => "rse_workflow_move_to_workflow",
-            "label" => i18n_get_translated($action["buttontext"]),
-            "data_attr" => array(
-                "url" => generateURL(
-                    "{$baseurl_short}plugins/rse_workflow/pages/batch_action.php",
-                    array(
-                        "collection" => $collection,
-                        "action" => $action["ref"],
-                    )),
-            ),
-            "category" => ACTIONGROUP_EDIT
-        );
-
-        $options[] = $option;
-        }
-
-    return $options;
+    return array_merge($options, $wf_actions_options);
     }
 
 function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_id)

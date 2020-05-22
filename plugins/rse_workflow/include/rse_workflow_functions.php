@@ -199,9 +199,42 @@ function rse_workflow_validate_action(array $action, array $resource)
 
 
 /**
+* Compile workflow actions for the unified dropdown actions. This will validate actions using only 'wf' permissions (@see rse_workflow_get_valid_actions)
 * 
+* @param array $url_params Inject any url params if needed. Useful to pass along search params.
+* 
+* @return array
 */
-function rse_workflow_render_actions()
+function rse_workflow_compile_actions(array $url_params)
     {
-    return;
+    // Validate actions without going through all resources to not impact performance on huge sets
+    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);
+    if(empty($valid_actions))
+        {
+        return array();
+        }
+
+    global $baseurl;
+
+    $wf_actions = array();
+    foreach($valid_actions as $action)
+        {
+        $option = array(
+            "value" => "rse_workflow_move_to_workflow",
+            "label" => i18n_get_translated($action["buttontext"]),
+            "data_attr" => array(
+                "url" => generateURL(
+                    "{$baseurl}/plugins/rse_workflow/pages/batch_action.php",
+                    $url_params,
+                    array(
+                        "action" => $action["ref"],
+                    )),
+            ),
+            "category" => ACTIONGROUP_EDIT
+        );
+
+        $wf_actions[] = $option;
+        }
+
+    return $wf_actions;
     }

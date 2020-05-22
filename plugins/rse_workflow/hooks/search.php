@@ -1,13 +1,7 @@
 <?php
 function HookRse_workflowSearchRender_search_actions_add_option(array $options, array $urlparams)
     {
-    echo "<pre>";print_r($urlparams);echo "</pre>";
-
-    rse_workflow_render_actions();
-
-
-
-
+    $wf_actions_options = rse_workflow_compile_actions($urlparams);
 
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
@@ -15,7 +9,5 @@ function HookRse_workflowSearchRender_search_actions_add_option(array $options, 
         $options = $GLOBALS["hook_return_value"];
         }
 
-    // $options_new = array_merge($options, $wf_actions_options);
-
-    return $options;
+    return array_merge($options, $wf_actions_options);
     }
