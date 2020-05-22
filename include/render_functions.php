@@ -3229,3 +3229,15 @@ function render_user_collection_select($name = "collection", $collections=array(
            
 	echo "</select>";
     }
+
+
+/**
+* Render CSRF information as data attributes. Useful to allow JS to run state changing operations
+*/
+function render_csrf_data_attributes($ident)
+    {
+    global $CSRF_token_identifier, $usersession;
+
+    $token = generateCSRFToken($usersession, $ident);
+    return "data-csrf-token-identifier=\"{$CSRF_token_identifier}\" data-csrf-token=\"{$token}\"";
+    }

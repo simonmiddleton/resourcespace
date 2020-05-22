@@ -22,6 +22,8 @@ $allowed_actions = array(
     "render_edit_selected_btn",
     "render_clear_selected_btn",
     "remove_selected_from_collection",
+    "add_resource",
+    "remove_resource",
 );
 
 if($action == "" || !in_array($action, $allowed_actions))
@@ -29,8 +31,6 @@ if($action == "" || !in_array($action, $allowed_actions))
     $fail_msg = str_replace("%key", "action", $lang["error-request-missing-key"]);
     ajax_send_response(400, ajax_response_fail(ajax_build_message($fail_msg)));
     }
-
-// todo: move actions from pages/collections.php here (break them apart if needed to cover single responsibilities)
 
 if($action == "clear_selection_collection_resources")
     {
@@ -83,4 +83,71 @@ if($action == "remove_selected_from_collection")
         }
 
     ajax_send_response(200, ajax_response_ok_no_data());
+    }
+
+if($action == "add_resource")
+    {
+    $resource = getval("resource", null, true);
+    $collection = getval("collection", null, true);
+    $smartadd = getval("smartadd", false);
+    $size = getval("size", "");
+    $addtype = getval("addtype", "");
+
+    $collection_data = get_collection($collection);
+    if($collection_data["type"] == COLLECTION_TYPE_UPLOAD)
+        {
+        ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+        }
+
+    $allow_add = true;
+    // If collection has been shared externally need to check access and permissions
+    $external_keys = get_collection_external_access($collection);
+    if(is_array($external_keys) && !empty($external_keys))
+        {
+        if(checkperm("noex"))
+            {
+            $allow_add = false;
+            }
+        else
+            {
+            // Not permitted if share is open and access is restricted
+            if(min(array_column($external_keys, "access")) < get_resource_access($add))
+                {
+                $allow_add = false;
+                }
+            }
+
+        if(!$allow_add)
+            {
+            ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["sharedcollectionaddblocked"])));
+            }
+        }
+
+    if($allow_add)
+        {
+        if(!add_resource_to_collection($resource, $collection, $smartadd, $size, $addtype))
+            {
+            ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+            }
+
+        daily_stat("Add resource to collection", $resource);
+        }
+
+    ajax_send_response(200, ajax_response_ok_no_data());
+    }
+
+if($action == "remove_resource")
+    {
+    $resource = getval("resource", null, true);
+    $collection = getval("collection", null, true);
+    $smartadd = getval("smartadd", false);
+    $size = getval("size", "");
+
+    if(remove_resource_from_collection($resource, $collection, $smartadd, $size))
+        {
+        daily_stat("Removed resource from collection", $resource);
+        ajax_send_response(200, ajax_response_ok_no_data());
+        }
+
+    ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
     }
