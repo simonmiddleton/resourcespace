@@ -75,7 +75,7 @@ $selected_columns[] = $csv_set_options["resource_type_column"];
 $selected_columns[] = $csv_set_options["id_column"];
 $selected_columns[] = $csv_set_options["status_column"];
 $selected_columns[] = $csv_set_options["access_column"];
-array_filter($selected_columns);
+$selected_columns = array_filter($selected_columns,"emptyiszero");
 
 rs_setcookie("saved_csv_options",json_encode($csv_set_options));
 
