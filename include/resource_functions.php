@@ -2293,6 +2293,10 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
                 $diff = $tovalue;
                 break;
 
+            case LOG_CODE_CREATED:
+                $diff = $tovalue;
+                break;
+
             default:                
                 $diff = log_diff($fromvalue, $tovalue);
             }
@@ -3014,14 +3018,16 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 
 function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
-	# Import the resource at the given path
-	# This is used by staticsync.php and Camillo's SOAP API
-	# Note that the file will be used at it's present location and will not be copied.
+    global $syncdir;
+    // Import the resource at the given path
+    // This is used by staticsync.php and Camillo's SOAP API
+    // Note that the file will be used at it's present location and will not be copied.
 
-	# Create resource
-	$r=create_resource($type);
-        return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
-	}
+    $r=create_resource($type);
+    // Log this in case the original location is not stored anywhere else
+    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_CREATED,'','','', $syncdir . DIRECTORY_SEPARATOR . $path);
+    return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
+    }
 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
 	{

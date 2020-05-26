@@ -38,7 +38,8 @@ if(isset($staticsync_userref))
     # If a user is specified, log them in.
     $userref=$staticsync_userref;
     $userdata=get_user($userref);
-    setup_user($userdata);
+    $userdata = array($userdata);
+    setup_user($userdata[0]);
     }
 
 ob_end_clean();
