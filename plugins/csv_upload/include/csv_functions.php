@@ -412,7 +412,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     {
                     // Check nodes are valid for this field, remove quotes 
                     //echo "Checking for '" . htmlspecialchars($cell_value_item) . "' in ('" . implode("','",$currentoptions) . "')<br/>";
-                                    
 
                     if('' != $cell_value_item && !in_array(mb_strtolower($cell_value_item), $currentoptions))
                         {
@@ -640,13 +639,6 @@ function csv_upload_get_info($filename, &$messages)
 		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 		return false;		
         }
-    if (count($headers)!=count(array_unique($headers)))
-		{
-		array_push($messages,"Error: duplicate header fields found");
-		fclose($file);
-		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
-		return false;		
-		}
 
     // Create array to hold sample data to show to user
     $headercount = count($headers);
