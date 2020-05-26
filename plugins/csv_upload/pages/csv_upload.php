@@ -17,6 +17,7 @@ $fd="user_{$userref}_uploaded_meta";			// file descriptor for uploaded file
 $allfields              = get_resource_type_fields();
 $csv_set_options = array();
 $csv_saved_options = getval("saved_csv_options","");
+$existing_config = false;
 
 if(isset($_FILES["csv_config"]) && $_FILES["csv_config"]['error'] == 0)
     {
@@ -36,8 +37,9 @@ if(getval("getconfig","") != "")
 if($csv_saved_options != "" && getval("resetconfig","") == "")
     { 
     $csv_set_options = json_decode($csv_saved_options, true);
+    $existing_config = true;
     }
-    
+
 $default_status = get_default_archive_state();
 $csv_settings = array(
     "add_to_collection" => 0,
@@ -236,36 +238,49 @@ switch($csvstep)
             </div>
         </form>
 
-        <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_config_form" method="post" enctype="multipart/form-data" >
-            <?php generateFormToken("upload_csv_config_form"); ?>
-            <input type="hidden" id="csvstep" name="csvstep" value="1" > 			
-            <div class="Question">
-                <label for="csv_config"><?php echo $lang['csv_upload_upload_config'] ?></label>
-                <input type="file" id="csv_config" name="csv_config" onchange="if(this.value==null || this.value=='') { jQuery('.config_selected').hide(); } else { jQuery('.config_selected').show(); } ">	
-                <div class="clearerleft"> </div>
-            </div>	
-            
-            <div class="config_selected Question" style="display: none;">
-                <label for="submit" class="config_selected" style="display: none;"></label>
-                <input type="submit" id="submit" value="<?php echo $lang["upload"]; ?>" class="config_selected" style="display: none;"> 
-                <div class="clearerleft"> </div>
-            </div>
-
-            <div class="Question">
-                <label for="clear"></label>
-                <div class="fixed" ><a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("resetconfig"=>"1")); ?>"><?php echo LINK_CARET . $lang["csv_upload_upload_config_clear"]; ?></a></div>
-                <div class="clearerleft"> </div>
-            </div>
+        <br/>
+        <div>
+            <h2><?php echo $lang["csv_upload_mapping config"]; ?></h2>
+            <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_config_form" method="post" enctype="multipart/form-data" >
+                <?php generateFormToken("upload_csv_config_form"); ?>
+                <input type="hidden" id="csvstep" name="csvstep" value="1" > 			
 
 
-            <div class="VerticalNav">
-            <ul>
-                <li>
+                <?php
+                if($existing_config)
+                    {?>
+                    <div class="Question">
+                        <label for="clear"><?php echo $lang["csv_upload_using_config"]; ?></label>
+                        <div class="fixed" ><a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("resetconfig"=>"1")); ?>" onclick="return CentralSpaceLoad(this,false);"><?php echo LINK_CARET . $lang["csv_upload_upload_config_clear"]; ?></a></div>
+                        <div class="clearerleft"> </div>
+                    </div>
+                    <?php
+                    }                    
+                else
+                    {?>
+                    <div class="Question">
+                        <label for="csv_config"><?php echo $lang['csv_upload_upload_config'] ?></label>
+                        <input type="file" id="csv_config" name="csv_config" onchange="if(this.value==null || this.value=='') { jQuery('.config_selected').hide(); } else { jQuery('.config_selected').show(); } ">	
+                        <div class="clearerleft"> </div>
+                    </div>	
                     
-                </li>
-            </ul>
+                    <div class="config_selected Question" style="display: none;">
+                        <label for="submit" class="config_selected" style="display: none;"></label>
+                        <input type="submit" id="submit" value="<?php echo $lang["upload"]; ?>" class="config_selected" style="display: none;"> 
+                        <div class="clearerleft"> </div>
+                    </div>
+                    <?php
+                    }?>
+
+                <div class="VerticalNav">
+                <ul>
+                    <li>
+                        
+                    </li>
+                </ul>
+            </div>
+            </form>
         </div>
-        </form>
         <?php
         break;
     case 2:
