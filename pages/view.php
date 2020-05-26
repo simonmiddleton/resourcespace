@@ -1946,21 +1946,40 @@ if ($view_resource_collections && !checkperm('b')){ ?>
 	</script>
 	<?php }
 
-// include optional ajax metadata report
-if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access)){?>
-        <div class="RecordBox">
+if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
+    {
+    ?>
+    <div class="RecordBox">
         <div class="RecordPanel">  
-        <div class="Title"><?php echo $lang['metadata-report']?></div>
-        <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#"> <?php echo LINK_CARET . $lang['viewreport'];?></a><br /></div>
+            <h3 class="CollapsibleSectionHead collapsed"><?php echo $lang['metadata-report']; ?></h3>
+            <div id="<?php echo $context; ?>MetadataReportSection" class="CollapsibleSection"></div>
+            <script>
+            jQuery("#<?php echo $context; ?>MetadataReportSection").on("ToggleCollapsibleSection", function(e, data)
+                {
+                if(data.state == "collapsed")
+                    {
+                    return false;
+                    }
+
+                // if report has already been generated, just show it
+                if(jQuery.trim(jQuery(this).html()).length > 0)
+                    {
+                    return true;
+                    }
+
+                CentralSpaceShowLoading();
+                metadataReport(<?php echo htmlspecialchars($ref); ?>, '<?php echo htmlspecialchars($context); ?>');
+
+                return true;
+                });
+            </script>
         </div>
-        
-        </div>
+    </div>
+    <?php
+    }
 
-<?php } ?>
+hook("customrelations"); //For future template/spawned relations in Web to Print plugin
 
-<?php hook("customrelations"); //For future template/spawned relations in Web to Print plugin ?>
-
-<?php
 # -------- Related Resources (must be able to search for this to work)
 if($enable_related_resources && !isset($relatedresources))
     {
@@ -2297,11 +2316,11 @@ if($annotate_enabled)
 	?>
 
 <script>
-/* Call SelectTab upon page load to select first tab*/
-jQuery('document').ready(function() 
-	{       
-	SelectTab();
-	});
+jQuery('document').ready(function()
+    {
+    /* Call SelectTab upon page load to select first tab*/
+    SelectTab();
+    registerCollapsibleSections(false);
+    });
 </script>
-
-<?php include "../include/footer.php"; ?>
+<?php include "../include/footer.php";
