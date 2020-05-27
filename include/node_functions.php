@@ -1168,6 +1168,7 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
 */        
 function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
     {
+    global $userref;
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
 
@@ -1178,6 +1179,12 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
         $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
         if(!$access)
             {return false;}
+
+        if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+            {
+            $error = get_resource_lock_message($resourcedata["lock_user"]);
+            return false;
+            }
         }
     if(!is_array($nodes))
         {$nodes=array($nodes);}
@@ -1211,6 +1218,7 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
 */
 function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
     {
+    global $userref;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
         {return false;}
     
@@ -1223,6 +1231,12 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
             if(!$access)
                 {return false;}
+            
+            if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+                {
+                $error = get_resource_lock_message($resourcedata["lock_user"]);
+                return false;
+                }
             }
         }
 

@@ -35,7 +35,7 @@ function HookRse_workflowViewPageevaluation()
                 $validstates = explode(',', $workflowaction['statusfrom']);
                 $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
     
-                if('' != $k)
+                if('' != $k || ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref))
                     {
                     $edit_access = 0;
                     }
@@ -78,8 +78,13 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     {
     include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
 
-    global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos;
+    global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos, $userref;
     
+    if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        {
+        return false;
+        }
+
     # Retrieve list of existing defined actions
     $workflowactions = rse_workflow_get_actions();
     $validactions    = array();

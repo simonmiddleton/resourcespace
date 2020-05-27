@@ -1773,7 +1773,7 @@ $lang["can_change_own_password"]="Can change own account password. Unchecking th
 $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_users_in_children_groups"]="Can manage users in children groups to the user's group only";
 $lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can email resources to users in the user's own group, children groups and parent group only";
-$lang["permission_nolock"] = "Block locking of editable resources (locking is used to prevent resources being edited by other users)";
+$lang["permission_nolock"] = "Disable locking of editable resources (locking is used to prevent resources being edited by other users)";
 $lang["nodownloadcollection"]="You do not have access to download any of the resources in this collection.";
 
 $lang["progress"]="Progress";
@@ -2882,3 +2882,6 @@ $lang["status_locked_by"]                   = "Locked by %%USER%%";
 $lang["status_locked_self"]                 = "You have locked this resource";
 $lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
 $lang["error_locked_other_user"]            = "Resource is locked by another user";
+$lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
+$lang["error-edit_locked_resources"]        = "The following resources are locked: ";
+$lang["locked_resource_search"]             = "Locked resources";

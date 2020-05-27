@@ -1827,6 +1827,11 @@ a.BrowseRefresh{
     background-color:red;    
     }
 
+
+.ResourceLocked{
+    float:left;
+}
+
 .ResourceLocked:before{
     content: "\f023";
     font: normal normal normal 14px "Font Awesome 5 Free";

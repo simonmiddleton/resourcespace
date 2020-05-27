@@ -2273,7 +2273,10 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
-  error_fields[0].scrollIntoView();
+  if(error_fields.length > 0)
+    {
+    error_fields[0].scrollIntoView();
+    }
   styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
   <?php

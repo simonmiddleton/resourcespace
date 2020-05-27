@@ -84,7 +84,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
-           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS;
+           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
+           $userref;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -106,7 +107,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	$errors=array();
 	$fields=get_resource_field_data($ref,$multi, !hook("customgetresourceperms"));    
 	$expiry_field_edited=false;
-	$resource_data=get_resource_data($ref);
+    $resource_data=get_resource_data($ref);
+    
+    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+        {
+        $errors[] = get_resource_lock_message($resource_data["lock_user"]);
+        return $errors;
+        }
 		
 	# Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
 	resource_type_config_override($resource_data["resource_type"]);                
@@ -752,9 +759,11 @@ if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection,$editsearch = array())
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
-    $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES;
+    $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
+
+    $errors = array();
     if($collection == 0 && isset($editsearch["search"]))
         {
         // Editing a result set, not a collection
@@ -766,8 +775,37 @@ function save_resource_data_multi($collection,$editsearch = array())
         # Save all submitted data for collection $collection, 
         $list   = get_collection_resources($collection);
         }
+    
+    // Check that user can edit all resources, edit access and not locked by another user
+    $noeditaccess = array();
+    $lockedresources = array();
+    foreach($list as $listresource)
+        {
+        $resource_data[$listresource]  = get_resource_data($listresource, true);
+        if(!get_edit_access($listresource,$resource_data[$listresource]["archive"], $resource_data[$listresource]))
+            {
+            $noeditaccess[] = $listresource;
+            }
+        if($resource_data[$listresource]["lock_user"] != 0 && $resource_data[$listresource]["lock_user"] != $userref)
+            {
+            $lockedresources[] = $listresource;
+            }
+        }
 
-    $errors = array();
+    if(count($noeditaccess) > 0)
+        {
+        $errors[] = $lang["error-edit_noaccess"] . implode(",",$noeditaccess);
+        }
+    if (count($lockedresources) > 0)
+        {
+        $errors[] = $lang["error-edit_locked_resources"] . implode(",",$lockedresources);            
+        }
+
+    if(count($errors) > 0)
+        {
+        return $errors;
+        }
+
     $tmp    = hook("altercollist", "", array("save_resource_data_multi", $list));
     if(is_array($tmp))
         {
@@ -1053,15 +1091,13 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $ref            = $list[$m];
                     $resource_sql   = '';
                     $value_changed  = false;  
-                    $resource_data  = get_resource_data($ref, true);
-
                     if(
                         (
                             // Not applicable for global fields or archive only fields
                             !in_array($fields[$n]["resource_type"], array(0, 999))
-                            && $resource_data["resource_type"] != $fields[$n]["resource_type"]
+                            && $resource_data[$ref]["resource_type"] != $fields[$n]["resource_type"]
                         )
-                        || ($fields[$n]["resource_type"] == 999 && $resource_data["archive"] != 2)
+                        || ($fields[$n]["resource_type"] == 999 && $resource_data[$ref]["archive"] != 2)
                     )
                         {
                         continue;
@@ -1131,7 +1167,6 @@ function save_resource_data_multi($collection,$editsearch = array())
                         if($fields[$n]["required"] && strip_leading_comma($val)=="")
                             {
                             // Required field and  no value now set, revert to existing and add to array of failed edits
-                            global $lang;
                             $val=$existing;
                             if(!isset($errors[$fields[$n]["ref"]]))
                                 {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
@@ -1155,7 +1190,6 @@ function save_resource_data_multi($collection,$editsearch = array())
                         if($fields[$n]["required"] && strip_leading_comma($val)=="")
                             {
                             // Required field and  no value now set, revert to existing and add to array of failed edits
-                            global $lang;
                             $val=$existing;
                             if(!isset($errors[$fields[$n]["ref"]]))
                                 {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
@@ -1615,8 +1649,15 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true)
     {
-    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents;
+    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username;
     
+    $resource_data = get_resource_data($resource);
+    if ($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+        {
+        $errors[] = get_resource_lock_message($resource_data["lock_user"]);
+        return false;
+        }
+
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
         {
@@ -1980,6 +2021,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 function delete_resource($ref)
 	{
+    global $userref;
 	# Delete the resource, all related entries in tables and all files on disk
 	$ref      = escape_check($ref);
 	$resource = get_resource_data($ref);
@@ -1993,6 +2035,8 @@ function delete_resource($ref)
                 (isset($allow_resource_deletion) && !$allow_resource_deletion)
                 ||
                 !get_edit_access($ref,$resource["archive"], false,$resource)
+                ||
+                (isset($userref) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
                 )
             &&
                 !hook('check_single_delete')
@@ -3926,7 +3970,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	if ($status==-999) # Archive status may not be passed 
 		{$status=$resourcedata["archive"];}
 		
-	if ($resource==0-$userref) {return true;} # Can always edit their own user template.
+    if ($resource==0-$userref) {return true;} # Can always edit their own user template.
 
     # If $edit_access_for_contributor is true in config then users can always edit their own resources.
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
@@ -5524,7 +5568,6 @@ function process_edit_form($ref, $resource)
         if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
             {
             $save_errors = array("resource_type"=>$lang["resourcetype"] . ": " . $lang["save-conflict-error"]);
-            $show_error=true;
             }
         else
             {
@@ -5558,7 +5601,6 @@ function process_edit_form($ref, $resource)
         {
         if (!is_array($save_errors)){$save_errors=array();} 
         $save_errors['resource_type'] = $lang["resourcetype"] . ": " . $lang["requiredfield"];
-        $show_error=true;
         }
       
     if ($upload_collection_name_required)
@@ -5567,7 +5609,6 @@ function process_edit_form($ref, $resource)
               { 
               if (!is_array($save_errors)){$save_errors=array();} 
               $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
-              $show_error=true;
               }
        }
 
@@ -5787,11 +5828,14 @@ function save_original_file_as_alternative($ref)
 
 function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate=false, $keep_original=true)
     {
-    global $replace_resource_preserve_option, $notify_on_resource_change_days, $lang;
+    global $replace_resource_preserve_option, $notify_on_resource_change_days, $lang, $userref;
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
     
     $resource = get_resource_data($ref);
-    if (!get_edit_access($ref,$resource["archive"],false,$resource))
+    if (!get_edit_access($ref,$resource["archive"],false,$resource)
+        ||
+        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        )
         {
         return false;
         }
@@ -6066,6 +6110,10 @@ function filter_check($filterid,$nodes)
 function update_resource_lock($ref,$lockaction,$newlockuser=0,$accesschecked = false)
     {
     global $userref;
+    if($ref <= 0)
+        {
+        return false;
+        }
 
     if($newlockuser==0)
         {
@@ -6107,7 +6155,7 @@ function get_resource_lock_message($lockuser)
     $visible_users = get_users(0,"","u.username",true);
     if($lockuser == 0)
         {
-        return $lang["status_unlocked"];
+        return "";
         }
     elseif($lockuser == $userref)
         {

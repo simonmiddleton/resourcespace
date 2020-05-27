@@ -594,6 +594,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 ?>
 <script>
 var resource_lock_status = <?php echo (int)$resource_locked ?>;
+var lockmessage = new Array();
+lockmessage[<?php echo $ref ?>] = '<?php echo $lock_details ?>';
 
 <?php 
 if($resource_locked && $resource['lock_user'] != $userref)
@@ -625,18 +627,19 @@ function updateResourceLock(resource,lockstatus)
             jQuery('#lock_link_' + resource).toggleClass("ResourceLocked");
             jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
             if(lockstatus==1)
-                {         
-                alert("LOCKED " + resource);       
+                {               
                 jQuery('#lock_link_' + resource).html('<?php echo $lang["action_unlock"] ;?>');
                 jQuery('#lock_link_' + resource).attr("title","<?php echo $lang["status_locked_self"]; ?>");
+                lockmessage[resource] = '<?php echo $lang["status_locked_self"]; ?>';
+                jQuery('#lock_details_link').show();
                 }
             else
                 {
-                alert("UNLOCKED " + resource); 
-                jQuery('#lock_link_' + resource).removeAttr('title');
                 jQuery('#lock_link_' + resource).html('<?php echo $lang["action_lock"] ;?>');
-
-                console.log("jQuery('#lock_link_" + resource + "').attr('title','');");
+                lockmessage[resource] = '';
+                jQuery('#lock_details_link').hide();
+                // Timeout added as title seems to resist removal if cursor is hovering at same time
+                setTimeout(function() {jQuery('#lock_link_' + resource).removeAttr("title");},1000);
                 }
             resource_lock_status = !resource_lock_status;
             },

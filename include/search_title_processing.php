@@ -348,6 +348,10 @@ if ($search_titles)
         {
         $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!integrityfail'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["file_integrity_fail_search"].'</a>'.$searchcrumbs.'</h1> ';
         }
+    elseif (substr($search,0,14)=="!locked")
+        {
+        $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!locked'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["locked_resource_search"].'</a>'.$searchcrumbs.'</h1> ';
+        }
 	
 	hook("addspecialsearchtitle");
 	}

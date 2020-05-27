@@ -2256,7 +2256,7 @@ function renderBreadcrumbs(array $links, $pre_links = '')
     /*
     NOTE: implemented as seen on themes and search. There is a lot of room for improvement UI wise
 
-    TODO: search_title_processing.php is using it intesively and at the moment there are differences in terms of 
+    TODO: search_title_processing.php is using it intensively and at the moment there are differences in terms of 
     rendered HTML between themes/ search and search_title_processing.php. We should refactor all places were breadcrumbs
     are being created and make sure they all use this function (or any future related functions - like generateBreadcrumb() ).
     */
@@ -3070,9 +3070,10 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
     
     $lock_details = get_resource_lock_message($lockuser);
 
+    echo "<li>";
     if($edit_lock_option)
         {
-        echo "<li><a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
+        echo "<a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
         echo "title='" .  $lock_details . "'";
         echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
         if($resource_locked)
@@ -3083,10 +3084,12 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
             {
             $locktext = $lang["action_lock"];
             }
-        echo $locktext . "</a></li>";
+        echo $locktext . "</a>";
         }
     else
         {
-        echo "<li><div  class='ResourceLocked' title='" .  $lock_details . "' >" . $lang["status_locked"] . "</div></li>";
+        echo "<div  class='ResourceLocked' title='" .  $lock_details . "' >" . $lang["status_locked"] . "</div>";
         }
+
+    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
     }

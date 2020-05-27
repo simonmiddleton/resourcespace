@@ -484,7 +484,7 @@ if ($_FILES)
         if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
             debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
-            die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
+            die('{"jsonrpc" : "2.0", "error" : {"code": 110, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
         }}
 
@@ -1117,6 +1117,17 @@ var pluploadconfig = {
                                                 {
                                                     jQuery("#UploadLogSectionHead").click();
                                                     uploader.settings.logopened = true;
+                                                }
+                                            }
+                                        else if(uploadresponse.error.code==109)
+                                            {
+                                            message = uploadresponse.error.message +  ' ' + uploadresponse.id;
+                                            styledalert('<?php echo $lang["error"] ?> ' + uploadresponse.error.code, message);   
+                                            jQuery("#upload_log").append("\r\n" + message);
+                                            if(!uploader.settings.logopened)
+                                                {
+                                                jQuery("#UploadLogSectionHead").click();
+                                                uploader.settings.logopened = true;
                                                 }
                                             }
                                         else

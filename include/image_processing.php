@@ -28,7 +28,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         return false;
         }
 
-    global $lang, $upload_then_process, $offline_job_queue;
+    global $lang, $upload_then_process, $offline_job_queue, $userref;
+
+    $resource_data=get_resource_data($ref);    
+    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+        {
+        return false;
+        }
     
     if($upload_then_process && !$offline_job_queue)
         {
@@ -3146,8 +3152,14 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
         return false;
         }
 
-    # Download a file from the provided URL, then upload it as if it was a local upload.
     global $userref;
+    $resource_data=get_resource_data($ref);    
+    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+        {
+        return false;
+        }
+
+    # Download a file from the provided URL, then upload it as if it was a local upload.
     $file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
     $s=explode("?",$file_path);$file_path=$s[0]; # Remove query string if it was present in the URL
 
