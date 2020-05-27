@@ -131,7 +131,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             $missing_fields=array();
             foreach ($meta[$resource_type_set] as $field_name=>$field_attributes)
                 {
-                if ($field_attributes['required'] && array_search($field_attributes["ref"], $csv_set_options["fieldmapping"])===false)
+                if ($field_attributes['required'] && array_search($field_attributes["remote_ref"], $csv_set_options["fieldmapping"])===false)
                     {
                     $meta[$resource_type_set][$field_name]['missing']=true;
                     array_push($missing_fields, $meta[$resource_type_set][$field_name]['nicename']);
