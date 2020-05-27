@@ -14,7 +14,7 @@ include_once (dirname(__FILE__)."/../include/meta_functions.php");
 include_once (dirname(__FILE__)."/../include/csv_functions.php");
 	
 $fd="user_{$userref}_uploaded_meta";			// file descriptor for uploaded file
-$allfields              = get_resource_type_fields();
+$allfields              = get_resource_type_fields("","title");
 $csv_set_options = array();
 $csv_saved_options = getval("saved_csv_options","");
 $existing_config = false;
@@ -136,7 +136,7 @@ jQuery('document').ready(function()
         {
         jQuery(this).attr("prev",this.value);
 
-        if(this.value == -1)
+        if(this.value == -1 || this.value == '')
             {
             return;
             }
