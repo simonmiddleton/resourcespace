@@ -3166,6 +3166,8 @@ function render_selected_collection_actions()
         "search_items_disk_usage",
         "csv_export_results_metadata",
         "share_collection",
+        "download_collection",
+        "license_batch",
     );
 
     if($refs_to_remove > 0)
