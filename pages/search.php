@@ -517,7 +517,8 @@ $searchparams= array(
     'sort'                                      => $sort,
     'restypes'                                  => $restypes,
     'recentdaylimit'                            => getvalescaped('recentdaylimit', '', true),
-    'foredit'                                   => ($editable_only?"true":"")
+    'foredit'                                   => ($editable_only?"true":""),
+    'noreload'                                  => "true"
 );
  
 $checkparams = array();
