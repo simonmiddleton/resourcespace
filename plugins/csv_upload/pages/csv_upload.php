@@ -558,7 +558,7 @@ switch($csvstep)
                                 {
                                 echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars($field["title"]) . "</option>\n";
+                            echo  ">" . htmlspecialchars($field["title"]) . ($field["resource_type"] != 0 && isset($resource_types[$field["resource_type"]]) ? (" (" . $resource_types[$field["resource_type"]]["name"]  . ")"): "") . "</option>\n";
                             }
                         echo "</select></td>";
                         echo "<td>";
