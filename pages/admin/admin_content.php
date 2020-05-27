@@ -145,6 +145,7 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 <?php if ($site_text_custom_create){?>
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php">
+	<input type="hidden" name="custom" value="1"/>
 		<?php generateFormToken("admin_content_new"); ?>
         <div class="Question">
 			<label for="find"><?php echo $lang["addnewcontent"]?></label>
