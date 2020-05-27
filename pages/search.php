@@ -1645,5 +1645,81 @@ if($search_anchors)
     </script>
     <?php
     }
+    ?>
+<script>
+jQuery(document).ready(function()
+    {
+    jQuery(".checkselect").click(function(e)
+        {
+        if(e.shiftKey == false)
+            {
+            ToggleCollectionResourceSelection(e, <?php echo $USER_SELECTION_COLLECTION; ?>);
+            shift_select_previous_target = e.target;
+            return;
+            }
 
+        if(typeof shift_select_previous_target === "undefined")
+            {
+            shift_select_previous_target = e.target;
+            return;
+            }
+
+        var input = e.target;
+        var in_range = false;
+        jQuery(".checkselect").each(function()
+            {
+            var mark = (shift_select_previous_target === this || input === this);
+
+            if(mark && typeof last_mark === "undefined")
+                {
+                console.debug("Mark added at element with ID %o", this.id);
+                in_range = true;
+                last_mark = this;
+                }
+            else if(mark && typeof last_mark !== "undefined")
+                {
+                console.debug("Mark removed at element with ID %o", this.id);
+                in_range = false;
+                last_mark = this;
+
+                if(jQuery(input).prop("checked"))
+                    {
+                    this.setAttribute("checked", "checked");
+                    }
+                else
+                    {
+                    this.removeAttribute("checked");
+                    }
+                var toggle_event = jQuery.Event("click", { target: this });
+                ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
+                }
+
+            if(!in_range)
+                {
+                return;
+                }
+
+            console.debug("checkselect is in range -- %o", this.id);
+            if(jQuery(input).prop("checked"))
+                {
+                this.setAttribute("checked", "checked");
+                }
+            else
+                {
+                this.removeAttribute("checked");
+                }
+            var toggle_event = jQuery.Event("click", { target: this });
+            ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
+
+            return;
+            });
+
+        delete(shift_select_previous_target);
+        delete(last_mark);
+
+        return;
+        });
+    });
+</script>
+<?php
 include '../include/footer.php';

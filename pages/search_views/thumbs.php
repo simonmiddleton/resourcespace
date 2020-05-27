@@ -371,8 +371,7 @@ if (!hook("renderresultthumb"))
                             { ?>
                             checked
                             <?php 
-                            } ?> 
-                        onclick="return ToggleCollectionResourceSelection(event, <?php echo $USER_SELECTION_COLLECTION; ?>);"
+                            } ?>
                     >
                     <?php 
                     }

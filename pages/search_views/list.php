@@ -25,8 +25,7 @@ if (!hook("replacelistitem"))
                         class="checkselect" 
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
-                        <?php if (in_array($ref, $selection_collection_resources)) { ?> checked <?php } ?> 
-                        onclick="return ToggleCollectionResourceSelection(event, <?php echo $USER_SELECTION_COLLECTION; ?>);"
+                        <?php if (in_array($ref, $selection_collection_resources)) { ?> checked <?php } ?>
                     >
                 </td>
                 <?php 
