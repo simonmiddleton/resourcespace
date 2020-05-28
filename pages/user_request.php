@@ -64,7 +64,7 @@ if (getval("save","")!="")
 
 	if (!empty($missingFields))
 		{
-		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields), true);
+		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields));
 		}
     # Check the anti-spam time is recent
     elseif(getval("antispamtime",0)<(time()-180) ||  getval("antispamtime",0)>time())

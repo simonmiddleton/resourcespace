@@ -2820,7 +2820,7 @@ function write_metadata($path, $ref, $uniqid="")
                             }
                             else
                             {
-                                $command.= escapeshellarg("-" . $group_tag . "=" . htmlentities(i18n_get_translated($writevalue,false), ENT_QUOTES, "UTF-8")) . " ";
+                                $command.= escapeshellarg("-" . $group_tag . "=" . htmlentities(i18n_get_translated($writevalue), ENT_QUOTES, "UTF-8")) . " ";
                             }
                     }
                 }

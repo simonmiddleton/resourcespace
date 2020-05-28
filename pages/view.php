@@ -446,10 +446,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		else {$title="";}
 
 		# Value formatting
-		if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
-			{$i18n_split_keywords =true;}
-		else 	{$i18n_split_keywords =false;}
-		$value=i18n_get_translated($value,$i18n_split_keywords );
+		$value=i18n_get_translated($value);
 		
 		// Don't display the comma for radio buttons:
 		if($field['type'] == FIELD_TYPE_RADIO_BUTTONS) {
