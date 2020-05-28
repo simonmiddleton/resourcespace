@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . '/../../../include/collections_functions.php';
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {      

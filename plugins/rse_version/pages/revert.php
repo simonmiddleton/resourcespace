@@ -4,9 +4,7 @@ namespace RseVersion;
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; 
 include_once '../../../include/general.php';
-include_once '../../../include/resource_functions.php';
 include_once '../../../include/image_processing.php';
-include_once '../../../include/collections_functions.php';
 include_once '../include/rse_version_functions.php';
 
 if(is_valid_revert_state_request())

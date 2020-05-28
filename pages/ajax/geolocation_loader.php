@@ -1,7 +1,6 @@
 <?php
 include "../../include/db.php";
 include_once "../../include/general.php";
-include "../../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $k=getvalescaped("k","");if (($k=="") || (!check_access_key($ref,$k))) {include "../../include/authenticate.php";}

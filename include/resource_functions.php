@@ -5,6 +5,410 @@
 include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
 include_once __DIR__ . '/metadata_functions.php';
 
+$GLOBALS['get_resource_path_fpcache'] = array();
+/**
+* Get resource path/ resource URL/ download URL for this resource
+* 
+* IMPORTANT: the download URL should always be used client side (public)
+*            whilst filstore path is private for internal use only
+* 
+* @uses sql_value()
+* @uses get_alternative_file()
+* @uses get_resource_data()
+* 
+* @param integer $ref              Resource ID 
+* @param boolean $getfilepath      Set to TRUE to get the filestore (physical) path
+* @param string  $size             Specify which size of the resource should be returned. Use '' for original file
+* @param boolean $generate         Generate folder if not found
+* @param string  $extension        Extension of the file we are looking for. For original file, this would be the file
+*                                  extension, otherwise use the preview extension (e.g image preview will have JPG
+*                                  while video preview can have FLV/MP4 or others)
+* @param boolean $scramble         Set to TRUE to get the scrambled folder (requires scramble key for it to work)
+* @param integer $page             For documents, use the page number we are trying to get the preview of.
+* @param boolean $watermarked      Get the watermark version?
+* @param string  $file_modified    Specify when the file was last modified
+* @param integer $alternative      ID of the alternative file
+* @param boolean $includemodified  Show when the file was last modified
+* 
+* @return string
+*/
+function get_resource_path(
+    $ref,
+    $getfilepath,
+    $size = '',
+    $generate = true,
+    $extension = 'jpg',
+    $scramble = true,
+    $page = 1,
+    $watermarked = false,
+    $file_modified = '',
+    $alternative = -1,
+    $includemodified = true
+)
+    {
+    # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
+    # If one or more of the folders do not exist, and $generate=true, then they are generated
+    if(!preg_match('/^[a-zA-Z0-9]+$/', $extension))
+        {
+        $extension = 'jpg';
+        }
+    if($extension=='icc')
+        {
+        # use the preview path
+        $size='pre';
+        }
+
+    $override = hook(
+        'get_resource_path_override',
+        '',
+        array($ref, $getfilepath, $size, $generate, $extension, $scramble, $page, $watermarked, $file_modified, $alternative, $includemodified)
+    );
+
+    if(is_string($override))
+        {
+        return $override;
+        }
+
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
+           $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
+
+    // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
+    if(!$getfilepath && $hide_real_filepath)
+        {
+        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
+        if(
+            !isset($get_resource_path_extra_download_query_string_params)
+            || is_null($get_resource_path_extra_download_query_string_params)
+            || !is_array($get_resource_path_extra_download_query_string_params)
+        )
+            {
+            $get_resource_path_extra_download_query_string_params = array();
+            }
+
+        return generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'ref'         => $ref,
+                'size'        => $size,
+                'ext'         => $extension,
+                'page'        => $page,
+                'alternative' => $alternative,
+                'k'           => $k,
+                'noattach'    => 'true',
+            ),
+            $get_resource_path_extra_download_query_string_params);
+        }
+
+    if ($size=="")
+        {
+        # For the full size, check to see if the full path is set and if so return that.
+        global $get_resource_path_fpcache;
+        truncate_cache_arrays();
+
+        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='" . escape_check($ref) . "'","");}
+        $fp=$get_resource_path_fpcache[$ref];
+        
+        # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
+        # If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
+        # Also, returning the original filename when a nosize 'jpg' is looked for is no good, since preview_preprocessing.php deletes $target.
+        
+        $test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
+        
+        if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && (strpos($fp,"/")!==false || strlen($fp)>1))
+            {               
+            if ($getfilepath)
+                {
+                global $syncdir; 
+                $syncdirmodified=hook("modifysyncdir","all",array($ref, $fp, $alternative)); if ($syncdirmodified!=""){return $syncdirmodified;}
+                if(!($alternative>0))
+                    {return $syncdir . "/" . $fp;}
+                elseif(!$generate)
+                    {
+                    // Alternative file and using staticsync. Would not be generating path if checking for an existing file.
+                    // Check if file is present in syncdir, else continue to get the $storagedir location
+                    $altfile = get_alternative_file($ref,$alternative);
+                    if($altfile["file_extension"]==$extension && file_exists($altfile["file_name"]))
+                        {return $altfile["file_name"];}
+                    }
+                }
+            else 
+                {
+                global $baseurl_short, $k;
+                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}"; 
+                }
+            }
+        }
+
+    // Create a scrambled path using the scramble key
+    // It should be very difficult or impossible to work out the scramble key, and therefore access
+    // other resources, based on the scrambled path of a single resource.
+    if($scramble && isset($scramble_key) && '' != $scramble_key)
+        {
+        $skey = $scramble_key;
+
+        // FSTemplate support - for trial system templates
+        if(0 < $fstemplate_alt_threshold && $ref < $fstemplate_alt_threshold && -1 == $alternative)
+            {
+            $skey = $fstemplate_alt_scramblekey;
+            }
+
+        $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
+        }
+    
+    
+    if ($extension=="") {$extension="jpg";}
+    
+    $folder="";
+    #if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
+    
+    # Original separation support
+    if($originals_separate_storage)
+        {
+        global $originals_separate_storage_ffmpegalts_as_previews;
+        if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
+            {
+            $alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
+            if(!empty($alt_data))
+                {
+                // determin if this file was created from $ffmpeg_alternatives
+                $ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
+                if($ffmpeg_alt)
+                    {
+                    $path_suffix="/resized/";
+                    }
+                else
+                    {
+                    $path_suffix="/original/";
+                    }
+                }
+            else
+                {
+                $path_suffix="/original/";
+                }
+            }
+        elseif($size=="")
+            {
+            # Original file (core file or alternative)
+            $path_suffix="/original/";
+            }
+        else
+            {
+            # Preview or thumb
+            $path_suffix="/resized/";
+            }
+        }
+    else
+        {
+        // If getting the physical path, use the appropriate directory separator. For URL, it can only use forward 
+        // slashes (/). For more information, see RFC 3986 (https://tools.ietf.org/html/rfc3986)
+        $path_suffix = ($getfilepath ? DIRECTORY_SEPARATOR : "/");
+        }
+
+    for ($n=0;$n<strlen($ref);$n++)
+        {
+        // If using $filestore_evenspread then the path is generated using the least significant figure first instead of the greatest significant figure
+        $refpos = $filestore_evenspread ? -($n+1) : $n;
+        $folder .= substr($ref,$refpos,1);
+
+        if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1)))
+            {
+            $folder.="_" . $scramblepath;
+            }  
+
+        $folder.="/";
+        if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate)
+            {
+            @mkdir($storagedir . $path_suffix . $folder,0777,true);
+            chmod($storagedir . $path_suffix . $folder,0777);
+            }
+        }
+        
+    # Add the page to the filename for everything except page 1.
+    if ($page==1) {$p="";} else {$p="_" . $page;}
+    
+    # Add the alternative file ID to the filename if provided
+    if ($alternative>0) {$a="_alt_" . $alternative;} else {$a="";}
+    
+    # Add the watermarked url too
+    if ($watermarked) {$p.="_wm";}
+    
+    $sdir=$storagedir;
+    
+    # FSTemplate support - for trial system templates
+    if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+        {
+        $sdir=$fstemplate_alt_storagedir;
+        }
+    # switch the size back so the icc profile name matches the original name and find the original extension
+    $icc=false;
+    if ($extension=='icc')
+        {
+        $size='';
+        $icc=true;
+        $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'", 'jpg');
+        }
+            
+        
+    $filefolder=$sdir . $path_suffix . $folder;
+    
+    # Fetching the file path? Add the full path to the file
+    if ($getfilepath)
+        {
+        $folder=$filefolder; 
+        }
+    else
+        {
+        global $storageurl;$surl=$storageurl;
+        
+        # FSTemplate support - for trial system templates
+        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+            {
+            $surl=$fstemplate_alt_storageurl;
+            }
+        
+        $folder=$surl . $path_suffix . $folder;
+        }
+    if ($scramble && isset($skey))
+        {
+        $file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
+        $file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+        $file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+        if (file_exists($file_old))
+            {
+            rename($file_old, $file_new);
+            }
+        }
+    else
+        {
+        $file=$folder . $ref . $size . $p . $a . "." . $extension;
+        }
+        
+    if($icc)
+        {
+        $file.='.icc';
+        }
+
+    # Append modified date/time to the URL so the cached copy is not used if the file is changed.
+    if (!$getfilepath && $includemodified)
+        {        
+        if ($file_modified=="")
+            {
+            # Work out the value from the file on disk
+            $disk_path=get_resource_path($ref,true,$size,false,$extension,$scramble,$page,$watermarked,'',$alternative,false);
+            if (file_exists($disk_path))
+                {  
+                $file .= "?v=" . urlencode(filemtime($disk_path));
+                }
+            }
+        else
+            {
+            # Use the provided value
+            $file .= "?v=" . urlencode($file_modified);
+            }
+        }
+
+    if (($scramble && isset($migrating_scrambled) && $migrating_scrambled) || ($filestore_migrate && $filestore_evenspread))
+        {
+        // Check if there is a file at the path using no/previous scramble key or with $filestore_evenspread=false;
+        // Most will normally have been moved using pages/tools/xfer_scrambled.php or pages/tools/filestore_migrate.php
+        
+        // Flag to set whether we are migrating to even out filestore distibution or because of scramble key change
+        $redistribute_mode = $filestore_migrate;
+
+        // Get the new paths without migrating to prevent infinite recursion
+        $migrating_scrambled = false;
+        $filestore_migrate = false;
+        $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
+        
+        // Use old settings to get old path before migration and migrate if found
+        if($redistribute_mode)
+            {
+            $filestore_evenspread = false;
+            }
+        else
+            {
+            $scramble_key_saved = $scramble_key;
+            $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
+            }        
+        $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
+        if (file_exists($oldfilepath))
+            {
+            if(!file_exists(dirname($newpath)))
+                {
+                mkdir(dirname($newpath),0777,true);
+                }
+            rename ($oldfilepath,$newpath);
+            }
+        
+        // Reset key/evenspread value
+        if($redistribute_mode)
+            {
+            $filestore_evenspread = true;
+            $filestore_migrate = true;
+            }
+        else
+            {
+            $scramble_key = $scramble_key_saved;
+            $migrating_scrambled = true;
+            }
+        }
+    
+    return $file;
+    }
+
+
+$GLOBALS['get_resource_data_cache'] = array();
+function get_resource_data($ref,$cache=true)
+    {
+    if ((string)(int)$ref != (string)$ref)
+        {
+        return false;
+        }
+    # Returns basic resource data (from the resource table alone) for resource $ref.
+    # For 'dynamic' field data, see get_resource_field_data
+    global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
+    truncate_cache_arrays();
+    if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
+    $resource=sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
+    if (count($resource)==0) 
+        {
+        if ($ref>=0)
+            {
+            return false;
+            }
+        else
+            {
+            # For upload templates (negative reference numbers), generate a new resource if upload permission.
+            if (!(checkperm("c") || checkperm("d"))) {return false;}
+            elseif(!hook('replace_upload_template_creation', '', array($ref)))
+                {
+                if (isset($always_record_resource_creator) && $always_record_resource_creator)
+                    {
+                    global $userref;
+                    $user = $userref;
+                    }
+                else {$user = -1;}
+
+                $default_archive_state = escape_check(get_default_archive_state());
+                $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
+                $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
+                }
+            }
+        }
+    if (isset($resource[0]))
+        {
+        $get_resource_data_cache[$ref]=$resource[0];
+        return $resource[0];
+        }
+    else
+        {
+        return false;
+        }
+    }
+
+
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
@@ -76,7 +480,20 @@ function create_resource($resource_type,$archive=999,$user=-1)
 
 	return $insert;
 	}
-	
+    
+
+function update_hitcount($ref)
+    {
+    global $resource_hit_count_on_downloads;
+    
+    # update hit count if not tracking downloads only
+    if (!$resource_hit_count_on_downloads) 
+        { 
+        # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
+        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
+        }
+    }   
+
 function save_resource_data($ref,$multi,$autosave_field="")
 	{
 	# Save all submitted data for resource $ref.
@@ -2061,7 +2478,6 @@ function delete_resource($ref)
 	# Log the deletion of this resource for any collection it was in. 
 	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
 	if (count($in_collections)>0){
-		if (!function_exists("collection_log")){include_once ("collections_functions.php");}
 		for($n=0;$n<count($in_collections);$n++)
 			{
 			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);

@@ -2457,10 +2457,6 @@ function setup_user($userdata)
     
     if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
 		{
-		if (!function_exists("get_user_collections"))
-			{
-			include_once "collections_functions.php";
-			}
 		// Get all the collections that relate to this session
 		$sessioncollections=get_session_collections($rs_session,$userref,true); 
 		if($anonymous_user_session_collection)
@@ -2477,8 +2473,6 @@ function setup_user($userdata)
 		}
 	else
 		{
-        include_once "collections_functions.php";
-
 		$usercollection=$userdata["current_collection"];
 		// Check collection actually exists
 		$validcollection=$userdata["current_collection_valid"];

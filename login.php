@@ -1,8 +1,6 @@
 <?php
 include "include/db.php";
 include_once 'include/general.php';
-include_once "include/resource_functions.php";
-include_once "include/collections_functions.php";
 include_once "include/login_functions.php";
 
 $url=getval("url","index.php");

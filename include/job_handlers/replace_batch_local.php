@@ -23,9 +23,6 @@ if(!file_exists($local_path))
 
 $logtext = array();
 
-include_once __DIR__ . '/../search_functions.php';
-include_once __DIR__ . '/../resource_functions.php';
-include_once __DIR__ . '/../collections_functions.php';
 include_once __DIR__ . '/../image_processing.php';
 
 if (!isset($collectionid) || $collectionid == 0)

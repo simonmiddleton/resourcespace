@@ -7,7 +7,6 @@ if(!checkperm('u'))
     header('HTTP/1.1 401 Unauthorized');
     die('Permission denied!');
     }
-include_once '../../../include/collections_functions.php';
 include_once dirname(__FILE__). '/../include/csv_functions.php';
 
 

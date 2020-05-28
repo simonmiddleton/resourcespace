@@ -8,7 +8,6 @@ if(!checkperm('a'))
     exit('Permission denied.');
     }
 include '../../include/admin_functions.php';
-include '../../include/resource_functions.php';
 include '../../include/slideshow_functions.php';
 
 $slideshow_files = get_slideshow_files_data();

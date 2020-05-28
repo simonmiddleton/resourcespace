@@ -13,7 +13,6 @@ if('cli' != PHP_SAPI)
         exit("Permission denied");
         }
     }
-include "../../include/resource_functions.php";
 
 $resource_type_fields=sql_query("select ref from resource_type_field where type=3", "schema");
 $joins=get_resource_table_joins();

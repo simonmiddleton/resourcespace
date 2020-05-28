@@ -7,9 +7,6 @@ if(!checkperm('ex'))
     header('HTTP/1.1 401 Unauthorized');
     exit('Permission denied!');
     }
-include_once '../../include/resource_functions.php';
-include_once '../../include/collections_functions.php';
-include_once '../../include/render_functions.php';
 
 $ajax              = ('true' == getval('ajax', '') ? true : false);
 $delete_access_key = getvalescaped('delete_access_key', '');

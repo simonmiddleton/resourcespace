@@ -2,8 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
-include "../include/resource_functions.php";
-include "../include/search_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $k=getvalescaped("k","");

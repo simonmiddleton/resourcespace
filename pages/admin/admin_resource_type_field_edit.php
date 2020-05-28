@@ -14,7 +14,6 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-include "../../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 

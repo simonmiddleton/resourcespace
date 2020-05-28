@@ -11,7 +11,6 @@ $cwd = dirname(__FILE__);
 include "$cwd/../../include/db.php";
 include_once "$cwd/../../include/general.php";
 include "$cwd/../../include/image_processing.php";
-include "$cwd/../../include/resource_functions.php";
 
 // Allow access from UI (legacy mode) only if authenticated and admin
 if('cli' != PHP_SAPI)

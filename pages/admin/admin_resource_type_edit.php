@@ -80,7 +80,6 @@ if (getval("delete","")!="" && enforcePostRequest(false))
 	    //If we have a target type, move the current resources to the new resource type
 	    if($targettype!="" && $targettype!=$ref)
 		{
-		include "../../include/resource_functions.php"; 
 		foreach($affectedresources as $affectedresource)
 		    {update_resource_type($affectedresource,$targettype);}
 		}

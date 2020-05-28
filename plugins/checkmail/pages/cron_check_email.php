@@ -2,8 +2,6 @@
 include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/image_processing.php';
-include '../../../include/resource_functions.php';
-include '../../../include/collections_functions.php';
 include '../include/checkmail_functions.php';
 
 

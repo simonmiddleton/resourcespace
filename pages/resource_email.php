@@ -2,10 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; 
-include "../include/resource_functions.php";
-include "../include/search_functions.php";
-include_once "../include/collections_functions.php";
-include_once '../include/render_functions.php';
 
 $ref=getvalescaped("ref","",true);
 // Fetch resource data

@@ -2,8 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
-include "../include/resource_functions.php";
-include "../include/search_functions.php";
 if (!$enable_theme_category_edit){ die ('$enable_theme_category_edit=false');}
 
 function save_themename()

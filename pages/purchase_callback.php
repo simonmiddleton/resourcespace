@@ -1,8 +1,6 @@
 <?php
 include "../include/db.php";
 include_once "../include/general.php";
-include "../include/resource_functions.php";
-include "../include/search_functions.php";
 
 # Handle the callback from PayPal and mark the collection items as purchased.
 

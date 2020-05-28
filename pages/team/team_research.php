@@ -9,7 +9,6 @@ include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";if (!checkperm("r")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
-include_once "../../include/collections_functions.php";
 
 $offset     = getval("offset",0, true);
 $find       = getvalescaped("find","");

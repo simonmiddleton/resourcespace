@@ -9,8 +9,6 @@
 include_once __DIR__ . "/../include/db.php";
 include_once __DIR__ . "/../include/general.php";
 include_once __DIR__ . "/../include/image_processing.php";
-include_once __DIR__ . "/../include/resource_functions.php";
-include_once __DIR__ . "/../include/collections_functions.php";
 
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')

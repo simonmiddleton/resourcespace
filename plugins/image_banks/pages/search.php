@@ -3,7 +3,6 @@ $rs_root = dirname(dirname(dirname(__DIR__)));
 include_once "{$rs_root}/include/db.php";
 include_once "{$rs_root}/include/general.php";
 include_once "{$rs_root}/include/authenticate.php";
-include_once "{$rs_root}/include/render_functions.php";
 
 $search                 = getval("search", "");
 $image_bank_provider_id = getval("image_bank_provider_id", 0, true);

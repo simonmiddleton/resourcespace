@@ -6,7 +6,6 @@
 include '../../include/db.php';
 include_once '../../include/general.php';
 include '../../include/authenticate.php';
-include_once '../../include/collections_functions.php';
 
 $ref=getvalescaped("ref","",true);
 $print=(getval("print","")!=""); # Print mode?
@@ -87,8 +86,6 @@ $resource_activity_types=array("Add resource to collection","Create resource","E
 
 if ($print)
     {
-    include_once("../../include/render_functions.php");
-
     ?><html><head>
         <style>
         .pie {transform: scale(0.45);transform-origin: 0 0;}

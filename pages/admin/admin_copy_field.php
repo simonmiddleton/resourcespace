@@ -6,7 +6,6 @@ if(!checkperm('a'))
     {
     exit('Permission denied.');
     }
-include_once '../../include/resource_functions.php';
 
 $ref    = getvalescaped('ref', '');
 $copied = '';

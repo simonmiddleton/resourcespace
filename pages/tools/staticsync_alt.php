@@ -15,7 +15,6 @@ if('cli' != PHP_SAPI)
 
 include dirname(__FILE__) . "/../../include/db.php";
 include_once dirname(__FILE__) . "/../../include/general.php";
-include dirname(__FILE__) . "/../../include/resource_functions.php";
 include dirname(__FILE__) . "/../../include/image_processing.php";
 
 if (file_exists(dirname(__FILE__) . "/staticsync_local_functions.php")){

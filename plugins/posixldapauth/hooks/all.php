@@ -6,8 +6,6 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 	*/
 	$ldap_debug = true;
 	
-	include_once "include/collections_functions.php";
-
 	include_once "plugins/posixldapauth/config/config.default.php";
 	if (file_exists("plugins/posixldapauth/config/config.php"))
 	{

@@ -1,9 +1,6 @@
 <?php
 include "include/db.php";
 include_once 'include/general.php';
-include_once 'include/collections_functions.php';
-
-
 
 if (getval("rp","")!="")
 	{

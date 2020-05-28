@@ -2,9 +2,7 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
-include_once "../../include/search_functions.php";
 include_once "../../include/request_functions.php";
-include_once "../../include/collections_functions.php";
 include_once "../../include/action_functions.php";
 include "../../include/authenticate.php";
 

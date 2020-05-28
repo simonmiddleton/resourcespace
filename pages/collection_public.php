@@ -2,10 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
-include_once "../include/collections_functions.php";
-include_once "../include/render_functions.php";
-include_once "../include/resource_functions.php";
-include_once "../include/search_functions.php";
 
 $offset=getvalescaped("offset",0);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);

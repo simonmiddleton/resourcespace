@@ -3,9 +3,6 @@ $suppress_headers=true; # Suppress headers including the XFRAME limitation so th
 
 include "../../../include/db.php";
 include_once "../../../include/general.php";
-include "../../../include/resource_functions.php";
-include_once "../../../include/collections_functions.php";
-include "../../../include/search_functions.php";
 
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.
 

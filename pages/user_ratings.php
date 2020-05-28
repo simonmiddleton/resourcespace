@@ -3,7 +3,6 @@ include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; 
 include "../include/header.php";
-include "../include/resource_functions.php";
 
 $ref=getval("ref","",true);
 $resource=get_resource_data($ref);

@@ -8,7 +8,6 @@
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
-include_once "../../include/collections_functions.php";
 
 $offset=getvalescaped("offset",0);
 $find=getvalescaped("find","");

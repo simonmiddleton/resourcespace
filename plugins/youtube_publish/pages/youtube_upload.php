@@ -2,8 +2,6 @@
 include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/authenticate.php";
-include "../../../include/search_functions.php";
-include "../../../include/resource_functions.php";
 include "../include/youtube_functions.php";
 
 global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $youtube_publish_allow_multiple;

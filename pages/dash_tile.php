@@ -9,10 +9,7 @@ include "../include/db.php";
 include_once "../include/general.php";
 $k=getvalescaped("k","");
 include "../include/authenticate.php";
-include_once "../include/collections_functions.php";
-include_once "../include/search_functions.php";
 include_once "../include/dash_functions.php";
-include_once '../include/render_functions.php';
 
 if(!checkPermission_dashcreate()){exit($lang["error-permissiondenied"]);}
 global $baseurl,$baseurl_short,$userref,$managed_home_dash;
@@ -335,7 +332,6 @@ if($create)
 		
 		if(substr($title,0,11)=="!collection")
 			{
-			include_once "../include/collections_functions.php";
 			$col= get_collection(preg_replace("/^!collection/", "", $title));
 			$promoted_resource = true;
 			$title=$col["name"];

@@ -5,8 +5,7 @@ if (php_sapi_name() != "cli")
     {
     exit("Permission denied");
     }
-    
-include "../../include/resource_functions.php";
+
 
 // This script moves resources from old locations to new locations if settings are changed after initial setup
 // Useful in in the following situations :-

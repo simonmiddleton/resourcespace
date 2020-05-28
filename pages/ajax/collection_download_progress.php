@@ -2,7 +2,6 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
-include "../../include/resource_functions.php";
 
 $uniqid=getvalescaped("id","");
 $user=getvalescaped("user",""); // Need to get this from query string since we haven't authenticated

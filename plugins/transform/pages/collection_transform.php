@@ -8,8 +8,6 @@ if (file_exists("../include/config.php")){
 include_once "../../../include/db.php";
 include_once "../../../include/general.php";
 include_once "../../../include/authenticate.php";
-include_once "../../../include/resource_functions.php";
-include_once "../../../include/collections_functions.php";
 include_once "../../../include/image_processing.php";
 
 include_once "../include/transform_functions.php";

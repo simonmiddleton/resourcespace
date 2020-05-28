@@ -4,9 +4,6 @@ include "{$rsroot}/include/db.php";
 include_once "{$rsroot}/include/general.php";
 include "{$rsroot}/include/authenticate.php";
 include_once "{$rsroot}/include/ajax_functions.php";
-include_once "{$rsroot}/include/collections_functions.php";
-include_once "{$rsroot}/include/render_functions.php";
-// include_once "{$rsroot}/include/resource_functions.php";
 
 if(checkperm("b"))
     {

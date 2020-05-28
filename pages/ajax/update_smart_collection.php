@@ -7,9 +7,6 @@ if (RUNNING_ASYNC)
 	include dirname(__FILE__)."/../../include/db.php";
 	include_once dirname(__FILE__)."/../../include/general.php";
 	include dirname(__FILE__)."/../../include/authenticate.php";
-	include_once dirname(__FILE__)."/../../include/collections_functions.php";
-	include dirname(__FILE__)."/../../include/resource_functions.php";
-	include dirname(__FILE__)."/../../include/search_functions.php";
 	if (empty($_SERVER['argv'][1])) {exit();}
 
 	$collection=$_SERVER['argv'][1];

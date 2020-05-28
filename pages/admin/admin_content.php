@@ -9,7 +9,6 @@ include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
-include_once "../../include/collections_functions.php";
 
 $offset=getvalescaped("offset",0);
 if (array_key_exists("findpage",$_POST) ||array_key_exists("findname",$_POST) || array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting

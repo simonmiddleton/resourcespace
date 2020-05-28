@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . "/../../include/collections_functions.php";
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Removing \$use_checkboxes_for_selection - deprecated configuration option");
 sql_query("DELETE FROM user_preferences WHERE parameter = 'use_checkboxes_for_selection'");

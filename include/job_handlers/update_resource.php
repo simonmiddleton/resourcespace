@@ -1,6 +1,5 @@
 <?php
 include_once __DIR__ . '/../image_processing.php';
-include_once __DIR__ .  "/../resource_functions.php";
 
 # $job_data["r"]
 # $job_data["title"]

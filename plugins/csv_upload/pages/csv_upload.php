@@ -7,9 +7,6 @@
 include dirname(__FILE__)."/../../../include/db.php";
 include_once dirname(__FILE__)."/../../../include/general.php";
 include dirname(__FILE__)."/../../../include/authenticate.php";
-include_once dirname(__FILE__)."/../../../include/resource_functions.php";
-include_once dirname(__FILE__)."/../../../include/search_functions.php";
-include_once dirname(__FILE__)."/../../../include/collections_functions.php";
 include_once (dirname(__FILE__)."/../include/meta_functions.php");
 include_once (dirname(__FILE__)."/../include/csv_functions.php");
 	

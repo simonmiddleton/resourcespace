@@ -9,8 +9,6 @@ if (!checkperm("a"))
     exit ("Permission denied.");
     }
 
-include "../../include/resource_functions.php";
-
 
 $find=getvalescaped("find","");
 $offset=getvalescaped("offset",0);

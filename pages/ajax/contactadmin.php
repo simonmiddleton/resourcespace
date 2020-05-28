@@ -2,9 +2,6 @@
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";
-include_once "../../include/collections_functions.php";
-include "../../include/resource_functions.php";
-include "../../include/search_functions.php";
 
 
 # Is this an ajax call from the view page?

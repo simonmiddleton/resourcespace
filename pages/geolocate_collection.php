@@ -2,9 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once "../include/search_functions.php";
 
 //The two variables below act like "pemissions" to display or not the page
 if($disable_geocoding || (!$disable_geocoding && !$geo_locate_collection))

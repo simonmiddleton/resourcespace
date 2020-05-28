@@ -2,7 +2,6 @@
 include dirname(__FILE__) . '/../../include/db.php';
 include_once dirname(__FILE__) . '/../../include/general.php';
 include dirname(__FILE__) . '/../../include/authenticate.php';
-include_once dirname(__FILE__) . '/../../include/render_functions.php';
 include_once dirname(__FILE__) . '/../../include/node_functions.php';
 
 // Used to obtain JSON encoded list of options for given fixed list field

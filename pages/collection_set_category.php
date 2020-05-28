@@ -3,9 +3,6 @@ include "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; 
 if(checkperm("b") || !checkperm("h") || !$enable_themes) {exit ("Permission denied.");} // Must have collections functionality and permission to publish featured collections
-include_once "../include/collections_functions.php";
-include "../include/resource_functions.php";
-include "../include/search_functions.php"; 
 
 $ref=getvalescaped("ref","",true);
 $copycollectionremoveall=getvalescaped("copycollectionremoveall","");

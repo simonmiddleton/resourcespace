@@ -1,6 +1,5 @@
 <?php
 $rse_search_notifications_plugin_root_path = dirname(__DIR__);
-include_once "{$rse_search_notifications_plugin_root_path}/../../include/collections_functions.php";
 include_once "{$rse_search_notifications_plugin_root_path}/include/search_notifications_functions.php";
 
 function HookRse_search_notificationsCron_copy_hitcountAddplugincronjob()

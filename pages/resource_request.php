@@ -13,8 +13,6 @@ if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $pr
 	}
 
 include "../include/request_functions.php";
-include "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $error=false;

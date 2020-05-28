@@ -9,8 +9,6 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     }
 
 include_once "../../include/general.php";
-include_once "../../include/resource_functions.php";
-include_once "../../include/search_functions.php";
 include_once "../../include/api_functions.php";
 $iiif_debug = getval("debug","")!="";
 
