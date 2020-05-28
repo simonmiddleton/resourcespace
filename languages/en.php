@@ -613,6 +613,8 @@ $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
 $lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
 $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to state %ARCHIVE)';
 $lang['log-f']="Replaced file";
+$lang['log-X']="Locked resource";
+$lang['log-Y']="Unlocked resource";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
