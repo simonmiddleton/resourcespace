@@ -3534,3 +3534,29 @@ function get_user_selection_collection($user)
 
     return sql_value($sql, null);
     }
+
+
+/**
+* Delete all collections that are not in use e.g. session collections for the anonymous user. Will not affect collections that are public.
+* 
+* @param integer $userref - ID of user to delete collections for 
+* @param integer $days - minimum age of collections to delete in days
+* 
+* @return integer - number of collections deleted
+*/
+function delete_old_collections($userref=0, $days=30)
+    {
+    if($userref==0 || !is_numeric($userref))
+        {
+        return 0;
+        }
+    $deletioncount = 0;
+    $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='" . $userref . "' AND created < DATE_SUB(NOW(), INTERVAL '" . $days . "' DAY) AND public=0",0);
+    foreach($old_collections as $old_collection)
+        {
+        sql_query("DELETE FROM collection_resource WHERE collection='" . $old_collection . "'");
+        sql_query("DELETE FROM collection WHERE ref='" . $old_collection . "'");
+        $deletioncount++;
+        }
+    return $deletioncount;
+    }

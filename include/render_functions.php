@@ -3243,3 +3243,401 @@ function render_csrf_data_attributes($ident)
     $token = generateCSRFToken($usersession, $ident);
     return "data-csrf-token-identifier=\"{$CSRF_token_identifier}\" data-csrf-token=\"{$token}\"";
     }
+
+
+/**
+* Check display condition for a field. 
+* 
+* @uses get_nodes()
+* @uses extract_node_options()
+* @uses get_resource_nodes()
+* @uses get_node_by_name()
+* 
+* @param integer $n         Question sequence number on the rendered form
+* @param array   $field     Field on which we check display conditions
+* @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
+* @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
+* 
+* 
+* @return boolean Returns TRUE if no display condition or if field shoud be displayed or FALSE if field should not be displayed.
+*/
+function check_display_condition($n, array $field, array $fields, $render_js)
+    {
+    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+
+    if(trim($field['display_condition']) == "")
+        {
+        return true;  # This field does not have a display condition, so it should be displayed
+        }
+
+    // Assume the candidate field is to be displayed    
+    $displaycondition = true;
+    // Break down into array of conditions
+    $conditions       = explode(';', $field['display_condition']);
+    $condref          = 0;
+    $scriptconditions = array();
+    
+    
+    // Need all field data to check display conditions
+    global $display_check_data;
+    if(!is_array($display_check_data))
+        {
+        $display_check_data = get_resource_field_data($use,false,false);
+        }
+
+    // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
+    $user_set_values = getval('nodes', array());
+
+    foreach ($conditions as $condition) # Check each condition
+        {
+        $displayconditioncheck = false;
+
+        // Break this condition down into fieldname $s[0] and value(s) $s[1]
+        $s = explode('=', $condition);
+
+        // Process all fields which are referenced by display condition(s) on the candidate field
+        // For each referenced field, render javascript to trigger when the referenced field changes
+        for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
+            {
+            // Work out nodes submitted by user, if any
+            $ui_selected_node_values = array();
+            if(
+                isset($user_set_values[$display_check_data[$cf]['ref']])
+                && !is_array($user_set_values[$display_check_data[$cf]['ref']])
+                && $user_set_values[$display_check_data[$cf]['ref']] != ''
+                && is_numeric($user_set_values[$display_check_data[$cf]['ref']])
+            )
+                {
+                $ui_selected_node_values[] = $user_set_values[$display_check_data[$cf]['ref']];
+                }
+            else if(isset($user_set_values[$display_check_data[$cf]['ref']]) && is_array($user_set_values[$display_check_data[$cf]['ref']]))
+                {
+                $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
+                }
+
+            // Does the fieldname on this condition match the field being processed    
+            if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
+                {
+                $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
+
+                $node_options = extract_node_options($display_check_data[$cf]['nodes']);
+
+                $scriptconditions[$condref]['field'] = $display_check_data[$cf]['ref'];
+                $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
+
+                $checkvalues=$s[1];
+                // Break down values delimited with pipe characters
+                $validvalues=explode("|",mb_strtoupper($checkvalues));
+                $scriptconditions[$condref]['valid'] = array();
+                $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
+
+                if(count($ui_selected_node_values) > 0)
+                    {
+                    $v = $ui_selected_node_values;
+                    }
+
+                // If blank edit template is used, on upload form the dependent fields should be hidden
+                if($blank_edit_template && $ref < 0 && $use == $ref)
+                    {
+                    $v = array();
+                    }
+
+                foreach($validvalues as $validvalue)
+                    {
+                    $found_validvalue = get_node_by_name($display_check_data[$cf]['nodes'], $validvalue);
+
+                    if(0 != count($found_validvalue))
+                        {
+                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+                        if(in_array($found_validvalue['ref'], $v))
+                            {
+                            $displayconditioncheck = true;
+                            }
+                        }
+                    }
+
+                 if(!$displayconditioncheck)
+                    {
+                    $displaycondition = false;
+                    $required_fields_exempt[]=$field["ref"];
+                    }
+
+                // Skip rendering the JS calls to checkDisplayCondition functions
+                // Skip if user does not have access to the master (parent) field 
+                if(!$render_js || !in_array($display_check_data[$cf]['ref'], array_column($fields,"ref")))
+                    {
+                    continue;
+                    }
+
+                // Check display conditions
+                // Certain fixed list types allow for multiple nodes to be passed at the same time
+
+                // Generate a javascript function specific to the field with the display condition
+                // This function will be invoked whenever a field referenced by the display condition changes
+                if(in_array($display_check_data[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    if(FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
+                            jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $display_check_data[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
+                            jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+
+                    $checkname = "nodes[{$display_check_data[$cf]['ref']}][]";
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $display_check_data[$cf]['type'])
+                        {
+                        $checkname = "nodes[{$display_check_data[$cf]['ref']}]";
+                        }
+
+                    $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $display_check_data[$cf]['type'])
+                        {
+                        $checkname       = "nodes[{$display_check_data[$cf]['ref']}]";
+                        $jquery_selector = "select[name=\"{$checkname}\"]";
+                        }
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
+                        jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
+                        jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                }
+
+            } # see if next field needs to be checked
+        $condref++;
+
+        } # check next condition
+
+    if($render_js)
+        {
+        ?>
+        <script type="text/javascript">
+        function checkDisplayCondition<?php echo $field["ref"];?>()
+            {
+            // Get current display status
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            // Assume field will not be displayed
+            newfield<?php echo $field['ref']; ?>status = 'none';
+            newfield<?php echo $field['ref']; ?>show   = false;
+            newfield<?php echo $field['ref']; ?>provisional = true;
+            <?php
+            foreach($scriptconditions as $scriptcondition)
+                {
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
+                ?>
+                newfield<?php echo $field['ref']; ?>subcheck = false;
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                <?php
+                ############################
+                ### Field type specific
+                ############################
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
+                        {
+                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
+                        }
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                        }
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                        }
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                            {
+                            if(<?php echo $js_conditional_statement; ?>)
+                                {
+                                newfield<?php echo $field['ref']; ?>subcheck = true;
+                                }
+                            });
+                        }
+                    <?php
+                    }
+                ?>
+                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                    {
+                    newfield<?php echo $field['ref']; ?>provisional = false;
+                    }
+                <?php
+                }
+                ?>
+
+                // Is field to be displayed
+                if(newfield<?php echo $field['ref']; ?>provisional)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
+
+                // If display status changed then toggle the visibility
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status);                   
+
+                <?php
+                // Batch edit mode
+                if($GLOBALS["multiple"] === true)
+                    {
+                    ?>
+                    var batch_edit_editthis = jQuery("#<?php echo "editthis_{$n}"; ?>");
+                    batch_edit_editthis.prop("checked", !batch_edit_editthis.prop("checked"));
+                    batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);
+                    <?php
+                    }
+                    ?>
+
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
+            }
+        </script>
+        <?php
+        }
+
+    return $displaycondition;
+    }
+
+
+/**
+* Utility to check if browse bar should be rendered
+*  
+* @return boolean
+*/   
+function has_browsebar()
+    {
+    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    return isset($username)
+    && !in_array($pagename, $not_authenticated_pages)
+    && ('' == $k || $internal_share_access)
+    && $browse_bar;
+    //   && false == $loginterms ?
+    }
+
+/**
+* Utility to if collapsable upload options should be displayed
+*  
+* @return boolean
+*/   
+function display_upload_options()
+    {
+    global $metadata_read, $enable_add_collection_on_upload, $relate_on_upload, $camera_autorotation;
+    if ($metadata_read || $enable_add_collection_on_upload || $relate_on_upload || $camera_autorotation)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
+    }
+    
