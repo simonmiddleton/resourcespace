@@ -3088,7 +3088,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         }
     else
         {
-        echo "<div  class='ResourceLocked' title='" .  $lock_details . "' >" . $lang["status_locked"] . "</div>";
+        echo "<div  class='ResourceLocked' title='" .  htmlspecialchars($lock_details) . "' >" . $lang["status_locked"] . "</div>";
         }
 
     echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";

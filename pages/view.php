@@ -595,7 +595,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 <script>
 var resource_lock_status = <?php echo (int)$resource_locked ?>;
 var lockmessage = new Array();
-lockmessage[<?php echo $ref ?>] = '<?php echo $lock_details ?>';
+lockmessage[<?php echo $ref ?>] = '<?php echo htmlspecialchars($lock_details) ?>';
 
 <?php 
 if($resource_locked && $resource['lock_user'] != $userref)
@@ -603,7 +603,7 @@ if($resource_locked && $resource['lock_user'] != $userref)
     jQuery(document).ready(function ()
         {
         jQuery('.LockedResourceAction').each(function(){
-            jQuery(this).attr("title","<?php echo $lock_details; ?>");
+            jQuery(this).attr("title","<?php echo htmlspecialchars($lock_details); ?>");
             });
         });
         <?php
@@ -638,7 +638,7 @@ function updateResourceLock(resource,lockstatus)
                 jQuery('#lock_link_' + resource).html('<?php echo $lang["action_lock"] ;?>');
                 lockmessage[resource] = '';
                 jQuery('#lock_details_link').hide();
-                // Timeout added as title seems to resist removal if cursor is hovering at same time
+                // Timeout added as title resists removal if cursor is hovering as it is removed
                 setTimeout(function() {jQuery('#lock_link_' + resource).removeAttr("title");},1000);
                 }
             resource_lock_status = !resource_lock_status;
@@ -655,7 +655,7 @@ function updateResourceLock(resource,lockstatus)
                 styledalert('<?php echo $lang["error"]; ?>',error);
                 }
             }
-    });
+        });
     }
 
 <?php
