@@ -60,7 +60,7 @@ function do_search(
            $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
-           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $order_by_resource_type;
+           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl;
         
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -106,7 +106,7 @@ function do_search(
         "title"           => "title $sort,r.ref $sort",
         "file_path"       => "file_path $sort,r.ref $sort",
         "resourceid"      => "r.ref $sort",
-        "resourcetype"    => "rty.order_by ASC,r.ref $sort",
+        "resourcetype"    => "resource_type $sort,r.ref $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
         "status"          => "archive $sort",
@@ -1567,22 +1567,6 @@ function do_search(
 
     global $max_results;
 
-    /**
-     * if config option set to allow sorting by resource_type on thumbnail views, 
-     * and user has selected to sort results by type
-     * then 
-     *  -- add SQL to match on resource.resource_type = resource_type.ref
-     */
-    if ($order_by_resource_type && ($orig_order=="resourcetype") )
-        {
-        $t2 = " r.resource_type = rty.ref ";  
-        $table_resourcetype = ", resource_type rty";  
-        }
-    else 
-        {
-        $table_resourcetype = "";
-        }
-
     if (($t2!="") && ($sql!=""))
         {
         $sql=" AND " . $sql;
@@ -1597,8 +1581,8 @@ function do_search(
         }
 
   
-    $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r $table_resourcetype  $t  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
-
+    $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
+    
     # Debug
     debug('$results_sql=' . $results_sql);
 
