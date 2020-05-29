@@ -44,7 +44,7 @@ $no_reference_data_tables = sql_array('
           FROM activity_log
          WHERE remote_table IS NOT NULL AND remote_table <> ""
     ',
-    array());
+    "");
 
 if(!checkperm('a') || $requesteduser == $actasuser && $requesteduser != 0)
     {
