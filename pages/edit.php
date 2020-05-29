@@ -1053,6 +1053,8 @@ else
         return <?php echo ($modal ? 'Modal' : 'CentralSpace'); ?>Post(this, true);
       ">
     <?php generateFormToken("mainform"); ?>
+    <!-- hidden form var - modal - to keep track of modal window setting -->
+    <input type="hidden" name="modal" value="<?php echo ($modal?"true":"")?>"/>
     <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
