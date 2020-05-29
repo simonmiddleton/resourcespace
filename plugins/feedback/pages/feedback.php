@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 
 # Make a folder for this
 if(!is_dir($storagedir . "/feedback"))

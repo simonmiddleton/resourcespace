@@ -11,7 +11,6 @@ if(PHP_SAPI != 'cli')
     }
 
 include __DIR__ . '/../../include/db.php';
-include_once __DIR__ . '/../../include/general.php';
 
 // Separate output of this script from any initialisation messages (e.g. The system is up-to-date [...])
 echo PHP_EOL;

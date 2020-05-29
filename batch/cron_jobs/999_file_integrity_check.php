@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
+
 
 if (is_process_lock("file_integrity_check")) 
     {

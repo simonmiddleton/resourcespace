@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permission denied.");}
 
 $plugin_name = 'discount_code';

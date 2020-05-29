@@ -1,7 +1,6 @@
 <?php
 
 include '../../../include/db.php';
-include_once '../../../include/general.php';
 include_once dirname(__FILE__) . "/../include/utility.php";
 
 $k=getvalescaped("k","");

@@ -2,7 +2,7 @@
 
 include "../../include/db.php";
 if (!(PHP_SAPI == 'cli')) {include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
-include_once "../../include/general.php";
+
 include "../../include/header.php";
 
 $functions=array();

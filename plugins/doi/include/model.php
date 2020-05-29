@@ -6,7 +6,7 @@
 	 */
 
 	include_once __DIR__ . "/../../../include/log_functions.php";
-//	include_once __DIR__ . "/../../../include/resource_functions.php";
+//	
 
 	# Consider "https://mds.datacite.org/static/apidoc" for further information on the underlying API.
 

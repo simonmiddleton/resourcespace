@@ -1,6 +1,6 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("c")) {exit ("Permission denied.");}
 include "../../include/image_processing.php";
 

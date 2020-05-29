@@ -6,7 +6,6 @@ if('cli' != PHP_SAPI)
     }
 
 include __DIR__ . '/../../include/db.php';
-include_once __DIR__ . '/../../include/general.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
 
 ob_end_clean();

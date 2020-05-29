@@ -2,7 +2,7 @@
 
 
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
+
 $k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../../../include/authenticate.php";}
 
 $ref=getvalescaped("ref", 0, true);

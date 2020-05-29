@@ -1,7 +1,7 @@
 <?php
 
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../inc/flickr_functions.php";
 
 $uniqid=getvalescaped("id","");

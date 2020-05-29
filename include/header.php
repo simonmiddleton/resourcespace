@@ -1,5 +1,4 @@
 <?php 
-include_once("render_functions.php");
 
 hook ("preheaderoutput");
  

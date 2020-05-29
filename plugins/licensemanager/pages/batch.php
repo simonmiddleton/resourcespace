@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include_once "../../../include/authenticate.php";
 if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
 

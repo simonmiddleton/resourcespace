@@ -1,6 +1,5 @@
 <?php
 include_once '../../include/db.php';
-include_once '../../include/general.php';
 include_once '../../include/authenticate.php';
 
 $ajax = filter_var(getvalescaped('ajax', false), FILTER_VALIDATE_BOOLEAN);

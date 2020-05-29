@@ -1,6 +1,5 @@
 <?php
 include '../../../include/db.php';
-include_once '../../../include/general.php';
 
 if('cli' != PHP_SAPI)
     {

@@ -1,7 +1,7 @@
 <?php
 $rs_root = dirname(dirname(dirname(__DIR__)));
 include_once "{$rs_root}/include/db.php";
-include_once "{$rs_root}/include/general.php";
+
 include_once "{$rs_root}/include/authenticate.php";
 
 $search                 = getval("search", "");

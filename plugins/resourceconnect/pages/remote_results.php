@@ -1,7 +1,5 @@
 <?php
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
-include_once "../../../include/search_functions.php";
 include_once "../../lightbox_preview/include/utility.php";
 include_once "../config/config.php";
 

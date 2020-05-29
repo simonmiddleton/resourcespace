@@ -8,7 +8,7 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     exit($lang["iiif_disabled"]);
     }
 
-include_once "../../include/general.php";
+
 include_once "../../include/api_functions.php";
 $iiif_debug = getval("debug","")!="";
 

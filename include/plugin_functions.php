@@ -1365,3 +1365,104 @@ function plugin_activate_for_setup($plugin_name)
 	}
 
 	
+
+    function include_plugin_config($plugin_name,$config="",$config_json="")
+    {
+    global $mysql_charset;
+    
+    $pluginpath=get_plugin_path($plugin_name);
+    
+    $configpath = $pluginpath . "/config/config.default.php";
+    if (file_exists($configpath)) {include $configpath;}
+    $configpath = $pluginpath . "/config/config.php";
+    if (file_exists($configpath)) {include $configpath;}
+
+    if ($config_json != "" && function_exists('json_decode'))
+        {
+        if (!isset($mysql_charset))
+            {
+            $config_json = iconv('ISO-8859-1', 'UTF-8', $config_json);
+            }
+        $config_json = json_decode($config_json, true);
+        if ($config_json)
+            {
+            foreach($config_json as $key=>$value)
+                {
+                $$key = $value;
+                }
+            }
+        }
+	elseif ($config != "")
+		{
+		$config=unserialize(base64_decode($config));
+		foreach($config as $key=>$value)
+			$$key = $value;
+		}
+
+	# Copy config variables to global scope.
+    unset($plugin_name, $config, $config_json, $configpath);
+	$vars = get_defined_vars();
+	foreach ($vars as $name=>$value)
+		{
+		global $$name;
+		$$name = $value;
+		}
+	}
+function register_plugin_language($plugin)
+    {
+    global $plugins,$language,$pagename,$lang,$applicationname,$customsitetext;
+    
+    	# Include language file
+    	$langpath=get_plugin_path($plugin) . "/languages/";
+	
+    	if (file_exists($langpath . "en.php")) {include $langpath . "en.php";}
+    	if ($language!="en")
+    		{
+    		if (substr($language, 2, 1)=='-' && substr($language, 0, 2)!='en')
+    			@include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
+    		@include $langpath . safe_file_name($language) . ".php";
+    		}
+	// If we have custome text created from Manage Content we need to reset this
+	if(isset($customsitetext))
+		{
+		foreach ($customsitetext as $customsitetextname=>$customsitetextentry)
+			{
+			$lang[$customsitetextname] = $customsitetextentry;
+			}
+		}
+    }
+    
+function get_plugin_path($plugin,$url=false)
+    {
+    # For the given plugin shortname, return the path on disk
+    # Supports plugins being in the filestore folder (for user uploaded plugins)
+    global $baseurl_short,$storagedir,$storageurl;
+    
+    # Standard location    
+    $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;
+    if (file_exists($pluginpath)) {return ($url?$baseurl_short . "plugins/" . $plugin:$pluginpath);}
+
+    # Filestore location
+    $pluginpath=$storagedir . "/plugins/" . $plugin;
+    if (file_exists($pluginpath)) {return ($url?$storageurl . "/plugins/" . $plugin:$pluginpath);}
+    }
+    
+function register_plugin($plugin)
+	{
+	global $plugins,$language,$pagename,$lang,$applicationname;
+
+	# Also include plugin hook file for this page.
+	if ($pagename=="collections_frameless_loader"){$pagename="collections";}
+	
+	$pluginpath=get_plugin_path($plugin);
+	    
+	$hookpath=$pluginpath . "/hooks/" . $pagename . ".php";
+	if (file_exists($hookpath)) {include_once $hookpath;}
+	
+	# Support an 'all' hook
+	$hookpath=$pluginpath . "/hooks/all.php";
+	if (file_exists($hookpath)) {include_once $hookpath;}
+	
+	return true;	
+	}
+	

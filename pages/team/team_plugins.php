@@ -10,7 +10,7 @@
  * @todo Update plugin DB if uploaded plugin is installed (upgrade functionality)
  */
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 if(!checkperm('a'))

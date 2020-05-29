@@ -1,9 +1,9 @@
 <?php
 $rs_root = dirname(dirname(dirname(__DIR__)));
 include_once "{$rs_root}/include/db.php";
-include_once "{$rs_root}/include/general.php";
+
 include_once "{$rs_root}/include/authenticate.php";
-include_once "{$rs_root}/include/resource_functions.php";
+
 include_once "{$rs_root}/include/image_processing.php";
 
 if(!(checkperm("c") || checkperm("d")))

@@ -1,6 +1,6 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
 if (!$enable_theme_category_edit){ die ('$enable_theme_category_edit=false');}
 

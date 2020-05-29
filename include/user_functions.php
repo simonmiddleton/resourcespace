@@ -2,6 +2,279 @@
 # User functions
 # Functions to create, edit and generally deal with user accounts
 
+/**
+* Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
+* Will always return false if matches criteria but the user account is not approved or has expired
+*
+* $user_select_sql example u.session=$variable. 
+* Joins to usergroup table as g  which can be used in criteria
+*
+* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
+* @param 	boolan	$getuserdata			default true. Return user data as required by authenticate.php
+* 
+* @return boolean|array
+*/
+function validate_user($user_select_sql, $getuserdata=true)
+    {
+    if('' == $user_select_sql)
+        {
+        return false;
+        }
+
+    $full_user_select_sql = "
+        approved = 1
+        AND (
+                account_expires IS NULL 
+                OR account_expires = '0000-00-00 00:00:00' 
+                OR account_expires > now()
+            ) "
+        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $user_select_sql;
+
+    if($getuserdata)
+        {
+        $userdata = sql_query(
+            "   SELECT u.ref,
+                       u.username,
+                       u.origin,
+                       if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions,
+                       g.parent,
+                       u.usergroup,
+                       u.current_collection,
+					   (select count(*) from collection where ref=u.current_collection) as current_collection_valid,
+                       u.last_active,
+                       timestampdiff(second, u.last_active, now()) AS idle_seconds,
+                       u.email,
+                       u.password,
+                       u.fullname,
+                       g.search_filter,
+                       g.edit_filter,
+                       g.ip_restrict ip_restrict_group,
+                       g.name groupname,
+                       u.ip_restrict ip_restrict_user,
+                       u.search_filter_override,
+                       u.search_filter_o_id,
+                       g.resource_defaults,
+                       u.password_last_change,
+                       if(find_in_set('config_options',g.inherit_flags) AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,
+                       g.request_mode,
+                       g.derestrict_filter,
+                       u.hidden_collections,
+                       u.accepted_terms,
+                       u.session,
+                       g.search_filter_id,
+                       g.download_limit,
+                       g.download_log_days,
+                       g.edit_filter_id,
+                       g.derestrict_filter_id
+                  FROM user AS u
+             LEFT JOIN usergroup AS g on u.usergroup = g.ref
+			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
+                 WHERE {$full_user_select_sql}"
+        );
+
+        return $userdata;
+        }
+    else
+        {
+        $validuser = sql_value(
+            "      SELECT u.ref AS `value`
+                     FROM user AS u 
+                LEFT JOIN usergroup g ON u.usergroup = g.ref
+                    WHERE {$full_user_select_sql}"
+            ,
+            ''
+        );
+
+        if('' != $validuser)
+            {
+            return true;
+            }
+        }
+
+    return false;
+    }
+
+
+/**
+*
+* Given an array of user data loaded from the user table, set up all necessary global variables for this user
+* including permissions, current collection, config overrides and so on.
+* 
+* @param  array  $userdata  Array of user data obtained by validate_user() from user/usergroup tables
+* 
+* @return boolean           success/failure flag - used for example to prevent certain users from making API calls
+*/
+function setup_user($userdata)
+	{        
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
+           $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
+           $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
+           $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
+           $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
+           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
+           $user_dl_limit,$user_dl_days, $search_filter_nodes, $USER_SELECTION_COLLECTION;
+		
+	# Hook to modify user permissions
+	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
+
+    $userref           = $userdata['ref'];
+    $username          = $userdata['username'];
+    $useracceptedterms = $userdata['accepted_terms'];
+	
+	# Create userpermissions array for checkperm() function
+	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
+	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
+	
+	$actions_on=$actions_enable;
+	# Enable actions functionality if based on user permissions
+	if(!$actions_enable && count($actions_permissions)>0)
+		{
+		foreach($actions_permissions as $actions_permission)
+			{
+			if(in_array($actions_permission,$userpermissions))
+                {
+                $actions_on=true;
+                break;
+                }
+			}
+		}
+	
+	$usergroup=$userdata["usergroup"];
+	$usergroupname=$userdata["groupname"];
+    $usergroupparent=$userdata["parent"];
+    $useremail=$userdata["email"];
+    $userpassword=$userdata["password"];
+    $userfullname=$userdata["fullname"];
+    $userorigin=$userdata["origin"];
+    $usersession = $userdata["session"];
+
+    $ip_restrict_group=trim($userdata["ip_restrict_group"]);
+    $ip_restrict_user=trim($userdata["ip_restrict_user"]);
+    
+    if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
+		{
+		// Get all the collections that relate to this session
+		$sessioncollections=get_session_collections($rs_session,$userref,true); 
+		if($anonymous_user_session_collection)
+			{
+			// Just get the first one if more
+			$usercollection=$sessioncollections[0];		
+			$collection_allow_creation=false; // Hide all links that allow creation of new collections
+			}
+		else
+			{
+			// Unlikely scenario, but maybe we do allow anonymous users to change the selected collection for all other anonymous users
+			$usercollection=$userdata["current_collection"];
+			}		
+		}
+	else
+		{
+		$usercollection=$userdata["current_collection"];
+		// Check collection actually exists
+		$validcollection=$userdata["current_collection_valid"];
+		if($validcollection==0)
+			{
+			// Not a valid collection - switch to user's primary collection if there is one
+			$usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
+			if ($usercollection!=0)
+				{
+				# set this to be the user's current collection
+				sql_query("update user set current_collection='$usercollection' where ref='$userref'");
+				}
+			}
+		
+		if ($usercollection==0 || !is_numeric($usercollection))
+			{
+			# Create a collection for this user
+			# The collection name is translated when displayed!
+			$usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
+			# set this to be the user's current collection
+			sql_query("update user set current_collection='$usercollection' where ref='$userref'");
+			}
+
+        $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
+        if(is_null($USER_SELECTION_COLLECTION))
+            {
+            $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
+            update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
+            }
+		}
+
+        $newfilter = false;
+        if ($search_filter_nodes)
+            {
+            if(isset($userdata["search_filter_o_id"]) && is_numeric($userdata["search_filter_o_id"]) && $userdata['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userdata["search_filter_o_id"];
+                $newfilter = true;
+                }
+            elseif(isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]) && $userdata['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userdata["search_filter_id"];
+                $newfilter = true;
+                }
+            }
+        
+        if(!$newfilter)
+            {
+            // Old style search filter that hasn't been migrated
+            $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
+            }
+            
+        $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
+        $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
+
+        $hidden_collections=explode(",",$userdata["hidden_collections"]);
+        $userresourcedefaults=$userdata["resource_defaults"];
+        $userrequestmode=trim($userdata["request_mode"]);
+        $user_dl_limit=trim($userdata["download_limit"]);
+        $user_dl_days=trim($userdata["download_log_days"]);
+
+        if((int)$user_dl_limit > 0)
+            {
+            // API cannot be used by these users as would open up opportunities to bypass limits
+            if(defined("API_CALL"))
+                {
+                return false;
+                }
+            }
+
+    	$userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';","preferences") : FALSE;
+    	$userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
+
+        # Some alternative language choices for basket mode / e-commerce
+        if ($userrequestmode==2 || $userrequestmode==3)
+			{
+			$lang["addtocollection"]=$lang["addtobasket"];
+			$lang["action-addtocollection"]=$lang["addtobasket"];
+			$lang["addtocurrentcollection"]=$lang["addtobasket"];
+			$lang["requestaddedtocollection"]=$lang["buyitemaddedtocollection"];
+			$lang["action-request"]=$lang["addtobasket"];
+			$lang["managemycollections"]=$lang["viewpurchases"];
+			$lang["mycollection"]=$lang["yourbasket"];
+			$lang["action-removefromcollection"]=$lang["removefrombasket"];
+			$lang["total-collections-0"] = $lang["total-orders-0"];
+			$lang["total-collections-1"] = $lang["total-orders-1"];
+			$lang["total-collections-2"] = $lang["total-orders-2"];
+			
+			# The request button (renamed "Buy" by the line above) should always add the item to the current collection.
+			$request_adds_to_collection=true;
+			}        
+
+        # Apply config override options
+        $config_options=trim($userdata["config_options"]);
+        if ($config_options!="")
+            {
+            // We need to get all globals as we don't know what may be referenced here
+            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+            eval($config_options);
+            }
+    return true;
+    }
+    
 
 if (!function_exists("get_users")){     
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
@@ -1807,3 +2080,97 @@ function offset_user_local_timezone($datetime, $format)
 
     return $user_local_dt->format($format);
     }
+
+
+/**
+ * Returns whether a user is anonymous or not
+ * 
+ * @return boolean
+ */
+function checkPermission_anonymoususer()
+    {
+    global $baseurl, $anonymous_login, $anonymous_autouser_group, $username, $usergroup;
+
+    return
+        (
+            (
+            isset($anonymous_login)
+            && (
+                (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+                || (
+                    is_array($anonymous_login)
+                    && array_key_exists($baseurl, $anonymous_login)
+                    && $anonymous_login[$baseurl] == $username
+                   )
+               )
+            )
+            || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group)
+        );
+    }
+
+
+# Dash Permissions
+function checkPermission_dashadmin()	
+	{
+	return ((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")));
+	}
+function checkPermission_dashuser()
+	{
+	return !checkperm("dtu");
+	}
+
+function checkPermission_dashmanage()
+	{
+	#Home_dash is on, And not the Anonymous user with default dash, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
+	global $managed_home_dash,$unmanaged_home_dash_admins, $anonymous_default_dash;
+	return (!checkPermission_anonymoususer() || !$anonymous_default_dash) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
+				|| ($unmanaged_home_dash_admins && checkPermission_dashadmin()));
+	}
+function checkPermission_dashcreate()
+	{
+	#Home_dash is on, And not Anonymous use, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
+	global $managed_home_dash,$unmanaged_home_dash_admins;
+	return !checkPermission_anonymoususer() 
+			&& 
+				(
+					(!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
+				||
+					($managed_home_dash && checkPermission_dashadmin())
+				|| 
+					($unmanaged_home_dash_admins && checkPermission_dashadmin())
+				);
+    }
+
+    function checkperm($perm)
+    {
+    # check that the user has the $perm permission
+    global $userpermissions;
+    if (!(isset($userpermissions))) {return false;}
+    if (in_array($perm,$userpermissions)) {return true;} else {return false;}
+    }
+
+// Check if user is allowed to edit user with passed reference
+function checkperm_user_edit($user)
+	{
+	if (!checkperm('u'))    // does not have edit user permission
+		{
+		return false;
+		}
+	if (!is_array($user))		// allow for passing of user array or user ref to this function.
+		{
+		$user=get_user($user);
+		}
+	$editusergroup=$user['usergroup'];
+	if (!checkperm('U') || $editusergroup == '')    // no user editing restriction, or is not defined so return true
+		{
+		return true;
+		}
+	global $U_perm_strict, $usergroup;
+	// Get all the groups that the logged in user can manage 
+	$validgroups = sql_array("SELECT `ref` AS  'value' FROM `usergroup` WHERE " .
+		($U_perm_strict ? "FIND_IN_SET('{$usergroup}',parent)" : "(`ref`='{$usergroup}' OR FIND_IN_SET('{$usergroup}',parent))")
+	);
+	
+	// Return true if the target user we are checking is in one of the valid groups
+	return (in_array($editusergroup, $validgroups));
+	}

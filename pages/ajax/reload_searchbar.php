@@ -1,7 +1,6 @@
 <?php
 
 include_once('../../include/db.php');
-include_once('../../include/general.php');
 include_once('../../include/authenticate.php');
 
 if ($simple_search_reset_after_search)

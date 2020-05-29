@@ -17,7 +17,7 @@ echo "error - aborting.";
 exit;
 }
 include __DIR__ . "/../../include/db.php"; ob_end_clean(); // Discard output buffering as it's causing the script to stop working
-include_once __DIR__ . "/../../include/general.php";
+
 include __DIR__ . "/../../include/image_processing.php";
 
 if(ini_get('max_execution_time') < 1800 || $php_time_limit < 1800) {

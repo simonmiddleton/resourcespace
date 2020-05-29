@@ -1,6 +1,6 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission denied.");}
 
 function get_search_default_restypes()

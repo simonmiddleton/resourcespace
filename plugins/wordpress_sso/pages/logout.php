@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 
 global $baseurl, $lang, $username, $wordpress_sso_url, $wordpress_sso_secret, $global_cookies;
 

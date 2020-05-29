@@ -2,7 +2,7 @@
 # update the user select element
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 $userstring=getvalescaped("userstring","");

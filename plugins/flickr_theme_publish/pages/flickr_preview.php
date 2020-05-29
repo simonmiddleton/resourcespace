@@ -1,7 +1,7 @@
 <?php
 // grabs preview image to show while publishing
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../../../include/authenticate.php";
 
 $ref=getvalescaped("ref","");

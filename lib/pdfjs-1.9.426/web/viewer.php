@@ -1,6 +1,5 @@
 <?php
 include_once dirname(dirname(dirname(__DIR__))) . '/include/db.php';
-include_once dirname(dirname(dirname(__DIR__))) . '/include/general.php';
 
 $k   = getval('k', '');
 $ref = getval('ref', 0, true);

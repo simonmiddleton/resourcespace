@@ -1,5 +1,4 @@
 <?php
-include_once(__DIR__ . '/../../include/search_functions.php');
 
 // Check that get_Suggested keywords does not return data from fields that user does not have access to
 

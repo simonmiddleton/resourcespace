@@ -1,6 +1,5 @@
 <?php 
 include '../../../include/db.php';
-include_once '../../../include/general.php';
 include '../../../include/image_processing.php';
 include '../include/checkmail_functions.php';
 

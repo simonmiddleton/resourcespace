@@ -1,6 +1,5 @@
 <?php
 include      __DIR__ . '/../../include/db.php';
-include_once __DIR__ . '/../../include/general.php';
 include      __DIR__ . '/../../include/authenticate.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
 include_once __DIR__ . '/../../include/facial_recognition_functions.php';

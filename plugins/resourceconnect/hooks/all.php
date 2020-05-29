@@ -157,8 +157,7 @@ function HookResourceconnectAllGenerateurl($url)
     /**
      * This functions checks for the existence of global var $userpermissions and sets it to empty array if it doesn't already exist
      * 
-     * Used in include/search_functions.php and relevant when there is an external collection share via a link and the $userpermissions var has not been set
-     */
+     * Used in      */
 
     function HookResourceconnectAllModifyUserPermissions()
         {

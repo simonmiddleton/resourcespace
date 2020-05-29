@@ -1,6 +1,6 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 include_once "../include/authenticate.php";
 include_once "../include/research_functions.php";
 include_once "../include/request_functions.php";

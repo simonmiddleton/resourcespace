@@ -6,7 +6,7 @@
  * @Subpackage Pages_Team
  */
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
 $offset=getvalescaped("offset",0);

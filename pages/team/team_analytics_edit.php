@@ -4,7 +4,6 @@
 #
 
 include '../../include/db.php';
-include_once '../../include/general.php';
 include '../../include/authenticate.php';
 
 $ref=getvalescaped("ref","",true);

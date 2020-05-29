@@ -1,6 +1,5 @@
 <?php
 
-include_once(__DIR__ . '/../../include/search_functions.php');
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Check for searching using related keywords and with keyword_relationships_one_way set

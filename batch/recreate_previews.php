@@ -7,7 +7,7 @@
 # also includes optional -videoupdate to cater for systems moving from old flv videos to HTML5 compatible video
 
 include_once __DIR__ . "/../include/db.php";
-include_once __DIR__ . "/../include/general.php";
+
 include_once __DIR__ . "/../include/image_processing.php";
 
 $sapi_type = php_sapi_name();

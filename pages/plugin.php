@@ -11,7 +11,6 @@
 define('RESOURCESPACE', true);
 
 include '../include/db.php';
-include_once '../include/general.php';
 
 $query = explode('&', $_SERVER['QUERY_STRING']);
 $plugin_query = explode('/', $query[0]);

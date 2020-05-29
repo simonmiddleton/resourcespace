@@ -1,8 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
 include "../include/authenticate.php"; #if (!checkperm("s")) {exit ("Permission denied.");}
-include "../include/render_functions.php";
+
 
 $collection_url	= getvalescaped("collection","");
 $find			= getvalescaped('find', '');

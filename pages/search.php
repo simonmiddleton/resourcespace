@@ -1,6 +1,6 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 if($annotate_enabled)
     {
     include_once '../include/annotation_functions.php';

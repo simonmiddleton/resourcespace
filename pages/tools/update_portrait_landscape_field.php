@@ -3,7 +3,7 @@
 # This script is for updating the $portrait_landscape_field 
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";
 

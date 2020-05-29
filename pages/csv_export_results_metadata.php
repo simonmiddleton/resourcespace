@@ -1,6 +1,5 @@
 <?php
 include_once '../include/db.php';
-include_once '../include/general.php';
 # External access support (authenticate only if no key was provided)
 if(getvalescaped('k', '') == '')
     {

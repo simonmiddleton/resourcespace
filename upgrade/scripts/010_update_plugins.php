@@ -1,7 +1,7 @@
 <?php
 
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
+
 include_once __DIR__ . "/../../include/plugin_functions.php";
 
 // Update active plugins with new title and icon

@@ -13,12 +13,6 @@ if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_fil
     include_once __DIR__ . '/../include/db.php';
     }
 
-// need to perform a get_included_files() again to guard against db.php bringing in general.php in the future
-if ($cli || !in_array(realpath(__DIR__ . '/../include/general.php'), get_included_files()))
-    {
-    include_once __DIR__ . '/../include/general.php';
-    }
-
 // try and grab the current system upgrade level from sysvars
 $current_system_upgrade_level=get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL);
 

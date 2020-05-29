@@ -1,8 +1,5 @@
 <?php
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
-include_once __DIR__ . "/../../include/resource_functions.php";
-include_once __DIR__ . "/../../include/search_functions.php";
 include_once __DIR__ . "/../../include/migration_functions.php";
 
 // Migrate reports away from requiring substitutions at execution time, which was very hacky.

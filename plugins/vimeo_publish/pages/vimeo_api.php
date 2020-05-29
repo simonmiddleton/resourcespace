@@ -1,6 +1,5 @@
 <?php
 include '../../../include/db.php';
-include_once '../../../include/general.php';
 include '../../../include/authenticate.php';
 include_once '../../../include/resource_functions.php';
 include_once '../include/vimeo_publish_functions.php';

@@ -6,7 +6,7 @@ if (file_exists('../include/collections_functions.php')){
 }
 
 include_once "$relpath/include/db.php";
-include_once "$relpath/include/general.php"; 
+ 
 include_once "$relpath/include/authenticate.php"; 
 
 $max_theme_levels = get_max_theme_levels(); // max number of theme columns currently in table

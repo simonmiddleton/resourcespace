@@ -14,8 +14,7 @@ if ($k!="")
 	}
 
 if ($k=="" || !$kauth) {include "../../../include/authenticate.php";}
-include_once "../../../include/general.php";
-include_once "../../../include/search_functions.php";
+
 
 # Wrap the remote view page with the local header/footer.
 

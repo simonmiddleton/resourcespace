@@ -122,7 +122,7 @@ foreach($options as $option_name => $option_value)
 
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
-include_once "{$webroot}/include/general.php";
+
 include_once "{$webroot}/include/log_functions.php";
 
 $get_file_handler = function($file_path, $mode)

@@ -6,7 +6,7 @@
  */
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 include "../../include/dash_functions.php";
 

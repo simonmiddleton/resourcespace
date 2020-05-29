@@ -4,7 +4,7 @@
 # When some values have commas and others don't, sorting doesn't work correctly!!!
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 if('cli' != PHP_SAPI)
     {
     include "../../include/authenticate.php";

@@ -1,6 +1,6 @@
 <?php
 include_once "../../include/db.php";
-include_once "../../include/general.php";
+
 
 # from
 # http://wiki.openstreetmap.org/wiki/ProxySimplePHP

@@ -4,8 +4,8 @@
 # cron job.
 
 include "../../include/db.php";
-include_once "../../include/general.php";
-include_once "../../include/resource_functions.php";
+
+
 
 if('cli' != php_sapi_name())
     {

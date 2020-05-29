@@ -1,6 +1,6 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 if (php_sapi_name() != "cli")
     {
     exit("Permission denied");

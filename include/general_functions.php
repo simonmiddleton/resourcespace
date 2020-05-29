@@ -5,16 +5,237 @@
 #
 # PLEASE NOTE - Don't add search/resource/collection/user etc. functions here - use the separate include files.
 #
-include_once 'definitions.php';
-include_once 'search_functions.php';
-include_once 'resource_functions.php';
-include_once 'collections_functions.php';
-include_once 'language_functions.php';
-include_once 'message_functions.php';
-include_once 'node_functions.php';
-include_once 'encryption_functions.php';
-include_once 'render_functions.php';
-include_once 'user_functions.php';
+
+function getval($val,$default,$force_numeric=false)
+    {
+    # return a value from POST, GET or COOKIE (in that order), or $default if none set
+    if (array_key_exists($val,$_POST)) {return ($force_numeric && !is_numeric($_POST[$val])?$default:$_POST[$val]);}
+    if (array_key_exists($val,$_GET)) {return ($force_numeric && !is_numeric($_GET[$val])?$default:$_GET[$val]);}
+    if (array_key_exists($val,$_COOKIE)) {return ($force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val]);}
+    return $default;
+    }
+
+/**
+* Return a value from get/post/cookie, escaped and SQL-safe
+* 
+* It should not be relied upon for XSS. Sanitising output should be done when needed by developer
+* 
+* @param string        $val
+* @param string|array  $default        The fallback value if not found
+* @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
+*                                      the function will return the default value
+* 
+* @return string|array
+*/
+function getvalescaped($val, $default, $force_numeric = false)
+    {
+    $value = getval($val, $default, $force_numeric);
+
+    if(is_array($value))
+        {
+        foreach($value as &$item)
+            {
+            $item = escape_check($item);
+            }
+        }
+    else
+        {
+        $value = escape_check($value);
+        }
+
+    return $value;
+    }
+
+function getuid()
+    {
+    # generate a unique ID
+    return strtr(escape_check(microtime() . " " . $_SERVER["REMOTE_ADDR"]),". ","--");
+    }
+
+function escape_check($text) #only escape a string if we need to, to prevent escaping an already escaped string
+    {
+    global $db;
+
+    $db_connection = $db["read_write"];
+    if(db_use_multiple_connection_modes() && db_get_connection_mode() == "read_only")
+        {
+        $db_connection = $db["read_only"];
+        db_clear_connection_mode();
+        }
+
+    $text = mysqli_real_escape_string($db_connection, $text);
+
+    # turn all \\' into \'
+    while (!(strpos($text,"\\\\'")===false))
+        {
+        $text=str_replace("\\\\'","\\'",$text);
+        }
+
+    # Remove any backslashes that are not being used to escape single quotes.
+    $text=str_replace("\\'","{bs}'",$text);
+    $text=str_replace("\\n","{bs}n",$text);
+    $text=str_replace("\\r","{bs}r",$text);
+
+	if (!$GLOBALS['mysql_verbatim_queries'])
+		{
+		$text=str_replace("\\","",$text);
+		}
+		
+    $text=str_replace("{bs}'","\\'",$text);            
+    $text=str_replace("{bs}n","\\n",$text);            
+    $text=str_replace("{bs}r","\\r",$text);  
+                      
+    return $text;
+    }
+
+function unescape($text) 
+    {
+    // for comparing escape_checked strings against mysql content because	
+    // just doing $text=str_replace("\\","",$text);	does not undo escape_check
+
+    # Remove any backslashes that are not being used to escape single quotes.
+    $text=str_replace("\\'","\'",$text);
+    $text=str_replace("\\n","\n",$text);
+    $text=str_replace("\\r","\r",$text);
+    $text=str_replace("\\","",$text);    
+    
+
+    return $text;
+    }
+
+/**
+* Escape each elements' value of an array to safely use any of the values in SQL statements
+* 
+* @uses escape_check()
+* 
+* @param array $unsafe_array Array of values that should be escaped
+* 
+* @return array Returns an array with its values escaped for SQLi
+*/
+function escape_check_array_values(array $unsafe_array)
+    {
+    $escape_array_element = function($value)
+        {
+        if(is_array($value))
+            {
+            return escape_check_array_values($value);
+            }
+
+        return escape_check($value);
+        };
+
+    $escaped_array = array_map($escape_array_element, $unsafe_array);
+
+    return $escaped_array;
+    }
+
+
+if (!function_exists("nicedate")) {
+/**
+* Formats a MySQL ISO date
+* 
+* Always use the 'wordy' style from now on as this works better internationally.
+* 
+* @uses offset_user_local_timezone()
+* 
+* @var  string   $date
+* @var  boolean  $time
+* @var  boolean  $wordy
+* @var  boolean  $offset_tz  Set to TRUE to offset based on time zone, FALSE otherwise
+* 
+* @return string Returns an empty string if date not set/invalid
+*/
+function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
+    {
+    global $lang, $date_d_m_y, $date_yyyy;
+
+    if($date == '' || strtotime($date) === false)
+        {
+        return '';
+        }
+
+    $original_time_part = substr($date, 11, 5);
+    if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
+        {
+        $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
+        }
+
+    $y = substr($date, 0, 4);
+    if(!$date_yyyy)
+        {
+        $y = substr($y, 2, 2);
+        }
+
+    if($y == "")
+        {
+        return "-";
+        };
+
+    $month_part = substr($date, 5, 2);
+    $m = $wordy ? (@$lang["months"][$month_part - 1]) : $month_part;
+    if($m == "")
+        {
+        return $y;
+        }
+
+    $d = substr($date, 8, 2);    
+    if($d == "" || $d == "00")
+        {
+        return "{$m} {$y}";
+        }
+
+    $t = $time ? " @ " . substr($date, 11, 5) : "";
+
+    if($date_d_m_y)
+        {
+        return $d . " " . $m . " " . $y . $t;
+        }
+    else
+        {
+        return $m . " " . $d . " " . $y . $t;
+        }
+    }
+}
+
+function redirect($url)
+	{
+	# Redirect to the provided URL using a HTTP header Location directive.
+	global $baseurl,$baseurl_short;
+	if (getval("ajax","")!="")
+		{
+		# When redirecting from an AJAX loaded page, forward the AJAX parameter automatically so headers and footers are removed.	
+		if (strpos($url,"?")!==false)
+			{
+			$url.="&ajax=true";
+			}
+		else
+			{
+			$url.="?ajax=true";
+			}
+		}
+	
+	if (substr($url,0,1)=="/")
+		{
+		# redirect to an absolute URL
+		header ("Location: " . str_replace('/[\\\/]/D',"",$baseurl) . str_replace($baseurl_short,"/",$url));
+		}
+	else
+		{	
+		if(strpos($url,$baseurl)!==false)
+			{
+			// exit($url);	
+			// Base url has already been added
+			header ("Location: " . $url);	
+			exit();
+			}
+
+		# redirect to a relative URL
+		header ("Location: " . $baseurl . "/" . $url);
+		}
+	exit();
+	}
+
+
 
 function trim_spaces($text)
     {
@@ -3190,3 +3411,559 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
 
     return $result;
     }
+
+
+// set a system variable (which is stored in the sysvars table) - set to null to remove
+function set_sysvar($name,$value=null)
+    {
+    $name=escape_check($name);
+    $value=escape_check($value);
+	db_begin_transaction("set_sysvar");
+    sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
+    if($value!=null)
+        {
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        }
+	db_end_transaction("set_sysvar");
+    }
+
+// get a system variable (which is received from the sysvars table)
+function get_sysvar($name, $default=false)
+    {
+	// Check the global array.
+	global $sysvars;
+    if (isset($sysvars) && array_key_exists($name,$sysvars))
+        {
+        return $sysvars[$name];
+        }
+    // Value not set, return default
+    return $default;
+    }
+
+function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
+	{
+	# Plugin architecture.  Look for hooks with this name (and corresponding page, if applicable) and run them sequentially.
+	# Utilises a cache for significantly better performance.  
+	# Enable $draw_performance_footer in config.php to see stats.
+
+	# Allow modifications to the hook itself:
+	if(function_exists("hook_modifier") && !hook_modifier($name, $pagename, $params)) return;
+
+	global $hook_cache;
+	if($pagename == '')
+		{
+		global $pagename;
+		}
+	
+	# the index name for the $hook_cache
+	$hook_cache_index = $name . "|" . $pagename;
+	
+	# we have already processed this hook name and page combination before so return from cache
+	if (isset($hook_cache[$hook_cache_index]))
+		{
+		# increment stats
+		global $hook_cache_hits;
+		$hook_cache_hits++;
+
+		unset($GLOBALS['hook_return_value']);
+		$empty_global_return_value=true;
+		// we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
+
+		foreach ($hook_cache[$hook_cache_index] as $function)
+			{
+			$function_return_value = call_user_func_array($function, $params);
+
+			if ($function_return_value === null)
+				{
+				continue;	// the function did not return a value so skip to next hook call
+				}
+
+			if (!$last_hook_value_wins && !$empty_global_return_value &&
+				isset($GLOBALS['hook_return_value']) &&
+				(gettype($GLOBALS['hook_return_value']) == gettype($function_return_value)) &&
+				(is_array($function_return_value) || is_string($function_return_value) || is_bool($function_return_value)))
+				{
+				if (is_array($function_return_value))
+					{
+					// We merge the cached result with the new result from the plugin and remove any duplicates
+					// Note: in custom plugins developers should work with the full array (ie. superset) rather than just a sub-set of the array.
+					//       If your plugin needs to know if the array has been modified previously by other plugins use the global variable "hook_return_value"
+					$numeric_key=false;
+					foreach($GLOBALS['hook_return_value'] as $key=> $value){
+						if(is_numeric($key)){
+							$numeric_key=true;
+						}
+						else{
+							$numeric_key=false;
+						}
+						break;
+					}
+					if($numeric_key){
+						$GLOBALS['hook_return_value'] = array_values(array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR));
+					}
+					else{
+						$GLOBALS['hook_return_value'] = array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR);
+					}
+					}
+				elseif (is_string($function_return_value))
+					{
+					$GLOBALS['hook_return_value'] .= $function_return_value;		// appends string
+					}
+				elseif (is_bool($function_return_value))
+					{
+					$GLOBALS['hook_return_value'] = $GLOBALS['hook_return_value'] || $function_return_value;		// boolean OR
+					}
+				}
+			else
+				{
+				$GLOBALS['hook_return_value'] = $function_return_value;
+				$empty_global_return_value=false;
+				}
+			}
+
+		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
+		}
+
+	# we have not encountered this hook and page combination before so go add it
+	global $plugins;
+	
+	# this will hold all of the functions to call when hitting this hook name and page combination
+	$function_list = array();
+
+	for ($n=0;$n<count($plugins);$n++)
+		{	
+		# "All" hooks
+		$function="Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name);		
+		if (function_exists($function)) 
+			{			
+			$function_list[]=$function;
+			}
+		else 
+			{
+			# Specific hook	
+			$function="Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name);
+			if (function_exists($function)) 
+				{
+				$function_list[]=$function;
+				}
+			}
+		}	
+	
+	# add the function list to cache
+	$hook_cache[$hook_cache_index] = $function_list;
+
+	# do a callback to run the function(s) - this will not cause an infinite loop as we have just added to cache for execution.
+	return hook($name, $pagename, $params, $last_hook_value_wins);
+    }
+    
+
+/**
+* Utility function to remove unwanted HTML tags and attributes.
+* Note: if $html is a full page, developers should allow html and body tags.
+* 
+* @param string $html       HTML string
+* @param array  $tags       Extra tags to be allowed
+* @param array  $attributes Extra attributes to be allowed
+*  
+* @return string
+*/
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+    {
+	global $permitted_html_tags, $permitted_html_attributes;
+	
+    if(!is_string($html) || 0 === strlen($html))
+        {
+        return $html;
+        }
+
+    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+    // Basic way of telling whether we had any tags previously
+    // This allows us to know that the returned value should actually be just text rather than HTML
+    // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
+    $is_html = ($html != strip_tags($html));
+
+    $allowed_tags = array_merge($permitted_html_tags, $tags);
+    $allowed_attributes = array_merge($permitted_html_attributes, $attributes);
+
+    // Step 1 - Check DOM
+    libxml_use_internal_errors(true);
+
+    $doc           = new DOMDocument();
+    $doc->encoding = 'UTF-8';
+
+    $process_html = $doc->loadHTML($html);
+
+    if($process_html)
+        {
+        foreach($doc->getElementsByTagName('*') as $tag)
+            {
+            if(!in_array($tag->tagName, $allowed_tags))
+                {
+                $tag->parentNode->removeChild($tag);
+
+                continue;
+                }
+
+            if(!$tag->hasAttributes())
+                {
+                continue;
+                }
+
+            foreach($tag->attributes as $attribute)
+                {
+                if(!in_array($attribute->nodeName, $allowed_attributes))
+                    {
+                    $tag->removeAttribute($attribute->nodeName);
+                    }
+                }
+            }
+
+        $html = $doc->saveHTML();
+
+        if(false !== strpos($html, '<body>'))
+            {
+            $body_o_tag_pos = strpos($html, '<body>');
+            $body_c_tag_pos = strpos($html, '</body>');
+
+            $html = substr($html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+            }
+        }
+
+    // Step 2 - Use regular expressions
+    // Note: this step is required because PHP built-in functions for DOM sometimes don't
+    // pick up certain attributes. I was getting errors of "Not yet implemented." when debugging
+    preg_match_all('/[a-z]+=".+"/iU', $html, $attributes);
+
+    foreach($attributes[0] as $attribute)
+        {
+        $attribute_name = stristr($attribute, '=', true);
+
+        if(!in_array($attribute_name, $allowed_attributes))
+            {
+            $html = str_replace(' ' . $attribute, '', $html);
+            }
+        }
+
+    $html = trim($html, "\r\n");
+
+    if(!$is_html)
+        {
+        // DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag
+        $html = strip_tags($html);
+        }
+
+    // Revert back to UTF-8
+    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
+    return $html;
+    }
+
+
+    function show_pagetime(){
+        global $pagetime_start;
+        $time = microtime();
+        $time = explode(' ', $time);
+        $time = $time[1] + $time[0];
+        $total_time = round(($time - $pagetime_start), 4);
+        echo $total_time." sec";
+    }
+
+/**
+ * Determines where the debug log will live.  Typically, same as tmp dir (See general.php: get_temp_dir().
+ * Since general.php may not be included, we cannot use that method so I have created this one too.
+ * @return string - The path to the debug_log directory.
+ */
+function get_debug_log_dir()
+{
+    // Set up the default.
+    $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
+
+    // if $tempdir is explicity set, use it.
+    if(isset($tempdir))
+    {
+        // Make sure the dir exists.
+        if(!is_dir($tempdir))
+        {
+            // If it does not exist, create it.
+            mkdir($tempdir, 0777);
+        }
+        $result = $tempdir;
+    }
+    // Otherwise, if $storagedir is set, use it.
+    else if (isset($storagedir))
+    {
+        // Make sure the dir exists.
+        if(!is_dir($storagedir . "/tmp"))
+        {
+            // If it does not exist, create it.
+            mkdir($storagedir . "/tmp", 0777);
+        }
+        $result = $storagedir . "/tmp";
+    }
+    else
+    {
+        // Make sure the dir exists.
+        if(!is_dir($result))
+        {
+            // If it does not exist, create it.
+            mkdir($result, 0777);
+        }
+    }
+    // return the result.
+    return $result;
+}
+
+
+function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE_TRANSFORMED)
+	{
+
+    # Update the resource log if resource reference passed.
+	if(!is_null($resource_log_resource_ref))
+        {
+        resource_log($resource_log_resource_ref,$resource_log_code,'','','',$text);
+        }
+
+	# Output some text to a debug file.
+	# For developers only
+	global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
+	if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
+	
+	# Cannot use the general.php: get_temp_dir() method here since general may not have been included.
+	if (isset($debug_log_location))
+		{
+		$debugdir = dirname($debug_log_location);
+		if (!is_dir($debugdir)){mkdir($debugdir, 0755, true);}
+		}
+	else 
+		{
+		$debug_log_location=get_debug_log_dir() . "/debug.txt";
+		}
+	if(!file_exists($debug_log_location))
+		{
+		// Set the permissions if we can to prevent browser access (will not work on Windows)
+		$f=fopen($debug_log_location,"a");
+		chmod($debug_log_location,0333);
+		}
+    else
+        {
+		$f=fopen($debug_log_location,"a");
+		}
+	
+	$extendedtext = "";	
+	if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
+		{
+		$backtrace = debug_backtrace(0);
+		$btc = count($backtrace);
+		$callingfunctions = array();
+		$page = "";
+		for($n=$btc;$n>0;$n--)
+			{
+			if($page == "" && isset($backtrace[$n]["file"]))
+				{
+				$page = $backtrace[$n]["file"];
+				}
+				
+			if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
+				{
+				if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
+					{
+					$callingfunctions[] = $backtrace[$n]["args"][0];
+					}
+				else
+					{
+					$callingfunctions[] = $backtrace[$n]["function"];
+					}
+				}
+			}
+		$extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
+		}
+		
+    fwrite($f,date("Y-m-d H:i:s") . " " . $extendedtext . $text . "\n");
+    fclose ($f);
+	return true;
+	}
+    
+/**
+ * Recursively removes a directory.
+ *  
+ * @param string $path Directory path to remove.
+ *
+ * @return boolean
+ */
+function rcRmdir ($path)
+    {
+    debug("rcRmdir: " . $path);
+    if (is_dir($path))
+        {
+        $foldercontents = new DirectoryIterator($path);
+        foreach($foldercontents as $objectindex => $object)
+            {
+            if($object->isDot())
+                {
+                continue;
+                }
+            $objectname = $object->getFilename();
+
+            if ($object->isDir() && $object->isWritable())
+                {
+                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
+                }				
+            else
+                {
+                $success = @unlink($path . DIRECTORY_SEPARATOR . $objectname);
+                }
+
+            if(!$success)
+                {
+                debug("rcRmdir: Unable to delete " . $path . DIRECTORY_SEPARATOR . $objectname);
+                return false;
+                }
+            }
+        }
+    $success = @rmdir($path);
+    debug("rcRmdir: " . $path . " - " . ($success ? "SUCCESS" : "FAILED"));
+    return $success;
+    }
+    
+    
+if (!function_exists("daily_stat")){
+    function daily_stat($activity_type,$object_ref)
+        {
+        global $disable_daily_stat;if($disable_daily_stat===true){return;}  //can be used to speed up heavy scripts	when stats are less important
+        # Update the daily statistics after a loggable event.
+        # the daily_stat table contains a counter for each 'activity type' (i.e. download) for each object (i.e. resource)
+        # per day.
+        $date=getdate();$year=$date["year"];$month=$date["mon"];$day=$date["mday"];
+        
+    
+        # Set object ref to zero if not set.
+        
+        if ($object_ref=="") {$object_ref=0;}
+    
+        
+        # Find usergroup
+        global $usergroup;
+        if (!isset($usergroup)) {$usergroup=0;}
+        
+        # External or not?
+        global $k;$external=0;
+        if (getval("k","")!="") {$external=1;}
+        
+        # First check to see if there's a row
+        $count=sql_value("select count(*) value from daily_stat where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",0);
+        if ($count==0)
+            {
+            # insert
+            sql_query("insert into daily_stat(year,month,day,usergroup,activity_type,object_ref,external,count) values ('$year','$month','$day','$usergroup','$activity_type','$object_ref','$external','1')",false,-1,true,0);
+            }
+        else
+            {
+            # update
+            sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
+            }
+        }    
+    }
+
+function pagename()
+	{
+	$name=safe_file_name(getvalescaped('pagename', ''));
+	if (!empty($name))
+		return $name;
+	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
+	$urlparts=explode("/",$url);
+   $url=$urlparts[count($urlparts)-1];
+    return escape_check($url);
+    }
+    
+function text($name)
+	{
+	global $site_text,$pagename,$language,$languages,$usergroup,$lang;
+	
+	# Look for the site content in the language strings. These will already be overridden with site content if present.
+	$key=$pagename . "__" . $name;	
+	if (array_key_exists($key,$lang)) {return $lang[$key];}
+	else if(array_key_exists("all__" . $name,$lang)) {return $lang["all__" . $name];}
+	
+	return "";
+	}
+    
+function get_section_list($page)
+	{
+	return sql_array("select distinct name value from site_text where page='$page' and name<>'introtext' order by name");
+	}
+
+function resolve_user_agent($agent)
+    {
+    if ($agent=="") {return "-";}
+    $agent=strtolower($agent);
+    $bmatches=array( # Note - order is important - first come first matched
+                    "firefox"=>"Firefox",
+                    "chrome"=>"Chrome",
+                    "opera"=>"Opera",
+                    "safari"=>"Safari",
+                    "applewebkit"=>"Safari",
+                    "msie 3."=>"IE3",
+                    "msie 4."=>"IE4",
+                    "msie 5.5"=>"IE5.5",
+                    "msie 5."=>"IE5",
+                    "msie 6."=>"IE6",
+                    "msie 7."=>"IE7",
+                    "msie 8."=>"IE8",
+                    "msie 9."=>"IE9",
+                    "msie 10."=>"IE10",
+                    "trident/7.0"=>"IE11",
+		    "msie"=>"IE",
+		    "trident"=>"IE",
+                    "netscape"=>"Netscape",
+                    "mozilla"=>"Mozilla"
+                    #catch all for mozilla references not specified above
+                    );
+    $osmatches=array(
+                    "iphone"=>"iPhone",
+					"nt 10.0"=>"Windows 10",
+					"nt 6.3"=>"Windows 8.1",
+					"nt 6.2"=>"Windows 8",
+                    "nt 6.1"=>"Windows 7",
+                    "nt 6.0"=>"Vista",
+                    "nt 5.2"=>"WS2003",
+                    "nt 5.1"=>"XP",
+                    "nt 5.0"=>"2000",
+                    "nt 4.0"=>"NT4",
+                    "windows 98"=>"98",
+                    "linux"=>"Linux",
+                    "freebsd"=>"FreeBSD",
+                    "os x"=>"OS X",
+                    "mac_powerpc"=>"Mac",
+                    "sunos"=>"Sun",
+                    "psp"=>"Sony PSP",
+                    "api"=>"Api Client"
+                    );
+    $b="???";$os="???";
+    foreach($bmatches as $key => $value)
+        {if (!strpos($agent,$key)===false) {$b=$value;break;}}
+    foreach($osmatches as $key => $value)
+        {if (!strpos($agent,$key)===false) {$os=$value;break;}}
+    return $os . " / " . $b;
+    }
+    
+
+
+
+function get_ip()
+	{
+	global $ip_forwarded_for;
+	
+	if ($ip_forwarded_for)
+		{
+		if (isset($_SERVER) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {return $_SERVER["HTTP_X_FORWARDED_FOR"];}
+		}
+		
+	# Returns the IP address for the current user.
+	if (array_key_exists("REMOTE_ADDR",$_SERVER)) {return $_SERVER["REMOTE_ADDR"];}
+
+
+	# Can't find an IP address.
+	return "???";
+	}

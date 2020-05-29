@@ -6,7 +6,7 @@
 */
 
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 
 header("Content-type: text/css");
 

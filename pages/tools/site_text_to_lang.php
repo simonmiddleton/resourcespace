@@ -6,7 +6,7 @@
 # ~Dan Huby, Montla Limited, Feb 2015.
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
 $lang=getvalescaped("lang","en");

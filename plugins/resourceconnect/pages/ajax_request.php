@@ -1,8 +1,6 @@
 <?php
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
 include_once "../../../include/authenticate.php";
-include_once "../../../include/search_functions.php";
 
 # This basically acts as a proxy to fetch the remote results, because AJAX is unable to make requests directly to remote servers for security reasons.
 

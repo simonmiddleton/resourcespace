@@ -1,7 +1,7 @@
 <?php
 $rsroot = dirname(dirname(dirname(__FILE__)));
 include "{$rsroot}/include/db.php";
-include_once "{$rsroot}/include/general.php";
+
 include "{$rsroot}/include/authenticate.php";
 include_once "{$rsroot}/include/ajax_functions.php";
 
@@ -55,7 +55,6 @@ if($action == "render_clear_selected_btn")
 if($action == "render_edit_selected_btn")
     {
     include_once "{$rsroot}/include/search_do.php";
-    include_once "{$rsroot}/include/search_functions.php";
 
     $restypes = getval("restypes", "");
     $archive = getval("archive", "");

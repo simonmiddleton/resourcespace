@@ -6,7 +6,7 @@
  * @subpackage Pages
  */
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
 include_once "../include/image_processing.php";

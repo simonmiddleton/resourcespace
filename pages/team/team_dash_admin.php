@@ -1,10 +1,8 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
 include "../../include/authenticate.php";
 if(!checkPermission_dashadmin()){exit($lang["error-permissiondenied"]);}
 include "../../include/dash_functions.php";
-include '../../include/render_functions.php';
 
 
 $user_groups = array(ucfirst($lang['all_users']));

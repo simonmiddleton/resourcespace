@@ -3,12 +3,8 @@
 DEFINE('WATCHED_SEARCHES_ITEMS_PER_PAGE',10);
 
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
 include_once "../../../include/authenticate.php";
-include_once "../../../include/collections_functions.php";
-include_once "../../../include/search_functions.php";
 include_once "../../../include/search_do.php";
-
 include_once "../include/search_notifications_functions.php";
 
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");

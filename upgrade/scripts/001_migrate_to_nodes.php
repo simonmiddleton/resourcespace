@@ -3,8 +3,8 @@
 // Note: It is safe to run this script at any time as it will work on differential data if migration interrupted
 
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
-include_once __DIR__ . "/../../include/resource_functions.php";
+
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)

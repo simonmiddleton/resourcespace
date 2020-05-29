@@ -5,7 +5,6 @@
 
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
-include_once '../../../include/general.php';
 
 global $baseurl;
 // Specify the name of this plugin and the heading to display for the page.

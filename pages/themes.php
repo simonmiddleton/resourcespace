@@ -1,6 +1,6 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
 
 if(!$enable_themes)

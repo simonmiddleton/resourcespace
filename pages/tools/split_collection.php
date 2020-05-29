@@ -3,7 +3,7 @@
 # Split a collection into multiple collections
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
 $collectionid=getvalescaped("col", false);

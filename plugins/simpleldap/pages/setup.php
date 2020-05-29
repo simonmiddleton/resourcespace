@@ -1,7 +1,7 @@
 <?php
 include "../../../include/db.php";
 include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permission denied.");}
-include_once "../../../include/general.php";
+
 
 $plugin_name="simpleldap";
 if(!in_array($plugin_name, $plugins))
