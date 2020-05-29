@@ -16,8 +16,20 @@ function HookLicensemanagerViewCustompanels()
     <div class="RecordPanel">
     <div class="Title"><?php echo $lang["license_management"] ?></div>
 
-    <?php if ($edit_access) { ?>    
-    <p>&gt;&nbsp;<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=new&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["new_license"] ?></a></p>	
+    <?php if ($edit_access) { 
+        $new_license_url_params = array(
+            'ref'        => 'new',
+            'resource'   => $ref,
+            'search'     => getval('search',''),
+            'order_by'   => getval('order_by',''),
+            'collection' => getval('collection',''),
+            'offset'     => getval('offset',0),
+            'restypes'   => getval('restypes',''),
+            'archive'    => getval('archive','')
+        );
+        $new_license_url = generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$new_license_url_params);
+        ?>    
+    <p>&gt;&nbsp;<a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["new_license"] ?></a></p>	
     <?php } ?>
    
 	<?php if (count($licenses)>0) { ?>

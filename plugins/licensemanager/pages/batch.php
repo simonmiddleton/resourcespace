@@ -17,8 +17,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         'search'     => getval('search',''),
         'order_by'   => getval('order_by',''),
         'collection' => getval('collection',''),
-        'order_by'   => getval('order_by',''),
-        'offset'     => getval('offset',''),
+        'offset'     => getval('offset',0),
         'restypes'   => getval('restypes',''),
         'archive'    => getval('archive','')
     );
