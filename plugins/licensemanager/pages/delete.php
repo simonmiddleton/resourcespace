@@ -8,27 +8,29 @@ $ref=getvalescaped("ref","");
 # Check access
 if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
 
+$url_params = array(
+    'ref'        => $ref,
+    'search'     => getval('search',''),
+    'order_by'   => getval('order_by',''),
+    'collection' => getval('collection',''),
+    'offset'     => getval('offset',0),
+    'restypes'   => getval('restypes',''),
+    'archive'    => getval('archive','')
+);
+$redirect_url = generateURL($baseurl_short . "/plugins/licensemanager/pages/list.php",$url_params);
+
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	sql_query("delete from license where ref='$ref'");
 	sql_query("delete from resource_license where license='$ref'");
-    $url_params = array(
-        'ref'        => $ref,
-        'search'     => getval('search',''),
-        'order_by'   => getval('order_by',''),
-        'collection' => getval('collection',''),
-        'offset'     => getval('offset',0),
-        'restypes'   => getval('restypes',''),
-        'archive'    => getval('archive','')
-    );
-    $redirect_url = generateURL($baseurl_short . "/plugins/licesemanager/pages/list.php",$url_params);
+
 	redirect($redirect_url);
 	}
 		
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>plugins/licensemanager/pages/list.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
 
 <h1><?php echo $lang["delete_license"] ?></h1>
 
