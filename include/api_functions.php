@@ -82,25 +82,27 @@ function execute_api_call($query,$pretty=false)
     
     debug("API - calling api_" . $function);
     $result = call_user_func_array("api_" . $function, $setparams);
-    $result = mb_convert_encoding($result,"UTF-8"); //Make sure this data is UTF-8 to avoid JSON errors
+
     if($pretty)
         {
             debug("API: json_encode() using JSON_PRETTY_PRINT");
-            return json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
+            $json_encoded_result = json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
         }
     else
         {
             debug("API: json_encode()");
             $json_encoded_result = json_encode($result);
-
-            if(json_last_error() !== JSON_ERROR_NONE)
-                {
-                debug("API: JSON error: " . json_last_error_msg());
-                debug("API: JSON error when \$result = " . print_r($result, true));
-                }
-
-            return $json_encoded_result;
         }
+    if(json_last_error() !== JSON_ERROR_NONE)
+        {
+        debug("API: JSON error: " . json_last_error_msg());
+        debug("API: JSON error when \$result = " . print_r($result, true));
+
+        $json_encoded_result = json_encode($result,JSON_UNESCAPED_UNICODE);
+        }
+
+    return $json_encoded_result;
+
     }
     
 /**
