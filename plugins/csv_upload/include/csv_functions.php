@@ -6,7 +6,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 	{
     // Ensure /r line endings (such as those created in MS Excel) are handled correctly
 	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
-    global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref, $category_tree_add_parents;
+    global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref,
+    $category_tree_add_parents, $mysql_verbatim_queries;
 
     $file=fopen($filename,'r');
     $line_count=0;
@@ -178,6 +179,20 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     }
                 $matchsearch = "\"" . $match_field["name"] . ":" . $match_val . "\"";
                 $allmatches = do_search($matchsearch,'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
+                
+                if(!is_array($allmatches))
+                    {
+                    // May be trying to match on file path in which case see if we can match with forward slashes rather than backslashes
+                    $matchsearch = "\"" . $match_field["name"] . ":" . str_replace("\\","/",$match_val) . "\"";
+                    $allmatches = do_search($matchsearch,'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
+                    }
+
+                if(!is_array($allmatches))
+                    {
+                    array_push ($messages,"Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line));
+                    $error_count++;
+                    continue;
+                    }
 
                 $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
                 if(count($validmatches) == 0)
@@ -377,6 +392,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     $error_count++;
                     continue;
                     }
+                }
+            
+            // Extra check to replace backslashes with forward slashes
+            // This is required because file paths are often used as resource identifier but back slashes
+            // cannot be stored in resource_data by default
+
+            if(!$mysql_verbatim_queries && mb_strpos($cell_value,"\\") !== false)
+                {
+                $cell_value = str_replace("\\","/",$cell_value);
                 }
 
             // Check for multiple options

@@ -1885,51 +1885,24 @@ if (!function_exists("split_keywords")){
     
         $ns=trim_spaces($search);
     
-        if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
-        # we support keywords with spaces.
+        if ($index==false && strpos($ns,":")!==false) # special 'constructed' query type
             {   
-            if(!$index && $keepquotes)
+            if($keepquotes)
                 {
                 preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
                 $return=trim_array($matches[0],$config_trimchars . ",");
                 }
-            else
+            elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
                 {
-                if (strpos($ns,"startdate")==false && strpos($ns,"enddate")==false)
-                    {$ns=cleanse_string($ns,true,!$index,$is_html);}
                 $return=explode(",",$ns);
                 }
-            
-            # If we are indexing, append any values that contain spaces.
-            
-            # Important! Solves the searching for keywords with spaces issue.
-            # Consider: for any keyword that has spaces, append to the array each individual word too
-            # so for example: South Asia,USA becomes South Asia,USA,South,Asia
-            # so a plain search for 'south asia' will match those with the keyword 'south asia' because the resource
-            # will also be linked to the words 'south' and 'asia'.
-            if ($index)
-                {
-                $return2=$return;
-                for ($n=0;$n<count($return);$n++)
-                    {
-                    $keyword=trim($return[$n]);
-                    if (strpos($keyword," ")!==false)
-                        {
-                        # append each word
-                        $words=explode(" ",$keyword);
-                        for ($m=0;$m<count($words);$m++) {$return2[]=trim($words[$m]);}
-                        }
-                    }
-                    
-                $return2=trim_array($return2,$config_trimchars . ",");
-                if ($partial_index) {return add_partial_index($return2);}
-                return $return2;
-                }
             else
                 {
-                // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
-                return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+                $ns=cleanse_string($ns,false,!$index,$is_html);
+                $return=explode(" ",$ns);
                 }
+            // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
+            return trim_array($return,$config_trimchars . ($keepquotes?",":""));
             }
         else
             {
