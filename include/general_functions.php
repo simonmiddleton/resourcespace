@@ -1569,14 +1569,7 @@ function strip_extension($name,$use_ext_list=false)
              return $name;     
          }
     }
- // strip_extension()
 
-
-
-
-
-
-    
 function is_process_lock($name)
     {
     # Checks to see if a process lock exists for the given process name.
@@ -1590,7 +1583,7 @@ function is_process_lock($name)
     if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
     
     $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
-    if ((time()-$time)>$process_locks_max_seconds) {return false;} # Lock has expired
+    if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
     
     return true; # Lock is valid
     }
