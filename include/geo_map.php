@@ -1,10 +1,5 @@
-
-
 <div id="map_canvas" style="width: 100%; height: <?php echo isset($mapheight)?$mapheight:"500" ?>px; display:block; float:none;overflow: hidden;" class="Picture" ></div>
-
-
 <script>
-
 <?php
 if ($geo_override_options == "") 
     {
@@ -15,32 +10,17 @@ if ($geo_override_options == "")
     map = new OpenLayers.Map("map_canvas");
 
     var osm = new OpenLayers.Layer.OSM("<?php echo $lang["openstreetmap"]?>"
-        <?php
-        if ($geo_tile_caching && extension_loaded("curl"))
-            {
-            if(isset($geo_tile_cache_directory))
-                {
-                $tilecache = $geo_tile_cache_directory;    
-                }
-            else
-                {
-                $tilecache = get_temp_dir()."/tiles";
-                }
-                
-            if (!file_exists($tilecache))
-                    {
-                    mkdir($tilecache);
-                    chmod($tilecache,0777);
-                    }
-        ?>
-        ,"<?php echo $baseurl?>/pages/ajax/tiles.php?z=${z}&x=${x}&y=${y}&r=mapnik",{transitionEffect: 'resize'}
-        
-        <?php }
-        else
-            {?>
-            ,"http://tile.openstreetmap.org/${z}/${x}/${y}.png",{transitionEffect: 'resize'}
-            <?php
-            } ?>
+    <?php
+    if(count($geo_tile_servers) > 0 && !$geo_tile_caching)
+        {
+        $tileurl = 'https://'.$geo_tile_servers[array_rand($geo_tile_servers)];
+        $tileurl .= "/".$z."/".$x."/".$y.".png";
+        echo ",\"" . $tileurl . "\",{transitionEffect: 'resize'}";
+        }
+    else
+        {
+        echo ",\"" . $baseurl ."/pages/ajax/tiles.php?z=\${z}&x=\${x}&y=\${y}&\",{transitionEffect: 'resize'}";
+        }?>
     );
 
     <?php if ($use_google_maps) { ?>
@@ -63,8 +43,16 @@ if ($geo_override_options == "")
 
     map.addLayers([<?php echo $geo_layers ?>]);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
-
-<?php
+    <?php 
+    if(count($geo_tile_servers) == 0)
+        {
+        // Block zooming beyond the tile resolutions included by default in gfx/geotiles
+        echo "
+        map.isValidZoomLevel = function(zoomLevel)
+            {
+            return (zoomLevel != null && zoomLevel <= 3);
+            }";
+        }
     }
 else 
     {

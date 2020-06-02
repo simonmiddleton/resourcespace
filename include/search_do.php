@@ -865,6 +865,7 @@ function do_search(
                     $quotedkeywords=split_keywords(substr($keyword,1,-1));
                     } 
                     
+                    debug("BANG 2 " . implode(",",$quotedkeywords));
 				$omit = false;
                 if (substr($keyword, 0, 1) == "-")
 					{
@@ -875,6 +876,7 @@ function do_search(
                 $qk=1; // Set the counter to the first keyword
 				foreach($quotedkeywords as $quotedkeyword)
 					{
+                    debug("resolve_keyword '" . $quotedkeyword . "'");
 					global $noadd, $wildcard_always_applied, $wildcard_always_applied_leading;
 					if (in_array($quotedkeyword, $noadd)) # skip common words that are excluded from indexing
 						{

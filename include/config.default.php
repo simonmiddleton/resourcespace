@@ -2500,12 +2500,19 @@ $geo_search_restrict=array
 # Add OpenLayers configuration options to this variable to overwrite all other options. 
 $geo_override_options = "";
 
-$geo_tile_servers = array();
-$geo_tile_servers[] = 'a.tile.openstreetmap.org';
-$geo_tile_servers[] = 'b.tile.openstreetmap.org';
-$geo_tile_servers[] = 'c.tile.openstreetmap.org';
-$geo_tile_cache_lifetime = 60*60*24*365; // 1 year by default to prevent hitting tile server 
+// Only high level tiles are included by default. If you require higher resolution tiles 
+// you need permitted access to a full tile server, or you can set up your own. 
+// See https://wiki.openstreetmap.org/wiki/Tile_servers for more information
+// If no servers are available then your zoom ability will be limited
 
+$geo_tile_servers = array();
+//$geo_tile_servers[] = 'a.tile.sometileserver.org';
+//$geo_tile_servers[] = 'b.tile.sometileserver.org';
+//$geo_tile_servers[] = 'c.tile.sometileserver.org';
+
+// How long will tiles be cached? Set to one year by default
+// Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+$geo_tile_cache_lifetime = 60*60*24*365;
 
 # QuickLook previews (Mac Only)
 # If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
