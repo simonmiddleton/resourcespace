@@ -7,7 +7,7 @@ function HookImage_banksAllSearchfiltertop()
 
     foreach($providers as $provider_id => $provider)
         {
-        if(!$provider->checkDependencies())
+        if($provider->checkDependencies() !== true)
             {
             unset($providers[$provider_id]);
             }

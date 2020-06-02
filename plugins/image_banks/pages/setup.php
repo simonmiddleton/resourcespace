@@ -18,13 +18,12 @@ $page_def = array();
 $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
 foreach($providers as $provider)
     {
-    if(!$provider::checkDependencies())
+    $dependency_check = $provider->checkDependencies();
+    if ($dependency_check !== true)
         {
-        $error = str_replace('%PROVIDER', $provider->getName(), $lang['image_banks_provider_unmet_dependencies']);
-
+        $error = str_replace('%PROVIDER', $provider->getName(), $lang['image_banks_provider_unmet_dependencies']." - ".$dependency_check);
         break;
         }
-
     $page_def = $provider->buildConfigPageDefinition($page_def);
     }
 
