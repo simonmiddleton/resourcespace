@@ -12,6 +12,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
     $file=fopen($filename,'r');
     $line_count=0;
     $headers = fgetcsv($file);
+    $error_count=0;
 
     // Get list of possible resources to replace
     if($csv_set_options["update_existing"])
@@ -25,6 +26,13 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             // Limit resources to replace to those that user can edit
             $replaceresources = do_search('','','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
             }
+            
+        if(!is_array($replaceresources))
+            {
+            array_push ($messages,"Error: No editable resources found");
+            return false;
+            }
+
         $replaceresources = array_column($replaceresources,"ref");
         }
 
@@ -40,7 +48,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         }
 
 	# ----- end of header row checks, process each of the rows checking data -----
-    $error_count=0;
     $restypefields = get_resource_type_fields();
 
     foreach($restypefields as $field)
