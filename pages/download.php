@@ -126,6 +126,13 @@ else
         }
 
     $noattach = getval('noattach','');
+
+    // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
+    if ($size == 'videojs' && $ext == 'mp3')
+    {
+        $size="";
+    }
+    
     $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file

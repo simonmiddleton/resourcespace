@@ -4646,7 +4646,8 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         {
         // The system should always allow these sizes to be downloaded as these are needed for search results and it makes
         // sense to allow them if a request for one of them is received. For example when $hide_real_filepath is enabled.
-        $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot');
+        // 'videojs' represents the preview loaded by videojs viewer.
+        $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 
         if('' == $size)
             {
