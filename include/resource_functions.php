@@ -6452,7 +6452,7 @@ function get_default_archive_state($requestedstate = "")
         # Set the default status if set in config.
         return $override_status_default;
         }
-    elseif (checkperm("c"))
+    elseif (checkperm("c") && checkperm("e0"))
         {
         # Set status to Active
         return 0;
