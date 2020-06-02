@@ -7517,7 +7517,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                personal_data,
                include_in_csv_export,
                browse_bar,
-               active
+               active,
+               read_only
           FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), "schema");
 
     return $allfields;
