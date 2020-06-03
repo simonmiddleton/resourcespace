@@ -106,7 +106,7 @@ function do_search(
         "title"           => "title $sort,r.ref $sort",
         "file_path"       => "file_path $sort,r.ref $sort",
         "resourceid"      => "r.ref $sort",
-        "resourcetype"    => "resource_type $sort,r.ref $sort",
+        "resourcetype"    => "order_by ASC, r.ref $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
         "status"          => "archive $sort",
@@ -968,6 +968,15 @@ function do_search(
     //
     // *******************************************************************************
 
+
+    // *******************************************************************************
+    //                                                      order by RESOURCE TYPE
+    // *******************************************************************************
+
+    $sql_join .= " JOIN resource_type rty  on r.resource_type = rty.ref  ";
+
+    $select .= ", rty.order_by ";
+
     // *******************************************************************************
     //                                                       START add node conditions
     // *******************************************************************************
@@ -994,7 +1003,7 @@ function do_search(
 
     if(count($node_bucket_not)>0)
         {
-        $sql_filter='NOT EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .
+        $sql_filter='NOT EXISTS (SELECT `resource` FROM `resource_node` WHERE r.ref=`resource` AND `node` IN (' .
             implode(',',$node_bucket_not) . ')) AND ' . $sql_filter;
         }
 
