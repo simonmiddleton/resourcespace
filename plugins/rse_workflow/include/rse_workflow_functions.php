@@ -131,23 +131,23 @@ if (!function_exists("rse_workflow_delete_state")){
 * Validate list of actions for a resource or a batch of resources. For a batch of 
 * resources, an action is valid only if using the 'wf' permission is set for that action.
 * 
-* @param array $actions          List of workflow actions (@see rse_workflow_get_actions())
-* @param bool  $use_wf_perm_only Validate actions only using 'wf' permissions
+* @param array $actions         List of workflow actions (@see rse_workflow_get_actions())
+* @param bool  $use_perms_only  Validate actions using edit access (e perm) on the destination state -OR- 'wf' permissions
 * 
 * @return array
 */
-function rse_workflow_get_valid_actions(array $actions, $use_wf_perm_only)
+function rse_workflow_get_valid_actions(array $actions, $use_perms_only)
     {
     /** $resource, $edit_access are used on the view page to determine valid actions for a resource where we run a 
     * proper action validation (@see rse_workflow_validate_action())
     */
     global $resource, $edit_access;
 
-    if($use_wf_perm_only)
+    if($use_perms_only)
         {
         return array_filter($actions, function($action)
             {
-            return checkperm("wf{$action['ref']}");
+            return checkperm("e{$action['statusto']}") || checkperm("wf{$action['ref']}");
             });
         }
 
