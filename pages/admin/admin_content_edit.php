@@ -106,7 +106,7 @@ if($html_validation !== true && $html_validation !== '')
 		<input type=hidden name=name value="<?php echo $name?>">
 		<input type=hidden name=langswitch id="langswitch" value="">
 		<input type=hidden name=groupswitch id="groupswitch" value="">
-		<input type="hidden" name="custom" value="<?php echo getval('custom', '')?>">
+		<input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
 		<div class="Question">
 			<label><?php echo $lang["page"]?></label>
 			<div class="Fixed"><?php echo ($page==""?$lang["all"]:$page) ?></div>
