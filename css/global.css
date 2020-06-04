@@ -629,8 +629,8 @@ behavior: url('../css/iepngfix.htc');
 .NewFlag {display:inline;font-size:0.6em;margin-left:5px;padding:1px 3px 1px 3px;}
 .Breadcrumbs {float:left;margin-top:4px;}
 .SearchBreadcrumbs {margin-top:15px;}
-.SearchTitle {padding: 0px;margin-top:15px;}
-.SearchTitle + p{padding-bottom: 0px;}
+.SearchTitle {padding: 0px;margin-top:-10px;margin-bottom:5px;}
+.SearchTitle + p{padding-bottom: 7px;}
 .SearchBreadcrumbs + .RecordHeader .SearchTitle {margin-top:0px;}
 
 .CategoryBox {overflow:auto;width:414px;height:80px;padding:2px;font-size:1em;}
