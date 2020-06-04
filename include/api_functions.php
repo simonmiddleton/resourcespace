@@ -50,7 +50,9 @@ function execute_api_call($query,$pretty=false)
     if (!array_key_exists("function",$params)) {return false;}
     $function=$params["function"];
     if (!function_exists("api_" . $function)) {return false;}
-    
+
+    global $lang;
+
     // Construct an array of the real params, setting default values as necessary
     $setparams = array();
     $n = 0;    
@@ -58,23 +60,38 @@ function execute_api_call($query,$pretty=false)
     foreach ($fct->getParameters() as $fparam)
         {
         $paramkey = $n + 1;
-        debug ("API Checking for parameter " . $fparam->getName() . " (param" . $paramkey . ")");
+        $param_name = $fparam->getName();
+        debug ("API Checking for parameter " . $param_name . " (param" . $paramkey . ")");
         if (array_key_exists("param" . $paramkey,$params))
             {
-            debug ("API " . $fparam->getName() . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
+            debug ("API " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
             $setparams[$n] = $params["param" . $paramkey];
             }
-        
+        else if(array_key_exists($param_name, $params))
+            {
+            debug("API: {$param_name} - value has been passed (by name): '{$params[$param_name]}'");
+
+            if($fparam->hasType() && $fparam->isArray() && gettype($params[$param_name]) != "array")
+                {
+                $error = str_replace(
+                    array("%arg", "%expected-type", "%type"),
+                    array($param_name, "array", gettype($params[$param_name])),
+                    $lang["error-type-mismatch"]);
+                return json_encode($error);
+                }
+
+            $setparams[$n] = $params[$param_name];
+            }
         elseif ($fparam->isOptional())
             {
             // Set default value if nothing passed e.g. from API test tool
-            debug ("API " . $fparam->getName() . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API " . $param_name . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = $fparam->getDefaultValue();
             }
         else
             {
              // Set as empty
-            debug ("API " . $fparam->getName() . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = "";    
             }
         $n++;

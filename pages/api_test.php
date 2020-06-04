@@ -18,18 +18,26 @@ if ($api_function!="")
     $fct = new ReflectionFunction("api_" . $api_function);
     $paramcount=$fct->getNumberOfParameters();
     $rparamcount=$fct->getNumberOfRequiredParameters();
+    $fct_params = $fct->getParameters();
     }
     
 $output="";
 if (getval("submitting","")!="" && $api_function!="")
     {
     $output="";
-    
-    # Execute API call.
+
     $query="function=" . $api_function;
-    for ($n=1;$n<=$paramcount;$n++)
+    foreach($fct_params as $fparam)
         {
-        $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
+        $param_name = $fparam->getName();
+        $param_val = trim(getval($param_name, ""));
+
+        if($fparam->isOptional() && $param_val == "")
+            {
+            continue;
+            }
+
+        $query .= "&{$param_name}=" . urlencode($param_val);
         }
     $output.="Query: " . $query . "\n\n";
     $output.="Response:\n";
@@ -74,12 +82,15 @@ if (getval("submitting","")!="" && $api_function!="")
 <?php
 if ($api_function!="")
     {
-    for($n=1;$n<=$paramcount;$n++)
+    foreach($fct_params as $fparam)
         {
+        $param_name = $fparam->getName();
+        $required = ($fparam->isOptional() ? "" : " *");
+        $required_attr = ($fparam->isOptional() ? "" : "required");
         ?>
         <div class="Question">
-        <label>Param<?php echo $n ?> <?php if ($n<=$rparamcount) {echo "*";} ?></label>
-        <input <?php if ($n<=$rparamcount) {echo "required";} ?> type="text" name="param<?php echo $n ?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("param" . $n,"")) ?>"/>
+            <label><?php echo $param_name; echo $required; ?></label>
+            <input type="text" name="<?php echo $param_name; ?>" class="stdwidth" value="<?php echo htmlspecialchars(getval($param_name, "")); ?>" <?php echo $required_attr; ?>>
         </div>
         <?php
         }
