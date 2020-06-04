@@ -500,21 +500,23 @@ if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$spe
 $search=refine_searchstring($search);
 
 $editable_only = getval("foredit","")=="true";
+$search_access = getval("access", null, true); # admins can search for resources with a specific access from advanced search
 
 $searchparams= array(
-    'search'                                    => $search,
-    'k'                                         => $k,
-    'modal'                                     => $modal,  
-    'display'                                   => $display,
-    'order_by'                                  => $order_by,
-    'offset'                                    => $offset,
-    'per_page'                                  => $per_page,
-    'archive'                                   => $archive,
-    'sort'                                      => $sort,
-    'restypes'                                  => $restypes,
-    'recentdaylimit'                            => getvalescaped('recentdaylimit', '', true),
-    'foredit'                                   => ($editable_only?"true":""),
-    'noreload'                                  => "true"
+    'search'         => $search,
+    'k'              => $k,
+    'modal'          => $modal,  
+    'display'        => $display,
+    'order_by'       => $order_by,
+    'offset'         => $offset,
+    'per_page'       => $per_page,
+    'archive'        => $archive,
+    'sort'           => $sort,
+    'restypes'       => $restypes,
+    'recentdaylimit' => getvalescaped('recentdaylimit', '', true),
+    'foredit'        => ($editable_only?"true":""),
+    'noreload'       => "true",
+    'access'         => $search_access,
 );
  
 $checkparams = array();
@@ -550,7 +552,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {   
-        $result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only);
+        $result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
         }
     }
 else

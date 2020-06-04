@@ -31,6 +31,7 @@
 * @param boolean     $return_refs_only
 * @param boolean     $editable_only
 * @param boolean     $returnsql
+* @param integer     $access                  Search for resources with this access
 * 
 * @return null|string|array
 */
@@ -50,7 +51,8 @@ function do_search(
     $stats_logging = true,
     $return_refs_only = false,
     $editable_only = false,
-    $returnsql = false
+    $returnsql = false,
+    $access = null
 )
     {
     debug_function_call("do_search", func_get_args());
@@ -192,7 +194,7 @@ function do_search(
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only);
+    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access);
     debug("do_search: \$sql_filter = {$sql_filter}");
 
     # Initialise variables.

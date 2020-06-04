@@ -778,7 +778,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false)
+function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -987,8 +987,14 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     # append ref filter - never return the batch upload template (negative refs)
     if ($sql_filter!="") {$sql_filter.=" AND ";}
     $sql_filter.="r.ref>0";
-    
-    
+
+    // Only users with v perm can search for resources with a specific access
+    if(checkperm("v") && !is_null($access) && is_numeric($access) && !checkperm("ea{$access}"))
+        {
+        $sql_filter .= (trim($sql_filter) != "" ? " AND " : "");
+        $sql_filter .= "r.access = {$access}";
+        }
+
     // Append filter if only searching for editable resources
     // ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
     if($editable_only)
