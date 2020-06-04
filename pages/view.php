@@ -372,13 +372,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
-    if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(",<br/>",$treetext_arr);        
-        }
-    elseif(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+    if(in_array($field['type'],$FIXED_LIST_FIELD_TYPES) && !$field['type'] == FIELD_TYPE_CATEGORY_TREE )
 		{
 		# Get all nodes attached to this resource and this field    
 		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);

@@ -1424,7 +1424,8 @@ $category_tree_search_use_and=false;
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
 
-# Force selection of parent nodes when selecting a sub node?
+# Force selection of parent nodes when selecting a sub node? 
+# If set to false then each node should be unique to avoid possible corruption when exporting/importing data
 $category_tree_add_parents=true;
 
 # Force deselection of child nodes when deselecting a node?

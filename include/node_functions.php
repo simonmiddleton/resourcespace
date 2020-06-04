@@ -1682,6 +1682,7 @@ function get_node_tree($parentId = "", array $nodes)
  */
 function get_tree_strings($resource_nodes,$allnodes = false)
     {
+    global $category_tree_add_parents;
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = array();
     // Array with node ids as indexes to ease parent tracking
@@ -1691,21 +1692,19 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         {
         $todocount = count($resource_nodes);
         for($n=0;$n < $todocount;$n++)
-            {
-            // Add root nodes
-            if($resource_nodes[$n]["parent"] == "")
+            {            
+            if(
+                in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
+                &&
+                !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
+                )
                 {
-                $orderednodes[] = $resource_nodes[$n];
-                $treenodes[$resource_nodes[$n]["ref"]] = $resource_nodes[$n];
-                unset($resource_nodes[$n]);
+                // Don't add yet, add once parent has been added
+                continue;
                 }
-            elseif(in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref")))
-                {
-                // Add subnodes only once parent has been added
-                $orderednodes[] = $resource_nodes[$n];
-                $treenodes[$resource_nodes[$n]["ref"]] = $resource_nodes[$n];
-                unset($resource_nodes[$n]);
-                }
+            $orderednodes[] = $resource_nodes[$n];
+            $treenodes[$resource_nodes[$n]["ref"]] = $resource_nodes[$n];
+            unset($resource_nodes[$n]);
             }
         $resource_nodes = array_values($resource_nodes);
         }
@@ -1729,20 +1728,20 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         // Create string representation, reversing the order so parents come first
         $fullpath = "";
         for($n=count($node_parts[$resource_node["ref"]])-1;$n>=0;$n--)
-            {;
+            {
             $fullpath .= $node_parts[$resource_node["ref"]][$n];
             if(!$allnodes)
                 {
                 $duplicatepath = array_search($fullpath,$nodestrings);                 
 
                 if($duplicatepath !== false)
-                    {;
+                    {
                     unset($nodestrings[$duplicatepath]);
                     }          
                 }
             if($n>0)
                 {
-                $fullpath .= "\\";
+                $fullpath .= "/";
                 }
             }
         $nodestrings[$resource_node["ref"]] = $fullpath;

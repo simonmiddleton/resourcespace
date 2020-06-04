@@ -2581,7 +2581,7 @@ function get_resource_type_field($field)
     }
 
 if (!function_exists('get_resource_field_data')) {
-function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false)
+function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for this resource, for display in an edit / view form.
@@ -2660,16 +2660,17 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $fields = sql_query($fieldsSQL);
 
-
+    // Add category tree values, reflecting tree structure
     $tree_fields = get_resource_type_fields('',"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     foreach($tree_fields as $tree_field)
         {
         $addfield= $tree_field;
 
-        $treenodes = get_resource_nodes($ref, $tree_field["ref"], true);
+        $treenodes = get_resource_nodes($ref, $tree_field["ref"], true, SORT_ASC);
         $treetext_arr = get_tree_strings($treenodes);
-
-        $addfield["value"] = count($treetext_arr) > 0 ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : "";
+        // Quoting each element is required for csv export
+        $valstring = $forcsv ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
+        $addfield["value"] = count($treetext_arr) > 0 ? $valstring : "";
         $addfield["resource_type_field"] = $tree_field["ref"];
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
