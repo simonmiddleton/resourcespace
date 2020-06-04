@@ -61,7 +61,6 @@ $order_by = getvalescaped("order_by", "relevance");
 $archive = getvalescaped("archive", "0");
 $per_page = getvalescaped("per_page", null, true);
 $offset = getvalescaped("offset", null, true);
-$fetchrows = (!is_null($per_page) || !is_null($offset) ? (int) $per_page + (int) $offset : -1);
 $sort = getvalescaped("sort", "desc");
 $starsearch = getvalescaped("starsearch", 0, true);
 $recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
@@ -75,14 +74,12 @@ if(!is_null($collection))
     $form_action_extra["collection"] = $collection;
     }
 
-// edititems is on edit.php when editsearchresults=true
-// $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
 $result = do_search(
     $search,
     $restypes,
     $order_by,
     $archive,
-    $fetchrows,
+    -1,
     $sort,
     false, # $access_override
     $starsearch,
