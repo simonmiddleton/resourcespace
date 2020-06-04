@@ -2436,62 +2436,10 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     {
     global $view_title_field;
     
-    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
-        {
-        $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
-        }
-    else
-        {
-        // use php function getimagesize()
-        $size = ($img_url != "") ? getimagesize($img_url) : "";
-        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+    list($width, $height, $margin) = calculate_image_display($imagedata, $img_url, $display);
 
-        }
-        
-    switch($display)
-        {
-        case "xlthumbs":
-            $defaultwidth = 320;
-            $defaultheight = 320;
-        break;
-    
-        case "thumbs":
-            $defaultwidth = 175;
-            $defaultheight = 175;
-        break;        
-        
-        case "collection":
-            $defaultwidth = 75;
-            $defaultheight = 75;
-        break;
-    
-        default:
-            $defaultwidth = 75;
-            $defaultheight = 75;
-        break;        
-        }
-    
-        if ($ratio > 1)
-            {
-            $width = $defaultwidth;
-            $height = round($defaultheight / $ratio);
-            $margin = floor(($defaultheight - $height ) / 2) . "px";
-            }
-        elseif ($ratio < 1)
-            {
-            # portrait image dimensions
-            $height = $defaultheight;
-            $width = round($defaultwidth * $ratio);
-            $margin = floor(($defaultheight - $height ) / 2) . "px";
-            }
-        else
-            {
-            # square image or no image dimensions
-            $height = $defaultheight;
-            $width = $defaultwidth;
-            $margin = "auto";
-            }
-    
+    $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
+
     ?>
     
     <img
@@ -2504,6 +2452,80 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     />
     <?php
     }
+
+
+/**
+ * Calculations width, height and margin-top property for resource image to display in ResourcePanel
+ * 
+ * @param   array   $imagedata
+ * @param   string  $img_url
+ * @param   string  $display
+ * 
+ * @return  array   array($width, $height, $margin);
+ */
+
+
+function calculate_image_display($imagedata, $img_url, $display="thumbs")
+    {
+    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
+        {
+        $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
+        }
+    else
+        {
+        // use php function getimagesize()
+        $size = ($img_url != "") ? getimagesize($img_url) : "";
+        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+        }
+    
+    switch($display)
+        {
+        case "xlthumbs":
+            $defaultwidth = 320;
+            $defaultheight = 320;
+        break;
+
+        case "thumbs":
+            $defaultwidth = 175;
+            $defaultheight = 175;
+        break;        
+        
+        case "collection":
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;
+
+        default:
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;        
+        }
+
+    if ($ratio > 1)
+        {
+        $width = $defaultwidth;
+        $height = round($defaultheight / $ratio);
+        $margin = floor(($defaultheight - $height ) / 2);
+        }
+    elseif ($ratio < 1)
+        {
+        # portrait image dimensions
+        $height = $defaultheight;
+        $width = round($defaultwidth * $ratio);
+        $margin = floor(($defaultheight - $height ) / 2);
+        }
+    else
+        {
+        # square image or no image dimensions
+        $height = $defaultheight;
+        $width = $defaultwidth;
+        $margin = "auto";
+        }
+
+    return array($width, $height, $margin);
+    }
+
+
 
 /**
 * Render the share options (used on collection_share.php and resource_share.php)

@@ -233,7 +233,31 @@ function HookResourceConnectAllAdvancedsearchlink()
         
     }
 */
+function HookResourceConnectAllAftersearchimg($resource, $img_url="")
+    {
+        
+    // If function called from preview image code with just resource id then return
+    if (!is_array($resource))
+        {
+        return;
+        }
 
+    /** 
+     * If query of local collection from remote location via remote_results.php, or
+     * image data contains ref and the ref is negative, then query of local collection containing remote resource, or
+     * resource identified as being from remote source
+     * then display overlay icon */    
+    if ((getval("affiliatename", "") != "") || (isset($resource["ref"]) && $resource["ref"] < 1) || isset($resource["remote"]))
+        {
+        list($width,$height,$margin) = calculate_image_display($resource, $img_url);
+       
+        $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
+        // ResourcePanel width - ResourcePanel margin - image width 
+        $right = ($height > $width) ?  "right:" . (175 - 14 - intval($width)) . "px" : "";
+        
+        echo "<i style=\"margin-top:$margin;$right\" class=\"overlay-link fas fa-link fa-2x\"></i>";
+        }
+    }
 function HookResourceconnectAllGetResourcesToCheck($collection)
     {
     /* if resourceconnect is enabled there may be

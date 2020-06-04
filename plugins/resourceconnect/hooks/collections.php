@@ -11,9 +11,10 @@ function HookResourceconnectCollectionsThumblistextra()
 		<!--Resource Panel--> 
 		<div class="CollectionPanelShell"> 
 
-		<table border="0" class="CollectionResourceAlign"><tr><td> 
-		<a href="<?php echo $baseurl ?>/plugins/resourceconnect/pages/view.php?url=<?php echo urlencode($thumb["url"]) ?>&k=<?php echo getval("k","") ?>&col=<?php echo $usercollection ?>" onClick="return ModalLoad(this,true);"><img border=0 src="<?php echo $thumb["thumb"] ?>" class="CollectImageBorder" /></a></td> 
-		</tr></table> 
+		<table border="0" class="CollectionResourceAlign"><tr><td>
+		<div class="overlay-link-container"><i class="overlay-link fas fa-link fa-2x"></i></div>
+		<a href="<?php echo $baseurl ?>/plugins/resourceconnect/pages/view.php?url=<?php echo urlencode($thumb["url"]) ?>&k=<?php echo getval("k","") ?>&col=<?php echo $usercollection ?>" onClick="return ModalLoad(this,true);"><div class="overlay-link-container"><i class="overlay-link fas fa-link fa-2x"></i></div><img border=0 src="<?php echo $thumb["thumb"] ?>" class="CollectImageBorder" /></a></td> 
+		</tr></table>
 
 		<div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/plugins/resourceconnect/pages/view.php?url=<?php echo urlencode($thumb["url"]) ?>&k=<?php echo getval("k","") ?>&col=<?php echo $usercollection ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($thumb["title"]),15) ?></a>&nbsp;</div> 
 

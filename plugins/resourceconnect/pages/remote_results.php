@@ -1,5 +1,6 @@
 <?php
 include_once "../../../include/db.php";
+include_once "../../../include/render_functions.php";
 include_once "../../lightbox_preview/include/utility.php";
 include_once "../config/config.php";
 
@@ -189,6 +190,8 @@ else
         <?php if ($result["has_image"]==1) {
             
             $img_url = get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"]);
+            
+            
             $size = getimagesize($img_url);
             $ratio = (isset($size[0]))? $size[0] / $size[1] : 1; 
             
@@ -214,12 +217,10 @@ else
             $width = $defaultwidth;
             $margin = "auto";
             }
-            
-            print "<img height=\"$height\" width=\"$width\" margin=\"$margin\" src=\"$img_url\" style=\"margin-top:$margin;\" />";
+            echo "<img height=\"$height\" width=\"$width\" margin=\"$margin\" src=\"$img_url\" style=\"margin-top:$margin;\" />";
+            # add icon overlay if remote image
+            hook("aftersearchimg","",array($result, $img_url));
             ?>
-        
-        
-        
         <?php } else { ?>
                 
         <img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
