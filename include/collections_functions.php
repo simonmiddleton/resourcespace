@@ -120,7 +120,7 @@ if (!function_exists("get_collection")){
 function get_collection($ref)
 	{
     # Returns all data for collection $ref.
-    $return=sql_query("select c.*, u.fullname, u.username from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+    $return=sql_query("select c.ref, c.name, c.user, c.created, c.public, c.theme, c.theme2, c.theme3, c.allow_changes, c.cant_delete, c.keywords,c.savedsearch, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.type, c.theme4, c.theme5, u.fullname, u.username from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
         return false;
