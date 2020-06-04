@@ -1705,7 +1705,7 @@ hook ("resourceactions") ?>
 	if ($edit_access) 
 		{ ?>
 		<li><a href="<?php echo $baseurl ?>/pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onclick="return ModalLoad(this, true);">
-			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-edit"]?>
+			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-editmetadata"]?>
 		</a></li>
 		<?php 
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))

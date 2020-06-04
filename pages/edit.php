@@ -1086,7 +1086,7 @@ else
          if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          
          if (!$upload_review_mode) { ?>
-         <h1 id="editresource"><?php echo $lang["editresource"];render_help_link("user/editing-resources");?></h1>
+         <h1 id="editresource"><?php echo $lang["action-editmetadata"];render_help_link("user/editing-resources");?></h1>
          <?php } else { ?>
         <h1 id="editresource"><?php echo $lang["refinemetadata"];render_help_link("user/editing-resources");?></h1>
         <?php } ?>

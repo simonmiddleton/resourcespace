@@ -10,7 +10,7 @@ if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook
                         <a aria-hidden="true" class="fa fa-pencil"
                                 href="<?php echo str_replace("view.php","edit.php",$url) ?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                                title="<?php echo $lang["editresource"]?>"
+                                title="<?php echo $lang["action-editmetadata"]?>"
                         ></a>
                 <?php
                 $showkeyedit = true;
