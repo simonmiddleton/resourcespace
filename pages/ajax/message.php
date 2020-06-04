@@ -15,6 +15,20 @@
 			include_once __DIR__ . "/../../include/request_functions.php";
 			}
 
+        if(getval("check_upgrade_in_progress", "") != "")
+            {
+            $data["upgrade_in_progress"] = false;
+            if(is_process_lock("process_lock_upgrade_in_progress"))
+                {
+                $data["upgrade_in_progress"] = true;
+                }
+
+            echo json_encode(array(
+                "status" => "success",
+                "data" => $data));
+            exit();
+            }
+
         $user         = getvalescaped('user', 0, true);
         $seen         = getvalescaped('seen', 0, true);
         $unseen       = getvalescaped('unseen', 0, true);
@@ -113,7 +127,7 @@
 			}
 		?>
 		jQuery.ajax({
-			url: '<?php echo $baseurl; ?>/pages/ajax/message.php',
+			url: '<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true',
 			type: 'GET',
 			success: function(messages, textStatus, xhr) {
 				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
@@ -149,8 +163,7 @@
 								{
 								?>
 								message_display(message, url, ref, function (ref) {
-									jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?seen=' + ref).done(function () {
-									});
+									jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
 								});
 								<?php
 								}
@@ -191,6 +204,8 @@
 			?>
 			message_poll_first_run = false;
 		});
+
+        check_upgrade_in_progress();
 	}
 
 	jQuery(document).bind("blur focus focusin focusout load resize scroll unload click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup error",
@@ -238,7 +253,7 @@
 				jQuery("div#" + id).fadeOut("fast", function()
 				{
 					jQuery("div#" + id).remove();
-					jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?seen=' + ref);
+					jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
 					if (typeof callback === 'function')
 					{
 						callback();
@@ -302,7 +317,7 @@
 			close: function( event, ui ) {
 				jQuery('#modal_dialog').html('');
 				jQuery("#modal_dialog").removeClass('message_dialog');
-				jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?seen=' + ref);
+				jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
 				},
 			dialogClass: 'no-close'
 			});

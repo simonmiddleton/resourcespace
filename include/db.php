@@ -1447,4 +1447,3 @@ function sql_limit($offset, $rows)
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';
-

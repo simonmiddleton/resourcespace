@@ -6,11 +6,19 @@ define('SYSVAR_UPGRADE_PROGRESS_SCRIPT','upgrade_progress_script');
 define('SYSVAR_CURRENT_UPGRADE_LEVEL','upgrade_system_level');
 
 $cli=PHP_SAPI=='cli';
+$ajax = (!$cli ? getval("ajax", false) : false);
+$ajax = filter_var($ajax, FILTER_VALIDATE_BOOLEAN);
 
 // if running from the command line or called somewhere within RS check to see if we need to include db.php
 if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_files()))
     {
     include_once __DIR__ . '/../include/db.php';
+    }
+
+// Don't trigger upgrade if request is done via ajax. Checking if upgrade is in progress can be done through ajax
+if(!$cli && $ajax)
+    {
+    return;
     }
 
 // try and grab the current system upgrade level from sysvars
@@ -30,6 +38,8 @@ if ($current_system_upgrade_level>=SYSTEM_UPGRADE_LEVEL)
     return;
     }
 
+include_once __DIR__ . '/../include/header.php';
+
 set_time_limit(60 * 60 * 4);
 $process_locks_max_seconds=60 * 60;     // allow 1 hour for the upgrade of a single script
 if (is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
@@ -45,15 +55,18 @@ if (is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
         }
     else
         {
+        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
         echo nl2br($message);
+        ?>
+        <script>
+        setTimeout(function()
+            {
+            window.location.reload(true);
+            }, 5000);
+        </script>
+        <?php
         }
     exit;
-    }
-
-// only kick of migration if on a whitelist of pages to avoid short-lived ajax callbacks from starting upgrade (and also setup.php)
-if(!$cli && !in_array(basename($_SERVER['PHP_SELF']),array('home.php')))
-    {
-    return;
     }
 
 // set a process lock straight away even before running any upgrade scripts to reduce chance of concurrent upgrades

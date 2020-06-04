@@ -2398,6 +2398,7 @@ $lang['manage_dash_tiles'] = 'Manage dash tiles';
 $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'Click for more information about the new version';
+$lang["upgrade_in_progress"] = "Upgrade in progress";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';

@@ -787,7 +787,6 @@ if (getval("ajax","") == "")
 		top.history.replaceState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname);
 		}
 	catch(e){console.log(e);
-	//console.log("failed to load state");
 	}
 	
 	</script>
