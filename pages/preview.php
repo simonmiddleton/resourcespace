@@ -1,13 +1,10 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include "../include/authenticate.php";}
 
-include "../include/search_functions.php";
-include_once "../include/collections_functions.php";
-include_once '../include/resource_functions.php';
 include_once '../include/annotation_functions.php';
 
 # Save Existing Thumb Cookie Status Then Hide the collection Bar 

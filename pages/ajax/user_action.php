@@ -1,10 +1,6 @@
 <?php
 include_once('../../include/db.php');
-include_once('../../include/general.php');
 include_once('../../include/authenticate.php');
-include_once('../../include/resource_functions.php');
-include_once('../../include/search_functions.php');
-include_once('../../include/collections_functions.php');
 
 // Generic endpoint that can be used for ajax calls
 $action = getvalescaped('action','');
@@ -55,8 +51,15 @@ switch ($action)
             break;
             }
         $edit_access = get_edit_access($resource,$resource_data["archive"],false,$resource_data);
-        $lockuser=  $resource_data["lock_user"];
-        if(checkperm("a")
+        $lockuser =  $resource_data["lock_user"];
+
+        if($lockaction && $lockuser > 0 && $lockuser != $userref)
+            {
+            // Already locked
+            $return['status'] = 403;
+            $return['message'] = get_resource_lock_message($lockuser);
+            }
+        elseif(checkperm("a")
             ||
             $lockuser == $userref
             ||
@@ -71,6 +74,7 @@ switch ($action)
             }
         else
             {
+            $return['status'] = 403;
             $return['message'] = $lang["error-permissiondenied"];
             }
         break;

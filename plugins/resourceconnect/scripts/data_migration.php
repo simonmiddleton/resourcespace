@@ -15,12 +15,9 @@ if('cli' != PHP_SAPI)
 // @todo: once ResourceSpace supports a higher version of PHP, replace dirname(dirname()) with the use of "levels" parameter
 $webroot = dirname(dirname(dirname(__DIR__)));
 include_once "{$webroot}/include/db.php";
-include_once "{$webroot}/include/general.php";
+
 include_once "{$webroot}/plugins/resourceconnect/include/resourceconnect_functions.php";
 include_once "{$webroot}/include/log_functions.php";
-include_once "{$webroot}/include/resource_functions.php";
-include_once "{$webroot}/include/collections_functions.php";
-include_once "{$webroot}/include/search_functions.php";
 
 // Script options
 $cli_short_options = "i:";

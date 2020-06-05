@@ -1,13 +1,10 @@
 <?php
 include_once '../include/db.php';
-include_once '../include/general.php';
 # External access support (authenticate only if no key was provided)
 if(getvalescaped('k', '') == '')
     {
     include_once '../include/authenticate.php';
     }
-include_once '../include/search_functions.php';
-include_once '../include/collections_functions.php';
 include_once '../include/csv_export_functions.php';
 
 $search     = getvalescaped('search', '');

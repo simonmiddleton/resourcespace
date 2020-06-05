@@ -1016,7 +1016,7 @@ function extract_exif_comment($ref,$extension="")
             #echo "<pre>IPTC\n";print_r($iptc);exit();
 
             # Look for iptc fields, and insert.
-            $fields=sql_query("select * from resource_type_field where length(iptc_equiv)>0");
+            $fields=sql_query("select * from resource_type_field where length(iptc_equiv)>0", "schema");
             for ($n=0;$n<count($fields);$n++)
                 {
                 $iptc_equiv=$fields[$n]["iptc_equiv"];
@@ -1513,7 +1513,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $fullgenerated = false;
                 $tileregion = $preview_tile_size * $scale;
                 debug("create_previews - creating tiles at scale: " . $scale . ". Region size=" . $tileregion);
-                if($fullgenerated && $tileregion > $sh || $tileregion > $sw)
+                if($fullgenerated && $tileregion > $sh && $tileregion > $sw)
                     {
                     debug("create_previews scaled tile (" . $scale . ") too large for source. Tile region length: " . $tileregion );
                     continue;

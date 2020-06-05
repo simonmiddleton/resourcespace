@@ -22,8 +22,8 @@ elseif(isset($argv[1]) && is_numeric($argv[1]))
 	$end = $argv[2];
 	}
 	
-include_once "../../include/general.php";
-include_once "../../include/resource_functions.php";
+
+
 include_once "../../include/image_processing.php";
 
 // Disable sql_logging

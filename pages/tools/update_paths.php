@@ -6,10 +6,9 @@
 #
 #
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";
-include "../../include/resource_functions.php";
 
 $max=sql_value("select max(ref) value from resource",0);
 $ref=getvalescaped("ref",1);

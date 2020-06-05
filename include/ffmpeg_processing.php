@@ -14,8 +14,6 @@ else
         }
 
 	require dirname(__FILE__)."/db.php";
-	require_once dirname(__FILE__)."/general.php";
-	require dirname(__FILE__)."/resource_functions.php";
 	
 	if (empty($_SERVER['argv'][1]) || $scramble_key!==$_SERVER['argv'][1]) {exit("Incorrect scramble_key");}
 	

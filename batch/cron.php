@@ -1,9 +1,7 @@
 <?php
 include_once dirname(__FILE__) . "/../include/db.php";
-include_once dirname(__FILE__) . "/../include/general.php";
+
 include_once dirname(__FILE__) . "/../include/reporting_functions.php";
-include_once dirname(__FILE__) . "/../include/resource_functions.php";
-include_once dirname(__FILE__) . "/../include/search_functions.php";
 include_once dirname(__FILE__) . "/../include/action_functions.php";
 include_once dirname(__FILE__) . "/../include/request_functions.php";
 

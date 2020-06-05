@@ -1,13 +1,9 @@
 <?php 
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}
-include_once "../include/collections_functions.php";
-include "../include/search_functions.php";
-include "../include/resource_functions.php";
-include "../include/render_functions.php";
 
 $offset=getvalescaped("offset",0);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
@@ -145,15 +141,7 @@ if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 	
 	if ($purge!=""){$deletecollection=$purge;}
 	if ($deleteall!=""){$deletecollection=$deleteall;}
-	
-	if (!function_exists("do_search")) {
-		include "../include/search_functions.php";
-	}
-	
-	if (!function_exists("delete_resource")) {
-		include "../include/resource_functions.php";
-	}
-	
+		
 	# Delete all resources in collection
 	if (!checkperm("D")) {
 		$resources=do_search("!collection" . $deletecollection);

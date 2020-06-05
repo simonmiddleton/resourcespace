@@ -1,6 +1,6 @@
 <?php
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permission denied.");}
 
 // Specify the name of this plugin and the heading to display for the page.

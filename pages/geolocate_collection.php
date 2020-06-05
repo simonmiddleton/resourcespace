@@ -1,10 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once "../include/search_functions.php";
 
 //The two variables below act like "pemissions" to display or not the page
 if($disable_geocoding || (!$disable_geocoding && !$geo_locate_collection))
@@ -106,13 +103,26 @@ if (count($markers)==0) {exit;}?>
 
 <div class="BasicsBox"> 
 <div id="map_canvas_col" style="width: 100%; height: <?php echo isset($mapheight)?$mapheight:"500" ?>px; display:block; float:none;overflow: hidden;" class="Picture" ></div>
-<script src="../lib/OpenLayers/OpenLayers.js"></script>
+
 <script>
 
     map = new OpenLayers.Map("map_canvas_col");
     
     map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
-    map.addLayer(new OpenLayers.Layer.OSM('OSM'));
+    map.addLayer(new OpenLayers.Layer.OSM("<?php echo $lang["openstreetmap"]?>"
+    <?php
+    if(count($geo_tile_servers) > 0 && !$geo_tile_caching)
+        {
+        $tileurl = 'https://'.$geo_tile_servers[array_rand($geo_tile_servers)];
+        $tileurl .= "/".$z."/".$x."/".$y.".png";
+        echo ",\"" . $tileurl . "\",{transitionEffect: 'resize'}";
+        }
+    else
+        {
+        echo ",\"" . $baseurl ."/pages/ajax/tiles.php?z=\${z}&x=\${x}&y=\${y}&\",{transitionEffect: 'resize'}";
+        }?>));
+    
+    
     epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
     projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
          
@@ -180,8 +190,27 @@ if (count($markers)==0) {exit;}?>
 	map.addLayer(vectorLayer);
     map.addLayer(vectorLayer2);
 	
-    map.zoomToExtent(vectorLayer2.getDataExtent());
-    
+    <?php
+    if(count($geo_tile_servers) == 0)
+        {
+        // Block zoom beyond the tiles included in gfx/geotiles
+        echo "
+        map.isValidZoomLevel = function(zoomLevel)
+            {
+                console.log(zoomLevel);
+                if(zoomLevel != null && zoomLevel <= 3)
+                    {
+                    console.log('OK');
+                    }
+            return (zoomLevel != null && zoomLevel <= 3);
+            }
+        map.zoomTo(2);
+        ";
+        }
+    else
+        {
+        echo "map.zoomToExtent(vectorLayer2.getDataExtent());";
+        }?>
 </script>
 </div>
 

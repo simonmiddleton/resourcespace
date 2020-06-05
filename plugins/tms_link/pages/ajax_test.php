@@ -1,7 +1,6 @@
 <?php
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
-include_once '../../../include/general.php';
 
 $tms_test_dsn = getval("dsn","");
 $tms_test_user = getval("tmsuser","");

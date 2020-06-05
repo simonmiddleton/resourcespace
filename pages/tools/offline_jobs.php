@@ -1,9 +1,8 @@
 <?php
 include_once dirname(__FILE__) . "/../../include/db.php";
-include_once dirname(__FILE__) . "/../../include/general.php";
+
 include_once dirname(__FILE__) . "/../../include/reporting_functions.php";
-include_once dirname(__FILE__) . "/../../include/resource_functions.php";
-include_once dirname(__FILE__) . "/../../include/search_functions.php";
+
 set_time_limit(0);
 
 // This MUST only be done by having access to the server

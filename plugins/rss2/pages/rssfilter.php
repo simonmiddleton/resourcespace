@@ -1,9 +1,5 @@
 <?php
 include(dirname(__FILE__)."/../../../include/db.php");
-include_once(dirname(__FILE__)."/../../../include/general.php");
-include(dirname(__FILE__)."/../../../include/search_functions.php");
-include(dirname(__FILE__)."/../../../include/resource_functions.php");
-include(dirname(__FILE__)."/../../../include/collections_functions.php");
 include(dirname(__FILE__)."/../../../include/image_processing.php");
 
 if(!function_exists("get_api_key"))
@@ -135,7 +131,7 @@ for ($n=0;$n<count($result);$n++)
 	{
 	$ref=$result[$n]["ref"];
 	$title=xml_entities(i18n_get_translated($result[$n]["field".$view_title_field]));
-	$creation_date=$result[$n]["field".$date_field];
+	$creation_date=$result[$n]["creation_date"];
 	
 	//echo $time = time();//date("r");
 	

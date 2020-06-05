@@ -140,7 +140,7 @@ function extractFitsMetadata($file_path, $resource)
             WHERE length(rtf.fits_field) > 0
               AND (rtf.resource_type = '{$resource_type}' OR rtf.resource_type = 0)
          ORDER BY fits_field;
-    ");
+    ", "schema");
 
     if(0 === count($rs_fields_to_read_for))
         {

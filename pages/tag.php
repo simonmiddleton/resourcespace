@@ -1,8 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; if (!checkperm("n")) {exit("Permission denied");}
-include "../include/resource_functions.php";
 
 if (!$speedtagging) {exit("This function is not enabled.");}
 
@@ -68,7 +67,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 				}
 
 			# Find field(s) - multiple fields can be returned to support several fields with the same name.
-			$f=sql_array("select ref value from resource_type_field where name='" . escape_check($filterfield) . "'");
+			$f=sql_array("select ref value from resource_type_field where name='" . escape_check($filterfield) . "'", "schema");
 			if (count($f)==0) {exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");}
 			
 			# Find keyword(s)

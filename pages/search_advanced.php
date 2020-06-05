@@ -1,11 +1,7 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission denied.");}
-include_once "../include/search_functions.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once dirname(__FILE__) . '/../include/render_functions.php';
 
 function get_search_default_restypes()
 	{
@@ -89,6 +85,9 @@ rs_setcookie('starsearch', $starsearch,0,"","",false,false);
 # Selectedtypes can also contain Global and Media which are virtual checkboxes which are always considered to be checked
 $selectedtypes=get_selectedtypes();
 
+$access = getval("access", null, true);
+rs_setcookie("access", $access, 0, "{$baseurl_short}pages/", "", false, false);
+
 # Disable auto-save function, only applicable to edit form. Some fields pick up on this value when rendering then fail to work.
 $edit_autosave=false;
 
@@ -114,11 +113,11 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	hook("moresearchcriteria");
 
 	if (getval("countonly","")!="")
-		{        
+		{
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections" && !$collection_search_includes_resource_metadata)
             {
-            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch);
+            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch, false, false, "", false, true, false, false, false, $access);
             }
         else 
             {
@@ -166,7 +165,17 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Log this			
 		daily_stat("Advanced search",$userref);
 
-		redirect($baseurl_short."pages/search.php?search=" . urlencode($search) . "&archive=" . urlencode($archive) . "&restypes=" . urlencode($restypes));
+        redirect(
+            generateURL(
+                "{$baseurl_short}pages/search.php",
+                array(
+                    "search" => $search,
+                    "archive" => $archive,
+                    "restypes" => $restypes,
+                    "access" => $access,
+                )
+            )
+        );
 		}
 	}
 
@@ -190,6 +199,9 @@ if (getval("resetform","")!="")
   $selected_archive_states=array(0);
   rs_setcookie("search","",0,"","",false,false);
   rs_setcookie("saved_archive","",0,"","",false,false);
+
+  $access = null;
+  rs_setcookie("access", "", 0, "{$baseurl_short}pages/", "", false, false);
   }
 else
   {
@@ -718,6 +730,33 @@ else
 	<?php
 	}
 
+if(checkperm("v"))
+    {
+    render_question_div("search_advanced_access_question", function() use ($lang, $access)
+        {
+        ?>
+        <label for="search_advanced_access"><?php echo htmlspecialchars($lang["access"]); ?></label>
+        <select id="search_advanced_access" class="SearchWidth" name="access" onchange="UpdateResultCount();">
+            <option><?php echo $lang["all"]; ?></option>
+        <?php
+        foreach(range(0, 2) as $access_level)
+            {
+            if(checkperm("ea{$access_level}"))
+                {
+                continue;
+                }
+
+            $label = htmlspecialchars($lang["access{$access_level}"]);
+            $extra_attributes = (!is_null($access) && $access_level == $access ? " selected" : "");
+
+            echo render_dropdown_option($access_level, $label, array(), $extra_attributes);
+            }
+        ?>
+        </select>
+        <?php
+        });
+    }
+
 if($advanced_search_contributed_by)
     {
     ?>
@@ -867,4 +906,3 @@ if($archive!==0){
 }
 
 include "../include/footer.php";
-?>

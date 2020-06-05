@@ -6,7 +6,6 @@ if('cli' != PHP_SAPI)
 
 // @todo use the dirname level argument once PHP 7.0 is supported
 $webroot = dirname(dirname(__DIR__));
-include_once("{$webroot}/include/search_functions.php");
 
 
 $resource_portrait = create_resource(1, 0);

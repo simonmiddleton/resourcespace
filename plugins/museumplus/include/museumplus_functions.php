@@ -136,6 +136,7 @@ function mplus_generate_connection_data($host, $application, $user, $pass)
 */
 function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $mplus_mpid_field)
     {
+    global $lang;
     if(
         empty($conn_data)
         || empty($mappings)
@@ -198,7 +199,7 @@ function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $m
 
     if($result['status_code'] != 200)
         {
-        trigger_error(str_replace('$code', $result['status_code'], $lang['museumplus_error_unexpected_response']));
+        trigger_error(str_replace('%code', $result['status_code'], $lang['museumplus_error_unexpected_response']));
         }
 
     if($result['headers']['content-type'][0] == 'application/xml')

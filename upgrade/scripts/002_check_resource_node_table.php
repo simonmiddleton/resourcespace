@@ -1,7 +1,7 @@
 <?php
 
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
+
 
 
 set_time_limit(0);

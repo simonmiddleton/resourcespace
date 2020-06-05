@@ -1,11 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; 
-include "../include/resource_functions.php";
-include "../include/search_functions.php";
-include_once "../include/collections_functions.php";
-include_once '../include/render_functions.php';
 
 $ref=getvalescaped("ref","",true);
 // Fetch resource data
@@ -155,7 +151,7 @@ if ($share_resource_include_related && $enable_related_resources && checkperm("s
 				?>
 				<div class="sharerelatedtype">
 				<?php
-				$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","");
+				$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","", "schema");
 				$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 				?><!--Panel for related resources-->
 				

@@ -4,8 +4,7 @@
 # for all your resources.
 
 include "../../include/db.php";
-include_once "../../include/general.php";
-include "../../include/resource_functions.php";
+
 include "../../include/image_processing.php";
 
 $sapi_type = php_sapi_name();

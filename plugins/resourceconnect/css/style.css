@@ -1,2 +1,23 @@
+.ResourceConnectSearch 
+    {
+    color:yellow;
+    }
 
-.ResourceConnectSearch {color:yellow;}
+.overlay-link
+    {
+    position: absolute;
+    top: 5px;
+    right: 5px; 
+    text-shadow: 0 0 3px black;
+    }
+
+.overlay-link-container
+    {
+    position: relative;
+    }
+
+.fa-link
+    {
+    color:white;
+    }
+

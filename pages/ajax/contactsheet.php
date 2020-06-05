@@ -3,11 +3,7 @@
 # PDF Contact Sheet Functionality
 #
 include('../../include/db.php');
-include_once('../../include/general.php');
 include('../../include/authenticate.php');
-include('../../include/search_functions.php');
-include('../../include/resource_functions.php');
-include_once('../../include/collections_functions.php');
 include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';

@@ -1,13 +1,10 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; 
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once "../include/search_functions.php";
 include_once "../include/image_processing.php";
 include_once '../include/node_functions.php';
-include_once '../include/render_functions.php';
+
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
@@ -308,8 +305,17 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource))
 if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
     {
     $error = get_resource_lock_message($resource["lock_user"]);
-    error_alert($error,!$modal);
-    exit();
+    if(getval("autosave","")!="")
+        {
+        // Send JSON with error back
+        http_response_code(403);
+        exit($error);
+        }
+    else
+        {
+        error_alert($error,!$modal);
+        exit();
+        }
     }
 
 if (getval("regen","")!="" && enforcePostRequest($ajax))
@@ -781,7 +787,6 @@ registerCollapsibleSections();
 
 jQuery(document).ready(function()
 {
-
    <?php
    if($ctrls_to_save)
      {?>
@@ -886,63 +891,43 @@ function ShowHelp(field)
             preventautosave = false;    
             }
         });
+        
 
-    function AutoSave(field)
+    function AutoSave(field, stop_recurrence)
         {
-        if(preventautosave) return false;
+        stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
+
+        // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
+        // lead to edit conflicts.
+        if(!preventautosave && !stop_recurrence)
+            {
+            setTimeout(function()
+                {
+                AutoSave(field, true);
+                }, 150);
+
+            return false;
+            }
+
+        if(preventautosave)
+            {
+            return false;
+            }
 
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
         
-        // counter to track number of ajax autosave operations underway
-        // if autosaveCounter does not exists - create and set value to 1, otherwise increment
-        if (jQuery("#autosaveCounter").length == 0)
-            {
-            jQuery(".BasicsBox").append("<div class='autosaveCounter' id='autosaveCounter' style='visibility:hidden'>1</div>");
-            } else
-            {
-            var autosaveCounter = parseInt(jQuery("#autosaveCounter").text()) + 1; // increment autosaveCounter
-            jQuery("#autosaveCounter").text(autosaveCounter);
-            }
-
-        // add transparent div to prevent user from changing input value during autosave 
-        
-        // patterns for label @for attribute
-        var labelPattern = new Array(
-            "label[for='field_" + field + "_selector']",
-            "label[for='field_" + field + "']",
-            "label[for='field_" + field + "-d']",
-            "label[for='" + field.toLowerCase() + "']"
-             );
-
-        // get div.Question element that surrounds the input field making the AutoSave() function call using label pattern array
-        var divQuestion = "";
-        for (i = 0; i < labelPattern.length; i++) 
-            {
-            var pattern = labelPattern[i];
-            if (jQuery(pattern).length)
-                {
-                divQuestion =  jQuery(pattern).parent("div.Question");
-                break;   
-                }
-            }
-
-        // if Question element found, append transparent div overlay
-        if (divQuestion.length) 
-            {
-            divQuestion.css("position","relative");
-            var divPreventEditConflict = "preventEditConflict"  + field;
-            divQuestion.append("<div class=\"preventEditConflict\" id=\""  + divPreventEditConflict + "\"></div>");
-            }
-        
-        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
+        formdata = jQuery('#mainform').serialize();
+        // Clear checksum to prevent edit conflicts for this field if they perform multiple subsequent edits
+        jQuery("#field_" + field + "_checksum").val('');
+        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,formdata,
             function(data)
                 {
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
                     jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow'); 
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
                         for (var i in saveresult['checksums']) 
@@ -973,26 +958,14 @@ function ShowHelp(field)
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
-
-                // once autosave has completed, remove the div that prevents user input
-                if (divQuestion.length)
-                    {
-                    jQuery("div[id='" + divPreventEditConflict + "']").remove(); 
-                    jQuery(divQuestion).css("position",""); 
-                    }
-                
-                // autosave completed, decrement autosave counter
-                var autosaveCounter = parseInt(jQuery("#autosaveCounter").text()) - 1 ;
-                jQuery("#autosaveCounter").text(autosaveCounter);   
-                // if no other autosave operations underway, re-enable save button
-                if (autosaveCounter == 0) 
-                    {
-                    jQuery("input.editsave").removeAttr("disabled");  // re-enable save button
-                    }
-                });
-	    }
-<?php 
-    } 
+                })
+                .fail(function(response) {
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                    styledalert('<?php echo $lang["error"] ?>',response.responseText);
+                    });
+	}
+<?php } 
 
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
@@ -1036,31 +1009,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             {
             echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
-            ?>  
+            ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
-                name="save"
-                class="editsave"
-                type="submit"
-                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
-
+               name="save"
+               class="editsave"
+               type="submit"
+               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
         <?php
-        
-        // disable form save button on input form field value change
-        // only needed with regular resource edit when autosave enabled
-        if(($ref > 0) && !$upload_review_mode && $edit_autosave)
-            {
-        ?>
-            <script>
-            // input fields, on change, disable submit button, prevent edit conflict 
-            jQuery(document).ready(function(){
-                jQuery("div.BasicsBox").find("input,textarea,select").change(function (e)
-                    {  jQuery("input.editsave").attr("disabled", true);    });
-                    });
-            </script>
-
-        <?php
-            }
-            
         if($upload_review_mode)
             {
             ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
@@ -1152,7 +1107,7 @@ else
          if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          
          if (!$upload_review_mode) { ?>
-         <h1 id="editresource"><?php echo $lang["editresource"];render_help_link("user/editing-resources");?></h1>
+         <h1 id="editresource"><?php echo $lang["action-editmetadata"];render_help_link("user/editing-resources");?></h1>
          <?php } else { ?>
         <h1 id="editresource"><?php echo $lang["refinemetadata"];render_help_link("user/editing-resources");?></h1>
         <?php } ?>
@@ -2264,6 +2219,7 @@ hook('aftereditcollapsiblesection');
                         value: "true" }));}
                 );
 </script>
+
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
@@ -2281,7 +2237,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   </script>
   <?php
   }
-   
+
 hook("autolivejs");
 
 include "../include/footer.php";

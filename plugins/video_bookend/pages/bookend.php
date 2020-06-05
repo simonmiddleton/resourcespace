@@ -5,11 +5,7 @@ ob_start();
 $nocache = true;
 
 include_once("../../../include/db.php");
-include_once("../../../include/general.php");
 include_once("../../../include/authenticate.php");
-include_once("../../../include/collections_functions.php");
-include_once("../../../include/search_functions.php");
-include_once("../../../include/resource_functions.php");
 include_once("../../../include/image_processing.php");
 
 $ref             = getvalescaped("ref", 0, true);

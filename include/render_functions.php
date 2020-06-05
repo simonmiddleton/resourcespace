@@ -891,17 +891,40 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     }
                 }
     
-            $actions_array = array_merge($collection_actions_array, $search_actions_array);
-            
+            /**
+            * @var A global variable that allows other parts in ResourceSpace to append extra options to the actions 
+            * unified dropdown (plugins can use existing hooks).
+            */
+            $render_actions_extra_options = array();
+            if(
+                isset($GLOBALS["render_actions_extra_options"])
+                && is_array($GLOBALS["render_actions_extra_options"])
+                && !empty($GLOBALS["render_actions_extra_options"]))
+                {
+                $render_actions_extra_options = $GLOBALS["render_actions_extra_options"];
+                }
+
+            $actions_array = array_merge($collection_actions_array, $search_actions_array, $render_actions_extra_options);
+            unset($render_actions_extra_options);
+
             $modify_actions_array = hook('modify_unified_dropdown_actions_options', '', array($actions_array,$top_actions));
 
-	if(!empty($modify_actions_array))
+            if(!empty($modify_actions_array))
                 {
                 $actions_array = $modify_actions_array;
                 }
 
+            /**
+            * @var A global variable that allows other parts in ResourceSpace to filter actions options (plugins can use 
+            * existing hooks).
+            */
+            if(isset($GLOBALS["render_actions_filter"]) && is_callable($GLOBALS["render_actions_filter"]))
+                {
+                $actions_array = array_filter($actions_array, $GLOBALS["render_actions_filter"]);
+                unset($GLOBALS["render_actions_filter"]);
+                }
+
             // Sort array into category groups
-           
             usort($actions_array, function($a, $b){
                if(isset($a['category']) && isset($b['category']))
                     {
@@ -1174,7 +1197,22 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
                 default:
                     var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
-                    CentralSpaceLoad(option_url, true);
+                    var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
+
+                    // If action option has a defined data-callback attribute, then we can call it
+                    // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
+                    // generate the callbacks - key point is "generate"
+                    if(typeof option_callback !== "undefined")
+                        {
+                        eval(option_callback);
+                        }
+
+                    // If action option has a defined data-url attribute, then we can CentralSpaceLoad it
+                    if(typeof option_url !== "undefined")
+                        {
+                        CentralSpaceLoad(option_url, true);
+                        }
+    
                     break;
                 }
 				
@@ -1862,7 +1900,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears
        ?>
-       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
+       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
        <?php
      }
 
@@ -2398,62 +2436,10 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     {
     global $view_title_field;
     
-    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
-        {
-        $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
-        }
-    else
-        {
-        // use php function getimagesize()
-        $size = ($img_url != "") ? getimagesize($img_url) : "";
-        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+    list($width, $height, $margin) = calculate_image_display($imagedata, $img_url, $display);
 
-        }
-        
-    switch($display)
-        {
-        case "xlthumbs":
-            $defaultwidth = 320;
-            $defaultheight = 320;
-        break;
-    
-        case "thumbs":
-            $defaultwidth = 175;
-            $defaultheight = 175;
-        break;        
-        
-        case "collection":
-            $defaultwidth = 75;
-            $defaultheight = 75;
-        break;
-    
-        default:
-            $defaultwidth = 75;
-            $defaultheight = 75;
-        break;        
-        }
-    
-        if ($ratio > 1)
-            {
-            $width = $defaultwidth;
-            $height = round($defaultheight / $ratio);
-            $margin = floor(($defaultheight - $height ) / 2) . "px";
-            }
-        elseif ($ratio < 1)
-            {
-            # portrait image dimensions
-            $height = $defaultheight;
-            $width = round($defaultwidth * $ratio);
-            $margin = floor(($defaultheight - $height ) / 2) . "px";
-            }
-        else
-            {
-            # square image or no image dimensions
-            $height = $defaultheight;
-            $width = $defaultwidth;
-            $margin = "auto";
-            }
-    
+    $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
+
     ?>
     
     <img
@@ -2466,6 +2452,80 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     />
     <?php
     }
+
+
+/**
+ * Calculations width, height and margin-top property for resource image to display in ResourcePanel
+ * 
+ * @param   array   $imagedata
+ * @param   string  $img_url
+ * @param   string  $display
+ * 
+ * @return  array   array($width, $height, $margin);
+ */
+
+
+function calculate_image_display($imagedata, $img_url, $display="thumbs")
+    {
+    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
+        {
+        $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
+        }
+    else
+        {
+        // use php function getimagesize()
+        $size = ($img_url != "") ? getimagesize($img_url) : "";
+        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+        }
+    
+    switch($display)
+        {
+        case "xlthumbs":
+            $defaultwidth = 320;
+            $defaultheight = 320;
+        break;
+
+        case "thumbs":
+            $defaultwidth = 175;
+            $defaultheight = 175;
+        break;        
+        
+        case "collection":
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;
+
+        default:
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;        
+        }
+
+    if ($ratio > 1)
+        {
+        $width = $defaultwidth;
+        $height = round($defaultheight / $ratio);
+        $margin = floor(($defaultheight - $height ) / 2);
+        }
+    elseif ($ratio < 1)
+        {
+        # portrait image dimensions
+        $height = $defaultheight;
+        $width = round($defaultwidth * $ratio);
+        $margin = floor(($defaultheight - $height ) / 2);
+        }
+    else
+        {
+        # square image or no image dimensions
+        $height = $defaultheight;
+        $width = $defaultwidth;
+        $margin = "auto";
+        }
+
+    return array($width, $height, $margin);
+    }
+
+
 
 /**
 * Render the share options (used on collection_share.php and resource_share.php)
@@ -2586,7 +2646,7 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
 		}
         
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name");
+    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
     
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
@@ -2607,16 +2667,16 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 * Render a filter bar button
 * 
 * @param string $text Button text
-* @param string $text The onclick attribute for the button
+* @param string $attr Button attributes
 * @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
 * 
 * @return void
 */
-function render_filter_bar_button($text, $on_click, $icon)
+function render_filter_bar_button($text, $attr, $icon)
     {
     ?>
     <div class="InpageNavLeftBlock">
-        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo $icon . htmlspecialchars($text); ?></button>
+        <button type="button" <?php echo $attr; ?>><?php echo $icon . htmlspecialchars($text); ?></button>
     </div>
     <?php
     return;
@@ -2737,9 +2797,9 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         }
         
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
-    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+    $attributes = "onclick=\"CentralSpaceLoad('{$upload_here_url}');\"";
 
-    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
     }
 
 /**
@@ -3008,6 +3068,164 @@ function render_custom_fields(array $cfs)
         });
     }
 
+
+/**
+* Generates HTML for the "X Selected" in the search results found part pointing to the special collection COLLECTION_TYPE_SELECTION
+* 
+* @param integer $i Counter to display
+* 
+* @return string  Returns HTML
+*/
+function render_selected_resources_counter($i)
+    {
+    global $baseurl, $lang, $USER_SELECTION_COLLECTION;
+
+    $url = generateURL("{$baseurl}", array("c" => $USER_SELECTION_COLLECTION));
+
+    $x_selected = '<span class="Selected">' . number_format($i) . "</span> {$lang["selected"]}";
+    $return = "<a href=\"{$url}\" class=\"SelectionCollectionLink\" onclick=\"return CentralSpaceLoad(this, true);\">{$x_selected}</a>";
+
+    return $return;
+    }
+
+
+/**
+* Renders the "Edit selected" button. This is using the special 'COLLECTION_TYPE_SELECTION' collection
+* 
+* @return void
+*/
+function render_edit_selected_btn()
+    {
+    global $baseurl_short, $lang, $USER_SELECTION_COLLECTION, $restypes, $archive;
+
+    $search = "!collection{$USER_SELECTION_COLLECTION}";
+    $editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, true);
+    $non_editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
+
+    if(!is_array($editable_resources) || !is_array($non_editable_resources))
+        {
+        return;
+        }
+
+    $editable_resources_count = count($editable_resources);
+    $non_editable_resources_count = count($non_editable_resources);
+
+    if($editable_resources_count == 0 || $non_editable_resources_count == 0)
+        {
+        return;
+        }
+
+    // If not all resources are editable, don't show the batch edit button
+    if($editable_resources_count != $non_editable_resources_count)
+        {
+        return;
+        }
+
+    $batch_edit_url = generateURL(
+        "{$baseurl_short}pages/edit.php",
+        array(
+            "search"            =>  $search,
+            "collection"        =>  $USER_SELECTION_COLLECTION,
+            "restypes"          =>  $restypes,
+            "order_by"          =>  "resourceid",
+            "archive"           =>  $archive,
+            "sort"              =>  "desc",
+            "daylimit"          =>  "",
+            "editsearchresults" => "true",
+        ));
+
+    $attributes  = " id=\"EditSelectedResourcesBtn\"";
+    $attributes .= " onclick=\"CentralSpaceLoad('{$batch_edit_url}', true);\"";
+
+    return render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+    }
+
+
+/**
+* Renders the "Clear selected" button. This is using the special 'COLLECTION_TYPE_SELECTION' collection
+* 
+* @return void
+*/
+function render_clear_selected_btn()
+    {
+    global $lang, $USER_SELECTION_COLLECTION, $CSRF_token_identifier, $usersession;
+
+    $attributes  = " id=\"ClearSelectedResourcesBtn\" class=\"ClearSelectedButton\"";
+    $attributes .= " onclick=\"ClearSelectionCollection(this);\"";
+    $attributes .= " data-csrf-token-identifier=\"{$CSRF_token_identifier}\"";
+    $attributes .= " data-csrf-token=\"" . generateCSRFToken($usersession, "clear_selected_btn_{$USER_SELECTION_COLLECTION}") . "\"";
+
+    return render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+    }
+
+
+/**
+* Render the actions specific to when a user selected resources (using the special "COLLECTION_TYPE_SELECTION" collection)
+* 
+* @return void
+*/
+function render_selected_collection_actions()
+    {
+    global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
+           $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
+
+    $orig_search = $search;
+    $search = "!collection{$USER_SELECTION_COLLECTION}";
+
+    $orig_result = $result;
+    $result = do_search($search, '', 'relevance', 0, -1, 'desc', false, '', false, '');
+
+    $selected_resources = array_column($result, "ref");
+    $resources_count = count($selected_resources);
+    $usercollection_resources = get_collection_resources($usercollection);
+    $refs_to_remove = count(array_intersect($selected_resources, $usercollection_resources));
+    $collection_data = get_collection($USER_SELECTION_COLLECTION);
+
+    $valid_selection_collection_actions = array(
+        "relate_all",
+        "save_search_items_to_collection",
+        "remove_selected_from_collection",
+        "search_items_disk_usage",
+        "csv_export_results_metadata",
+        "share_collection",
+        "download_collection",
+        "license_batch",
+    );
+
+    if($refs_to_remove > 0)
+        {
+        $callback_csrf_token = generateCSRFToken($usersession, "remove_selected_from_collection");
+        $render_actions_extra_options = array(
+            array(
+                "value" => "remove_selected_from_collection",
+                "label" => $lang["remove_selected_from_collection"],
+                "data_attr" => array(
+                    "callback" => "RemoveSelectedFromCollection('{$CSRF_token_identifier}', '{$callback_csrf_token}');",
+                ),
+                "category" => ACTIONGROUP_COLLECTION,
+            ),
+        );
+        }
+    $render_actions_filter = function($action) use ($valid_selection_collection_actions)
+        {
+        return in_array($action["value"], $valid_selection_collection_actions);
+        };
+
+    // override the language for actions as it's now specific to a selection of resources
+    $lang["relateallresources"] = $lang["relate_selected_resources"];
+    $lang["savesearchitemstocollection"] = $lang["add_selected_to_collection"];
+    $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
+    $lang["share"] = $lang["share_selected"];
+
+    render_actions($collection_data, true, false);
+
+    $search = $orig_search;
+    $result = $orig_result;
+
+    return;
+    }
+
+
 // Render a select input for a user's collections
 function render_user_collection_select($name = "collection", $collections=array(), $selected=0, $classes = "", $onchangejs = "")
     {
@@ -3035,6 +3253,416 @@ function render_user_collection_select($name = "collection", $collections=array(
            
 	echo "</select>";
     }
+
+
+/**
+* Render CSRF information as data attributes. Useful to allow JS to run state changing operations
+*/
+function render_csrf_data_attributes($ident)
+    {
+    global $CSRF_token_identifier, $usersession;
+
+    $token = generateCSRFToken($usersession, $ident);
+    return "data-csrf-token-identifier=\"{$CSRF_token_identifier}\" data-csrf-token=\"{$token}\"";
+    }
+
+
+/**
+* Check display condition for a field. 
+* 
+* @uses get_nodes()
+* @uses extract_node_options()
+* @uses get_resource_nodes()
+* @uses get_node_by_name()
+* 
+* @param integer $n         Question sequence number on the rendered form
+* @param array   $field     Field on which we check display conditions
+* @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
+* @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
+* 
+* 
+* @return boolean Returns TRUE if no display condition or if field shoud be displayed or FALSE if field should not be displayed.
+*/
+function check_display_condition($n, array $field, array $fields, $render_js)
+    {
+    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+
+    if(trim($field['display_condition']) == "")
+        {
+        return true;  # This field does not have a display condition, so it should be displayed
+        }
+
+    // Assume the candidate field is to be displayed    
+    $displaycondition = true;
+    // Break down into array of conditions
+    $conditions       = explode(';', $field['display_condition']);
+    $condref          = 0;
+    $scriptconditions = array();
+    
+    
+    // Need all field data to check display conditions
+    global $display_check_data;
+    if(!is_array($display_check_data))
+        {
+        $display_check_data = get_resource_field_data($use,false,false);
+        }
+
+    // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
+    $user_set_values = getval('nodes', array());
+
+    foreach ($conditions as $condition) # Check each condition
+        {
+        $displayconditioncheck = false;
+
+        // Break this condition down into fieldname $s[0] and value(s) $s[1]
+        $s = explode('=', $condition);
+
+        // Process all fields which are referenced by display condition(s) on the candidate field
+        // For each referenced field, render javascript to trigger when the referenced field changes
+        for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
+            {
+            // Work out nodes submitted by user, if any
+            $ui_selected_node_values = array();
+            if(
+                isset($user_set_values[$display_check_data[$cf]['ref']])
+                && !is_array($user_set_values[$display_check_data[$cf]['ref']])
+                && $user_set_values[$display_check_data[$cf]['ref']] != ''
+                && is_numeric($user_set_values[$display_check_data[$cf]['ref']])
+            )
+                {
+                $ui_selected_node_values[] = $user_set_values[$display_check_data[$cf]['ref']];
+                }
+            else if(isset($user_set_values[$display_check_data[$cf]['ref']]) && is_array($user_set_values[$display_check_data[$cf]['ref']]))
+                {
+                $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
+                }
+
+            // Does the fieldname on this condition match the field being processed    
+            if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
+                {
+                $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
+
+                $node_options = extract_node_options($display_check_data[$cf]['nodes']);
+
+                $scriptconditions[$condref]['field'] = $display_check_data[$cf]['ref'];
+                $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
+
+                $checkvalues=$s[1];
+                // Break down values delimited with pipe characters
+                $validvalues=explode("|",mb_strtoupper($checkvalues));
+                $scriptconditions[$condref]['valid'] = array();
+                $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
+
+                if(count($ui_selected_node_values) > 0)
+                    {
+                    $v = $ui_selected_node_values;
+                    }
+
+                // If blank edit template is used, on upload form the dependent fields should be hidden
+                if($blank_edit_template && $ref < 0 && $use == $ref)
+                    {
+                    $v = array();
+                    }
+
+                foreach($validvalues as $validvalue)
+                    {
+                    $found_validvalue = get_node_by_name($display_check_data[$cf]['nodes'], $validvalue);
+
+                    if(0 != count($found_validvalue))
+                        {
+                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+                        if(in_array($found_validvalue['ref'], $v))
+                            {
+                            $displayconditioncheck = true;
+                            }
+                        }
+                    }
+
+                 if(!$displayconditioncheck)
+                    {
+                    $displaycondition = false;
+                    $required_fields_exempt[]=$field["ref"];
+                    }
+
+                // Skip rendering the JS calls to checkDisplayCondition functions
+                // Skip if user does not have access to the master (parent) field 
+                if(!$render_js || !in_array($display_check_data[$cf]['ref'], array_column($fields,"ref")))
+                    {
+                    continue;
+                    }
+
+                // Check display conditions
+                // Certain fixed list types allow for multiple nodes to be passed at the same time
+
+                // Generate a javascript function specific to the field with the display condition
+                // This function will be invoked whenever a field referenced by the display condition changes
+                if(in_array($display_check_data[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    if(FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
+                            jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $display_check_data[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
+                            jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+
+                    $checkname = "nodes[{$display_check_data[$cf]['ref']}][]";
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $display_check_data[$cf]['type'])
+                        {
+                        $checkname = "nodes[{$display_check_data[$cf]['ref']}]";
+                        }
+
+                    $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $display_check_data[$cf]['type'])
+                        {
+                        $checkname       = "nodes[{$display_check_data[$cf]['ref']}]";
+                        $jquery_selector = "select[name=\"{$checkname}\"]";
+                        }
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
+                        jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
+                        jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                }
+
+            } # see if next field needs to be checked
+        $condref++;
+
+        } # check next condition
+
+    if($render_js)
+        {
+        ?>
+        <script type="text/javascript">
+        function checkDisplayCondition<?php echo $field["ref"];?>()
+            {
+            // Get current display status
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            // Assume field will not be displayed
+            newfield<?php echo $field['ref']; ?>status = 'none';
+            newfield<?php echo $field['ref']; ?>show   = false;
+            newfield<?php echo $field['ref']; ?>provisional = true;
+            <?php
+            foreach($scriptconditions as $scriptcondition)
+                {
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
+                ?>
+                newfield<?php echo $field['ref']; ?>subcheck = false;
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                <?php
+                ############################
+                ### Field type specific
+                ############################
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
+                        {
+                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
+                        }
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                        }
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                        }
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                            {
+                            if(<?php echo $js_conditional_statement; ?>)
+                                {
+                                newfield<?php echo $field['ref']; ?>subcheck = true;
+                                }
+                            });
+                        }
+                    <?php
+                    }
+                ?>
+                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                    {
+                    newfield<?php echo $field['ref']; ?>provisional = false;
+                    }
+                <?php
+                }
+                ?>
+
+                // Is field to be displayed
+                if(newfield<?php echo $field['ref']; ?>provisional)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
+
+                // If display status changed then toggle the visibility
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status);                   
+
+                <?php
+                // Batch edit mode
+                if($GLOBALS["multiple"] === true)
+                    {
+                    ?>
+                    var batch_edit_editthis = jQuery("#<?php echo "editthis_{$n}"; ?>");
+                    batch_edit_editthis.prop("checked", !batch_edit_editthis.prop("checked"));
+                    batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);
+                    <?php
+                    }
+                    ?>
+
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
+            }
+        </script>
+        <?php
+        }
+
+    return $displaycondition;
+    }
+
+
+/**
+* Utility to check if browse bar should be rendered
+*  
+* @return boolean
+*/   
+function has_browsebar()
+    {
+    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    return isset($username)
+    && !in_array($pagename, $not_authenticated_pages)
+    && ('' == $k || $internal_share_access)
+    && $browse_bar;
+    //   && false == $loginterms ?
+    }
+
+/**
+* Utility to if collapsable upload options should be displayed
+*  
+* @return boolean
+*/   
+function display_upload_options()
+    {
+    global $metadata_read, $enable_add_collection_on_upload, $relate_on_upload, $camera_autorotation;
+    if ($metadata_read || $enable_add_collection_on_upload || $relate_on_upload || $camera_autorotation)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
+    }
+
 
 /*
 * Render the resource lock/unlock link for resource tools

@@ -291,11 +291,6 @@ function checkTileConfig($tile,$tile_style)
 	switch($tile_style)
 		{
 		case "thmsl": 	global $home_themeheaders; return $home_themeheaders;
-		case "theme":	global $home_themes; return $home_themes;
-		case "mycol":	global $home_mycollections; return $home_mycollections;
-		case "advsr":	global $home_advancedsearch; return $home_advancedsearch;
-		case "mycnt":	global $home_mycontributions; return $home_mycontributions;
-		case "hlpad":	global $home_helpadvice; return $home_helpadvice;
 		case "custm":	global $custom_home_panels; return isset($custom_home_panels)? checkConfigCustomHomePanels($tile,$tile_style) : FALSE;
 		}
 	}

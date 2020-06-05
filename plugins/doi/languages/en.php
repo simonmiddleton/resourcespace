@@ -9,7 +9,7 @@
 	$lang['doi_info_wikipedia'] = "https://en.wikipedia.org/wiki/Digital_Object_Identifier";
 	$lang['doi_info_link'] = 'on <a target="_blank" href="https://en.wikipedia.org/wiki/Digital_Object_Identifier">DOIs</a>.';
 	$lang['doi_info_metadata_schema'] = 'on the DOI registration at DataCite.org are stated in the <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Datacite Metadata Schema Documentation</a>.';
-	$lang['doi_info_mds_api'] = 'on the DOI-API used by this plugin are stated in the <a target="_blank" href="https://mds.datacite.org/static/apidoc">Datacite API Documentation</a>.';
+	$lang['doi_info_mds_api'] = 'on the DOI-API used by this plugin are stated in the <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API Documentation</a>.';
 
 	$lang['doi_plugin_heading'] = 'This Plugin creates <a target="_blank" href="https://en.wikipedia.org/wiki/Digital_Object_Identifier">DOIs</a> for immutable objects and collections before registering them at <a target="_blank" href="https://www.datacite.org/about-datacite">DataCite</a>.';
 	$lang['doi_further_information'] = 'Further information';
@@ -32,7 +32,7 @@
 <li>The resource must be publicly accessable, that is, having its access set to <strong>open</strong>.</li>
 <li>The resource must have a <strong>title</strong>.</li>
 <li>It must be marked {status}, that is, having its state set to <strong>{status}</strong>.</li>
-<li>Then, only an <strong>admin</strong> is aloud to initiate the registration process.</li>
+<li>Then, only an <strong>admin</strong> is allowed to initiate the registration process.</li>
 HTML;
 //
 //	$lang['doi_setup_perms_needed'] = 'necessary user permissions for registration';

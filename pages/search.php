@@ -1,10 +1,6 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/general.php";
-include_once "../include/resource_functions.php"; //for checking scr access
-include_once "../include/search_functions.php";
-include_once "../include/collections_functions.php";
-include_once '../include/render_functions.php';
+
 if($annotate_enabled)
     {
     include_once '../include/annotation_functions.php';
@@ -42,8 +38,13 @@ if ($k=="" || $internal_share_access)
             }
         }
     }
-# Disable checkboxes for external users.
-if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
+
+// Disable checkboxes for external users.
+$use_selection_collection = true;
+if($k != "" && !$internal_share_access)
+    {
+    $use_selection_collection = false;
+    }
 
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
@@ -93,7 +94,7 @@ foreach($keywords as $keyword)
         }
 
     $field_shortname = escape_check($field_shortname);
-    $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+    $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0, "schema");
 
     if(0 == $resource_type_field)
         {
@@ -412,10 +413,13 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 $allow_reorder=false;
 
 # get current collection resources to pre-fill checkboxes
-if ($use_checkboxes_for_selection){
-$collectionresources=get_collection_resources($usercollection);
-}
-    $hiddenfields=getvalescaped("hiddenfields","");
+if($use_selection_collection)
+    {
+    $selection_collection_resources = get_collection_resources(get_user_selection_collection($userref));
+    $selection_collection_resources_count = count($selection_collection_resources);
+    }
+
+$hiddenfields=getvalescaped("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
 if (getvalescaped("resetrestypes","")=="")
@@ -496,20 +500,23 @@ if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$spe
 $search=refine_searchstring($search);
 
 $editable_only = getval("foredit","")=="true";
+$search_access = getval("access", null, true); # admins can search for resources with a specific access from advanced search
 
 $searchparams= array(
-    'search'                                    => $search,
-    'k'                                         => $k,
-    'modal'                                     => $modal,  
-    'display'                                   => $display,
-    'order_by'                                  => $order_by,
-    'offset'                                    => $offset,
-    'per_page'                                  => $per_page,
-    'archive'                                   => $archive,
-    'sort'                                      => $sort,
-    'restypes'                                  => $restypes,
-    'recentdaylimit'                            => getvalescaped('recentdaylimit', '', true),
-    'foredit'                                   => ($editable_only?"true":"")
+    'search'         => $search,
+    'k'              => $k,
+    'modal'          => $modal,  
+    'display'        => $display,
+    'order_by'       => $order_by,
+    'offset'         => $offset,
+    'per_page'       => $per_page,
+    'archive'        => $archive,
+    'sort'           => $sort,
+    'restypes'       => $restypes,
+    'recentdaylimit' => getvalescaped('recentdaylimit', '', true),
+    'foredit'        => ($editable_only?"true":""),
+    'noreload'       => "true",
+    'access'         => $search_access,
 );
  
 $checkparams = array();
@@ -545,7 +552,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {   
-        $result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only);
+        $result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
         }
     }
 else
@@ -615,6 +622,14 @@ if($k=="" || $internal_share_access)
     <?php
     }
 
+if($use_selection_collection)
+    {
+    ?>
+    <script>
+    var searchparams = <?php echo json_encode($searchparams); ?>;
+    </script>
+    <?php
+    }
 
 // Allow Drag & Drop from collection bar to CentralSpace only when special search is "!collection"
 if($collectionsearch && collection_writeable(substr($search, 11)))
@@ -925,22 +940,12 @@ if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($them
         $theme_link);
     }
 
-// Show collection title and description.
-if ($collectionsearch && !$search_titles)
+if ($search_titles)
     {
-    if ($show_collection_name)
-        { ?>
-        <div class="RecordHeader">
-            <h1 class="SearchTitle">
-            <?php echo i18n_get_collection_name($collectiondata); ?>
-            </h1>
-        <?php
-        if(trim($collectiondata['description']) != "")
-            {
-            echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
-            }
-        echo "</div>";
-        }
+    hook("beforesearchtitle");
+    echo $search_title;
+    hook("aftersearchtitle");
+    hook("beforecollectiontoolscolumn");
     }
 
 if (!hook("replacesearchheader")) # Always show search header now.
@@ -962,10 +967,16 @@ if($responsive_ui)
     <div class="ResponsiveResultDisplayControls">
         <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
         <div id="ResponsiveResultCount" style="display:none;">
-            <span class="Selected">
         <?php
-        if(isset($collections)) 
+        if($use_selection_collection && $selection_collection_resources_count > 0)
             {
+            echo render_selected_resources_counter(count($selection_collection_resources));
+            }
+        else if(isset($collections)) 
+            {
+            ?>
+            <span class="Selected">
+            <?php
             echo number_format($results_count);
             ?>
             </span>
@@ -974,6 +985,9 @@ if($responsive_ui)
             } 
         else
             {
+            ?>
+            <span class="Selected">
+            <?php
             echo number_format($resources_count);
             ?>
             </span>
@@ -987,14 +1001,24 @@ if($responsive_ui)
     }
     hook('responsiveresultoptions');
     ?>
-    <div id="SearchResultFound" class="InpageNavLeftBlock"><span class="Selected">
+    <div id="SearchResultFound" class="InpageNavLeftBlock">
     <?php
-    if (isset($collections)) 
+    if($use_selection_collection && $selection_collection_resources_count > 0)
         {
+        echo render_selected_resources_counter(count($selection_collection_resources));
+        }
+    else if (isset($collections)) 
+        {
+        ?>
+        <span class="Selected">
+        <?php
         echo number_format($results_count)?> </span><?php echo ($results_count==1) ? $lang["youfoundresult"] : $lang["youfoundresults"];
-        } 
+        }
     else
         {
+        ?>
+        <span class="Selected">
+        <?php
         echo number_format($resources_count)?> </span><?php echo ($resources_count==1)? $lang["youfoundresource"] : $lang["youfoundresources"];
         }
      ?></div>
@@ -1203,13 +1227,26 @@ if($responsive_ui)
             }
 
         $url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
-        render_actions($collectiondata,true,false);
+        if($use_selection_collection && $selection_collection_resources_count > 0)
+            {
+            render_selected_collection_actions();
+            }
+        else
+            {
+            render_actions($collectiondata, true, false);
+            }
 
         hook("search_header_after_actions");
 
         if(isset($is_authenticated) && $is_authenticated)
             {
             render_upload_here_button($searchparams);
+
+            if($use_selection_collection && $selection_collection_resources_count > 0)
+                {
+                render_edit_selected_btn();
+                render_clear_selected_btn();
+                }
             }
         
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
@@ -1254,14 +1291,24 @@ if($responsive_ui)
     </div>
     <?php
 } 
-        hook("stickysearchresults");
+    hook("stickysearchresults");
 
-    if ($search_titles)
+    // Show collection title and description.
+    if ($collectionsearch)
         {
-        hook("beforesearchtitle");
-        echo $search_title;
-        hook("aftersearchtitle");
-        hook("beforecollectiontoolscolumn");
+        if ($show_collection_name)
+            { ?>
+            <div class="RecordHeader">
+                <h1 class="SearchTitle">
+                <?php echo i18n_get_collection_name($collectiondata); ?>
+                </h1>
+            <?php
+            if(trim($collectiondata['description']) != "")
+                {
+                echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
+                }
+            echo "</div>";
+            }
         }
     
     hook("beforesearchresults");
@@ -1367,7 +1414,7 @@ if($responsive_ui)
         <?php if(!hook("replacelistviewtitlerow")){?>   
         <tr class="ListviewTitleStyle">
         <?php if (!hook("listcheckboxesheader")){?>
-        <?php if ($use_checkboxes_for_selection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
+        <?php if ($use_selection_collection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
         <?php } # end hook listcheckboxesheader 
 
         for ($x=0;$x<count($df);$x++)
@@ -1596,5 +1643,81 @@ if($search_anchors)
     </script>
     <?php
     }
+    ?>
+<script>
+jQuery(document).ready(function()
+    {
+    jQuery(".checkselect").click(function(e)
+        {
+        if(e.shiftKey == false)
+            {
+            ToggleCollectionResourceSelection(e, <?php echo $USER_SELECTION_COLLECTION; ?>);
+            shift_select_previous_target = e.target;
+            return;
+            }
 
+        if(typeof shift_select_previous_target === "undefined")
+            {
+            shift_select_previous_target = e.target;
+            return;
+            }
+
+        var input = e.target;
+        var in_range = false;
+        jQuery(".checkselect").each(function()
+            {
+            var mark = (shift_select_previous_target === this || input === this);
+
+            if(mark && typeof last_mark === "undefined")
+                {
+                console.debug("Mark added at element with ID %o", this.id);
+                in_range = true;
+                last_mark = this;
+                }
+            else if(mark && typeof last_mark !== "undefined")
+                {
+                console.debug("Mark removed at element with ID %o", this.id);
+                in_range = false;
+                last_mark = this;
+
+                if(jQuery(input).prop("checked"))
+                    {
+                    this.setAttribute("checked", "checked");
+                    }
+                else
+                    {
+                    this.removeAttribute("checked");
+                    }
+                var toggle_event = jQuery.Event("click", { target: this });
+                ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
+                }
+
+            if(!in_range)
+                {
+                return;
+                }
+
+            console.debug("checkselect is in range -- %o", this.id);
+            if(jQuery(input).prop("checked"))
+                {
+                this.setAttribute("checked", "checked");
+                }
+            else
+                {
+                this.removeAttribute("checked");
+                }
+            var toggle_event = jQuery.Event("click", { target: this });
+            ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
+
+            return;
+            });
+
+        delete(shift_select_previous_target);
+        delete(last_mark);
+
+        return;
+        });
+    });
+</script>
+<?php
 include '../include/footer.php';

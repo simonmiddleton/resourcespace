@@ -1,8 +1,5 @@
 <?php
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
-include_once __DIR__ . "/../../include/resource_functions.php";
-include_once __DIR__ . "/../../include/search_functions.php";
 include_once __DIR__ . "/../../include/migration_functions.php";
 
 if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRATION"] == 0))

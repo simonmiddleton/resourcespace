@@ -39,7 +39,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             $resources_fields_data[$resource['ref']]["file_checksum"] = $resdata["file_checksum"];
             }
 
-        foreach(get_resource_field_data($resource['ref'], false, true, NULL, '' != getval('k', '')) as $field_data)
+        foreach(get_resource_field_data($resource['ref'], false, true, NULL, '' != getval('k', ''), true,true) as $field_data)
             {
             // If $personal=true, return personal_data fields only.
             // If $alldata=false, return only fields marked as 'Include in CSV export'
@@ -103,7 +103,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                 {
                 if($column_header == $field_name)
                     {
-                    $csv_row .= '"' . str_replace(array("\n","\r","\""),"",tidylist(i18n_get_translated($field_value))) . '",';
+                    $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
                     }
                 }
             }

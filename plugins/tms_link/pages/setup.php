@@ -1,7 +1,6 @@
 <?php
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
-include_once '../../../include/general.php';
 
 
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));

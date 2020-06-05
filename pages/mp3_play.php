@@ -5,7 +5,7 @@ if($videojs || $pagename=="search")
 
 	global $alternative,$css_reload_key,$display,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview;
 
-	if(!isset($mp3path)){$mp3path=get_resource_path($ref,false,"",false,"mp3",-1,1,false,"",$alternative);}
+	if(!isset($mp3path)){$mp3path=get_resource_path($ref,false,"videojs",false,"mp3",-1,1,false,"",$alternative);}
 	if(!isset($thumb_url))
 		{
 		if(isset($thm_url)){$thumb_url=$thm_url;}

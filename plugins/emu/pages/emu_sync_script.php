@@ -6,7 +6,6 @@ if('cli' != PHP_SAPI)
     }
 
 include dirname(__FILE__) . '/../../../include/db.php';
-include_once dirname(__FILE__) . '/../../../include/general.php';
 include_once dirname(__FILE__) . '/../../../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../../../include/image_processing.php';
 include_once dirname(__FILE__) . '/../include/emu_functions.php';

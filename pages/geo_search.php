@@ -1,8 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; 
-include "../include/resource_functions.php";
 include "../include/header.php";
 
 ?>
@@ -81,8 +80,6 @@ else
 $bounds=explode(",",$bounds);
 ?>
 map.setCenter(new OpenLayers.LonLat(<?php echo htmlspecialchars($bounds[0]) ?>,<?php echo htmlspecialchars($bounds[1]) ?>),<?php echo $bounds[2] ?>);
-
-
 	
 </script>
 </div>

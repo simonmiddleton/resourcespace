@@ -10,7 +10,7 @@ if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook
                         <a aria-hidden="true" class="fa fa-pencil"
                                 href="<?php echo str_replace("view.php","edit.php",$url) ?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                                title="<?php echo $lang["editresource"]?>"
+                                title="<?php echo $lang["action-editmetadata"]?>"
                         ></a>
                 <?php
                 $showkeyedit = true;
@@ -78,7 +78,7 @@ if(!hook("iconemail"))
         
 <!-- Remove from collection icon -->
 <?php 
-if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection))
+if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access)))
         {
         if ($pagename=="collections" || trim($search)=="!collection".$usercollection)
                 { ?>
@@ -93,7 +93,7 @@ if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!coll
 <?php
 if(!hook('iconcollect') && $pagename!="collections")
     {
-    if(!checkperm('b') && ('' == $k || $internal_share_access) && !$use_checkboxes_for_selection && !in_array($result[$n]['resource_type'], $collection_block_restypes))
+    if(!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
         // Basket mode? - this is for the e-commerce user request modes.
         if(2 == $userrequestmode || 3 == $userrequestmode)

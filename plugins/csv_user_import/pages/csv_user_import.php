@@ -1,13 +1,11 @@
 <?php
 include_once '../../../include/db.php';
-include_once '../../../include/general.php';
 include_once '../../../include/authenticate.php';
 if(!checkperm('u'))
     {
     header('HTTP/1.1 401 Unauthorized');
     die('Permission denied!');
     }
-include_once '../../../include/collections_functions.php';
 include_once dirname(__FILE__). '/../include/csv_functions.php';
 
 

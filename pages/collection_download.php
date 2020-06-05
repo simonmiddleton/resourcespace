@@ -1,13 +1,9 @@
 <?php 
 ini_set('zlib.output_compression','off'); // disable PHP output compression since it breaks collection downloading
 include "../include/db.php";
-include_once "../include/general.php";
-include_once "../include/collections_functions.php";
+
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}
-include "../include/search_functions.php";
-include "../include/resource_functions.php";
-include_once '../include/csv_export_functions.php';
+$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
@@ -759,7 +755,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 	<div class="clearerleft"></div></div><br />
 	<div class="clearerleft"></div>
 	<label for="tarinfo"></label>
-	<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
 	
 	<div class="clearerleft"></div>
 </div>

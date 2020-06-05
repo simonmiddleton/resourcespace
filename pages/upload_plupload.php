@@ -1,13 +1,10 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
 if (! (checkperm("c") || checkperm("d")))
     {exit ("Permission denied.");}
 include "../include/image_processing.php";
-include "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once "../include/search_functions.php";
 
 
 $overquota                              = overquota();
@@ -590,7 +587,13 @@ if ($_FILES)
                     {			
                     if ($alternative!="")
                             {
-                            # Upload an alternative file (JUpload only)
+                            # Upload an alternative file 
+                            $resource_data = get_resource_data($alternative);
+                            if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+                                {
+                                $error = get_resource_lock_message($resource_data["lock_user"]);
+                                die('{"jsonrpc" : "2.0", "error" : {"code": 111, "message": "' . $error  . '"}, "id" : "id"}');
+                                }
 
                             # Add a new alternative file
                             $aref=add_alternative_file($alternative,$plfilename);
@@ -1528,7 +1531,7 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
  if  ($alternative!=""){?><p>
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($alternative)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a></p><?php } ?>
 
-<?php if ($replace_resource!=""){?><p> <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($replace_resource)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditresource"]?></a><br / >
+<?php if ($replace_resource!=""){?><p> <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($replace_resource)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($replace_resource) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p><?php } ?>
 
 <?php if ($alternative!=""){$resource=get_resource_data($alternative);

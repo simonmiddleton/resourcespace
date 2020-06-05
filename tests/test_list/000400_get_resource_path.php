@@ -10,10 +10,6 @@ $scramble_key          = 'c8cf6994c288cf9d75c64017c57d16b24a0fdb4f0b826c66bfa7da
 $path = get_resource_path(1, true, '');
 $pre_path = get_resource_path(1, true, 'pre');
 
-// Copy the default slideshow image to this location, for future tests to use
-copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $path);
-copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $pre_path);
-
 if (!file_exists($path) || !file_exists($pre_path))
     {
     echo "File was not copied.";

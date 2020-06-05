@@ -1,7 +1,5 @@
 <?php
 include dirname(__FILE__) . "/../../include/db.php";
-include_once dirname(__FILE__) . "/../../include/general.php";
-include dirname(__FILE__) . "/../../include/resource_functions.php";
 include dirname(__FILE__) . "/../../include/image_processing.php";
 
 $cli_short_options = 'h';
@@ -38,7 +36,8 @@ if(isset($staticsync_userref))
     # If a user is specified, log them in.
     $userref=$staticsync_userref;
     $userdata=get_user($userref);
-    setup_user($userdata);
+    $userdata = array($userdata);
+    setup_user($userdata[0]);
     }
 
 ob_end_clean();
@@ -609,8 +608,6 @@ function ProcessFolder($folder)
                             staticsync_process_alt($altfile->getPathname(), $r);
                             echo "Processed alternative: " . $shortpath . PHP_EOL;
                             }
-
-						continue;
                         }
 
                     # Add to collection
@@ -851,6 +848,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
             $alt["name"]            = $altname;            
 
 			$alt["ref"] = add_alternative_file($ref, $alt["name"], $alt["altdescription"], $alternativefile, $alt["extension"], $alt["file_size"]);
+            $alternative = $alt["ref"];
 			
 			echo "Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref . PHP_EOL;
             debug("Staticsync - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref);
@@ -888,12 +886,20 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 # Recurse through the folder structure.
 ProcessFolder($syncdir);
 
+debug("StaticSync: \$done = " . json_encode($done));
+
 // Look for alternative files that may have not been processed
 foreach($alternativefiles as $alternativefile)
     {
     $shortpath = str_replace($syncdir . "/", '', $alternativefile);
     echo "Processing alternative file " . $shortpath . PHP_EOL;
     debug("Staticsync -  Processing altfile " . $shortpath);
+
+    if(array_key_exists($shortpath, $done) && isset($done[$shortpath]["alternative"]) && $done[$shortpath]["alternative"] > 0)
+        {
+        echo "Alternative '{$shortpath}' has already been processed. Skipping" . PHP_EOL;
+        continue;
+        }
 
     if(!file_exists($alternativefile))
         {

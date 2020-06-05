@@ -1,9 +1,7 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include_once "../../../include/authenticate.php";
-include_once "../../../include/resource_functions.php";
-include_once "../../../include/collections_functions.php";
 if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
 
 
@@ -19,8 +17,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         'search'     => getval('search',''),
         'order_by'   => getval('order_by',''),
         'collection' => getval('collection',''),
-        'order_by'   => getval('order_by',''),
-        'offset'     => getval('offset',''),
+        'offset'     => getval('offset',0),
         'restypes'   => getval('restypes',''),
         'archive'    => getval('archive','')
     );

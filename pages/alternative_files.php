@@ -1,8 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
-include "../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $alt=getvalescaped("alternative","",true);
@@ -48,8 +47,8 @@ if (!($editaccess || checkperm('A')) && $ref>0) {exit ("Permission denied.");}
 if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
     {
     $error = get_resource_lock_message($resource["lock_user"]);
-    error_alert($error,!$modal);
-    exit();
+    http_response_code(403);
+    exit($error);
     }
 
 hook("pageevaluation");
@@ -93,7 +92,7 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditresource"]?></a><br / >
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
     </p>
     <?php

@@ -207,9 +207,6 @@ $linkedheaderimgsrc="";
 # Change the Header Logo link to another address by uncommenting and setting the variable below
 # $header_link_url=http://my-alternative-header-link
 
-# Include ResourceSpace version header in View Source
-$include_rs_header_info=true;
-
 # Used for specifying custom colours for header 
 $header_colour_style_override='';
 $header_link_style_override='';
@@ -296,7 +293,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders, $home_themes, $home_mycollections and $home_helpadvice to false).
+# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
@@ -350,16 +347,9 @@ $dash_tile_colour_options = array();
 
 	# Options to show/hide the tiles on the home page
 	$home_themeheaders=false;
-	$home_themes=true;
-	$home_mycollections=true;
-	$home_helpadvice=true;
-	$home_advancedsearch=false;
-	$home_mycontributions=false;
 	#
 	# Custom panels for the home page.
 	# You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
-	#
-	# You may want to turn off $home_themes etc. above if you want ONLY your own custom panels to appear on the home page.
 	#
 	# The below are examples.
 	#
@@ -808,7 +798,6 @@ $descthemesorder=false;
 ##  Defaults (all false) shows advanced search in the search bar but not the home page or top navigation.
 ##  To disable advanced search altogether, set 
 ##      $advancedsearch_disabled = true;
-##      $home_advancedsearch=false;
 ##      $advanced_search_nav=false;
 
 #Hide advanced search on search bar
@@ -973,7 +962,7 @@ $user_purge=true;
 # List of active plugins.
 # Note that multiple plugins must be specified within array() as follows:
 # $plugins=array("loader","rss","messaging","googledisplay"); 
-$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager');
+$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'image_banks');
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
@@ -1427,7 +1416,8 @@ $category_tree_search_use_and=false;
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
 
-# Force selection of parent nodes when selecting a sub node?
+# Force selection of parent nodes when selecting a sub node? 
+# If set to false then each node should be unique to avoid possible corruption when exporting/importing data
 $category_tree_add_parents=true;
 
 # Force deselection of child nodes when deselecting a node?
@@ -2434,9 +2424,6 @@ $site_text_custom_create=false;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
-# Use checkboxes for selecting resources 
-$use_checkboxes_for_selection=false;
-
 # allow player for mp3 files
 # player docs at http://flash-mp3-player.net/players/maxi/
 # Updated October 2015 so will use VideoJS if enabled ($videojs=true;)
@@ -2506,12 +2493,19 @@ $geo_search_restrict=array
 # Add OpenLayers configuration options to this variable to overwrite all other options. 
 $geo_override_options = "";
 
-$geo_tile_servers = array();
-$geo_tile_servers[] = 'a.tile.openstreetmap.org';
-$geo_tile_servers[] = 'b.tile.openstreetmap.org';
-$geo_tile_servers[] = 'c.tile.openstreetmap.org';
-$geo_tile_cache_lifetime = 60*60*24*365; // 1 year by default to prevent hitting tile server 
+// Only high level tiles are included by default. If you require higher resolution tiles 
+// you need permitted access to a full tile server, or you can set up your own. 
+// See https://wiki.openstreetmap.org/wiki/Tile_servers for more information
+// If no servers are available then your zoom ability will be limited
 
+$geo_tile_servers = array();
+//$geo_tile_servers[] = 'a.tile.sometileserver.org';
+//$geo_tile_servers[] = 'b.tile.sometileserver.org';
+//$geo_tile_servers[] = 'c.tile.sometileserver.org';
+
+// How long will tiles be cached? Set to one year by default
+// Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+$geo_tile_cache_lifetime = 60*60*24*365;
 
 # QuickLook previews (Mac Only)
 # If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
@@ -2561,7 +2555,7 @@ $metadata_template_mandatory = false;
 $view_resource_collections=false;
 
 # enable titles on the search page that help describe the current context
-$search_titles=false;
+$search_titles=true;
 # whether all/additional keywords should be displayed in search titles (ex. "Recent 1000 / pdf")
 $search_titles_searchcrumbs=false;
 # whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"

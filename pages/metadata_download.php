@@ -1,6 +1,5 @@
 <?php
 include '../include/db.php';
-include_once '../include/general.php';
 
 $k   = getvalescaped('k', '');
 $ref = getvalescaped('ref', '', true);
@@ -10,9 +9,6 @@ if('' == $k || !check_access_key($ref, $k))
     {
     include '../include/authenticate.php';
     }
-
-include_once '../include/resource_functions.php';
-include_once '../include/collections_functions.php';
 include_once '../include/pdf_functions.php';
 
 $resource = get_resource_data($ref);

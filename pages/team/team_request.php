@@ -8,10 +8,9 @@
 
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
 include "../../include/request_functions.php";
-include_once "../../include/collections_functions.php";
 include "../../include/header.php";
 
 $offset=getvalescaped("offset",0);

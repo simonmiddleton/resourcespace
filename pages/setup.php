@@ -7,9 +7,10 @@
  */
 include_once '../include/config.security.php';
 include_once '../include/file_functions.php';
-include_once '../include/general.php';
-include_once '../include/collections_functions.php';
 include_once '../include/definitions.php';
+include_once '../include/general_functions.php';
+include_once '../include/user_functions.php';
+
 if (!function_exists('filter_var')){  //If running on PHP without filter_var, define a do-fer function, otherwise use php's filter_var (PHP > 5.2.0)
     define(FILTER_SANITIZE_STRING, 1);
     define(FILTER_SANITIZE_EMAIL, 2);

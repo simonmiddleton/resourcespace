@@ -3,6 +3,12 @@ function HookImage_banksSearchSearchaftersearchcookie()
     {
     $search_image_banks = filter_var(getval("search_image_banks", false), FILTER_VALIDATE_BOOLEAN);
     $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
+    
+    // Check for provider id where $simple_search_pills_view enabled and search triggered by 'Enter' key press. If found this is an image banks search.
+    if ($image_bank_provider_id > 0)
+        {
+        $search_image_banks = true;
+        }
 
     $per_page = getval("per_page", 0, true);
     $saved_offset = getval("saved_offset", 0, true);

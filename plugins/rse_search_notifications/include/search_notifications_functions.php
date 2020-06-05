@@ -142,11 +142,6 @@
 			" ORDER BY owner"
 		);
 
-		if (!function_exists("do_search"))
-			{
-			include __DIR__ . "/../../../include/search_functions.php";
-			}
-
 		foreach ($saved_searches as $search)
 			{
 			$results=do_search($search['search'],$search['restypes'],'resourceid',$search['archive']);

@@ -28,7 +28,7 @@ function initFacialRecognition()
            FROM resource_type_field
           WHERE ref = '" . escape_check($facial_recognition_tag_field) . "'
         ",
-        null);
+        null, "schema");
 
     if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST != $facial_recognition_rtf_type)
         {

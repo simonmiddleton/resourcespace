@@ -3,9 +3,8 @@
 # This script is for updating the $portrait_landscape_field 
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include "../../include/resource_functions.php";
 include "../../include/image_processing.php";
 
 set_time_limit(60*60*40);

@@ -2,7 +2,7 @@
 # Feeder page for AJAX search auto-completion.
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 $field=getval("field",""); # get field name if doing a simple search completion (to get it easily from $_GET)

@@ -1,8 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; 
-include "../include/resource_functions.php";
 include "../include/header.php";
 
 if ($disable_geocoding){exit("Geomapping disabled.");}

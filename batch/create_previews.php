@@ -1,9 +1,7 @@
 #!/usr/bin/php
 <?php
 include(dirname(__FILE__) . "/../include/db.php");
-include_once(dirname(__FILE__) . "/../include/general.php");
 include(dirname(__FILE__) . "/../include/image_processing.php");
-include(dirname(__FILE__) . "/../include/resource_functions.php");
 
 
 $ignoremaxsize=false;

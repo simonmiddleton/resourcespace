@@ -1,13 +1,9 @@
 <?php
 
 include_once "../../../include/db.php";
-include_once "../../../include/general.php";
 include_once "../../../include/authenticate.php";
-include_once "../../../include/search_functions.php";
-include_once "../../../include/resource_functions.php";
 include_once "../../../include/image_processing.php";
 include_once "../../../include/slideshow_functions.php";
-
 include_once "../include/transform_functions.php";
 
 global $cropper_allowed_extensions;
@@ -640,7 +636,7 @@ include "../../../include/header.php";
 # slider, sound, controls
 ?>
 
-<h1><?php echo ($original ? $lang['transform_original'] : $lang['transformimage']); ?></h1>
+<h1><?php echo ($original ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']); ?></h1>
 <p><?php
   if($cropperestricted)
       {

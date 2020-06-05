@@ -37,7 +37,16 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
  
 		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
 		}
-    
+
+    if($sql == "")
+        {
+        $sql = "WHERE c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
+        }
+    else
+        {
+        $sql .= "AND c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
+        }
+
     # Include themes in my collecions? 
     # Only filter out themes if $themes_in_my_collections is set to false in config.php
    	global $themes_in_my_collections;
@@ -345,7 +354,12 @@ function collection_readable($collection)
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
 	$collectiondata=get_collection($collection);
-	
+
+    if($collectiondata === false)
+        {
+        return false;
+        }
+
 	# Load a list of attached users
 	$attached=sql_array("select user value from user_collection where collection='$collection'");
 	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
@@ -1048,7 +1062,7 @@ function get_themes($themes=array(""),$subthemes=false)
 function get_smart_theme_headers()
 	{
 	# Returns a list of smart theme headers, which are basically fields with a 'smart theme name' set.
-	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name");
+	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "schema");
 	}
 
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
@@ -2072,9 +2086,6 @@ function collection_min_access($collection)
 
     for($n = 0; $n < count($result); $n++)
         {
-        $ref = $result[$n]['ref'];
-
-        # Load access level
         $access = get_resource_access($result[$n]);
         if($access > $minaccess)
             {
@@ -2305,7 +2316,16 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	{
 		$order_by = $default_collection_sort;
 		}
-	
+    
+    if($pagename == 'collection_manage') 
+        {
+        $min_access = collection_min_access($collection_data['ref']);
+        }
+    else
+        {
+        $min_access = collection_min_access($result);
+        }
+
     // If resourceconnect plugin activated, need to consider if resource connect resources exist in the collection - if yes display view all resources link	
 	$count_resourceconnect_resources = hook("countresult","", array($urlparams["collection"],0));
 	$count_resourceconnect_resources = is_numeric($count_resourceconnect_resources) ? $count_resourceconnect_resources : 0;
@@ -2335,15 +2355,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     
     // Download option
-    if($pagename == 'collection_manage') 
-        {
-        $min_access = collection_min_access($collection_data['ref']);
-        }
-    else
-        {
-        $min_access = collection_min_access($result);
-        }
-
     if($min_access == 0 )
         {
         if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
@@ -2610,14 +2621,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
 		# Ability to request a whole collection (only if user has restricted access to any of these resources)
-		if($pagename == 'collection_manage') 
-			{
-			$min_access = collection_min_access($collection_data['ref']);
-			}
-		else
-		    {
-			$min_access = collection_min_access($result);
-			}
         if($min_access != 0)
             {                
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
@@ -3463,4 +3466,97 @@ function relate_all_collection($collection, $checkperms = true)
             }
         }
     return true;
+    }
+
+
+/**
+* Update collection type for one collection or batch
+* 
+* @param  integer|array  $cid   Collection ID -or- list of collection IDs
+* @param  integer        $type  Collection type. @see include/definitions.php for available options
+* 
+* @return boolean
+*/
+function update_collection_type($cid, $type)
+    {
+    debug_function_call("update_collection_type", func_get_args());
+
+    if(!is_array($cid))
+        {
+        $cid = array($cid);
+        }
+
+    $cid = array_filter($cid, "is_numeric");
+
+    if(empty($cid))
+        {
+        return false;
+        }
+
+    if(!in_array($type, definitions_get_by_prefix("COLLECTION_TYPE")))
+        {
+        return false;
+        }
+
+    foreach($cid as $ref)
+        {
+        collection_log($ref, LOG_CODE_EDITED, "", "Update collection type to '{$type}'");
+        }
+
+    $cid_list = "'" . implode("', '", $cid) . "'";
+
+    sql_query("UPDATE collection SET `type` = '{$type}' WHERE ref IN ({$cid_list})");
+
+    return true;
+    }
+
+
+/**
+* Get a users' collection of type SELECTION.
+* 
+* There can only be one collection of this type per user. If more, the first one found will be used instead.
+* 
+* @param integer  $user  User ID
+* 
+* @return null|integer  Returns NULL if none found or the collection ID
+*/
+function get_user_selection_collection($user)
+    {
+    if(!is_numeric($user))
+        {
+        return null;
+        }
+
+    $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' ORDER BY ref ASC",
+        escape_check($user),
+        COLLECTION_TYPE_SELECTION
+    );
+
+    return sql_value($sql, null);
+    }
+
+
+/**
+* Delete all collections that are not in use e.g. session collections for the anonymous user. Will not affect collections that are public.
+* 
+* @param integer $userref - ID of user to delete collections for 
+* @param integer $days - minimum age of collections to delete in days
+* 
+* @return integer - number of collections deleted
+*/
+function delete_old_collections($userref=0, $days=30)
+    {
+    if($userref==0 || !is_numeric($userref))
+        {
+        return 0;
+        }
+    $deletioncount = 0;
+    $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='" . $userref . "' AND created < DATE_SUB(NOW(), INTERVAL '" . $days . "' DAY) AND public=0",0);
+    foreach($old_collections as $old_collection)
+        {
+        sql_query("DELETE FROM collection_resource WHERE collection='" . $old_collection . "'");
+        sql_query("DELETE FROM collection WHERE ref='" . $old_collection . "'");
+        $deletioncount++;
+        }
+    return $deletioncount;
     }

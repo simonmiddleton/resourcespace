@@ -29,15 +29,12 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
 }
 
 if (!function_exists("i18n_get_translated")) {
-function i18n_get_translated($text,$i18n_split_keywords=true)
+function i18n_get_translated($text)
     {
     # For field names / values using the i18n syntax, return the version in the current user's language
     # Format is ~en:Somename~es:Someothername
     $text=trim($text);
-    
-    # For multiple keywords, parse each keyword.
-    if ($i18n_split_keywords && (strpos($text,",")!==false) && (strpos($text,"~")!==false)) {$s=explode(",",$text);$out="";for ($n=0;$n<count($s);$n++) {if ($n>0) {$out.=",";}; $out.=i18n_get_translated(trim($s[$n]));};return $out;}
-    
+        
     global $language,$defaultlanguage;
 	$asdefaultlanguage=$defaultlanguage;
 	if (!isset($asdefaultlanguage))
@@ -455,3 +452,93 @@ function seems_utf8($str) {
 	}
 	return true;
 }
+
+
+function http_get_preferred_language($strict_mode=false)
+	{
+	global $languages;
+
+	if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		return null;
+
+	$accepted_languages=preg_split('/,\s*/',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	$current_lang=false;
+	$current_quality=0;
+	$language_map = array();
+	foreach ($languages as $key => $value)
+		$language_map[strtolower($key)] = $key;
+
+	foreach ($accepted_languages as $accepted_language)
+		{
+		$res=preg_match('/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i',$accepted_language,$matches);
+		if (!$res)
+			continue;
+
+		$lang_code=explode('-',$matches[1]);
+
+		// Use specified quality, if any
+		if (isset($matches[2]))
+			$lang_quality=(float)$matches[2];
+		else
+			$lang_quality=1.0;
+
+		while (count($lang_code))
+			{
+			$short=strtolower(join('-', $lang_code));
+			if (array_key_exists($short, $language_map) && $lang_quality > $current_quality)
+				{
+				$current_lang=$language_map[$short];
+				$current_quality=$lang_quality;
+				}
+
+			if ($strict_mode)
+				break;
+
+			array_pop($lang_code);
+			}
+		}
+
+        return $current_lang;
+	}
+
+function setLanguage()
+	{
+	global $browser_language,$disable_languages,$defaultlanguage,$languages,$global_cookies,$baseurl_short;
+	$language="";
+	if (isset($_GET["language_set"]))
+	    {
+	    $language=$_GET["language_set"];
+	    if(array_key_exists($language,$languages)) 
+			{
+		    # Cannot use the general.php: rs_setcookie() here since general may not have been included.
+		    if ($global_cookies)
+		        {
+		        # Remove previously set cookies to avoid clashes
+		        setcookie("language", "", time() - 3600, $baseurl_short . "pages/", '', false, true);
+		        setcookie("language", "", time() - 3600, $baseurl_short, '', false, true);
+		        # Set new cookie
+		        setcookie("language", $language, time() + (3600*24*1000), "/", '', false, true);
+		        }
+		    else
+		        {
+		        # Set new cookie
+		        setcookie("language", $language, time() + (3600*24*1000));
+		        setcookie("language", $language, time() + (3600*24*1000), $baseurl_short . "pages/", '', false, true);
+		        }
+		    return $language;
+		    }
+		    else{$language="";}
+	    }
+	if (isset($_GET["language"]) && array_key_exists($_GET["language"],$languages)) {return $_GET["language"];}	
+	if (isset($_POST["language"]) && array_key_exists($_POST["language"],$languages)) {return $_POST["language"];}
+	if (isset($_COOKIE["language"]) && array_key_exists($_COOKIE["language"],$languages)) {return $_COOKIE["language"];}
+
+	if(!$disable_languages && $browser_language && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		{
+		$language = http_get_preferred_language();
+		if(!empty($language) && array_key_exists($language,$languages)){return $language;}
+		} 
+	if(($disable_languages || $language ==="") && isset($defaultlanguage)) {return $defaultlanguage;}
+	# Final case.
+	return 'en';
+    }

@@ -12,9 +12,7 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
   */
 
 include_once "../include/db.php";
-include_once "../include/general.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
+
 
 $suppress_headers=true;
 define ("RS_TEST_MODE",1);

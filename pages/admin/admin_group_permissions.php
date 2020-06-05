@@ -1,7 +1,7 @@
 <?php
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -140,7 +140,7 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=sql_query("select *,active from resource_type_field order by active desc,order_by");
+$fields=sql_query("select *,active from resource_type_field order by active desc,order_by", "schema");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
@@ -159,7 +159,7 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=sql_query("select * from resource_type_field order by active desc,order_by");
+$fields=sql_query("select * from resource_type_field order by active desc,order_by", "schema");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	
@@ -183,7 +183,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=sql_query("select * from resource_type order by name");
+$rtypes=sql_query("select * from resource_type order by name", "schema");
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE","%REF"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-"),$rtype["ref"]),$lang["can_see_resource_type"]), true);

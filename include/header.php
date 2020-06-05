@@ -1,5 +1,4 @@
 <?php 
-include_once("render_functions.php");
 
 hook ("preheaderoutput");
  
@@ -31,18 +30,15 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 	
 ?><!DOCTYPE html>
 <html lang="<?php echo $language ?>">	
-<?php 
-if ($include_rs_header_info)
-    {?>
-    <!--<?php hook("copyrightinsert");?>
-    ResourceSpace version <?php echo $productversion?>
 
-    For copyright and license information see documentation/licenses/resourcespace.txt
-    https://www.resourcespace.com
-    -->
-    <?php 
-    }
-?>
+<!--
+
+ ResourceSpace version <?php echo $productversion?>
+
+ For copyright and license information see /documentation/licenses/resourcespace.txt
+ https://www.resourcespace.com
+ -->
+
 <head>
 <?php if(!hook("customhtmlheader")): ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -111,12 +107,16 @@ if ($contact_sheet)
 global $enable_ckeditor;
 if ($enable_ckeditor){?>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script><?php } ?>
-<?php if (!$disable_geocoding) { ?>
-<script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-<?php if ($use_google_maps) { ?>
-<script src="https://maps.google.com/maps/api/js?<?php if(isset($google_maps_api_key)) { echo "key={$google_maps_api_key}&"; } ?>v=3"></script>
-<?php } ?>
-<?php } ?>
+<?php if (!$disable_geocoding)
+    {?>
+    <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
+    <?php
+    if ($use_google_maps)
+        {
+        echo "<script src=\"https://maps.google.com/maps/api/js?" . (isset($google_maps_api_key) ? ("key=" . $google_maps_api_key . "&") : "") . "v=3\"></script>\n";
+        } ?>
+    <?php
+    } ?>
 <?php if (!hook("ajaxcollections")) { ?>
 <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <?php } ?>
@@ -187,6 +187,7 @@ var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
 var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
+var errortext = "<?php echo $lang["error"] ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit="<?php echo $cat_tree_singlebranch?>";
 var branch_limit_field = new Array();

@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../../../include/authenticate.php"; 
 
 
@@ -21,8 +21,8 @@ if ($userinfo['email']==""){error_alert($lang['pleasesetupemailaddress']);}
 $message=str_replace("[fromaddress]",$userinfo['email'],$lang['uploadviaemail-intro']);
 $message=str_replace("[toaddress]",$checkmail_email,$message);
 
-$subjectfield=sql_value("select title value from resource_type_field where ref='$checkmail_subject_field'","");
-$bodyfield=sql_value("select title value from resource_type_field where ref='$checkmail_body_field'","");
+$subjectfield=sql_value("select title value from resource_type_field where ref='$checkmail_subject_field'","", "schema");
+$bodyfield=sql_value("select title value from resource_type_field where ref='$checkmail_body_field'","", "schema");
 
 $message=str_replace("[subjectfield]",lang_or_i18n_get_translated($subjectfield, "fieldtitle-"),$message);
 $message=str_replace("[bodyfield]",lang_or_i18n_get_translated($bodyfield, "fieldtitle-"),$message);

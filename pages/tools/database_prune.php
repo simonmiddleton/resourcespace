@@ -6,7 +6,6 @@
 #
 
 require dirname(__FILE__) . "/../../include/db.php";
-require_once dirname(__FILE__) . "/../../include/general.php";
 
 if('cli' != php_sapi_name())
     {

@@ -41,7 +41,7 @@ abstract class Provider
     abstract public function getName();
     abstract public function getAllowedDownloadEndpoint();
 
-    abstract static function checkDependencies();
+    abstract public function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
 
 

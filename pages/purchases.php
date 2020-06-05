@@ -1,10 +1,7 @@
 <?php 
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; if (checkperm("b")){exit("Permission denied");}
-include_once "../include/collections_functions.php";
-include "../include/search_functions.php";
-include "../include/resource_functions.php";
 
 $offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);

@@ -1,6 +1,5 @@
 <?php
 require_once "../include/db.php";
-require_once "../include/general.php";
 require_once "../include/authenticate.php";if (!checkperm("d")&&!(checkperm('c') && checkperm('e0'))) {exit ("Permission denied.");}
 
 include "../include/header.php";

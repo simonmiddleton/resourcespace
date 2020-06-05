@@ -5,8 +5,6 @@ if('cli' != PHP_SAPI)
     }
 
 $web_root = dirname(dirname(__DIR__));
-include_once "{$web_root}/include/search_functions.php";
-
 
 $resource = create_resource(1, 0);
 update_field($resource, 8, "Title field8");

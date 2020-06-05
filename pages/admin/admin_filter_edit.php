@@ -1,6 +1,6 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 $filterid = getval("filter",0,true);
 

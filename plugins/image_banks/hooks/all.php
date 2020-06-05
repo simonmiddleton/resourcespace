@@ -7,7 +7,7 @@ function HookImage_banksAllSearchfiltertop()
 
     foreach($providers as $provider_id => $provider)
         {
-        if(!$provider->checkDependencies())
+        if($provider->checkDependencies() !== true)
             {
             unset($providers[$provider_id]);
             }
@@ -72,7 +72,7 @@ function HookImage_banksAllSearchfiltertop()
         <div class="clearerleft"></div>
     </div>
     <?php
-    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']); toggleUnwantedElementsFromSimpleSearch(jQuery("#SearchImageBanks"));';
+    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']); search_show=true; toggleUnwantedElementsFromSimpleSearch(jQuery("#SearchImageBanks"));';
 
     return;
     }

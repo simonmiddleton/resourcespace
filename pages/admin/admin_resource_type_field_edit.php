@@ -6,7 +6,7 @@
  * @subpackage Pages_Team
  */
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; 
 
 if (!checkperm("a"))
@@ -14,7 +14,6 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-include "../../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 
@@ -71,7 +70,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 	global $lang;
  	
 	$addconstraint=true;
-	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);
+	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0, "schema");
 	?>
 		<div class="clearerleft"></div>
 	</div> <!-- end question -->
@@ -350,7 +349,7 @@ $fieldcolumns = array(
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
     'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
     'required'                 => array($lang['property-required'],'',1,1),
-    'order_by'                 => array($lang['property-order_by'],'',0,1),
+    'order_by'                 => array($lang['property-order_by'],'',0,0),
     'keywords_index'           => array($lang['property-index_this_field'],$lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
     'display_field'            => array($lang['property-display_field'],'',1,1),
     'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
@@ -365,7 +364,7 @@ $fieldcolumns = array(
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
     'help_text'                => array($lang['property-help_text'],'',2,1),
     'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
-    'tab_name'                 => array($lang['property-tab_name'],'',0,1),
+    'tab_name'                 => array($lang['property-tab_name'],'',0,0),
 
     'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
     'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
@@ -540,7 +539,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=sql_query("select ref, name from resource_type");
+$resource_types=sql_query("select ref, name from resource_type", "schema");
 foreach($resource_types as $resource_type)
 	{
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];

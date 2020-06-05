@@ -18,9 +18,6 @@ $job_data['available_sizes'] -
 $job_data['settings_id'] - 
 $job_data['include_csv_file'] - User input opting to include the CSV file in the downloaded archive
 */
-include_once __DIR__ . '/../search_functions.php';
-include_once __DIR__ . '/../resource_functions.php';
-include_once __DIR__ . '/../collections_functions.php';
 include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
 

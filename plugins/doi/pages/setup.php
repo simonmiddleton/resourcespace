@@ -14,8 +14,7 @@
 
 	// Do the include and authorization checking ritual -- don't change this section.
 	include '../../../include/db.php';
-	include_once '../../../include/general.php';
-	include '../../../include/authenticate.php';
+		include '../../../include/authenticate.php';
 	if (!checkperm('a')) {
 		exit ($lang['error-permissiondenied']);
 	}

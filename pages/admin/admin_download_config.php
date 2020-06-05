@@ -1,6 +1,5 @@
 <?php
 include '../../include/db.php';
-include_once '../../include/general.php';
 include '../../include/authenticate.php'; if(!(checkperm('a') && checkperm("v"))) { exit('Permission denied.');}
 include_once '../../include/config_functions.php';
 

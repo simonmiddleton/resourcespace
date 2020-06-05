@@ -1,6 +1,6 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 if (!$allow_password_reset) {exit("Password requests have been disabled.");} # User should never see this.
 
 if (getval("save","")!="" && enforcePostRequest(false))

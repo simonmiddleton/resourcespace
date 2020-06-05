@@ -8,9 +8,7 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     exit($lang["iiif_disabled"]);
     }
 
-include_once "../../include/general.php";
-include_once "../../include/resource_functions.php";
-include_once "../../include/search_functions.php";
+
 include_once "../../include/api_functions.php";
 $iiif_debug = getval("debug","")!="";
 
@@ -197,7 +195,7 @@ else
                         if(fmod($regionx,$preview_tile_size) != 0 || fmod($regiony,$preview_tile_size) != 0)
                             {
                             // Invalid region
-                            $errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode($preview_tile_scale_factors,",") . ".";
+                            $errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
                             iiif_error(400,$errors);
                             }                            
                         else
@@ -415,7 +413,7 @@ else
             {
             //$errorcode=404;
             $errors[] = "Missing or invalid identifier";
-            //$errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode($preview_tile_scale_factors,",") . ".";
+            //$errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
             iiif_error(404,$errors);
             }
         } // End of image API

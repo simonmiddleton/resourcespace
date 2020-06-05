@@ -4,7 +4,6 @@
 #
 
 include '../../../include/db.php';
-include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 // Specify the name of this plugin and the heading to display for the page.
@@ -60,7 +59,7 @@ $video_trackshtml="<div class='Question'>
     </th>
     </tr>";
 
-$fields=sql_query('select * from resource_type_field order by title, name');
+$fields=sql_query('select * from resource_type_field order by title, name', "schema");
 
 $inputconfig = $execution_lockout ? " disabled=true " : "";
 

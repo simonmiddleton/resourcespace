@@ -1,6 +1,6 @@
 <?php
 include "../../../include/db.php";
-include_once "../../../include/general.php";
+
 include "../../../include/authenticate.php";
 
 # Check access
@@ -8,7 +8,9 @@ if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page
 
 function rrmdir($dir)
     { 
-    // Recursively remove a folder.
+    global $homeanim_folder,$storagedir;
+    $slideshow_dir = substr($homeanim_folder,strrpos($homeanim_folder,"/")+1);
+    // Recursively remove a folder. Slideshow and system folders are retained.
     if (is_dir($dir))
         { 
         $objects = scandir($dir);
@@ -26,7 +28,10 @@ function rrmdir($dir)
                     }
                 } 
             }
-        rmdir($dir); 
+        if ($dir != $storagedir . "/system" && $dir != $storagedir . "/system/".$slideshow_dir)
+        {
+        echo "remove directory ".($dir)."</br>";
+        }
         }
     }
 

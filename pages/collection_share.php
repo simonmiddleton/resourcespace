@@ -1,11 +1,7 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
-include "../include/search_functions.php";
-include "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-include_once '../include/render_functions.php';
 
 // Fetch vars
 
@@ -21,13 +17,14 @@ $sort			= getvalescaped('sort', '', true);
 $starsearch		= getvalescaped('starsearch', '', true);
 $user_group		= getvalescaped('usergroup', '', true);
 
-# if bypass sharing page option is on, redirect to e-mail
-if ($bypass_share_screen)
-	{
-	redirect('pages/collection_email.php?ref='.$ref ) ;
-	}
 
 $collection=get_collection($ref);
+
+# if bypass sharing page option is on, redirect to e-mail
+if ($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION)
+    {
+    redirect('pages/collection_email.php?ref='.$ref ) ;
+    }
 
 # Check access
 if (!collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
@@ -45,6 +42,29 @@ $editaccess=getvalescaped("editaccess","");
 ($editaccess=="")?$editing=false:$editing=true;
 
 $editexternalurl = (getval("editexternalurl","")!="");
+$deleteaccess = (getval("deleteaccess", "") != "");
+$generateurl = (getval("generateurl", "") != "");
+$access=getvalescaped("access","");
+
+// Special collection being shared - we need to make a copy of it and disable internal access
+$share_selected_resources = false;
+if($collection["type"] == COLLECTION_TYPE_SELECTION)
+    {
+    $share_selected_resources = true;
+
+    // disable a few options
+    $hide_internal_sharing_url = true;
+    $email_sharing = false;
+    $home_dash = false;
+
+    // Prevent users from sharing the real collection. Copy it instead
+    if(($generateurl && !$editing) || $editexternalurl || $deleteaccess)
+        {
+        $ref = create_collection($userref, $collection["name"]);
+        copy_collection($collection["ref"], $ref);
+        $collection = get_collection($ref);
+        }
+    }
 	
 #Check if any resources are not active
 $collectionstates=is_collection_approved($ref);
@@ -86,7 +106,7 @@ if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuser
 
 
 # Process deletion of access keys
-if (getval("deleteaccess","")!="" && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
+if ($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
         {
         delete_collection_access_key($ref,getvalescaped("deleteaccess",""));
         }
@@ -157,7 +177,7 @@ include "../include/header.php";
 	if (!$internal_share_only && ($editing || getval("generateurl","")!=""))
 		{
 			global $ignore_collection_access;
-		if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"]==1 || $ignore_collection_access)
+        if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"]==1 || $ignore_collection_access)
 			{
 			?>
 			<p><?php echo $lang["generateurlinternal"]?></p>
@@ -166,7 +186,6 @@ include "../include/header.php";
 			<?php
 			}
 			
-		$access=getvalescaped("access","");
 		$expires=getvalescaped("expires","");
         $sharepwd = getvalescaped('sharepassword', '');
 		if ($access=="" || ($editing && !$editexternalurl))

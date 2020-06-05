@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
+
 include_once __DIR__ . "/../../include/slideshow_functions.php";
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Checking current slideshow images in homeanim folder");

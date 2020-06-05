@@ -6,10 +6,9 @@
  * @subpackage Pages_Team
  */
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";if (!checkperm("k")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
-include_once "../../include/collections_functions.php";
 
 $offset=getvalescaped("offset",0);
 $find=getvalescaped("find","");

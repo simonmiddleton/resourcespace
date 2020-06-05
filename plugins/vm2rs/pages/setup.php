@@ -10,8 +10,6 @@ if (!checkperm('a'))
     exit($lang['error-permissiondenied']);
     }
     
-include_once '../../../include/general.php';
-include '../../../include/resource_functions.php';
 
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'vm2rs';

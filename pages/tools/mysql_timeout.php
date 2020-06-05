@@ -6,7 +6,7 @@ if('cli' != PHP_SAPI)
     }
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 
 # Fetch a list of MySQL processes and kill any that exceed the timeout limit.
 

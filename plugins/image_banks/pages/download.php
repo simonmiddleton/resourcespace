@@ -2,7 +2,7 @@
 ob_start(); $nocache=true;
 $rs_root = dirname(dirname(dirname(__DIR__)));
 include_once "{$rs_root}/include/db.php";
-include_once "{$rs_root}/include/general.php";
+
 include_once "{$rs_root}/include/authenticate.php";
 ob_end_clean();
 

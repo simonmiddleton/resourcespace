@@ -6,7 +6,7 @@ $results_per_page = 20;
 if ($same_page_callback)
 	{
 	include "../../include/db.php";
-	include_once "../../include/general.php";
+	
 	include "../../include/authenticate.php";
 	}
 

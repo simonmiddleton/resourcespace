@@ -1,13 +1,12 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include '../../include/authenticate.php';
 if(!checkperm('a'))
     {
     header('HTTP/1.1 401 Unauthorized');
     exit($lang['error-permissiondenied']);
     }
-include "../../include/resource_functions.php";
 
 # This file converts existing filestore to the filestore separation
 # method or restore separated filestore to the default. The config

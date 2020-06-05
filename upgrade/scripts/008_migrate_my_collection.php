@@ -1,7 +1,7 @@
 <?php
 
 include_once __DIR__ . "/../../include/db.php";
-include_once __DIR__ . "/../../include/general.php";
+
 
 // Rename existing 'My collection' collections
 sql_query("UPDATE collection SET `name` = 'Default Collection' WHERE TRIM(`name`) = 'My Collection' AND `cant_delete`=1");

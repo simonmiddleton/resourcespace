@@ -1,6 +1,6 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
-include_once dirname(__FILE__)."/../../../include/general.php";
+
 include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
 global $baseurl;
 
@@ -24,6 +24,14 @@ if ($delete!="" && enforcePostRequest(false))
 
 include dirname(__FILE__)."/../../../include/header.php";
 
+$url_params = array(
+    'search'     => getval('search',''),
+    'order_by'   => getval('order_by',''),
+    'collection' => getval('collection',''),
+    'offset'     => getval('offset',0),
+    'restypes'   => getval('restypes',''),
+    'archive'    => getval('archive','')
+);
 ?>
 <form method=post id="licenselist" action="<?php echo $baseurl_short ?>plugins/licensemanager/pages/list.php" onSubmit="CentralSpacePost(this);return false;">
 <?php generateFormToken("licenselist"); ?>
@@ -75,6 +83,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
     $license=$licenses[$n];
     $license_usage_mediums = trim_array(explode(", ", $license["license_usage"]));
     $translated_mediums = "";
+    $url_params['ref'] = $license["ref"];
 	?>
 	<tr>
     <td>
@@ -94,8 +103,8 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
 		
 			<td><div class="ListTools">
-			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"] ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/delete.php?ref=<?php echo $license["ref"] ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
 			</div></td>
 	</tr>
 	<?php

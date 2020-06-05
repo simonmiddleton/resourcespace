@@ -6,9 +6,6 @@ if(isset($_POST["submit"]))
     }
 
 include "../../include/db.php";
-include_once "../../include/general.php";
-include_once "../../include/resource_functions.php";
-include_once "../../include/search_functions.php";
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 

@@ -8,9 +8,8 @@
 #
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include "../../include/resource_functions.php";
 include "../../include/image_processing.php";
 
 $sql="";

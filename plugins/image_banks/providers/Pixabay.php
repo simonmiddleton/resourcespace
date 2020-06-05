@@ -29,9 +29,16 @@ class Pixabay extends Provider
         }
 
 
-    static function checkDependencies()
+    public function checkDependencies()
         {
-        return function_exists('curl_version');
+            if (!function_exists('curl_version'))
+            {
+            return $this->lang["image_banks_pixabay_error_detail_curl"];
+            }
+            else
+            {
+            return true;
+            }
         }
 
     public function buildConfigPageDefinition(array $page_def)

@@ -7,9 +7,9 @@ if('cli' != PHP_SAPI)
 
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
-include_once "{$webroot}/include/general.php";
+
 include_once "{$webroot}/include/log_functions.php";
-include_once "{$webroot}/include/resource_functions.php";
+
 
 // Script options (if required)
 $cli_short_options = '';

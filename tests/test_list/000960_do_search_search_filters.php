@@ -4,7 +4,6 @@
 $saved_search_filter_nodes = $search_filter_nodes;
 $search_filter_nodes = false;
 
-include_once(__DIR__ . '/../../include/search_functions.php');
 
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 

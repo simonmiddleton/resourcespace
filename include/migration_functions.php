@@ -111,7 +111,7 @@ function populate_resource_nodes($startingref=0)
 	if($count==0)
 		{			
 		// Node table is not yet populated. Need to populate this first
-		$metadatafields=sql_query("select * from resource_type_field");
+		$metadatafields=sql_query("select * from resource_type_field", "schema");
 		foreach($metadatafields as $metadatafield)
 			{
 			migrate_resource_type_field_check($metadatafield);

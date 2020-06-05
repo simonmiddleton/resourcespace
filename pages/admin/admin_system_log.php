@@ -1,6 +1,6 @@
 <?php
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 if (!checkperm_user_edit($userref))
@@ -44,7 +44,7 @@ $no_reference_data_tables = sql_array('
           FROM activity_log
          WHERE remote_table IS NOT NULL AND remote_table <> ""
     ',
-    array());
+    "");
 
 if(!checkperm('a') || $requesteduser == $actasuser && $requesteduser != 0)
     {

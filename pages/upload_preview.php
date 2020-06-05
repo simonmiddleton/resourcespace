@@ -1,9 +1,8 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php"; if ($disable_upload_preview || checkperm("F*")) {exit ("Permission denied.");}
 include "../include/image_processing.php";
-include "../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $status="";
@@ -14,7 +13,14 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource)) {
 		$error=$lang['error-permissiondenied'];
 		error_alert($error);
 		exit();
-		}
+        }
+        
+if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resource["lock_user"]);
+    http_response_code(403);
+    exit($error);
+    }
 
 # fetch the current search 
 $search=getvalescaped("search","");
@@ -106,7 +112,7 @@ function check(filename) {
 <input name="save" type="submit" onclick="if (!check(this.form.userfile.value)){document.getElementById('invalid').style.display='block';return false;}else {document.getElementById('invalid').style.display='none';}" value="&nbsp;&nbsp;<?php echo $lang["upload_file"]?>&nbsp;&nbsp;" />
 </div>
 
-<p><a onClick="return CentralSpaceLoad(this,true);" href="edit.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditresource"]?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="edit.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a></p>
 
 </form>
 </div>

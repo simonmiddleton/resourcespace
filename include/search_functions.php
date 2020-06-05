@@ -55,7 +55,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=sql_query("SELECT *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by");
+    $fields=sql_query("SELECT *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", "schema");
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -495,7 +495,7 @@ function refine_searchstring($search)
     $keywords=split_keywords($search, false, false, false, false, true);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
-    $dynamic_keyword_fields=sql_array("SELECT name value FROM resource_type_field where type=9");
+    $dynamic_keyword_fields=sql_array("SELECT name value FROM resource_type_field where type=9", "schema");
     
     $fixedkeywords=array();
     foreach ($keywords as $keyword)
@@ -778,7 +778,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false)
+function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -987,8 +987,14 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     # append ref filter - never return the batch upload template (negative refs)
     if ($sql_filter!="") {$sql_filter.=" AND ";}
     $sql_filter.="r.ref>0";
-    
-    
+
+    // Only users with v perm can search for resources with a specific access
+    if(checkperm("v") && !is_null($access) && is_numeric($access) && !checkperm("ea{$access}"))
+        {
+        $sql_filter .= (trim($sql_filter) != "" ? " AND " : "");
+        $sql_filter .= "r.access = {$access}";
+        }
+
     // Append filter if only searching for editable resources
     // ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
     if($editable_only)
@@ -1195,7 +1201,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,12)=="!nodownloads") 
         {
         if ($orig_order=="relevance") {$order_by="ref DESC";}
-        $sql=$sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY ref ORDER BY $order_by" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
     
@@ -1495,7 +1501,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,8)=="!hasdata") 
         {
         $fieldref=intval(trim(substr($search,8)));
-        $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);
+        $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0, "schema");
 
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {
@@ -1680,7 +1686,7 @@ function rebuild_specific_field_search_from_node(array $node)
         return '';
         }
 
-    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field WHERE ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}");
+    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field WHERE ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}", "schema");
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
@@ -1832,3 +1838,838 @@ function get_filter_sql($filterid)
         return $filter_add;
         }
     }
+
+
+if (!function_exists("split_keywords")){
+    function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
+        {
+        # Takes $search and returns an array of individual keywords.
+        global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
+    
+        if ($index && $is_date)
+            {
+            # Date handling... index a little differently to support various levels of date matching (Year, Year+Month, Year+Month+Day).
+            $s=explode("-",$search);
+            if (count($s)>=3)
+                {
+                return (array($s[0],$s[0] . "-" . $s[1],$search));
+                }
+            else if (is_array($search))
+                {
+                return $search;
+                }
+            else
+                {
+                return array($search);
+                }
+            }
+            
+        # Remove any real / unescaped lf/cr
+        $search=str_replace("\r"," ",$search);
+        $search=str_replace("\n"," ",$search);
+        $search=str_replace("\\r"," ",$search);
+        $search=str_replace("\\n"," ",$search);
+        
+        if($is_html || (substr($search,0,1) == "<" && substr($search,-1,1) == ">"))
+            {
+            // String can't be in encoded format at this point or string won't be indexed correctly.
+            $search=html_entity_decode($search);
+            if($index)
+                {
+                // Clean up html for indexing
+                // Allow indexing of anchor text
+                $allowed_tags = array_merge(array("a"),$permitted_html_tags);
+                $allowed_attributes = array_merge(array("href"),$permitted_html_attributes);
+                $search=strip_tags_and_attributes($search,$allowed_tags,$allowed_attributes);
+                
+                // Get rid of the actual html tags and attribute ids to prevent indexing these
+                foreach ($allowed_tags as $allowed_tag)
+                    {
+                    $search=str_replace(array("<" . $allowed_tag . ">","<" . $allowed_tag,"</" . $allowed_tag)," ",$search);
+                    }
+                foreach ($allowed_attributes as $allowed_attribute)
+                    {
+                    $search=str_replace($allowed_attribute . "="," ",$search);
+                    }
+                // Remove any left over tag parts
+                $search=str_replace(array(">", "<","="), " ",$search);
+                }
+            }
+    
+        $ns=trim_spaces($search);
+    
+        if ($index==false && strpos($ns,":")!==false) # special 'constructed' query type
+            {   
+            if($keepquotes)
+                {
+                preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+                $return=trim_array($matches[0],$config_trimchars . ",");
+                }
+            elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
+                {
+                $return=explode(",",$ns);
+                }
+            else
+                {
+                $ns=cleanse_string($ns,false,!$index,$is_html);
+                $return=explode(" ",$ns);
+                }
+            // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
+            return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+            }
+        else
+            {
+            # split using spaces and similar chars (according to configured whitespace characters)
+            if(!$index && $keepquotes && strpos($ns,"\"")!==false)
+                {
+                preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+                
+                $splits=$matches[0];
+                $ns=array();
+                foreach ($splits as $split)
+                    {
+                    if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
+                        {
+                        $split=explode(",",$split);
+                        $ns = array_merge($ns,$split);
+                        }
+                    else
+                        {
+                        $ns[] = $split;   
+                        }
+                    }
+                
+            
+                }
+            else
+                { 
+                # split using spaces and similar chars (according to configured whitespace characters)
+                $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
+                }
+            
+            
+            $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
+            
+    //print_r($ns) . "<br /><br />";
+            if ($index && $partial_index) {
+                return add_partial_index($ns);
+            }
+            return $ns;
+            }
+    
+        }
+    }
+
+if (!function_exists("cleanse_string")){
+function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_html=false)
+        {
+        # Removes characters from a string prior to keyword splitting, for example full stops
+        # Also makes the string lower case ready for indexing.
+        global $config_separators;
+        $separators=$config_separators;
+
+        // Replace some HTML entities with empty space
+        // Most of them should already be in $config_separators
+        // but others, like &shy; don't have an actual character that we can copy and paste
+        // to $config_separators
+        $string = htmlentities($string, null, 'UTF-8');
+        $string = str_replace('&nbsp;', ' ', $string);
+        $string = str_replace('&shy;', ' ', $string);
+        $string = str_replace('&lsquo;', ' ', $string);
+        $string = str_replace('&rsquo;', ' ', $string);
+        $string = str_replace('&ldquo;', ' ', $string);
+        $string = str_replace('&rdquo;', ' ', $string);
+        $string = str_replace('&ndash;', ' ', $string);
+
+        // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
+        $string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
+        
+        if ($preserve_hyphen)
+            {
+            # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
+            if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
+                {
+                    $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
+                }
+            }
+        if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false) 
+                {
+                // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
+                $separators=array_diff($separators,array("!")); 
+                }
+                
+        if ($preserve_separators)
+                {
+                return mb_strtolower(trim_spaces(str_replace($separators," ",$string)),'UTF-8');
+                }
+        else
+                {
+                # Also strip out the separators used when specifying multiple field/keyword pairs (comma and colon)
+                $s=$separators;
+                $s[]=",";
+                $s[]=":";
+                return mb_strtolower(trim_spaces(str_replace($s," ",$string)),'UTF-8');
+                }
+        }
+}
+
+if (!function_exists("resolve_keyword")){
+function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
+    {
+    debug_function_call("resolve_keyword", func_get_args());
+
+    global $quoted_string, $stemming;
+    $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+            
+    if(!$quoted_string && $normalize)
+        {
+        $keyword=normalize_keyword($keyword);       
+        debug("resolving normalized keyword " . $keyword  . ".");
+        }
+    
+    # Stemming support. If enabled and a stemmer is available for the current language, index the stem of the keyword not the keyword itself.
+    # This means plural/singular (and other) forms of a word are treated as equivalents.
+    
+    if ($stem && $stemming && function_exists("GetStem"))
+        {
+        $keyword=GetStem($keyword);
+        }
+
+    # Returns the keyword reference for $keyword, or false if no such keyword exists.
+    $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
+    if ($return===false && $create)
+        {
+        # Create a new keyword.
+        debug("resolve_keyword: Creating new keyword for " . $keyword);
+        sql_query("insert into keyword (keyword,soundex,hit_count) values ('" . escape_check($keyword) . "',left('".soundex(escape_check($keyword))."',10),0)");
+        $return=sql_insert_id();
+        }
+    return $return;
+    }
+}
+
+function add_partial_index($keywords)
+    {
+    # For each keywords in the supplied keywords list add all possible infixes and return the combined array.
+    # This therefore returns all keywords that need indexing for the given string.
+    # Only for fields with 'partial_index' enabled.
+    $return=array();
+    $position=0;
+    $x=0;
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        $keyword=trim($keywords[$n]);
+        $return[$x]['keyword']=$keyword;
+        $return[$x]['position']=$position;
+        $x++;
+        if (strpos($keyword," ")===false) # Do not do this for keywords containing spaces as these have already been broken to individual words using the code above.
+            {
+            global $partial_index_min_word_length;
+            # For each appropriate infix length
+            for ($m=$partial_index_min_word_length;$m<strlen($keyword);$m++)
+                {
+                # For each position an infix of this length can exist in the string
+                for ($o=0;$o<=strlen($keyword)-$m;$o++)
+                    {
+                    $infix=mb_substr($keyword,$o,$m);
+                    $return[$x]['keyword']=$infix;
+                    $return[$x]['position']=$position; // infix has same position as root
+                    $x++;
+                    }
+                }
+            } # End of no-spaces condition
+        $position++; // end of root keyword
+        } # End of partial indexing keywords loop
+    return $return;
+    }
+
+
+if (!function_exists("highlightkeywords")){
+    function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
+        {
+        # do not highlight if the field is not indexed, so it is clearer where results came from.   
+        if ($keywords_index!=1){return $text;}
+    
+        # Highlight searched keywords in $text
+        # Optional - depends on $highlightkeywords being set in config.php.
+        global $highlightkeywords;
+        # Situations where we do not need to do this.
+        if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
+    
+    
+            # Generate the cache of search keywords (no longer global so it can test against particular fields.
+            # a search is a small array so I don't think there is much to lose by processing it.
+            $hlkeycache=array();
+            $wildcards_found=false;
+            $s=split_keywords($search);
+            for ($n=0;$n<count($s);$n++)
+                    {
+                    if (strpos($s[$n],":")!==false) {
+                            $c=explode(":",$s[$n]);
+                            # only add field specific keywords
+                            if($field_name!="" && $c[0]==$field_name){
+                                    $hlkeycache[]=$c[1];            
+                            }   
+                    }
+                    # else add general keywords
+                    else {
+                            $keyword=$s[$n];
+                
+                            global $stemming;
+                            if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
+                                {
+                                $keyword=GetStem($keyword);
+                                }
+                            
+                            if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
+                            $hlkeycache[]=$keyword;
+                    }   
+                    }
+            
+        # Parse and replace.
+        return str_highlight($text, $hlkeycache, $str_highlight_options);
+        }
+    }
+    # These lines go with str_highlight (next).
+    define('STR_HIGHLIGHT_SIMPLE', 1);
+    define('STR_HIGHLIGHT_WHOLEWD', 2);
+    define('STR_HIGHLIGHT_CASESENS', 4);
+    define('STR_HIGHLIGHT_STRIPLINKS', 8);
+    
+    function str_highlight($text, $needle, $options = null, $highlight = null)
+        {
+        /*
+        Sometimes the text can contain HTML entities and can break the hilghlighting feature
+        Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
+        */
+        $text = htmlspecialchars_decode($text);
+    
+        // If text contains HTML tags then ignore them
+        if ($text != strip_tags($text))
+            {
+            $options = $options & STR_HIGHLIGHT_STRIPLINKS;
+            }
+    
+        # Thanks to Aidan Lister <aidan@php.net>
+        # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
+        # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
+        # http://aidanlister.com/repos/license/
+    
+        $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
+        $text=str_replace("#zwspace;","♣",$text);
+        
+        // Default highlighting
+        if ($highlight === null) {
+            $highlight = '||<||\1||>||';
+        }
+        
+        // Select pattern to use
+        if ($options & STR_HIGHLIGHT_SIMPLE) {
+            $pattern = '#(%s)#';
+            $sl_pattern = '#(%s)#';
+        } else {
+            $pattern = '#(?!<.*?)(%s)(?![^<>]*?>)#';
+            $sl_pattern = '#<a\s(?:.*?)>(%s)</a>#';
+        }
+        
+        // Case sensitivity
+        if (!($options & STR_HIGHLIGHT_CASESENS)) {
+            $pattern .= 'i';
+            $sl_pattern .= 'i';
+        }
+        
+        $needle = (array) $needle;
+    
+        usort($needle, "sorthighlights");
+    
+        foreach ($needle as $needle_s) {
+            if (strlen($needle_s) > 0) {
+                $needle_s = preg_quote($needle_s);
+                $needle_s = str_replace("#","\\#",$needle_s);
+            
+                // Escape needle with optional whole word check
+                if ($options & STR_HIGHLIGHT_WHOLEWD) {
+                    $needle_s = '\b' . $needle_s . '\b';
+                }
+            
+                // Strip links
+                if ($options & STR_HIGHLIGHT_STRIPLINKS) {
+                    $sl_regex = sprintf($sl_pattern, $needle_s);
+                    $text = preg_replace($sl_regex, '\1', $text);
+                }
+            
+                $regex = sprintf($pattern, $needle_s);
+                $text = preg_replace($regex, $highlight, $text);
+            }
+        }
+        $text=str_replace("♠","_",$text);
+        $text=str_replace("♣","#zwspace;",$text);
+    
+        # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
+        $text=str_replace("||<||",'<span class="highlight">',$text);
+        $text=str_replace("||>||",'</span>',$text);
+    
+        return $text;
+        }
+        
+function sorthighlights($a, $b)
+    {
+    # fixes an odd problem for str_highlight related to the order of keywords
+    if (strlen($a) < strlen($b)) {
+        return 0;
+        }
+    return ($a < $b) ? -1 : 1;
+    }
+
+
+function get_suggested_keywords($search,$ref="")
+    {
+    # For the given partial word, suggest complete existing keywords.
+    global $autocomplete_search_items,$autocomplete_search_min_hitcount;
+    
+    # Fetch a list of fields that are not available to the user - these must be omitted from the search.
+    $hidden_indexed_fields=get_hidden_indexed_fields();
+    
+    $restriction_clause_free = "";
+    $restriction_clause_node = ""; 
+    
+    if (count($hidden_indexed_fields) > 0)
+        {
+        $restriction_clause_free .= " AND rk.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
+        $restriction_clause_node .= " AND n.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";                                 
+        }
+    
+    if ((string)(int)$ref == $ref)
+        {
+        $restriction_clause_free .= " AND rk.resource_type_field = '" . $ref . "'";
+        $restriction_clause_node .= " AND n.resource_type_field = '" . $ref . "'";                                        
+        }    
+    
+    return sql_array("SELECT ak.keyword value
+        FROM
+            (
+            SELECT k.keyword, k.hit_count
+            FROM keyword k
+            JOIN resource_keyword rk ON rk.keyword=k.ref
+            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_free . "
+            AND k.hit_count >= '$autocomplete_search_min_hitcount'
+         
+            UNION
+         
+            SELECT k.keyword, k.hit_count
+            FROM keyword k
+            JOIN node_keyword nk ON nk.keyword=k.ref
+            JOIN node n ON n.ref=nk.node
+            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_node . "
+            ) ak
+        GROUP BY ak.keyword, ak.hit_count 
+        ORDER BY ak.hit_count DESC LIMIT " . $autocomplete_search_items
+        );
+    }
+
+
+function get_related_keywords($keyref)
+    {
+    debug_function_call("get_related_keywords", func_get_args());
+
+    # For a given keyword reference returns the related keywords
+    # Also reverses the process, returning keywords for matching related words
+    # and for matching related words, also returns other words related to the same keyword.
+    global $keyword_relationships_one_way;
+    global $related_keywords_cache;
+    if (isset($related_keywords_cache[$keyref])){
+        return $related_keywords_cache[$keyref];
+    } else {
+        if ($keyword_relationships_one_way){
+            $related_keywords_cache[$keyref]=sql_array("select related value from keyword_related where keyword='$keyref'");
+            return $related_keywords_cache[$keyref];
+            }
+        else {
+            $related_keywords_cache[$keyref]=sql_array("select keyword value from keyword_related where related='$keyref' union select related value from keyword_related where (keyword='$keyref' or keyword in (select keyword value from keyword_related where related='$keyref')) and related<>'$keyref'");
+            return $related_keywords_cache[$keyref];
+            }
+        }
+    }
+
+    
+    
+function get_grouped_related_keywords($find="",$specific="")
+    {
+    debug_function_call("get_grouped_related_keywords", func_get_args());
+
+    # Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
+    $sql="";
+    if ($find!="") {$sql="where k1.keyword='" . escape_check($find) . "' or k2.keyword='" . escape_check($find) . "'";}
+    if ($specific!="") {$sql="where k1.keyword='" . escape_check($specific) . "'";}
+    
+    return sql_query("
+        select k1.keyword,group_concat(k2.keyword order by k2.keyword separator ', ') related from keyword_related kr
+            join keyword k1 on kr.keyword=k1.ref
+            join keyword k2 on kr.related=k2.ref
+        $sql
+        group by k1.keyword order by k1.keyword
+        ");
+    }
+
+function save_related_keywords($keyword,$related)
+    {
+    debug_function_call("save_related_keywords", func_get_args());
+
+    $keyref = resolve_keyword($keyword, true, false, false);
+    $s=trim_array(explode(",",$related));
+
+    sql_query("DELETE FROM keyword_related WHERE keyword = '$keyref'");
+    if (trim($related)!="")
+        {
+        for ($n=0;$n<count($s);$n++)
+            {
+            sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true,false,false) . "')");
+            }
+        }
+    return true;
+    }
+
+
+function get_simple_search_fields()
+    {
+    global $FIXED_LIST_FIELD_TYPES, $country_search;
+    # Returns a list of fields suitable for the simple search box.
+    # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
+   
+    # First get all the fields
+    $allfields=get_resource_type_fields("","resource_type,order_by");
+    
+    # Applies field permissions and translates field titles in the newly created array.
+    $return = array();
+    for ($n = 0;$n<count($allfields);$n++)
+        {
+        if (
+            # Check if for simple_search
+            # Also include the country field even if not selected
+            # This is to provide compatibility for older systems on which the simple search box was not configurable
+            # and had a simpler 'country search' option.
+            ($allfields[$n]["simple_search"] == 1 || (isset($country_search) && $country_search && $allfields[$n]["ref"] == 3))         
+        &&
+            # Must be either indexed or a fixed list type
+            ($allfields[$n]["keywords_index"] == 1 || in_array($allfields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
+        &&    
+            metadata_field_view_access($allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
+            {
+            $allfields[$n]["title"] = lang_or_i18n_get_translated($allfields[$n]["title"], "fieldtitle-");            
+            $return[] = $allfields[$n];
+            }
+        }
+    return $return;
+    }
+
+
+function get_fields_for_search_display($field_refs)
+    {
+    # Returns a list of fields/properties with refs matching the supplied field refs, for search display setup
+    # This returns fewer columns and doesn't require that the fields be indexed, as in this case it's only used to judge whether the field should be highlighted.
+    # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
+
+    if (!is_array($field_refs)) {
+        print_r($field_refs);
+        exit(" passed to getfields() is not an array. ");
+    }
+
+    # Executes query.
+    $fields = sql_query("select *, ref, name, type, title, keywords_index, partial_index, value_filter from resource_type_field where ref in ('" . join("','",$field_refs) . "')","schema");
+
+    # Applies field permissions and translates field titles in the newly created array.
+    $return = array();
+    for ($n = 0;$n<count($fields);$n++)
+        {
+        if (metadata_field_view_access($fields[$n]["ref"]))
+            {
+            $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
+            $return[] = $fields[$n];
+            }
+        }
+    return $return;
+    }
+
+
+/**
+* Get all defined filters (currently only used for search)
+* 
+* @param string $order  column to order by  
+* @param string $sort   sort order ("ASC" or "DESC")
+* @param string $find   text to search for in filter
+* 
+* @return array
+*/        
+function get_filters($order = "ref", $sort = "ASC", $find = "")
+    {
+    $validorder = array("ref","name");
+    if(!in_array($order,$validorder))
+        {
+        $order = "ref";
+        }
+        
+    if($sort != "ASC")
+        {
+        $sort = "DESC";
+        }
+        
+    $condition = "";
+    $join = "";
+    
+    if(trim($find) != "")
+        {
+        $join = " LEFT JOIN filter_rule_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
+        $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
+        }
+        
+    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}";
+    $filters = sql_query($sql);
+    return $filters;
+    }
+
+
+/**
+* Get filter summary details
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/           
+function get_filter($filterid)
+    {
+    // Codes for filter 'condition' column
+    // 1 = ALL must apply
+    // 2 = NONE must apply
+    // 3 = ANY can apply
+    
+    if(!is_numeric($filterid) || $filterid < 1)
+            {
+            return false;    
+            }
+            
+    $filter  = sql_query("SELECT ref, name, filter_condition FROM filter f WHERE ref={$filterid}"); 
+    
+    if(count($filter) > 0)
+        {
+        return $filter[0];
+        }
+        
+    return false;
+    }
+
+/**
+* Get filter rules for use in search
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/       
+function get_filter_rules($filterid)
+    {
+    $filter_rule_nodes  = sql_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "'"); 
+        
+    // Convert results into useful array    
+    $rules = array();
+    foreach($filter_rule_nodes as $filter_rule_node)
+        {
+        $rule = $filter_rule_node["rule"];
+        if(!isset($rules[$filter_rule_node["rule"]]))
+            {
+            $rules[$rule] = array();
+            $rules[$rule]["nodes_on"] = array();
+            $rules[$rule]["nodes_off"] = array();
+            }
+        if($filter_rule_node["node_condition"] == 1)
+            {
+            $rules[$rule]["nodes_on"][] = $filter_rule_node["node"];
+            }
+        else
+            {
+            $rules[$rule]["nodes_off"][] = $filter_rule_node["node"];
+            }
+        }
+        
+    return $rules;
+    }
+    
+/**
+* Get filter rule
+* 
+* @param int $ruleid  - ID of filter rule
+* 
+* @return array
+*/       
+function get_filter_rule($ruleid)
+    {    
+    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
+    if(count($rule_data) > 0)
+        {
+        return $rule_data[0];
+        }
+    return false;
+    }
+
+
+/**
+* Save filter, will return existing filter ID if text matches already migrated
+* 
+* @param int $filter            - ID of filter 
+* @param int $filter_name       - Name of filter 
+* @param int $filter_condition  - One of RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY
+* 
+* @return boolean | integer     - false, or ID of filter
+*/        
+function save_filter($filter,$filter_name,$filter_condition)
+    {
+    if(!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY)))
+        {
+        return false;
+        }
+        
+    if($filter != 0)
+        {    
+        if(!is_numeric($filter))
+            {
+            return false;    
+            }
+        sql_query("UPDATE filter SET name='" . escape_check($filter_name). "', filter_condition='{$filter_condition}' WHERE ref = '" . escape_check($filter)  . "'");
+        }
+    else
+        {
+        $newfilter = sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filter_name). "','{$filter_condition}')");
+        $newfilter = sql_insert_id();
+        return $newfilter;
+        }
+
+    return $filter;
+    }
+    
+/**
+* Save filter rule, will return existing rule ID if text matches already migrated
+* 
+* @param int $filter_rule       - ID of filter_rule
+* @param int $filterid          - ID of associated filter 
+* @param array|string $ruledata   - Details of associated rule nodes  (as JSON if submitted from rule edit page)
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/     
+function save_filter_rule($filter_rule, $filterid, $rule_data)
+    {
+    if(!is_array($rule_data))
+        {
+        $rule_data = json_decode($rule_data);
+        }
+        
+    if($filter_rule != "new")
+        {    
+        if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+        sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
+        }
+    else
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        $filter_rule = sql_insert_id();
+        }    
+        
+    if(count($rule_data) > 0)
+        {
+        $nodeinsert = array();
+        for($n=0;$n<count($rule_data);$n++)
+            {
+            $condition = $rule_data[$n][0];
+            for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
+                {
+                $nodeid = $rule_data[$n][1][$rd];
+                $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
+                }
+            }
+        $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
+        sql_query($sql);
+        }
+    return $filter_rule;
+    }
+
+/**
+* Delete specified filter
+* 
+* @param int $filter       - ID of filter
+* 
+* @return boolean | array of users/groups using filter
+*/       
+function delete_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    // Check for existing use of filter
+    $checkgroups = sql_array("SELECT ref value FROM usergroup WHERE search_filter_id='" . $filter . "'","");
+    $checkusers  = sql_array("SELECT ref value FROM user WHERE search_filter_o_id='" . $filter . "'","");
+    
+    if(count($checkgroups)>0 || count($checkusers)>0)
+        {
+        return array("groups"=>$checkgroups, "users"=>$checkusers);
+        }
+    
+    // Delete and cleanup any unused 
+    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
+    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Delete specified filter_rule
+* 
+* @param int $filter       - ID of filter_rule
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/  
+function delete_filter_rule($filter_rule)
+    {
+    if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+            
+    // Delete and cleanup any unused nodes
+    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Copy specified filter_rule
+* 
+* @param int $filter            - ID of filter_rule to copy
+* 
+* @return boolean | integer     - false, or ID of new filter
+*/ 
+function copy_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter}"); 
+    $newfilter = sql_insert_id();
+    $rules = sql_array("SELECT ref value from filter_rule  WHERE filter={$filter}"); 
+    foreach($rules as $rule)
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
+        $newrule = sql_insert_id();
+        sql_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT '{$newrule}', node_condition, node FROM filter_rule_node WHERE filter_rule='{$rule}'");
+        }
+
+    return $newfilter;
+    }
+    

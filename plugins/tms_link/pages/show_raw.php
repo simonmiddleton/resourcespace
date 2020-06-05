@@ -2,8 +2,8 @@
 include '../../../include/db.php';
 include "../../../include/authenticate.php";
 if(!checkperm("a")){exit ("Access denied"); }
-include_once "../../../include/general.php";
-include_once "../../../include/resource_functions.php";
+
+
 include_once "../include/tms_link_functions.php";
 
 

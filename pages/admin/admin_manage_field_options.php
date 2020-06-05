@@ -1,6 +1,5 @@
 <?php
 include '../../include/db.php';
-include_once '../../include/general.php';
 include '../../include/authenticate.php';
 
 if(!checkperm('k'))
@@ -9,9 +8,7 @@ if(!checkperm('k'))
     die('Permission denied!');
     }
 
-include_once '../../include/resource_functions.php';
 include_once '../../include/node_functions.php';
-include_once '../../include/render_functions.php';
 
 
 // Initialize

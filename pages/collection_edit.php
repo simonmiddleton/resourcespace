@@ -1,12 +1,9 @@
 <?php
 include "../include/db.php";
-include_once "../include/general.php";
+
 include "../include/authenticate.php";
 if(checkperm("b"))
     {exit ("Permission denied.");}
-include_once "../include/collections_functions.php";
-include "../include/resource_functions.php";
-include "../include/search_functions.php"; 
 
 $ref=getvalescaped("ref","",true);
 $copycollectionremoveall=getvalescaped("copycollectionremoveall","");
@@ -31,6 +28,12 @@ if ($collection===false)
 	error_alert($error);
 	exit();
 	}
+
+if($collection["type"] != COLLECTION_TYPE_STANDARD)
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 401));
+    }
+
 $resources=do_search("!collection".$ref);
 $colcount=count($resources);
 

@@ -1,10 +1,10 @@
 <?php
 
 # Filters the dropdown options on the basic search page.
-# The output from this page is Javascript.
+#ï¿½The output from this page is Javascript.
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php";
 
 $filter=getvalescaped("filter","");
@@ -19,7 +19,7 @@ for ($n=0;$n<count($s);$n++)
 	if (count($e)==2)
 		{
 		# Fetch field details
-		$field[$n]=sql_query("select * from resource_type_field where name='" . escape_check($e[0]) . "'");
+		$field[$n]=sql_query("select * from resource_type_field where name='" . escape_check($e[0]) . "'", "schema");
 		if (count($field[$n])==0) {exit();}
 		$field[$n]=$field[$n][0];
 		

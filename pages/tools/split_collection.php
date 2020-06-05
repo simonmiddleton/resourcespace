@@ -3,9 +3,8 @@
 # Split a collection into multiple collections
 
 include "../../include/db.php";
-include_once "../../include/general.php";
+
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include_once "../../include/collections_functions.php";
 
 $collectionid=getvalescaped("col", false);
 $numcollections=getvalescaped("num", 2, true);

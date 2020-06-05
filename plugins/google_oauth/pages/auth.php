@@ -1,7 +1,5 @@
 <?php
 include dirname(__DIR__) . '/../../include/db.php';
-include_once dirname(__DIR__) . '/../../include/general.php';
-include_once dirname(__DIR__) . '/../../include/collections_functions.php';
 include_once dirname(__DIR__) . '/../../include/login_functions.php';
 
 $client = new Google_Client();
