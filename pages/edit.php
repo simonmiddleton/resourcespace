@@ -974,12 +974,19 @@ function EditNav() # Create a function so this can be repeated at the end of the
   
 function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
-    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave, $is_template, $show_required_field_label, $modal;
+    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave, 
+           $is_template, $show_required_field_label, $modal, $USER_SELECTION_COLLECTION, $editsearch, $collection;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
         {
         $save_btn_value = $lang['create'];
+        }
+
+    $confirm_text = $lang["confirmeditall"];
+    if($editsearch && $collection == $USER_SELECTION_COLLECTION)
+        {
+        $confirm_text = $lang["confirm_edit_all_selected_resources"];
         }
     ?>
     <div class="QuestionSubmit <?php echo $extraclass ?>">
@@ -989,7 +996,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
+        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
                name="save"
                class="editsave"
                type="submit"
