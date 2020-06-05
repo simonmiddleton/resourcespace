@@ -10,7 +10,7 @@
 * Joins to usergroup table as g  which can be used in criteria
 *
 * @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
-* @param 	boolan	$getuserdata			default true. Return user data as required by authenticate.php
+* @param 	boolean	$getuserdata			default true. Return user data as required by authenticate.php
 * 
 * @return boolean|array
 */

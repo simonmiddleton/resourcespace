@@ -187,6 +187,41 @@ function get_collection_resources($collection)
     return sql_array("select resource value from collection_resource where collection='" . escape_check($collection) . "' order by sortorder asc, date_added desc, resource desc"); 
     }
 
+/**
+* Get all resources in a collection without checking permissions or filtering by workflow states.
+* This is useful when you want to get all the resources for further subprocessing (@see render_selected_collection_actions() 
+* as an example)
+* 
+* @param integer $ref Collection ID
+* 
+* @return array
+*/
+function get_collection_resources_with_data($ref)
+    {
+    if(!is_numeric($ref))
+        {
+        return array();
+        }
+
+    $ref = escape_check($ref);
+
+    $result = sql_query("
+            SELECT r.*
+              FROM collection_resource AS cr
+        RIGHT JOIN resource AS r ON cr.resource = r.ref
+             WHERE cr.collection = '{$ref}'
+          ORDER BY cr.sortorder ASC , cr.date_added DESC , cr.resource DESC
+    ");
+
+    if(!is_array($result))
+        {
+        return array();
+        }
+
+    return $result;
+    }
+
+
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)

@@ -38,7 +38,10 @@ if ($current_system_upgrade_level>=SYSTEM_UPGRADE_LEVEL)
     return;
     }
 
-include_once __DIR__ . '/../include/header.php';
+if(!$cli)
+    {
+    include_once __DIR__ . '/../include/header.php';    
+    }
 
 set_time_limit(60 * 60 * 4);
 $process_locks_max_seconds=60 * 60;     // allow 1 hour for the upgrade of a single script

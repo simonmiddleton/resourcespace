@@ -51,7 +51,7 @@ function renderBrowseItem(node, parent)
     if(node.expandable != "false")
         {
         var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\", false, true);return false;'></a></div>";
-        expand = expand.replace("%BROWSE_ID%",node.id);
+        expand = expand.replace("%BROWSE_ID%",node.id);        
         }
     else
         {
@@ -84,10 +84,19 @@ function renderBrowseItem(node, parent)
             linkfunction = "return CentralSpaceLoad(this,true);";
             }
         
-        link = "<a class='browse_droplink'  href='%BROWSE_LINK%' onclick='" + linkfunction + "'><div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div><div class='BrowseBarLink' >%BROWSE_NAME%</div></a>";
+        link = "<a class='browse_droplink'  href='%BROWSE_LINK%' onclick='" + linkfunction + "'><div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'>%ICON_HTML%</div><div class='BrowseBarLink' >%BROWSE_NAME%</div></a>";
         link = link.replace("%BROWSE_CLASS%",node.class);
         link = link.replace("%BROWSE_LINK%",node.link);  
-        link = link.replace("%BROWSE_NAME%",node.name);
+        link = link.replace("%BROWSE_NAME%",node.name);      
+        
+        iconhtml = "";
+        if(node.icon)
+            {
+            iconhtml = node.icon;
+            }
+        
+        link = link.replace("%ICON_HTML%",iconhtml);
+        
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",link);  
         }
     else

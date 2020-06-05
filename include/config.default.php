@@ -293,7 +293,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders, $home_themes, $home_mycollections and $home_helpadvice to false).
+# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
@@ -347,16 +347,9 @@ $dash_tile_colour_options = array();
 
 	# Options to show/hide the tiles on the home page
 	$home_themeheaders=false;
-	$home_themes=true;
-	$home_mycollections=true;
-	$home_helpadvice=true;
-	$home_advancedsearch=false;
-	$home_mycontributions=false;
 	#
 	# Custom panels for the home page.
 	# You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
-	#
-	# You may want to turn off $home_themes etc. above if you want ONLY your own custom panels to appear on the home page.
 	#
 	# The below are examples.
 	#
@@ -805,7 +798,6 @@ $descthemesorder=false;
 ##  Defaults (all false) shows advanced search in the search bar but not the home page or top navigation.
 ##  To disable advanced search altogether, set 
 ##      $advancedsearch_disabled = true;
-##      $home_advancedsearch=false;
 ##      $advanced_search_nav=false;
 
 #Hide advanced search on search bar

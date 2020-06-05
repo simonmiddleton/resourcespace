@@ -2560,6 +2560,7 @@ function get_resource_type_field($field)
                 include_in_csv_export,
                 browse_bar,
                 active,
+                full_width,
                 read_only" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
@@ -2620,7 +2621,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.field_constraint,
                     f1.automatic_nodes_ordering,
                     f1.personal_data,
-                    f1.include_in_csv_export
+                    f1.include_in_csv_export,
+                    f1.full_width
                FROM resource_type_field AS f1
           LEFT JOIN resource_data d
                  ON d.resource_type_field = f1.ref AND d.resource = '" . escape_check($ref) . "'
@@ -2640,7 +2642,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f2.field_constraint,
                     f2.automatic_nodes_ordering,
                     f2.personal_data,
-                    f2.include_in_csv_export
+                    f2.include_in_csv_export,
+                    f2.full_width
                FROM resource_type_field AS f2
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
           LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '" . escape_check($ref) . "'
@@ -7519,7 +7522,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                include_in_csv_export,
                browse_bar,
                active,
-               read_only
+               read_only,
+               full_width
           FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), "schema");
 
     return $allfields;
