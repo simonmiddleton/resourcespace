@@ -20,7 +20,7 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$modal=(getval("modal","")=="true");
+$modal = (getval("modal", "") == "true");
 $single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
 $uploader = getvalescaped("uploader","");
@@ -189,6 +189,7 @@ if ($go!="")
 
 $collection=getvalescaped("collection",0,true);
 $editsearch = getval("editsearchresults","") != "";
+$edit_selection_collection_resources = ($editsearch && $collection == $USER_SELECTION_COLLECTION);
 if($editsearch)
     {
     debug("edit.php: editing multiple items...");
@@ -672,7 +673,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
                 $save_errors=save_resource_data_multi(0,$editsearch);
-                if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+
+                // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
+                if(!is_array($save_errors) && $edit_selection_collection_resources)
+                    {
+                    exit("<script>ModalClose(); window.location.reload(true);</script>");
+                    }
+                else if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
                     redirect(generateURL($baseurl_short . "pages/search.php",$urlparams));
                     }
@@ -975,7 +982,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
 function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
     global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave, 
-           $is_template, $show_required_field_label, $modal, $USER_SELECTION_COLLECTION, $editsearch, $collection;
+           $is_template, $show_required_field_label, $modal, $edit_selection_collection_resources;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
@@ -984,7 +991,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         }
 
     $confirm_text = $lang["confirmeditall"];
-    if($editsearch && $collection == $USER_SELECTION_COLLECTION)
+    if($edit_selection_collection_resources)
         {
         $confirm_text = $lang["confirm_edit_all_selected_resources"];
         }
