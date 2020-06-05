@@ -22,16 +22,6 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 			case "thmsl": 	global $usertile;
 							tile_config_themeselector($tile,$tile_id,$usertile,$tile_width,$tile_height);
 							exit;
-			case "theme":	tile_config_theme($tile,$tile_id,$tile_width,$tile_height);
-							exit;
-			case "mycol":	tile_config_mycollection($tile,$tile_id,$tile_width,$tile_height);
-							exit;
-			case "advsr":	tile_config_advancedsearch($tile,$tile_id,$tile_width,$tile_height);
-							exit;
-			case "mycnt":	tile_config_mycontributions($tile,$tile_id,$tile_width,$tile_height);
-							exit;
-			case "hlpad":	tile_config_helpandadvice($tile,$tile_id,$tile_width,$tile_height);
-							exit;
 			case "custm":	tile_config_custom($tile,$tile_id,$tile_width,$tile_height);
 							exit;
 			case "pend": 	tile_config_pending($tile,$tile_id,$tile_width,$tile_height);
@@ -91,15 +81,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
  * Config controlled panels
  *
  */
-function tile_config_theme($tile,$tile_id,$tile_width,$tile_height)
-	{
-	global $lang,$pagename;
-	$pagename="home";
-	?>
-	<h2><span class='fa fa-folder'></span><?php echo htmlspecialchars($lang["themes"]); ?></h2>
-	<p><?php echo htmlspecialchars(text("themes"));?></p>
-	<?php
-	}
+
 function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	{
 	global $lang,$pagename,$baseurl_short,$dash_tile_shadows, $theme_category_levels, $theme_direct_jump;
@@ -135,42 +117,6 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	<script>
 	 jQuery("a#<?php echo str_replace("contents_","",$tile_id);?>").replaceWith(jQuery(".featuredcollectionselector"));
 	</script>
-	<?php
-	}
-function tile_config_mycollection($tile,$tile_id,$tile_width,$tile_height) 
-	{
-	global $lang,$pagename;
-	$pagename="home";
-	?>
-	<h2><span class='fa fa-shopping-bag'></span><?php echo htmlspecialchars($lang["mycollections"]); ?></h2>
-	<p><?php echo htmlspecialchars(text("mycollections")); ?></p>
-	<?php
-	}
-function tile_config_advancedsearch($tile,$tile_id,$tile_width,$tile_height) 
-	{
-	global $lang,$pagename;
-	$pagename="home";
-	?>
-	<h2><span class='fa fa-search'></span><?php echo htmlspecialchars($lang["advancedsearch"]); ?></h2>
-	<p><?php echo htmlspecialchars(text("advancedsearch")); ?></p>
-	<?php
-	}
-function tile_config_mycontributions($tile,$tile_id,$tile_width,$tile_height) 
-	{
-	global $lang,$pagename;
-	$pagename="home";
-	?>
-	<h2><span class='fa fa-user'></span><?php echo htmlspecialchars($lang["mycontributions"]); ?></h2>
-	<p><?php echo htmlspecialchars(text("mycontributions"));?></p>
-	<?php
-	}
-function tile_config_helpandadvice($tile,$tile_id,$tile_width,$tile_height) 
-	{
-	global $lang,$pagename;
-	$pagename="home";
-	?>
-	<h2><span class='fa fa-book'></span><?php echo htmlspecialchars($lang["helpandadvice"]); ?></h2>
-	<p><?php echo htmlspecialchars(text("help")); ?></p>
 	<?php
 	}
 function tile_config_custom($tile,$tile_id,$tile_width,$tile_height) 
