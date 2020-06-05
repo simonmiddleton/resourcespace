@@ -138,6 +138,7 @@ $lang["property-enable_partial_indexing"]="Enable partial indexing";
 $lang["information-shorthand_name"]="Important: Shorthand name must be set for the field to be appear on the search bar, in Advanced search or to be used in search/edit filters. It must contain only lowercase alphabetical characters and/or numbers - no spaces or symbols.";
 $lang["property-shorthand_name"]="Shorthand name";
 $lang["property-display_field"]="Display field";
+$lang['property-field_full_width'] = "Display full width on view page";
 $lang["property-enable_advanced_search"]="Enable advanced search";
 $lang["property-enable_simple_search"]="Enable simple search";
 $lang["property-use_for_find_similar_searching"]="Use for find similar searching";

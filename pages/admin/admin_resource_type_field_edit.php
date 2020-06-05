@@ -342,8 +342,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
 $fieldcolumns = array(
-	'active'				   => array($lang['property-field_active'],'',1,1),
-	'title'                    => array($lang['property-title'],'',0,1),
+    'active'				   => array($lang['property-field_active'],'',1,1),
+    'title'                    => array($lang['property-title'],'',0,1),
     'resource_type'            => array($lang['property-resource_type'],'',0,0),
     'type'                     => array($lang['property-field_type'],'',0,1),
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
@@ -352,6 +352,7 @@ $fieldcolumns = array(
     'order_by'                 => array($lang['property-order_by'],'',0,0),
     'keywords_index'           => array($lang['property-index_this_field'],$lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
     'display_field'            => array($lang['property-display_field'],'',1,1),
+    'full_width'			   => array($lang['property-field_full_width'],'',1,1),
     'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
     'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),		
     'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),

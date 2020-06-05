@@ -189,9 +189,9 @@ div.autocomplete ul li {color: #000;}
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
 .Listview {background-color: white;border-radius:6px;}
 .highlight {color: #000;background-color: #ff0;}
-.Tab a {color: #aaaaaa; padding: 8px 1rem;}
+.Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
 .StyledTabbedPanel {background: #fff;}
-.TabSelected {border-top: 1px solid #ffffff; border-left: #bbbbbb;}
+.TabSelected {border-left: #bbbbbb;}
 .TabSelected a {background: #ffffff; color: #666666; border-bottom: 1px solid #ffffff; }
 .InfoTable {border-collapse:collapse;border-radius: 4px;}
 .InfoTable {background: #fff;}
