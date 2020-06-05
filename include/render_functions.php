@@ -3173,7 +3173,7 @@ function render_selected_collection_actions()
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
     $orig_result = $result;
-    $result = do_search($search, '', 'relevance', 0, -1, 'desc', false, '', false, '');
+    $result = get_collection_resources_with_data($USER_SELECTION_COLLECTION);
 
     $selected_resources = array_column($result, "ref");
     $resources_count = count($selected_resources);
