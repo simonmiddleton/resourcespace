@@ -416,6 +416,19 @@ switch ($returntype)
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
+            
+            // Set an icon 
+            switch($showstate)
+                {
+                case -2: $icon="file-import"; break;
+                case -1: $icon="eye"; break;
+                case 0: $icon="check"; break;
+                case 1: $icon="clock"; break;
+                case 2: $icon="archive"; break;
+                case 3: $icon="trash"; break;
+                default: $icon="cogs"; # All additional workflow states show gears icon to indicate workflow
+                }
+            $return_items[$n]["icon"] = "<i class='fa fa-fw fa-" . $icon  . "'></i>";
             $n++;
             }
 
