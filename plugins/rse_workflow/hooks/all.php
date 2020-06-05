@@ -208,7 +208,8 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     {
     global $baseurl_short, $lang, $pagename, $count_result;
 
-    if($pagename == "collections" && $count_result == 0)
+    // On special search !collection the actions will be added from HookRse_workflowSearchRender_search_actions_add_option
+    if($pagename != "collections" || $count_result == 0)
         {
         return false;
         }
