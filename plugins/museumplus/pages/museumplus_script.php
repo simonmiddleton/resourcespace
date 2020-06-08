@@ -168,6 +168,9 @@ foreach($mplus_resources as $mplus_resource)
 
 logScript("", $mplus_log_file);
 logScript(sprintf("MuseumPlus script completed in %01.2f seconds.", microtime(true) - $mplus_script_start_time), $mplus_log_file);
-fclose($mplus_log_file);
+if ($mplus_log_file != null)
+    {
+    fclose($mplus_log_file);
+    }
 sql_query("UPDATE sysvars SET `value` = NOW() WHERE `name` = '" . MPLUS_LAST_IMPORT . "'");
 clear_process_lock(MPLUS_LOCK);
