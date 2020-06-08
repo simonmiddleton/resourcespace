@@ -10,12 +10,6 @@ $scramble_key          = 'c8cf6994c288cf9d75c64017c57d16b24a0fdb4f0b826c66bfa7da
 $path = get_resource_path(1, true, '');
 $pre_path = get_resource_path(1, true, 'pre');
 
-if (!file_exists($path) || !file_exists($pre_path))
-    {
-    echo "File was not copied.";
-    return false;
-    }
-
 if(0 >= strlen($path))
     {
     return false;
