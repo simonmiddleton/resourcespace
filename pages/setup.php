@@ -979,12 +979,6 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
         $new_slideshow_image = set_slideshow($filename, NULL, 1, 0, $login_show);
-        if(!$new_slideshow_image)
-            {
-            trigger_error("Could not create a new slideshow record for '{$file}'");
-
-            continue;
-            }
 
         $from_file = "{$homeanim_folder_path}/{$file}";
         $to_file   = "{$to_folder}/{$file}";

@@ -39,6 +39,9 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
 
     sql_query($query);
 
+    // Clear cache
+    clear_query_cache("slideshow");
+
     $new_ref = sql_insert_id();
     if(is_null($ref) && $new_ref != 0)
         {
@@ -53,8 +56,6 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
         return $new_ref;
         }
 
-    // Clear cache
-    clear_query_cache("slideshow");
 
     return false;
     }
