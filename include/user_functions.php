@@ -297,12 +297,13 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
       if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
       $sql .= "LOWER(username) like '$find%'";
       }
-    if ($usepermissions && checkperm("U") && $U_perm_strict) {
+    if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict)))
+        {
         # Only return users in children groups to the user's group
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
         $sql.= "find_in_set('" . $usergroup . "',g.parent) ";
         $sql.= hook("getuseradditionalsql");
-    }
+        }
 
     if (is_numeric($approvalstate))
         {
