@@ -2288,7 +2288,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
 * 
 * @return void
 */
-function renderBreadcrumbs(array $links, $pre_links = '')
+function renderBreadcrumbs(array $links, $pre_links = '', $theme=false)
     {
     global $lang;
     /*
@@ -2303,7 +2303,8 @@ function renderBreadcrumbs(array $links, $pre_links = '')
         {
         return;
         }
-        ?>
+    ?>
+    <div class="BreadcrumbsBox <?php echo $theme ? 'BreadcrumbsBoxTheme' : ''; ?>">
         <div class="SearchBreadcrumbs">
         <?php
         if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
@@ -2325,6 +2326,7 @@ function renderBreadcrumbs(array $links, $pre_links = '')
             }
             ?>
         </div>
+    </div>
     <?php
 
     return;

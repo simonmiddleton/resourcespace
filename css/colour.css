@@ -359,6 +359,7 @@ input:checked + .customFieldLabel, .keywordselected {
 
 .BreadcrumbsBox {color:#FFF;}
 .BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0em;}
 
 .TopInpageNav select {
     background-color: #fff;

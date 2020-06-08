@@ -1563,14 +1563,13 @@ a.Enabled, a:visited.Enabled {
 
 /* Breadcrumbs */
 .BreadcrumbsBox {
-    display: inline-block;
+    display: table;
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    margin: 0em 1em 1em 0em;
-    margin: 0em 1em 1em 0em;
+    margin: 1em 1em 0em 0em;;
     padding: 0.66em;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.33);
 }
 .BreadcrumbsBox > .SearchBreadcrumbs{
     margin: 0;

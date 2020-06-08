@@ -508,22 +508,8 @@ if(!hook('replacethemesbacklink'))
                 'href'  => generateURL("{$baseurl_short}pages/themes.php", $links_trail_params, $links_trail_additional_params)
                 );
             }
-
-        if($themes_show_background_image)
-            {
-            ?>
-            <div id="" class="BreadcrumbsBox">
-            <?php
-            renderBreadcrumbs($links_trail);
-            ?>
-            </div>
-            <div class="clearerleft"></div>
-            <?php
-            }
-        else
-            {
-            renderBreadcrumbs($links_trail);
-            }
+        
+        renderBreadcrumbs($links_trail, '', true);
         }
     } # end hook('replacethemesbacklink')
 
