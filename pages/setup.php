@@ -593,7 +593,7 @@ h2#dbaseconfig{  min-height: 32px;}
             // Check version
             $mysqlversion = mysqli_get_server_info($mysqli_connection);
             $mysqlversion_parts = explode(".", $mysqlversion);
-            $mysqlversion_majorminor = floatval($mysqlversion_parts[0] . "." . $mysqlversion_parts[1]);
+            $mysqlversion_majorminor = floatval($mysqlversion_parts[0] . (isset($mysqlversion_parts[1])?"." . $mysqlversion_parts[1]:""));
             if($mysqlversion_majorminor < 5)
                 {
                 $errors['databaseversion'] = true;
@@ -724,7 +724,7 @@ h2#dbaseconfig{  min-height: 32px;}
 		$email_from = get_post('email_from');
         if('' != $email_from)
             {
-            if(filter_var($email_from, FILTER_VALIDATE_EMAIL) && ('resourcespace@my.site' !== $email_from))
+            if(filter_var($email_from, FILTER_VALIDATE_EMAIL))
                 {
                 $config_output .= "\$email_from = '$email_from';\r\n";
                 }
@@ -840,6 +840,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     // Check database structure now
     $suppress_headers = true;
 	include_once '../include/db.php';
+	$show_detailed_errors=true; // Always show detailed errors during setup process.
 	check_db_structs();
 
     // set the current upgrade level to current one specified in definitions.php
