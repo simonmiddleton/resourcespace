@@ -345,6 +345,14 @@ if(empty($per_page))
     }
 rs_setcookie('per_page', $per_page,0,"","",false,false);
 
+$go = getval("go", "");
+// Clear special selection collection if user runs a new search. Paging is not a new search. Also we allow for users that
+// want to see what they've selected so far.
+if(!in_array($go, array("next", "prev")) && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") === false)
+    {
+    remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
+    }
+
 // Construct archive string and array
 $archive_choices=getvalescaped("archive","");
 $archive_standard = $archive_choices=="";
