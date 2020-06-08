@@ -227,7 +227,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
                 $faces[$f] .= "\"[";
                 foreach($face["landmarks"] as $lndmk)
                     {
-                    $faces[$f] .= "{type:" . $lndmk["type"] . ",x:" . (isset($lndmk["position"]["x"]) ? $lndmk["position"]["x"] : "0") . ",y:" . (isset($lndmk["position"]["y"]) ? $lndmk["position"]["y"] : "0") . ",z:" . (isset($lndmk["position"]["z"]) ? $lndmk["position"]["z"] : "0") . "}";
+                    $faces[$f] .= "{type:" . (isset($lndmk["type"]) ? $lndmk["type"] : "?") . ",x:" . (isset($lndmk["position"]["x"]) ? $lndmk["position"]["x"] : "0") . ",y:" . (isset($lndmk["position"]["y"]) ? $lndmk["position"]["y"] : "0") . ",z:" . (isset($lndmk["position"]["z"]) ? $lndmk["position"]["z"] : "0") . "}";
                     }
                 $faces[$f] .= "]\",";
                 unset($face["landmarks"]);
