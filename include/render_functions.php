@@ -1091,7 +1091,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             // Add extra collection actions javascript case through plugins
             // Note: if you are just going to a different page, it should be easily picked by the default case
-            $extra_options_js_case = hook('render_actions_add_option_js_case');
+            $extra_options_js_case = hook('render_actions_add_option_js_case', '', array($action_selection_id));
             if(trim($extra_options_js_case) !== '')
                 {
                 echo $extra_options_js_case;

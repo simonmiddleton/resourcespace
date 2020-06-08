@@ -126,3 +126,115 @@ if (!function_exists("rse_workflow_delete_state")){
         return true;  
         }
     } 
+
+/**
+* Validate list of actions for a resource or a batch of resources. For a batch of 
+* resources, an action is valid only if using the 'wf' permission is set for that action.
+* 
+* @param array $actions         List of workflow actions (@see rse_workflow_get_actions())
+* @param bool  $use_perms_only  Validate actions using edit access (e perm) on the destination state -OR- 'wf' permissions
+* 
+* @return array
+*/
+function rse_workflow_get_valid_actions(array $actions, $use_perms_only)
+    {
+    /** $resource, $edit_access are used on the view page to determine valid actions for a resource where we run a 
+    * proper action validation (@see rse_workflow_validate_action())
+    */
+    global $resource, $edit_access;
+
+    if($use_perms_only)
+        {
+        return array_filter($actions, function($action)
+            {
+            return checkperm("e{$action['statusto']}") || checkperm("wf{$action['ref']}");
+            });
+        }
+
+    return array_filter($actions, function($action) use ($resource, $edit_access)
+        {
+        $resource["edit_access"] = $edit_access;
+        return rse_workflow_validate_action($action, $resource);
+        });
+    }
+
+/**
+* Validate a workflow action for a particular resource
+* 
+* @param array $action   Workflow action structure (@see rse_workflow_get_actions())
+* @param array $resource Resource structure (@see get_resource_data() or do_search())
+* 
+* @return bool
+*/
+function rse_workflow_validate_action(array $action, array $resource)
+    {
+    if(empty($action) || empty($resource))
+        {
+        return false;
+        }
+
+    $resource_in_valid_state = in_array($resource['archive'], explode(',', $action['statusfrom']));
+
+    $edit_access = false;
+    // resource[edit_access] can be added by outside context if this information is already available to increase performance
+    // if action is validated for a list of resources (3k+) that we had to iterate over
+    if(!isset($resource["edit_access"]))
+        {
+        $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], false, $resource));
+        }
+    else
+        {
+        $edit_access = $resource["edit_access"];
+        }
+
+    $check_edit_access = ($edit_access && checkperm("e{$action['statusto']}"));
+
+    // Provide workflow action option if user has access to it without having edit access to resource
+    // Use case: a particular user group doesn't have access to the archive state but still needs to be
+    // able to move the resource to a different state.
+    $checkperm_wf = checkperm("wf{$action['ref']}");
+
+    return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
+    }
+
+
+/**
+* Compile workflow actions for the unified dropdown actions. This will validate actions using only 'wf' permissions (@see rse_workflow_get_valid_actions)
+* 
+* @param array $url_params Inject any url params if needed. Useful to pass along search params.
+* 
+* @return array
+*/
+function rse_workflow_compile_actions(array $url_params)
+    {
+    // Validate actions without going through all resources to not impact performance on huge sets
+    $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);
+    if(empty($valid_actions))
+        {
+        return array();
+        }
+
+    global $baseurl;
+
+    $wf_actions = array();
+    foreach($valid_actions as $action)
+        {
+        $option = array(
+            "value" => "rse_workflow_move_to_workflow",
+            "label" => i18n_get_translated($action["buttontext"]),
+            "data_attr" => array(
+                "url" => generateURL(
+                    "{$baseurl}/plugins/rse_workflow/pages/batch_action.php",
+                    $url_params,
+                    array(
+                        "action" => $action["ref"],
+                    )),
+            ),
+            "category" => ACTIONGROUP_EDIT
+        );
+
+        $wf_actions[] = $option;
+        }
+
+    return $wf_actions;
+    }

@@ -2,7 +2,7 @@
 
 function HookRse_workflowViewPageevaluation()
     {
-    include (dirname(__file__) . "/../include/rse_workflow_functions.php");
+    include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
     global $lang;
     global $ref;
     global $resource;
@@ -51,7 +51,7 @@ function HookRse_workflowViewPageevaluation()
                        )
                     )
                     {
-                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);;
+                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
                     hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
                                                 
                     if (checkperm("z" . $workflowaction["statusto"]))
@@ -80,32 +80,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 
     global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos;
     
-    # Retrieve list of existing defined actions
-    $workflowactions = rse_workflow_get_actions();
-    $validactions    = array();
-
-    foreach($workflowactions as $workflowaction)
-        {
-        $validstates = explode(',', $workflowaction['statusfrom']);	
-        if(
-            in_array($resource['archive'], $validstates)
-            && (
-                    (
-                        $edit_access
-                        && checkperm("e{$workflowaction['statusto']}")
-                    )
-                    // Provide workflow action option if user has access to it without having edit access to resource
-                    // Use case: a particular user group doesn't have access to the archive state but still needs to be
-                    // able to move the resource to a different state.
-                    || checkperm("wf{$workflowaction['ref']}")
-               )
-        )
-            {
-            $validactions[] = $workflowaction;
-            }
-        }
-    
-    
+    $validactions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), false);
     if(count($validactions)>0)
         {?>
         <div class="RecordDownload" id="ResourceWorkflowActions">

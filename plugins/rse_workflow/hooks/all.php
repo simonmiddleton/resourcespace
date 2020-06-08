@@ -202,3 +202,36 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         }
     /*****END OF NOTIFY CONTRIBUTOR*****/    
     }
+
+
+function HookRse_workflowAllRender_actions_add_collection_option($top_actions, array $options, $collection_data, $urlparams)
+    {
+    global $baseurl_short, $lang, $pagename, $count_result;
+
+    // On special search !collection the actions will be added from HookRse_workflowSearchRender_search_actions_add_option
+    if($pagename != "collections" || $count_result == 0)
+        {
+        return false;
+        }
+
+    $wf_actions_options = rse_workflow_compile_actions($urlparams);
+
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
+    return array_merge($options, $wf_actions_options);
+    }
+
+function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_id)
+    {
+    ?>
+    case 'rse_workflow_move_to_workflow':
+        var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+        ModalLoad(option_url, true, true);
+        break;
+    <?php
+    return;
+    }
