@@ -400,7 +400,7 @@ if ($search_titles)
         }
     elseif (substr($search,0,14)=="!locked")
         {
-        $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!locked'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["locked_resource_search"].'</a>'.$searchcrumbs.'</h1> ';
+        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!locked'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["locked_resource_search"].'</a>'.$searchcrumbs.'</div></div> ';
         }
 	
 	hook("addspecialsearchtitle");
