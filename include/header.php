@@ -187,6 +187,7 @@ var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
 var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
+var errortext = "<?php echo $lang["error"] ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit="<?php echo $cat_tree_singlebranch?>";
 var branch_limit_field = new Array();

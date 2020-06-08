@@ -75,6 +75,7 @@ Restrictive permissions
 p       Can not change own password. Useful for shared user accounts.
 D       Can not delete resources.
 noex    Cannot share resources externally (internal sharing is still possible, provided $allow_share=true;).
+nolock  Cannot lock resources (locking is used to prevent resources being edited by other users)
 
 Administration
 --------------

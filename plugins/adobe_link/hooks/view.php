@@ -6,7 +6,12 @@
 function HookAdobe_linkViewBefore_footer_always()
     {
     global $lang;
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect")))
+    if(!isset($_SERVER['HTTP_USER_AGENT'])
+        ||
+        !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
+        ||
+        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        )
         {
         return false;
         }
@@ -149,9 +154,13 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     # Adds a special link to the download button.
     $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
     
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
+    if(!isset($_SERVER['HTTP_USER_AGENT'])
+        ||
+        !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($adb_ext),$adobe_link_asset_extensions) && !in_array(strtolower($adb_ext),$adobe_link_document_extensions))
+        ||
+        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
       )
         {
         return false;
@@ -205,9 +214,13 @@ function HookAdobe_linkViewOrigdownloadlink()
 	global $userref, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl, $urlparams, $path, $direct_download, $alternative;
 	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang, $edit_access;
     
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
+    if(!isset($_SERVER['HTTP_USER_AGENT']) 
+        ||
+        !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions) && !in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
+        ||
+        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
         )
         {
         return false;

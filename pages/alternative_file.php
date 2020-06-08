@@ -22,6 +22,14 @@ $resource=getvalescaped("resource","",true);
 
 # Fetch resource data.
 $resourcedata=get_resource_data($resource);
+
+if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resourcedata["lock_user"]);
+    http_response_code(403);
+    exit($error);
+    }
+
 # Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
 resource_type_config_override($resourcedata["resource_type"]);
 

@@ -30,6 +30,13 @@ $error="";
 # Not allowed to edit this resource? They shouldn't have been able to get here.
 if (!get_edit_access($ref,$resource["archive"],false,$resource)) {exit ("Permission denied.");}
 
+if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resource["lock_user"]);
+    error_alert($error,!$modal);
+    exit();
+    }
+    
 hook("pageevaluation");
 
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))

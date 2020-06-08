@@ -481,7 +481,7 @@ if ($_FILES)
         if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
             debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
-            die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
+            die('{"jsonrpc" : "2.0", "error" : {"code": 110, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
         }}
 
@@ -587,7 +587,13 @@ if ($_FILES)
                     {			
                     if ($alternative!="")
                             {
-                            # Upload an alternative file (JUpload only)
+                            # Upload an alternative file 
+                            $resource_data = get_resource_data($alternative);
+                            if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+                                {
+                                $error = get_resource_lock_message($resource_data["lock_user"]);
+                                die('{"jsonrpc" : "2.0", "error" : {"code": 111, "message": "' . $error  . '"}, "id" : "id"}');
+                                }
 
                             # Add a new alternative file
                             $aref=add_alternative_file($alternative,$plfilename);
@@ -1114,6 +1120,17 @@ var pluploadconfig = {
                                                 {
                                                     jQuery("#UploadLogSectionHead").click();
                                                     uploader.settings.logopened = true;
+                                                }
+                                            }
+                                        else if(uploadresponse.error.code==109)
+                                            {
+                                            message = uploadresponse.error.message +  ' ' + uploadresponse.id;
+                                            styledalert('<?php echo $lang["error"] ?> ' + uploadresponse.error.code, message);   
+                                            jQuery("#upload_log").append("\r\n" + message);
+                                            if(!uploader.settings.logopened)
+                                                {
+                                                jQuery("#UploadLogSectionHead").click();
+                                                uploader.settings.logopened = true;
                                                 }
                                             }
                                         else

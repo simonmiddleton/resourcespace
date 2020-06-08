@@ -13,7 +13,14 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource)) {
 		$error=$lang['error-permissiondenied'];
 		error_alert($error);
 		exit();
-		}
+        }
+        
+if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resource["lock_user"]);
+    http_response_code(403);
+    exit($error);
+    }
 
 # fetch the current search 
 $search=getvalescaped("search","");

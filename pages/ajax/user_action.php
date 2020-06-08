@@ -40,6 +40,45 @@ switch ($action)
         $return['status'] = 200;
         break;
 
+    case 'updatelock':
+        $resource = getval("ref",0,true);
+        $lockaction = getval("lock",'') == "true";
+        $resource_data = get_resource_data($resource);
+        
+        if(((string)(int)$resource != (string)$resource) || !$resource_data)
+            {
+            $return['message'] = $lang["error_invalid_input"] ;
+            break;
+            }
+        $edit_access = get_edit_access($resource,$resource_data["archive"],false,$resource_data);
+        $lockuser =  $resource_data["lock_user"];
+
+        if($lockaction && $lockuser > 0 && $lockuser != $userref)
+            {
+            // Already locked
+            $return['status'] = 403;
+            $return['message'] = get_resource_lock_message($lockuser);
+            }
+        elseif(checkperm("a")
+            ||
+            $lockuser == $userref
+            ||
+            ($edit_access && $lockuser == 0 && !checkperm("nolock"))
+            )
+            {
+            $success = update_resource_lock($resource,$lockaction,$userref,true);
+            if($success)
+                {
+                $return['status'] = 200;
+                }
+            }
+        else
+            {
+            $return['status'] = 403;
+            $return['message'] = $lang["error-permissiondenied"];
+            }
+        break;
+
     default:
         $return['message'] = $lang["error_generic"] ;
         break;

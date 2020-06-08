@@ -2294,7 +2294,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $theme=false)
     /*
     NOTE: implemented as seen on themes and search. There is a lot of room for improvement UI wise
 
-    TODO: search_title_processing.php is using it intesively and at the moment there are differences in terms of 
+    TODO: search_title_processing.php is using it intensively and at the moment there are differences in terms of 
     rendered HTML between themes/ search and search_title_processing.php. We should refactor all places were breadcrumbs
     are being created and make sure they all use this function (or any future related functions - like generateBreadcrumb() ).
     */
@@ -3891,4 +3891,62 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $extra='';
             }
         }
+    }
+
+/*
+* Render the resource lock/unlock link for resource tools
+* 
+* @param  int       $ref         Resource ID
+* @param  int       $lock_user   ID of the user that locked the resource
+* @param  boolean   $editaccess  Does the user have edit access to the resource?
+* 
+* @return void
+*/
+function render_resource_lock_link($ref,$lockuser,$editaccess)
+    {
+    global $userref, $lang;
+    
+    $resource_locked = (int)$lockuser > 0;
+
+    $edit_lock_option = false;
+    if(checkperm("a") 
+        ||
+        $userref == $lockuser
+        ||
+        (!$resource_locked && !checkperm("noex") && $editaccess)
+        )
+        {
+        $edit_lock_option = true;
+        }
+
+    if(!$resource_locked && !$edit_lock_option)
+        {
+        // User is not permitted to lock resource
+        return;
+        }    
+    
+    $lock_details = get_resource_lock_message($lockuser);
+
+    echo "<li>";
+    if($edit_lock_option)
+        {
+        echo "<a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
+        echo "title='" .  $lock_details . "'";
+        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
+        if($resource_locked)
+            {
+            $locktext = (checkperm("a") || ($lockuser == $userref)) ? $lang["action_unlock"] : $lang["status_locked"];
+            }
+        else
+            {
+            $locktext = $lang["action_lock"];
+            }
+        echo $locktext . "</a>";
+        }
+    else
+        {
+        echo "<div  class='ResourceLocked' title='" .  htmlspecialchars($lock_details) . "' >" . $lang["status_locked"] . "</div>";
+        }
+
+    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
     }

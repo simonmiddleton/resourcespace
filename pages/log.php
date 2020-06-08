@@ -18,8 +18,8 @@ $filter_url_params = array(
 // Some log records can be viewed by all users. Ensure access control by allowing only white listed log codes to bypass 
 // permissions checks.
 $safe_log_codes = array(LOG_CODE_DOWNLOADED);
-$resouce_access = get_resource_access($ref);
-$bypass_permission_check = in_array($filter_by_type, $safe_log_codes) && in_array($resouce_access, array(0, 1));
+$resource_access = get_resource_access($ref);
+$bypass_permission_check = in_array($filter_by_type, $safe_log_codes) && in_array($resource_access, array(0, 1));
 if(!checkperm('v') && !$bypass_permission_check)
     {
     die($lang['log-adminpermissionsrequired']);

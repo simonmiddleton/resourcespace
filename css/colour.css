@@ -25,7 +25,7 @@ input[readonly] {
 #Header {background: rgba(0, 0, 0, 0.6);transform: translate3d(0, 0, 0);border: none;}
 #Header li a {color:#fff; opacity:0.7;}
 #Header .SearchResultsDisabled,
-#Header .SearchResultsDisabled:hover {opacity: 0.35; cursor: default;}
+#Header .SearchResultsDisabled:hover, .DisabledLink {opacity: 0.35; cursor: default;}
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
 /* links in Header overflow dropdown menu */

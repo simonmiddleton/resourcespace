@@ -303,6 +303,22 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource))
   exit();
 }
 
+if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    {
+    $error = get_resource_lock_message($resource["lock_user"]);
+    if(getval("autosave","")!="")
+        {
+        // Send JSON with error back
+        http_response_code(403);
+        exit($error);
+        }
+    else
+        {
+        error_alert($error,!$modal);
+        exit();
+        }
+    }
+
 if (getval("regen","")!="" && enforcePostRequest($ajax))
 {
   sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
@@ -949,7 +965,12 @@ function ShowHelp(field)
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
-                });
+                })
+                .fail(function(response) {
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
+                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                    styledalert('<?php echo $lang["error"] ?>',response.responseText);
+                    });
 	}
 <?php } 
 
@@ -2222,7 +2243,10 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
-  error_fields[0].scrollIntoView();
+  if(error_fields.length > 0)
+    {
+    error_fields[0].scrollIntoView();
+    }
   styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
   <?php

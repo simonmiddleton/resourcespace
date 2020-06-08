@@ -1191,6 +1191,7 @@ div.video-js {margin:auto;}
 #modal_dialog, .ui-dialog
     {
     z-index: 103;
+    word-break: break-word;
     }
         
 #modal_dialog .MessageText {
@@ -1835,4 +1836,22 @@ a.BrowseRefresh{
     {
     text-decoration: line-through;
     }
-    
+.ResourceLocked{
+    float:left;
+}
+
+.ResourceLocked:before{
+    content: "\f023";
+    font: normal normal normal 14px "Font Awesome 5 Free";
+    font-weight: 600;
+    padding-right:12px;
+    display: inline-block; width:0.6em;
+}  
+
+.ResourceUnlocked:before{
+    content: "\f09c";
+    font: normal normal normal 14px "Font Awesome 5 Free";
+    font-weight: 600;
+    padding-right:12px;
+    display: inline-block; width:0.6em;
+}  

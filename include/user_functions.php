@@ -119,6 +119,7 @@ function setup_user($userdata)
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
 
     $userref           = $userdata['ref'];
+debug("BANG userref" . $userref);
     $username          = $userdata['username'];
     $useracceptedterms = $userdata['accepted_terms'];
 	

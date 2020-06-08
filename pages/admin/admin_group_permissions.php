@@ -351,6 +351,7 @@ DrawOption("U", $lang["can_manage_users_in_children_groups"]);
 DrawOption("E", $lang["can_email_resources_to_own_and_children_and_parent_groups"]);
 DrawOption("x", $lang["allow_user_group_selection_for_access_when_sharing_externally"]);
 DrawOption("noex", $lang["prevent_user_group_sharing_externally"]);
+DrawOption("nolock", $lang["permission_nolock"]);
 
 hook("additionalperms");
 ?>			</table>

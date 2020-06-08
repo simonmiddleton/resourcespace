@@ -615,6 +615,8 @@ $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
 $lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
 $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to state %ARCHIVE)';
 $lang['log-f']="Replaced file";
+$lang['log-X']="Locked resource";
+$lang['log-Y']="Unlocked resource";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -1783,7 +1785,7 @@ $lang["can_change_own_password"]="Can change own account password. Unchecking th
 $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_users_in_children_groups"]="Can manage users in children groups to the user's group only";
 $lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can email resources to users in the user's own group, children groups and parent group only";
-
+$lang["permission_nolock"] = "Disable locking of editable resources (locking is used to prevent resources being edited by other users)";
 $lang["nodownloadcollection"]="You do not have access to download any of the resources in this collection.";
 
 $lang["progress"]="Progress";
@@ -2884,5 +2886,15 @@ $lang["useaspreviewimage"]                  = "Use as preview image";
 $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
+$lang["action_lock"]                        = "Lock";
+$lang["action_unlock"]                      = "Unlock";
+$lang["status_locked"]                      = "Locked";
+$lang["status_unlocked"]                    = "Unlocked";
+$lang["status_locked_by"]                   = "Locked by %%USER%%";
+$lang["status_locked_self"]                 = "You have locked this resource";
+$lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
+$lang["error_locked_other_user"]            = "Resource is locked by another user";
+$lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
+$lang["error-edit_locked_resources"]        = "The following resources are locked: ";
+$lang["locked_resource_search"]             = "Locked resources";

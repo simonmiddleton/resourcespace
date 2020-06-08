@@ -1608,6 +1608,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE integrity_fail=1 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
+    
+    # Search for locked resources 
+    if ($search=="!locked") 
+        {
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE lock_user<>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
+        }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the

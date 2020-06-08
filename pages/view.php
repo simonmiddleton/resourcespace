@@ -325,8 +325,14 @@ $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($mo
 # Load edit access level (checking edit permissions - e0,e-1 etc. and also the group 'edit filter')
 $edit_access = ($access==0 && get_edit_access($ref,$resource["archive"],$fields,$resource));
 
+# Check if resource is locked
+$resource_locked = (int)$resource["lock_user"] != 0;
+$unlock_option = checkperm("a") || ($userref == $resource["lock_user"] && $userref != $anonymous_login);
+$lock_details = get_resource_lock_message($resource["lock_user"]);
+
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
+//Check if we want to use a specified field as a caption below the preview
 //Check if we want to use a specified field as a caption below the preview
 //Check if we want to use a specified field as a caption below the preview
 if(isset($display_field_below_preview) && is_int($display_field_below_preview))
@@ -358,76 +364,142 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
         echo '<link href="' . $baseurl . $custom_stylesheet_external_share_path . '" rel="stylesheet" type="text/css" media="screen,projection,print" />';
     }
 }
-if ($view_panels) {
+
 ?>
-<script type="text/javascript">
+<script>
+var resource_lock_status = <?php echo (int)$resource_locked ?>;
+var lockmessage = new Array();
+lockmessage[<?php echo $ref ?>] = '<?php echo htmlspecialchars($lock_details) ?>';
 
+<?php 
+if($resource_locked && $resource['lock_user'] != $userref)
+    {?>
+    jQuery(document).ready(function ()
+        {
+        jQuery('.LockedResourceAction').each(function(){
+            jQuery(this).attr("title","<?php echo htmlspecialchars($lock_details); ?>");
+            });
+        });
+        <?php
+    }?>
 
-jQuery(document).ready(function () {		
-    
-	var comments_marker='<?php echo $comments_view_panel_show_marker?>';
-	var comments_resource_enable='<?php echo $comments_resource_enable?>';
-	var resource_comments='<?php echo $resource_comments?>';
-    
-    jQuery("#Metadata").appendTo("#Panel1");
-    jQuery("#Metadata").addClass("TabPanel");
-    
-	
-	jQuery("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo("#Titles1");
-	jQuery("#CommentsPanelHeaderRowTitle").remove();
-	jQuery("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
-	removePanel=jQuery("#Comments").parents(".RecordBox");
-	jQuery("#Comments").appendTo("#Panel1").addClass("TabPanel").hide();
-	removePanel.remove();
-	if(comments_marker==true && comments_resource_enable==true && resource_comments>'0'){
-		jQuery("[panel='Comments']").append("&#42;");
-	}
-
-    jQuery("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo("#Titles2");
-    removePanel=jQuery("#RelatedResources").parents(".RecordBox");
-    jQuery("#RelatedResources").appendTo("#Panel2").addClass("TabPanel");
-    removePanel.remove();
-    
-
-    jQuery("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo("#Titles2");
-    removePanel=jQuery("#SearchSimilar").parents(".RecordBox");
-    jQuery("#SearchSimilar").appendTo("#Panel2").addClass("TabPanel").hide();
-    removePanel.remove();
-    // if there are no related resources
-    if (jQuery("#RelatedResources").length==0) {
-        jQuery("#SearchSimilar").show();
-        jQuery("div[panel='SearchSimilar']").addClass("Selected"); 
-    }    
-    
-    // if there are no collections and themes
-    if (jQuery("#resourcecollections").is(':empty')) {
-       jQuery("div[panel='CollectionsThemes']").addClass("Selected"); 
-       jQuery("#CollectionsThemes").show(); 
+function updateResourceLock(resource,lockstatus)
+    {
+    // Fire an ajax call to update the lock state and update resource tools if successful
+    jQuery.ajax({
+        type: 'POST',
+        url: '<?php echo $baseurl_short; ?>pages/ajax/user_action.php',
+        data: {
+            ajax: 'true',
+            action: 'updatelock',
+            ref: resource,
+            lock: lockstatus,
+            <?php echo generateAjaxToken('UpdateLock'); ?>
+        },
+        success: function(response,status,xhr)
+            {
+            jQuery('#lock_link_' + resource).toggleClass("ResourceLocked");
+            jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
+            if(lockstatus==1)
+                {               
+                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_unlock"] ;?>');
+                jQuery('#lock_link_' + resource).attr("title","<?php echo $lang["status_locked_self"]; ?>");
+                lockmessage[resource] = '<?php echo $lang["status_locked_self"]; ?>';
+                jQuery('#lock_details_link').show();
+                }
+            else
+                {
+                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_lock"] ;?>');
+                lockmessage[resource] = '';
+                jQuery('#lock_details_link').hide();
+                // Timeout added as title resists removal if cursor is hovering as it is removed
+                setTimeout(function() {jQuery('#lock_link_' + resource).removeAttr("title");},1000);
+                }
+            resource_lock_status = !resource_lock_status;
+            },
+        error: function(xhr, status, error)
+            {
+            console.log(xhr);
+            if(typeof xhr.responseJSON.message !== undefined)
+                {
+                styledalert('<?php echo $lang["error"]; ?>',xhr.responseJSON.message);
+                }
+            else
+                {
+                styledalert('<?php echo $lang["error"]; ?>',xhr.statusText);
+                }
+            }
+        });
     }
-    
-    jQuery(".ViewPanelTitles").children(".Title").click(function(){
-    // function to switch tab panels
-        jQuery(this).parent().parent().children(".TabPanel").hide();
-        jQuery(this).parent().children(".Title").removeClass("Selected");
-        jQuery(this).addClass("Selected");
-        jQuery("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px");
-        jQuery("#"+jQuery(this).attr("panel")).show();
-        if (jQuery(this).attr("panel")=="Comments") {
-        jQuery("#CommentsContainer").load(
-        	"../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
-        	function() {
-        	if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
-        		jQuery(window.location.hash)[0].scrollIntoView();
-        	}						
-        );	
+
+<?php
+if ($view_panels)
+    {
+    ?>
+    jQuery(document).ready(function () {		
+        
+        var comments_marker='<?php echo $comments_view_panel_show_marker?>';
+        var comments_resource_enable='<?php echo $comments_resource_enable?>';
+        var resource_comments='<?php echo $resource_comments?>';
+        
+        jQuery("#Metadata").appendTo("#Panel1");
+        jQuery("#Metadata").addClass("TabPanel");
+        
+        
+        jQuery("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo("#Titles1");
+        jQuery("#CommentsPanelHeaderRowTitle").remove();
+        jQuery("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
+        removePanel=jQuery("#Comments").parents(".RecordBox");
+        jQuery("#Comments").appendTo("#Panel1").addClass("TabPanel").hide();
+        removePanel.remove();
+        if(comments_marker==true && comments_resource_enable==true && resource_comments>'0'){
+            jQuery("[panel='Comments']").append("&#42;");
         }
+
+        jQuery("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo("#Titles2");
+        removePanel=jQuery("#RelatedResources").parents(".RecordBox");
+        jQuery("#RelatedResources").appendTo("#Panel2").addClass("TabPanel");
+        removePanel.remove();
+        
+
+        jQuery("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo("#Titles2");
+        removePanel=jQuery("#SearchSimilar").parents(".RecordBox");
+        jQuery("#SearchSimilar").appendTo("#Panel2").addClass("TabPanel").hide();
+        removePanel.remove();
+        // if there are no related resources
+        if (jQuery("#RelatedResources").length==0) {
+            jQuery("#SearchSimilar").show();
+            jQuery("div[panel='SearchSimilar']").addClass("Selected"); 
+        }    
+        
+        // if there are no collections and themes
+        if (jQuery("#resourcecollections").is(':empty')) {
+        jQuery("div[panel='CollectionsThemes']").addClass("Selected"); 
+        jQuery("#CollectionsThemes").show(); 
+        }
+        
+        jQuery(".ViewPanelTitles").children(".Title").click(function(){
+        // function to switch tab panels
+            jQuery(this).parent().parent().children(".TabPanel").hide();
+            jQuery(this).parent().children(".Title").removeClass("Selected");
+            jQuery(this).addClass("Selected");
+            jQuery("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px");
+            jQuery("#"+jQuery(this).attr("panel")).show();
+            if (jQuery(this).attr("panel")=="Comments") {
+            jQuery("#CommentsContainer").load(
+                "../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
+                function() {
+                if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
+                    jQuery(window.location.hash)[0].scrollIntoView();
+                }						
+            );	
+            }
+        });
     });
-    
-   
-});
+    <?php
+    }?>
 
 </script>
-<?php } ?>
 <!--Panel for record and details-->
 <div class="RecordBox">
 <div class="RecordPanel<?php echo $use_larger_layout ? ' RecordPanelLarge' : ''; ?>">
@@ -1476,36 +1548,47 @@ hook ("resourceactions") ?>
 		hook('aftersharelink', '', array($ref, $search, $offset, $order_by, $sort, $archive));
 		}
 	if ($edit_access) 
-		{ ?>
-		<li><a href="<?php echo $baseurl ?>/pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onclick="return ModalLoad(this, true);">
-			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-editmetadata"]?>
-		</a></li>
-		<?php 
+		{
+        echo "<li>";
+        if($resource_locked && $resource['lock_user'] != $userref)
+            {
+            echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</div>";
+            }
+        else
+            {
+            echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</a>";
+            }
+        echo "</li>";
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
 			{
-			?>
-			<li>
-			<a href="<?php echo $baseurl ?>/pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return ModalLoad(this, true);">
-			<?php 
-			if ($resource["archive"]==3)
-				{
-				echo "<i class='fa fa-trash'></i>&nbsp;" .$lang["action-delete_permanently"];
-				} 
-			else 
-				{
-				echo "<i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete"];
-				}?>
-			</a>
-			</li>
-			<?php 
-			}
+            $deletetext = (isset($resource_deletion_state) && $resource["archive"] == $resource_deletion_state) ? $lang["action-delete_permanently"] : $lang["action-delete"];
+            echo "<li>";
+            if($resource_locked && $resource['lock_user'] != $userref)
+                {
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</div>";
+                }
+            else
+                {
+                echo "<a id='delete_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</a>";
+                }
+            echo "</li>";
+            }
 		if (!$disable_alternative_files && !checkperm('A')) 
-			{ ?>
-			<li><a href="<?php echo $baseurl ?>/pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onclick="return ModalLoad(this, true);">
-			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
-			</a></li>
-			<?php 
-			}
+			{ 
+            echo "<li>";
+            if($resource_locked && $resource['lock_user'] != $userref)
+                {
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</div>";
+                }
+            else
+                {
+                echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a>";
+                }
+            echo "</li>";
+            }
+
+        // Show the lock/unlock links only if edit access
+        render_resource_lock_link($ref,$resource['lock_user'], true);
 		} 
 	// At least one field should be visible to the user otherwise it makes no sense in using this feature
 	$can_see_fields_individually = false;
@@ -1545,7 +1628,6 @@ hook ("resourceactions") ?>
         </li>
         <?php 
         }
-
     } /* End replaceresourceactions */ 
 hook("afterresourceactions");
 hook("afterresourceactions2");
