@@ -508,7 +508,14 @@ if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$spe
 $search=refine_searchstring($search);
 
 $editable_only = getval("foredit","")=="true";
-$search_access = getval("access", null, true); # admins can search for resources with a specific access from advanced search
+
+$get_post_array = array_merge($_GET, $_POST);
+$search_access = null; # admins can search for resources with a specific access from advanced search
+if(array_key_exists("access", $get_post_array))
+    {
+    $search_access = $get_post_array["access"];
+    }
+rs_setcookie("access", $search_access, 0, "{$baseurl_short}pages/", "", false, false);
 
 $searchparams= array(
     'search'         => $search,
