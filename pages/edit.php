@@ -693,7 +693,38 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
                 if(!is_array($save_errors) && $edit_selection_collection_resources)
                     {
-                    exit("<script>ModalClose(); window.location.reload(true);</script>");
+                    ?>
+                    <script>
+                    // Create a temp form to prevent clear_selection_collection being a query string param and use CentralSpacePost
+                    // to reload the search underneath batch edit modal.
+                    var temp_form = document.createElement("form");
+                    temp_form.setAttribute("method", "post");
+                    temp_form.setAttribute("action", window.location.href);
+
+                    // Instruct search page not to clear the selection collection
+                    var i = document.createElement("input");
+                    i.setAttribute("type", "hidden");
+                    i.setAttribute("name", "clear_selection_collection");
+                    i.setAttribute("value", "no");
+                    temp_form.appendChild(i);
+
+                    <?php
+                    if($CSRF_enabled)
+                        {
+                        ?>
+                        var csrf = document.createElement("input");
+                        csrf.setAttribute("type", "hidden");
+                        csrf.setAttribute("name", "<?php echo $CSRF_token_identifier; ?>");
+                        csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "no_clear_selection_collection"); ?>");
+                        temp_form.appendChild(csrf);
+                        <?php
+                        }
+                        ?>
+
+                    CentralSpacePost(temp_form, true, false, false);
+                    </script>
+                    <?php
+                    exit();
                     }
                 else if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {

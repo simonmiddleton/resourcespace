@@ -345,10 +345,13 @@ if(empty($per_page))
     }
 rs_setcookie('per_page', $per_page,0,"","",false,false);
 
-$go = getval("go", "");
 // Clear special selection collection if user runs a new search. Paging is not a new search. Also we allow for users that
-// want to see what they've selected so far.
-if($use_selection_collection && !in_array($go, array("next", "prev")) && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") === false)
+// want to see what they've selected so far. Client side we can POST clear_selection_collection=no to prevent it from clearing
+// (e.g when batch editing)
+$clear_selection_collection = (getval("clear_selection_collection", "") != "no");
+$paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
+$view_selected_request = (mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
+if($use_selection_collection && $clear_selection_collection && !$paging_request && !$view_selected_request)
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
     }
