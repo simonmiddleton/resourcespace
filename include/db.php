@@ -114,7 +114,7 @@ set_error_handler("errorhandler");
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
 if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
 # Load the real config
-if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: /pages/setup.php" );die(0);}
+if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
 
 error_reporting($config_error_reporting);
