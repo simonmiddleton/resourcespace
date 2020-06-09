@@ -16,7 +16,7 @@ if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_fil
     }
 
 // Don't trigger upgrade if request is done via ajax. Checking if upgrade is in progress can be done through ajax
-if(!$cli && $ajax)
+if((!$cli && $ajax) || $pagename == "setup") 
     {
     return;
     }
