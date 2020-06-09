@@ -174,7 +174,7 @@ $not_authenticated_pages = array('login', 'user_change_password','user_password'
 $browse_on = has_browsebar();
 if($browse_on)
     {
-    $browse_width   = getval("browse_width",$browse_default_width,true);
+    $browse_width   = $browse_default_width;
     $browse_show    = getval("browse_show","") == "show";
     ?>
     <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>

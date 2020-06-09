@@ -1692,7 +1692,7 @@ select.MultiSelect:before {
     float: left;
     overflow-x: hidden;
     overflow-y: auto;
-    min-width: 140px;
+    min-width: 265px;
 }
 .BrowseBarStructure {
     display: table-cell;
