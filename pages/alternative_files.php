@@ -97,7 +97,23 @@ if(!$modal)
     </p>
     <?php
     }
-
+    ?>
+    <div class="RecordHeader">
+        <div class="BackToResultsContainer">
+            <div class="backtoresults"> 
+            <?php
+            if($modal)
+                {
+                ?>
+                <a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php", $urlparams, array("modal" => "")); ?>" onclick="return CentralSpaceLoad(this);"></a>
+                &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();"></a>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+<?php
 if($alternative_file_resource_preview)
     {
     if(file_exists(get_resource_path($resource['ref'], true, 'col', false)))
