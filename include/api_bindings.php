@@ -413,6 +413,13 @@ function api_get_resource_data($resource)
     return $resdata;
     }
 
+function api_put_resource_data($resource,$data)
+    {
+    $data=json_decode($data,JSON_OBJECT_AS_ARRAY);
+    if (is_null($data)) {return false;}
+    return put_resource_data($resource,$data);
+    }
+
 function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
     global $disable_alternative_files, $alt_files_visible_when_restricted;
