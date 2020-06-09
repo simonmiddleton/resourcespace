@@ -2615,8 +2615,14 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
             <div class="clearerleft"> </div>
         </div>
         <?php 
-        }?>
-        
+        }
+    else if(!checkperm("x") && !empty($allowed_external_share_groups) && in_array($usergroup, $allowed_external_share_groups))
+        {
+        ?>
+        <input type="hidden" name="usergroup" value="<?php echo $usergroup; ?>">
+        <?php
+        }
+        ?>
         <div class="Question">
             <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
             <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
