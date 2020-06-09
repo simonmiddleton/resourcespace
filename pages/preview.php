@@ -208,13 +208,29 @@ if($annotate_enabled)
 # If viewing alternative files allow tabbing through them, else tab through resources in the collection
 if ($alternative != "-1")
     {
+    $thumbs_show="";
+    if ($saved_thumbs_state=="show")
+        {
+        $thumbs_show="show";
+        }
+    $defaultparams = array(
+        "ref"         =>  $ref,
+        "k"           =>  $k,
+        "from"        =>  getval("from",""),
+        "search"      =>  $search,
+        "offset"      =>  $offset,
+        "order_by"    =>  $order_by,
+        "sort"        =>  $sort,
+        "archive"     =>  $archive,
+        "thumbs"      =>  $thumbs_show);
+        
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alt_previous) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>" title="<?php echo $lang["previousresult"]?>"></a>
+         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, array("alternative"=>$alt_previous));?>" title="<?php echo $lang["previousresult"]?>"></a>
          &nbsp;
-         <a class="enterLink" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>"><?php echo $lang["vieworiginalresource"]?></a>
+         <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/view.php", $defaultparams, array("from"=>""))."&".hook("viewextraurl");?>"><?php echo $lang["vieworiginalresource"]?></a>
          &nbsp;
-         <a class="nextLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alt_next) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>" title="<?php echo $lang["nextresult"] ?>"></a><?php
+         <a class="prevLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, array("alternative"=>$alt_next));?>" title="<?php echo $lang["nextresult"]?>"></a><?php
     }
 else
     {
