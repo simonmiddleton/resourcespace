@@ -776,7 +776,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         && $fields[$n]['hide_when_uploading']
                     )
                         {
-                        $val = date('Y-m-d H:i:s');
+                        $val = date('Y-m-d H:i');
                         }
 					
 					
