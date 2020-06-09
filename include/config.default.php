@@ -3210,7 +3210,7 @@ $resource_view_use_pre = false;
 
 # Use the larger layout on the view page for landscape images, smaller layout for portrait images.
 # NOTE: Enabling $resource_view_large_ext will override this.
-$resource_view_large_orientation = false;
+$resource_view_large_orientation = true;
 
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
