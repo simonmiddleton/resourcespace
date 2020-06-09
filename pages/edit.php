@@ -1408,7 +1408,6 @@ if(!$multiple)
                 $selected_type = $shown_resource_types[0];
                 }
 
-            update_resource_type($ref, $selected_type);
             $resource['resource_type'] = $selected_type;
             }
             ?>
