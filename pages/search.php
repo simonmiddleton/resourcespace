@@ -350,7 +350,7 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 // (e.g when batch editing)
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
-$view_selected_request = (mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
+$view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
 if($use_selection_collection && $clear_selection_collection && !$paging_request && !$view_selected_request)
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
