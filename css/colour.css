@@ -435,6 +435,10 @@ a.ui-button.plupload_button.ui-button-disabled {
     padding-bottom: 5px;
     }
 
+.FeaturedSimpleTile .FeaturedSimpleTileContents .FeaturedSimpleTileText h2 {
+    background-color: unset;
+}
+
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited { color: #474747; }
 .ClearSelectedButton { background-color: #ff2b2b; }
 .ClearSelectedButton:hover { background-color: #b71c1c; }

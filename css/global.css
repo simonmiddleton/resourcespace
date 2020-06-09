@@ -579,7 +579,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 /*Home styling */
 .HomePanel {margin:15px 15px 0 0;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
-.HomePanel h2 {display:block;margin: 5px 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.HomePanel h2 {display:block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
 .HomePicturePanel {    margin:0px 15px 10px 0px;float: left;width: 517px;}
 .HomePicturePanelIN img {width:517px; height:350px;}
@@ -1313,8 +1313,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2{
     background: transparent;
-    margin: auto;  
-    max-width: 215px;    
+    max-width: 220px;    
     white-space: normal;
 }
 
