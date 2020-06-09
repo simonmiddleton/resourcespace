@@ -108,7 +108,7 @@ function do_search(
         "title"           => "title $sort,r.ref $sort",
         "file_path"       => "file_path $sort,r.ref $sort",
         "resourceid"      => "r.ref $sort",
-        "resourcetype"    => "order_by ASC, r.ref $sort",
+        "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
         "status"          => "archive $sort",
