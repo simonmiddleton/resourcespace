@@ -390,9 +390,13 @@ if ($search_titles)
                 break;
             }
         }
-    else if (substr($search,0,1)!="!" || substr($search,0,6)=="!empty")
+    elseif (substr($search,0,6)=="!empty")
 		{ 
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);"></a>'.$searchcrumbs.'</div></div> '; 
+        $fieldref=intval(trim(substr($search,6)));
+        $fieldinfo=get_resource_type_field($fieldref);
+        $displayname=i18n_get_translated($fieldinfo["title"]);
+        if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
+		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!empty'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'. $lang["search_title_empty"] . ' ' . $displayname . '</a>'.$searchcrumbs.'</div></div> '; 
 		}
     elseif (substr($search,0,14)=="!integrityfail")
         {

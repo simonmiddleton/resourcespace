@@ -2231,6 +2231,7 @@ $lang["resource_type_delete_select_new"]="Please select the resource type that t
 $lang["resourcetype-global_field"]="Global";
 $lang["resourcetype-global_field"]="Global";
 $lang["search_title_hasdata"]="Resources with data in field";
+$lang["search_title_empty"]="Resources with no data in field";
 $lang["show_resources"]="Show resources";
 $lang["team_user_contributions"]="Contributions";
 $lang["team_user_view_contributions"]="View contributions";
