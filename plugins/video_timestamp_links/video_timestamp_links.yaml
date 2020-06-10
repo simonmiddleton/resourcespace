@@ -3,3 +3,5 @@ author: Montala Limited
 version: 1.0
 desc: Looks for timestamp links in HH:MM:SS format in fields and adds clickable links to that point in the video preview.
 category: User Interface
+icon: fas fa-film
+title: Video Timestamp Links

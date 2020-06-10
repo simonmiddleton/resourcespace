@@ -407,9 +407,9 @@ if ($use_plugins_manager)
 				$plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
 				$p_y = get_plugin_yaml($plugin_yaml_path, false);
 				# Write what information we have to the plugin DB.
-				sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select) ".
+				sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) ".
 						  "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
-						  "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}')");
+						  "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}','{$p_y['title']}','{$p_y['icon']}')");
 				}
 			}
 		}
