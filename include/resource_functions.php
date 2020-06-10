@@ -5,6 +5,28 @@
 include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
 include_once __DIR__ . '/metadata_functions.php';
 
+function put_resource_data($resource,$data)
+    {   
+    // Updates $resource with the name/value pairs in $data - this relates to the resource table column, not metadata.
+ 
+    // Check access
+    if (!get_edit_access($resource)) {return false;}
+    
+    // Define safe columns
+    $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","created_by","mapzoom","modified","geo_lat","geo_long");
+ 
+    $sql="";
+    foreach ($data as $column=>$value)
+        {
+        if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
+        if ($sql!="") {$sql.=",";}
+        $sql.=$column . "='" . escape_check($value) . "'";
+        }
+    if ($sql=="") {return false;} // Nothing to do.
+    sql_query("update resource set $sql where ref='" . escape_check($resource) . "'");
+    return true;
+    }
+
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
