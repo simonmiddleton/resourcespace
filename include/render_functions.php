@@ -742,15 +742,14 @@ function render_sort_order(array $order_fields,$default_sort_order)
             }
 
         $option .= sprintf('
-                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s&sort=%s"
+                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s"
             ',
             $baseurl_short,
             urlencode($search),
             $name,
             urlencode($archive),
             urlencode($k),
-            urlencode($restypes),
-            ($name == "resourcetype" ? "ASC" : "DESC")
+            urlencode($restypes)
         );
 
         $option .= '>';
@@ -782,7 +781,15 @@ function render_sort_order(array $order_fields,$default_sort_order)
             }
         else
             {
-            var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+            if(selected_option='resourcetype')
+                {
+                // The default sort should be ascending when sorting by resource type
+                var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+                }
+            else
+                {
+                var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+                }
             }
         option_url += '&sort=' + selected_sort_option;
          <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(option_url);
