@@ -13,7 +13,7 @@
 18,caption,Caption,,1,20,1,0,0,,1,0,2#120,"<div class=""item""><h3>[title]</h3><p>[value]</p></div>
 
 <div class=""clearerleft""> </div>",,0,,"Caption-Abstract,Description,ImageDescription",1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,0,1,0
-25,,Notes,,1,130,0,0,0,,1,0,2#103,"<div class=""RecordStory"">
+25,notes,Notes,,1,130,0,0,0,,1,0,2#103,"<div class=""RecordStory"">
 
   <h1>[title]</h1>
 
