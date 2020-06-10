@@ -742,14 +742,15 @@ function render_sort_order(array $order_fields,$default_sort_order)
             }
 
         $option .= sprintf('
-                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s"
+                data-url="%spages/search.php?search=%s&amp;order_by=%s&amp;archive=%s&amp;k=%s&amp;restypes=%s&sort=%s"
             ',
             $baseurl_short,
             urlencode($search),
             $name,
             urlencode($archive),
             urlencode($k),
-            urlencode($restypes)
+            urlencode($restypes),
+            ($name == "resourcetype" ? "ASC" : "DESC")
         );
 
         $option .= '>';
