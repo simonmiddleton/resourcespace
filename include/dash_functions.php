@@ -1285,14 +1285,35 @@ function render_delete_dialog_JS($all_users=false)
  * Helper Functions
  */
 function parse_dashtile_link($link)
-	{
-	global $userref,$upload_then_edit;
-	$link = str_replace("[userref]",$userref,$link);
-    //For upload tiles respect the upload then edit preference
-    if ((strpos($link, 'uploader=plupload') !== false) && $upload_then_edit){$link="upload_plupload.php";}
+    {
+    global $userref, $upload_then_edit;
+    $link = str_replace("[userref]", $userref, $link);
 
-	return $link;
-	}
+    //For upload tiles respect the upload then edit preference
+    if((strpos($link, 'uploader=plupload') !== false) && $upload_then_edit)
+        {
+        global $baseurl;
+
+        $query = parse_url($link, PHP_URL_QUERY);
+        if($query === false || is_null($query))
+            {
+            $query = "";
+            }
+
+        /**
+        * @var path is the real ResourceSpace path (regardless if RS is installed under web root or in a subfolder)
+        * Example:
+        * For http://localhost/trunk/pages/edit.php?ref=-[userref]&uploader=plupload the real path is pages/edit.php as 
+        * RS handles this via its baseurl when generating absolute paths.
+        */
+        $path = str_replace("{$baseurl}/", "", $link);
+        $path = str_replace("?{$query}", "", $path);
+
+        $link = str_replace($path, "pages/upload_plupload.php", $link);
+        }
+
+    return $link;
+    }
 
 /*
  * Dash Admin Display Functions
