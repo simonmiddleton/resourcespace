@@ -1,6 +1,6 @@
 <?php
-include dirname(__FILE__) . "/../../include/db.php";
-include dirname(__FILE__) . "/../../include/image_processing.php";
+include_once dirname(__FILE__) . "/../../include/db.php";
+include_once dirname(__FILE__) . "/../../include/image_processing.php";
 
 $cli_short_options = 'h';
 $cli_long_options  = array(
