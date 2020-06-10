@@ -989,7 +989,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     $sql_filter.="r.ref>0";
 
     // Only users with v perm can search for resources with a specific access
-    if(checkperm("v") && !is_null($access) && is_numeric($access) && !checkperm("ea{$access}"))
+    if(checkperm("v") && !is_null($access) && is_numeric($access))
         {
         $sql_filter .= (trim($sql_filter) != "" ? " AND " : "");
         $sql_filter .= "r.access = {$access}";

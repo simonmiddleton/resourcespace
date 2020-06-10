@@ -741,11 +741,6 @@ if(checkperm("v"))
         <?php
         foreach(range(0, 2) as $access_level)
             {
-            if(checkperm("ea{$access_level}"))
-                {
-                continue;
-                }
-
             $label = htmlspecialchars($lang["access{$access_level}"]);
             $extra_attributes = (!is_null($access) && $access_level == $access ? " selected" : "");
 
