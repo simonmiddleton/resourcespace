@@ -302,6 +302,7 @@ $validpage = false;
 if($create)
 	{
 	$tile_type                    = getvalescaped("tltype","");
+    $tile_style                   = getvalescaped('tlstyle', "");
 	$tile_nostyle                 = getvalescaped("nostyleoptions",FALSE);
 	$allusers                     = getvalescaped("all_users",FALSE);
 	$url                          = getvalescaped("url","");
@@ -315,6 +316,11 @@ if($create)
 
     // Promoted resources can be available for search tiles (srch) and feature collection tiles (fcthm)
     $promoted_resource = getvalescaped('promoted_resource', FALSE);
+
+    if(!allow_tile_colour_change($tile_type, $tile_style))
+        {
+        $tile_nostyle = true;
+        }
 
 	if($tile_type=="srch")
 		{
