@@ -1430,7 +1430,7 @@ function allow_tile_colour_change($tile_type, $tile_style = '')
         }
 
     // Is one of the allowed styles in the styles available for this tile type?
-    if($dash_tile_colour && 0 < count(array_intersect($tile_styles[$tile_type], $allowed_styles)))
+    if($dash_tile_colour && isset($tile_styles[$tile_type]) && 0 < count(array_intersect($tile_styles[$tile_type], $allowed_styles)))
         {
         return true;
         }
