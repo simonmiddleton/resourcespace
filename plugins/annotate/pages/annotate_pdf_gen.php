@@ -1,8 +1,8 @@
 <?php
 
 // this program creates a new PDF document with annotations
-
 include('../../../include/db.php');
+include_once "../include/annotate_functions.php";
 include('../../../include/authenticate.php');
 
 global $plugins;
@@ -20,8 +20,8 @@ $cleartmp=getvalescaped("cleartmp","");
 
 if ($cleartmp!="")
     {
-    echo getvalescaped("uniqid","");
-    clear_annotate_temp($ref,getvalescaped("uniqid",""),$previewpage);
+    echo getvalescaped("annotateid","");
+    clear_annotate_temp($ref,getvalescaped("annotateid",""),$previewpage);
     exit("cleared");
     }
 

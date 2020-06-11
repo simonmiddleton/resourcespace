@@ -1,33 +1,32 @@
 <?php
 
-function clear_annotate_temp($ref,$uniqid){
-	if ($uniqid!=""){$uniqfolder="/".$uniqid;} else {$uniqfolder="";}
-	$tmpfolder=get_temp_dir(false,"annotate$uniqfolder");
-	$jpg_path=get_annotate_file_path($ref,true,"jpg");
-	$pdf_path=get_annotate_file_path($ref,true,"pdf");
-	
-	if (file_exists($jpg_path)){unlink($jpg_path);}
-	if (file_exists($pdf_path)){unlink($pdf_path);}
-	if ($uniqfolder!="" && file_exists($tmpfolder)){rmdir($tmpfolder);}
-}
+function clear_annotate_temp($ref,$annotateid)
+    {
+    $jpg_path=get_annotate_file_path($ref,true,"jpg");
+    $pdf_path=get_annotate_file_path($ref,true,"pdf");
 
+    if (file_exists($jpg_path)){unlink($jpg_path);}
+    if (file_exists($pdf_path)){unlink($pdf_path);}
+    }
+  
+// $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date(time()) . $scramble_key) . ".jpg";
+// $crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date(time()) . ".jpg";
+    
 
-function get_annotate_file_path($ref,$getfilepath,$extension){
-	global $storageurl;
-	global $storagedir;
-	global $scramble_key;	
-	
-	if (!file_exists($storagedir . "/annotate")){mkdir($storagedir . "/annotate",0777);}
-	
-	global $uniqid; // if setting uniqid before manual create_annotated_pdf function use
-	$uniqid=getvalescaped("uniqid",$uniqid); //or if sent through a request
-	if ($uniqid!=""){$uniqfolder="/".$uniqid;} else {$uniqfolder="";}
-	
-	$tmpfolder=get_temp_dir(!$getfilepath,"annotate$uniqfolder");
-	$file=$tmpfolder."/$uniqid-annotations.".$extension;
-
-	return  $file;
-}
+function get_annotate_file_path($ref,$getfilepath,$extension)
+    {
+    global $username, $scramble_key, $baseurl, $annotateid;
+    $annotateid=getvalescaped("annotateid",$annotateid); //or if sent through a request
+    if($getfilepath)
+        {
+        $path = get_temp_dir(false,'') . "/annotate_" . $ref . "_" . md5($username . $annotateid . $scramble_key) . "." . $extension;
+        }
+    else
+        {
+        $path= $baseurl . "/pages/download.php?tempfile=annotate_" . $ref . "_" . $annotateid . "." . $extension . "&noattach=true";
+        }    
+    return $path;
+    }
 	
 
 function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=false,$preview=false){
@@ -112,7 +111,6 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	if ($size == "letter") {$width=8.5;$height=11;}
 	if ($size == "legal") {$width=8.5;$height=14;}
 	if ($size == "tabloid") {$width=11;$height=17;}
-
 	#configuring the sheet:
 	$pagewidth=$pagesize[0]=$width;
 	$pageheight=$pagesize[1]=$height;
@@ -122,13 +120,18 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	// set document information
 	$pdf->SetCreator(PDF_CREATOR);
 	$pdf->SetAuthor($userfullname);
-	if ($is_collection){ $pdf->SetTitle(i18n_get_collection_name($collectiondata).' '.$date);}
-	else { $pdf->SetTitle(i18n_get_translated($resourcedata['field'.$view_title_field]).' '.$date);}
+    if ($is_collection)
+        {
+        $pdf->SetTitle(i18n_get_collection_name($collectiondata).' '.$date);
+        }
+    else
+        {
+        $pdf->SetTitle(i18n_get_translated($resourcedata['field'.$view_title_field]).' '.$date);
+        }
 	$pdf->SetSubject($lang['annotations']);
 	$pdf->setPrintHeader(false);
 	$pdf->setPrintFooter(false);
 	$pdf->setMargins(.5,.5,.5);
-	
 	$page=1;
 	$totalpages=1;
 	$m=1;
@@ -259,8 +262,6 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		// cleanup
 		if (file_exists($pdfstoragepath)){unlink($pdfstoragepath);}
 		if (file_exists($jpgstoragepath)){unlink($jpgstoragepath);}
-		$pathinfo=pathinfo($jpgstoragepath);
-		if (file_exists($pathinfo['dirname'])){rmdir($pathinfo['dirname']);}
 		$pdf->Output($filename.".pdf",'D');
 		}
 	else {
