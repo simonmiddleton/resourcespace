@@ -6,14 +6,26 @@ function HookImage_textDownloadModifydownloadfile()
 	$image_text_restypes, $image_text_override_groups, $image_text_filetypes,
 	$size, $page, $use_watermark, $alternative, $image_text_height_proportion,
 	$image_text_max_height, $image_text_min_height, $image_text_font, $image_text_position, $image_text_banner_position;
-	
+    
 	# Return if not configured for this resource type or if user has requested no overlay and is permitted this
-	if(!in_array($resource_data['resource_type'], $image_text_restypes) || !in_array(strtoupper($ext), $image_text_filetypes) || (getval("nooverlay","")!="" && in_array($usergroup, $image_text_override_groups)) || $use_watermark){return false;}
+    if(!is_array($resource_data)
+        ||
+        !in_array($resource_data['resource_type'], $image_text_restypes) 
+        ||
+        !in_array(strtoupper($ext), $image_text_filetypes)
+        ||
+        (getval("nooverlay","")!="" && in_array($usergroup, $image_text_override_groups))
+        ||
+        $use_watermark)
+        {
+        return false;
+        }
 	
     # Get text from field
 	global $image_text_field_select, $image_text_default_text;
-	$overlaytext=strip_leading_comma(mb_convert_encoding(get_data_by_field($ref, $image_text_field_select), "pass", "auto"));
-	if($overlaytext=="")
+    $overlaydata = get_data_by_field($ref, $image_text_field_select);
+    $overlaytext=mb_convert_encoding($overlaydata, mb_detect_encoding($overlaydata),"UTF-8");
+    if($overlaytext=="")
 		{
 		if($image_text_default_text!="")
 			{$overlaytext=$image_text_default_text;}
