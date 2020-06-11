@@ -4448,7 +4448,7 @@ function get_resource_access($resource)
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
         $prevent_open_access_on_edit_for_active, $search_filter_nodes, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_filter_strict, $search_all_workflow_states,
-        $userderestrictfilter, $userdata, $lang;
+        $userderestrictfilter, $userdata;
 	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.	
 		
 	# Returns the access that the currently logged-in user has to $resource.
@@ -4468,22 +4468,13 @@ function get_resource_access($resource)
 	if (!is_array($resource))
         {
         $resourcedata=get_resource_data($resource,true);
-        // if resource not returned from get_resource_data(), raise error    
-        if (!$resourcedata)    
-            {   
-            echo $lang["error"] . ": " . $lang["resourcenotfound"]  . " " . $resource;
-            exit;
-            }
         }
 	else
         {
         $resourcedata=$resource;
         $passthru="yes";
         }
-               
-    
-
-
+                
 	$ref=$resourcedata['ref'];
 	$access=$resourcedata["access"];
 	$resource_type=$resourcedata['resource_type'];
