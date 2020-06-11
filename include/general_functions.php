@@ -157,7 +157,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $original_time_part = substr($date, 11, 5);
     if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
         {
-        $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
+        $date = offset_user_local_timezone($date, 'Y-m-d H:i');
         }
 
     $y = substr($date, 0, 4);

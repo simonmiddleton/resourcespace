@@ -459,7 +459,7 @@ function propose_changes_display_field($n, $field)
                     eval($field['value_filter']);
             }
                     else if ($field["type"]==4 || $field["type"]==6) { 
-                            $value=NiceDate($value,false,true);
+                            $value=nicedate($value,false,true);
                     }
             
             ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo $value ?></div><?php                        
