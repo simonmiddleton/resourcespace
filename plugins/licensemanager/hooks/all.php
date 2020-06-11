@@ -6,7 +6,7 @@ function HookLicensemanagerAllExport_add_tables()
     return array("resource_license"=>array("scramble"=>array()));
     }
 
-function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,array $options)
+function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,array $options, array $collection_data)
     {
     // Add the options to link a license and unlink the license
     global $search,$lang,$k,$baseurl_short;
@@ -15,6 +15,8 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
         {
         return array();
         }
+
+    $collection = (isset($collection_data["ref"]) ? $collection_data["ref"] : null);
 
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
@@ -25,11 +27,10 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
     $data_attr_url = generateURL(
         $baseurl_short . "plugins/licensemanager/pages/batch.php",
         array(
-            'collection'   => $search,
-            'unlink' => 'true',
-            'search'     => getval('search',''),
+            'collection' => $collection,
+            'unlink'     => 'true',
+            'search'     => getval('search', $search),
             'order_by'   => getval('order_by',''),
-            'collection' => getval('collection',''),
             'offset'     => getval('offset',0),
             'restypes'   => getval('restypes',''),
             'archive'    => getval('archive','')
@@ -51,10 +52,9 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
     $data_attr_url = generateURL(
         $baseurl_short . "plugins/licensemanager/pages/batch.php",
         array(
-            'collection'   => $search,
-            'search'     => getval('search',''),
+            'collection' => $collection,
+            'search'     => getval('search', $search),
             'order_by'   => getval('order_by',''),
-            'collection' => getval('collection',''),
             'offset'     => getval('offset',0),
             'restypes'   => getval('restypes',''),
             'archive'    => getval('archive','')
