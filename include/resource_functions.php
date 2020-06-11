@@ -2744,6 +2744,21 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
+    
+    foreach($fields as $fkey => $field)
+        {
+        $fieldorder_by[$fkey]   = $field["order_by"]; 
+        $fieldrestype[$fkey]    = $field["resource_type"]; 
+        $fieldref[$fkey]        = $field["ref"]; 
+        }
+    if($ord_by)
+        {
+        array_multisort($fieldorder_by, SORT_ASC, $fieldrestype, SORT_ASC, $fieldref, SORT_ASC, $fields);
+        }
+        else
+        {
+        array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
+        }
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
     $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
