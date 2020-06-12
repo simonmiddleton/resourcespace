@@ -300,3 +300,15 @@ $corefields = array(
 define("COLLECTION_TYPE_STANDARD",  0);
 define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then edit mode
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
+
+
+
+// ----------------------------------------------
+// RESOURCE ACCESS TYPES
+// ----------------------------------------------
+
+define("RESOURCE_ACCESS_FULL", 0); # Full Access (download all sizes)
+define("RESOURCE_ACCESS_RESTRICTED", 1); # 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
+define("RESOURCE_ACCESS_CONFIDENTIAL", 2); # Confidential (no access)
+define("RESOURCE_ACCESS_CUSTOM_GROUP", 3); # custom group access
+define("RESOURCE_ACCESS_INVALID_REQUEST", 99); # invalid resource request eg. invalid resource ref
