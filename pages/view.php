@@ -323,7 +323,7 @@ $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
 
 # Load edit access level (checking edit permissions - e0,e-1 etc. and also the group 'edit filter')
-$edit_access = ($access==0 && get_edit_access($ref,$resource["archive"],$fields,$resource));
+$edit_access = get_edit_access($ref,$resource["archive"],$fields,$resource);
 
 # Check if resource is locked
 $resource_locked = (int)$resource["lock_user"] != 0;
