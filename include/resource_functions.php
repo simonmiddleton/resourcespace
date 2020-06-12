@@ -411,13 +411,17 @@ function get_resource_data($ref,$cache=true)
 function put_resource_data($resource,$data)
     {   
     // Updates $resource with the name/value pairs in $data - this relates to the resource table column, not metadata.
+    global $edit_contributed_by;
 
     // Check access
     if (!get_edit_access($resource)) {return false;}
     
     // Define safe columns
-    $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","created_by","mapzoom","modified","geo_lat","geo_long");
+    $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long");
 
+    // Permit the created by column to be changed also
+    if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
+    
     $sql="";
     foreach ($data as $column=>$value)
         {
