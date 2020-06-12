@@ -333,6 +333,8 @@ if($create)
 		$title=getvalescaped("title","");
 		$resource_count=getvalescaped("resource_count",0,TRUE);
 
+        unset($tile_style);
+
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
 		
