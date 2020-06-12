@@ -1107,7 +1107,7 @@ if($ref < 0)
     }
 else
     {
-    $form_action = generateURL($baseurl_short . "pages/edit.php",array_merge($urlparams));
+    $form_action = generateURL($baseurl_short . "pages/edit.php", $urlparams);
     }
 ?>
 
@@ -1260,7 +1260,8 @@ else
 
   if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
   <div class="Question" id="question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
+   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label>
+   <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>); <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
    <?php if ($resource["has_image"]==1) { ?>
    <?php
@@ -1364,7 +1365,7 @@ if(!$multiple)
         ?>
 
         <select name="resource_type" id="resourcetype" class="stdwidth" 
-                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
         <?php
         $types                = get_resource_types();
         $shown_resource_types = array();
