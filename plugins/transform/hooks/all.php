@@ -11,8 +11,13 @@ function HookTransformAllAdditionalheaderjs()
 
 function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data)
     {
-	global $cropper_enable_batch,$count_result,$lang,$baseurl_short, $userref;
-    
+	global $cropper_enable_batch,$count_result,$lang,$baseurl_short, $userref, $internal_share_access;
+
+    if($internal_share_access === false)
+        {
+        return false;
+        }
+
 	$c=count($options);
         
     if ($cropper_enable_batch

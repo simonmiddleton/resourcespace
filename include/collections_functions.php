@@ -2539,7 +2539,12 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Copy resources from another collection. Must be in top actions or have more than one collection available if on collections.php
-    if(!checkperm('b') && collection_readable($collection_data['ref']) && ($top_actions || (is_array($list) && count($list) > 1)))
+    if(
+        !checkperm('b')
+        && ($k == '' || $internal_share_access)
+        && collection_readable($collection_data['ref'])
+        && ($top_actions || (is_array($list) && count($list) > 1))
+    )
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_copy_resources.php",array("ref"=>$collection_data['ref']));
         $options[$o]['data_attr'] = $data_attribute;

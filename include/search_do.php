@@ -62,8 +62,13 @@ function do_search(
            $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
-           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl;
-        
+           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access;
+
+    if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
+        {
+        return array();
+        }
+
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
         {
