@@ -104,15 +104,12 @@ function HookGrant_editEditReplacesubmitbuttons()
     <?php
    
 	if ($multiple)
-                { ?>
-                <div class="Question" id="editmultiple_grant_edit"><input name="editthis_grant_edit" id="editthis_grant_edit" value="yes" type="checkbox" onClick="var q=document.getElementById('grant_edit_fields');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo $lang["grant_edit_title"]?></label></div><?php
-                }
-	else
-		{?>
-		<h1 id="GrantEditSectionHead"><?php echo $lang["grant_edit_title"]?></h1>
-		<?php
-		}
-	
+        { ?>
+        <div class="Question" id="editmultiple_grant_edit">
+            <input name="editthis_grant_edit" id="editthis_grant_edit" value="yes" type="checkbox" onClick="var q=document.getElementById('grant_edit_fields');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
+            <label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo $lang["grant_edit_title"]?></label>
+        </div><?php
+        }
 	
 	if(count($grant_editusers)>0 && !$multiple)
 		{

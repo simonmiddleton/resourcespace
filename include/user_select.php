@@ -186,7 +186,10 @@ jQuery(document).ready(function () {
 	jQuery('#<?php echo $autocomplete_user_scope; ?>autocomplete').autocomplete(
 		{
 		source: "<?php echo $baseurl?>/pages/ajax/autocomplete_user.php<?php if(isset($single_user_select_field_id)) { ?>?nogroups=true<?php } ?>",
-            select: <?php echo $autocomplete_user_scope; ?>addUser
+        select: <?php echo $autocomplete_user_scope; ?>addUser,
+        classes: {
+                "ui-autocomplete": "userselect"
+            }
 		} );
 })
 
