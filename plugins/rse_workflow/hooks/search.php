@@ -3,7 +3,9 @@ function HookRse_workflowSearchRender_search_actions_add_option(array $options, 
     {
     global $internal_share_access;
 
-    if($internal_share_access === false)
+    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
+
+    if($k != "" && $internal_share_access === false)
         {
         return false;
         }
