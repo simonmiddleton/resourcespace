@@ -505,7 +505,7 @@ if(!$validpage)
 		<?php
 		}
 
-if('' != $tile_type)
+if('' != $tile_type && $tile_type !== "conf")
     {
     ?>
     <!-- Dash tile size selector -->
