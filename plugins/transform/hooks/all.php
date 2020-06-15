@@ -9,13 +9,21 @@ function HookTransformAllAdditionalheaderjs()
     }
 
 
-function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data)
+function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data, array $urlparams)
     {
 	global $cropper_enable_batch,$count_result,$lang,$baseurl_short, $userref, $internal_share_access;
 
-    if($internal_share_access === false)
+    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
+
+    if($k != "" && $internal_share_access === false)
         {
         return false;
+        }
+
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
         }
 
 	$c=count($options);
