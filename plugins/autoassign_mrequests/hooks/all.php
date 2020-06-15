@@ -1,4 +1,5 @@
 <?php
+include_once(dirname(__FILE__) . '/../include/autoassign_general.php');
 
 function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $collection_ref, $message, $manage_collection_request)
 {
