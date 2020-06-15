@@ -538,7 +538,7 @@ function api_get_related_resources($ref)
     global $enable_related_resources;
     $access = get_resource_access($ref);
     if($access == RESOURCE_ACCESS_INVALID_REQUEST)
-        {return false;}
+        {return array();}
 
     if(!$enable_related_resources || $access == 2)
         {
