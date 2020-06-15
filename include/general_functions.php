@@ -1548,20 +1548,24 @@ function strip_extension($name,$use_ext_list=false)
          $ext = strrchr($name, '.');
          if ($use_ext_list != false)
          {
-            // Use list of specified extensions if requested.
-             global $download_filename_strip_extensions;
-             $fn_extension=substr(strrchr($name, '.'),1);
-             if ($use_ext_list == true && isset($download_filename_strip_extensions) && in_array(strtolower($fn_extension),$download_filename_strip_extensions))
-                 {
-                 $filename_new = substr($name, 0, -strlen(".".$fn_extension));
-                 return $filename_new;
-                 }
-             // The extension specified was not in config $download_filename_strip_extensions. Just return the original value.
-             return $name;
+            // Use list of specified extensions if config present.
+            global $download_filename_strip_extensions;
+            $fn_extension=substr(strrchr($name, '.'),1);
+            if ($use_ext_list == true && isset($download_filename_strip_extensions) && in_array(strtolower($fn_extension),$download_filename_strip_extensions))
+                {
+                $filename_new = substr($name, 0, -strlen(".".$fn_extension));
+                return $filename_new;
+                }
+            // Attempt to remove file extension from string where download_filename_strip_extensions is not configured.
+            if($ext !== false)
+                {
+                $name = substr($name, 0, -strlen($ext));
+                }
+            return $name; 
          }
          else
          {
-             // Attempt to remove file extension from string where download_filename_strip_extensions is not available.
+             // Attempt to remove file extension from string where download_filename_strip_extensions is not configured.
              if($ext !== false)
                 {
                     $name = substr($name, 0, -strlen($ext));
