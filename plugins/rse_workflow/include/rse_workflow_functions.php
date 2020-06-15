@@ -175,7 +175,6 @@ function rse_workflow_validate_action(array $action, array $resource)
 
     $resource_in_valid_state = in_array($resource['archive'], explode(',', $action['statusfrom']));
 
-    $edit_access = false;
     // resource[edit_access] can be added by outside context if this information is already available to increase performance
     // if action is validated for a list of resources (3k+) that we had to iterate over
     if(!isset($resource["edit_access"]))
@@ -184,7 +183,7 @@ function rse_workflow_validate_action(array $action, array $resource)
         }
     else
         {
-        $edit_access = $resource["edit_access"];
+        $edit_access = (is_bool($resource["edit_access"]) ? $resource["edit_access"] : false);
         }
 
     $check_edit_access = ($edit_access && checkperm("e{$action['statusto']}"));

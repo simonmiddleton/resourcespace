@@ -78,9 +78,15 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     {
     include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
 
-    global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos, $userref;
+    global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos,
+           $userref, $k, $internal_share_access;
 
     if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        {
+        return false;
+        }
+
+    if($k != "" && $internal_share_access === false)
         {
         return false;
         }
