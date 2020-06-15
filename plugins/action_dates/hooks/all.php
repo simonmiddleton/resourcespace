@@ -165,11 +165,11 @@ function HookAction_datesCronCron()
         
         
     // Perform additional actions based on fields
-    foreach($action_dates_extra_config as $action_dates_extra_config)
+    foreach($action_dates_extra_config as $action_dates_extra_config_setting)
         {
-        $datefield = get_resource_type_field($action_dates_extra_config["field"]);
+        $datefield = get_resource_type_field($action_dates_extra_config_setting["field"]);
         $field = $datefield["ref"];
-        $newstatus = $action_dates_extra_config["status"];
+        $newstatus = $action_dates_extra_config_setting["status"];
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
             echo "action_dates: Checking dates for field " . $datefield["title"] . PHP_EOL;
