@@ -1447,7 +1447,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($open_access_for_contributor && $userref == $cuser)
             {
             $sql_filter="archive IN (" . implode(",",$archive) . ")";
-            $sql_join="";
+            $sql_join = " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
             }
 
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);

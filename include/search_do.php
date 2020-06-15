@@ -980,7 +980,7 @@ function do_search(
     //                                                      order by RESOURCE TYPE
     // *******************************************************************************
 
-    $sql_join .= " JOIN resource_type rty  on r.resource_type = rty.ref  ";
+    $sql_join .= " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
 
     $select .= ", rty.order_by ";
 
@@ -1547,7 +1547,6 @@ function do_search(
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
- 
    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only);
     if ($special_results!==false)
         {
