@@ -140,7 +140,7 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
     $order_by= "relevance";
     $archive = $linkstring["archive"];
     $sort = "";
-    $tile_search=do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false);
+    $tile_search=do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false,false,true);
     if(!is_array($tile_search))
         {
         $found_resources=false;
