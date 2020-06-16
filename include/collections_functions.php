@@ -2018,7 +2018,13 @@ function get_collection_external_access($collection)
 	{
 	# Return all external access given to a collection.
 	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='" . escape_check($collection) . "' group by access_key order by date");
+	global $userref;
+
+	# Restrict to only their shares unless they have the elevated 'v' permission
+    $condition="";
+    if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
+
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
 }
 function delete_collection_access_key($collection,$access_key)

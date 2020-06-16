@@ -5794,8 +5794,14 @@ if(!function_exists("get_resource_external_access")){
 function get_resource_external_access($resource)
 	{
 	# Return all external access given to a resource 
-	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' group by access_key,access,expires,collection,usergroup order by maxdate");
+    # Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
+    global $userref;
+
+    # Restrict to only their shares unless they have the elevated 'v' permission
+    $condition="";
+    if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
+    
+    return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' $condition group by access_key,access,expires,collection,usergroup order by maxdate");
 	}
 }
         
