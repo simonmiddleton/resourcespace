@@ -11,7 +11,7 @@ function HookTransformAllAdditionalheaderjs()
 
 function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data, array $urlparams)
     {
-	global $cropper_enable_batch,$count_result,$lang,$baseurl_short, $userref, $internal_share_access;
+	global $cropper_enable_batch,$count_result,$lang, $baseurl, $userref, $internal_share_access;
 
     $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
 
@@ -26,8 +26,6 @@ function HookTransformAllRender_actions_add_collection_option($top_actions,$opti
         $options = $GLOBALS["hook_return_value"];
         }
 
-	$c=count($options);
-        
     if ($cropper_enable_batch
         && $count_result > 0
         &&  (
@@ -37,13 +35,21 @@ function HookTransformAllRender_actions_add_collection_option($top_actions,$opti
             )
         )
         {
-        $data_attribute['url'] = sprintf('%splugins/transform/pages/collection_transform.php?collection=%s',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
+
+        $annotate_option = array(
+            "value" => "transform",
+            "label" => $lang["transform"],
+            "data_attr" => array(
+                "url" => generateURL(
+                    "{$baseurl}/plugins/transform/pages/collection_transform.php",
+                    $urlparams,
+                    array(
+                        "collection" => $collection_data['ref'],
+                    )),
+            ),
         );
-        $options[$c]['value']='transform';
-        $options[$c]['label']=$lang["transform"];
-        $options[$c]['data_attr']=$data_attribute;
+        $options[] = $annotate_option;
+
         return $options;
         }
     }

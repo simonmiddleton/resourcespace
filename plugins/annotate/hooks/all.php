@@ -32,19 +32,30 @@ function HookAnnotateAllRemoveannotations(){
     sql_query("update resource set annotation_count=0 where ref='$ref_escaped'");   
     sql_query("delete from resource_keyword where resource='$ref_escaped' and annotation_ref>0");;
 }
-function HookAnnotateAllRender_actions_add_collection_option($top_actions,$options){
-    global $lang,$pagename,$annotate_pdf_output,$annotate_pdf_output_only_annotated,$baseurl_short,$collection,$count_result;
-    
-    $c=count($options);
-    
+
+function HookAnnotateAllRender_actions_add_collection_option($top_actions, array $options, $collection_data, array $urlparams){
+    global $lang,$pagename,$annotate_pdf_output,$annotate_pdf_output_only_annotated,$baseurl,$collection,$count_result;
+
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
     if ($annotate_pdf_output || $count_result!=0){
-        $data_attribute['url'] = sprintf('%splugins/annotate/pages/annotate_pdf_config.php?col=%s',
-            $baseurl_short,
-            urlencode($collection)
+        $annotate_option = array(
+            "value" => "annotate",
+            "label" => $lang["pdfwithnotes"],
+            "data_attr" => array(
+                "url" => generateURL(
+                    "{$baseurl}/plugins/annotate/pages/annotate_pdf_config.php",
+                    $urlparams,
+                    array(
+                        "col" => $collection,
+                    )),
+            ),
         );
-        $options[$c]['value']='annotate';
-        $options[$c]['label']=$lang['pdfwithnotes'];
-        $options[$c]['data_attr']=$data_attribute;
+        $options[] = $annotate_option;
         
         return $options;
     }
