@@ -186,7 +186,6 @@ else
 		  
 		  $linkparams["ref"] = $all_actions[$n]["ref"];
 		  $linkparams["disablenav"]="true";
-		  if($actions_modal){$linkparams["modal"]="true";}
 		  
 		  $editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
 		  $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
