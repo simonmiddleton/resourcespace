@@ -1035,9 +1035,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
-    autocomplete_blank_fields($ref, false);
 
-	// Initialise an array of updates for the resource table
+    $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
+ 
+        foreach($autocomplete_fields as $ref => $value)
+            {
+            $new_checksums[$ref] = md5($value);
+            }
+        
+    // Initialise an array of updates for the resource table
     $resource_update_sql = array();
     $resource_update_log_sql = array();
     if($edit_contributed_by)
@@ -5130,7 +5136,7 @@ function check_use_watermark($download_key = "", $resource="")
 * 
 * @return void
 */
-function autocomplete_blank_fields($resource, $force_run)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
 
@@ -5146,6 +5152,8 @@ function autocomplete_blank_fields($resource, $force_run)
          WHERE (resource_type = 0 || resource_type = '{$resource_type}')
            AND length(autocomplete_macro) > 0
     ", "schema");
+
+    $fields_updated = array();
 
     foreach($fields as $field)
         {
@@ -5166,10 +5174,29 @@ function autocomplete_blank_fields($resource, $force_run)
             # Empty value. Autocomplete and set.
             $value = eval($field['autocomplete_macro']);
             update_field($resource, $field['ref'], $value);
+            if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $autovals = str_getcsv($value);
+                $autonodes = array();
+                foreach($autovals as $autoval)
+                    {
+                    $autonodes[] = get_node_id($autoval,$field['ref']);
+                    }
+                natsort($autonodes);
+                $fields_updated[$field['ref']] = implode(",",$autonodes);
+                }
+            else
+                {
+                $fields_updated[$field['ref']] = $value;
+                }
             }
         }
-    }
 
+    if ($return_changes = true)
+        {
+        return $fields_updated;
+        }
+}
 
 function get_resource_files($ref,$includeorphan=false){
     // returns array of all files associated with a resource
