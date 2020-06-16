@@ -1332,7 +1332,7 @@ if($responsive_ui)
     hook("beforesearchresults");
     
     # Archive link
-    if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search) 
+    if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search && $archive_standard) 
         {
         $archive_standard = false;
         $arcresults=do_search($search,$restypes,$order_by,2,0);
