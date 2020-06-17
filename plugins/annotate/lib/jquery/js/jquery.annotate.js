@@ -351,8 +351,8 @@ function isInt(value) {
         //this.form.css('top', (parseInt(this.area.offset().top) + parseInt(this.area.height()) + 7) + 'px');
 
 		// modified for RS
-		image.canvas.after(this.form);	
-		this.form.css('left', this.area.offset().left + $('.ui-layout-center').scrollLeft()+ 'px');
+		image.canvas.after(this.form);
+		this.form.css('left', (this.area.offset().left / 2) + $('.ui-layout-center').scrollLeft()+ 'px');
         this.form.css('top', (parseInt(this.area.offset().top)+ $('.ui-layout-center').scrollTop() + parseInt(this.area.height()) + 7) + 'px');
 		this.form.css('z-index',3);
 		//
@@ -360,22 +360,22 @@ function isInt(value) {
         area.resizable({
             handles: 'all',
             resize: function(e, ui) {
-                form.css('left', area.offset().left  + $('.ui-layout-center').scrollLeft()+ 'px');
+                form.css('left', (area.offset().left / 2)  + $('.ui-layout-center').scrollLeft()+ 'px');
                 form.css('top', (parseInt(area.offset().top) + $('.ui-layout-center').scrollTop() + parseInt(area.height()) + 7) + 'px');
             },
             stop: function(e, ui) {
-                form.css('left', area.offset().left + $('.ui-layout-center').scrollLeft() + 'px');
+                form.css('left', (area.offset().left / 2) + $('.ui-layout-center').scrollLeft() + 'px');
                 form.css('top', (parseInt(area.offset().top) + $('.ui-layout-center').scrollTop() + parseInt(area.height()) + 7) + 'px');
             }
         })
         .draggable({
             containment: image.canvas,
             drag: function(e, ui) {
-                form.css('left', area.offset().left  + $('.ui-layout-center').scrollLeft()+ 'px');
+                form.css('left', (area.offset().left / 2)  + $('.ui-layout-center').scrollLeft()+ 'px');
                 form.css('top', (parseInt(area.offset().top) + $('.ui-layout-center').scrollTop() + parseInt(area.height()) + 7) + 'px');
             },
             stop: function(e, ui) {
-                form.css('left', area.offset().left + $('.ui-layout-center').scrollLeft() + 'px');
+                form.css('left', (area.offset().left / 2) + $('.ui-layout-center').scrollLeft() + 'px');
                 form.css('top', (parseInt(area.offset().top) + $('.ui-layout-center').scrollTop() + parseInt(area.height()) + 7) + 'px');
             }
         });
