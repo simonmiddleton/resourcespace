@@ -377,7 +377,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
                     <script>
                     jQuery('#<?php echo $action_selection_id ?>').bind({
                         mouseenter:function(e){
-                        LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
+                        LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>');
                         }});
                     </script>
                     <?php

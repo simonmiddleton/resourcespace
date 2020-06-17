@@ -363,7 +363,7 @@ hook('render_collections_list_tools', '', array($collections[$n])); ?>
 <script>
   jQuery('#<?php echo $action_selection_id ?>').bind({
     mouseenter:function(e){
-      LoadActions('collections','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]['ref'] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"collection_actions"); ?>');
+      LoadActions('collections','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]['ref'] ?>');
     }
   }
 );

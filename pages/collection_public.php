@@ -227,7 +227,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     <script>
         jQuery('#<?php echo $action_selection_id ?>').bind({
                         mouseenter:function(e){
-                        LoadActions('collectionpublic','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]["ref"] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"collectionpublic_actions"); ?>');
+                        LoadActions('collectionpublic','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]["ref"] ?>');
                         }});
     </script>
     <?php
