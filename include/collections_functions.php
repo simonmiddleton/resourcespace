@@ -2312,7 +2312,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
 		{
-		$count_result = count(get_collection_resources($collection_data['ref']));
+        if(is_null($result))
+            {
+            $result = get_collection_resources_with_data($collection_data['ref']);
+            }
+
+        if(('' == $k || $internal_share_access) && is_null($list))
+            {
+            $list = get_user_collections($userref);
+            }
+
+		$count_result = count($result);
 		}
 	
 	if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
