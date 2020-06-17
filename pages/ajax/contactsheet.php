@@ -6,7 +6,12 @@ include('../../include/db.php');
 include('../../include/authenticate.php');
 include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
-require_once '../../lib/html2pdf/html2pdf.class.php';
+require_once '../../lib/html2pdf/vendor/autoload.php';
+
+use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Exception\Html2PdfException;
+use Spipu\Html2Pdf\Exception\ExceptionFormatter;
+
 
 $collection        = getvalescaped('c', 0,true);
 $size              = getvalescaped('size', '');

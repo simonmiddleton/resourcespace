@@ -66,7 +66,7 @@ if ($download && $download_file_type == 'text')
 
 // Process PDF file download
 if($download && $download_file_type === 'pdf') {
-	$html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/html2pdf.class.php';
+	$html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/vendor/autoload.php';
 	ob_start();
 	if(!file_exists($html2pdf_path)) {
 		die('html2pdf class file is missing. Please make sure you have it under lib folder.');

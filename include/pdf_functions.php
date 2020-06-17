@@ -65,7 +65,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     {
     global $applicationname, $baseurl, $baseurl_short, $storagedir, $linkedheaderimgsrc, $language, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
 
-    $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/html2pdf.class.php';
+    $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/vendor/autoload.php';
     if(!file_exists($html2pdf_path))
         {
         trigger_error('html2pdf class file is missing. Please make sure you have it under lib folder!');
@@ -371,7 +371,7 @@ function resolve_pdf_language(){
 
     $asdefaultlanguage = 'en';
     
-    $supported_lang_files = scandir(__DIR__ . '/../lib/html2pdf/locale');
+    $supported_lang_files = scandir(__DIR__ . '/../lib/html2pdf/src/locale');
     $supported_langs      = array();
 
 	foreach($supported_lang_files as $file)
