@@ -950,7 +950,7 @@ function ShowHelp(field)
             return false;
             }
 
-        if(preventautosave)
+        if(preventautosave || typeof jQuery('#mainform').attr('action') == 'undefined')
             {
             return false;
             }
