@@ -259,29 +259,6 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     // Attach assigned admin to this collection
     add_collection($assigned_to_user['ref'], $collection_id);
 
-    //user_mail_message = $lang['requestassignedtoyoumail'] . "\n\n" . $baseurl . '/?q=' . $request . "\n";
-    //     send_mail($assigned_to_user['email'], $applicationname . ': ' . $lang['requestassignedtoyou'], $assigned_user_mail_message);
-    // }
-
-    
-    // # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
-    // $admin_notify_email = $email_notify;
-    // $collection_id_escaped = escape_check($collection_id);
-    // if(isset($resource_type_request_emails)) {
-    //     $requestrestypes = array_unique(
-    //         sql_array('SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource = r.ref WHERE cr.collection = "' . $collection_id_escaped . '"')
-    //     );
-        
-    //     if(count($requestrestypes) == 1 && isset($resource_type_request_emails[$requestrestypes[0]])) {
-    //         $admin_notify_email = $resource_type_request_emails[$requestrestypes[0]];
-    //     }
-    // }
-
-    // # Send the e-mail
-    // $message  = $lang['user_made_request'] . '<br/><br/>' . $lang['username'] . ': ' . $username . '<br/>' . $message . '<br/><br/>';
-    // $message .= $lang['clicktoviewresource'] . '<br/>' . $baseurl . '/?q=' . $request;
-    // send_mail($admin_notify_email, $applicationname . ': ' . $lang['requestcollection'] . ' - ' . $collection_id, $message, $useremail, $useremail, $admin_mail_template, $templatevars);
-
     if($notify_manage_request_admin)
         {
         $notification_message = $lang['requestassignedtoyoumail'];
