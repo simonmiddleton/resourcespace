@@ -8256,15 +8256,19 @@ function get_resource_table_joins(){
 * 
 * @return boolean   Success/failure
 */
-function update_resource_lock($ref,$lockaction,$newlockuser=0,$accesschecked = false)
+function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked = false)
     {
     global $userref;
-    if($ref <= 0)
+    
+    if(((string)(int)$ref != (string)$ref)
+     || $ref <= 0
+     || !in_array($lockaction,array(0,1))
+        )
         {
         return false;
         }
 
-    if($newlockuser==0)
+    if(is_null($newlockuser) || ((string)(int)$newlockuser != (string)$newlockuser))
         {
         $newlockuser = $userref;
         }
