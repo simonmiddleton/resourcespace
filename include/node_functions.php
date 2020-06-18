@@ -1163,11 +1163,10 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
 * @param  integer      $resourceid         Resource ID to add nodes to
 * @param  array        $nodes              Array of node IDs to add
 * @param  boolean      $checkperms         Check permissions before adding? 
-* @param  boolean      $logthis            Log this? Log entries are ideally added when more data on all the changes made is available to make reverts easier.
 *  
 * @return boolean
 */        
-function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $logthis=true)
+function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
     {
     global $userref;
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
@@ -1192,27 +1191,24 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
 
     sql_query("insert into resource_node (resource, node) values ('" . escape_check($resourceid) . "','" . implode("'),('" . escape_check($resourceid) . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
 
-    if($logthis)
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
         {
-        $field_nodes_arr = array();
-        foreach ($nodes as $node)
-            {
-            $nodedata = array();
-            get_node($node, $nodedata);
-            $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
-            }
-        
-        foreach ($field_nodes_arr as $key => $value)
-            {
-            resource_log($resourceid,"e",$key,"","","," . implode(",",$value));
-            }
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"","","," . implode(",",$value));
         }
 
     return true;
     }
 
 /**
-* Add nodes in array to multiple resources. Changes made using this function will not be logged
+* Add nodes in array to multiple resources
 *
 * @param  array        $resources           Array of resource IDs to add nodes to
 * @param  array        $nodes               Array of node IDs to add
@@ -1249,14 +1245,14 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
 
     $nodes_escaped = escape_check_array_values($nodes);
 
-    $sql = "INSERT INTO resource_node (resource, node) VALUES ";
+    $sql = "insert into resource_node (resource, node) values ";
     $nodesql = "";
     foreach($resources as $resource)
         {
         if($nodesql!=""){$nodesql .= ",";}
         $nodesql .= " ('" . escape_check($resource) . "','" . implode("'),('" . escape_check($resource) . "','",$nodes_escaped) . "') ";
         }
-    $sql = "INSERT INTO resource_node (resource, node) VALUES " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
+    $sql = "insert into resource_node (resource, node) values " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
     sql_query($sql);
     return true;
     }
@@ -1307,35 +1303,24 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
     return sql_array($query);
     }
 
-/**
-* Delete nodes in array from resource
-*
-* @param  integer      $resourceid         Resource ID to add nodes to
-* @param  array        $nodes              Array of node IDs to remove
-* @param  boolean      $logthis            Log this? Log entries are ideally added when more data on all changes made is available to make reverts easier.
-*  
-* @return boolean
-*/
-    
-function delete_resource_nodes($resourceid,$nodes=array(),$logthis=true)
+
+function delete_resource_nodes($resourceid,$nodes=array())
     {
     if(!is_array($nodes))
         {$nodes=array($nodes);}
     sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
 
-    if($logthis)
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
         {
-        $field_nodes_arr = array();
-        foreach ($nodes as $node)
-            {
-            $nodedata = array();
-            get_node($node, $nodedata);
-            $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
-            }
-        foreach ($field_nodes_arr as $key => $value)
-            {
-            resource_log($resourceid,"e",$key,"","," . implode(",",$value),'');
-            }
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"","," . implode(",",$value),'');
         }
     }
 
