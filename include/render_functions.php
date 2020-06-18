@@ -663,12 +663,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             }
         break;
         
-        // Dynamic keywords list
         case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST:
             include __DIR__ . '/../pages/edit_fields/9.php';
         break;      
 
-        // Radio buttons:
         case FIELD_TYPE_RADIO_BUTTONS:
             // auto save is not needed when searching
             $edit_autosave           = false;
@@ -3784,11 +3782,11 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		# Value formatting
 		$value=i18n_get_translated($value);
 		
-		// Don't display the comma for radio buttons:
+        // Don't display the comma for radio buttons:
         if($field['type'] == FIELD_TYPE_RADIO_BUTTONS)
             {
-			$value = str_replace(',', '', $value);
-		    }
+            $value = str_replace(',', '', $value);
+            }
 
 		$value_unformatted=$value; # store unformatted value for replacement also
 
@@ -3853,12 +3851,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
-				# Draw this field normally.				
-
-                /*
-                Sanitize value before rendering.
-                Note: we cannot use htmlspecialchars where we actually render it as that might break highligthing
-                */
+                # Draw this field normally.
+                # Sanitize value before rendering.
+                # Note: we cannot use htmlspecialchars where we actually render it as that might break highlighting
                 if($value != strip_tags(htmlspecialchars_decode($value)))
                     {
                     // Strip tags moved before highlighting as was being corrupted

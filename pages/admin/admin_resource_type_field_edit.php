@@ -342,7 +342,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
 $fieldcolumns = array(
-    'active'				   => array($lang['property-field_active'],'',1,1),
+    'active'                   => array($lang['property-field_active'],'',1,1),
     'title'                    => array($lang['property-title'],'',0,1),
     'resource_type'            => array($lang['property-resource_type'],'',0,0),
     'type'                     => array($lang['property-field_type'],'',0,1),
@@ -352,7 +352,7 @@ $fieldcolumns = array(
     'order_by'                 => array($lang['property-order_by'],'',0,0),
     'keywords_index'           => array($lang['property-index_this_field'],$lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
     'display_field'            => array($lang['property-display_field'],'',1,1),
-    'full_width'			   => array($lang['property-field_full_width'],'',1,1),
+    'full_width'               => array($lang['property-field_full_width'],'',1,1),
     'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
     'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),		
     'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),
@@ -366,7 +366,6 @@ $fieldcolumns = array(
     'help_text'                => array($lang['property-help_text'],'',2,1),
     'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
     'tab_name'                 => array($lang['property-tab_name'],'',0,0),
-
     'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
     'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
     'display_template'         => array($lang['property-display_template'],'',2,1),
@@ -386,12 +385,12 @@ $fieldcolumns = array(
 
 # Remove some items if $execution_lockout is set to prevent code execution
 if ($execution_lockout)
-	{
-	unset($fieldcolumns["autocomplete_macro"]);
-	unset($fieldcolumns["exiftool_filter"]);
-	unset($fieldcolumns["value_filter"]);
-	unset($fieldcolumns["onchange_macro"]);
-	}
+    {
+    unset($fieldcolumns["autocomplete_macro"]);
+    unset($fieldcolumns["exiftool_filter"]);
+    unset($fieldcolumns["value_filter"]);
+    unset($fieldcolumns["onchange_macro"]);
+    }
 
 $modify_resource_type_field_columns=hook("modifyresourcetypefieldcolumns","",array($fieldcolumns));
 if($modify_resource_type_field_columns!=''){

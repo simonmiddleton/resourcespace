@@ -333,8 +333,6 @@ $lock_details = get_resource_lock_message($resource["lock_user"]);
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
 //Check if we want to use a specified field as a caption below the preview
-//Check if we want to use a specified field as a caption below the preview
-//Check if we want to use a specified field as a caption below the preview
 if(isset($display_field_below_preview) && is_int($display_field_below_preview))
 	{
 	$df=0;
