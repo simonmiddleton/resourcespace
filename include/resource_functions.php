@@ -754,27 +754,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 							continue;
 							};
-						
-						$added_nodes = array_diff($daterangenodes, $current_field_nodes);
-						debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
-						$nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-						$removed_nodes = array_diff($current_field_nodes,$daterangenodes);  
-						debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
-						$nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-						
-						if(count($added_nodes)>0 || count($removed_nodes)>0)
-							{  
-							$val = $newval;
-							# If this is a 'joined' field it still needs to be added to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
-							}
-					
-					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
+                        
+                        if($daterangenodes !== $current_field_nodes)
+                            {
+                            $added_nodes = array_diff($daterangenodes, $current_field_nodes);
+                            debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                            $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
+                            $removed_nodes = array_diff($current_field_nodes,$daterangenodes);  
+                            debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                            $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
+                            
+                            $val = $newval;
+                            # If this is a 'joined' field it still needs to be added to the resource column
+                            $joins=get_resource_table_joins();
+                            if (in_array($fields[$n]["ref"],$joins))
+                                {
+                                if(substr($val,0,1)==","){$val=substr($val,1);}
+                                sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
+                                }
+					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
+                            }
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                     {
@@ -932,10 +931,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				# This value is different from the value we have on record.
 
 				# Write this edit to the log (including the diff) (unescaped is safe because the diff is processed later)
-				resource_log($ref,'e',$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
+				resource_log($ref,LOG_CODE_EDITED,$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
 
 				# Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
-				if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
+				if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE) {$expiry_field_edited=true;}
 
 				# If 'resource_column' is set, then we need to add this to a query to back-update
 				# the related columns on the resource table
@@ -980,12 +979,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
                     }
                 }
-
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
-                eval($fields[$n]["onchange_macro"]);    
-                }		
+                eval($fields[$n]["onchange_macro"]);
+                }
 			}
 		}
 
@@ -1004,9 +1002,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
          # Make sure all submitted values are numeric
          $ok=array();for ($n=0;$n<count($related);$n++) {if (is_numeric(trim($related[$n]))) {$ok[]=trim($related[$n]);}}
          if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");} 
-        }    
+        }
 
-        
     if ($autosave_field=="")
         {
         # Additional tasks when editing all fields (i.e. not autosaving)
@@ -1027,21 +1024,47 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // Update resource_node table
     db_begin_transaction("update_resource_node");
-    delete_resource_nodes($ref, $nodes_to_remove);
-    if(0 < count($nodes_to_add))
+    if(count($nodes_to_remove)>0)
         {
-        add_resource_nodes($ref, $nodes_to_add, false);
+        delete_resource_nodes($ref,$nodes_to_remove, false);
         }
+
+    if(count($nodes_to_add)>0)
+        {
+        add_resource_nodes($ref,$nodes_to_add, false, false);
+        }
+    
+    // Log node field changes
+    $nodefieldchanges = array();
+    foreach ($nodes_to_remove as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+        }
+    foreach ($nodes_to_add as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+        }
+    foreach ($nodefieldchanges as $key => $value)
+        {
+        $fromvalue  = (isset($value[0]) && count($value[0]) > 0) ? "," . implode(",",$value[0]) : "";
+        $tovalue    = (isset($value[1]) && count($value[1]) > 0) ? "," . implode(",",$value[1]) : "";
+        resource_log($ref,LOG_CODE_EDITED,$key,"",$fromvalue,$tovalue);
+        }
+  
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
 
     $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
  
-        foreach($autocomplete_fields as $ref => $value)
-            {
-            $new_checksums[$ref] = md5($value);
-            }
+    foreach($autocomplete_fields as $ref => $value)
+        {
+        $new_checksums[$ref] = md5($value);
+        }
         
     // Initialise an array of updates for the resource table
     $resource_update_sql = array();
@@ -1319,8 +1342,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="RM")
                     {
                     // Remove option(s) mode
-                    $nodes_to_remove = $ui_selected_node_values;
-                    
+                    $nodes_to_remove = $ui_selected_node_values;                    
                     debug("Removing nodes: " .  implode(",",$nodes_to_remove));
                     }
                 else
@@ -1355,7 +1377,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if(count($added_nodes)>0 || count($removed_nodes)>0){$value_changed  = true;}
                     
                    	if($value_changed)
-						{  
+						{
 						$existing_nodes_value = '';
 						$new_nodes_val        = '';
 
@@ -1369,10 +1391,26 @@ function save_resource_data_multi($collection,$editsearch = array())
 							{
 							$existing_nodes_value .= ",{$node_options[$current_field_node]}";
 							}
-
-                        resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
-
                         $val = $new_nodes_val;
+
+                        $nodefieldchanges = array();
+                        foreach ($removed_nodes as $node)
+                            {
+                            $nodedata = array();
+                            get_node($node, $nodedata);
+                            $nodefieldchanges[0][] = $nodedata["name"];
+                            }
+                        foreach ($new_nodes as $node)
+                            {
+                            $nodedata = array();
+                            get_node($node, $nodedata);
+                            $nodefieldchanges[1][] = $nodedata["name"];
+                            }                    
+                        // Prefix with a comma so that log_diff can log each node change correctly
+                        $fromvalue  = isset($nodefieldchanges[0]) ? "," . implode(",",$nodefieldchanges[0]) : "";
+                        $tovalue    = isset($nodefieldchanges[1]) ? "," . implode(",",$nodefieldchanges[1]) : "";
+                        debug("BANG " . $fromvalue . " to " . $tovalue);
+                        resource_log($ref,LOG_CODE_EDITED,$fields[$n]['ref'],"",$fromvalue,$tovalue);
 
                         // If this is a 'joined' field it still needs to add it to the resource column
                         $joins = get_resource_table_joins();
@@ -1388,105 +1426,121 @@ function save_resource_data_multi($collection,$editsearch = array())
 						}
                     }
                 } // End of fixed list field section
-			else
+			elseif($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
                 {
-				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
-					{
-					# date range type
-					# each value will be a node so we end up with a pair of nodes to represent the start and end dates
+                # date range type
+                # each value will be a node so we end up with a pair of nodes to represent the start and end dates
 
-					$daterangenodes=array();
-					$newval="";
-					
-					if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
-						{
-						// We have been passed the range in EDTF format, check it is in the correct format
-						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
-						if(!preg_match($rangeregex,$date_edtf,$matches))
-							{
-							$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
-							continue;
-							}
-                        if(is_numeric($fields[$n]["linked_data_field"]))
-                            {
-                            // Update the linked field with the raw EDTF string submitted
-                            update_field($ref,$fields[$n]["linked_data_field"],$date_edtf);
-                            }
-						$rangedates = explode("/",$date_edtf);
-						$rangestart=str_pad($rangedates[0],  10, "-00");
-						$rangeendparts=explode("-",$rangedates[1]);
-                        $rangeendyear=$rangeendparts[0];
-                        $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
-                        $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
-						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
-                        
-						$newval = $rangestart . $range_separator . $rangeend;
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
-						}
-					else
-						{
-						// Range has been passed via normal inputs, construct the value from the date/time dropdowns
-						$date_parts=array("_start_","_end_");
-						
-						foreach($date_parts as $date_part)
-							{
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
-							if (intval($val)<=0) 
-								{
-								$val="";
-								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="") 
-								{
-								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="") 
-									{
-									$val.="-" . $field;
-									}
-								 else 
-									{
-									$val.="-00";
-									}
-								}
-							else 
-								{
-								$val.="-00-00";
-								}
-							$newval.= ($newval!=""?$range_separator:"") . $val;if($val!=="")
-								{
-								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
-								}
-							}
-						}
-						// Get currently selected nodes for this field 
-						$current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
-						
-						$added_nodes = array_diff($daterangenodes, $current_field_nodes);
-						debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
-						$nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-						
-						$removed_nodes = array_diff($current_field_nodes,$daterangenodes);  
-						debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
-						$nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-						
-						if(count($added_nodes)>0 || count($removed_nodes)>0)
-							{  
-							// Log this change, nodes will actually be added later	
-							resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $fields[$n]["value"], $newval);
-							
-							$val = $newval;
-							# If this is a 'joined' field it still needs to add it to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
-							}
-						$all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
-						$all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
+                $daterangenodes=array();
+                $newval="";
+                
+                if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+                    {
+                    // We have been passed the range in EDTF format, check it is in the correct format
+                    $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+                    if(!preg_match($rangeregex,$date_edtf,$matches))
+                        {
+                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                        continue;
+                        }
+                    if(is_numeric($fields[$n]["linked_data_field"]))
+                        {
+                        // Update the linked field with the raw EDTF string submitted
+                        update_field($ref,$fields[$n]["linked_data_field"],$date_edtf);
+                        }
+                    $rangedates = explode("/",$date_edtf);
+                    $rangestart=str_pad($rangedates[0],  10, "-00");
+                    $rangeendparts=explode("-",$rangedates[1]);
+                    $rangeendyear=$rangeendparts[0];
+                    $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
+                    $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
+                    $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
+                    
+                    $newval = $rangestart . $range_separator . $rangeend;
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
                     }
-				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+                else
+                    {
+                    // Range has been passed via normal inputs, construct the value from the date/time dropdowns
+                    $date_parts=array("_start_","_end_");
+                    
+                    foreach($date_parts as $date_part)
+                        {
+                        $val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                        if (intval($val)<=0) 
+                            {
+                            $val="";
+                            }
+                        elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="") 
+                            {
+                            $val.="-" . $field;
+                            if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="") 
+                                {
+                                $val.="-" . $field;
+                                }
+                                else 
+                                {
+                                $val.="-00";
+                                }
+                            }
+                        else 
+                            {
+                            $val.="-00-00";
+                            }
+                        $newval.= ($newval!=""?$range_separator:"") . $val;if($val!=="")
+                            {
+                            $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
+                            }
+                        }
+                    }
+                    // Get currently selected nodes for this field 
+                    $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
+                    
+                    $added_nodes = array_diff($daterangenodes, $current_field_nodes);
+                    debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                    $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
+                    
+                    $removed_nodes = array_diff($current_field_nodes,$daterangenodes);  
+                    debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                    $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
+                    
+                    if(count($added_nodes)>0 || count($removed_nodes)>0)
+                        {
+                        // Log this change, nodes will actually be added later
+                        $fieldchanges = array();
+                        foreach ($removed_nodes as $node)
+                            {
+                            $nodedata = array();
+                            get_node($node, $nodedata);
+                            $fieldchanges[0][] = $nodedata["name"];
+                            }      
+                        foreach ($added_nodes as $node)
+                            {
+                            $nodedata = array();
+                            get_node($node, $nodedata);
+                            $fieldchanges[1][] = $nodedata["name"];
+                            }              
+                        
+                        $fromvalue  = isset($fieldchanges[0]) ? "," . implode("\n",$fieldchanges[0]) : "";
+                        $tovalue    = isset($fieldchanges[1]) ? "," . implode("\n",$fieldchanges[1]) : "";
+                        resource_log($ref,LOG_CODE_EDITED,$fields[$n]['ref'],"",$fromvalue,$tovalue);
+
+                        $val = $newval;
+                        # If this is a 'joined' field it still needs to add it to the resource column
+                        $joins=get_resource_table_joins();
+                        if (in_array($fields[$n]["ref"],$joins))
+                            {
+                            if(substr($val,0,1)==","){$val=substr($val,1);}
+                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
+                                }
+                        }
+                $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
+                $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
+                }
+            else
+                {
+                if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
                     # date/expiry date type, construct the value from the date dropdowns
                     $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
@@ -1656,10 +1710,9 @@ function save_resource_data_multi($collection,$editsearch = array())
     
                     if ($val !== $existing || $value_changed)
                         {
-                        # This value is different from the value we have on record.
-                        
+                        # This value is different from the value we have on record.                        
                         # Write this edit to the log.
-                        resource_log($ref,'m',$fields[$n]["ref"],"",$existing,$val);
+                        resource_log($ref,LOG_CODE_MULTI_EDITED,$fields[$n]["ref"],"",$existing,$val);
             
                         # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                         if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
@@ -1681,13 +1734,6 @@ function save_resource_data_multi($collection,$editsearch = array())
             
                         $oldval=$existing;
                         $newval=$val;
-                        
-                        if (in_array($fields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
-                            {
-                            # Prepend a comma when indexing dropdowns and checkboxes
-                            $newval=  strlen($val)>0 && $val[0]==',' ? $val : ',' . $val;
-                            $oldval=  strlen($oldval)>0 && $oldval[0]==',' ? $oldval : ',' . $oldval;
-                            }
                         
                         if ($fields[$n]["keywords_index"]==1)
                             {
@@ -1711,7 +1757,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                             sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value($val)) . "' WHERE ref = '{$ref}'");
                             }
-
+                        
                         # Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
@@ -1719,7 +1765,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                             }
                         }
                     }
-                }  // End of non-node editing section
+                }  // End of non-node editing section            
 			} // End of if edit this field
 		} // End of foreach field loop
 
@@ -1732,7 +1778,7 @@ function save_resource_data_multi($collection,$editsearch = array())
         {
         delete_resource_nodes_multi($list,$all_nodes_to_remove);   
         }
-    	
+
     // Also save related resources field
     if(getval("editthis_related","")!="")
         {
@@ -1826,9 +1872,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
                 }
             }
-        }
-    
-    
+        }    
+
     # Also update access level
 	if (getval("editthis_access","")!="")
 		{
@@ -1839,14 +1884,13 @@ function save_resource_data_multi($collection,$editsearch = array())
 			$oldaccess=sql_value("select access value from resource where ref='$ref'","");
 			if ($access!=$oldaccess)
 				{
-				sql_query("update resource set access='$access' where ref='$ref'");
-				
-                                if ($oldaccess==3)
-                                        {
-                                        # Moving out of custom access - delete custom usergroup access.
-                                        delete_resource_custom_access_usergroups($ref);
-                                        }
-				resource_log($ref,"a",0,"",$oldaccess,$access);
+				sql_query("update resource set access='$access' where ref='$ref'");				
+                if ($oldaccess==3)
+                    {
+                    # Moving out of custom access - delete custom usergroup access.
+                    delete_resource_custom_access_usergroups($ref);
+                    }
+				resource_log($ref,LOG_CODE_ACCESS_CHANGED,0,"",$oldaccess,$access);
 				}
 			
 			# For access level 3 (custom) - also save custom permissions
@@ -2153,34 +2197,28 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         
     # If this is a date range field we need to add values to the field options
     if($fieldinfo['type'] == FIELD_TYPE_DATE_RANGE)
-    {
-
-       $newvalues = array_map('trim', explode('/', $value));
-
-       $currentoptions = array();
-
-
-    foreach($newvalues as $newvalue)
         {
-        # Check if each new value exists in current options list
-        if('' != $newvalue && !in_array($newvalue, $currentoptions))
-            {
-            # Append the option and update the field
-            $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
-            $nodes_to_add[]   = $newnode;
-            $currentoptions[] = trim($newvalue);
-
-            debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
-            }
-        }
-    }    
-
-
-    # If this is a dynamic keyword we need to add it to the field options
-    if($fieldinfo['type'] == 9 && !checkperm('bdk' . $field))
-        {
+        $newvalues = array_map('trim', explode('/', $value));
         $currentoptions = array();
 
+        foreach($newvalues as $newvalue)
+            {
+            # Check if each new value exists in current options list
+            if('' != $newvalue && !in_array($newvalue, $currentoptions))
+                {
+                # Append the option and update the field
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $nodes_to_add[]   = $newnode;
+                $currentoptions[] = trim($newvalue);
+
+                debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                }
+            }
+        }
+    elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
+        {
+        # If this is a dynamic keyword we need to add it to the field options
+        $currentoptions = array();
         foreach($fieldoptions as $fieldoption)
             {
             $fieldoptiontranslations = explode('~', $fieldoption['name']);
@@ -2232,6 +2270,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
     if (in_array($fieldinfo['type'], $NODE_FIELDS))
         {
+        $newvalues = array();
         foreach($fieldoptions as $nodedata)
             {
             $newvalues_translated = $newvalues;
@@ -2242,7 +2281,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     $value = i18n_get_translated($value);
                     }
             );
-
             // Add to array of nodes, unless it has been added to array already as a parent for a previous node
             if (in_array(i18n_get_translated($nodedata["name"]), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
                 {
@@ -2265,47 +2303,71 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $nodes_to_remove[] = $nodedata["ref"];
                 }
+            $newvalues[] = $value;
             }
 
         # Update resource_node table
         db_begin_transaction("update_field_{$field}");
-        delete_resource_nodes($resource,$nodes_to_remove);
+        if(count($nodes_to_remove)>0)
+            {
+            delete_resource_nodes($resource,$nodes_to_remove, false);
+            }
 
         if(count($nodes_to_add)>0)
             {
-            add_resource_nodes($resource,$nodes_to_add, false);
+            add_resource_nodes($resource,$nodes_to_add, false, false);
             }
+
+        $nodefieldchanges = array();
+        foreach ($nodes_to_remove as $node)
+            {
+            $nodedata = array();
+            get_node($node, $nodedata);
+            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+            }
+        foreach ($nodes_to_add as $node)
+            {
+            $nodedata = array();
+            get_node($node, $nodedata);
+            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+            }
+    
+        foreach ($nodefieldchanges as $key => $value)
+            {
+            $fromvalue  = isset($value[0]) ? "," . implode("\n",$value[0]) : "";
+            $tovalue    = isset($value[1]) ? "," . implode("\n",$value[1]) : "";
+            resource_log($resource,LOG_CODE_EDITED,$key,"",$fromvalue,$tovalue);
+            }
+
         db_end_transaction("update_field_{$field}");
+        $value = implode(",",$newvalues);
         }
-
-    if ($fieldinfo["keywords_index"])
+    else
         {
-        $is_html=($fieldinfo["type"]==8);	
-        # If there's a previous value, remove the index for those keywords
-        $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
-        if (strlen($existing)>0)
+        if ($fieldinfo["keywords_index"])
             {
-            remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
+            $is_html=($fieldinfo["type"]==8);	
+            # If there's a previous value, remove the index for those keywords
+            $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+            if (strlen($existing)>0)
+                {
+                remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
+                }
+
+            // Index the new value
+            add_keyword_mappings($resource,i18n_get_indexable($value),$field,$fieldinfo["partial_index"],false,'','',$is_html);
             }
 
-        if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && substr($value,0,1) <> ',')
+        # Delete the old value (if any) and add a new value.
+        sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
+
+        $value = escape_check($value);
+
+        # write to resource_data if not an empty value
+        if($value !== '')
             {
-            $value = ','.$value;
+            sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
             }
-
-        // Index the new value
-        add_keyword_mappings($resource,i18n_get_indexable($value),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-        }
-
-    # Delete the old value (if any) and add a new value.
-    sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
-
-    $value = escape_check($value);
-
-    # write to resource_data if not an empty value
-    if($value !== '')
-        {
-        sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
         }
 
     # If this is a 'joined' field we need to add it to the resource column
@@ -2339,7 +2401,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     // Log this update
     if ($log && $value != $existing)
         {
-        resource_log($resource,'e',$field,"",$existing,unescape($value));
+        resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
         }
     
     # Allow plugins to perform additional actions.
@@ -2472,7 +2534,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 		send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
 		
 		# log this
-		resource_log($resource,"E","",$notes=$unames[$n]);
+		resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
 		
 		}
 	hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
@@ -2517,7 +2579,7 @@ function delete_resource($ref)
 		update_archive_status($ref, $resource_deletion_state, $current_state);
 
         # log this so that administrator can tell who requested deletion
-        resource_log($ref,'x','');
+        resource_log($ref,LOG_CODE_DELETED,'');
 		
 		# Remove the resource from any collections
 		sql_query("delete from collection_resource where resource='$ref'");
@@ -3116,7 +3178,7 @@ function copy_resource($from,$resource_type=-1)
 	
 	# Log this			
 	daily_stat("Create resource",$to);
-	resource_log($to,'c',0);
+	resource_log($to,LOG_CODE_CREATED,0);
 
 	hook("afternewresource", "", array($to));
 	
@@ -3966,7 +4028,7 @@ function delete_alternative_file($resource,$ref)
 	sql_query("delete from resource_alt_files where resource='" . escape_check($resource) . "' and ref='" . escape_check($ref) . "'");
 	
 	# Log the deletion
-	resource_log($resource,'y','');
+	resource_log($resource,LOG_CODE_DELETED_ALTERNATIVE,'');
 	
 	# Update disk usage
 	update_disk_usage($resource);
@@ -4996,12 +5058,12 @@ function log_diff($fromvalue, $tovalue)
         $deletes = array_diff($fromvalue, $tovalue);
 
         // Process array diffs into meaningful strings
-        if(0 < count($deletes))
+        if(0 < count($deletes) && isset($deletes[0]) && $deletes[0] != "")
             {
             $return .= '- ' . join("\n- " , $deletes);
             }
 
-        if(0 < count($inserts))
+        if(0 < count($inserts) && isset($inserts[0]) && $inserts[0] != "")
             {
             if('' != $return)
                 {
@@ -5135,14 +5197,18 @@ function check_use_watermark($download_key = "", $resource="")
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data 
 * for that field as at this point you probably have the expected data for your field.
 * 
-* @return void
+* @return boolean|array Success/fail or array of changes made
 */
 function autocomplete_blank_fields($resource, $force_run, $return_changes = false)
     {
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $lang;
+
+    if((string)(int)$resource != (string)$resource)
+        {
+        return false;
+        }
 
     $resource_escaped = escape_check($resource);
-
     $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
 
     $fields = sql_query("
@@ -5158,23 +5224,24 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     foreach($fields as $field)
         {
-        $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
-
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            if(count(get_resource_nodes($resource, $field['ref'], true)) == 0)
+            if(count(get_resource_nodes($resource, $field['ref'], true)) > 0)
                 {
-                $value = '';
+                continue;
                 }
+            $value = "";
+            }
+        else
+            {
+            $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
-
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
             # Empty value. Autocomplete and set.
             $value = eval($field['autocomplete_macro']);
-            update_field($resource, $field['ref'], $value);
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 $autovals = str_getcsv($value);
@@ -5184,10 +5251,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                     $autonodes[] = get_node_id($autoval,$field['ref']);
                     }
                 natsort($autonodes);
+                add_resource_nodes($resource,$autonodes,false,false);
+                $tovalue = "," . implode(",",$autovals);
+                resource_log($resource,LOG_CODE_EDITED,$field['ref'],$lang["autocomplete_log_note"],"",$tovalue); 
                 $fields_updated[$field['ref']] = implode(",",$autonodes);
                 }
             else
                 {
+                update_field($resource, $field['ref'], $value);
                 $fields_updated[$field['ref']] = $value;
                 }
             }
@@ -5197,7 +5268,8 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         {
         return $fields_updated;
         }
-}
+    return true;
+    }
 
 function get_resource_files($ref,$includeorphan=false){
     // returns array of all files associated with a resource
@@ -5865,7 +5937,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             continue;
             }
 
-        resource_log($resource[$n], 's', 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);    
+        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);    
         }
 
     # Prevent any attempt to update with non-numeric archive state
@@ -6270,7 +6342,7 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
                         # Copy custom access
                         sql_query("insert into resource_custom_access (resource,usergroup,user,access) select '" . $resource["ref"] . "', usergroup,user,access from resource_custom_access where resource = '" . $lastresource["ref"] . "'");
 		                }
-				resource_log($resource["ref"],"a",0,"",$resource["access"],$newaccess);
+				resource_log($resource["ref"],LOG_CODE_ACCESS_CHANGED,0,"",$resource["access"],$newaccess);
 				}
 			}
         $resource["access"] = $newaccess;
@@ -7246,7 +7318,6 @@ function get_data_by_field($resource, $field)
     return $return;   
     }
 
-
 /**
 * Get all resources by resource_type_field and value
 * 
@@ -7417,8 +7488,7 @@ function get_OR_fields()
         $orfields_cache=$orfields;
         return $orfields;
         }
-    }      
-    
+    }
 
 /**
 * Returns the path (relative to the gfx folder) of a suitable folder to represent
@@ -7492,10 +7562,8 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
     # Fall back to the 'no preview' icon used for type 1.
     return "no_preview/resource_type/type1" . $col . ".png";
     }
-    
 
-
-    function purchase_set_size($collection,$resource,$size,$price)
+function purchase_set_size($collection,$resource,$size,$price)
     {
     // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
     sql_query("update collection_resource set purchase_size='" . escape_check($size) . "',purchase_price='" . escape_check($price) . "' where collection='$collection' and resource='$resource'");
@@ -7515,7 +7583,7 @@ function payment_set_complete($collection,$emailconfirmation="")
         {
         $purchasesize=$resource["purchase_size"];
         if ($purchasesize==""){$purchasesize=$lang["original"];}
-        resource_log($resource["resource"],"p",0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
+        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
         $summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
         }
     $summary.="</table>";

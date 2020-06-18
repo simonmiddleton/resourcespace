@@ -39,7 +39,6 @@ $sort=getval("sort",$default_sort_direction);
 
 $offset=getvalescaped("offset",0);
 $per_page=getvalescaped("per_page_list", $default_perpage_list);rs_setcookie('per_page_list', $per_page);
-
 // When filtering by download records only the table output will be slightly different, showing only the following columns:
 // date, user, usage option and usage reason
 $filter_dld_records_only = ($filter_by_type == LOG_CODE_DOWNLOADED);
@@ -230,7 +229,19 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	<td><?php
     if($log[$n]["diff"]!=="")
         {
-        echo nl2br(format_string_more_link(htmlspecialchars(wordwrap($log[$n]["diff"],75,"\n",true))));
+        $difftext = $log[$n]["diff"];
+        if($log[$n]["resource_type_field"] != "" && in_array($log[$n]["resource_type_field"],$FIXED_LIST_FIELD_TYPES))
+            {
+            $transdifflines = array();
+            $difflines = explode("\n",$difftext);
+            foreach($difflines as $diffline)
+                {
+                $action = substr($diffline,0,1);
+                $transdifflines[] = $action . " " . i18n_get_translated(substr($diffline,2));
+                }
+            $difftext = implode("\n",$transdifflines);
+             }
+        echo nl2br(format_string_more_link(htmlspecialchars(wordwrap($difftext,75,"\n",true))));
         }
     if ($log[$n]["usageoption"]!="-1" && $log[$n]["usageoption"]!="")
         {
