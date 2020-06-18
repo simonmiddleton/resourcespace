@@ -5,7 +5,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
 {
     global $manage_request_admin, $assigned_to_user, $notify_manage_request_admin, $request_query;
 
-    // Do not process this any further as this only handles indivual resource requests
+    // Do not process this any further as this only handles individual resource requests
     if($manage_collection_request) {
         return true;
     }
@@ -52,14 +52,10 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         }
     }
 
-    // Default back to auto assign based on resource type (if set to do so)
-    if($assigned_administrator === 0 && isset($manage_request_admin)) {
+    if($assigned_administrator === 0)
+        {
         return false;
-    }
-
-    // We get here if assigned admin is present and fallback is absent 
-    //             or assigned admin is present and fallback is present
-    //             or assigned admin is absent and fallback is absent
+        }
 
     $request_query = sprintf("
             INSERT INTO request(
@@ -87,12 +83,8 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         $assigned_administrator
     );
 
-    // If there is a matched mapping then fetch the associated user details
-    if($assigned_administrator !== 0) 
-        {
-        $assigned_to_user = get_user($assigned_administrator);
-        $notify_manage_request_admin = true;
-        }
+    $assigned_to_user = get_user($assigned_administrator);
+    $notify_manage_request_admin = true;
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
     $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
@@ -247,6 +239,13 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         // Because we are bypassing the end of managed_collection_request function we need to return true
         return true;
     }
+
+    // If we don't have an assigned user, it probably means system is misconfigured so go ahead and run this normally via
+    // RS own logic for dealing with requests.
+    if(is_null($assigned_to_user))
+        {
+        return false;
+        }
 
     // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
     sql_query($request_query);

@@ -521,18 +521,11 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     
     $notify_manage_request_admin = false;
     $notification_sent = false;
-    
-    // Manage individual requests of resources:
+
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
 
-    // Hook Processing
-    // If assigned admin is absent and default manager (manage_request_admin) is present then request SQL is not established by above hook
-    // If however the request SQL has been established, then default manager will be initialised
-
-    // Regular Processing
-    // If the resource level request SQL is yet to be established and a default manager is present for the resource type
-    // then the following will establish the resource level request SQL assigned to the default manager
-    if(isset($manage_request_admin) && $ref_is_resource)
+    // Regular Processing: autoassign using the resource type - one resource was requested and no plugin is preventing this from running
+    if($ref_is_resource && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
         $admin_notify_user = 0;
         $request_resource_type = $resourcedata["resource_type"];
@@ -574,17 +567,11 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             }
         }   
-    
-    // Manage collection requests:
+
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
 
-    // Hook Processing
-    // If collectiondata is absent then request(s) not created by above hook
-    // If however request(s) have been created, then default manager will be initialised
-    
-    // Regular Processing
-    // Runs if default manager present and hook absent or hook present but did not create any request(s)
-    if(isset($manage_request_admin) && count($manage_request_admin) > 0 && isset($collectiondata)) 
+    // Regular Processing: autoassign using the resource type - collection request and no plugin is preventing this from running
+    if(isset($collectiondata) && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
         $all_r_types = get_resource_types();
 
@@ -760,7 +747,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     else
         {
         if(hook('bypass_end_managed_collection_request', '', array(!isset($collectiondata), $ref, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)))
-            // This hook is called if the autoassign_collection_requests hook was called
             {
             return true;
             }
