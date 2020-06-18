@@ -248,7 +248,7 @@ if($ref < 0 && $resource_type_force_selection)
   $resource["resource_type"] = "";
   }
 
-// Set iniitla value for noupload
+// Set initial value for noupload
 $noupload = getval("noupload","") != "" || in_array($resource['resource_type'], $data_only_resource_types);
 
 # Allow to specify resource type from url for new resources
@@ -257,7 +257,7 @@ if ($ref<0 && $resource_type != "" && $resource_type!=$resource["resource_type"]
     {
     update_resource_type($ref,intval($resource_type));
     $resource["resource_type"] = $resource_type;
-    // Change the noupload as resource type has changed from that requestedd originally
+    // Change the noupload as resource type has changed from that requested originally
     $noupload = in_array($resource['resource_type'], $data_only_resource_types);
     }
 
