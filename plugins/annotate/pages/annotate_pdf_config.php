@@ -10,9 +10,9 @@ if (!in_array("annotate",$plugins))
 	exit($lang["error-plugin-not-activated"]);
 	}
 
-$ref=getvalescaped("ref","");
-$col=getvalescaped("col","");
-$previewpage=getvalescaped("previewpage",1,true);
+$ref=getval("ref",0,true);
+$col=getval("col",0,true);
+$previewpage=getval("previewpage",1,true);
 
 if ($col!="")
 	{

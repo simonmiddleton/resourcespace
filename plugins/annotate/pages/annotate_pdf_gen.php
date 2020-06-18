@@ -12,10 +12,10 @@ if (!in_array("annotate",$plugins))
     exit($lang["error-plugin-not-activated"]);
     }
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref",0,true);
 $size=getvalescaped("size","letter");
 $color=getvalescaped("color","yellow");
-$previewpage=getvalescaped("previewpage",1);
+$previewpage=getval("previewpage",1,true);
 $cleartmp=getvalescaped("cleartmp","");
 
 if ($cleartmp!="")

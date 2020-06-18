@@ -240,7 +240,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		putenv("MAGICK_HOME=" . $imagemagick_path); 
         $ghostscript_fullpath = get_utility_path("ghostscript");
 		
-        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . $previewpage . " -o -r100 -dLastPage=" . $previewpage . " -sOutputFile=" . escapeshellarg($jpgstoragepath) . " " . escapeshellarg($pdfstoragepath);
+        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . escapeshellarg($previewpage) . " -o -r100 -dLastPage=" . escapeshellarg($previewpage) . " -sOutputFile=" . escapeshellarg($jpgstoragepath) . " " . escapeshellarg($pdfstoragepath);
 		run_command($command);
 		
 		$convert_fullpath = get_utility_path("im-convert");
