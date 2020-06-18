@@ -106,24 +106,14 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         {
         if($b_fixed_field)
             {
-            $log_entry='';
-            if (count($nodes_to_add) > 0)
+            if(count($nodes_to_remove)>0)
                 {
-                add_resource_nodes($resource, array_values($nodes_to_add),false);
-
-                foreach($nodes_to_add as $node_to_add)
-                    {
-                    $log_entry .= '+ ' . $nodes_available[$node_to_add] . PHP_EOL;
-                    }
-                }
-            if (count($nodes_to_remove) > 0)
+                delete_resource_nodes($resource,array_values($nodes_to_remove),false);
+                }        
+            if(count($nodes_to_add)>0)
                 {
-                delete_resource_nodes($resource,array_values($nodes_to_remove));
-                foreach($nodes_to_remove as $node_to_remove)
-                    {
-                    $log_entry.='- ' . $nodes_available[$node_to_remove] . PHP_EOL;
-                    }
-                }
+                add_resource_nodes($resource, array_values($nodes_to_add),false,false);
+                }       
 
             # If this is a 'joined' field we need to add it to the resource column
             $joins = get_resource_table_joins();
@@ -149,9 +139,25 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 sql_query("UPDATE resource SET field{$field} = {$truncated_value} WHERE ref = '{$resource}'");
                 }
 
-            if($log_entry!='')
+            // Log node field changes
+            $nodefieldchanges = array();
+            foreach ($nodes_to_remove as $node)
                 {
-                resource_log($resource,LOG_CODE_NODE_REVERT,$field,$lang["revert_log_note"],'',$log_entry);
+                $nodedata = array();
+                get_node($node, $nodedata);
+                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+                }
+            foreach ($nodes_to_add as $node)
+                {
+                $nodedata = array();
+                get_node($node, $nodedata);
+                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+                }
+            foreach ($nodefieldchanges as $key => $value)
+                {
+                $fromvalue  = isset($value[0]) ? implode("\n",$value[0]) : "";
+                $tovalue    = isset($value[1]) ? implode("\n",$value[1]) : "";
+                resource_log($resource,"e",$key,$lang["revert_log_note"],$fromvalue,$tovalue);
                 }
             }
         else
