@@ -372,7 +372,7 @@ if ($search_titles)
 		if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
 		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!hasdata'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["search_title_hasdata"]." ".$displayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"" ).'</a>'.$searchcrumbs.'</div></div> ';            
         }
-    else if (!$archive_standard && strpos(",",$archive)===false) // Don't construct title if more than one archive state is selected
+    elseif (!$archive_standard && strpos($archive,",")===false) // Don't construct title if more than one archive state is selected
         {
         switch ($archive)
             {
