@@ -329,3 +329,51 @@ function get_user_downloads($userref,$user_dl_days)
         
     return $count;
     }
+
+
+/**
+* Add detail of node changes to resource log
+* 
+* @param integer $resource          Resource ID
+* @param array   $nodes_added       Array of node IDs that have been added
+* @param array   $nodes_removed     Array of node IDs that have been removed
+* @param string  $lognote           Optional note to add to log entry
+* 
+* @return boolean                   Success/failure
+*/
+function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "")
+    {
+    if((string)(int)$resource !== (string)$resource)
+        {
+        return false;
+        }
+    $nodefieldchanges = array();
+    foreach ($nodes_removed as $node)
+        {
+        $nodedata = array();
+        if(get_node($node, $nodedata))
+            {
+            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+            }
+        }
+    foreach ($nodes_added as $node)
+        {
+        $nodedata = array();
+        if(get_node($node, $nodedata))
+            {
+            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+            }
+        }
+    foreach ($nodefieldchanges as $key => $value)
+        {
+        // Log changes to each field separately
+        // Prefix with a comma so that log_diff() can log each node change correctly
+        $fromvalue  = isset($value[0]) ? "," . implode(",",$value[0]) : "";
+        $tovalue    = isset($value[1]) ? "," . implode(",",$value[1]) : "";
+        resource_log($resource,LOG_CODE_EDITED,$key,$lognote,$fromvalue,$tovalue);
+        return true;
+        }
+
+    // Nothing to log
+    return false;
+    }

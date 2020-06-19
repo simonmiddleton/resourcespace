@@ -7,15 +7,13 @@ function HookRse_versionLogLog_extra_columns_header()
 
 function HookRse_versionLogLog_extra_columns_row()
     {
-    global $lang;
-    global $log;
-    global $n;
+    global $lang,$log, $n, $baseurl;
     ?>
     <td>
     <div class="ListTools">
         
     <?php if ($log[$n]["revert_enabled"]) { ?>
-    <a href="../plugins/rse_version/pages/revert.php?ref=<?php echo $log[$n]["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
+    <a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $log[$n]["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
     <?php } ?>
     </div>
     </td>
@@ -30,7 +28,7 @@ function HookRse_versionLogGet_resource_log_extra_fields()
 
 function HookRse_versionLogLog_diff_td_extra($ref)
     {
-	global $baseurl_short;
+	global $baseurl;
     # For images, display the uploaded image in the "Difference" section of the log.
     global $lang;
     global $log;
@@ -75,7 +73,7 @@ function HookRse_versionLogLog_diff_td_extra($ref)
             else
                 {
                 //If an image does not exist, get a nopreview image by looking at the extension of the alternative file    
-                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
+                $image = $baseurl . '/gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
                 }
             
             }?>
@@ -85,7 +83,7 @@ function HookRse_versionLogLog_diff_td_extra($ref)
                 {
                 //Only add the donload link if this is an alternative file
 				?>
-				<a href="<?php echo $baseurl_short?>pages/terms.php?ref=<?php echo urlencode($ref)?>&url=<?php echo urlencode("pages/download_progress.php?ref=" . $ref . "&alternative=" . $alt_file . "&ext=" . $alter_data['file_extension'])?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang['logdownloadearlierversion'] ?> </a>
+				<a href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&url=<?php echo urlencode("pages/download_progress.php?ref=" . $ref . "&alternative=" . $alt_file . "&ext=" . $alter_data['file_extension'])?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang['logdownloadearlierversion'] ?> </a>
 				
             <?php } 
             

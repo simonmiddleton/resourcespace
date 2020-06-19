@@ -1034,27 +1034,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         add_resource_nodes($ref,$nodes_to_add, false, false);
         }
     
-    // Log node field changes
-    $nodefieldchanges = array();
-    foreach ($nodes_to_remove as $node)
-        {
-        $nodedata = array();
-        get_node($node, $nodedata);
-        $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
-        }
-    foreach ($nodes_to_add as $node)
-        {
-        $nodedata = array();
-        get_node($node, $nodedata);
-        $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
-        }
-    foreach ($nodefieldchanges as $key => $value)
-        {
-        $fromvalue  = (isset($value[0]) && count($value[0]) > 0) ? "," . implode(",",$value[0]) : "";
-        $tovalue    = (isset($value[1]) && count($value[1]) > 0) ? "," . implode(",",$value[1]) : "";
-        resource_log($ref,LOG_CODE_EDITED,$key,"",$fromvalue,$tovalue);
-        }
-  
+    log_node_changes($ref,$nodes_to_add,$nodes_to_remove);
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
@@ -1393,24 +1373,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 							}
                         $val = $new_nodes_val;
 
-                        $nodefieldchanges = array();
-                        foreach ($removed_nodes as $node)
-                            {
-                            $nodedata = array();
-                            get_node($node, $nodedata);
-                            $nodefieldchanges[0][] = $nodedata["name"];
-                            }
-                        foreach ($new_nodes as $node)
-                            {
-                            $nodedata = array();
-                            get_node($node, $nodedata);
-                            $nodefieldchanges[1][] = $nodedata["name"];
-                            }                    
-                        // Prefix with a comma so that log_diff can log each node change correctly
-                        $fromvalue  = isset($nodefieldchanges[0]) ? "," . implode(",",$nodefieldchanges[0]) : "";
-                        $tovalue    = isset($nodefieldchanges[1]) ? "," . implode(",",$nodefieldchanges[1]) : "";
-                        debug("BANG " . $fromvalue . " to " . $tovalue);
-                        resource_log($ref,LOG_CODE_EDITED,$fields[$n]['ref'],"",$fromvalue,$tovalue);
+                        log_node_changes($ref,$new_nodes,$removed_nodes);
 
                         // If this is a 'joined' field it still needs to add it to the resource column
                         $joins = get_resource_table_joins();
@@ -1508,24 +1471,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
                         // Log this change, nodes will actually be added later
-                        $fieldchanges = array();
-                        foreach ($removed_nodes as $node)
-                            {
-                            $nodedata = array();
-                            get_node($node, $nodedata);
-                            $fieldchanges[0][] = $nodedata["name"];
-                            }      
-                        foreach ($added_nodes as $node)
-                            {
-                            $nodedata = array();
-                            get_node($node, $nodedata);
-                            $fieldchanges[1][] = $nodedata["name"];
-                            }              
-                        
-                        $fromvalue  = isset($fieldchanges[0]) ? "," . implode("\n",$fieldchanges[0]) : "";
-                        $tovalue    = isset($fieldchanges[1]) ? "," . implode("\n",$fieldchanges[1]) : "";
-                        resource_log($ref,LOG_CODE_EDITED,$fields[$n]['ref'],"",$fromvalue,$tovalue);
-
+                        log_node_changes($ref,$added_nodes,$removed_nodes);
                         $val = $newval;
                         # If this is a 'joined' field it still needs to add it to the resource column
                         $joins=get_resource_table_joins();
@@ -2318,26 +2264,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             add_resource_nodes($resource,$nodes_to_add, false, false);
             }
 
-        $nodefieldchanges = array();
-        foreach ($nodes_to_remove as $node)
-            {
-            $nodedata = array();
-            get_node($node, $nodedata);
-            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
-            }
-        foreach ($nodes_to_add as $node)
-            {
-            $nodedata = array();
-            get_node($node, $nodedata);
-            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
-            }
-    
-        foreach ($nodefieldchanges as $key => $value)
-            {
-            $fromvalue  = isset($value[0]) ? "," . implode("\n",$value[0]) : "";
-            $tovalue    = isset($value[1]) ? "," . implode("\n",$value[1]) : "";
-            resource_log($resource,LOG_CODE_EDITED,$key,"",$fromvalue,$tovalue);
-            }
+        log_node_changes($resource,$nodes_to_add,$nodes_to_remove);
 
         db_end_transaction("update_field_{$field}");
         $value = implode(",",$newvalues);
@@ -5028,6 +4955,7 @@ function filter_match($filter,$name,$value)
 function log_diff($fromvalue, $tovalue)
     {
     $return = '';
+    debug_function_call("log_diff",func_get_args());
     
     // Trim values as it can cause out of memory errors with class.Diff.php e.g. when saving extracted text or creating previews for large PDF files
     if(strlen($fromvalue)>10000)
@@ -5046,24 +4974,24 @@ function log_diff($fromvalue, $tovalue)
     // Work a different way for fixed lists
     if(',' == substr($fromvalue, 0, 1) || ',' == substr($tovalue, 0, 1))
         {
-        $fromvalue = explode(',', i18n_get_translated($fromvalue));
-        $tovalue   = explode(',', i18n_get_translated($tovalue));
+        $fromvalue = array_filter(explode(',', $fromvalue));
+        $tovalue   = array_filter(explode(',', $tovalue));
 
         // Empty arrays if either side is blank.
-        if (count($fromvalue)==1 && trim($fromvalue[0])=="") {$fromvalue=array("");}
-        if (count($tovalue)==1   && trim($tovalue[0])=="")   {$tovalue=array("");}
+        if (count($fromvalue)==0) {$fromvalue=array();}
+        if (count($tovalue)==0)   {$tovalue=array();}
             
         // Get diffs
         $inserts = array_diff($tovalue, $fromvalue);
         $deletes = array_diff($fromvalue, $tovalue);
 
         // Process array diffs into meaningful strings
-        if(0 < count($deletes) && isset($deletes[0]) && $deletes[0] != "")
+        if(0 < count($deletes))
             {
             $return .= '- ' . join("\n- " , $deletes);
             }
 
-        if(0 < count($inserts) && isset($inserts[0]) && $inserts[0] != "")
+        if(0 < count($inserts))
             {
             if('' != $return)
                 {
@@ -5248,12 +5176,15 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                 $autonodes = array();
                 foreach($autovals as $autoval)
                     {
-                    $autonodes[] = get_node_id($autoval,$field['ref']);
+                    $nodeid = get_node_id($autoval,$field['ref']);
+                    if($nodeid !== false)
+                        {
+                        $autonodes[] = $nodeid;
+                        }
                     }
                 natsort($autonodes);
                 add_resource_nodes($resource,$autonodes,false,false);
-                $tovalue = "," . implode(",",$autovals);
-                resource_log($resource,LOG_CODE_EDITED,$field['ref'],$lang["autocomplete_log_note"],"",$tovalue); 
+                log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
                 $fields_updated[$field['ref']] = implode(",",$autonodes);
                 }
             else

@@ -138,26 +138,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 sql_query("UPDATE resource SET field{$field} = {$truncated_value} WHERE ref = '{$resource}'");
                 }
 
-            // Log node field changes
-            $nodefieldchanges = array();
-            foreach ($nodes_to_remove as $node)
-                {
-                $nodedata = array();
-                get_node($node, $nodedata);
-                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
-                }
-            foreach ($nodes_to_add as $node)
-                {
-                $nodedata = array();
-                get_node($node, $nodedata);
-                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
-                }
-            foreach ($nodefieldchanges as $key => $value)
-                {
-                $fromvalue  = isset($value[0]) ? implode("\n",$value[0]) : "";
-                $tovalue    = isset($value[1]) ? implode("\n",$value[1]) : "";
-                resource_log($resource,"e",$key,$lang["revert_log_note"],$fromvalue,$tovalue);
-                }
+            log_node_changes($resource,$nodes_to_add,$nodes_to_remove,$lang["revert_log_note"]);
             }
         else
             {
