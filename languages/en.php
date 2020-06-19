@@ -2227,6 +2227,7 @@ $lang["property-user_group"]="User group";
 $lang["property-user_group_parent"]="Parent user group";
 $lang["property-user_group_remove_parent"]="(remove parent)";
 $lang["resource_type_delete_confirmation"]="There are %%RESOURCECOUNT%% resource(s) of this type.";
+$lang["resource_type_delete_assoc_rtf_confirm"] = "There are %COUNT metadata field(s) associated with this resource type.";
 $lang["resource_type_delete_select_new"]="Please select the resource type that these will be converted to.";
 $lang["resourcetype-global_field"]="Global";
 $lang["resourcetype-global_field"]="Global";
