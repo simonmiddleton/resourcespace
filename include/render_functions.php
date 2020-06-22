@@ -2448,16 +2448,18 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 
     $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
 
+    // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
+    $preview_red=100+($imagedata["image_red"]/1000)*156;
+    $preview_green=100+($imagedata["image_green"]/1000)*156;
+    $preview_blue=100+($imagedata["image_blue"]/1000)*156;
     ?>
-    
-    <img
+    <div style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto;"><img
     border="0"
     width="<?php echo $width ?>" 
     height="<?php echo $height ?>"
-    style="margin-top:<?php echo $margin ?>;"        
     src="<?php echo $img_url ?>" 
     alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
-    />
+    /></div>
     <?php
     }
 
