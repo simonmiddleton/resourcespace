@@ -1,4 +1,4 @@
-(table desciption goes here)
+Defines custom access for a resource - for example that a specific user group has restricted access to a resource.
 resource,int(11),
 usergroup,int(11),
 user,int(11),

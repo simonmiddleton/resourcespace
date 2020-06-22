@@ -1,4 +1,4 @@
-(table desciption goes here)
+For free text metadata, stores the indexed keywords. Fixed list indexing is stored separately via resource_node and node_keyword.
 resource,int(11),
 keyword,int(11),
 hit_count,int(11),

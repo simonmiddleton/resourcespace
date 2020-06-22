@@ -1,8 +1,8 @@
-(table desciption goes here)
+A list of saved searches which can exist within collections.
 ref,int(11),
 collection,int(11),
-search,text,
-restypes,text,
+search,text,The search string.
+restypes,text,The resource types used when searching.
 starsearch,int(11),
 archive,varchar(50),
 created,timestamp,

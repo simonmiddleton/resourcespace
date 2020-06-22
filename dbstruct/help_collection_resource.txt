@@ -1,4 +1,4 @@
-(table desciption goes here)
+Defines the contents of a collection.
 collection,int(11),
 resource,int(11),
 date_added,timestamp,
@@ -7,5 +7,5 @@ rating,int(11),
 use_as_theme_thumbnail,int(11),
 purchase_size,varchar(10),
 purchase_complete,int(11),
-purchase_price,decimal(10§2),
+purchase_price,decimal,
 sortorder,int(11),

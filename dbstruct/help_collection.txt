@@ -1,12 +1,12 @@
-(table desciption goes here)
+Collections are groups of resources.
 ref,int(11),
-name,varchar(100),
+name,varchar(100),The collection display name.
 user,int(11),
 created,datetime,
-public,int(11),
-theme,varchar(100),
-theme2,varchar(100),
-theme3,varchar(100),
+public,int(11),Set to '1' for public collections and featured collections.
+theme,varchar(100),The first level theme category. Defined for multi-level featured collections.
+theme2,varchar(100),The second level theme category. Defined for multi-level featured collections.
+theme3,varchar(100),The third level theme category. Defined for multi-level featured collections.
 allow_changes,int(11),
 cant_delete,int(11),
 keywords,text,

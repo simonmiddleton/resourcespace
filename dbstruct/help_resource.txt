@@ -1,4 +1,4 @@
-(table desciption goes here)
+A resource is the central record within ResourceSpace mapping to a single asset / file.
 ref,int(11),
 title,varchar(200),
 resource_type,int(11),

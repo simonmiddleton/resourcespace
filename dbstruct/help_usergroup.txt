@@ -1,4 +1,4 @@
-(table desciption goes here)
+Defines user groups.
 ref,int(11),
 name,varchar(100),
 permissions,text,

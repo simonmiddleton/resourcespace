@@ -1,4 +1,4 @@
-(table desciption goes here)
+Stores all user preferences, and also system configuration.
 ref,int(11),
 user,int(11),
 parameter,varchar(150),

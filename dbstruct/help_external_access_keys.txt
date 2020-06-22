@@ -1,4 +1,4 @@
-(table desciption goes here)
+When externally sharing there will be one row here for each resource shared.
 resource,int(11),
 access_key,char(10),
 user,int(11),

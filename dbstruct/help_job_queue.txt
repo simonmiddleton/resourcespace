@@ -1,4 +1,4 @@
-(table desciption goes here)
+The job queue - a list of active offline jobs such as preview processing.
 ref,int(11),
 type,varchar(100),
 job_data,mediumtext,

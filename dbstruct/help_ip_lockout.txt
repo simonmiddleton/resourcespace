@@ -1,4 +1,4 @@
-(table desciption goes here)
+IP address lockout - for denying access after a number of invalid login attempts.
 ip,varchar(40),
 tries,int(11),
 last_try,datetime,

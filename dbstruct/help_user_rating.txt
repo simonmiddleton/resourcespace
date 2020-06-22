@@ -1,4 +1,4 @@
-(table desciption goes here)
+The user ratings for a given resource.
 user,int(11),
 rating,int(11),
 ref,int(11),

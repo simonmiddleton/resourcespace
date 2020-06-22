@@ -1,5 +1,5 @@
-(table desciption goes here)
+A list of nodes used for category trees.
 ref,int(11),
 resource_type_field,int(11),
-parent,int(11),
-name,varchar(100),
+parent,int(11),The parent node.
+name,varchar(100),The node name.

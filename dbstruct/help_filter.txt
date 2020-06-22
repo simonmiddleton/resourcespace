@@ -1,4 +1,4 @@
-(table desciption goes here)
+Filter rule definition.
 ref,int(11),
 name,varchar(200),
 filter_condition,int(11),

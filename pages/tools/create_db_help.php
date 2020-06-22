@@ -17,7 +17,7 @@ foreach ($dir as $file)
 
         // Create the help file if it doesn't exist.
         $helpfile=$folder . "help_" . $table . ".txt";
-        if (!file_exists($helpfile)) {touch($helpfile);file_put_contents($helpfile,"(table desciption goes here)\n",FILE_APPEND);}
+        if (!file_exists($helpfile)) {touch($helpfile);file_put_contents($helpfile,"(table description goes here)\n",FILE_APPEND);}
 
         // Load the columns already there
         $existingcols=file($helpfile);

@@ -1,4 +1,4 @@
-(table desciption goes here)
+Lists all plugins active on the system and stores plugin configuration.
 name,varchar(50),
 descrip,text,
 author,varchar(100),

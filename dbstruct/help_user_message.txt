@@ -1,4 +1,4 @@
-(table desciption goes here)
+For multi-user messages defines which users will see the message, and which have seen it.
 ref,int(11),
 user,int(11),
 message,int(11),

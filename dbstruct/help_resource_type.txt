@@ -1,4 +1,4 @@
-(table desciption goes here)
+Resource types, such as photo / video / case study. The choice of resource type will determine the metadata fields a resource has.
 ref,int(11),
 name,varchar(200),
 allowed_extensions,TEXT,

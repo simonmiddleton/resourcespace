@@ -1,4 +1,4 @@
-(table desciption goes here)
+Users that have subscribed to receive a report regularly.
 ref,int(11),
 user,int(11),
 send_all_users,int(11),

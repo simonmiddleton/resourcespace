@@ -1,4 +1,4 @@
-(table desciption goes here)
+Logs all activity relating to a resource.
 ref,int(11),
 date,datetime,
 user,int(11),

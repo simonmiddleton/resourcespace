@@ -1,6 +1,6 @@
-(table desciption goes here)
+Node keyword list (fixed metadata). Used for the fixed list types such as drop down boxes and category trees.
 ref,int(11),
 resource_type_field,int(11),
 name,text,
-parent,int(11),
+parent,int(11),For category trees - defines heirarchy. 
 order_by,int(11),

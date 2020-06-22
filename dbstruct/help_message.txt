@@ -1,4 +1,4 @@
-(table desciption goes here)
+Internal messaging, informing users of particular events.
 ref,int(11),
 created,DATETIME,
 owner,int(11),

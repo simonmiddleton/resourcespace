@@ -1,4 +1,4 @@
-(table desciption goes here)
+Additional metrics for a resource.
 resource,int(11),
 width,int(11),
 height,int(11),

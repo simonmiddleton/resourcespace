@@ -1,4 +1,4 @@
-(table desciption goes here)
+Dash tiles, displayed on the home page.
 ref,int(11),
 title,varchar(255),
 txt,text,

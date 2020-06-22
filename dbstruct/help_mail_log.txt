@@ -1,4 +1,4 @@
-(table desciption goes here)
+A log storing all e-mails sent, mainly for diagnosis purposes.
 ref,int(11),
 date,datetime,
 mail_to,varchar(100),

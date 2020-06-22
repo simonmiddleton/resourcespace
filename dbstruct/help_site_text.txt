@@ -1,4 +1,4 @@
-(table desciption goes here)
+Stores any custom site text the user has entered replacing that stored in the language folder.
 page,varchar(50),
 name,varchar(200),
 text,text,

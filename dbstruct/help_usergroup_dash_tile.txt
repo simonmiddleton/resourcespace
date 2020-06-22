@@ -1,4 +1,4 @@
-(table desciption goes here)
+Dash tiles configured for user groups.
 ref,int(11),
 usergroup,int(11),
 dash_tile,int(11),

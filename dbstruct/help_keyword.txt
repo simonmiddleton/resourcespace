@@ -1,4 +1,4 @@
-(table desciption goes here)
+A list of keywords used when indexing. With stemming enabled (the default) the stems are stored as well as the full keywords.
 ref,int(11),
 keyword,varchar(100),
 soundex,varchar(50),

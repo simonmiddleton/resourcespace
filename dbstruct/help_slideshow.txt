@@ -1,4 +1,4 @@
-(table desciption goes here)
+Stores the home page slideshow images.
 ref,int(11),
 resource_ref,int(11),
 homepage_show,tinyint(1),

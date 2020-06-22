@@ -1,7 +1,7 @@
-(table desciption goes here)
+Stores all ResourceSpace users.
 ref,int(11),
 username,varchar(50),
-password,varchar(64),
+password,varchar(64),One way encrypted password, using hash chaining to support/upgrade old hash algorithms. Can store the password in plain text and it will be encrypted when the user next logs in.
 fullname,varchar(100),
 email,varchar(100),
 usergroup,int(11),
