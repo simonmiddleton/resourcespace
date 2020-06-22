@@ -1,0 +1,3 @@
+(table desciption goes here)
+annotation,int(11),
+node,int(11),

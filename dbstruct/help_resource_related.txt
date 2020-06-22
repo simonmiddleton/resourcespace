@@ -1,0 +1,3 @@
+(table desciption goes here)
+resource,int(11),
+related,int(11),

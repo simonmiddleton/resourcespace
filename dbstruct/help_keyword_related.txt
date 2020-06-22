@@ -1,0 +1,3 @@
+(table desciption goes here)
+keyword,int(11),
+related,int(11),

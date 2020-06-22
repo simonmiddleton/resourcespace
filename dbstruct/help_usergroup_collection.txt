@@ -1,0 +1,4 @@
+(table desciption goes here)
+usergroup,int(11),
+collection,int(11),
+request_feedback,int(11),

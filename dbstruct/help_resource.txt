@@ -1,0 +1,42 @@
+(table desciption goes here)
+ref,int(11),
+title,varchar(200),
+resource_type,int(11),
+has_image,int(11),Does the resource have a preview image?
+is_transcoding,int(11),Is there a transcoding process underway for this resource?
+hit_count,int(11),How many times this resource has been viewed.
+new_hit_count,int(11),Copied from hit_count by cron so that resource hit counts don't change throughout the day affecting search ordering.
+creation_date,datetime,When the resource record was created.
+rating,int(11),
+user_rating,int(11),
+user_rating_count,int(11),
+user_rating_total,int(11),
+country,varchar(200),
+file_extension,varchar(10),
+preview_extension,varchar(10),
+image_red,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
+image_green,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
+image_blue,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
+thumb_width,int(11),
+thumb_height,int(11),
+archive,int(11),
+access,int(11),
+colour_key,varchar(5),
+created_by,int(11),
+file_path,varchar(500),
+file_modified,datetime,
+file_checksum,varchar(32),
+request_count,int(11),
+expiry_notification_sent,int(11),
+preview_tweaks,varchar(50),
+geo_lat,double,
+geo_long,double,
+mapzoom,int(11),
+disk_usage,bigint(20),
+disk_usage_last_updated,datetime,
+file_size,bigint(20),
+preview_attempts,int(11),
+modified,timestamp,
+last_verified,datetime,
+integrity_fail,tinyint(1),
+lock_user,int(11),

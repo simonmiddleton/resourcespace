@@ -1,0 +1,5 @@
+(table desciption goes here)
+ref,int(11),
+name,varchar(100),
+user,int(11),
+params,text,

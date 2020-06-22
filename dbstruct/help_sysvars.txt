@@ -1,0 +1,3 @@
+(table desciption goes here)
+name,varchar(50),
+value,text,

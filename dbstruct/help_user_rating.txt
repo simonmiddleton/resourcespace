@@ -1,0 +1,4 @@
+(table desciption goes here)
+user,int(11),
+rating,int(11),
+ref,int(11),

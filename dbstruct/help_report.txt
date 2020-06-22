@@ -1,0 +1,4 @@
+(table desciption goes here)
+ref,int(11),
+name,varchar(100),
+query,text,

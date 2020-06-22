@@ -1,0 +1,4 @@
+(table desciption goes here)
+ip,varchar(40),
+tries,int(11),
+last_try,datetime,

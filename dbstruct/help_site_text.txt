@@ -1,0 +1,9 @@
+(table desciption goes here)
+page,varchar(50),
+name,varchar(200),
+text,text,
+ref,int(11),
+language,varchar(10),
+ignore_me,int(11),
+specific_to_group,int(11),
+custom,int(11),

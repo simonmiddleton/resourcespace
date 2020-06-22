@@ -1,0 +1,9 @@
+(table desciption goes here)
+ref,int(11),
+name,varchar(200),
+allowed_extensions,TEXT,
+order_by,int(11),
+config_options,text,
+tab_name,varchar(50),
+push_metadata,int(11),
+inherit_global_fields,tinyint(1),

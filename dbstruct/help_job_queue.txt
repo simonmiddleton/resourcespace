@@ -1,0 +1,10 @@
+(table desciption goes here)
+ref,int(11),
+type,varchar(100),
+job_data,mediumtext,
+start_date,datetime,
+user,int(11),
+status,int(11),
+success_text,varchar(250),
+failure_text,varchar(250),
+job_code,varchar(100),

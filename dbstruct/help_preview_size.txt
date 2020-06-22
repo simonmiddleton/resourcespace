@@ -1,0 +1,11 @@
+(table desciption goes here)
+ref,int(11),
+id,char(3),
+width,int(11),
+height,int(11),
+padtosize,int(11),
+name,varchar(50),
+internal,int(11),
+allow_preview,int(11),
+allow_restricted,int(11),
+quality,int(3),

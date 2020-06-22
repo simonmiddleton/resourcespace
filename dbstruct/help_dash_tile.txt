@@ -1,0 +1,11 @@
+(table desciption goes here)
+ref,int(11),
+title,varchar(255),
+txt,text,
+all_users,int(1),
+default_order_by,int(11),
+url,text,
+link,text,
+reload_interval_secs,int(11),
+resource_count,int(1),
+allow_delete,int(1),

@@ -1,0 +1,13 @@
+(table desciption goes here)
+resource,int(11),
+access_key,char(10),
+user,int(11),
+usergroup,int(11),
+collection,int(11),
+request_feedback,int(11),
+email,varchar(100),
+date,datetime,
+lastused,datetime,
+access,int(11),
+expires,datetime,
+password_hash,varchar(100),

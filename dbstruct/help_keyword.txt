@@ -1,0 +1,5 @@
+(table desciption goes here)
+ref,int(11),
+keyword,varchar(100),
+soundex,varchar(50),
+hit_count,int(11),

@@ -1,0 +1,5 @@
+(table desciption goes here)
+resource,int(11),
+node,int(11),
+hit_count,int(11),
+new_hit_count,int(11),

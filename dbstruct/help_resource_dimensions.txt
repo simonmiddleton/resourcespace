@@ -1,0 +1,8 @@
+(table desciption goes here)
+resource,int(11),
+width,int(11),
+height,int(11),
+file_size,bigint(20),
+resolution,int(11),
+unit,varchar(11),
+page_count,int(11),

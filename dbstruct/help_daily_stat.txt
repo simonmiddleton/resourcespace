@@ -1,0 +1,9 @@
+(table desciption goes here)
+year,int(11),
+month,int(11),
+day,int(11),
+usergroup,int(11),
+activity_type,varchar(50),
+object_ref,int(11),
+count,int(11),
+external,tinyint(1),

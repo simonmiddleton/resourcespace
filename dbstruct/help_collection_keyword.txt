@@ -1,0 +1,3 @@
+(table desciption goes here)
+collection,int(11),
+keyword,int(11),

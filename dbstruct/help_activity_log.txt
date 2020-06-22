@@ -1,0 +1,12 @@
+(table desciption goes here)
+ref,int(11),
+logged,datetime,
+user,int(11),
+log_code,char(1),
+note,text,
+value_old,text,
+value_new,text,
+value_diff,text,
+remote_table,varchar(100),
+remote_column,varchar(100),
+remote_ref,varchar(100),

@@ -1,0 +1,10 @@
+(table desciption goes here)
+ref,int(11),
+resource,int(11),
+resource_type_field,int(11),
+user,int(11),
+x,"decimal(17,
+y,"decimal(17,
+width,"decimal(17,
+height,"decimal(17,
+page,int(11),

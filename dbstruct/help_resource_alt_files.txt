@@ -1,0 +1,12 @@
+(table desciption goes here)
+ref,int(11),
+resource,int(11),
+name,varchar(100),
+description,varchar(200),
+file_name,varchar(200),
+file_extension,varchar(10),
+file_size,bigint(20),
+creation_date,datetime,
+unoconv,int(11),
+alt_type,varchar(100),
+page_count,int(11),

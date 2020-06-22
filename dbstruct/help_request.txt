@@ -1,0 +1,13 @@
+(table desciption goes here)
+ref,int(11),
+user,int(11),
+collection,int(11),
+created,datetime,
+request_mode,int(11),
+status,int(11),
+comments,text,
+expires,date,
+assigned_to,int(11),
+reason,text,
+reasonapproved,text,
+approved_declined_by,int(11),

@@ -1,0 +1,4 @@
+(table desciption goes here)
+id,int(11),
+user_id,int(11),
+periodic_email_id,int(11),

@@ -1,0 +1,6 @@
+(table desciption goes here)
+resource,int(11),
+usergroup,int(11),
+user,int(11),
+access,int(11),
+user_expires,date,
