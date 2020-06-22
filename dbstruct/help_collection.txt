@@ -9,11 +9,11 @@ theme2,varchar(100),The second level theme category. Defined for multi-level fea
 theme3,varchar(100),The third level theme category. Defined for multi-level featured collections.
 allow_changes,int(11),
 cant_delete,int(11),
-keywords,text,
+keywords,text,Optional keywords entered by the user and indexed for collection searching.
 savedsearch,int(11),
 home_page_publish,int(11),
 home_page_text,text,
 home_page_image,int(11),
-session_id,int(11),
-description,text,
+session_id,int(11),Used for anonymous access with collections enabled - the session ID cookie used by the anonymous user, as a single user is used for all accesses.
+description,text,Textual description.
 type,int(11),

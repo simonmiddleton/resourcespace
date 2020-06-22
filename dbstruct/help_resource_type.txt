@@ -3,7 +3,7 @@ ref,int(11),
 name,varchar(200),
 allowed_extensions,TEXT,
 order_by,int(11),
-config_options,text,
+config_options,text,Supports separate configuration options for resources depending on resource type.
 tab_name,varchar(50),
 push_metadata,int(11),
-inherit_global_fields,tinyint(1),
+inherit_global_fields,tinyint(1),Should resources of this type inherit the global fields?
