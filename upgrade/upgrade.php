@@ -15,8 +15,10 @@ if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_fil
     include_once __DIR__ . '/../include/db.php';
     }
 
-// Don't trigger upgrade if request is done via ajax. Checking if upgrade is in progress can be done through ajax
-if((!$cli && $ajax) || $pagename == "setup") 
+// Don't trigger upgrade if request is done via ajax or requests are done via no upgrade routes. Checking if upgrade is 
+// in progress can be done through ajax
+$no_upgrade_routes = array("setup", "healthcheck");
+if((!$cli && $ajax) || in_array($pagename, $no_upgrade_routes)) 
     {
     return;
     }
