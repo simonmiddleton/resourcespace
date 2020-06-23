@@ -1,10 +1,8 @@
 <?php
 include_once "../include/db.php";
-
 include "../include/authenticate.php"; 
 include_once "../include/image_processing.php";
 include_once '../include/node_functions.php';
-
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
@@ -1006,90 +1004,7 @@ function ShowHelp(field)
                     styledalert('<?php echo $lang["error"] ?>',response.responseText);
                     });
 	}
-<?php } 
-
-# Resource next / back browsing.
-function EditNav() # Create a function so this can be repeated at the end of the form also.
-    {
-    global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode, $urlparams;
-    ?>
-    <div class="BackToResultsContainer"><div class="backtoresults"> 
-    <?php
-    if(!$disablenavlinks && !$upload_review_mode)
-        {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>"></a>
-    
-        <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo $lang["viewallresults"]?></a>
-    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>"></a>
-    
-        <?php
-        }
-    if ($modal)
-        { ?>
-        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);"></a>
-        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
-        <?php
-        } ?>
-    </div></div><?php
-  }
-  
-function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
-    {
-    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave, 
-           $is_template, $show_required_field_label, $modal, $edit_selection_collection_resources;
-
-    $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
-    if($ref < 0 && $noupload)
-        {
-        $save_btn_value = $lang['create'];
-        }
-
-    $confirm_text = $lang["confirmeditall"];
-    if($edit_selection_collection_resources)
-        {
-        $confirm_text = $lang["confirm_edit_all_selected_resources"];
-        }
-    ?>
-    <div class="QuestionSubmit <?php echo $extraclass ?>">
-        <?php
-        if($ref < 0 || $upload_review_mode)
-            {
-            echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
-            }
-            ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
-               name="save"
-               class="editsave"
-               type="submit"
-               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
-        <?php
-        if($upload_review_mode)
-            {
-            ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
-            <?php
-            }
-
-        if(!$is_template && $show_required_field_label && $requiredfields)
-            {
-            ?>
-            <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>
-            <?php
-            } 
-
-        # Duplicate navigation
-        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
-            {
-            EditNav();
-            }
-            ?>
-        
-            <br />
-            <div class="clearerleft"> </div>
-    </div>
-    <?php 
-    }
-    ?>
+<?php } ?>
 </script>
 
 <?php
