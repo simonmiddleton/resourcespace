@@ -71,12 +71,10 @@ if(array_search('nosetup',$argv)===false)
     # this has to be done in its own function as it includes the config.php and don't want to scope those vars globally
     create_new_db($mysql_db);
     }
-
     
 // Reset any odd config settings by reapplying config.default and config.new_installs.php
 // Save any important settings e.g for mysql connections first 
-$savedconfigs = array("mysql_db","mysql_server","mysql_server_port","mysql_username","mysql_password","imagemagick_path","ghostscript_path","exiftool_path");
-
+$savedconfigs = array("mysql_db","mysql_server","mysql_server_port","mysql_username","mysql_password","read_only_db_username","read_only_db_password","imagemagick_path","ghostscript_path","exiftool_path");
 foreach($savedconfigs as $savedconfig)
     {
     $saved[$savedconfig] = $$savedconfig;
