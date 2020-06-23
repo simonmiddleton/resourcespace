@@ -294,11 +294,11 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
         }
 
     $year=getvalescaped("basicyear","");
-    if ($year!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicyear:" . $year;}
+    if ($year!="") {$search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicyear:" . $year;}
     $month=getvalescaped("basicmonth","");
-    if ($month!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicmonth:" . $month;}
+    if ($month!="") {$search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicmonth:" . $month;}
     $day=getvalescaped("basicday","");
-    if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicday:" . $day;}
+    if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicday:" . $day;}
     }
 
 $searchresourceid = "";
