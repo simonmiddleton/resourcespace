@@ -3,8 +3,7 @@
 if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections)) {
 	
 $shownresults=false;
-
-for ($n=0;$n<count($collections);$n++)
+for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)));$n++)
 	{
 	$resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);	
 	$hook_result=hook("process_search_results","",array("result"=>$resources,"search"=>"!collection".$collections[$n]['ref']));
@@ -66,13 +65,8 @@ for ($n=0;$n<count($collections);$n++)
 		<?php hook("searchiconpublic");?>
 		<div class="clearer"></div>
 		</div><!-- End of ResourcePanel -->
-	<?php } 
-	
-	
-	
-	
-
-	
+    <?php } 
+    
 	if ($display=="list")
 		{
 		?>
@@ -92,7 +86,7 @@ for ($n=0;$n<count($collections);$n++)
 		if(!hook("replacelistviewcolresults")){?>
 		<td nowrap><div class="ListTitle"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"", $collection_prefix . i18n_get_collection_name($collections[$n]))?>"><?php echo $collection_prefix . highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]),45),$search)?></a></div></td>
 		<?php 
-		for ($x=0;$x<count($df)-1;$x++){
+		for ($x=0;$x<count($df)-2;$x++){
 			?><td>-</td><?php
 			}
 				

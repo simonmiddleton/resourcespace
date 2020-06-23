@@ -527,7 +527,7 @@ function refresh_collection_frame($collection="")
     }
 
 if (!function_exists("search_public_collections")){	
-function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false)
+function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows=-1)
 	{
 	global $userref;
 
@@ -623,17 +623,17 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 	# Run the query
 	if ($include_resources)
 		{    
-        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort));
+        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort),'',$fetchrows);
 		}
 	else
 		{
-		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort));
+		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort),'',$fetchrows);
 		}
 	}
 }
 
 
-function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC")
+function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC", $fetchrows = -1)
     {
     global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata, $default_collection_sort;
     
@@ -675,7 +675,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
 	else
 		{
 		# The old way - same search as when searching within publich collections.
-		$collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now);
+		$collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
 		}
 	
 	
