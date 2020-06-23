@@ -67,10 +67,9 @@ function HookAnnotateAllAdditionalheaderjs(){
 
 <script type="text/javascript" src="<?php echo $baseurl_short?>plugins/annotate/lib/jquery/js/jquery.annotate.js?css_reload_key=<?php echo $css_reload_key?>"></script>
 <script language="javascript">
-    function annotate(ref,k,w,h,annotate_toggle,page, modal){
+    function annotate(ref,k,w,h,annotate_toggle,page){
         // Set function's optional arguments:
         page = typeof page !== 'undefined' ? page : 1;
-        modal = typeof modal !== 'undefined' ? modal : false;
 
         // Set defaults:
         var url_params = '';
@@ -80,13 +79,7 @@ function HookAnnotateAllAdditionalheaderjs(){
             url_params = '&page=' + page;
             }
 
-        var target = jQuery("#toAnnotate");
-        if(modal)
-            {
-            target = jQuery("#modal #toAnnotate");
-            }
-
-        target.annotateImage({
+        jQuery("#toAnnotate").annotateImage({
             getUrl: "<?php echo $baseurl_short?>plugins/annotate/pages/get.php?ref="+ref+"&k="+k+"&pw="+w+"&ph="+h + url_params,
             saveUrl: "<?php echo $baseurl_short?>plugins/annotate/pages/save.php?ref="+ref+"&k="+k+"&pw="+w+"&ph="+h + url_params,
             deleteUrl: "<?php echo $baseurl_short?>plugins/annotate/pages/delete.php?ref="+ref+"&k="+k + url_params,
