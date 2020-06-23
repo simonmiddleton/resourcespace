@@ -139,3 +139,12 @@ function HookCookies_notificationLoginPostlogout()
 
     return;
     }
+
+function HookCookies_notificationAllRemoveuseridcookie()
+    {
+    global $baseurl;
+ 
+    rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
+ 
+    return;
+    }
