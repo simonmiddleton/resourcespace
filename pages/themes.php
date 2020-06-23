@@ -509,7 +509,7 @@ if(!hook('replacethemesbacklink'))
                 );
             }
         
-        renderBreadcrumbs($links_trail, '', true);
+        renderBreadcrumbs($links_trail, '', 'BreadcrumbsBoxTheme');
         }
     } # end hook('replacethemesbacklink')
 
