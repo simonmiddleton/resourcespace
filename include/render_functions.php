@@ -2453,7 +2453,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     $preview_green=100+($imagedata["image_green"]/1000)*156;
     $preview_blue=100+($imagedata["image_blue"]/1000)*156;
     ?>
-    <div style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin-top:<?php echo $margin ?>"><img
+    <div style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto;"><img
     border="0"
     width="<?php echo $width ?>" 
     height="<?php echo $height ?>"
