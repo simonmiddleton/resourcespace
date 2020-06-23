@@ -2672,4 +2672,128 @@ function copy_filter($filter)
 
     return $newfilter;
     }
+
+/**
+* Add POST/GET parameters into search string. Moved from pages/search.php
+* 
+* @param string $search        Existing search string without params added
+* 
+* @return string               Updated string with params added
+*/ 
+function update_search_from_request($search)
+    {
+    reset ($_POST);reset($_GET);
+
+    foreach (array_merge($_GET, $_POST) as $key=>$value)
+        {
+        if(is_string($value))
+          {
+          $value = trim($value);
+          }
+
+        if ($value!="" && substr($key,0,6)=="field_")
+            {
+            if ((strpos($key,"_year")!==false)||(strpos($key,"_month")!==false)||(strpos($key,"_day")!==false))
+                {
+                # Date field
+                
+                # Construct the date from the supplied dropdown values
+                $key_part=substr($key,0, strrpos($key, "_"));
+                $field=substr($key_part,6);
+                $value="";
+                if (strpos($search, $field.":")===false) 
+                    {
+                    $key_year=$key_part."_year";
+                    $value_year=getvalescaped($key_year,"");
+                    if ($value_year!="") $value=$value_year;
+                    else $value="nnnn";
+                    
+                    $key_month=$key_part."_month";
+                    $value_month=getvalescaped($key_month,"");
+                    if ($value_month=="") $value_month.="nn";
+                    
+                    $key_day=$key_part."_day";
+                    $value_day=getvalescaped($key_day,"");
+                    if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
+                    elseif ($value_month!="nn") $value.="|" . $value_month;
+                    $search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
+                    }
+                                
+                }
+            elseif (strpos($key,"_drop_")!==false)
+                {
+                # Dropdown field
+                # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
+                $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
+                }       
+            elseif (strpos($key,"_cat_")!==false)
+                {
+                # Category tree field
+                # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
+                $value=str_replace(",",";",$value);
+                if (substr($value,0,1)==";") {$value=substr($value,1);}
+                
+                $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
+                }
+            else
+                {
+                # Standard field
+                $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                foreach ($values as $value)
+                    {
+                    # Standard field
+                    $search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
+                    }
+                }
+            }
+        // Nodes can be searched directly when displayed on simple search bar
+        // Note: intially they come grouped by field as we need to know whether if
+        // there is a OR case involved (ie. @@101@@102)
+        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
+            {
+            $node_ref = '';
+
+            foreach($value as $searched_field_nodes)
+                {
+                // Fields that are displayed as a dropdown will only pass one node ID
+                if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
+                    {
+                    continue;
+                    }
+                else if(!is_array($searched_field_nodes))
+                    {
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+
+                    continue;
+                    }
+
+                // For fields that can pass multiple node IDs at a time
+                $node_ref .= ', ';
+
+                foreach($searched_field_nodes as $searched_node_ref)
+                    {
+                    $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                    }
+                }
+            $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
+            }
+        }
+
+    $year=getvalescaped("basicyear","");
+    if ($year!="")
+        {
+        $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicyear:" . $year;
+        }
+    $month=getvalescaped("basicmonth","");
+    if ($month!="")
+        {
+        $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicmonth:" . $month;
+        }
+    $day=getvalescaped("basicday","");
+    if ($day!="")
+        {
+        $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicday:" . $day;
+        }
     
+    return $search;
+    }
