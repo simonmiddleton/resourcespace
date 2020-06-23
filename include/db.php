@@ -785,28 +785,29 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
     $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_already_completed_this_time;
 	
-	// Check cache for this query
-	$cache_write=false;
-	if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
-		{
-		$cache_write=true;
-		$cache_location=get_query_cache_location();
-		$cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
-		if (file_exists($cache_file))
-			{
-			$cachedata=json_decode(file_get_contents($cache_file),true);
-			if (!is_null($cachedata)) // JSON decode success
-				{
-				if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
-					{
-					if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
-						{
-						return $cachedata["results"];
-						}
-					}
-				}
-			}
-		}
+    // Check cache for this query
+    $cache_write=false;
+    if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
+        {
+        $cache_write=true;
+        $cache_location=get_query_cache_location();
+        $cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
+        if (file_exists($cache_file))
+            {
+            $cachedata=json_decode(file_get_contents($cache_file),true);
+            if (!is_null($cachedata)) // JSON decode success
+                {
+                if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
+                    {
+                    if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
+                        {
+                        db_clear_connection_mode();
+                        return $cachedata["results"];
+                        }
+                    }
+                }
+            }
+        }
 
 	if (!isset($debug_log_override))
 		{
@@ -874,6 +875,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     // available using db_set_connection_mode(). An example use case for this can be reports.
     $db_connection_mode = "read_write";
     $db_connection = $db["read_write"];
+    
     if(
         db_use_multiple_connection_modes()
         && (
