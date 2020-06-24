@@ -7,10 +7,6 @@
  * @return array Containing the login details ('valid' determines whether or not the login succeeded).
  */
 
-if (!function_exists('hash'))
-    {
-    include dirname(__FILE__) . "/hash_functions.php";
-    }
     
 function perform_login()
 	{

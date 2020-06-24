@@ -313,3 +313,23 @@ define("RESOURCE_ACCESS_RESTRICTED", 1); # 1 = Restricted Access (download only 
 define("RESOURCE_ACCESS_CONFIDENTIAL", 2); # Confidential (no access)
 define("RESOURCE_ACCESS_CUSTOM_GROUP", 3); # custom group access
 define("RESOURCE_ACCESS_INVALID_REQUEST", 99); # invalid resource request eg. invalid resource ref
+
+
+// ----------------------------------------------
+// MESSAGES
+// ----------------------------------------------
+// Enumerated types of message.  Note the base two offset for binary combination.
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN",1);
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL",2);
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_1",4);
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_2",8);
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_3",16);
+
+DEFINE ("MESSAGE_DEFAULT_TTL_SECONDS",60 * 60 * 24 * 7);		// 7 days
+
+
+// ----------------------------------------------
+// MIGRATIONS
+// ----------------------------------------------
+define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX','!deprecated');
+define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE',"-1,,!deprecated\n");

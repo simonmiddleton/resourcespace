@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
-
 function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=null, $remote_table=null, $remote_column=null, $remote_ref=null, $ref_column_override=null, $value_old=null, $user=null, $generate_diff=false)
 	{
 

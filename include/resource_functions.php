@@ -2,9 +2,6 @@
 # Resource functions
 # Functions to create, edit and index resources
 
-include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
-include_once __DIR__ . '/metadata_functions.php';
-
 $GLOBALS['get_resource_path_fpcache'] = array();
 /**
 * Get resource path/ resource URL/ download URL for this resource

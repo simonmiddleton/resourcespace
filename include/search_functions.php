@@ -3,13 +3,6 @@
 # Functions to perform searches (read only)
 # - For resource indexing / keyword creation, see resource_functions.php
 
-include_once 'node_functions.php';
-
-if (!function_exists("do_search"))
-    {
-    include_once 'search_do.php'; // be consistent with filename
-    }
-
 function resolve_soundex($keyword)
     {
     # returns the most commonly used keyword that sounds like $keyword, or failing a soundex match,

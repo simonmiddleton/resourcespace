@@ -1,7 +1,4 @@
 <?php
-// called by node_field_options_override function to migrate comma separated options to nodes
-include_once 'migration_functions.php';
-
 
 /**
 * Set node - Used for both creating and saving a node in the database.

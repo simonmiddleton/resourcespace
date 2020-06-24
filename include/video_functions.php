@@ -1,5 +1,4 @@
 <?php
-include_once 'resource_functions.php';
 
 /**
 * Get video resolution using FFMpeg

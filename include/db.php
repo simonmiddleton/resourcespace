@@ -10,6 +10,7 @@ include_once dirname(__FILE__) . '/config.security.php';
 include_once dirname(__FILE__) . '/general_functions.php';
 include_once dirname(__FILE__) . '/definitions.php';
 include_once dirname(__FILE__) . '/search_functions.php';
+include_once dirname(__FILE__) . '/search_do.php';
 include_once dirname(__FILE__) . '/resource_functions.php';
 include_once dirname(__FILE__) . '/collections_functions.php';
 include_once dirname(__FILE__) . '/language_functions.php';
@@ -23,6 +24,9 @@ include_once dirname(__FILE__) . '/log_functions.php';
 include_once dirname(__FILE__) . '/file_functions.php';
 include_once dirname(__FILE__) . '/config_functions.php';
 include_once dirname(__FILE__) . '/plugin_functions.php';
+include_once dirname(__FILE__) . '/hash_functions.php';
+include_once dirname(__FILE__) . '/migration_functions.php';
+include_once dirname(__FILE__) . '/metadata_functions.php';
 
 # Switch on output buffering.
 ob_start(null,4096);

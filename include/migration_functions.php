@@ -1,7 +1,5 @@
 <?php
 
-define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX','!deprecated');
-define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE',"-1,,!deprecated\n");
 
 // function to automatically migrate options lists to nodes
 function migrate_resource_type_field_check(&$resource_type_field)

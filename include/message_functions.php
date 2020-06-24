@@ -1,13 +1,5 @@
 <?php
 
-// enumerated types of message.  Note the base two offset for binary combination.
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN",1);
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL",2);
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_1",4);
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_2",8);
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_3",16);
-
-DEFINE ("MESSAGE_DEFAULT_TTL_SECONDS",60 * 60 * 24 * 7);		// 7 days
 
 // ------------------------------------------------------------------------------------------------------------------------
 
