@@ -473,6 +473,7 @@ if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive
 else
     {
     $resourcestoretrieve = $rowstoretrieve;
+    $colcount = 0;
     }
 
 if ($search_includes_resources || substr($search,0,1)==="!")
