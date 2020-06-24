@@ -414,5 +414,3 @@ function get_translated_activity_type($activity_type)
         return $lang[$key];
         }
     }
-
-?>

@@ -352,5 +352,3 @@ EOT;
 		}			
 		if ($level == 1)  echo "</div>";  // end of comments_container
 	}
-	
-?>

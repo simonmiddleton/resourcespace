@@ -1754,4 +1754,5 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
     </script>
     <?php  
     }
-?>
+
+	
