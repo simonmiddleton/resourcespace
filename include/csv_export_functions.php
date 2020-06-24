@@ -6,7 +6,7 @@
 /**
 * Generates the CSV content of the metadata for resources passed in the array
 *
-* @param $resources
+* @param array $resources
 * @return string
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
