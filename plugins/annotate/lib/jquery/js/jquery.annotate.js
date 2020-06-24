@@ -33,6 +33,11 @@ function isInt(value) {
         this.useAjax = opts.useAjax;
         this.notes = opts.notes;
 		this.toggle= opts.toggle;
+
+        // Specific to ResourceSpace
+        var modal = (typeof opts.modal !== "undefined" ? opts.modal : false);
+        $.fn.annotateImage.modal = modal;
+
 		
         // Add the canvas
         this.canvas = $('<div class="image-annotate-canvas"><div class="image-annotate-view"></div><div class="image-annotate-edit"><div class="image-annotate-edit-area"></div></div></div>');
@@ -70,7 +75,8 @@ function isInt(value) {
         // Add the image actions
         if (this.editable) {
 			this.button = $('<div class="image-actions" id="image-actions">');
-			this.canvas.append(this.button);$('#image-actions').hide();
+			this.canvas.append(this.button);
+            $.fn.annotateImage.getImageActionsTarget(modal).hide();
 			
 			            this.button = $('<a class="image-annotate-add" id="image-annotate-add" href="#" style="display:inline;">' + button_add + '</a>');
             this.button.css({width: 'auto', 'padding-right': '5px'});
@@ -78,19 +84,19 @@ function isInt(value) {
                 $.fn.annotateImage.add(image);
                 return false;
             });
-            $('#image-actions').append(this.button);
+            $.fn.annotateImage.getImageActionsTarget(modal).append(this.button);
 			
             this.button = $('<a class="image-annotate-toggle" id="image-annotate-toggle" href="#" style="display:inline;">');
             this.button.css({width: 'auto', 'padding-right': '5px'});this.button.click(function() {
                 $.fn.annotateImage.toggle(image);
             }); 
             this.button.css({});
-            $('#image-actions').append(this.button);
+            $.fn.annotateImage.getImageActionsTarget(modal).append(this.button);
             $.fn.annotateImage.toggle(image); 
             $.fn.annotateImage.toggle(image);
            
-            $('#image-actions').hover(function(){
-				toTop('#image-actions');
+            $.fn.annotateImage.getImageActionsTarget(modal).hover(function(){
+				toTop($.fn.annotateImage.getImageActionsTarget(modal, true));
 			});
         }
         
@@ -99,8 +105,8 @@ function isInt(value) {
 			image.canvas.css({"overflow":"visible"});
             if ($(this).children('.image-annotate-edit').css('display') == 'none') {
                $(this).children('.image-annotate-view').show();
-               $('#image-actions').show();
-               toTop('#image-actions');
+               $.fn.annotateImage.getImageActionsTarget(modal).show();
+               toTop($.fn.annotateImage.getImageActionsTarget(modal, true));
             }
         }, function() {
 			image.canvas.css({"overflow":"hidden"});
@@ -108,7 +114,7 @@ function isInt(value) {
 				$(this).children('.image-annotate-view').hide();
 				$(this).children('.image-annotate-note','.image-annotate-toggle').hide();
             }
-            $('#image-actions').hide();
+            $.fn.annotateImage.getImageActionsTarget(modal).hide();
         });
         
         // Hide the original
@@ -137,6 +143,27 @@ function isInt(value) {
             image.notes[image.notes[i]].destroy();
         }
         image.notes = new Array();
+    };
+
+    $.fn.annotateImage.getImageActionsTarget = function(modal, as_str) {
+        /// <summary>
+        ///     Specific to ResourceSpace
+        ///     Return the image-actions target based on image being in a modal or normal page.
+        /// </summary>
+
+        // $.fn.annotateImage.modal is shared between a normal page and the modal. We rely on the passed modal arg to reset
+        // this value to false once we closed the modal.
+        if(typeof modal !== "undefined" && modal && modal != $.fn.annotateImage.modal)
+            {
+            $.fn.annotateImage.modal = modal; 
+            }
+
+        if(modal)
+            {
+            return (as_str === true ? '#modal #image-actions' : $('#modal #image-actions'));
+            }
+
+        return (as_str === true ? '#image-actions' : $('#image-actions'));
     };
 
     $.fn.annotateImage.ajaxLoad = function(image) {
@@ -335,7 +362,7 @@ function isInt(value) {
         this.area.css('top', this.note.top + 'px');
 
         // Show the edition canvas and hide the view canvas
-        $('#image-actions').hide();
+        $.fn.annotateImage.getImageActionsTarget().hide();
         image.canvas.children('.image-annotate-view').hide();
         image.canvas.children('.image-annotate-edit').show();
 
