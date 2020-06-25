@@ -91,8 +91,6 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 			}
 				
 		?>
-		<td>-</td>
-
 		<?php if ($id_column){?><td><?php echo $collections[$n]['ref']?></td><?php } ?>
 		<?php if ($resource_type_column){?><td><?php echo $collection_tag?></td><?php } ?>
 		<?php if ($date_column){?><td><?php echo nicedate($collections[$n]["created"],false,true)?></td><?php } ?>
