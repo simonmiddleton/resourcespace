@@ -1335,6 +1335,13 @@ function delete_resource_nodes($resourceid,$nodes=array(),$logthis=true)
     }
 
 
+/**
+ * Delete all node relationships matching the passed resource IDs and node IDs.
+ *
+ * @param  array $resources An array of resource IDs
+ * @param  mixed $nodes An integer or array of single/multiple nodes
+ * @return void
+ */
 function delete_resource_nodes_multi($resources=array(),$nodes=array())
     {
     if(!is_array($nodes))
@@ -1344,6 +1351,13 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
     sql_query($sql);
     }
 
+
+/**
+ * Delete all node relationships for the given resource.
+ *
+ * @param  integer $resourceid    The resource ID
+ * @return void
+ */
 function delete_all_resource_nodes($resourceid)
     {
     sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");  
@@ -1389,15 +1403,28 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     return;
     }
 
+/**
+ * Return an array of all node IDs where the node contains any of the keyword IDs passed
+ *
+ * @param  array $keywords An array of keyword IDs for the indexed content
+ * @return array Matching node IDs
+ */
 function get_nodes_from_keywords($keywords=array())
     {
     if(!is_array($keywords)){$keywords=array($keywords);}
     return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");"); 
     }
 
+    
+/**
+ * For the specified $resource, increment the hitcount for each node in array
+ *
+ * @param  integer $resource
+ * @param  array $nodes
+ * @return void
+ */
 function update_resource_node_hitcount($resource,$nodes)
     {
-    # For the specified $resource, increment the hitcount for each node in array
     if(!is_array($nodes)){$nodes=array($nodes);}
     if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 WHERE resource='$resource' AND node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
     }
@@ -1463,6 +1490,12 @@ function copy_resource_type_field_nodes($from, $to)
     return true;
     }
 
+/**
+ * Get all the parent nodes of the given node, all the way back to the top of the node tree.
+ *
+ * @param  integer $noderef The child node ID
+ * @return array Array of the parent node IDs
+ */
 function get_parent_nodes($noderef)
     {
     $parent_nodes=array();
