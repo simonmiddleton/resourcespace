@@ -4,10 +4,6 @@ if('cli' != PHP_SAPI)
     exit('This utility is command line only.');
     }
 
-// @todo use the dirname level argument once PHP 7.0 is supported
-$webroot = dirname(dirname(__DIR__));
-
-
 $resource_portrait = create_resource(1, 0);
 sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_portrait', 1000, 2000)");
 $search = search_special(

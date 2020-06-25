@@ -1283,6 +1283,9 @@ $open_access_for_contributor=false;
 # Should a user that has contributed a resource always have edit access to it? (even if the resource is live)
 $edit_access_for_contributor=false;
 
+# For users that have edit access to main states (e.g Active), make sure edit access is granted only for resources contributed by that user
+$edit_only_own_contributions = false;
+
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
