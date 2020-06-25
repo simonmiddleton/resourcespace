@@ -3,12 +3,16 @@
 # Functions for the translation of the application
 
 if (!function_exists("lang_or_i18n_get_translated")) {
+/**
+ * Translates field names / values using two methods: First it checks if $text exists in the current $lang (after $text is sanitized and $mixedprefix - one by one if an array - and $suffix are added). If not found in the $lang, it tries to translate $text using the i18n_get_translated function.
+ *
+ * @param  string $text
+ * @param  string $mixedprefix
+ * @param  string $suffix
+ * @return void
+ */
 function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
     {
-    # Translates field names / values using two methods:
-    # First it checks if $text exists in the current $lang (after $text is sanitized and $mixedprefix - one by one if an array - and $suffix are added).
-    # If not found in the $lang, it tries to translate $text using the i18n_get_translated function.
-
     $text=trim($text);
     global $lang;
 
@@ -29,10 +33,14 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
 }
 
 if (!function_exists("i18n_get_translated")) {
+/**
+ * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
+ *
+ * @param  string $text
+ * @return void
+ */
 function i18n_get_translated($text)
     {
-    # For field names / values using the i18n syntax, return the version in the current user's language
-    # Format is ~en:Somename~es:Someothername
     $text=trim($text);
         
     global $language,$defaultlanguage;
@@ -67,10 +75,15 @@ function i18n_get_translated($text)
     }
 }
 
+/**
+ * Translates collection names
+ *
+ * @param  mixed $mixedcollection
+ * @param  string $index
+ * @return void
+ */
 function i18n_get_collection_name($mixedcollection, $index="name")
     {
-    # Translates collection names
-
     global $lang;
 
     # The function handles both strings and arrays.
@@ -134,10 +147,14 @@ function i18n_get_collection_name($mixedcollection, $index="name")
     }
 
 if (!function_exists("i18n_get_indexable")) {
+/**
+ * For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
+ *
+ * @param  string $text The text to process
+ * @return void
+ */
 function i18n_get_indexable($text)
     {
-	# For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
-	
 	// Make sure keywords don't get squashed together, then trim
 	$text=str_replace(array("<br />","<br>","\\r","\\n","&nbsp;")," ",$text);
 	$text=trim($text);
@@ -173,11 +190,17 @@ function i18n_get_indexable($text)
 }
 
 if (!function_exists("i18n_get_translations")) {
+/**
+ * For a string in the language format, return all translations as an associative array
+ * E.g. "en"->"English translation";
+ * "fr"->"French translation"
+ *
+ * @param  string $value A string in the language format
+ * @return void
+ */
 function i18n_get_translations($value)
     {
-    # For a string in the language format, return all translations as an associative array
-    # E.g. "en"->"English translation";
-    # "fr"->"French translation"
+    # 
     global $defaultlanguage;
     if (strpos($value,"~")===false) {return array($defaultlanguage=>$value);}
     $s=explode("~",$value);
@@ -191,29 +214,40 @@ function i18n_get_translations($value)
     }
 }
 
+/**
+ * Returns a string with all occurrences of the $mixedplaceholder in $subject replaced with the $mixedreplace.
+ * If $mixedplaceholder is a string but $mixedreplace is an array, the $mixedreplace is imploded to a string using $separator.
+ * The replace values are formatted according to the formatting of the placeholders.
+ * The placeholders may be written in UPPERCASE, lowercase or Uppercasefirst.
+ * Each placeholder will be replaced by the replace value,
+ * written with the same case as the placeholder.
+ * It's possible to also include "?" as a placeholder for legacy reasons.
+ * 
+ * Example #1:
+ * str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"], true)
+ * will search for the three words "%EXTENSION", "%extension" and "%Extension" and also the char "?"
+ * in the string $lang["originalfileoftype"]. If the found placeholder is %extension
+ * it will be replaced by the value of $resource["file_extension"],
+ * written in lowercase. If the found placeholder instead would have been "?" the value
+ * would have been written in UPPERCASE.
+ * 
+ * Example #2:
+ * str_replace_formatted_placeholder("%resourcetypes%", $searched_resource_types_names_array, 
+ * $lang["resourcetypes-collections"], false, $lang["resourcetypes_separator"])
+ * will search for the three words "%RESOURCETYPES%", "%resourcetypes%" and "%Resourcetypes%"
+ * in the string $lang["resourcetypes-collections"]. If the found placeholder is %resourcetypes%
+ * all elements in $searched_resource_types_names_array will be written in lowercase and separated by
+ * $lang["resourcetypes_separator"] before the resulting string will replace the placeholder.
+ *
+ * @param  mixed $mixedplaceholder
+ * @param  mixed $mixedreplace
+ * @param  mixed $subject
+ * @param  mixed $question_mark
+ * @param  string $separator
+ * @return void
+ */
 function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $subject, $question_mark = false, $separator = ", ")
     {
-    # Returns a string with all occurrences of the $mixedplaceholder in $subject replaced with the $mixedreplace. If $mixedplaceholder is a string but $mixedreplace is an array, the $mixedreplace is imploded to a string using $separator.
-    # The replace values are formatted according to the formatting of the placeholders.
-    # The placeholders may be written in UPPERCASE, lowercase or Uppercasefirst.
-    # Each placeholder will be replaced by the replace value,
-    # written with the same case as the placeholder.
-    # It's possible to also include "?" as a placeholder for legacy reasons.
-
-    # Example #1:
-    # str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"], true)
-    # will search for the three words "%EXTENSION", "%extension" and "%Extension" and also the char "?"
-    # in the string $lang["originalfileoftype"]. If the found placeholder is %extension
-    # it will be replaced by the value of $resource["file_extension"],
-    # written in lowercase. If the found placeholder instead would have been "?" the value
-    # would have been written in UPPERCASE.
-    #
-    # Example #2:
-    # str_replace_formatted_placeholder("%resourcetypes%", $searched_resource_types_names_array, $lang["resourcetypes-collections"], false, $lang["resourcetypes_separator"])
-    # will search for the three words "%RESOURCETYPES%", "%resourcetypes%" and "%Resourcetypes%"
-    # in the string $lang["resourcetypes-collections"]. If the found placeholder is %resourcetypes%
-    # all elements in $searched_resource_types_names_array will be written in lowercase and separated by $lang["resourcetypes_separator"] before the resulting string will replace the placeholder.
-
     # Creates a multi-dimensional array of the placeholders written in different case styles.
     $array_placeholder = array();
     if (is_array($mixedplaceholder)) {$placeholder = $mixedplaceholder;}
@@ -260,27 +294,46 @@ function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $su
     return $result;
     }
 
+/**
+ * Returns a string with the first LETTER of $string capitalized.
+ * Compare with ucfirst($string) which returns a string with first CHAR of $string capitalized:
+ * ucfirstletter("abc") / ucfirstletter("%abc") returns "Abc" / "%Abc"
+ * ucfirst("abc") / ucfirst("%abc") returns "Abc" / "%abc"
+ * 
+ * Search for the first letter ([a-zA-Z]), which may or may not be followed by other characters (.*).
+ * Replaces the found substring ('$0') with the same substring but now with the first character capitalized, using ucfirst().
+ * Note the /e modifier: If this modifier is set, preg_replace() does normal substitution of backreferences in the replacement
+ * string, evaluates it as PHP code, and uses the result for replacing the search string.  
+ *
+ * @param  mixed $string
+ * @return void
+ */
 function ucfirstletter($string)
     {
-    # Returns a string with the first LETTER of $string capitalized.
-    # Compare with ucfirst($string) which returns a string with first CHAR of $string capitalized:
-    # ucfirstletter("abc") / ucfirstletter("%abc") returns "Abc" / "%Abc"
-    # ucfirst("abc") / ucfirst("%abc") returns "Abc" / "%abc"
-
-    # Search for the first letter ([a-zA-Z]), which may or may not be followed by other characters (.*).
-    # Replaces the found substring ('$0') with the same substring but now with the first character capitalized, using ucfirst().
-    # Note the /e modifier: If this modifier is set, preg_replace() does normal substitution of backreferences in the replacement string, evaluates it as PHP code, and uses the result for replacing the search string.  
     return preg_replace_callback("/[a-zA-Z].*/", "ucfirstletter_callback", $string);
-
     }
+
+    
+/**
+ * Callback used by ucfirstletter
+ *
+ * @param  array $matches
+ * @return void
+ */
 function ucfirstletter_callback($matches){
 	return ucfirst($matches[0]);
 }
 
+
+/**
+ * Normalize the text if function available
+ *
+ * @param  string $keyword
+ * @return void
+ */
 function normalize_keyword($keyword)
 	{
 	global $normalize_keywords, $keywords_remove_diacritics;
-	//Normalize the text if function available
 	if($normalize_keywords && function_exists('normalizer_normalize'))
 		{
 		$keyword=normalizer_normalize($keyword);
@@ -293,17 +346,19 @@ function normalize_keyword($keyword)
 	return $keyword;
 	}
 
+
+/**
+* This function and seems_utf8 are reused from WordPress. See documentation/licenses/wordpress.txt for license information
+*
+* Converts all accent characters to ASCII characters.
+*
+* If there are no accent characters, then the string given is just returned.
+*
+* @param string $string Text that might have accent characters
+* @return string Filtered string with replaced "nice" characters.
+*/
 function remove_accents($string) {
-    /**
-    * This function and seems_utf8 are reused from WordPress. See documentation/licenses/wordpress.txt for license information
-    *
-    * Converts all accent characters to ASCII characters.
-    *
-    * If there are no accent characters, then the string given is just returned.
-    *
-    * @param string $string Text that might have accent characters
-    * @return string Filtered string with replaced "nice" characters.
-    */
+
     
     if ( !preg_match('/[\x80-\xff]/', $string) )
         return $string;
@@ -434,6 +489,13 @@ function remove_accents($string) {
     return $string;
 }
 
+
+/**
+ * Looks for particular patterns to attempt to determine if the provided string is in UTF8 format
+ *
+ * @param  string $str
+ * @return boolean True if it's possibly UTF8
+ */
 function seems_utf8($str) {
 	$length = strlen($str);
 	for ($i=0; $i < $length; $i++) {
@@ -454,6 +516,14 @@ function seems_utf8($str) {
 }
 
 
+
+
+/**
+ * Use the browser settings to determine the default / preferred language
+ *
+ * @param  boolean $strict_mode
+ * @return string The language string the user may prefer
+ */
 function http_get_preferred_language($strict_mode=false)
 	{
 	global $languages;
@@ -501,6 +571,11 @@ function http_get_preferred_language($strict_mode=false)
         return $current_lang;
 	}
 
+/**
+ * Set the user's current language based on get/post/cookie values as appropriate.
+ *
+ * @return string The language string set
+ */
 function setLanguage()
 	{
 	global $browser_language,$disable_languages,$defaultlanguage,$languages,$global_cookies,$baseurl_short;
