@@ -1348,9 +1348,9 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		{
 		?>
 		<tr class="DownloadDBlend">
-		<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
+		<td class="DownloadFileName" <?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
 		<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
-		<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
+		
             <?php
                 $size_info = array('id' => '', 'extension' => $resource['file_extension']);
                 $downloadthissize=resource_download_allowed($ref,'',$resource["resource_type"]);
