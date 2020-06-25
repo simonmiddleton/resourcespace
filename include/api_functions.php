@@ -8,17 +8,31 @@
  *
  */
 
+
+/**
+ * Return a private scramble key for this user.
+ *
+ * @param  integer $user The user ID
+ * @return void
+ */
 function get_api_key($user)
     {
-    // Return a private scramble key for this user.
     global $api_scramble_key;
     return hash("sha256", $user . $api_scramble_key);
     }
 
+    
+
+/**
+ * Check a query is signed correctly.
+ *
+ * @param  string $username The username of the calling user
+ * @param  string $querystring The query being passed to the API
+ * @param  string $sign The signature to check
+ * @return void
+ */
 function check_api_key($username,$querystring,$sign)
     {
-    // Check a query is signed correctly.
-    
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
     $private_key=get_api_key($user);
@@ -43,9 +57,17 @@ function check_api_key($username,$querystring,$sign)
     return $expected==$sign;
     }
 
+
+    
+/**
+ * Execute the specified API function.
+ *
+ * @param  string $query The query string passed to the API
+ * @param  boolean $pretty Should the JSON encoded result be 'pretty' i.e. formatted for reading?
+ * @return void
+ */
 function execute_api_call($query,$pretty=false)
     {
-    // Execute the specified API function.
     $params=array();parse_str($query,$params);
     if (!array_key_exists("function",$params)) {return false;}
     $function=$params["function"];
@@ -313,6 +335,13 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
     return $images;  
 	}
 
+/**
+ * Handle a IIIF error.
+ *
+ * @param  integer $errorcode The error code
+ * @param  array $errors An array of errors
+ * @return void
+ */
 function iiif_error($errorcode = 404, $errors = array())
     {
     global $iiif_debug;

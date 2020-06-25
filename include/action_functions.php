@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+* Retrieve a list of user actions for the My Actions area.
+* 
+* @return array  Array of available actions
+*/
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
 	{
     global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
