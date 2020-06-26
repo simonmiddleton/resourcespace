@@ -3674,6 +3674,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
  */
 function get_debug_log_dir()
 {
+    global $tempdir, $storagedir;
+    
     // Set up the default.
     $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
 
