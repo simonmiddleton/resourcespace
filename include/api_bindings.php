@@ -111,7 +111,6 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
     
-    debug("api_create_resource");
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
@@ -137,7 +136,6 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
             update_field($ref,$field,$value);
             }
         }
-        debug("api_create_resource 2" . $ref);
     return $ref;
     }
 

@@ -3615,11 +3615,7 @@ function get_resource_access($resource)
                 $resourcedata=$resource;
                 $passthru="yes";
                 }
-           
-    if (!$resourcedata)
-        {
-            echo "Error: Resource data not found - check resource id: $resource"; exit;
-        }            
+                    
 	$ref=$resourcedata['ref'];
 	$access=$resourcedata["access"];
 	$resource_type=$resourcedata['resource_type'];
