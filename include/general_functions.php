@@ -197,9 +197,14 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     }
 }
 
+/**
+ * Redirect to the provided URL using a HTTP header Location directive. Exits after redirect
+ *
+ * @param  string $url  URL to redirect to
+ * @return void
+ */
 function redirect($url)
 	{
-	# Redirect to the provided URL using a HTTP header Location directive.
 	global $baseurl,$baseurl_short;
 	if (getval("ajax","")!="")
 		{
@@ -1574,9 +1579,14 @@ function strip_extension($name,$use_ext_list=false)
          }
     }
 
+/**
+ * Checks to see if a process lock exists for the given process name.
+ *
+ * @param  string $name     Name of lock to check
+ * @return boolean TRUE if a current process lock is in place, false if not
+ */
 function is_process_lock($name)
-    {
-    # Checks to see if a process lock exists for the given process name.
+    { 
     global $storagedir,$process_locks_max_seconds;
     
     # Check that tmp/process_locks exists, create if not.
@@ -1916,6 +1926,15 @@ function run_external($cmd,&$code)
     return $output;
 }
 
+/**
+ * Diaplay a styledalert() modal error and optionally return the browser to the previous page after 2 seconds
+ *
+ * @param  string $error    Error text to display
+ * @param  boolean $back    Return to previous page?
+ * @param  integer $code    (Optional) HTTP code to return
+ * 
+ * @return void
+ */
 function error_alert($error, $back = true, $code = 403)
     {
     foreach($GLOBALS as $key => $value)
@@ -1942,9 +1961,8 @@ function error_alert($error, $back = true, $code = 403)
         {
         include(dirname(__FILE__)."/footer.php");
         }
-    
-    
     }
+
 /**
  * Returns an xml compliant string in UTF-8
  *
@@ -2693,6 +2711,12 @@ function move_array_element(array &$array, $from_index, $to_index)
     return;
     }
     
+/**
+ * Check if a value that may equate to false in PHP is actually a zero
+ *
+ * @param  mixed $value
+ * @return boolean  
+ */
 function emptyiszero($value)
     {
     return ($value !== null && $value !== false && trim($value) !== '');
@@ -2961,16 +2985,11 @@ function generateSecureKey($length = 64)
     return $hex;
     }
 
-
-
-
-
 /**
-* Check if page is a modal and set global $modal variable if not already set
-*  
-* @return boolean =- true if modal, false otherwise
-*/
-
+ * Check if current page is a modal and set global $modal variable if not already set
+ *
+ * @return boolean  true if modal, false otherwise
+ */
 function IsModal()
     {
     global $modal;
@@ -2981,8 +3000,6 @@ function IsModal()
     $modal = (getval("modal","") == "true");
     return $modal;
     }
-    
-
 
 /**
 * Generates a CSRF token (Encrypted Token Pattern)
@@ -3826,43 +3843,47 @@ function rcRmdir ($path)
     return $success;
     }
     
+/**
+ * Update daily_stat table with activity
+ *
+ * @param  string  $activity_type e.g. 'Resource download', 'Create resource'
+ * @param  integer $object_ref  ID of related object e.g. resource, collection, keyword
+ * @return void
+ */
+function daily_stat($activity_type,$object_ref)
+    {
+    global $disable_daily_stat;if($disable_daily_stat===true){return;}  //can be used to speed up heavy scripts	when stats are less important
+    # Update the daily statistics after a loggable event.
+    # the daily_stat table contains a counter for each 'activity type' (i.e. download) for each object (i.e. resource)
+    # per day.
+    $date=getdate();$year=$date["year"];$month=$date["mon"];$day=$date["mday"];
     
-if (!function_exists("daily_stat")){
-    function daily_stat($activity_type,$object_ref)
+
+    # Set object ref to zero if not set.
+    
+    if ($object_ref=="") {$object_ref=0;}
+
+    
+    # Find usergroup
+    global $usergroup;
+    if (!isset($usergroup)) {$usergroup=0;}
+    
+    # External or not?
+    global $k;$external=0;
+    if (getval("k","")!="") {$external=1;}
+    
+    # First check to see if there's a row
+    $count=sql_value("select count(*) value from daily_stat where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",0);
+    if ($count==0)
         {
-        global $disable_daily_stat;if($disable_daily_stat===true){return;}  //can be used to speed up heavy scripts	when stats are less important
-        # Update the daily statistics after a loggable event.
-        # the daily_stat table contains a counter for each 'activity type' (i.e. download) for each object (i.e. resource)
-        # per day.
-        $date=getdate();$year=$date["year"];$month=$date["mon"];$day=$date["mday"];
-        
-    
-        # Set object ref to zero if not set.
-        
-        if ($object_ref=="") {$object_ref=0;}
-    
-        
-        # Find usergroup
-        global $usergroup;
-        if (!isset($usergroup)) {$usergroup=0;}
-        
-        # External or not?
-        global $k;$external=0;
-        if (getval("k","")!="") {$external=1;}
-        
-        # First check to see if there's a row
-        $count=sql_value("select count(*) value from daily_stat where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",0);
-        if ($count==0)
-            {
-            # insert
-            sql_query("insert into daily_stat(year,month,day,usergroup,activity_type,object_ref,external,count) values ('$year','$month','$day','$usergroup','$activity_type','$object_ref','$external','1')",false,-1,true,0);
-            }
-        else
-            {
-            # update
-            sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
-            }
-        }    
+        # insert
+        sql_query("insert into daily_stat(year,month,day,usergroup,activity_type,object_ref,external,count) values ('$year','$month','$day','$usergroup','$activity_type','$object_ref','$external','1')",false,-1,true,0);
+        }
+    else
+        {
+        # update
+        sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
+        }
     }
 
 function pagename()
