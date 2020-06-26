@@ -277,10 +277,21 @@ function setup_user($userdata)
     
 
 if (!function_exists("get_users")){     
+/**
+ * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
+ *
+ * @param  integer $group   If set, a user group to limit the results
+ * @param  string $find Search string to filter returned results
+ * @param  string $order_by
+ * @param  boolean $usepermissions
+ * @param  integer $fetchrows
+ * @param  string $approvalstate
+ * @param  boolean $returnsql
+ * @param  string $selectcolumns
+ * @return array  Matching user records 
+ */
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
     {
-    # Returns a user list. Group or search term is optional.
-    # The standard user group names are translated using $lang. Custom user group names are i18n translated.
     global $usergroup, $U_perm_strict;
 
     $sql = "";
@@ -337,11 +348,15 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 }
 }   
 
+/**
+ * Returns all the users who have the permission $permission.
+ * The standard user group names are translated using $lang. Custom user group names are i18n translated. 
+ *
+ * @param  string $permission The permission code to search for
+ * @return array    Matching user records
+ */
 function get_users_with_permission($permission)
-{
-    # Returns all the users who have the permission $permission.
-    # The standard user group names are translated using $lang. Custom user group names are i18n translated.    
-
+    {
     # First find all matching groups.
     $groups = sql_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
@@ -362,6 +377,12 @@ function get_users_with_permission($permission)
     return $return;
 }
 
+/**
+ * Retrieve user records by e-mail address
+ *
+ * @param  string $email    The e-mail address to search for
+ * @return array Matching user records
+ */
 function get_user_by_email($email)
 {
     $r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE u.email LIKE '%$email%' ORDER BY username",false);
@@ -376,16 +397,28 @@ function get_user_by_email($email)
     return $return;
 }
 
+/**
+ * Retrieve user ID by username
+ *
+ * @param  string $username The username to search for
+ * @return mixed  The matching user ID or false if not found
+ */
 function get_user_by_username($username)
     {
     return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
     }
 
+/**
+ * Returns a list of user groups. The standard user groups are translated using $lang. Custom user groups are i18n translated.
+ * Puts anything starting with 'General Staff Users' - in the English default names - at the top (e.g. General Staff).
+ *
+ * @param  boolean $usepermissions Use permissions (user access)
+ * @param  string $find Search string
+ * @param  boolean $id_name_pair_array  Return an array of ID->name instead of full records
+ * @return array    Matching user group records
+ */
 function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array = false)
-{
-    # Returns a list of user groups. The standard user groups are translated using $lang. Custom user groups are i18n translated.
-    # Puts anything starting with 'General Staff Users' - in the English default names - at the top (e.g. General Staff).
-
+    {
     # Creates a query, taking (if required) the permissions  into account.
     $sql = "";
     if ($usepermissions && checkperm("U")) {
@@ -441,10 +474,14 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
 
 }    
 
+/**
+ * Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
+ *
+ * @param  integer $ref User group ID
+ * @return mixed False if not found, or the user group record if found.
+ */
 function get_usergroup($ref)
-{
-    # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
-    
+    {
     $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags, download_limit, download_log_days, edit_filter_id, derestrict_filter_id " . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
@@ -455,6 +492,12 @@ function get_usergroup($ref)
 }
 
 if (!function_exists("get_user")){
+/**
+ * Return the user group record matching $ref
+ *
+ * @param  integer $ref
+ * @return array
+ */
 function get_user($ref)
     {
     global $udata_cache;
@@ -623,6 +666,15 @@ function save_user($ref)
     }
 }
 
+/**
+ * E-mail the user the welcome message on account creation.
+ *
+ * @param  string $email
+ * @param  string $username
+ * @param  string $password
+ * @param  integer $usergroup
+ * @return void
+ */
 function email_user_welcome($email,$username,$password,$usergroup)
     {
     global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
@@ -705,9 +757,14 @@ function email_reset_link($email,$newuser=false)
 }
 
 if (!function_exists("auto_create_user_account")){
+/**
+ * Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
+ *
+ * @param  string $hash
+ * @return boolean Success?
+ */
 function auto_create_user_account($hash="")
     {
-    # Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
            $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash;
 
@@ -1009,6 +1066,11 @@ function new_user($newuser, $usergroup = 0)
 
 
 
+/**
+ * Returns a list of active users
+ *
+ * @return array
+ */
 function get_active_users()
     {
     global $usergroup, $U_perm_strict;
@@ -1031,9 +1093,14 @@ function get_active_users()
 
 
 if (!function_exists("change_password")){
+/**
+ * Sets a new password for the current user.
+ *
+ * @param  string $password
+ * @return mixed True if a success or a descriptive string if there's an issue.
+ */
 function change_password($password)
     {
-    # Sets a new password for the current user.
     global $userref,$username,$lang,$userpassword, $password_reset_mode;
 
     # Check password
@@ -1051,10 +1118,13 @@ function change_password($password)
     }
 }
     
+/**
+ * Generate a password using the configured settings.
+ *
+ * @return string The generated password
+ */
 function make_password()
     {
-    # Generate a password using the configured settings.
-    
     global $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
     $lowercase="abcdefghijklmnopqrstuvwxyz";
@@ -1106,6 +1176,17 @@ function make_password()
     return $password;
     }
 
+/**
+ * Send a bulk e-mail using the bulk e-mail tool.
+ *
+ * @param  string $userlist
+ * @param  string $subject
+ * @param  string $text
+ * @param  string $html
+ * @param  integer $message_type
+ * @param  string $url
+ * @return string The empty string if all OK, a descriptive string if there's an issue.
+ */
 function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL,$url="")
     {
     global $email_from,$lang,$applicationname;
@@ -1161,10 +1242,16 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
     return "";
     }
 
+/**
+ * Returns a user action log for $user.
+ * Standard field titles are translated using $lang.  Custom field titles are i18n translated.
+ *
+ * @param  integer $user
+ * @param  integer $fetchrows How many rows to fetch?
+ * @return array
+ */
 function get_user_log($user, $fetchrows=-1)
     {
-    # Returns a user action log for $user.
-    # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
     global $view_title_field;
     # Executes query.
     $r = sql_query("select r.ref resourceid,r.field".$view_title_field." resourcetitle,l.date,l.type,f.title,l.purchase_size,l.purchase_price, l.notes,l.diff from resource_log l left outer join resource r on l.resource=r.ref left outer join resource_type_field f on f.ref=l.resource_type_field where l.user='$user' order by l.date desc",false,$fetchrows);
@@ -1179,11 +1266,15 @@ function get_user_log($user, $fetchrows=-1)
     }
 
 
-    function resolve_userlist_groups($userlist)
+/**
+ * Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+ * Note that this function can't decode default groupnames containing special characters.
+ *
+ * @param  string $userlist
+ * @return string The resolved list
+ */
+function resolve_userlist_groups($userlist)
     {
-    # Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
-    # Note that this function can't decode default groupnames containing special characters.
-
     global $lang;
     $ulist=explode(",",$userlist);
     $newlist="";
@@ -1247,11 +1338,17 @@ function get_user_log($user, $fetchrows=-1)
         }
     return $newlist;
     }
+
+/**
+ * Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+ * Note that this function can't decode default groupnames containing special characters.
+ *
+ * @param  string $userlist
+ * @param  boolean $return_usernames
+ * @return string The resolved list
+ */
 function resolve_userlist_groups_smart($userlist,$return_usernames=false)
     {
-    # Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
-    # Note that this function can't decode default groupnames containing special characters.
-
     global $lang;
     $ulist=explode(",",$userlist);
     $newlist="";
@@ -1318,6 +1415,12 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
     return $newlist;
     }
 
+/**
+ * Remove smart lists from the provided user lists.
+ *
+ * @param  string $ulist    Comma separated list of user list names
+ * @return string   The updated list with smart groups removed.
+ */
 function remove_groups_smart_from_userlist($ulist)
     {
     global $lang;
@@ -1339,10 +1442,14 @@ function remove_groups_smart_from_userlist($ulist)
     }
 
     
+/**
+ * Checks that a password conforms to the configured paramaters. 
+ *
+ * @param  string $password The password
+ * @return mixed True if OK, or a descriptive string if it isn't
+ */
 function check_password($password)
     {
-    # Checks that a password conforms to the configured paramaters.
-    # Returns true if it does, or a descriptive string if it doesn't.
     global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
     trim($password);
@@ -1372,19 +1479,29 @@ function check_password($password)
     return true;
     }
 
+/**
+ * For a given comma-separated list of user refs (e.g. returned from a group_concat()), return a string of matching usernames.
+ *
+ * @param  string $users User list - caution, used directly in SQL so must not contain user input
+ * @return string Matching usernames.
+ */
 function resolve_users($users)
     {
-    # For a given comma-separated list of user refs (e.g. returned from a group_concat()), return a string of matching usernames.
     if (trim($users)=="") {return "";}
     $resolved=sql_array("select concat(fullname,' (',username,')') value from user where ref in ($users)");
     return join(", ",$resolved);
     }
 
 
-    function check_access_key($resource,$key)
+/**
+ * Verify a supplied external access key
+ *
+ * @param  integer $resource    The resource ID
+ * @param  string $key          The external access key
+ * @return boolean Valid?
+ */
+function check_access_key($resource,$key)
     {
-    # Verify a supplied external access key
-    
     # Option to plugin in some extra functionality to check keys
     if(hook("check_access_key", "", array($resource, $key)) === true)
         {
@@ -1633,10 +1750,14 @@ function check_access_key_collection($collection, $key)
     return true;
     }
 
+/**
+ * Generates a unique username for the given name
+ *
+ * @param  string $name The user's full name
+ * @return string   The username to use
+ */
 function make_username($name)
     {
-    # Generates a unique username for the given name
-    
     # First compress the various name parts
     $s=trim_array(explode(" ",$name));
     
@@ -1672,10 +1793,13 @@ function make_username($name)
     return $name . (($num==0)?"":$num);
     }
     
+/**
+ * Returns a list of user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
+ *
+ * @return array
+ */
 function get_registration_selectable_usergroups()
     {
-    # Returns a list of  user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
-
     # Executes query.
     $r = sql_query("select ref,name from usergroup where allow_registration_selection=1 order by name");
 
@@ -1691,11 +1815,16 @@ function get_registration_selectable_usergroups()
     }
 
 
-    function open_access_to_user($user,$resource,$expires)
+/**
+ * Give the user full access to the given resource. Used when approving requests.
+ *
+ * @param  integer $user
+ * @param  integer $resource
+ * @param  string $expires
+ * @return boolean
+ */
+function open_access_to_user($user,$resource,$expires)
     {
-    # Give the user full access to the given resource.
-    # Used when approving requests.
-    
     # Delete any existing custom access
     sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
     
@@ -1705,20 +1834,33 @@ function get_registration_selectable_usergroups()
     return true;
     }
 
+/**
+ * Give the user full access to the given resource. Used when approving requests.
+ *
+ * @param  integer $group
+ * @param  integer $resource
+ * @param  string $expires
+ * @return boolean
+ */
 function open_access_to_group($group,$resource,$expires)
     {
-    # Give the user full access to the given resource.
-    # Used when approving requests.
-    
     # Delete any existing custom access
-    sql_query("delete from resource_custom_access where usergroup=$group and resource=$resource");
+    sql_query("delete from resource_custom_access where usergroup='$group' and resource='$resource'");
     
     # Insert new row
-    sql_query("insert into resource_custom_access(resource,access,usergroup,user_expires) values ('$resource','0',$group," . ($expires==""?"null":"'$expires'") . ")");
+    sql_query("insert into resource_custom_access(resource,access,usergroup,user_expires) values ('$resource','0','$group'," . ($expires==""?"null":"'$expires'") . ")");
     
     return true;
     }
 
+/**
+ * Grants open access to the user list for the specified resource.
+ *
+ * @param  string $userlist
+ * @param  integer $resource
+ * @param  string $expires
+ * @return void
+ */
 function resolve_open_access($userlist,$resource,$expires)
     {
     global $open_internal_access,$lang;
@@ -1750,88 +1892,103 @@ function resolve_open_access($userlist,$resource,$expires)
         }
     }
     
+/**
+ * Remove any user-specific access granted by an 'approve'. Used when declining requests.
+ *
+ * @param  integer $user
+ * @param  integer $resource
+ * @return boolean
+ */
 function remove_access_to_user($user,$resource)
     {
-    # Remove any user-specific access granted by an 'approve'.
-    # Used when declining requests.
-    
     # Delete any existing custom access
     sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
     
     return true;
     }
     
+/**
+ * Returns true if a user account exists with e-mail address $email
+ *
+ * @param  string $email
+ * @return boolean
+ */
 function user_email_exists($email)
     {
-    # Returns true if a user account exists with e-mail address $email
     $email=escape_check(trim(strtolower($email)));
     return (sql_value("select count(*) value from user where email like '$email'",0)>0);
     }
 
 
 
-    if(!function_exists('resolve_user_emails'))
+if(!function_exists('resolve_user_emails')) {
+/**
+* Return an array of emails from a list of usernames and email addresses. 
+* with 'key_required' sibling array preserving the intent of internal/external sharing
+* 
+* @param array $user_list
+* 
+* @return array
+*/
+function resolve_user_emails($user_list)
     {
-    /**
-    * Return an array of emails from a list of usernames and email addresses. 
-    * with 'key_required' sibling array preserving the intent of internal/external sharing
-    * 
-    * @param array $user_list
-    * 
-    * @return array
-    */
-    function resolve_user_emails($user_list)
+    global $lang, $user_select_internal;
+
+    $emails_key_required = array();
+
+    foreach($user_list as $user)
         {
-        global $lang, $user_select_internal;
+        $escaped_username = escape_check($user);
+        $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}' AND (account_expires IS NULL OR account_expires > NOW())");
 
-        $emails_key_required = array();
-
-        foreach($user_list as $user)
+        // Not a recognised user, if @ sign present, assume e-mail address specified
+        if(0 === count($email_details))
             {
-            $escaped_username = escape_check($user);
-            $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}' AND (account_expires IS NULL OR account_expires > NOW())");
-
-            // Not a recognised user, if @ sign present, assume e-mail address specified
-            if(0 === count($email_details))
+            if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
                 {
-                if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
-                    {
-                    error_alert("{$lang['couldnotmatchallusernames']}: {$escaped_username}");
-                    die();
-                    }
-
-                $emails_key_required['unames'][]       = $user;
-                $emails_key_required['emails'][]       = $user;
-                $emails_key_required['key_required'][] = true;
-
-                continue;
+                error_alert("{$lang['couldnotmatchallusernames']}: {$escaped_username}");
+                die();
                 }
 
-            // Skip internal, not approved accounts
-            if($email_details[0]['approved'] != 1)
-                {
-                debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
-
-                continue;
-                }
-               
-            if(!filter_var($email_details[0]['email'], FILTER_VALIDATE_EMAIL))
-                {
-                debug("Skipping invalid e-mail address: " . $email_details[0]['email']);
-                continue;                    
-                }
-                
-            // Internal, approved user account - add e-mail address from user account
             $emails_key_required['unames'][]       = $user;
-            $emails_key_required['emails'][]       = $email_details[0]['email'];
-            $emails_key_required['key_required'][] = false;
+            $emails_key_required['emails'][]       = $user;
+            $emails_key_required['key_required'][] = true;
+
+            continue;
             }
 
-        return $emails_key_required;
-        }
-    }
+        // Skip internal, not approved accounts
+        if($email_details[0]['approved'] != 1)
+            {
+            debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
 
-    function create_password_reset_key($username)
+            continue;
+            }
+            
+        if(!filter_var($email_details[0]['email'], FILTER_VALIDATE_EMAIL))
+            {
+            debug("Skipping invalid e-mail address: " . $email_details[0]['email']);
+            continue;                    
+            }
+            
+        // Internal, approved user account - add e-mail address from user account
+        $emails_key_required['unames'][]       = $user;
+        $emails_key_required['emails'][]       = $email_details[0]['email'];
+        $emails_key_required['key_required'][] = false;
+        }
+
+    return $emails_key_required;
+    }
+}
+
+
+/**
+ * Creates a reset key for password reset e-mails
+ *
+ * @param  string $username The user's username
+ * @return string The reset key
+ */
+function create_password_reset_key($username)
     {
     global $scramble_key;
     $resetuniquecode=make_password();
@@ -1841,6 +1998,13 @@ function user_email_exists($email)
     return $password_reset_url_key;
     }
     
+    
+/**
+ * For anonymous access - a unique session key to identify the user (e.g. so they can still have their own collections)
+ *
+ * @param  boolean $create Create one if it doesn't already exist
+ * @return mixed    False on failure, the key on success
+ */
 function get_rs_session_id($create=false)
     {
     global $baseurl, $anonymous_login, $usergroup;
@@ -1891,17 +2055,23 @@ function get_rs_session_id($create=false)
     }
     
 
-    function get_notification_users($userpermission="SYSTEM_ADMIN")
-    {
-    // Returns an array of users (refs and emails) for use when sending email notifications (messages that in the past went to $email_notify, which can be emulated by using $email_notify_usergroups)
-    // Can be passed a specific user type or an array of permissions
-    // Types supported:-
-    // SYSTEM_ADMIN
-    // RESOURCE_ACCESS
-    // RESEARCH_ADMIN
-    // USER_ADMIN
-    // RESOURCE_ADMIN
-    
+/**
+ * Returns an array of users (refs and emails) for use when sending email notifications (messages that in the past went
+ *  to $email_notify, which can be emulated by using $email_notify_usergroups)
+ * 
+ * Can be passed a specific user type or an array of permissions
+ * Types supported:-
+ *      SYSTEM_ADMIN
+ *      RESOURCE_ACCESS
+ *      RESEARCH_ADMIN  
+ *      USER_ADMIN
+ *      RESOURCE_ADMIN
+ *
+ * @param  string $userpermission
+ * @return array
+ */
+function get_notification_users($userpermission="SYSTEM_ADMIN")
+    {    
     global $notification_users_cache, $usergroup,$email_notify_usergroups;
     $userpermissionindex=is_array($userpermission)?implode("_",$userpermission):$userpermission;
     if(isset($notification_users_cache[$userpermissionindex]))
@@ -2110,26 +2280,52 @@ function checkPermission_anonymoususer()
     }
 
 
-# Dash Permissions
+/**
+ * Does the current user have the ability to administer the dash (the tiles for all users)
+ *
+ * @return boolean
+ */
 function checkPermission_dashadmin()	
 	{
 	return ((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")));
-	}
+    }
+    
+
+/**
+ * Does the current user have the dash enabled?
+ *
+ * @return boolean
+ */
 function checkPermission_dashuser()
 	{
 	return !checkperm("dtu");
 	}
 
+/**
+ * Can the user manage their dash?
+ * 
+ * Logic:
+ * Home_dash is on, And not the Anonymous user with default dash, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
+ *
+ * @return boolean
+ */
 function checkPermission_dashmanage()
 	{
-	#Home_dash is on, And not the Anonymous user with default dash, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
 	global $managed_home_dash,$unmanaged_home_dash_admins, $anonymous_default_dash;
 	return (!checkPermission_anonymoususer() || !$anonymous_default_dash) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
 				|| ($unmanaged_home_dash_admins && checkPermission_dashadmin()));
-	}
+    }
+    
+/**
+ * Can the user create tiles?
+ *
+ * Logic:
+ * Home_dash is on, And not Anonymous use, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
+ * 
+ * @return boolean
+ */
 function checkPermission_dashcreate()
 	{
-	#Home_dash is on, And not Anonymous use, And (Dash tile user (Not with a managed dash) || Dash Tile Admin)
 	global $managed_home_dash,$unmanaged_home_dash_admins;
 	return !checkPermission_anonymoususer() 
 			&& 
@@ -2142,15 +2338,28 @@ function checkPermission_dashcreate()
 				);
     }
 
-    function checkperm($perm)
+
+/**
+ * Check that the user has the $perm permission
+ *
+ * @param  string $perm
+ * @return boolean Do they have the permission?
+ */
+function checkperm($perm)
     {
-    # check that the user has the $perm permission
+    # 
     global $userpermissions;
     if (!(isset($userpermissions))) {return false;}
     if (in_array($perm,$userpermissions)) {return true;} else {return false;}
     }
 
-// Check if user is allowed to edit user with passed reference
+
+/**
+ * Check if the current user is allowed to edit user with passed reference
+ *
+ * @param  integer $user The user to be edited
+ * @return boolean
+ */
 function checkperm_user_edit($user)
 	{
 	if (!checkperm('u'))    // does not have edit user permission
