@@ -3605,7 +3605,7 @@ function get_resource_access($resource)
 
 	// get_resource_data doesn't contain permissions, so fix for the case that such an array could be passed into this function unintentionally.
 	if (is_array($resource) && !isset($resource['group_access']) && !isset($resource['user_access'])){$resource=$resource['ref'];}
-	
+    
 	if (!is_array($resource))
                 {
                 $resourcedata=get_resource_data($resource,true);
@@ -3615,7 +3615,11 @@ function get_resource_access($resource)
                 $resourcedata=$resource;
                 $passthru="yes";
                 }
-                
+           
+    if (!$resourcedata)
+        {
+            echo "Error: Resource data not found - check resource id: $resource"; exit;
+        }            
 	$ref=$resourcedata['ref'];
 	$access=$resourcedata["access"];
 	$resource_type=$resourcedata['resource_type'];

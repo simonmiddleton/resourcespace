@@ -93,6 +93,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     
         else
             {
+           
+
             # Work out which file has been posted
             if (isset($_FILES['userfile']))
                 {
