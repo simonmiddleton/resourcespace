@@ -271,7 +271,7 @@ function simpleldap_to_utf8($str)
         return $str;
         }
 
-    $converted_str = iconv($simpleldap['ldap_encoding'], "UTF8", $str);
+    $converted_str = iconv($simpleldap['ldap_encoding'], "UTF-8", $str);
 
     return ($converted_str !== false ? $converted_str : $str);
     }
