@@ -43,15 +43,6 @@ $per_page=getvalescaped("per_page_list", $default_perpage_list);rs_setcookie('pe
 // date, user, usage option and usage reason
 $filter_dld_records_only = ($filter_by_type == LOG_CODE_DOWNLOADED);
 
-$url_params = array(
-    "ref" => $ref,
-    "search" => $search,
-    "search_offset" => $search_offset,
-    "order_by" => $order_by,
-    "sort" => $sort,
-    "archive" => $archive,
-    "k" => $k,
-);
 
 # next / previous resource browsing
 $go=getval("search_go","");
@@ -94,6 +85,15 @@ if ($go!="")
 	if ($k!="" && !check_access_key($ref,$k)) {$ref=$origref;} # cancel the move.
 	}
 
+$url_params = array(
+    "ref" => $ref,
+    "search" => $search,
+    "search_offset" => $search_offset,
+    "order_by" => $order_by,
+    "sort" => $sort,
+    "archive" => $archive,
+    "k" => $k,
+);
 
 include "../include/header.php";
 ?>
