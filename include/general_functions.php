@@ -6,6 +6,14 @@
 # PLEASE NOTE - Don't add search/resource/collection/user etc. functions here - use the separate include files.
 #
 
+/**
+ * Retrieve a user-submitted parameter from the browser, via post/get/cookies in that order.
+ *
+ * @param  string $val              The parameter name
+ * @param  string $default          A default value to return if no matching parameter was found
+ * @param  boolean $force_numeric   Ensure a number is returned
+ * @return string
+ */
 function getval($val,$default,$force_numeric=false)
     {
     # return a value from POST, GET or COOKIE (in that order), or $default if none set
@@ -46,13 +54,24 @@ function getvalescaped($val, $default, $force_numeric = false)
     return $value;
     }
 
+/**
+ * generate a unique ID
+ *
+ * @return string
+ */
 function getuid()
     {
-    # generate a unique ID
     return strtr(escape_check(microtime() . " " . $_SERVER["REMOTE_ADDR"]),". ","--");
     }
 
-function escape_check($text) #only escape a string if we need to, to prevent escaping an already escaped string
+/**
+ * Escape a value prior to using it in SQL. Only escape a string if we need to,
+ * to prevent escaping an already escaped string.
+ *
+ * @param  string $text
+ * @return string  
+ */
+function escape_check($text)
     {
     global $db;
 
@@ -88,18 +107,20 @@ function escape_check($text) #only escape a string if we need to, to prevent esc
     return $text;
     }
 
+/**
+ * For comparing escape_checked strings against mysql content because	
+ * just doing $text=str_replace("\\","",$text);	does not undo escape_check
+ *
+ * @param  mixed $text
+ * @return void
+ */
 function unescape($text) 
     {
-    // for comparing escape_checked strings against mysql content because	
-    // just doing $text=str_replace("\\","",$text);	does not undo escape_check
-
     # Remove any backslashes that are not being used to escape single quotes.
     $text=str_replace("\\'","\'",$text);
     $text=str_replace("\\n","\n",$text);
     $text=str_replace("\\r","\r",$text);
     $text=str_replace("\\","",$text);    
-    
-
     return $text;
     }
 
@@ -242,9 +263,14 @@ function redirect($url)
 
 
 
+/**
+ * replace multiple spaces with a single space
+ *
+ * @param  mixed $text
+ * @return void
+ */
 function trim_spaces($text)
     {
-    # replace multiple spaces with a single space
     while (strpos($text,"  ")!==false)
         {
         $text=str_replace("  "," ",$text);
@@ -253,13 +279,20 @@ function trim_spaces($text)
     }   
         
 
+/**
+ *  Removes whitespace from the beginning/end of all elements in an array
+ *
+ * @param  array $array
+ * @param  string $trimchars
+ * @return array
+ */
 function trim_array($array,$trimchars='')
     {
     if(isset($array[0]) && empty($array[0]) && !(emptyiszero($array[0]))){$unshiftblank=true;}
     $array = array_filter($array,'emptyiszero');
     $array_trimmed=array();
     $index=0;
-    # removes whitespace from the beginning/end of all elements in an array
+    
     foreach($array as $el)
         {
         $el=trim($el);
@@ -280,10 +313,15 @@ function trim_array($array,$trimchars='')
     }
 
 
+/**
+ * Takes a value as returned from a check-list field type and reformats to be more display-friendly.
+ *  Check-list fields have a leading comma.
+ *
+ * @param  string $list
+ * @return string
+ */
 function tidylist($list)
     {
-    # Takes a value as returned from a check-list field type and reformats to be more display-friendly.
-    # Check-list fields have a leading comma.
     $list=trim($list);
     if (strpos($list,",")===false) {return $list;}
     $list=explode(",",$list);
@@ -293,10 +331,15 @@ function tidylist($list)
     return $op;
     }
 
+/**
+ * Trims $text to $length if necessary. Tries to trim at a space if possible. Adds three full stops if trimmed...
+ *
+ * @param  string $text
+ * @param  integer $length
+ * @return string
+ */
 function tidy_trim($text,$length)
     {
-    # Trims $text to $length if necessary. Tries to trim at a space if possible. Adds three full stops
-    # if trimmed...
     $text=trim($text);
     if (strlen($text)>$length)
         {
@@ -314,10 +357,15 @@ function tidy_trim($text,$length)
     return $text;
     }
     
+/**
+ * Returns the average length of the strings in an array
+ *
+ * @param  array $array
+ * @return float
+ */
 function average_length($array)
     {
-    # Returns the average length of the strings in an array
-        if (count($array)==0) {return 0;}
+    if (count($array)==0) {return 0;}
     $total=0;
     for ($n=0;$n<count($array);$n++)
         {
@@ -328,31 +376,51 @@ function average_length($array)
     
 
 
+/**
+ * Returns a list of activity types for which we have stats data (Search, User Session etc.)
+ *
+ * @return array
+ */
 function get_stats_activity_types()
     {
-    # Returns a list of activity types for which we have stats data (Search, User Session etc.)
     return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
     }
 
+/**
+ * Returns a list of years for which we have statistics.
+ *
+ * @return array
+ */
 function get_stats_years()
     {
-    # Returns a list of years for which we have statistics.
     return sql_array("select distinct year value from daily_stat order by year");
     }
 
+/**
+ * Replace escaped newlines with real newlines.
+ *
+ * @param  string $text
+ * @return string
+ */
 function newlines($text)
     {
-    # Replace escaped newlines with real newlines.
     $text=str_replace("\\n","\n",$text);
     $text=str_replace("\\r","\r",$text);
     return $text;
     }
 
 
+/**
+ * Returns a list of all available editable site text (content). If $find is specified
+ * a search is performed across page, name and text fields.
+ *
+ * @param  string $findpage
+ * @param  string $findname
+ * @param  string $findtext
+ * @return array
+ */
 function get_all_site_text($findpage="",$findname="",$findtext="")
     {
-    # Returns a list of all available editable site text (content).
-    # If $find is specified a search is performed across page, name and text fields.
     global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
 
     $findname = trim($findname);
@@ -493,9 +561,17 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
     return $return;
     }
 
+/**
+ * Returns a specific site text entry.
+ *
+ * @param  string $page
+ * @param  string $name
+ * @param  string $getlanguage
+ * @param  string $group
+ * @return string
+ */
 function get_site_text($page,$name,$getlanguage,$group)
     {
-    # Returns a specific site text entry.
     global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang  
     global $applicationname, $storagedir, $homeanim_folder; // These are needed as they are referenced in lang files
     if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
@@ -562,18 +638,31 @@ function get_site_text($page,$name,$getlanguage,$group)
         }
     }
 
+/**
+ * Check if site text section is custom, i.e. deletable.
+ *
+ * @param  mixed $page
+ * @param  mixed $name
+ * @return void
+ */
 function check_site_text_custom($page,$name)
-    {
-    # Check if site text section is custom, i.e. deletable.
-    
+    {    
     $check=sql_query ("select custom from site_text where page='$page' and name='$name'");
     if (isset($check[0]["custom"])){return $check[0]["custom"];}
     }
 
+/**
+ * Saves the submitted site text changes to the database.
+ *
+ * @param  string $page
+ * @param  string $name
+ * @param  string $language
+ * @param  integer $group
+ * @return void
+ */
 function save_site_text($page,$name,$language,$group)
     {
     global $lang;
-    # Saves the submitted site text changes to the database.
 
     if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
     
@@ -629,13 +718,18 @@ function save_site_text($page,$name,$language,$group)
 
     // Clear cache
     clear_query_cache("sitetext");
-
     }
     
+/**
+ * Returns an integer score based on how similar the two strings are.
+ * This was used when importing data for "fuzzy" keyword/option matching.
+ *
+ * @param  string $string1
+ * @param  string $string2
+ * @return integer
+ */
 function string_similar($string1,$string2)
     {
-    # Returns an integer score based on how similar the two strings are.
-    # This was used when importing data for "fuzzy" keyword/option matching.
     $score=0;
     $string1=trim(strtolower($string1));$string2=trim(strtolower($string2));
     if ($string1==$string2) {return 9999;}
@@ -652,10 +746,14 @@ function string_similar($string1,$string2)
     return $score;
     }
 
+/**
+ * Return a human-readable string representing $bytes in either KB or MB.
+ *
+ * @param  integer $bytes
+ * @return string
+ */
 function formatfilesize($bytes)
     {
-    # Return a human-readable string representing $bytes in either KB or MB.
-    
     # Binary mode
     $multiple=1024;$lang_suffix="-binary";
     
@@ -691,13 +789,15 @@ function formatfilesize($bytes)
     }
 
 
-function filesize2bytes($str) {
 /**
  * Converts human readable file size (e.g. 10 MB, 200.20 GB) into bytes.
  *
  * @param string $str
  * @return int the result is in bytes
  */
+function filesize2bytes($str)
+    {
+
     $bytes = 0;
 
     $bytes_array = array(
@@ -719,8 +819,15 @@ function filesize2bytes($str) {
     
     #add leading zeroes (as this can be used to format filesize data in resource_data for sorting)
     return sprintf("%010d",$bytes);
-} 
+    } 
 
+/**
+ * Get the mime type for a file on disk
+ *
+ * @param  string $path
+ * @param  string $ext
+ * @return string
+ */
 function get_mime_type($path, $ext = null)
     {
     global $mime_type_by_extension;
@@ -743,18 +850,32 @@ function get_mime_type($path, $ext = null)
     }
 
 
+    
+/**
+ * Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
+ * 
+ * NOTE: $from is the name of the user sending the email,
+ * while $from_name is the name that should be put in the header, which can be the system name
+ * It is necessary to specify two since in all cases the email should be able to contain the user's name.
+ * 
+ * Old mail function remains the same to avoid possible issues with phpmailer
+ * send_mail_phpmailer allows for the use of text and html (multipart) emails,
+ * and the use of email templates in Manage Content.
+ * 
+ * @param  string $email
+ * @param  string $subject
+ * @param  string $message
+ * @param  string $from
+ * @param  string $reply_to
+ * @param  string $html_template
+ * @param  string $templatevars
+ * @param  string $from_name
+ * @param  string $cc
+ * @param  string $bcc
+ * @return void
+ */
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
     {
-    # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-    
-    # NOTE: $from is the name of the user sending the email,
-    # while $from_name is the name that should be put in the header, which can be the system name
-    # It is necessary to specify two since in all cases the email should be able to contain the user's name.
-    
-    # old mail function remains the same to avoid possible issues with phpmailer
-    # send_mail_phpmailer allows for the use of text and html (multipart) emails,
-    # and the use of email templates in Manage Content 
-
     global $always_email_from_user;
     if($always_email_from_user)
         {
@@ -907,18 +1028,32 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     }
 
 if (!function_exists("send_mail_phpmailer")){
+/**
+ * if ($use_phpmailer==true) this function is used instead.
+ * 
+ * Mail templates can include lang, server, site_text, and POST variables by default
+ * ex ( [lang_mycollections], [server_REMOTE_ADDR], [text_footer] , [message]
+ * 
+ * additional values must be made available through $templatevars
+ * For example, a complex url or image path that may be sent in an 
+ * email should be added to the templatevars array and passed into send_mail.
+ * available templatevars need to be well-documented, and sample templates
+ * need to be available.
+ *
+ * @param  string $email
+ * @param  string $subject
+ * @param  string $message
+ * @param  string $from
+ * @param  string $reply_to
+ * @param  string $html_template
+ * @param  string $templatevars
+ * @param  string $from_name
+ * @param  string $cc
+ * @param  string $bcc
+ * @return void
+ */
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
     {
-        # if ($use_phpmailer==true) this function is used instead.
-    # Mail templates can include lang, server, site_text, and POST variables by default
-    # ex ( [lang_mycollections], [server_REMOTE_ADDR], [text_footer] , [message]
-    
-    # additional values must be made available through $templatevars
-    # For example, a complex url or image path that may be sent in an 
-    # email should be added to the templatevars array and passed into send_mail.
-    # available templatevars need to be well-documented, and sample templates
-    # need to be available.
-
     # Include footer
     global $email_footer, $storagedir, $mime_type_by_extension;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
@@ -1242,13 +1377,21 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 }
 }
 
-function log_mail($email,$subject) {
-    // Log email 
-    // Data logged is:
-    //  Time
-    //  To address
-    //  From, User ID or 0 for system emails (cron etc.)
-    //  Subject
+/**
+ *  Log email 
+ * 
+ * Data logged is:
+ * Time
+ * To address
+ * From, User ID or 0 for system emails (cron etc.)
+ * Subject
+ *
+ * @param  string $email
+ * @param  string $subject
+ * @return void
+ */
+function log_mail($email,$subject)
+    {
     global $userref;
     $to = escape_check($email);
     if (isset($userref))
@@ -1277,39 +1420,57 @@ function log_mail($email,$subject) {
                 '" . $sub . "'
         );
         ");
-}
-
-function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $breaklen = 0, $encodecrlf = false) {
-        // Quoted printable encoding is rather simple.
-        // Each character in the string $string should be encoded if:
-        //  Character code is <0x20 (space)
-        //  Character is = (as it has a special meaning: 0x3d)
-        //  Character is over ASCII range (>=0x80)
-        $len = strlen($string);
-        $result = '';
-        for($i=0;$i<$len;$i++) {
-                if (($linelen >= 76) && (false)) { // break lines over 76 characters, and put special QP linebreak
-                        $linelen = $breaklen;
-                        $result.= $linebreak;
-                }
-                $c = ord($string[$i]);
-                if (($c==0x3d) || ($c>=0x80) || ($c<0x20)) { // in this case, we encode...
-                        if ((($c==0x0A) || ($c==0x0D)) && (!$encodecrlf)) { // but not for linebreaks
-                                $result.=chr($c);
-                                $linelen = 0;
-                                continue;
-                        }
-                        $result.='='.str_pad(strtoupper(dechex($c)), 2, '0');
-                        $linelen += 3;
-                        continue;
-                }
-                $result.=chr($c); // normal characters aren't encoded
-                $linelen++;
-        }
-        return $result;
-}
+    }
 
 
+/**
+ * Quoted printable encoding is rather simple.
+ * Each character in the string $string should be encoded if:
+ *      Character code is <0x20 (space)
+ *      Character is = (as it has a special meaning: 0x3d)
+ *      Character is over ASCII range (>=0x80)
+ *
+ * @param  string $string
+ * @param  integer $linelen
+ * @param  string $linebreak
+ * @param  integer $breaklen
+ * @param  boolean $encodecrlf
+ * @return string
+ */
+function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $breaklen = 0, $encodecrlf = false)
+    {
+    $len = strlen($string);
+    $result = '';
+    for($i=0;$i<$len;$i++) {
+            if (($linelen >= 76) && (false)) { // break lines over 76 characters, and put special QP linebreak
+                    $linelen = $breaklen;
+                    $result.= $linebreak;
+            }
+            $c = ord($string[$i]);
+            if (($c==0x3d) || ($c>=0x80) || ($c<0x20)) { // in this case, we encode...
+                    if ((($c==0x0A) || ($c==0x0D)) && (!$encodecrlf)) { // but not for linebreaks
+                            $result.=chr($c);
+                            $linelen = 0;
+                            continue;
+                    }
+                    $result.='='.str_pad(strtoupper(dechex($c)), 2, '0');
+                    $linelen += 3;
+                    continue;
+            }
+            $result.=chr($c); // normal characters aren't encoded
+            $linelen++;
+    }
+    return $result;
+    }
+
+
+/**
+ * As rs_quoted_printable_encode() but for e-mail subject
+ *
+ * @param  string $string
+ * @param  string $encoding
+ * @return string
+ */
 function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
     {
     // use this function with headers, not with the email body as it misses word wrapping
@@ -1334,6 +1495,13 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
     }
 
 
+/**
+ * A generic pager function used by many display lists in ResourceSpace.
+ *
+ * @param  boolean $break
+ * @param  boolean $scrolltotop
+ * @return void
+ */
 function pager($break=true,$scrolltotop=true)
     {
     global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
@@ -1369,9 +1537,13 @@ function pager($break=true,$scrolltotop=true)
     }
     
 
+/**
+ * If configured, send two metrics to Montala to get an idea of general software usage.
+ *
+ * @return void
+ */
 function send_statistics()
     {
-    # If configured, send two metrics to Montala.
     $last_sent_stats  = get_sysvar('last_sent_stats', '1970-01-01');
     
     # No need to send stats if already sent in last week.
@@ -1391,47 +1563,74 @@ function send_statistics()
     set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
     }
 
-
-
-
-
+/**
+ * Remove the extension part of a filename
+ *
+ * @param  mixed $strName   The filename
+ * @return string           The filename minus the extension
+ */
 function remove_extension($strName)
-{
-$ext = strrchr($strName, '.');
-if($ext !== false)
-{
-$strName = substr($strName, 0, -strlen($ext));
-}
-return $strName;
-}
+    {
+    $ext = strrchr($strName, '.');
+    if($ext !== false)
+    {
+    $strName = substr($strName, 0, -strlen($ext));
+    }
+    return $strName;
+    }
 
     
 
-function verify_extension($filename,$allowed_extensions=""){
+/**
+ * Does the filename passed have a permitted extension?
+ *
+ * @param  string $filename
+ * @param  string $allowed_extensions
+ * @return boolean
+ */
+function verify_extension($filename,$allowed_extensions="")
+    {
     # Allowed extension?
     $extension=explode(".",$filename);
-    if(count($extension)>1){
+    if(count($extension)>1)
+        {
         $extension=trim(strtolower($extension[count($extension)-1]));
         } else { return false;}
         
-    if ($allowed_extensions!=""){
+    if ($allowed_extensions!="")
+        {
         $allowed_extensions=explode(",",strtolower($allowed_extensions));
         if (!in_array($extension,$allowed_extensions)){ return false;}
-    }
-    
-    
+        }
     return true;
-}
+    }
 
-function get_allowed_extensions($ref){
+
+/**
+ * Retrieve a list of permitted extensions for the given resource.
+ *
+ * @param  integer $ref   The resource ID
+ * @return string
+ */
+function get_allowed_extensions($ref)
+    {
     $type = sql_value("select resource_type value from resource where ref=$ref","");
     $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","", "schema");
     return $allowed_extensions;
-}
-function get_allowed_extensions_by_type($resource_type){
+    }
+
+    
+/**
+ * Retrieve a list of permitted extensions for the given resource type.
+ *
+ * @param  integer $resource_type
+ * @return string
+ */
+function get_allowed_extensions_by_type($resource_type)
+    {
     $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","", "schema");
     return $allowed_extensions;
-}
+    }
 
 /**
  * Detect if a path is relative or absolute.
@@ -1460,7 +1659,7 @@ function getAbsolutePath($path, $create_if_not_exists = false)
         } // Test if the path need to be created.
 
     return $folder;
-    } // getAbsolutePath()
+    } 
 
 
 
@@ -1517,7 +1716,7 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
     natsort($files);
 
     return $files;
-    } // getPathFiles()
+    } 
 
 
 
@@ -1602,29 +1801,43 @@ function is_process_lock($name)
     return true; # Lock is valid
     }
     
+/**
+ * Set a process lock
+ *
+ * @param  string $name
+ * @return boolean
+ */
 function set_process_lock($name)
     {
-    # Set a process lock
     file_put_contents(get_temp_dir() . "/process_locks/" . $name,time());
     // make sure this is editable by the server in case a process lock could be set by different system users
     chmod(get_temp_dir() . "/process_locks/" . $name,0777);
     return true;
     }
     
+/**
+ * Clear a process lock
+ *
+ * @param  string $name
+ * @return boolean
+ */
 function clear_process_lock($name)
     {
-    # Clear a process lock
     if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
-        unlink(get_temp_dir() . "/process_locks/" . $name);
+    unlink(get_temp_dir() . "/process_locks/" . $name);
     return true;
     }
     
     
 
+/**
+ * Custom function for retrieving a file size. A resolution for PHP's issue with large files and filesize(). 
+ *
+ * @param  string $path
+ * @return integer  The file size in bytes
+ */
 function filesize_unlimited($path)
     {
-    # A resolution for PHP's issue with large files and filesize().
-
     hook("beforefilesize_unlimited","",array($path));
 
     if('WINNT' == PHP_OS)
@@ -1665,17 +1878,29 @@ function filesize_unlimited($path)
     return $bytesize;
     }
 
+/**
+ * Strip the leading comma from a string
+ *
+ * @param  string $val
+ * @return string
+ */
 function strip_leading_comma($val)
     {
     return preg_replace('/^\,/','',$val);
     }
 
-// String EnCrypt + DeCrypt function
-// Author: halojoy, July 2006
-// Modified and commented by: laserlight, August 2006
-//
-// Exploratory implementation using bitwise ops on strings; Weedpacket September 2006
 
+
+/**
+ * String EnCrypt + DeCrypt function
+ * Author: halojoy, July 2006
+ * Modified and commented by: laserlight, August 2006
+ * Exploratory implementation using bitwise ops on strings; Weedpacket September 2006
+ *
+ * @param  string $text
+ * @param  string $key
+ * @return string
+ */
 function convert($text, $key = '') {
     // return text unaltered if the key is blank
     if ($key == '') {
@@ -1717,11 +1942,12 @@ function convert($text, $key = '') {
  * 2. storagedir ."/tmp" - If storagedir is set in config.php, use it and create a subfolder tmp.
  * 3. generate default path - use filestore/tmp if all other attempts fail.
  * 4. if a uniqid is provided, create a folder within tmp and return the full path
+ * 
  * @param bool $asUrl - If we want the return to be like http://my.resourcespace.install/path set this as true.
  * @return string Path to the tmp directory.
  */
 function get_temp_dir($asUrl = false,$uniqid="")
-{
+    {
     global $storagedir, $tempdir;
     // Set up the default.
     $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
@@ -1774,10 +2000,11 @@ function get_temp_dir($asUrl = false,$uniqid="")
     $result = str_replace('\\','/',$result);
     }
     return $result;
-}
+    }
 
 /**
  * Converts a path to a url relative to the installation.
+ * 
  * @param string $abs_path: The absolute path.
  * @return Url that is the relative path.
  */
@@ -1866,11 +2093,17 @@ function run_command($command, $geterrors = false, array $params = array())
     return $output;
     }
 
+/**
+ * Thanks to dk at brightbyte dot de
+ * http://php.net/manual/en/function.shell-exec.php
+ * Returns an array with the resulting output (stdout & stderr). 
+ *
+ * @param  mixed $cmd
+ * @param  mixed $code
+ * @return void
+ */
 function run_external($cmd,&$code)
     {
-    # Thanks to dk at brightbyte dot de
-    # http://php.net/manual/en/function.shell-exec.php
-    # Returns an array with the resulting output (stdout & stderr). 
     debug("CLI command: $cmd");
 
     $descriptorspec = array(
@@ -1924,10 +2157,10 @@ function run_external($cmd,&$code)
     $code = proc_close($process);
 
     return $output;
-}
+    }
 
 /**
- * Diaplay a styledalert() modal error and optionally return the browser to the previous page after 2 seconds
+ * Display a styledalert() modal error and optionally return the browser to the previous page after 2 seconds
  *
  * @param  string $error    Error text to display
  * @param  boolean $back    Return to previous page?
@@ -1990,35 +2223,13 @@ function xml_entities($string, $fromcharset="")
     $not_in_list = "A-Z0-9a-z\s_-";
     return preg_replace_callback("/[^{$not_in_list}]/u", 'get_xml_entity_at_index_0', $string);
     }
-function get_xml_entity_at_index_0($char)
-    {
-    if (!is_string($char[0]) || (mb_strlen($char[0], "UTF-8") > 1))
-        {
-        die("function: 'get_xml_entity_at_index_0' requires data type: 'char' (single character). '{$char[0]}' does not match this type.");
-        }
-    switch ($char[0])
-        {
-        # http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
-        case '"':
-            return "&quot;";
-            break;
-        case '&':
-            return "&amp;";
-            break;
-        case "'":
-            return "&apos;";
-            break;
-        case '<':
-            return "&lt;";
-            break;
-        case '>':
-            return "&gt;";
-            break;
-        default:
-            return sanitize_char($char[0]);
-            break;
-        }
-    }
+
+/**
+ * Sanitize character for use in XML.
+ *
+ * @param  string $char
+ * @return string
+ */
 function sanitize_char($char)
     {
     # http://en.wikipedia.org/wiki/Valid_characters_in_XML?section=1#XML_1.0
@@ -2029,9 +2240,14 @@ function sanitize_char($char)
     return ""; # Not a valid char, return an empty string.
     }
 
-function format_display_field($value){
-    
-    // applies trim/wordwrap/highlights 
+/**
+ * When displaying metadata, applies trim/wordwrap/highlights.
+ *
+ * @param  string $value
+ * @return string
+ */
+function format_display_field($value)
+    {
     global $results_title_trim,$results_title_wordwrap,$df,$x,$search;
 
     $value = strip_tags_and_attributes($value);
@@ -2048,9 +2264,15 @@ function format_display_field($value){
     $string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
     
     return $string;
-}
+    }
 
-// formats a string with a collapsible more / less section
+/**
+ * Formats a string with a collapsible more / less section
+ *
+ * @param  string $string
+ * @param  integer $max_words_before_more
+ * @return string
+ */
 function format_string_more_link($string,$max_words_before_more=-1)
     {
     $words=preg_split('/[\t\f ]/',$string);
@@ -2083,9 +2305,19 @@ function format_string_more_link($string,$max_words_before_more=-1)
     return $return_value;
     }
 
-// found multidimensional array sort function to support the performance footer
-// http://www.php.net/manual/en/function.sort.php#104464
- function sortmulti ($array, $index, $order, $natsort=FALSE, $case_sensitive=FALSE) {
+
+/**
+ * Multidimensional array sort function to support the performance footer
+ * http://www.php.net/manual/en/function.sort.php#104464 
+ * @param  mixed $array
+ * @param  mixed $index
+ * @param  mixed $order
+ * @param  mixed $natsort
+ * @param  mixed $case_sensitive
+ * @return void
+ */
+function sortmulti ($array, $index, $order, $natsort=FALSE, $case_sensitive=FALSE) 
+    {
         if(is_array($array) && count($array)>0) {
             foreach(array_keys($array) as $key)
             $temp[$key]=$array[$key][$index];
@@ -2112,10 +2344,16 @@ function format_string_more_link($string,$max_words_before_more=-1)
             return $sorted;
         }
     return $sorted;
-}
+    }
 
 if (!function_exists("draw_performance_footer")){
-function draw_performance_footer(){
+/**
+ * Render a performance footer with metrics.
+ *
+ * @return void
+ */
+function draw_performance_footer()
+    {
     global $config_show_performance_footer,$querycount,$querytime,$querylog,$pagename,$hook_cache_hits,$hook_cache;
     $performance_footer_id=uniqid("performance");
     if ($config_show_performance_footer){   
@@ -2153,17 +2391,30 @@ function draw_performance_footer(){
     </div>
     <?php
     }
-}
-}
+    }
+    }
 
+/**
+ * Abstracted mysqli_affected_rows()
+ *
+ * @return mixed
+ */
 function sql_affected_rows()
     {
     global $db;
     return mysqli_affected_rows($db["read_write"]);
     }
 
+/**
+ * Returns the path to the ImageMagick utilities such as 'convert'.
+ *
+ * @param  string $utilityname
+ * @param  string $exeNames
+ * @param  string $checked_path
+ * @return string
+ */
 function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
-{
+    {
     global $imagemagick_path;
     if (!isset($imagemagick_path))
         {
@@ -2178,7 +2429,7 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
                 $checked_path) . ' ' . $utilityname;
         }
     return $path;
-}
+    }
 
 /**
 * Returns the full path to a utility, if installed or FALSE otherwise.
@@ -2461,25 +2712,35 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
     }
 
 
-function truncate_cache_arrays(){
+/**
+ * Clean up the resource data cache to keep within $cache_array_limit
+ *
+ * @return void
+ */
+function truncate_cache_arrays()
+    {
     $cache_array_limit = 2000;
-    // function to prevent cache arrays from going rogue
-    // this will prevent long-running scripts from dying as these
-    // caches exhaust available memory.
-    if (count($GLOBALS['get_resource_data_cache']) > $cache_array_limit){
+    if (count($GLOBALS['get_resource_data_cache']) > $cache_array_limit)
+        {
         $GLOBALS['get_resource_data_cache'] = array();
         // future improvement: get rid of only oldest, instead of clearing all?
         // this would require a way to guage the age of the entry.
-    }
-    if (count($GLOBALS['get_resource_path_fpcache']) > $cache_array_limit){
+        }
+    if (count($GLOBALS['get_resource_path_fpcache']) > $cache_array_limit)
+        {
         $GLOBALS['get_resource_path_fpcache'] = array();
+        }
     }
-}
 
 
+/**
+ * Transforms txt in html
+ * based on http://blog.matrixresources.com/blog/using-php-html-ize-plain-text
+ *
+ * @param  string $txt
+ * @return string
+ */
 function txt2html($txt) {
-// Transforms txt in html
-// based on http://blog.matrixresources.com/blog/using-php-html-ize-plain-text
   $txt = htmlentities($txt,ENT_COMPAT,"UTF-8");
   // keep whitespacing
   while( !( strpos($txt,'  ') === FALSE ) ) $txt = str_replace('  ','&nbsp; ',$txt);
@@ -2532,15 +2793,34 @@ $html=preg_replace('/\*(\w.*?)\*/','<b>$1</b>',$html);
   return $html;
 }
 
+/**
+ * Work out of a string is likely to be in HTML format.
+ *
+ * @param  mixed $string
+ * @return boolean
+ */
 function is_html($string)
-{
-  return preg_match("/<[^<]+>/",$string,$m) != 0;
-}
+    {
+    return preg_match("/<[^<]+>/",$string,$m) != 0;
+    }
 
+/**
+ * Set a cookie.
+ * 
+ * Note: The argument $daysexpire is not the same as the argument $expire in the PHP internal function setcookie.
+ * Note: The $path argument is not used if $global_cookies = true
+ *
+ * @param  string $name
+ * @param  string $value
+ * @param  integer $daysexpire
+ * @param  string $path
+ * @param  string $domain
+ * @param  boolean $secure
+ * @param  boolean $httponly
+ * @return void
+ */
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
-    # Note! The argument $daysexpire is not the same as the argument $expire in the PHP internal function setcookie.
-    # Note! The $path argument is not used if $global_cookies = true
     global $baseurl_short;
     
     if($path == "")
@@ -2572,8 +2852,13 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
         }
     }
 
+/**
+ * Get an array of all the states that a user has edit access to
+ *
+ * @param  integer $userref
+ * @return array
+ */
 function get_editable_states($userref)
-    // Get an array of all the states that a user has edit access to
     {
     global $additional_archive_states, $lang;
     if($userref==-1){return false;}
@@ -2590,10 +2875,14 @@ function get_editable_states($userref)
     return $editable_states;
     }
         
+/**
+ * Returns true if $html is valid HTML, otherwise an error string describing the problem.
+ *
+ * @param  mixed $html
+ * @return void
+ */
 function validate_html($html)
     {
-    # Returns true if $html is valid HTML, otherwise an error string describing the problem.
-    
     $parser=xml_parser_create();
     xml_parse_into_struct($parser,"<div>" . str_replace("&","&amp;",$html) . "</div>",$vals,$index);
     $errcode=xml_get_error_code($parser);
@@ -2650,10 +2939,19 @@ function generateURL($url, $parameters = array(), $set_params = array())
     }
 
 
-# Tails a file using native PHP functions.
-# First introduced with system console.
-# Credit to:
-# http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
+
+/**
+ * Tails a file using native PHP functions.
+ * 
+ * First introduced with system console.
+ * Credit to:
+ * http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
+ *
+ * @param  string $filename
+ * @param  integer $lines
+ * @param  integer $buffer
+ * @return string
+ */
 function tail($filename, $lines = 10, $buffer = 4096)
     {
     $f = fopen($filename, "rb");        // Open the file
@@ -2723,24 +3021,30 @@ function emptyiszero($value)
     }
 
 
-// Add array_column if <PHP 5.5
-if(!function_exists("array_column"))
+if(!function_exists("array_column")) {    
+/**
+ * Add array_column if <PHP 5.5
+ *
+ * @param  array $array
+ * @param  string $column_name
+ * @param  string $index_key
+ * @return array
+ */
+function array_column($array,$column_name,$index_key=null)
     {
-    function array_column($array,$column_name,$index_key=null)
-        {
-        if ($index_key == null)
-                {
-                return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
-                }
-                
-        $return=array();
-        foreach($array as $element)
+    if ($index_key == null)
             {
-            $return[$element[$index_key]] = $element[$column_name];                
+            return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
             }
-        return $return;
+            
+    $return=array();
+    foreach($array as $element)
+        {
+        $return[$element[$index_key]] = $element[$column_name];                
         }
+    return $return;
     }
+}
 
 
 /**
@@ -2820,9 +3124,17 @@ function get_slideshow_files_data()
     
     
         
+/**
+ * Returns a sanitised row from the table in a safe form for use in a form value, 
+ * suitable overwritten by POSTed data if it has been supplied.
+ *
+ * @param  array $row
+ * @param  string $name
+ * @param  string $default
+ * @return string
+ */
 function form_value_display($row,$name,$default="")
     {
-    # Returns a sanitised row from the table in a safe form for use in a form value, suitable overwritten by POSTed data if it has been supplied.
     if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
@@ -2830,9 +3142,20 @@ function form_value_display($row,$name,$default="")
 
 
 
+/**
+ * Adds a job to the job_queue table.
+ *
+ * @param  string $type
+ * @param  array $job_data
+ * @param  string $user
+ * @param  string $time
+ * @param  string $success_text
+ * @param  string $failure_text
+ * @param  string $job_code
+ * @return boolean
+ */
 function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_text="", $failure_text="", $job_code="")
     {
-    // Adds a job to the job_queue table.
     if($time==""){$time=date('Y-m-d H:i:s');}
     if($type==""){return false;}
     if($user==""){global $userref;$user=isset($userref)?$userref:0;}
@@ -2855,6 +3178,15 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
     return true;
     }
     
+/**
+ * Update the data/status/time of a job queue record.
+ *
+ * @param  integer $ref
+ * @param  array $job_data
+ * @param  string $newstatus
+ * @param  string $newtime
+ * @return void
+ */
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     {
     $sql="update  job_queue set job_data='" . escape_check(json_encode($job_data)) . "'";
@@ -2864,14 +3196,31 @@ function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     sql_query($sql);
     }
 
+/**
+ * Delete a job queue entry
+ *
+ * @param  mixed $ref
+ * @return void
+ */
 function job_queue_delete($ref)
     {
     sql_query("delete from job_queue where ref='" . $ref . "'");
     }
 
+/**
+ * Gets a list of offline jobs
+ *
+ * @param  string $type
+ * @param  string $status
+ * @param  string $user
+ * @param  string $job_code
+ * @param  string $job_order_by
+ * @param  string $job_sort
+ * @param  string $find
+ * @return array
+ */
 function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_order_by="ref", $job_sort="desc", $find="")
     {
-    // Gets offline jobs
     $condition=array();
     if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
     if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
@@ -2963,6 +3312,13 @@ function job_queue_run_job($job, $clear_process_lock)
     clear_process_lock('job_' . $jobref);
     }
         
+/**
+ * Change the user's user group
+ *
+ * @param  integer $user
+ * @param  integer $usergroup
+ * @return void
+ */
 function user_set_usergroup($user,$usergroup)
     {
     sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
@@ -3283,13 +3639,16 @@ function is_resourcespace_upgrade_available()
     }
 
 
+/**
+ * Fetch a count of recently active users
+ *
+ * @param  mixed $days  How many days to look back
+ * @return integer
+ */
 function get_recent_users($days)
     {
     return (sql_value("select count(*) value from user where datediff(now(),last_active) <= '" . escape_check($days) . "'",0));
     }
-
-
-
 
 
 /**
@@ -3426,8 +3785,13 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
     return $result;
     }
 
-
-// set a system variable (which is stored in the sysvars table) - set to null to remove
+/**
+ * Set a system variable (which is stored in the sysvars table) - set to null to remove
+ *
+ * @param  mixed $name      Variable name
+ * @param  mixed $value     String to set a new value; null to remove any existing value.
+ * @return void
+ */
 function set_sysvar($name,$value=null)
     {
     $name=escape_check($name);
@@ -3441,7 +3805,13 @@ function set_sysvar($name,$value=null)
 	db_end_transaction("set_sysvar");
     }
 
-// get a system variable (which is received from the sysvars table)
+/**
+ * Get a system variable (which is received from the sysvars table)
+ *
+ * @param  string $name
+ * @param  string $default  Returned if no matching variable was found
+ * @return string
+ */
 function get_sysvar($name, $default=false)
     {
 	// Check the global array.
@@ -3454,12 +3824,19 @@ function get_sysvar($name, $default=false)
     return $default;
     }
 
+/**
+ * Plugin architecture.  Look for hooks with this name (and corresponding page, if applicable) and run them sequentially.
+ * Utilises a cache for significantly better performance.
+ * Enable $draw_performance_footer in config.php to see stats.
+ *
+ * @param  string $name
+ * @param  string $pagename
+ * @param  string $params
+ * @param  boolean $last_hook_value_wins
+ * @return void
+ */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
-	# Plugin architecture.  Look for hooks with this name (and corresponding page, if applicable) and run them sequentially.
-	# Utilises a cache for significantly better performance.  
-	# Enable $draw_performance_footer in config.php to see stats.
-
 	# Allow modifications to the hook itself:
 	if(function_exists("hook_modifier") && !hook_modifier($name, $pagename, $params)) return;
 
@@ -3675,22 +4052,29 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     }
 
 
-    function show_pagetime(){
-        global $pagetime_start;
-        $time = microtime();
-        $time = explode(' ', $time);
-        $time = $time[1] + $time[0];
-        $total_time = round(($time - $pagetime_start), 4);
-        echo $total_time." sec";
+/**
+ * Returns the page load time until this point.
+ *
+ * @return string
+ */
+function show_pagetime()
+    {
+    global $pagetime_start;
+    $time = microtime();
+    $time = explode(' ', $time);
+    $time = $time[1] + $time[0];
+    $total_time = round(($time - $pagetime_start), 4);
+    echo $total_time." sec";
     }
 
 /**
  * Determines where the debug log will live.  Typically, same as tmp dir (See general.php: get_temp_dir().
  * Since general.php may not be included, we cannot use that method so I have created this one too.
+ * 
  * @return string - The path to the debug_log directory.
  */
 function get_debug_log_dir()
-{
+    {
     global $tempdir, $storagedir;
     
     // Set up the default.
@@ -3729,12 +4113,19 @@ function get_debug_log_dir()
     }
     // return the result.
     return $result;
-}
+    }
 
 
+/**
+ * Output debug information to the debug log, if debugging is enabled.
+ *
+ * @param  string $text
+ * @param  mixed $resource_log_resource_ref Update the resource log if resource reference passed.
+ * @param  string $resource_log_code    If updating the resource log, the code to use
+ * @return void
+ */
 function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE_TRANSFORMED)
 	{
-
     # Update the resource log if resource reference passed.
 	if(!is_null($resource_log_resource_ref))
         {
@@ -3843,24 +4234,23 @@ function rcRmdir ($path)
     return $success;
     }
     
+if (!function_exists("daily_stat")){    
 /**
- * Update daily_stat table with activity
+ * Update the daily statistics after a loggable event.
+ * 
+ * The daily_stat table contains a counter for each 'activity type' (i.e. download) for each object (i.e. resource) per day.
  *
- * @param  string  $activity_type e.g. 'Resource download', 'Create resource'
- * @param  integer $object_ref  ID of related object e.g. resource, collection, keyword
+ * @param  string $activity_type
+ * @param  integer $object_ref
  * @return void
  */
 function daily_stat($activity_type,$object_ref)
     {
-    global $disable_daily_stat;if($disable_daily_stat===true){return;}  //can be used to speed up heavy scripts	when stats are less important
-    # Update the daily statistics after a loggable event.
-    # the daily_stat table contains a counter for each 'activity type' (i.e. download) for each object (i.e. resource)
-    # per day.
+    global $disable_daily_stat;
+    
+    if($disable_daily_stat===true){return;}  //can be used to speed up heavy scripts when stats are less important
     $date=getdate();$year=$date["year"];$month=$date["mon"];$day=$date["mday"];
-    
-
-    # Set object ref to zero if not set.
-    
+        
     if ($object_ref=="") {$object_ref=0;}
 
     
@@ -3885,7 +4275,13 @@ function daily_stat($activity_type,$object_ref)
         sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
         }
     }
+}
 
+/**
+ * Returns the current page name minus the extension, e.g. "home" for pages/home.php
+ *
+ * @return string
+ */
 function pagename()
 	{
 	$name=safe_file_name(getvalescaped('pagename', ''));
@@ -3893,15 +4289,20 @@ function pagename()
 		return $name;
 	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
 	$urlparts=explode("/",$url);
-   $url=$urlparts[count($urlparts)-1];
+    $url=$urlparts[count($urlparts)-1];
     return escape_check($url);
     }
     
+/**
+ *  Returns the site content from the language strings. These will already be overridden with site_text content if present.
+ *
+ * @param  string $name
+ * @return string
+ */
 function text($name)
 	{
 	global $site_text,$pagename,$language,$languages,$usergroup,$lang;
-	
-	# Look for the site content in the language strings. These will already be overridden with site content if present.
+
 	$key=$pagename . "__" . $name;	
 	if (array_key_exists($key,$lang)) {return $lang[$key];}
 	else if(array_key_exists("all__" . $name,$lang)) {return $lang["all__" . $name];}
@@ -3909,11 +4310,23 @@ function text($name)
 	return "";
 	}
     
+/**
+ * Gets a list of site text sections, used for a multi-page help area.
+ *
+ * @param  mixed $page
+ * @return void
+ */
 function get_section_list($page)
 	{
 	return sql_array("select distinct name value from site_text where page='$page' and name<>'introtext' order by name");
 	}
 
+/**
+ * Returns a more friendly user agent string based on the passed user agent. Used in the user area to establish browsers used.
+ *
+ * @param  mixed $agent The user agent string
+ * @return string
+ */
 function resolve_user_agent($agent)
     {
     if ($agent=="") {return "-";}
@@ -3969,8 +4382,11 @@ function resolve_user_agent($agent)
     }
     
 
-
-
+/**
+ * Returns the current user's IP address, using HTTP proxy headers if present.
+ *
+ * @return string
+ */
 function get_ip()
 	{
 	global $ip_forwarded_for;
