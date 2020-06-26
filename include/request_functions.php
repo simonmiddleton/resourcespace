@@ -2,6 +2,12 @@
 # Request functions
 # Functions to accomodate resource requests and orders (requests with payment)
 
+/**
+ * Retrieve a resource request record
+ *
+ * @param  integer $request The request record ID
+ * @return mixed False if not found, the resource record (associative array) if found
+ */
 function get_request($request)
     {
     $result=sql_query("select u.username,u.fullname,u.email,r.user,r.collection,r.created,r.request_mode,r.status,r.comments,r.expires,r.assigned_to,r.reason,r.reasonapproved,u2.username assigned_to_username from request r left outer join user u  on r.user=u.ref left outer join user u2 on r.assigned_to=u2.ref where r.ref='$request'");
@@ -15,6 +21,13 @@ function get_request($request)
         }
     }
 
+/**
+ * Fetch a list of all requests for a user
+ *
+ * @param  boolean $excludecompleted  Exclude requests that have already been completed
+ * @param  mixed $returnsql Return the SQL for the execution rather than the results
+ * @return void
+ */
 function get_user_requests($excludecompleted=false,$returnsql=false)
     {
     global $userref;
@@ -23,6 +36,12 @@ function get_user_requests($excludecompleted=false,$returnsql=false)
     return $returnsql?$sql:sql_query($sql);
     }
     
+/**
+ * Handle the posted request form, when saving a request in the admin area.
+ *
+ * @param  integer $request The request record ID
+ * @return boolean  Was this successful?
+ */
 function save_request($request)
     {
     # Use the posted form to update the request
@@ -193,6 +212,14 @@ function save_request($request)
     }
     
     
+/**
+ * Fetch a list of requests assigned to the logged in user
+ *
+ * @param  boolean $excludecompleted    Exclude completed requests?
+ * @param  boolean $excludeassigned     Exclude assigned requests? (e.g. if the user is able to assign unassigned requests)
+ * @param  boolean $returnsql           Return SQL instead of the results?
+ * @return array The set of request records
+ */
 function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=false)
     {
     $condition="";global $userref;
@@ -221,10 +248,16 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
     return $returnsql?$sql:sql_query($sql);
     }
   
+/**
+ * Email a collection request to the team responsible for dealing with requests. Request mode 0 only (non managed).
+ *
+ * @param  integer $ref 
+ * @param  mixed $details
+ * @param  mixed $external_email
+ * @return void
+ */
 function email_collection_request($ref,$details,$external_email)
     {
-    # Request mode 0
-    # E-mails a collection request (posted) to the team
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$admin_resource_access_notifications, $always_email_from_user,$collection_empty_on_submit;
     
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
@@ -389,12 +422,16 @@ function email_collection_request($ref,$details,$external_email)
     return true;
     }
 
+/**
+ * Request mode 1 - quests are managed via the administrative interface. Sends an e-mail but also logs the request in the request table.
+ *
+ * @param  mixed $ref   
+ * @param  mixed $details
+ * @param  mixed $ref_is_resource
+ * @return void
+ */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
     {   
-    # Request mode 1
-    # Managed via the administrative interface
-    
-    # An e-mail is still sent.
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $resource_type_request_emails_and_email_notify, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
@@ -857,11 +894,15 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     }
 
 
+/**
+ * E-mails a basic resource request for a single resource (posted) to the team (not a managed request)
+ *
+ * @param  mixed $ref   The resource ID
+ * @param  mixed $details   The request details provided by the user
+ * @return void
+ */
 function email_resource_request($ref,$details)
     {
-    # E-mails a basic resource request for a single resource (posted) to the team
-    # (not a managed request)
-    
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days;
     
     if(intval($user_dl_limit) > 0)
