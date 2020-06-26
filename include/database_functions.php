@@ -6,7 +6,15 @@
  */
 
 
-# Error handling
+/**
+ * Centralised error handler. Display friendly error messages.
+ *
+ * @param  integer $errno
+ * @param  string $errstr
+ * @param  string $errfile
+ * @param  integer $errline
+ * @return void
+ */
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
     global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception;
@@ -166,9 +174,10 @@ function db_clear_connection_mode()
 
 $db = null;
 /**
-* @var  array  Holds database connections for different users (e.g read-write and/or read-only). NULL if no connection 
-*              has been registered.
-*/
+ * Connect to the database using the configured settings.
+ *
+ * @return void
+ */
 function sql_connect() 
     {
     global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
@@ -265,15 +274,21 @@ function db_begin_transaction($name)
     return false;
 	}
 
-# Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
-# Useful for re-indexing fields etc.
-# Example usage:
-#
-# sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
-#
-# Where first array parameter indicates types of bind data:
-# i=integer
-# s=string
+
+/**
+ * Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
+ *  Useful for re-indexing fields etc.
+ * 
+ * Example usage:
+ * sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
+ * Where first array parameter indicates types of bind data:
+ * i=integer
+ * s=string
+ *
+ * @param  string $sql
+ * @param  array $bind_data
+ * @return void
+ */
 function sql_query_prepared($sql,$bind_data)
     {
     global $prepared_statement_cache,$db;
@@ -346,20 +361,22 @@ function db_rollback_transaction($name)
     return false;
 	}        
 
+/**
+ * Execute a query and return the results as an array.
+ * 
+ * Database functions are wrapped in this way so supporting a database server other than MySQL is easier.
+ *
+ * @param  mixed $sql						The SQL to execute
+ * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  mixed $reconnect
+ * @param  mixed $fetch_specific_columns
+ * @return void
+ */
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
-    # sql_query(sql) - execute a query and return the results as an array.
-	# Database functions are wrapped in this way so supporting a database server other than MySQL is 
-	# easier.
-	
-	# $cache - disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
-	# At the moment this is basic and ignores $fetchrows and $fetch_specific_columns so isn't useful for queries employing those parameters
-
-    # If $fetchrows is set we don't have to loop through all the returned rows. We
-    # just fetch $fetchrows row but pad the array to the full result set size with empty values.
-    # This has been added retroactively to support large result sets, yet a pager can work as if a full
-    # result set has been returned as an array (as it was working previously).
-	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
     $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_already_completed_this_time;
 	
@@ -665,24 +682,40 @@ function sql_array($query,$cache="")
     return $return;
 	}
 
+/**
+ * Return the ID of the previously inserted row.
+ *
+ * @return integer
+ */
 function sql_insert_id()
 	{
     global $db;
-
     return mysqli_insert_id($db["read_write"]);
 	}
 
+	
+/**
+ * Returns the location of the query cache files
+ *
+ * @return string
+ */
 function get_query_cache_location()
 	{
 	global $storagedir;
 	return $storagedir . "/tmp/querycache";
 	}
 
+	
+/**
+ * Clear all cached queries for cache group $cache
+ * 
+ * If we've already done this on this page load, don't do it again as it will only add to the load in the case of batch operations.
+ *
+ * @param  string $cache
+ * @return boolean
+ */
 function clear_query_cache($cache)
 	{
-	// Clear all cached queries for cache group $cache
-
-	// If we've already done this on this page load, don't do it again as it will only add to the load in the case of batch operations.
 	global $query_cache_already_completed_this_time;
 	if (!isset($query_cache_already_completed_this_time)) {$query_cache_already_completed_this_time=array();}
 	if (in_array($cache,$query_cache_already_completed_this_time)) {return false;}
@@ -702,6 +735,14 @@ function clear_query_cache($cache)
 	return true;
 	}
 
+/**
+ * Check the database structure conforms to that describe in the /dbstruct folder. Usually only happens after a SQL error after which the SQL is retried, thus the database is automatically upgraded.
+ * 
+ * This function calls CheckDBStruct() for all plugin paths and the core project.
+ *
+ * @param  boolean $verbose
+ * @return void
+ */
 function check_db_structs($verbose=false)
 	{
 	CheckDBStruct("dbstruct",$verbose);
@@ -713,10 +754,16 @@ function check_db_structs($verbose=false)
 	hook("checkdbstruct");
 	}
 
+/**
+ * Check the database structure against the text files stored in $path.
+ * Add tables / columns / data / indices as necessary.
+ *
+ * @param  string $path
+ * @param  boolean $verbose
+ * @return void
+ */
 function CheckDBStruct($path,$verbose=false)
 	{
-	# Check the database structure against the text files stored in $path.
-	# Add tables / columns / data / indices as necessary.
 	global $mysql_db, $resource_field_column_limit;
 	
 	if (!file_exists($path)){
@@ -980,14 +1027,6 @@ function CheckDBStruct($path,$verbose=false)
 		}
 	}
 	
-
-
-
-
-
-
-
-
 
 
 
