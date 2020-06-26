@@ -1,10 +1,19 @@
 <?php
 
 /**
-* Retrieve a list of user actions for the My Actions area.
-* 
-* @return array  Array of available actions
-*/
+ * Retrieve a list of user actions for the My Actions area.
+ *
+ * @param  boolean $countonly Return the count of actions instead of the actions themselves
+ * @param  string $type Filter the actions based on action type
+ *     The available inputs are:
+ *         resourcereview
+ *         resourcerequest
+ *         userrequest
+ * @param  string $order_by
+ * @param  string $sort
+ * 
+ * @return mixed Count or array of actions
+ */
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
 	{
     global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
@@ -63,6 +72,11 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     return sql_query($actionsql);  
     }
     
+/**
+ * Return an SQL statement to find all editable resources in $actions_notify_states.
+ *
+ * @return string
+ */
 function get_editable_resource_sql()
 	{
 	global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states;
