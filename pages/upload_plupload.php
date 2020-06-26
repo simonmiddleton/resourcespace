@@ -67,11 +67,11 @@ if($upload_then_edit && $resource_type_force_selection && getval('posting', '') 
 
 // If upload_then_edit we may not have a resource type, so we need to find the first resource type
 // which does not have an XU? (restrict upload) permission  
-// This will be the resource type used for the upload
+// This will be the resource type used for the upload, but may be changed later when extension is known
+$all_resource_types = get_resource_types();
 if($resource_type == "")
 	{
-    $allrestypes = get_resource_types();
-	foreach($allrestypes as $restype)
+	foreach($all_resource_types as $restype)
 		{
 		if (!checkperm("XU" . $restype["ref"]))
 			{
@@ -231,48 +231,44 @@ if($upload_here)
         'search' => $search,
         'resource_type' => $resource_type,
         'status' => $setarchivestate,
-    );
+        );
     }
 
 $uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
-
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 $allowed_extensions="";
-
 if(($upload_then_edit || $replace ) && !$alternative)
     {
-        $all_allowed_extensions_holder = array();
-        $all_resource_types = get_resource_types();
-    
-        foreach ($all_resource_types as $type) 
+    $all_allowed_extensions_holder = array();
+    foreach ($all_resource_types as $type) 
         {
-            if(get_allowed_extensions_by_type($type["ref"]) == "")
+        if(get_allowed_extensions_by_type($type["ref"]) == "")
             {
-                $all_allowed_extensions_holder = array();
-                break;
+            $all_allowed_extensions_holder = array();
+            break;
             }
-            else
+        else
             {
-                $extensions = explode(",", get_allowed_extensions_by_type($type["ref"]));
-                foreach ($extensions as $extension) 
+            $extensions = explode(",", get_allowed_extensions_by_type($type["ref"]));
+            foreach ($extensions as $extension) 
                 {
-                    if ($extension != "") 
+                if ($extension != "") 
                     {
-                        array_push($all_allowed_extensions_holder, trim(strtolower($extension)));
+                    array_push($all_allowed_extensions_holder, trim(strtolower($extension)));
                     }
                 }
             }
         }
-        $all_allowed_extensions_holder = array_unique($all_allowed_extensions_holder);
-        $allowed_extensions = implode(",", $all_allowed_extensions_holder);
+    $all_allowed_extensions_holder = array_unique($all_allowed_extensions_holder);
+    $allowed_extensions = implode(",", $all_allowed_extensions_holder);
     }
 else if ($resource_type!="" && !$alternative) 
     {
-        $allowed_extensions=get_allowed_extensions_by_type($resource_type);
+    $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
 
 if (is_numeric($collection_add))
@@ -713,7 +709,7 @@ if ($_FILES)
                                     $resource_type_extension_mapping_default
                                 );
 
-                                if(!checkperm("XU{$resource_type_from_extension}"))
+                                if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
                                     {
                                     update_resource_type($ref, $resource_type_from_extension);
                                     }
