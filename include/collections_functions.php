@@ -507,23 +507,29 @@ function delete_collection($collection)
 	collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
 	}
 	
+/**
+ * Adds script to page that refreshes the Collection bar
+ *
+ * @param  integer $collection  Collection id
+ * @return void
+ */
 function refresh_collection_frame($collection="")
     {
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;
 
     if (getvalescaped("ajax",false))
-	{
-	echo "<script  type=\"text/javascript\">
-	CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");	
-	</script>";
-	}
+        {
+        echo "<script  type=\"text/javascript\">
+        CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");	
+        </script>";
+        }
     else
-	{
-	$headerinsert.="<script  type=\"text/javascript\">
-	CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");
-	</script>";
-	}
+        {
+        $headerinsert.="<script  type=\"text/javascript\">
+        CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");
+        </script>";
+        }
     }
 
 if (!function_exists("search_public_collections")){	
@@ -1455,41 +1461,51 @@ function add_smart_collection()
 	set_user_collection($userref,$newcollection);
 	}
 
-function get_search_title($searchstring){
-	// for naming smart collections, takes a full searchstring with the form 'search=restypes=archive=starsearch=' (all parameters optional)
-	// and uses search_title_processing to autocreate a more informative title 
-	$order_by="";
-	$sort="";
-	$offset="";
-	$k=getvalescaped("k","");
-	
-	$search_titles=true;
-	$search_titles_searchcrumbs=true;
-	$use_refine_searchstring=true;
-	$search_titles_shortnames=false;
-	
-	global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode,$preview_all;
-	
-	parse_str($searchstring,$searchvars);
-	if (isset($searchvars["archive"])){$archive=$searchvars["archive"];}else{$archive=0;}
-	if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
-	if (isset($searchvars["starsearch"])){$starsearch=$searchvars["starsearch"];}else{$starsearch="";}
-	if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
+/**
+ * Get a display friendly name for the given search string
+ * Takes a full searchstring of the form 'search=restypes=archive=starsearch=' and
+ * uses search_title_processing to autocreate a more informative title 
+ *
+ * @param  string $searchstring     Search string
+ * 
+ * @return string Friendly name for search
+ */
+function get_search_title($searchstring)
+    {    
+    $order_by="";
+    $sort="";
+    $offset="";
+    $k=getvalescaped("k","");
 
-	$collection_dropdown_user_access_mode=false;
-	include(dirname(__FILE__)."/search_title_processing.php");
+    $search_titles=true;
+    $search_titles_searchcrumbs=true;
+    $use_refine_searchstring=true;
+    $search_titles_shortnames=false;
+
+    global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode,$preview_all;
+
+    parse_str($searchstring,$searchvars);
+    if (isset($searchvars["archive"])){$archive=$searchvars["archive"];}else{$archive=0;}
+    if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
+    if (isset($searchvars["starsearch"])){$starsearch=$searchvars["starsearch"];}else{$starsearch="";}
+    if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
+
+    $collection_dropdown_user_access_mode=false;
+    include(dirname(__FILE__)."/search_title_processing.php");
 
     if ($starsearch!=0){$search_title.="(".$starsearch;$search_title.=($starsearch>1)?" ".$lang['stars']:" ".$lang['star'];$search_title.=")";}
-    if ($restypes!=""){ 
-		$resource_types=get_resource_types($restypes);
-		foreach($resource_types as $type){
-			$typenames[]=$type['name'];
-		}
-		$search_title.=" [".implode(', ',$typenames)."]";
-	}
-	$title=str_replace(">","",strip_tags($search_title));
-	return $title;
-}
+    if ($restypes!="")
+        { 
+        $resource_types=get_resource_types($restypes);
+        foreach($resource_types as $type)
+            {
+            $typenames[]=$type['name'];
+            }
+        $search_title.=" [".implode(', ',$typenames)."]";
+        }
+    $title=str_replace(">","",strip_tags($search_title));
+    return $title;
+    }
 
 function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $starsearch = "")
 	{
@@ -1862,98 +1878,87 @@ function get_collection_comments($collection)
 	return sql_query("select * from collection_resource where collection='" . escape_check($collection) . "' and length(comment)>0 order by date_added");
 	}
 
+/**
+ * Sends the feedback to the owner of the collection
+ *
+ * @param  integer $collection  Collection ID
+ * @param  string  $comment     Comment text
+ * @return void
+ */
 function send_collection_feedback($collection,$comment)
-	{
-	# Sends the feedback to the owner of the collection.
-	global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
-	
-	$cinfo=get_collection($collection);if ($cinfo===false) {exit("Collection not found");}
-	$user=get_user($cinfo["user"]);
-	$body=$lang["collectionfeedbackemail"] . "\n\n";
-	
-	if (isset($userfullname))
-		{
-		$body.=$lang["user"] . ": " . $userfullname . "\n";
-		}
-	else
-		{
-		# External user.
-		if ($feedback_email_required && !preg_match ("/${regex_email}/", getvalescaped("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
-		$body.=$lang["fullname"] . ": " . getval("name","") . "\n";
-		$body.=$lang["email"] . ": " . getval("email","") . "\n";
-		}
-	$body.=$lang["message"] . ": " . stripslashes(str_replace("\\r\\n","\n",trim($comment)));
+    {
+    global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
 
-	$f=get_collection_comments($collection);
-	for ($n=0;$n<count($f);$n++)
-		{
-		$body.="\n\n" . $lang["resourceid"] . ": " . $f[$n]["resource"];
-		$body.="\n" . $lang["comment"] . ": " . trim($f[$n]["comment"]);
-		if (is_numeric($f[$n]["rating"]))
-			{
-			$body.="\n" . $lang["rating"] . ": " . substr("**********",0,$f[$n]["rating"]);
-			}
-		}
-	
-	if ($feedback_resource_select)
-		{
-		$body.="\n\n" . $lang["selectedresources"] . ": ";
-		$file_list="";
-		$result=do_search("!collection" . $collection);
-		for ($n=0;$n<count($result);$n++)
-			{
-			$ref=$result[$n]["ref"];
-			if (getval("select_" . $ref,"")!="")
-				{
-				global $filename_field;
-				$filename=get_data_by_field($ref,$filename_field);
-				$body.="\n" . $ref . " : " . $filename;
+    $cinfo=get_collection($collection);if ($cinfo===false) {exit("Collection not found");}
+    $user=get_user($cinfo["user"]);
+    $body=$lang["collectionfeedbackemail"] . "\n\n";
 
-				# Append to a file list that is compatible with Adobe Lightroom
-				if ($file_list!="") {$file_list.=", ";}
-				$s=explode(".",$filename);
-				$file_list.=$s[0];
-				}
-			}
-		# Append Lightroom compatible summary.
-		$body.="\n\n" . $lang["selectedresourceslightroom"] . "\n" . $file_list;
-		}	
-	
-	
-	$cc=getval("email","");
-	get_config_option($user['ref'],'email_user_notifications', $send_email);
-	// Always send a mail for the feedback whatever the user preference, since the  feedback may be very long so can then refer to the CC'd email
-	if (filter_var($cc, FILTER_VALIDATE_EMAIL))
-		{
-		send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body,"","","",NULL,"",$cc);
-		}
-	else
-		{
-		send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body);
-		}
-		
-	if(!$send_email)
-		{
-		// Add a system notification message as well if the user has not 'opted out'
-		global $userref;
-		message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
-		}
-			
-	
-	# Cancel the feedback request for this resource.
-	/* - Commented out - as it may be useful to leave the feedback request in case the user wishes to leave
-	     additional feedback or make changes.
-	     
-	if (isset($userref))
-		{
-		sql_query("update user_collection set request_feedback=0 where collection='$collection' and user='$userref'");
-		}
-	else
-		{
-		sql_query("update external_access_keys set request_feedback=0 where access_key='$k'");
-		}
-	*/
-	}
+    if (isset($userfullname))
+        {
+        $body.=$lang["user"] . ": " . $userfullname . "\n";
+        }
+    else
+        {
+        # External user.
+        if ($feedback_email_required && !preg_match ("/${regex_email}/", getvalescaped("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
+        $body.=$lang["email"] . ": " . getval("email","") . "\n";
+        }
+    $body.=$lang["message"] . ": " . stripslashes(str_replace("\\r\\n","\n",trim($comment)));
+
+    $f=get_collection_comments($collection);
+    for ($n=0;$n<count($f);$n++)
+        {
+        $body.="\n\n" . $lang["resourceid"] . ": " . $f[$n]["resource"];
+        $body.="\n" . $lang["comment"] . ": " . trim($f[$n]["comment"]);
+        if (is_numeric($f[$n]["rating"]))
+            {
+            $body.="\n" . $lang["rating"] . ": " . substr("**********",0,$f[$n]["rating"]);
+            }
+        }
+
+    if ($feedback_resource_select)
+        {
+        $body.="\n\n" . $lang["selectedresources"] . ": ";
+        $file_list="";
+        $result=do_search("!collection" . $collection);
+        for ($n=0;$n<count($result);$n++)
+            {
+            $ref=$result[$n]["ref"];
+            if (getval("select_" . $ref,"")!="")
+                {
+                global $filename_field;
+                $filename=get_data_by_field($ref,$filename_field);
+                $body.="\n" . $ref . " : " . $filename;
+
+                # Append to a file list that is compatible with Adobe Lightroom
+                if ($file_list!="") {$file_list.=", ";}
+                $s=explode(".",$filename);
+                $file_list.=$s[0];
+                }
+            }
+        # Append Lightroom compatible summary.
+        $body.="\n\n" . $lang["selectedresourceslightroom"] . "\n" . $file_list;
+        }
+    $cc=getval("email","");
+    get_config_option($user['ref'],'email_user_notifications', $send_email);
+    // Always send a mail for the feedback whatever the user preference, since the  feedback may be very long so can then refer to the CC'd email
+    if (filter_var($cc, FILTER_VALIDATE_EMAIL))
+        {
+        send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body,"","","",NULL,"",$cc);
+        }
+    else
+        {
+        send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body);
+        }
+
+    if(!$send_email)
+        {
+        // Add a system notification message as well if the user has not 'opted out'
+        global $userref;
+        message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
+        }
+    }
 
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
@@ -2272,6 +2277,15 @@ function show_hide_collection($colref, $show=true, $user="")
 	sql_query("update user set hidden_collections ='" . implode(",",$hidden_collections) . "' where ref='" . escape_check($user) . "'");
 	}
 	
+/**
+ * Get an array of collection IDs for the specified ResourceSpace session and user
+ *
+ * @param  string  $rs_session  Session id - as obtained by get_rs_session_id()
+ * @param  integer $userref     User ID
+ * @param  boolean $create      Create new collection?
+ * 
+ * @return array Array of collection IDs for the specified sesssion
+ */
 function get_session_collections($rs_session,$userref="",$create=false)
 	{
 	$extrasql="";
@@ -2287,6 +2301,14 @@ function get_session_collections($rs_session,$userref="",$create=false)
 	return $collectionrefs;	
 	}
 
+/**
+ * Update collection to belong to a new user
+ *
+ * @param  integer $collection  Collection ID
+ * @param  integer $newuser     User ID to assign collection to
+ * 
+ * @return boolean success|failure
+ */
 function update_collection_user($collection,$newuser)
 	{	
 	if (!collection_writeable($collection))
@@ -3393,6 +3415,16 @@ function collection_download_process_command_to_file($use_zip_extension, $collec
         }
     }
 
+/**
+ * Modifies the filename for downloading as part of the specified collection
+ *
+ * @param  string &$filename        Filename (passed by reference)
+ * @param  integer $collection      Collection ID
+ * @param  string $size             Size code e.g scr,pre
+ * @param  string $suffix           String suffix to add (before file extension)
+ * @param  array $collectiondata    Collection data obtained by get_collection()
+ * @return void
+ */
 function collection_download_process_collection_download_name(&$filename, $collection, $size, $suffix, array $collectiondata)
     {
     global $lang, $use_collection_name_in_zip_name;
