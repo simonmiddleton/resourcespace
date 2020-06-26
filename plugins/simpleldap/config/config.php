@@ -3,6 +3,7 @@ $simpleldap['emailsuffix'] = 'mycompany.org';
 $simpleldap['domain'] = 'mydomain.mycompany.org';
 $simpleldap['ldaptype'] = 1;
 $simpleldap['ldapserver'] = 'pdc.mycompany.org';
+$simpleldap['ldap_encoding'] = '';
 $simpleldap['port'] = '389';
 $simpleldap['basedn']= 'CN=users, DC=mydomain,DC=mycompany,DC=org';
 $simpleldap['loginfield'] = 'uid';

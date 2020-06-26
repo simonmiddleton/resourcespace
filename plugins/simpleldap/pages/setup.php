@@ -20,6 +20,7 @@ elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag
 	$simpleldap['domain'] = getvalescaped('domain','');
 	$simpleldap['emailsuffix'] = getvalescaped('emailsuffix','');
 	$simpleldap['ldapserver'] = getvalescaped('ldapserver','');
+    $simpleldap['ldap_encoding'] = getvalescaped('ldap_encoding', '');
 	$simpleldap['port'] = getvalescaped('port','');
 	$simpleldap['basedn']= getvalescaped('basedn','');
 	$simpleldap['loginfield'] = getvalescaped('loginfield','');
@@ -94,7 +95,8 @@ foreach(
         'allow_duplicate_email',
         'notification_email',
         'ldaptype',
-        'LDAPTLS_REQCERT_never'
+        'LDAPTLS_REQCERT_never',
+        'ldap_encoding',
     ) as $thefield
 )
     {
@@ -265,7 +267,8 @@ echo config_boolean_field(
 	$lang['simpleldap_LDAPTLS_REQCERT_never_label'],
 	$simpleldap['LDAPTLS_REQCERT_never'],
 	30);
-echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);?>
+echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);
+echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['ldap_encoding'], 60);?>
 <?php echo config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);?>
 <?php echo config_text_field("emailsuffix",$lang['emailsuffix'],$simpleldap['emailsuffix'],60);?>
 <?php echo config_text_field("email_attribute",$lang['email_attribute'],$simpleldap['email_attribute'],60);?>

@@ -165,7 +165,7 @@ function simpleldap_authenticate($username,$password){
 	if($entries["count"] > 0){
 
 		if (isset($entries[0]['displayname']) && count($entries[0]['displayname']) > 0){
-			$displayname = $entries[0]['displayname'][0];
+			$displayname = simpleldap_to_utf8($entries[0]['displayname'][0]);
 		} else {
 			$displayname = '';
 		}
@@ -210,7 +210,7 @@ function simpleldap_authenticate($username,$password){
 						{
 						// ignore numbers; this is a kludgey way to deal with the fact
 						// that some ldap servers seem to return a result count as the first value
-						$newdept = escape_check($usermemberofgroup);
+						$newdept = escape_check(simpleldap_to_utf8($usermemberofgroup));
 						$usermemberof[]=$newdept;
 						sql_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (\"$newdept\",NULL)");
 						} 
@@ -220,7 +220,7 @@ function simpleldap_authenticate($username,$password){
 		//Extract email info
 		if ((isset($entries[0][$email_attribute])) && count($entries[0][$email_attribute]) > 0)
 			{
-			$email = $entries[0][$email_attribute][0];
+			$email = simpleldap_to_utf8($entries[0][$email_attribute][0]);
 			}
 		else
 			{
@@ -230,7 +230,7 @@ function simpleldap_authenticate($username,$password){
 		//Extract phone info
 		if (isset($entries[0][$phone_attribute]) && count($entries[0][$phone_attribute]) > 0)
 			{
-			$phone = $entries[0][$phone_attribute][0];
+			$phone = simpleldap_to_utf8($entries[0][$phone_attribute][0]);
 			}
 		else
 			{
@@ -252,7 +252,26 @@ function simpleldap_authenticate($username,$password){
 
 
 	ldap_unbind($ds);
-
-
-
 }
+
+
+/**
+* Helper function to convert received data from LDAP server to UTF-8
+* 
+* @param string $str String to convert to UTF8
+* 
+* @return string
+*/
+function simpleldap_to_utf8($str)
+    {
+    global $simpleldap;
+
+    if(!is_string($str) || trim($simpleldap['ldap_encoding']) == "")
+        {
+        return $str;
+        }
+
+    $converted_str = iconv($simpleldap['ldap_encoding'], "UTF8", $str);
+
+    return ($converted_str !== false ? $converted_str : $str);
+    }

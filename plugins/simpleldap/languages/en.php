@@ -4,6 +4,7 @@
 # -------
 $lang['simpleldap_ldaptype'] = "Directory Provider";
 $lang['ldapserver'] = "LDAP Server";
+$lang['ldap_encoding'] = "Data encoding received from the LDAP Server (set if not UTF-8 and data is not displayed properly - e.g display name)";
 $lang['domain'] = "AD Domain, if multiple separate with semi-colons";
 $lang['emailsuffix'] = "Email suffix - used if no email attribute data found";
 $lang['port'] = "Port";
