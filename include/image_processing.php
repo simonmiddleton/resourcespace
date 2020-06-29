@@ -339,7 +339,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             global $merge_filename_with_title, $merge_filename_with_title_default, $lang;
             if($merge_filename_with_title && isset($processfile))
                 {
-
                 $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
                 $merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
                 $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
@@ -871,7 +870,7 @@ function extract_exif_comment($ref,$extension="")
                             $original_filename = '';
                             if(isset($_REQUEST['name'])) {
                                 $original_filename = $_REQUEST['name'];
-                            } else {
+                            } elseif(isset($processfile)) {
                                 $original_filename = $processfile['name'];
                             }
 
