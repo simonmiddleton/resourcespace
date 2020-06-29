@@ -2290,47 +2290,6 @@ function format_string_more_link($string,$max_words_before_more=-1)
     return $return_value;
     }
 
-
-/**
- * Multidimensional array sort function to support the performance footer
- * http://www.php.net/manual/en/function.sort.php#104464 
- * @param  mixed $array
- * @param  mixed $index
- * @param  mixed $order
- * @param  mixed $natsort
- * @param  mixed $case_sensitive
- * @return void
- */
-function sortmulti ($array, $index, $order, $natsort=FALSE, $case_sensitive=FALSE) 
-    {
-        if(is_array($array) && count($array)>0) {
-            foreach(array_keys($array) as $key)
-            $temp[$key]=$array[$key][$index];
-            if(!$natsort) {
-                if ($order=='asc')
-                    asort($temp);
-                else   
-                    arsort($temp);
-            }
-            else
-            {
-                if ($case_sensitive===true)
-                    natsort($temp);
-                else
-                    natcasesort($temp);
-            if($order!='asc')
-                $temp=array_reverse($temp,TRUE);
-            }
-            foreach(array_keys($temp) as $key)
-                if (is_numeric($key))
-                    $sorted[]=$array[$key];
-                else   
-                    $sorted[$key]=$array[$key];
-            return $sorted;
-        }
-    return $sorted;
-    }
-
 if (!function_exists("draw_performance_footer")){
 /**
  * Render a performance footer with metrics.
@@ -2342,7 +2301,6 @@ function draw_performance_footer()
     global $config_show_performance_footer,$querycount,$querytime,$querylog,$pagename,$hook_cache_hits,$hook_cache;
     $performance_footer_id=uniqid("performance");
     if ($config_show_performance_footer){   
-    $querylog=sortmulti ($querylog, "time", "desc", FALSE, FALSE);
     # --- If configured (for debug/development only) show query statistics
     ?>
     <?php if ($pagename=="collections"){?><br/><br/><br/><br/><br/><br/><br/>
