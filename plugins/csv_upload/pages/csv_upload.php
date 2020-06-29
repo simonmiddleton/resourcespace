@@ -622,6 +622,9 @@ switch($csvstep)
         // Process file
         $meta=meta_get_map();
         $messages=array();
+        // Ensure connection does not get dropped
+        set_time_limit(0);
+
         csv_upload_process($csvfile,$meta,$resource_types,$messages,0,true,$csv_set_options);
         ?>
         <div class="BasicsBox">
