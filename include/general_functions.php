@@ -1723,8 +1723,6 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
 /**
  * Returns filename component of path
  * This version is UTF-8 proof.
- * Thanks to nasretdinov at gmail dot com
- * @link http://www.php.net/manual/en/function.basename.php#85369
  * 
  * @param string $file A path.
  * @access public
@@ -1732,11 +1730,8 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
  */
 function mb_basename($file)
     {
-    $exploded_path = preg_split('/[\\/]+/',$file);
-    return end($exploded_path);
-    } // mb_basename()
-
-
+    return end(preg_split('/[\\/]+/',$file));
+    } 
 
 /**
  * Remove the extension part of a filename.
