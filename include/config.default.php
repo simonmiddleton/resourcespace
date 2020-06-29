@@ -3569,7 +3569,6 @@ $hide_real_filepath = false;
 ################### Facial recognition:
 #######################################
 // Requires OpenCV and Python (version 2.7.6)
-// Credit to “AT&T Laboratories, Cambridge” for their database of faces during initial testing phase.
 $facial_recognition = false;
 
 // Set the field that will be used to store the name of the person suggested/ detected

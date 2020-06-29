@@ -2053,19 +2053,6 @@ function error_alert($error, $back = true, $code = 403)
     }
 
 /**
- * Returns an xml compliant string in UTF-8
- *
- * Built upon a code snippet from steve at mcdragonsoftware dot com
- * @link http://php.net/manual/en/function.htmlentities.php#106535
- * 
- * @param string $string A string to be made xml compliant.
- * @param string $fromcharset The charset of $string.
- * @access public
- * @return string Returns the xml compliant UTF-8 encoded string.
- */
-
-
-/**
  * Sanitize character for use in XML.
  *
  * @param  string $char
@@ -2073,7 +2060,6 @@ function error_alert($error, $back = true, $code = 403)
  */
 function sanitize_char($char)
     {
-    # http://en.wikipedia.org/wiki/Valid_characters_in_XML?section=1#XML_1.0
     $mb_ord = trim(mb_encode_numericentity($char, array(0x0, 0x10FFFF, 0, 0x10FFFF), "UTF-8"), "&#;");
     if ($mb_ord==0x0009 || $mb_ord==0x000A || $mb_ord==0x000D) {return $char;}
     if (($mb_ord>=0x0020 && $mb_ord<=0xD7FF) || ($mb_ord>=0xE000 && $mb_ord<=0xFFFD)) {return $char;}
@@ -2684,6 +2670,9 @@ function generateURL($url, $parameters = array(), $set_params = array())
  * First introduced with system console.
  * Credit to:
  * http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
+ * 
+ * As of 2020-06-29 the website is showing that all contents/code are CC BY 3.0
+ * https://creativecommons.org/licenses/by/3.0/
  *
  * @param  string $filename
  * @param  integer $lines
