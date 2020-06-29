@@ -831,6 +831,19 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
 * 
 */
 if (!function_exists("render_actions")){
+/**
+* Render the unified dropdown actions
+* 
+* @param array   $collection_data  Collection data
+* @param boolean $top_actions      Set to true if actions are to be rendered in the search filter bar (above results)
+* @param boolean $two_line         Display on two lines
+* @param string  $id               Selector HTML ID
+* @param array   $resource_data    Resource data
+* @param boolean $optionsonly      Render only options
+* @param string  $forpage          Specifically target for which page actions apply
+* 
+* @return void
+*/
 function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array(),$optionsonly=false, $forpage="")
     {
     if(hook('prevent_running_render_actions'))

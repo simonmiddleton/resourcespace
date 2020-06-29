@@ -1038,11 +1038,27 @@ function themes_comparator($a, $b)
 	}
 }
 
+/**
+* Case insensitive string comparisons using a "natural order" algorithm for collection names
+* 
+* @param string $a
+* @param string $b
+* 
+* @return integer < 0 if $a is less than $b > 0 if $a is greater than $b, and 0 if they are equal.
+*/
 function collections_comparator($a, $b)
 	{
 	return strnatcasecmp(i18n_get_collection_name($a), i18n_get_collection_name($b));
 	}
 
+/**
+* Case insensitive string comparisons using a "natural order" algorithm for collection names
+* 
+* @param string $b
+* @param string $a
+* 
+* @return integer < 0 if $a is less than $b > 0 if $a is greater than $b, and 0 if they are equal.
+*/
 function collections_comparator_desc($a, $b)
 	{
 	return strnatcasecmp(i18n_get_collection_name($b), i18n_get_collection_name($a));
@@ -2091,11 +2107,17 @@ function get_collection_log($collection, $fetchrows = -1)
                   WHERE collection = '{$collection}'
                ORDER BY c.ref DESC", false, $fetchrows);
 	}
-	
+
+/**
+* Figure out how many videos are in a collection
+* 
+* @param integer $ref Collections ref
+* 
+* @return integer
+*/
 function get_collection_videocount($ref)
 	{
 	global $videotypes;
-    #figure out how many videos are in a collection. if more than one, can make a playlist
 	$resources = do_search("!collection" . $ref);
 	$videocount=0;
 	foreach ($resources as $resource){if (in_array($resource['resource_type'],$videotypes)){$videocount++;}}
@@ -2318,7 +2340,16 @@ function update_collection_user($collection,$newuser)
 	return true;	
 	}
 
-if(!function_exists("compile_collection_actions")){	
+if(!function_exists("compile_collection_actions")){
+/**
+* Helper function for render_actions(). Compiles actions that are normally valid for collections
+* 
+* @param array   $collection_data  Collection data
+* @param boolean $top_actions      Set to true if actions are to be rendered in the search filter bar (above results)
+* @param array   $resource_data    Resource data
+* 
+* @return array
+*/
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
