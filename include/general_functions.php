@@ -1740,42 +1740,14 @@ function mb_basename($file)
 
 /**
  * Remove the extension part of a filename.
- * Thanks to phparadise
- * http://fundisom.com/phparadise/php/file_handling/strip_file_extension
  * 
  * @param string $name A file name.
  * @access public
  * @return string Return the file name without the extension part.
  */
-function strip_extension($name,$use_ext_list=false)
+function strip_extension($name)
     {
-         $ext = strrchr($name, '.');
-         if ($use_ext_list != false)
-         {
-            // Use list of specified extensions if config present.
-            global $download_filename_strip_extensions;
-            $fn_extension=substr(strrchr($name, '.'),1);
-            if ($use_ext_list == true && isset($download_filename_strip_extensions) && in_array(strtolower($fn_extension),$download_filename_strip_extensions))
-                {
-                $filename_new = substr($name, 0, -strlen(".".$fn_extension));
-                return $filename_new;
-                }
-            // Attempt to remove file extension from string where download_filename_strip_extensions is not configured.
-            if($ext !== false)
-                {
-                $name = substr($name, 0, -strlen($ext));
-                }
-            return $name; 
-         }
-         else
-         {
-             // Attempt to remove file extension from string where download_filename_strip_extensions is not configured.
-             if($ext !== false)
-                {
-                    $name = substr($name, 0, -strlen($ext));
-                }
-             return $name;     
-         }
+    $s = strrpos($name, '.');if ($s===false) {return $name;} else {return substr($name,0,$s);}
     }
 
 /**
@@ -1888,52 +1860,6 @@ function strip_leading_comma($val)
     {
     return preg_replace('/^\,/','',$val);
     }
-
-
-
-/**
- * String EnCrypt + DeCrypt function
- * Author: halojoy, July 2006
- * Modified and commented by: laserlight, August 2006
- * Exploratory implementation using bitwise ops on strings; Weedpacket September 2006
- *
- * @param  string $text
- * @param  string $key
- * @return string
- */
-function convert($text, $key = '') {
-    // return text unaltered if the key is blank
-    if ($key == '') {
-        return $text;
-    }
-
-    // remove the spaces in the key
-    $key = str_replace(' ', '', $key);
-    if (strlen($key) < 8) {
-        exit('key error');
-    }
-    // set key length to be no more than 32 characters
-    $key_len = strlen($key);
-    if ($key_len > 32) {
-        $key_len = 32;
-    }
-
-    // A wee bit of tidying in case the key was too long
-    $key = substr($key, 0, $key_len);
-
-    // We use this a couple of times or so
-    $text_len = strlen($text);
-
-    // fill key with the bitwise AND of the ith key character and 0x1F, padded to length of text.
-    $lomask = str_repeat("\x1f", $text_len); // Probably better than str_pad
-    $himask = str_repeat("\xe0", $text_len);
-    $k = str_pad("", $text_len, $key); // this one _does_ need to be str_pad
-
-    // {en|de}cryption algorithm
-    $text = (($text ^ $k) & $lomask) | ($text & $himask);
-
-    return $text;
-} 
 
 
 /**
