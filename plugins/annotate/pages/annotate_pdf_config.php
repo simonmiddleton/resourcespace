@@ -105,7 +105,7 @@ var annotate_previewimage_prefix = "";
 		
 		refresh : function( pagecount ) { 
 
-            document.previewimage.src = '<?php echo $jpghttppath;?>';
+            document.previewimage.src = '<?php echo $jpghttppath;?>?' +  Date.now();
             if (pagecount>1)
                 {
 				jQuery('#previewPageOptions').show(); // display selector  

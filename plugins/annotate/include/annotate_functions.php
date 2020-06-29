@@ -38,7 +38,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	$date= date("m-d-Y h:i a");
 	
 	include_once(dirname(__FILE__) . '/../../../include/image_processing.php');
-	include_once(dirname(__FILE__) . '/../../../lib/tcpdf/tcpdf.php');
+	include_once(dirname(__FILE__) . '/../../../lib//html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php');
 
 	$pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
 	$jpgstoragepath=get_annotate_file_path($ref,true,"jpg");
@@ -236,18 +236,17 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		echo ($pdf->GetPage()); // for paging
 		$pdf->Output($pdfstoragepath,'F');
 		# Set up  
-		
 		putenv("MAGICK_HOME=" . $imagemagick_path); 
         $ghostscript_fullpath = get_utility_path("ghostscript");
 		
         $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . escapeshellarg($previewpage) . " -o -r100 -dLastPage=" . escapeshellarg($previewpage) . " -sOutputFile=" . escapeshellarg($jpgstoragepath) . " " . escapeshellarg($pdfstoragepath);
 		run_command($command);
-		
+
 		$convert_fullpath = get_utility_path("im-convert");
 		if ($convert_fullpath == false) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}	
 		
-		$command = $convert_fullpath . " -resize $contact_sheet_preview_size -quality 90 -colorspace ".$imagemagick_colorspace." " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
-		run_command($command);
+        $command = $convert_fullpath . " -resize $contact_sheet_preview_size -quality 90 -colorspace ".$imagemagick_colorspace." " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
+        run_command($command);
 		return true;
 		}
 		
