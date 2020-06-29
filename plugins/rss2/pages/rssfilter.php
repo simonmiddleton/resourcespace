@@ -21,6 +21,11 @@ if (!check_api_key($user,$_SERVER["QUERY_STRING"],$sign))
 	exit;
 	}
 	
+function xmlentities($text)
+	{
+	return htmlentities($text);
+	}
+
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));
 	
@@ -95,10 +100,10 @@ $result = do_search($search, $restypes, "relevance", $archive, 100, "desc", fals
 # Create a title for the feed
 $searchstring = "search=$search&restypes=$restypes&archive=$archive&starsearch=$starsearch";
 if (substr($search,0,11)=="!collection"){$collection=substr($search,11);$collection=explode(" ",$collection);$collection=$collection[0];$collectiondata=get_collection($collection);}
-$feed_title = xml_entities($applicationname ." - " .get_search_title($searchstring));
+$feed_title = xmlentities($applicationname ." - " .get_search_title($searchstring));
 
 
-$r = new RSSFeed($feed_title, $baseurl, xml_entities(str_replace("%search%", $searchstring, $lang["filtered_resource_update_for"])));
+$r = new RSSFeed($feed_title, $baseurl, xmlentities(str_replace("%search%", $searchstring, $lang["filtered_resource_update_for"])));
 
 // rss fields can include any of thumbs, smallthumbs, list, xlthumbs display fields, or data_joins.
 $all_field_info=get_fields_for_search_display($rss_fields);
@@ -130,7 +135,7 @@ if (is_array($result)){
 for ($n=0;$n<count($result);$n++)			
 	{
 	$ref=$result[$n]["ref"];
-	$title=xml_entities(i18n_get_translated($result[$n]["field".$view_title_field]));
+	$title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
 	$creation_date=$result[$n]["creation_date"];
 	
 	//echo $time = time();//date("r");
@@ -180,7 +185,7 @@ for ($n=0;$n<count($result);$n++)
 							
 				}
 					
-				$add_desc.=xml_entities(strip_tags($value))."<![CDATA[<br/>]]>";
+				$add_desc.=xmlentities(strip_tags($value))."<![CDATA[<br/>]]>";
 			}
 		}
 	}

@@ -2207,22 +2207,7 @@ function error_alert($error, $back = true, $code = 403)
  * @access public
  * @return string Returns the xml compliant UTF-8 encoded string.
  */
-function xml_entities($string, $fromcharset="")
-    {
-    # Convert the data to UTF-8 if not already.
-    if ($fromcharset=="")
-        {
-        global $mysql_charset;
-        if (isset($mysql_charset)) {$fromcharset = $mysql_charset;}
-        else {$fromcharset = "UTF-8";} # Default to UTF-8.
-        }
-    if (strtolower($fromcharset)!="utf-8") {$string = mb_convert_encoding($string, 'UTF-8', $fromcharset);}
 
-    # Sanitize the string to comply with xml:
-    # http://en.wikipedia.org/wiki/Valid_characters_in_XML?section=1#XML_1.0
-    $not_in_list = "A-Z0-9a-z\s_-";
-    return preg_replace_callback("/[^{$not_in_list}]/u", 'get_xml_entity_at_index_0', $string);
-    }
 
 /**
  * Sanitize character for use in XML.
