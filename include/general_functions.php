@@ -2531,67 +2531,6 @@ function truncate_cache_arrays()
         }
     }
 
-
-/**
- * Transforms txt in html
- * based on http://blog.matrixresources.com/blog/using-php-html-ize-plain-text
- *
- * @param  string $txt
- * @return string
- */
-function txt2html($txt) {
-  $txt = htmlentities($txt,ENT_COMPAT,"UTF-8");
-  // keep whitespacing
-  while( !( strpos($txt,'  ') === FALSE ) ) $txt = str_replace('  ','&nbsp; ',$txt);
-
-  //Basic formatting
-  $eol = ( strpos($txt,"\r") === FALSE ) ? "\n" : "\r\n";
-  $html = str_replace("$eol"," <br/> ",$txt);
-
-
-/* General rules for replacing images */ 
-$imgReplacement = 
-    "<img align=left width=180 src=../..$5$6$7$8 /><br/>";
-
-/* Rules per supported file type */ 
-$extArray = array (
-//  ".html" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
-//  ".php" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
-    ".jpg" => $imgReplacement,
-    ".png" => $imgReplacement,
-    ".gif" => $imgReplacement,
-    "" => "<" . "a href=http://$4$5$6$7$8>$4$5$6$7$8"."</a>");
-/* $1 = http:
- * $2 = http
- * $3 = //www.eilertech.com
- * $4 = www.eilertech.com
- * $5 = /stories/powernaut/ 
- * $6 = 1941
- * $7 = .htm
- * $8 = #1
- * $9 = 1
- * Excluded:  ?fn=britannia_beach.txt */ 
- 
-// For each supported file type, up to and including Blank 
-foreach ($extArray as $ext => $replacement) {
-
-  // Define the search pattern here 
-  $pattern = 
-  "|((http):)(//([^/?# ]*))([^?# ,\.\)]*/)([^\.]*)?(" . $ext
-  //12       3  4          5               6        7  
-  . "[^# ,\)]*)(#([^ ,\.]*))?|i";
-  //           8 9  
-  
-  /* We have the pattern, the replacement, and the HTML being built;
-   * do the replacement. */ 
-  $html = preg_replace ($pattern, $replacement, $html);
-}
-
-$html=preg_replace('/\*(\w.*?)\*/','<b>$1</b>',$html);
-
-  return $html;
-}
-
 /**
  * Work out of a string is likely to be in HTML format.
  *

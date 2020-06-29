@@ -83,7 +83,7 @@ include "../include/header.php";
 		if (is_html($termstext)){
 			echo $termstext;
 		} else {
-			echo txt2html($termstext);
+			echo strip_tags($termstext);
 	}?></div>
 	<div class="clearerleft"> </div>
 	</div>
