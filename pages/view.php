@@ -155,7 +155,7 @@ if($use_mp3_player)
     $mp3realpath = get_resource_path($ref, true, '', false, 'mp3');
     if(file_exists($mp3realpath))
         {
-        $mp3path = get_resource_path($ref, false, 'videojs', false, 'mp3');
+        $mp3path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, 'mp3');
         }
     }
 
