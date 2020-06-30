@@ -528,7 +528,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
            $userref;
 
 	hook("befsaveresourcedata", "", array($ref));
-
     // Ability to avoid editing conflicts by checking checksums.
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
