@@ -882,6 +882,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 #SearchResultFound {
     padding-top: 3px;
+    min-width: 90px;
 }
 
 #contactadminbox  textarea{
