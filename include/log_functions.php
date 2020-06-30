@@ -1,5 +1,20 @@
 <?php
-
+/**
+* Log activity in the system (e.g user deleted a user)
+* 
+* @param string  $note                  Notes/comments regarding this activity
+* @param string  $log_code
+* @param string  $value_new
+* @param string  $remote_table
+* @param string  $remote_column
+* @param string  $remote_ref
+* @param string  $ref_column_override
+* @param string  $value_old
+* @param string  $user                  User that ran the activity
+* @param boolean $generate_diff
+* 
+* @return void
+*/
 function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=null, $remote_table=null, $remote_column=null, $remote_ref=null, $ref_column_override=null, $value_old=null, $user=null, $generate_diff=false)
 	{
 
@@ -21,7 +36,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 	if (is_null($value_old) && !is_null($remote_table) && !is_null($remote_column) && !is_null($remote_ref))	// only try and get the old value if not explicitly set and we have table details
 		{
-		$row = sql_query("SELECT * FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : escape_check($ref_column_override)) . "`='{$remote_ref}'");
+		$row = sql_query("SELECT * FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : escape_check($ref_column_override)) . "`='" . escape_check($remote_ref) . "'");
 		if (isset($row[0][$remote_column]))
 			{
 			$value_old = $row[0][$remote_column];
