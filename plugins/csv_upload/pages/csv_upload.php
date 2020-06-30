@@ -587,6 +587,8 @@ switch($csvstep)
         break;
     case 4:
         // Test file processing
+        // Ensure connection does not get dropped
+        set_time_limit(0);
         echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
         $meta=meta_get_map();
         $messages=array();
