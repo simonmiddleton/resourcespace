@@ -368,6 +368,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
+.ImageColourWrapper {display: inline-block;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
