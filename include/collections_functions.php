@@ -161,11 +161,17 @@ function get_collection($ref)
 	}
 }
 
+/**
+ * Returns all resources in collection
+ *
+ * @param  mixed  $collection   ID of collection being requested
+ * 
+ * @return void
+ */
 function get_collection_resources($collection)
     {
     global $userref;
 
-    # Returns all resources in collection
     # For many cases (e.g. when displaying a collection for a user) a search is used instead so permissions etc. are honoured.
     if((string)(int)$collection != (string)$collection)
         {
@@ -696,11 +702,16 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     }
 
 
-
+/**
+ * Add a collection to a user's 'My Collections'
+ *
+ * @param  integer  $user         ID of user
+ * @param  integer  $collection   ID of collection
+ * 
+ * @return void
+ */
 function add_collection($user,$collection)
 	{
-	# Add a collection to a user's 'My Collections'
-	
 	// Don't add if we are anonymous - we can only have one collection
 	global $anonymous_login,$username,$anonymous_user_session_collection;
  	if (isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
@@ -1675,9 +1686,17 @@ function allow_multi_edit($collection,$collectionid = 0)
 	}
 }	
 
+/**
+ * Returns an array of resource references that can be used as theme category images.
+ *
+ * @param  array    $themes       Array of collections     
+ * @param  integer  $collection   ID of collection
+ * @param  boolean  $smart        Flag for smart featured collections
+ * 
+ * @return array|boolean
+ */
 function get_theme_image($themes=array(), $collection="", $smart=false)
 	{
-	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
 	global $usergroup, $userref;
@@ -2007,9 +2026,19 @@ function collection_is_research_request($collection)
 }	
 
 if (!function_exists("add_to_collection_link")){
+/**
+ * Generates a HTML link for adding a resource to a collection
+ *
+ * @param  integer  $resource   ID of resource
+ * @param  string   $search     Search parameters
+ * @param  string   $extracode  Additonal code to be run when link is selected
+ * @param  string   $size       Resource size if appropriate
+ * @param  string   $class      Class to be applied to link
+ * 
+ * @return string
+ */
 function add_to_collection_link($resource,$search="",$extracode="",$size="",$class="")
     {
-    # Generates a HTML link for adding a resource to a collection
     global $lang;
 
     return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . "return false;\">";
@@ -2163,10 +2192,16 @@ function collection_min_access($collection)
 
     return $minaccess;
     }
-	
+
+/**
+ * Set an existing collection to be public
+ *
+ * @param  integer  $collection   ID of collection
+ * 
+ * @return boolean
+ */
 function collection_set_public($collection)
 	{
-	// set an existing collection to be public
 		if (is_numeric($collection)){
 			$sql = "update collection set public = '1' where ref = '$collection'";
 			sql_query($sql);
@@ -2176,9 +2211,14 @@ function collection_set_public($collection)
 		}
 	}
 
+/**
+ * Set an existing collection to be private
+ *
+ * @param  integer  $collection ID of collection
+ * @return boolean
+ */
 function collection_set_private($collection)
 	{
-	// set an existing collection to be private
 		if (is_numeric($collection)){
 			$sql = "update collection set public = '0' where ref = '$collection'";
 			sql_query($sql);
@@ -3542,12 +3582,17 @@ function collection_download_clean_temp_files(array $deletion_array)
         }
     }
 
-
+/**
+ * Delete any resources from collection moved out of users archive status permissions by other users
+ *
+ * @param  integer  $collection   ID of collection
+ * 
+ * @return void
+ */
 function collection_cleanup_inaccessible_resources($collection)
     {
     global $userref;
 
-    # Delete any resources from collection moved out of users archive status permissions by other users
     $editable_states = array_column(get_editable_states($userref), 'id');
     sql_query("DELETE a 
                 FROM   collection_resource AS a 
