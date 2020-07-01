@@ -1,9 +1,10 @@
 <?php
-
-
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Test to ensure that searching for editable resources (using parameter foredit=true) returns all valid resources and no invalid resources
+
+// Setup test
+$original_user_data = $userdata;
 
 // create 5 new resources 2 of type 1, 2 of type 2 and 2 of type 3
 $resourcea=create_resource(1,0);
@@ -95,6 +96,7 @@ if (count($results)!=1 || !in_array($resourcea,array_column($results,'ref')))
     }
 
 // Revert changes
-$userdata = array();
+$userdata = $original_user_data;
+setup_user($original_user_data);
 
 return true;
