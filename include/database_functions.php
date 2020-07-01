@@ -172,6 +172,10 @@ function db_clear_connection_mode()
     }
 
 
+/**
+* @var  array  Holds database connections for different users (e.g read-write and/or read-only). NULL if no connection 
+*              has been registered.
+*/
 $db = null;
 /**
  * Connect to the database using the configured settings.
