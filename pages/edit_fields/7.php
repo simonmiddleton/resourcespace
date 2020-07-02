@@ -28,7 +28,7 @@ if(!isset($selected_nodes))
 
 // User set values are options selected by user - used to render what users selected before submitting the form and
 // receiving an error (e.g required field missing)
-if(isset($user_set_values) && is_array($user_set_values) && !empty($user_set_values))
+if(isset($user_set_values[$field['ref']]) && is_array($user_set_values[$field['ref']]) && !empty($user_set_values[$field['ref']]))
     {
     $selected_nodes = array_merge($selected_nodes, $user_set_values[$field['ref']]);
     }
