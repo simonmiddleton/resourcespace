@@ -18,5 +18,3 @@ if(!update_collection_type($collections, COLLECTION_TYPE_UPLOAD))
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, $log);
 echo ($cli ? $log : nl2br(str_pad($log, 4096)));
-ob_flush();
-flush();
