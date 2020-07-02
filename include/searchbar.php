@@ -244,7 +244,7 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
                         {
                         if(event.key == 'Enter' && event.which === 13)
                             {
-                            document.getElementById('simple_search_form').submit();
+                            document.getElementById("searchbutton").click();
                             }
                         });
                     }
