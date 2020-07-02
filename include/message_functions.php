@@ -324,9 +324,9 @@ function message_send_unread_emails()
 			}
 
 		get_config_option($digestuser,'user_pref_daily_digest_mark_read', $mark_read);
-		if($mark_read)
+		if($mark_read && count($messagerefs) > 0)
 			{
-			sql_query("update user_message set seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' where message in ('" . implode("','",$messagerefs) . "') and user = '" . $digestuser . "'");
+			sql_query("UPDATE user_message SET seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' WHERE message IN ('" . implode("','",$messagerefs) . "') and user = '" . $digestuser . "'");
 			}
 		}
 
