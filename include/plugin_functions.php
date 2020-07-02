@@ -296,7 +296,7 @@ function get_plugin_config($name){
     # Need verbatum queries here
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
-    $configs = sql_query("SELECT config,config_json from plugins where name='$name'",'');
+    $configs = sql_query("SELECT config,config_json from plugins where name='$name'", 'plugins');
     $configs = $configs[0];
     $mysql_verbatim_queries = $mysql_vq;
     if (!array_key_exists('config', $configs))
