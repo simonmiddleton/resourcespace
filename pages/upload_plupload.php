@@ -399,7 +399,7 @@ if ($_FILES)
 	$maxFileAge = 5 * 3600; // Temp file age in seconds
 
 	// 5 minutes execution time
-	@set_time_limit(5 * 60);
+	@set_time_limit($php_time_limit);
 
 	// Uncomment this one to fake upload time
 	// usleep(5000);
