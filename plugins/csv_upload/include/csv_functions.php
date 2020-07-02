@@ -549,6 +549,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                         $daterangenodes     = array();
                         $daterangestartnode = set_node(null, $fieldid, $rangestart, null, null,true);
                         $daterangeendnode   = set_node(null, $fieldid, $rangeend, null, null,true);
+
+                        // get latest list of nodes, in case new nodes added with set_node() above
+                        $field_nodes   = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
+                        $node_options = array_column($field_nodes, 'name', 'ref');
+
                         $node_trans_arr[$fieldid][$daterangestartnode]  = $rangestart;
                         $node_trans_arr[$fieldid][$daterangeendnode]    = $rangeend;
                         $daterangenodes = array($daterangestartnode,$daterangeendnode);
