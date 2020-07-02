@@ -117,9 +117,15 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 }	
 
 if (!function_exists("get_collection")){
+/**
+ * Returns all data for collection $ref.
+ *
+ * @param  int  $ref   Collection ID
+ * 
+ * @return array|boolean
+ */
 function get_collection($ref)
 	{
-    # Returns all data for collection $ref.
     $return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
@@ -1076,6 +1082,14 @@ function collections_comparator_desc($a, $b)
 	}		
 
 if (!function_exists("get_themes")){
+/**
+ * Get collections linked to featured collcetion categories
+ *
+ * @param  array  $themes   Array of featured collection categories
+ * @param  boolean  $subthemes   Include subthemes
+ * 
+ * @return array   Array of colllection results
+ */
 function get_themes($themes=array(""),$subthemes=false)
 	{	
 	$themes_order_by=getvalescaped("themes_order_by",getvalescaped("saved_themes_order_by","name"));
@@ -1127,9 +1141,13 @@ function get_themes($themes=array(""),$subthemes=false)
 	}
 }
 
+/**
+ * Returns a list of smart theme headers, which are basically fields with a 'smart theme name' set.
+ *
+ * @return array
+ */
 function get_smart_theme_headers()
 	{
-	# Returns a list of smart theme headers, which are basically fields with a 'smart theme name' set.
 	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "schema");
 	}
 
@@ -1646,10 +1664,17 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 	}
 
 if (!function_exists("allow_multi_edit")){
+/**
+ * Returns true or false, can all resources in this collection be edited by the user?
+ *
+ * @param  array|int  $collection     Collection IDs
+ * @param  array      $collectionid        
+ * 
+ * @return boolean
+ */
 function allow_multi_edit($collection,$collectionid = 0)
 	{
 	global $resource;
-	# Returns true or false, can all resources in this collection be edited by the user?
 
 	if (is_array($collection) && $collectionid == 0)
 		{
@@ -2018,9 +2043,15 @@ function copy_collection($copied,$current,$remove_existing=false)
 	}
 
 if (!function_exists("collection_is_research_request")){
+/**
+ * Returns true if a collection is a research request
+ *
+ * @param  mixed $collection   Collection ID
+ * 
+ * @return boolean
+ */
 function collection_is_research_request($collection)
 	{
-	# Returns true if a collection is a research request
 	return (sql_value("select count(*) value from research_request where collection='" . escape_check($collection) . "'",0)>0);
 	}
 }	
@@ -3118,6 +3149,19 @@ function GetThemesFromRequest($levels)
     return $themes;
     }
 
+/**
+ * Define the archive file.
+ *
+ * @param  array|boolean  $archiver    
+ * @param  string         $settings_id   
+ * @param  string         $usertempdir
+ * @param  string         $collection
+ * @param  string         $size
+ * @param  class          $zip
+ * @param  string         $zipfile
+ * 
+ * @return string
+ */
 function collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, &$zip, &$zipfile)
     {
     global $lang, $use_zip_extension, $collection_download_settings;
