@@ -1,21 +1,21 @@
 Defines user groups.
 ref,int(11),
 name,varchar(100),
-permissions,text,
-parent,varchar(50),
-search_filter,text,
-edit_filter,text,
-derestrict_filter,text,
-ip_restrict,text,
+permissions,text,A list of permissions that this user group has - see /documentation/permissions.txt
+parent,varchar(50),An optional parent group ID - allows for group heirarchy and for groups to manage subgroups
+search_filter,text,Deprecated - string form of filters, being replace by search_filter_id and the filter table
+edit_filter,text,Deprecated - string form of filters, being replace by edit_filter_id and the filter table
+derestrict_filter,text,Deprecated - string form of filters, being replace by derestrict_filter_id and the filter table
+ip_restrict,text,A list of IP addresses that the users can log in from (optional)
 resource_defaults,text,
-config_options,text,
+config_options,text,Additional configuration options that apply to this user group - like include/config.php - accepts PHP
 welcome_message,text,
-request_mode,int(11),
+request_mode,int(11),A code indicating how resource requests are handled for this group: 0 = unmanaged/e-mail only, 1 = managed via the admin UI, 2 = payment via PayPal, 3 = payment but they pay later via a manual/offline process
 allow_registration_selection,int(11),
-group_specific_logo,text,
+group_specific_logo,text,An optional header logo to use instead for this user group only
 inherit_flags,text,
-search_filter_id,int(11),
+search_filter_id,int(11),The metadata filter to apply to determine if users in this usergroup can see a resource in search results
 download_limit,smallint,
 download_log_days,smallint,
-edit_filter_id,int(11),
-derestrict_filter_id,int(11),
+edit_filter_id,int(11),The metadata filter to apply to determine if users in this usergroup can edit a resource
+derestrict_filter_id,int(11),The metadata filter to apply to determine if users in this usergroup can bypass the restricted access level of a resource and download it without going through the request process
