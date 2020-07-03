@@ -482,11 +482,13 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     if (!hook("replacesearch"))
         {   
         $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+        $full_dataset = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch, false, false, $daylimit, false, true, false, $editable_only, false, $search_access);
         }
     }
 else
     {
     $result=array(); # Do not return resources (e.g. for collection searching only)
+    $full_dataset = array();
     }
 
 # Allow results to be processed by a plugin
@@ -1164,7 +1166,7 @@ if($responsive_ui)
             }
         else
             {
-            render_actions($collectiondata, true, false);
+            render_actions($collectiondata, true, false, "", $full_dataset);
             }
 
         hook("search_header_after_actions");
