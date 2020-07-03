@@ -137,12 +137,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         if(!$csv_set_options["update_existing"])
             {
             $missing_fields=array();
-            foreach ($meta[$resource_type_set] as $field_name=>$field_attributes)
+            if (isset($meta[$resource_type_set]))
                 {
-                if ($field_attributes['required'] && array_search($field_attributes["remote_ref"], $csv_set_options["fieldmapping"])===false)
+                foreach ($meta[$resource_type_set] as $field_name=>$field_attributes)
                     {
-                    $meta[$resource_type_set][$field_name]['missing']=true;
-                    array_push($missing_fields, $meta[$resource_type_set][$field_name]['nicename']);
+                    if ($field_attributes['required'] && array_search($field_attributes["remote_ref"], $csv_set_options["fieldmapping"])===false)
+                        {
+                        $meta[$resource_type_set][$field_name]['missing']=true;
+                        array_push($missing_fields, $meta[$resource_type_set][$field_name]['nicename']);
+                        }
                     }
                 }
             if (count($missing_fields) == 0)
