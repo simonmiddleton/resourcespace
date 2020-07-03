@@ -1,6 +1,6 @@
 A resource is the central record within ResourceSpace mapping to a single asset / file.
 ref,int(11),
-title,varchar(200),
+title,varchar(200),The resource title, synchronised with the configured title metadata field
 resource_type,int(11),
 has_image,int(11),Does the resource have a preview image?
 is_transcoding,int(11),Is there a transcoding process underway for this resource?
@@ -12,31 +12,31 @@ user_rating,int(11),
 user_rating_count,int(11),
 user_rating_total,int(11),
 country,varchar(200),
-file_extension,varchar(10),
-preview_extension,varchar(10),
+file_extension,varchar(10),The extension of the uploaded main file e.g. 'jpg'.
+preview_extension,varchar(10),The extension of the chosen preview format, e.g. 'mp4'
 image_red,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
 image_green,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
 image_blue,int(11),The average red component of the image excluding desaturated areas. Used for image placeholders during loading.
-thumb_width,int(11),
-thumb_height,int(11),
-archive,int(11),
-access,int(11),
-colour_key,varchar(5),
-created_by,int(11),
-file_path,varchar(500),
+thumb_width,int(11),The display width of the thumbnail ('thm' preview size)
+thumb_height,int(11),The display height of the thumbnail ('thm' preview size)
+archive,int(11),The delete/archive/custom workflow state of the resource: default states -2 = pending submission, -1 = pending review, 0 = active, 1 = pending archive, 2 = archived, 3 = deleted
+access,int(11),The default access level: 0 = open (all users), 1 = restricted (must be requested by non admin), 2 = confidential (admin only), 3 = custom (defined by <a href="resource_custom_access">resource_custom_access</a>)
+colour_key,varchar(5),A descriptive string listing the main colours in order. Not used.
+created_by,int(11),The user that created the resource record.
+file_path,varchar(500),The path to the file on disk, only used in the case of a staticsync file.
 file_modified,datetime,
 file_checksum,varchar(32),
 request_count,int(11),
 expiry_notification_sent,int(11),
 preview_tweaks,varchar(50),
-geo_lat,double,
-geo_long,double,
-mapzoom,int(11),
-disk_usage,bigint(20),
-disk_usage_last_updated,datetime,
-file_size,bigint(20),
+geo_lat,double,Geographical latitude in degrees, extracted from the resource file if configured
+geo_long,double,Geographical longitutude in degrees, extracted from the resource file if configured
+mapzoom,int(11),The map zoom level to use by default, set when manually setting a map coordinate
+disk_usage,bigint(20),Disk usage of all resource files including previews and alternatives in bytes
+disk_usage_last_updated,datetime,The last time disk_usage was updated
+file_size,bigint(20),The file size of the core file in bytes
 preview_attempts,int(11),
 modified,timestamp,
 last_verified,datetime,
 integrity_fail,tinyint(1),
-lock_user,int(11),
+lock_user,int(11),The ID of the user that has checked out (locked) this resource record

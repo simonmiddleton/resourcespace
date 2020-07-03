@@ -1,15 +1,15 @@
 Lists all plugins active on the system and stores plugin configuration.
-name,varchar(50),
-descrip,text,
-author,varchar(100),
+name,varchar(50),The folder name containing the plugin, also the file name in the case of an uploaded .RSP file
+descrip,text,A textual description of the plugin loaded from the .yaml file
+author,varchar(100),The author of the plugin, loaded from the .yaml file
 update_url,varchar(100),
-info_url,varchar(100),
-inst_version,float,
+info_url,varchar(100),The URL of the plugin's project page for more information
+inst_version,float,The installed version number
 config,longblob,
 config_json,mediumtext,
 config_url,varchar(100),
 enabled_groups,varchar(200),
 priority,int(11),
 disable_group_select,int(11),
-title,varchar(100),
-icon,varchar(100),
+title,varchar(100),A 'friendly' title to display as the plugin name instead of the folder name used in 'name'
+icon,varchar(100),A FontAwesome icon string to display in the UI.
