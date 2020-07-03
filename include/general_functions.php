@@ -3521,6 +3521,7 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
  */
 function set_sysvar($name,$value=null)
     {
+    global $sysvars;
     $name=escape_check($name);
     $value=escape_check($value);
 	db_begin_transaction("set_sysvar");
@@ -3529,7 +3530,10 @@ function set_sysvar($name,$value=null)
         {
         sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
         }
-	db_end_transaction("set_sysvar");
+    db_end_transaction("set_sysvar");
+
+    //Update the $sysvars array or get_sysvar() won't be aware of this change
+    $sysvars[$name] = $value;
     }
 
 /**

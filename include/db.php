@@ -408,6 +408,15 @@ for ($n=0;$n<count($results);$n++)
 # Blank the header insert
 $headerinsert="";
 
+# Load the sysvars into an array. Useful so we can check migration status etc.
+# Needs to be actioned before the 'initialise' hook or plugins can't use get_sysvar()
+$systemvars = sql_query("SELECT name, value FROM sysvars");
+$sysvars = array();
+foreach($systemvars as $systemvar)
+    {
+    $sysvars[$systemvar["name"]] = $systemvar["value"];
+    }
+    
 # Initialise hook for plugins
 hook("initialise");
 
@@ -422,13 +431,6 @@ if(file_exists($stemming_file))
 $hook_cache = array();
 $hook_cache_hits = 0;
 
-# Load the sysvars into an array. Useful so we can check migration status etc.
-$systemvars = sql_query("SELECT name, value FROM sysvars");
-$sysvars = array();
-foreach($systemvars as $systemvar)
-    {
-    $sysvars[$systemvar["name"]] = $systemvar["value"];
-    }
 
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
