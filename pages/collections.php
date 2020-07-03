@@ -708,7 +708,7 @@ $feedback=$cinfo["request_feedback"];
 $totalprice=0;
 if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	{
-	foreach ($result as $resource)
+	foreach ($results_all as $resource)
 		{
 		# For each resource in the collection, fetch the price (set in config.php, or config override for group specific pricing)
 		$id=$resource["purchase_size"];
@@ -798,7 +798,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
     <?php if ($count_result>0 && checkperm("q"))
     	{ 
 		# Ability to request a whole collection (only if user has restricted access to any of these resources)
-		$min_access=collection_min_access($result);
+		$min_access=collection_min_access($results_all);
 		if ($min_access!=0)
 			{
 		    ?>
@@ -1150,7 +1150,7 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 		<?php if ($count_result>0)
 			{ 
 			# Ability to request a whole collection (only if user has restricted access to any of these resources)
-			$min_access=collection_min_access($result);
+			$min_access=collection_min_access($results_all);
 			if ($min_access!=0)
 				{
 				?>

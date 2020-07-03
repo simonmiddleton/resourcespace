@@ -2498,7 +2498,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     else
         {
-        $min_access = collection_min_access($result);
+        $min_access = collection_min_access(empty($resource_data) ? $result : $resource_data);
         }
 
     // If resourceconnect plugin activated, need to consider if resource connect resources exist in the collection - if yes display view all resources link	
