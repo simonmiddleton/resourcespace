@@ -3374,7 +3374,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
                 }
 
-            // Does the fieldname on this condition match the field being processed    
+            // Does the fieldname on this condition match the field being processed
             if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
                 {
                 $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
@@ -3982,21 +3982,25 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
     echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
     }
 
+/**
+ * EditNav - render html for next/back browsing on the resource edit page. Called by SaveAndClearButtons()
+ *
+ * @return void
+ */
 function EditNav() 
-    {
-    # Resource next / back browsing - used on edit page
+   {
     global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode, $urlparams;
     ?>
-    <div class="BackToResultsContainer"><div class="backtoresults"> 
+    <div class="BackToResultsContainer"><div class="backtoresults">
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
         <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>"></a>
-    
+   
         <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo $lang["viewallresults"]?></a>
-    
+   
         <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>"></a>
-    
+   
         <?php
         }
     if ($modal)
@@ -4007,17 +4011,30 @@ function EditNav()
         } ?>
     </div></div><?php
   }
-
+ 
+/**
+ * Render the 'QuestionSubmit' div with the 'Save', 'Clear' and 'Save all with values' locked Buttons - used by the resource edit page
+ *
+ * @param  string   $extraclass   - Additional CSS classes to add to the Question div
+ * @param  bool     $requiredfields - to indicate the input is required
+ * @param  bool     $backtoresults - Show the next/back links using EditNav()
+ * @return void
+ */
 function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
-    # Used on edit page 
-    global $lang, $multiple, $ref, $upload_review_mode, $noupload, $is_template, 
-    $show_required_field_label, $modal, $locked_fields;
- 
+    global $lang, $multiple, $ref, $upload_review_mode, $noupload, $is_template,
+    $show_required_field_label, $modal, $edit_selection_collection_resources, $locked_fields;
+
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
         {
         $save_btn_value = $lang['create'];
+        }
+
+    $confirm_text = $lang["confirmeditall"];
+    if($edit_selection_collection_resources)
+        {
+        $confirm_text = $lang["confirm_edit_all_selected_resources"];
         }
     ?>
     <div class="QuestionSubmit <?php echo $extraclass ?>">
@@ -4027,7 +4044,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
+        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
                name="save"
                class="editsave"
                type="submit"
@@ -4035,26 +4052,25 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input class="save_auto_next" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
             <?php
             }
- 
+
         if(!$is_template && $show_required_field_label && $requiredfields)
             {
             ?>
             <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>
             <?php
-            } 
- 
+            }
+
         # Duplicate navigation
-        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
+       if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
             {
             EditNav();
             }
             ?>
-        
-            <br />
-            <div class="clearerleft"> </div>
+        <br />
+        <div class="clearerleft"> </div>
     </div>
-    <?php 
+    <?php
     }
