@@ -707,3 +707,88 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
 
     return array("Status" => "SUCCESS","Message" => "Resource ID #$ref replaced");
     }
+
+
+/**
+* API binding to get_data_by_field function.
+* 
+* @param integer $ref   Resource ref
+* @param integer $field Resource type field ref
+* 
+* @return boolean|array
+*/
+function api_get_data_by_field($ref, $field)
+    {
+    // Security: Check for numeric input values; otherwise, return FALSE.
+    if(!is_numeric($ref) || !is_numeric($field))
+        {
+        return false;
+        }
+
+    // Security: Check resource access, if not accessible to user, return FALSE.
+    $access = get_resource_access($ref);
+    if($access == 2 || $access == RESOURCE_ACCESS_INVALID_REQUEST)
+        {
+        return false;
+        }
+
+    // Get the data for a specific field for a specific resource.
+    $results = get_data_by_field($ref, $field);
+    
+    if(is_array($results))
+        {
+        $results_count = count($results);
+        for($n = 0; $n < $results_count; $n++)
+            {
+            $results[$n] = array_map("i18n_get_translated", $results[$n]);
+            }
+        }
+    
+    return $results;
+    }
+
+
+/**
+* API binding to modified get_resource_collections function, as we only want to pass collection ID, name, and 
+* description for security purposes.
+* 
+* @param integer $ref Resource ref
+* 
+* @return boolean|array
+*/
+function api_get_resource_collections($ref)
+    {
+    // Security: Check for numeric input value; otherwise, return FALSE.
+    if(!is_numeric($ref))
+        {
+        return false;
+        }
+
+    // Get all the collections a resource is part of.
+    $results = get_resource_collections($ref);
+
+    // Create a new array containing only the collection ID, name, and description fields.
+    if(is_array($results))
+        {
+        $ref_collections = [];
+        $results_count = count($results);
+
+        for($n = 0; $n < $results_count; $n++)
+            {
+            $ref_collections[$n]["ref"] = $results[$n]["ref"];
+            $ref_collections[$n]["name"] = $results[$n]["name"];
+            $ref_collections[$n]["description"] = $results[$n]["description"];
+            }
+
+        for($n = 0; $n < $results_count; $n++)
+            {
+            $ref_collections[$n] = array_map("i18n_get_translated", $ref_collections[$n]);
+            }
+        }
+    else // Resource is not part of a collection or other error.
+        {
+        return false;
+        }
+
+    return $ref_collections;
+    }
