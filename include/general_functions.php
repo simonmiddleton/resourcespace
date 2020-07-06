@@ -1730,7 +1730,8 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
  */
 function mb_basename($file)
     {
-    return end(preg_split('/[\\/]+/',$file));
+    $regex_file = preg_split('/[\\/]+/',$file);
+    return end($regex_file);
     } 
 
 /**
