@@ -23,7 +23,7 @@ $resource=getvalescaped("resource","",true);
 # Fetch resource data.
 $resourcedata=get_resource_data($resource);
 
-if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
     {
     $error = get_resource_lock_message($resourcedata["lock_user"]);
     http_response_code(403);

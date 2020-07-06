@@ -548,7 +548,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	$expiry_field_edited=false;
     $resource_data=get_resource_data($ref);
     
-    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         $errors[] = get_resource_lock_message($resource_data["lock_user"]);
         return $errors;
@@ -1234,7 +1234,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             {
             $noeditaccess[] = $listresource;
             }
-        if($resource_data[$listresource]["lock_user"] != 0 && $resource_data[$listresource]["lock_user"] != $userref)
+        if($resource_data[$listresource]["lock_user"] > 0 && $resource_data[$listresource]["lock_user"] != $userref)
             {
             $lockedresources[] = $listresource;
             }
@@ -2100,7 +2100,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref;
     
     $resource_data = get_resource_data($resource);
-    if ($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+    if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         $errors[] = get_resource_lock_message($resource_data["lock_user"]);
         return false;
@@ -2483,7 +2483,7 @@ function delete_resource($ref)
                 ||
                 !get_edit_access($ref,$resource["archive"], false,$resource)
                 ||
-                (isset($userref) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+                (isset($userref) && $resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
                 )
             &&
                 !hook('check_single_delete')
@@ -6701,7 +6701,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     $resource = get_resource_data($ref);
     if (!get_edit_access($ref,$resource["archive"],false,$resource)
         ||
-        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         )
         {
         return false;

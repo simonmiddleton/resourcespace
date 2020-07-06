@@ -1176,7 +1176,7 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
         if(!$access)
             {return false;}
 
-        if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+        if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
             {
             $error = get_resource_lock_message($resourcedata["lock_user"]);
             return false;
@@ -1231,7 +1231,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             if(!$access)
                 {return false;}
             
-            if($resourcedata["lock_user"] != 0 && $resourcedata["lock_user"] != $userref)
+            if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
                 {
                 $error = get_resource_lock_message($resourcedata["lock_user"]);
                 return false;

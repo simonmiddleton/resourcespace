@@ -326,7 +326,7 @@ $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($mo
 $edit_access = get_edit_access($ref,$resource["archive"],$fields,$resource);
 
 # Check if resource is locked
-$resource_locked = (int)$resource["lock_user"] != 0;
+$resource_locked = (int)$resource["lock_user"] > 0;
 $unlock_option = checkperm("a") || ($userref == $resource["lock_user"] && $userref != $anonymous_login);
 $lock_details = get_resource_lock_message($resource["lock_user"]);
 

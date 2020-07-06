@@ -15,7 +15,7 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource)) {
 		exit();
         }
         
-if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
     $error = get_resource_lock_message($resource["lock_user"]);
     http_response_code(403);

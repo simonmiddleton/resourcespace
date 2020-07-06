@@ -10,7 +10,7 @@ function HookAdobe_linkViewBefore_footer_always()
         ||
         !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
-        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         )
         {
         return false;

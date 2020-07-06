@@ -31,7 +31,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $lang, $upload_then_process, $offline_job_queue, $userref;
 
     $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }
@@ -3153,7 +3153,7 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
 
     global $userref;
     $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }

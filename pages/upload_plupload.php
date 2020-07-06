@@ -585,7 +585,7 @@ if ($_FILES)
                             {
                             # Upload an alternative file 
                             $resource_data = get_resource_data($alternative);
-                            if($resource_data["lock_user"] != 0 && $resource_data["lock_user"] != $userref)
+                            if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
                                 {
                                 $error = get_resource_lock_message($resource_data["lock_user"]);
                                 die('{"jsonrpc" : "2.0", "error" : {"code": 111, "message": "' . $error  . '"}, "id" : "id"}');

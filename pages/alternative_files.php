@@ -44,7 +44,7 @@ $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 # Not allowed to edit this resource?
 if (!($editaccess || checkperm('A')) && $ref>0) {exit ("Permission denied.");}
 
-if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
     $error = get_resource_lock_message($resource["lock_user"]);
     http_response_code(403);
