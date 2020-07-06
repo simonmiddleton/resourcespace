@@ -3551,8 +3551,10 @@ function get_sysvar($name, $default=false)
         {
         return $sysvars[$name];
         }
-    // Value not set, return default
-    return $default;
+
+    // Load from db or return default
+    $name=escape_check($name);
+    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
     }
 
 /**
