@@ -5527,12 +5527,18 @@ function update_disk_usage_cron()
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
 	}
 
+/**
+ * Returns the total disk space used by all resources on the system
+ *
+ * @return int  
+ */
 function get_total_disk_usage()
-	{
-	# Returns sum of all resource disk usage
-	global $fstemplate_alt_threshold;
-	return sql_value("select sum(disk_usage) value from resource where ref>'$fstemplate_alt_threshold'",0);
-	}
+    {
+    # Returns sum of all resource disk usage
+    global $fstemplate_alt_threshold;
+    $used = sql_value("select sum(disk_usage) value from resource where ref>'$fstemplate_alt_threshold'",0);
+    return (int)$used;
+    }
 
 function overquota()
 	{
