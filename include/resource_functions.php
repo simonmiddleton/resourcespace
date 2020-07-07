@@ -405,9 +405,16 @@ function get_resource_data($ref,$cache=true)
         }
     }
 
+/**
+* Updates $resource with the name/value pairs in $data - this relates to the resource table column, not metadata.
+*
+* @param  int  $resource   ID of resource
+* @param  array  $data     Array of data to be applied to resource
+* 
+* @return boolean
+*/
 function put_resource_data($resource,$data)
     {   
-    // Updates $resource with the name/value pairs in $data - this relates to the resource table column, not metadata.
     global $edit_contributed_by;
 
     // Check access
@@ -2969,16 +2976,23 @@ function get_resource_ref_range($lower,$higher)
 	# Returns an array of resource references in the range $lower to $upper.
 	return sql_array("select ref value from resource where ref>='$lower' and ref<='$higher' and archive=0 order by ref",0);
 	}
-	
+
+/**
+*  Create a new resource, copying all data from the resource with reference $from.
+*  Note this copies only the data and not any attached file. It's very unlikely the
+*  same file would be in the system twice, however users may want to clone an existing resource
+*  to avoid reentering data if the resource is very similar.
+*  If $resource_type if specified then the resource type for the new resource will be set to $resource_type
+*  rather than simply copied from the $from resource.
+*
+* @param  int    $from            ID of resource
+* @param  mixed  $resource_type   ID of resource type
+* 
+* @return void
+*/
 function copy_resource($from,$resource_type=-1)
 	{
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
-	# Create a new resource, copying all data from the resource with reference $from.
-	# Note this copies only the data and not any attached file. It's very unlikely the
-	# same file would be in the system twice, however users may want to clone an existing resource
-	# to avoid reentering data if the resource is very similar.
-	# If $resource_type if specified then the resource type for the new resource will be set to $resource_type
-	# rather than simply copied from the $from resource.
     global $userref;
     global $always_record_resource_creator, $upload_then_edit;
     
@@ -3684,6 +3698,12 @@ function write_metadata($path, $ref, $uniqid="")
         }
     }
 
+/**
+* Delete Exif temp file
+*
+* @param  string  $tmpfile   Exif temp file to be deleted
+*
+*/    
 function delete_exif_tmpfile($tmpfile)
     {
     if(file_exists($tmpfile)){unlink ($tmpfile);}
@@ -4132,7 +4152,16 @@ function notify_user_contributed_submitted($refs,$collection=0)
 			message_add($message_users,$notificationmessage,$templatevars['url'],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_RESOURCE,(is_array($refs)?$refs[0]:$refs));
 			}
 		}
-	}
+    }
+    
+/**
+* Send notifications when resources are moved from "User Contributed - Pending Review" to "User Contributed - Pending Submission"
+*
+* @param  array|int  $refs    ID of resource(s)
+* @param  mixed $collection   ID of collection
+* 
+* @return boolean
+*/
 function notify_user_contributed_unsubmitted($refs,$collection=0)
 	{
 	// Send notifications when resources are moved from "User Contributed - Pending Review"	to "User Contributed - Pending Submission"
@@ -4893,15 +4922,22 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     return $gotmatch;
     }
 
+/**
+* In the given filter string, does name/value match?
+* Returns:
+* 0 = no match for name
+* 1 = matched name but value was not present
+* 2 = matched name and value was correct
+*
+* @param  string  $filter   Sring to for which filtering is to be applied
+* @param  string  $name     Name to match
+* @param  string  $value    Value to match
+* 
+* @return int
+*/
 function filter_match($filter,$name,$value)
 	{
-	# In the given filter string, does name/value match?
-	# Returns:
-	# 0 = no match for name
-	# 1 = matched name but value was not present
-    # 2 = matched name and value was correct
-
-	$s=explode(";",$filter);
+    $s=explode(";",$filter);
 	foreach ($s as $condition)
 		{
 		$s=explode("=",$condition);
@@ -5534,7 +5570,6 @@ function update_disk_usage_cron()
  */
 function get_total_disk_usage()
     {
-    # Returns sum of all resource disk usage
     global $fstemplate_alt_threshold;
     $used = sql_value("select sum(disk_usage) value from resource where ref>'$fstemplate_alt_threshold'",0);
     return (int)$used;
@@ -5997,9 +6032,14 @@ function can_share_resource($ref, $access="")
 	return true;	
 	}
 
+/**
+* Delete all usergroup specific access to resource $ref
+*
+* @param  int  $ref   ID of resource
+* 
+*/
 function delete_resource_custom_access_usergroups($ref)
         {
-        # delete all usergroup specific access to resource $ref
         sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
         }
 
@@ -7121,14 +7161,20 @@ function get_preview_quality($size)
     return $preview_quality;
     }
     
-
+/**
+* Return an array of resource references that are related to resource $ref
+*
+* @param  int  $ref   ID of resource
+* 
+* @return array
+*/
 function get_related_resources($ref)
     {
-    # Return an array of resource references that are related to resource $ref
     return sql_array("select related value from resource_related where resource='" . escape_check($ref) . "' union select resource value from resource_related where related='" . escape_check($ref) . "'");
     }
 
-    function get_field_options($ref,$nodeinfo = false)
+
+function get_field_options($ref,$nodeinfo = false)
     {
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
@@ -7553,9 +7599,20 @@ function payment_set_complete($collection,$emailconfirmation="")
     return sql_array("select ref as value from resource_type_field where keywords_index=1","schema");
     }
 
+/**
+* Gets all metadata fields, optionally for a specified array of resource types 
+*
+* @param  array    $restypes           Optional array of resource types to check
+* @param  string   $field_order_by     Order by column
+* @param  string   $field_sort         Sort order
+* @param  string   $find               Parameter value to search for
+* @param  array    $fieldtypes         List of field types to include
+* @param  boolean  $include_inactive   Should inactive resources be checked, default is false
+* 
+* @return array
+*/
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
-    // Gets all metadata fields, optionally for a specified array of resource types 
     $conditionsql="";
     if(is_array($restypes))
         {
