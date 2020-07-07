@@ -1202,8 +1202,6 @@ function set_resource_defaults($ref, array $specific_fields = array())
     return true;
     }
 
-
-if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection,$editsearch = array())
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
@@ -1893,7 +1891,7 @@ function save_resource_data_multi($collection,$editsearch = array())
     if (count($errors)==0) {return true;} else {return $errors;}
     
 	}
-}
+
 
 function append_field_value($field_data,$new_value,$existing_value)
 	{
@@ -1916,7 +1914,6 @@ function append_field_value($field_data,$new_value,$existing_value)
 	return $val;
 	}
 
-if (!function_exists("remove_keyword_mappings")){
 function remove_keyword_mappings($ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
 	{
 	# Removes one instance of each keyword->resource mapping for each occurrence of that
@@ -1940,7 +1937,7 @@ function remove_keyword_mappings($ref,$string,$resource_type_field,$partial_inde
 		remove_keyword_from_resource($ref,$keywords[$n],$resource_type_field,$optional_column='',$optional_value='',false, $kwpos);
 		}	
 	}
-}
+
 
 function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$optional_column='',$optional_value='',$normalized=false, $position='')
     {
@@ -1970,7 +1967,6 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
 
 
 
-if(!function_exists('add_keyword_mappings')) {
 function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
     {
     /* For each instance of a keyword in $string, add a keyword->resource mapping.
@@ -2005,7 +2001,7 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
         }
 
     }
-}
+
 
 function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
@@ -2332,7 +2328,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     return true;
     }
 
-if (!function_exists("email_resource")){	
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
 	{
 	# Attempt to resolve all users in the string $userlist to user references.
@@ -2464,7 +2459,6 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 	# Return an empty string (all OK).
 	return "";
 	}
-}
 
 function delete_resource($ref)
 	{
@@ -2655,7 +2649,6 @@ function get_resource_type_field($field)
         }
     }
 
-if (!function_exists('get_resource_field_data')) {
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
@@ -2819,7 +2812,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }   
     return $return;
     }
-}
+
 
 function get_resource_field_data_batch($refs)
     {
@@ -3975,7 +3968,6 @@ function save_alternative_file($resource,$ref)
 	sql_query("update resource_alt_files set name='" . getvalescaped("name","") . "',description='" . getvalescaped("description","") . "',alt_type='" . getvalescaped("alt_type","") . "' $sql where resource='$resource' and ref='$ref'");
     	}
 	
-if (!function_exists("user_rating_save")){	
 function user_rating_save($userref,$ref,$rating)
 	{
 	# Save a user rating for a given resource
@@ -4043,7 +4035,7 @@ function user_rating_save($userref,$ref,$rating)
 	sql_query("update resource set user_rating='$average',user_rating_total='$total',user_rating_count='$count' where ref='$ref'");
 		
 	}
-}
+
 
 function process_notify_user_contributed_submitted($ref,$htmlbreak)
 	{
@@ -4450,7 +4442,6 @@ function add_field_option($field,$option)
 	return true;
 	}
 
-if (!function_exists("get_resource_access")){	
 function get_resource_access($resource)
 	{
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
@@ -4671,7 +4662,7 @@ function get_resource_access($resource)
 		
 	return (int) $access;
 	}
-}
+
 	
 function get_custom_access_user($resource,$user)
 	{
@@ -4689,7 +4680,6 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	return true;
 	}
 
-if (!function_exists("resource_download_allowed")){
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
 	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach;
@@ -4768,7 +4758,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 		}
 	
 	}
-}
+
 
 function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
 	{
@@ -5362,7 +5352,6 @@ function get_resource_files($ref,$includeorphan=false){
     return array_unique($filearray);
 }
 
-if (!function_exists("reindex_resource")){
 function reindex_resource($ref)
 	{
 	global $index_contributed_by, $index_resource_type,$FIXED_LIST_FIELD_TYPES;
@@ -5413,7 +5402,7 @@ function reindex_resource($ref)
 	
 	hook("afterreindexresource","all",array($ref));
 	}
-}
+
 
 function get_page_count($resource,$alternative=-1)
     {
@@ -5794,7 +5783,6 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
         return $k;
         }
 
-if(!function_exists("get_resource_external_access")){
 function get_resource_external_access($resource)
 	{
 	# Return all external access given to a resource 
@@ -5807,7 +5795,7 @@ function get_resource_external_access($resource)
     
     return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' $condition group by access_key,access,expires,collection,usergroup order by maxdate");
 	}
-}
+
         
 function delete_resource_access_key($resource,$access_key)
     {
@@ -6965,32 +6953,30 @@ function filter_check($filterid,$nodes)
     }
 
 
-if (!function_exists("update_resource_keyword_hitcount")){  
-    function update_resource_keyword_hitcount($resource,$search)
+function update_resource_keyword_hitcount($resource,$search)
+    {
+    # For the specified $resource, increment the hitcount for each matching keyword in $search
+    # This is done into a temporary column first (new_hit_count) so existing results are not affected.
+    # copy_hitcount_to_live() is then executed at a set interval to make this data live.
+    $keywords=split_keywords($search);
+    $keys=array();
+    for ($n=0;$n<count($keywords);$n++)
         {
-        # For the specified $resource, increment the hitcount for each matching keyword in $search
-        # This is done into a temporary column first (new_hit_count) so existing results are not affected.
-        # copy_hitcount_to_live() is then executed at a set interval to make this data live.
-        $keywords=split_keywords($search);
-        $keys=array();
-        for ($n=0;$n<count($keywords);$n++)
+        $keyword=$keywords[$n];
+        if (strpos($keyword,":")!==false)
             {
-            $keyword=$keywords[$n];
-            if (strpos($keyword,":")!==false)
-                {
-                $k=explode(":",$keyword);
-                $keyword=$k[1];
-                }
-            $found=resolve_keyword($keyword);
-            if ($found!==false) {$keys[]=resolve_keyword($keyword);}
-            }   
-        if (count($keys)>0)
-            {
-            // Get all nodes matching these keywords
-            $nodes = get_nodes_from_keywords($keys);
-            update_resource_node_hitcount($resource,$nodes);
-            sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
+            $k=explode(":",$keyword);
+            $keyword=$k[1];
             }
+        $found=resolve_keyword($keyword);
+        if ($found!==false) {$keys[]=resolve_keyword($keyword);}
+        }   
+    if (count($keys)>0)
+        {
+        // Get all nodes matching these keywords
+        $nodes = get_nodes_from_keywords($keys);
+        update_resource_node_hitcount($resource,$nodes);
+        sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
         }
     }
         
@@ -7008,7 +6994,6 @@ function copy_hitcount_to_live()
     sql_query("update resource_node set hit_count=new_hit_count");
     }
 
-if(!function_exists("get_image_sizes")){
 function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
     # Returns a table of available image sizes for resource $ref. The standard image sizes are translated using $lang. Custom image sizes are i18n translated.
@@ -7111,7 +7096,6 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
         }
     return $return;
     }
-}
 
 
 function get_preview_quality($size)

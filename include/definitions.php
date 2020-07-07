@@ -333,3 +333,10 @@ DEFINE ("MESSAGE_DEFAULT_TTL_SECONDS",60 * 60 * 24 * 7);		// 7 days
 // ----------------------------------------------
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX','!deprecated');
 define('MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE',"-1,,!deprecated\n");
+
+# For str_highlight ().
+define('STR_HIGHLIGHT_SIMPLE', 1);
+define('STR_HIGHLIGHT_WHOLEWD', 2);
+define('STR_HIGHLIGHT_CASESENS', 4);
+define('STR_HIGHLIGHT_STRIPLINKS', 8);
+

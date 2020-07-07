@@ -276,7 +276,6 @@ function setup_user($userdata)
     }
     
 
-if (!function_exists("get_users")){     
 /**
  * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
  *
@@ -344,9 +343,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     return $r;
-
-}
-}   
+    }   
 
 /**
  * Returns all the users who have the permission $permission.
@@ -491,7 +488,6 @@ function get_usergroup($ref)
     }
 }
 
-if (!function_exists("get_user")){
 /**
  * Return the user group record matching $ref
  *
@@ -510,9 +506,7 @@ function get_user($ref)
     # Return a user's credentials.
     if (count($udata_cache[$ref])>0) {return $udata_cache[$ref][0];} else {return false;}
     }
-}
-    
-if(!function_exists('save_user')){
+
 /**
 * Function used to update or delete a user.
 * Note: data is taken from the submitted form
@@ -664,7 +658,7 @@ function save_user($ref)
 
     return true;
     }
-}
+
 
 /**
  * E-mail the user the welcome message on account creation.
@@ -699,7 +693,6 @@ function email_user_welcome($email,$username,$password,$usergroup)
     send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
     }
 
-if (!function_exists("email_reset_link")){
 function email_reset_link($email,$newuser=false)
     {
     debug("password_reset - checking for email: " . $email);
@@ -754,9 +747,7 @@ function email_reset_link($email,$newuser=false)
     
     return true;
     }
-}
 
-if (!function_exists("auto_create_user_account")){
 /**
  * Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
  *
@@ -940,7 +931,6 @@ function auto_create_user_account($hash="")
 
     return true;
     }
-} //end function replace hook
 
 
 /**
@@ -1090,9 +1080,6 @@ function get_active_users()
     return sql_query("select u.ref, u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
     }
 
-
-
-if (!function_exists("change_password")){
 /**
  * Sets a new password for the current user.
  *
@@ -1116,8 +1103,7 @@ function change_password($password)
     sql_query("update user set password='$password_hash', password_reset_hash=NULL, login_tries=0, password_last_change=now() where ref='$userref' limit 1");
         return true;
     }
-}
-    
+
 /**
  * Generate a password using the configured settings.
  *
@@ -1920,8 +1906,6 @@ function user_email_exists($email)
     }
 
 
-
-if(!function_exists('resolve_user_emails')) {
 /**
 * Return an array of emails from a list of usernames and email addresses. 
 * with 'key_required' sibling array preserving the intent of internal/external sharing
@@ -1979,7 +1963,7 @@ function resolve_user_emails($user_list)
 
     return $emails_key_required;
     }
-}
+
 
 
 /**

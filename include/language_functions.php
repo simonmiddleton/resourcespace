@@ -2,7 +2,6 @@
 # Language functions
 # Functions for the translation of the application
 
-if (!function_exists("lang_or_i18n_get_translated")) {
 /**
  * Translates field names / values using two methods: First it checks if $text exists in the current $lang (after $text is sanitized and $mixedprefix - one by one if an array - and $suffix are added). If not found in the $lang, it tries to translate $text using the i18n_get_translated function.
  *
@@ -30,9 +29,8 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
         if (isset($return)) {return $return;}
         else {return i18n_get_translated($text);} # Performs an i18n translation (of probably a custom field name / value).
     }
-}
 
-if (!function_exists("i18n_get_translated")) {
+
 /**
  * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
  *
@@ -73,7 +71,7 @@ function i18n_get_translated($text)
     # No default language entry? Then consider this a broken language string and return the string unprocessed.
     if ($default!="") {return $default;} else {return $text;}
     }
-}
+
 
 /**
  * Translates collection names
@@ -146,7 +144,6 @@ function i18n_get_collection_name($mixedcollection, $index="name")
     return htmlspecialchars(i18n_get_translated($name_untranslated, false));
     }
 
-if (!function_exists("i18n_get_indexable")) {
 /**
  * For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
  *
@@ -187,9 +184,8 @@ function i18n_get_indexable($text)
         }    
     return $out;
     }
-}
 
-if (!function_exists("i18n_get_translations")) {
+
 /**
  * For a string in the language format, return all translations as an associative array
  * E.g. "en"->"English translation";
@@ -212,7 +208,7 @@ function i18n_get_translations($value)
     }
     return $return;
     }
-}
+
 
 /**
  * Returns a string with all occurrences of the $mixedplaceholder in $subject replaced with the $mixedreplace.

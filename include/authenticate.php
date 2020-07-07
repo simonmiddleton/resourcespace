@@ -6,7 +6,13 @@ $autologgedout=false;
 $nocookies=false;
 $is_authenticated=false;
 
-if (!function_exists("ip_matches")){
+/**
+ * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
+ *
+ * @param  string $ip
+ * @param  string $ip_restrict
+ * @return void
+ */
 function ip_matches($ip, $ip_restrict)
 	{
 	global $system_login;
@@ -41,7 +47,7 @@ function ip_matches($ip, $ip_restrict)
 		}
 	return false;
 	}
-}
+
 
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {

@@ -702,7 +702,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 * Renders sort order functionality as a dropdown box
 *
 */
-if (!function_exists("render_sort_order")){
 function render_sort_order(array $order_fields,$default_sort_order)
     {
     global $order_by, $baseurl_short, $lang, $search, $archive, $restypes, $k, $sort, $date_field;
@@ -796,12 +795,11 @@ function render_sort_order(array $order_fields,$default_sort_order)
     <?php
     return;
     }
-}
+
 /**
 * Renders a dropdown option
 * 
 */
-if (!function_exists("render_dropdown_option")){
 function render_dropdown_option($value, $label, array $data_attr = array(), $extra_tag_attributes  = '')
     {
     $result = '<option value="' . $value . '"';
@@ -824,15 +822,10 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
 
     return $result;
     }
-}
+
 
 /**
 * Renders search actions functionality as a dropdown box
-* 
-*/
-if (!function_exists("render_actions")){
-/**
-* Render the unified dropdown actions
 * 
 * @param array   $collection_data  Collection data
 * @param boolean $top_actions      Set to true if actions are to be rendered in the search filter bar (above results)
@@ -1256,7 +1249,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         }
     return;
     }
-}
+
 
 
 /**

@@ -151,7 +151,6 @@ function escape_check_array_values(array $unsafe_array)
     }
 
 
-if (!function_exists("nicedate")) {
 /**
 * Formats a MySQL ISO date
 * 
@@ -216,7 +215,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return $m . " " . $d . " " . $y . $t;
         }
     }
-}
+
 
 /**
  * Redirect to the provided URL using a HTTP header Location directive. Exits after redirect
@@ -1027,7 +1026,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     mail ($email,$subject,$message,$headers);
     }
 
-if (!function_exists("send_mail_phpmailer")){
 /**
  * if ($use_phpmailer==true) this function is used instead.
  * 
@@ -1375,7 +1373,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         }
     hook("aftersendmailphpmailer","",$email);   
 }
-}
+
 
 /**
  *  Log email 
@@ -2133,7 +2131,6 @@ function format_string_more_link($string,$max_words_before_more=-1)
     return $return_value;
     }
 
-if (!function_exists("draw_performance_footer")){
 /**
  * Render a performance footer with metrics.
  *
@@ -2178,7 +2175,7 @@ function draw_performance_footer()
     <?php
     }
     }
-    }
+    
 
 /**
  * Abstracted mysqli_affected_rows()
@@ -2747,32 +2744,6 @@ function emptyiszero($value)
     {
     return ($value !== null && $value !== false && trim($value) !== '');
     }
-
-
-if(!function_exists("array_column")) {    
-/**
- * Add array_column if <PHP 5.5
- *
- * @param  array $array
- * @param  string $column_name
- * @param  string $index_key
- * @return array
- */
-function array_column($array,$column_name,$index_key=null)
-    {
-    if ($index_key == null)
-            {
-            return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
-            }
-            
-    $return=array();
-    foreach($array as $element)
-        {
-        $return[$element[$index_key]] = $element[$column_name];                
-        }
-    return $return;
-    }
-}
 
 
 /**
@@ -3571,8 +3542,6 @@ function get_sysvar($name, $default=false)
  */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
-	# Allow modifications to the hook itself:
-	if(function_exists("hook_modifier") && !hook_modifier($name, $pagename, $params)) return;
 
 	global $hook_cache;
 	if($pagename == '')
@@ -3968,7 +3937,6 @@ function rcRmdir ($path)
     return $success;
     }
     
-if (!function_exists("daily_stat")){    
 /**
  * Update the daily statistics after a loggable event.
  * 
@@ -4009,7 +3977,6 @@ function daily_stat($activity_type,$object_ref)
         sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
         }
     }
-}
 
 /**
  * Returns the current page name minus the extension, e.g. "home" for pages/home.php

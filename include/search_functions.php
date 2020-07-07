@@ -36,7 +36,6 @@ function suggest_refinement($refs,$search)
     return $suggest;
     }
 
-if (!function_exists("get_advanced_search_fields")) {
 function get_advanced_search_fields($archive=false, $hiddenfields="")
     {
     global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
@@ -95,7 +94,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
     # Designated searchable date_field is already present in the lost of advanced search metadata fields        }
     return $return;
     }
-}
+
 
 function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     {
@@ -469,7 +468,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         return $search;
     }
 
-if (!function_exists("refine_searchstring")){
 function refine_searchstring($search)
     {
     # This function solves several issues related to searching.
@@ -547,7 +545,7 @@ function refine_searchstring($search)
     $search=str_replace(",-"," -",$search); // support the omission search
     return $search;
     }
-}
+
 
 function compile_search_actions($top_actions)
     {
@@ -1833,180 +1831,176 @@ function get_filter_sql($filterid)
     }
 
 
-if (!function_exists("split_keywords")){
-    function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
+function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
+    {
+    # Takes $search and returns an array of individual keywords.
+    global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
+
+    if ($index && $is_date)
         {
-        # Takes $search and returns an array of individual keywords.
-        global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
-    
-        if ($index && $is_date)
+        # Date handling... index a little differently to support various levels of date matching (Year, Year+Month, Year+Month+Day).
+        $s=explode("-",$search);
+        if (count($s)>=3)
             {
-            # Date handling... index a little differently to support various levels of date matching (Year, Year+Month, Year+Month+Day).
-            $s=explode("-",$search);
-            if (count($s)>=3)
-                {
-                return (array($s[0],$s[0] . "-" . $s[1],$search));
-                }
-            else if (is_array($search))
-                {
-                return $search;
-                }
-            else
-                {
-                return array($search);
-                }
+            return (array($s[0],$s[0] . "-" . $s[1],$search));
             }
-            
-        # Remove any real / unescaped lf/cr
-        $search=str_replace("\r"," ",$search);
-        $search=str_replace("\n"," ",$search);
-        $search=str_replace("\\r"," ",$search);
-        $search=str_replace("\\n"," ",$search);
-        
-        if($is_html || (substr($search,0,1) == "<" && substr($search,-1,1) == ">"))
+        else if (is_array($search))
             {
-            // String can't be in encoded format at this point or string won't be indexed correctly.
-            $search=html_entity_decode($search);
-            if($index)
-                {
-                // Clean up html for indexing
-                // Allow indexing of anchor text
-                $allowed_tags = array_merge(array("a"),$permitted_html_tags);
-                $allowed_attributes = array_merge(array("href"),$permitted_html_attributes);
-                $search=strip_tags_and_attributes($search,$allowed_tags,$allowed_attributes);
-                
-                // Get rid of the actual html tags and attribute ids to prevent indexing these
-                foreach ($allowed_tags as $allowed_tag)
-                    {
-                    $search=str_replace(array("<" . $allowed_tag . ">","<" . $allowed_tag,"</" . $allowed_tag)," ",$search);
-                    }
-                foreach ($allowed_attributes as $allowed_attribute)
-                    {
-                    $search=str_replace($allowed_attribute . "="," ",$search);
-                    }
-                // Remove any left over tag parts
-                $search=str_replace(array(">", "<","="), " ",$search);
-                }
-            }
-    
-        $ns=trim_spaces($search);
-    
-        if ($index==false && strpos($ns,":")!==false) # special 'constructed' query type
-            {   
-            if($keepquotes)
-                {
-                preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
-                $return=trim_array($matches[0],$config_trimchars . ",");
-                }
-            elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
-                {
-                $return=explode(",",$ns);
-                }
-            else
-                {
-                $ns=cleanse_string($ns,false,!$index,$is_html);
-                $return=explode(" ",$ns);
-                }
-            // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
-            return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+            return $search;
             }
         else
             {
-            # split using spaces and similar chars (according to configured whitespace characters)
-            if(!$index && $keepquotes && strpos($ns,"\"")!==false)
-                {
-                preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
-                
-                $splits=$matches[0];
-                $ns=array();
-                foreach ($splits as $split)
-                    {
-                    if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
-                        {
-                        $split=explode(",",$split);
-                        $ns = array_merge($ns,$split);
-                        }
-                    else
-                        {
-                        $ns[] = $split;   
-                        }
-                    }
-                
-            
-                }
-            else
-                { 
-                # split using spaces and similar chars (according to configured whitespace characters)
-                $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
-                }
-            
-            
-            $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
-            
-    //print_r($ns) . "<br /><br />";
-            if ($index && $partial_index) {
-                return add_partial_index($ns);
+            return array($search);
             }
-            return $ns;
-            }
-    
         }
+        
+    # Remove any real / unescaped lf/cr
+    $search=str_replace("\r"," ",$search);
+    $search=str_replace("\n"," ",$search);
+    $search=str_replace("\\r"," ",$search);
+    $search=str_replace("\\n"," ",$search);
+    
+    if($is_html || (substr($search,0,1) == "<" && substr($search,-1,1) == ">"))
+        {
+        // String can't be in encoded format at this point or string won't be indexed correctly.
+        $search=html_entity_decode($search);
+        if($index)
+            {
+            // Clean up html for indexing
+            // Allow indexing of anchor text
+            $allowed_tags = array_merge(array("a"),$permitted_html_tags);
+            $allowed_attributes = array_merge(array("href"),$permitted_html_attributes);
+            $search=strip_tags_and_attributes($search,$allowed_tags,$allowed_attributes);
+            
+            // Get rid of the actual html tags and attribute ids to prevent indexing these
+            foreach ($allowed_tags as $allowed_tag)
+                {
+                $search=str_replace(array("<" . $allowed_tag . ">","<" . $allowed_tag,"</" . $allowed_tag)," ",$search);
+                }
+            foreach ($allowed_attributes as $allowed_attribute)
+                {
+                $search=str_replace($allowed_attribute . "="," ",$search);
+                }
+            // Remove any left over tag parts
+            $search=str_replace(array(">", "<","="), " ",$search);
+            }
+        }
+
+    $ns=trim_spaces($search);
+
+    if ($index==false && strpos($ns,":")!==false) # special 'constructed' query type
+        {   
+        if($keepquotes)
+            {
+            preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            $return=trim_array($matches[0],$config_trimchars . ",");
+            }
+        elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
+            {
+            $return=explode(",",$ns);
+            }
+        else
+            {
+            $ns=cleanse_string($ns,false,!$index,$is_html);
+            $return=explode(" ",$ns);
+            }
+        // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
+        return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+        }
+    else
+        {
+        # split using spaces and similar chars (according to configured whitespace characters)
+        if(!$index && $keepquotes && strpos($ns,"\"")!==false)
+            {
+            preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            
+            $splits=$matches[0];
+            $ns=array();
+            foreach ($splits as $split)
+                {
+                if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
+                    {
+                    $split=explode(",",$split);
+                    $ns = array_merge($ns,$split);
+                    }
+                else
+                    {
+                    $ns[] = $split;   
+                    }
+                }
+            
+        
+            }
+        else
+            { 
+            # split using spaces and similar chars (according to configured whitespace characters)
+            $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
+            }
+        
+        
+        $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
+        
+//print_r($ns) . "<br /><br />";
+        if ($index && $partial_index) {
+            return add_partial_index($ns);
+        }
+        return $ns;
+        }
+
     }
 
-if (!function_exists("cleanse_string")){
 function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_html=false)
+    {
+    # Removes characters from a string prior to keyword splitting, for example full stops
+    # Also makes the string lower case ready for indexing.
+    global $config_separators;
+    $separators=$config_separators;
+
+    // Replace some HTML entities with empty space
+    // Most of them should already be in $config_separators
+    // but others, like &shy; don't have an actual character that we can copy and paste
+    // to $config_separators
+    $string = htmlentities($string, null, 'UTF-8');
+    $string = str_replace('&nbsp;', ' ', $string);
+    $string = str_replace('&shy;', ' ', $string);
+    $string = str_replace('&lsquo;', ' ', $string);
+    $string = str_replace('&rsquo;', ' ', $string);
+    $string = str_replace('&ldquo;', ' ', $string);
+    $string = str_replace('&rdquo;', ' ', $string);
+    $string = str_replace('&ndash;', ' ', $string);
+
+    // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
+    $string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
+    
+    if ($preserve_hyphen)
         {
-        # Removes characters from a string prior to keyword splitting, for example full stops
-        # Also makes the string lower case ready for indexing.
-        global $config_separators;
-        $separators=$config_separators;
-
-        // Replace some HTML entities with empty space
-        // Most of them should already be in $config_separators
-        // but others, like &shy; don't have an actual character that we can copy and paste
-        // to $config_separators
-        $string = htmlentities($string, null, 'UTF-8');
-        $string = str_replace('&nbsp;', ' ', $string);
-        $string = str_replace('&shy;', ' ', $string);
-        $string = str_replace('&lsquo;', ' ', $string);
-        $string = str_replace('&rsquo;', ' ', $string);
-        $string = str_replace('&ldquo;', ' ', $string);
-        $string = str_replace('&rdquo;', ' ', $string);
-        $string = str_replace('&ndash;', ' ', $string);
-
-        // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
-        $string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
-        
-        if ($preserve_hyphen)
+        # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
+        if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
             {
-            # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
-            if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
-                {
-                    $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
-                }
+                $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
             }
-        if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false) 
-                {
-                // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
-                $separators=array_diff($separators,array("!")); 
-                }
-                
-        if ($preserve_separators)
-                {
-                return mb_strtolower(trim_spaces(str_replace($separators," ",$string)),'UTF-8');
-                }
-        else
-                {
-                # Also strip out the separators used when specifying multiple field/keyword pairs (comma and colon)
-                $s=$separators;
-                $s[]=",";
-                $s[]=":";
-                return mb_strtolower(trim_spaces(str_replace($s," ",$string)),'UTF-8');
-                }
         }
-}
+    if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false) 
+            {
+            // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
+            $separators=array_diff($separators,array("!")); 
+            }
+            
+    if ($preserve_separators)
+            {
+            return mb_strtolower(trim_spaces(str_replace($separators," ",$string)),'UTF-8');
+            }
+    else
+            {
+            # Also strip out the separators used when specifying multiple field/keyword pairs (comma and colon)
+            $s=$separators;
+            $s[]=",";
+            $s[]=":";
+            return mb_strtolower(trim_spaces(str_replace($s," ",$string)),'UTF-8');
+            }
+    }
 
-if (!function_exists("resolve_keyword")){
+
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     {
     debug_function_call("resolve_keyword", func_get_args());
@@ -2039,7 +2033,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         }
     return $return;
     }
-}
+
 
 function add_partial_index($keywords)
     {
@@ -2077,133 +2071,127 @@ function add_partial_index($keywords)
     }
 
 
-if (!function_exists("highlightkeywords")){
-    function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
-        {
-        # do not highlight if the field is not indexed, so it is clearer where results came from.   
-        if ($keywords_index!=1){return $text;}
-    
-        # Highlight searched keywords in $text
-        # Optional - depends on $highlightkeywords being set in config.php.
-        global $highlightkeywords;
-        # Situations where we do not need to do this.
-        if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
-    
-    
-            # Generate the cache of search keywords (no longer global so it can test against particular fields.
-            # a search is a small array so I don't think there is much to lose by processing it.
-            $hlkeycache=array();
-            $wildcards_found=false;
-            $s=split_keywords($search);
-            for ($n=0;$n<count($s);$n++)
-                    {
-                    if (strpos($s[$n],":")!==false) {
-                            $c=explode(":",$s[$n]);
-                            # only add field specific keywords
-                            if($field_name!="" && $c[0]==$field_name){
-                                    $hlkeycache[]=$c[1];            
-                            }   
-                    }
-                    # else add general keywords
-                    else {
-                            $keyword=$s[$n];
-                
-                            global $stemming;
-                            if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
-                                {
-                                $keyword=GetStem($keyword);
-                                }
-                            
-                            if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
-                            $hlkeycache[]=$keyword;
-                    }   
-                    }
+function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
+    {
+    # do not highlight if the field is not indexed, so it is clearer where results came from.   
+    if ($keywords_index!=1){return $text;}
+
+    # Highlight searched keywords in $text
+    # Optional - depends on $highlightkeywords being set in config.php.
+    global $highlightkeywords;
+    # Situations where we do not need to do this.
+    if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
+
+
+        # Generate the cache of search keywords (no longer global so it can test against particular fields.
+        # a search is a small array so I don't think there is much to lose by processing it.
+        $hlkeycache=array();
+        $wildcards_found=false;
+        $s=split_keywords($search);
+        for ($n=0;$n<count($s);$n++)
+                {
+                if (strpos($s[$n],":")!==false) {
+                        $c=explode(":",$s[$n]);
+                        # only add field specific keywords
+                        if($field_name!="" && $c[0]==$field_name){
+                                $hlkeycache[]=$c[1];            
+                        }   
+                }
+                # else add general keywords
+                else {
+                        $keyword=$s[$n];
             
-        # Parse and replace.
-        return str_highlight($text, $hlkeycache, $str_highlight_options);
+                        global $stemming;
+                        if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
+                            {
+                            $keyword=GetStem($keyword);
+                            }
+                        
+                        if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
+                        $hlkeycache[]=$keyword;
+                }   
+                }
+        
+    # Parse and replace.
+    return str_highlight($text, $hlkeycache, $str_highlight_options);
+    }
+ 
+
+function str_highlight($text, $needle, $options = null, $highlight = null)
+    {
+    /*
+    Sometimes the text can contain HTML entities and can break the hilghlighting feature
+    Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
+    */
+    $text = htmlspecialchars_decode($text);
+
+    // If text contains HTML tags then ignore them
+    if ($text != strip_tags($text))
+        {
+        $options = $options & STR_HIGHLIGHT_STRIPLINKS;
+        }
+
+    # Thanks to Aidan Lister <aidan@php.net>
+    # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
+    # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
+    # http://aidanlister.com/repos/license/
+
+    $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
+    $text=str_replace("#zwspace;","♣",$text);
+    
+    // Default highlighting
+    if ($highlight === null) {
+        $highlight = '||<||\1||>||';
+    }
+    
+    // Select pattern to use
+    if ($options & STR_HIGHLIGHT_SIMPLE) {
+        $pattern = '#(%s)#';
+        $sl_pattern = '#(%s)#';
+    } else {
+        $pattern = '#(?!<.*?)(%s)(?![^<>]*?>)#';
+        $sl_pattern = '#<a\s(?:.*?)>(%s)</a>#';
+    }
+    
+    // Case sensitivity
+    if (!($options & STR_HIGHLIGHT_CASESENS)) {
+        $pattern .= 'i';
+        $sl_pattern .= 'i';
+    }
+    
+    $needle = (array) $needle;
+
+    usort($needle, "sorthighlights");
+
+    foreach ($needle as $needle_s) {
+        if (strlen($needle_s) > 0) {
+            $needle_s = preg_quote($needle_s);
+            $needle_s = str_replace("#","\\#",$needle_s);
+        
+            // Escape needle with optional whole word check
+            if ($options & STR_HIGHLIGHT_WHOLEWD) {
+                $needle_s = '\b' . $needle_s . '\b';
+            }
+        
+            // Strip links
+            if ($options & STR_HIGHLIGHT_STRIPLINKS) {
+                $sl_regex = sprintf($sl_pattern, $needle_s);
+                $text = preg_replace($sl_regex, '\1', $text);
+            }
+        
+            $regex = sprintf($pattern, $needle_s);
+            $text = preg_replace($regex, $highlight, $text);
         }
     }
-    # These lines go with str_highlight (next).
-    define('STR_HIGHLIGHT_SIMPLE', 1);
-    define('STR_HIGHLIGHT_WHOLEWD', 2);
-    define('STR_HIGHLIGHT_CASESENS', 4);
-    define('STR_HIGHLIGHT_STRIPLINKS', 8);
-    
-    function str_highlight($text, $needle, $options = null, $highlight = null)
-        {
-        /*
-        Sometimes the text can contain HTML entities and can break the hilghlighting feature
-        Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
-        */
-        $text = htmlspecialchars_decode($text);
-    
-        // If text contains HTML tags then ignore them
-        if ($text != strip_tags($text))
-            {
-            $options = $options & STR_HIGHLIGHT_STRIPLINKS;
-            }
-    
-        # Thanks to Aidan Lister <aidan@php.net>
-        # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
-        # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
-        # http://aidanlister.com/repos/license/
-    
-        $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
-        $text=str_replace("#zwspace;","♣",$text);
-        
-        // Default highlighting
-        if ($highlight === null) {
-            $highlight = '||<||\1||>||';
-        }
-        
-        // Select pattern to use
-        if ($options & STR_HIGHLIGHT_SIMPLE) {
-            $pattern = '#(%s)#';
-            $sl_pattern = '#(%s)#';
-        } else {
-            $pattern = '#(?!<.*?)(%s)(?![^<>]*?>)#';
-            $sl_pattern = '#<a\s(?:.*?)>(%s)</a>#';
-        }
-        
-        // Case sensitivity
-        if (!($options & STR_HIGHLIGHT_CASESENS)) {
-            $pattern .= 'i';
-            $sl_pattern .= 'i';
-        }
-        
-        $needle = (array) $needle;
-    
-        usort($needle, "sorthighlights");
-    
-        foreach ($needle as $needle_s) {
-            if (strlen($needle_s) > 0) {
-                $needle_s = preg_quote($needle_s);
-                $needle_s = str_replace("#","\\#",$needle_s);
-            
-                // Escape needle with optional whole word check
-                if ($options & STR_HIGHLIGHT_WHOLEWD) {
-                    $needle_s = '\b' . $needle_s . '\b';
-                }
-            
-                // Strip links
-                if ($options & STR_HIGHLIGHT_STRIPLINKS) {
-                    $sl_regex = sprintf($sl_pattern, $needle_s);
-                    $text = preg_replace($sl_regex, '\1', $text);
-                }
-            
-                $regex = sprintf($pattern, $needle_s);
-                $text = preg_replace($regex, $highlight, $text);
-            }
-        }
-        $text=str_replace("♠","_",$text);
-        $text=str_replace("♣","#zwspace;",$text);
-    
-        # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-        $text=str_replace("||<||",'<span class="highlight">',$text);
-        $text=str_replace("||>||",'</span>',$text);
-    
-        return $text;
-        }
+    $text=str_replace("♠","_",$text);
+    $text=str_replace("♣","#zwspace;",$text);
+
+    # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
+    $text=str_replace("||<||",'<span class="highlight">',$text);
+    $text=str_replace("||>||",'</span>',$text);
+
+    return $text;
+    }
         
 function sorthighlights($a, $b)
     {

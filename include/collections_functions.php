@@ -2,7 +2,6 @@
 # Collections functions
 # Functions to manipulate collections
 
-if (!function_exists("get_user_collections")){
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
 	{
 	global $usergroup;
@@ -114,9 +113,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 
 	return $return;
 	}
-}	
 
-if (!function_exists("get_collection")){
 /**
  * Returns all data for collection $ref.
  *
@@ -165,7 +162,6 @@ function get_collection($ref)
 	
 	return false;
 	}
-}
 
 /**
  * Returns all resources in collection
@@ -451,7 +447,6 @@ function set_user_collection($user,$collection)
 	$usercollection=$collection;
 	}
 	
-if (!function_exists("create_collection")){	
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
     debug_function_call("create_collection", func_get_args());
@@ -488,7 +483,6 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 	index_collection($ref);	
 	return $ref;
 	}	
-}
 	
 function delete_collection($collection)
 	{
@@ -544,7 +538,6 @@ function refresh_collection_frame($collection="")
         }
     }
 
-if (!function_exists("search_public_collections")){	
 function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows=-1)
 	{
 	global $userref;
@@ -648,7 +641,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort),'',$fetchrows);
 		}
 	}
-}
+
 
 
 function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC", $fetchrows = -1)
@@ -739,7 +732,6 @@ function remove_collection($user,$collection)
 	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
-if (!function_exists("index_collection")){
 function index_collection($ref,$index_string='')
 	{
 	# Update the keywords index for this collection
@@ -779,7 +771,7 @@ function index_collection($ref,$index_string='')
 	// return the number of keywords indexed
 	return $n;
 	}
-}
+
 
 function save_collection($ref, $coldata=array())
 	{
@@ -1048,12 +1040,10 @@ function get_theme_headers($themes=array())
 	return $return;
 	}
 	
-if (!function_exists("themes_comparator")){
 function themes_comparator($a, $b)
 	{
 	return strnatcasecmp(i18n_get_collection_name($a), i18n_get_collection_name($b));
 	}
-}
 
 /**
 * Case insensitive string comparisons using a "natural order" algorithm for collection names
@@ -1081,7 +1071,6 @@ function collections_comparator_desc($a, $b)
 	return strnatcasecmp(i18n_get_collection_name($b), i18n_get_collection_name($a));
 	}		
 
-if (!function_exists("get_themes")){
 /**
  * Get collections linked to featured collcetion categories
  *
@@ -1139,7 +1128,6 @@ function get_themes($themes=array(""),$subthemes=false)
 
 	return $collections;
 	}
-}
 
 /**
  * Returns a list of smart theme headers, which are basically fields with a 'smart theme name' set.
@@ -1219,7 +1207,6 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
     return $return;
     }
 
-if (!function_exists("email_collection")){
 function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd="")
 	{
 	# Attempt to resolve all users in the string $userlist to user references.
@@ -1440,7 +1427,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	# Return an empty string (all OK).
 	return "";
 	}
-}	
+
 
 
 function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="", $sharepwd="")
@@ -1663,7 +1650,6 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 	return array();
 	}
 
-if (!function_exists("allow_multi_edit")){
 /**
  * Returns true or false, can all resources in this collection be edited by the user?
  *
@@ -1708,9 +1694,9 @@ function allow_multi_edit($collection,$collectionid = 0)
 	if(hook('denyaftermultiedit', '', array($collection))) { return false; }
 
 	return true;
-	}
-}	
+	}	
 
+    
 /**
  * Returns an array of resource references that can be used as theme category images.
  *
@@ -2042,7 +2028,6 @@ function copy_collection($copied,$current,$remove_existing=false)
 	hook('aftercopycollection','',array($copied,$current));
 	}
 
-if (!function_exists("collection_is_research_request")){
 /**
  * Returns true if a collection is a research request
  *
@@ -2054,10 +2039,9 @@ function collection_is_research_request($collection)
 	{
 	return (sql_value("select count(*) value from research_request where collection='" . escape_check($collection) . "'",0)>0);
 	}
-}	
 
-if (!function_exists("add_to_collection_link")){
-/**
+
+    /**
  * Generates a HTML link for adding a resource to a collection
  *
  * @param  integer  $resource   ID of resource
@@ -2075,18 +2059,16 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
     return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . "return false;\">";
 
     }
-}
 
-if (!function_exists("remove_from_collection_link")){		
+
 function remove_from_collection_link($resource,$search="",$class="")
     {
     # Generates a HTML link for removing a resource to a collection
     global $lang, $pagename;
 
     return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');return false;\">";
-
     }
-}
+
 
 function change_collection_link($collection)
     {
@@ -2094,7 +2076,7 @@ function change_collection_link($collection)
     global $lang;
     return '<a onClick="ChangeCollection('.$collection.',\'\');return false;" href="collections.php?collection='.$collection.'">' . LINK_CARET . $lang["selectcollection"].'</a>';
     }
-if(!function_exists("get_collection_external_access")){
+
 function get_collection_external_access($collection)
 	{
 	# Return all external access given to a collection.
@@ -2107,7 +2089,8 @@ function get_collection_external_access($collection)
 
 	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
-}
+
+
 function delete_collection_access_key($collection,$access_key)
 	{
 	# Get details for log
@@ -2297,12 +2280,10 @@ function remove_all_resources_from_collection($ref){
     sql_query("DELETE FROM external_access_keys WHERE collection='" . escape_check($ref) . "'");
     }	
 
-if (!function_exists("get_home_page_promoted_collections")){
 function get_home_page_promoted_collections()
 	{
 	return sql_query("select collection.ref,collection.name,collection.home_page_publish,collection.home_page_text,collection.home_page_image,resource.thumb_height,resource.thumb_width, resource.resource_type, resource.file_extension from collection left outer join resource on collection.home_page_image=resource.ref where collection.public=1 and collection.home_page_publish=1 order by collection.ref desc");
 	}
-}
 
 
 function is_collection_approved($collection)
@@ -2411,7 +2392,6 @@ function update_collection_user($collection,$newuser)
 	return true;	
 	}
 
-if(!function_exists("compile_collection_actions")){
 /**
 * Helper function for render_actions(). Compiles actions that are normally valid for collections
 * 
@@ -2970,7 +2950,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     return $options;
     }
-}
+
 
 /**
 * Make a filename unique by appending a dupe-string.

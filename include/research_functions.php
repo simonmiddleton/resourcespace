@@ -2,7 +2,6 @@
 # Research functions
 # Functions to accomodate research requests
 
-if (!function_exists("send_research_request")){
 function send_research_request(array $rr_cfields)
 	{
 	# Insert a search request into the requests table.
@@ -78,7 +77,6 @@ function send_research_request(array $rr_cfields)
         message_add($research_notify_users,$notification_message,$templatevars["teamresearchurl"]);
 		}
 	}
-}
 
 function get_research_requests($find="",$order_by="name",$sort="ASC")
 	{
@@ -86,16 +84,13 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 	return sql_query("select *,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r $searchsql order by $order_by $sort");
 	}
 
-if (!function_exists("get_research_request")){
 function get_research_request($ref)
 	{
     $ref = escape_check($ref);
 	$return=sql_query("select *,email,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref='$ref'");
 	return $return[0];
 	}
-}	
 
-if (!function_exists("save_research_request")){	
 function save_research_request($ref)
 	{
 	# Save
@@ -188,19 +183,15 @@ function save_research_request($ref)
 		sql_query("insert into collection_resource(collection,resource) select '$collection',resource from collection_resource where collection='" . getvalescaped("copyexistingref","") . "' and resource not in (select resource from collection_resource where collection='$collection');");
 		}
 	}
-}
 
-if (!function_exists("get_research_request_collection")){	
+
 function get_research_request_collection($ref)
 	{
 	$return=sql_value("select collection value from research_request where ref='$ref'",0);
 	if (($return==0) || (strlen($return)==0)) {return false;} else {return $return;}
 	}
-}	
 
-if (!function_exists("set_research_collection")){
 function set_research_collection($research,$collection)
 	{
 	sql_query("update research_request set collection='$collection' where ref='$research'");
 	}
-}

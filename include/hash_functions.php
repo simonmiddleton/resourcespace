@@ -336,41 +336,6 @@ if (!class_exists('nanoSha2'))
     }
 }
 
-if (!function_exists('str_split'))
-{
-    /**
-     * Splits a string into an array of strings with specified length.
-     * Compatability with older verions of PHP
-     */
-    function str_split($string, $split_length = 1)
-    {
-        $sign = ($split_length < 0) ? -1 : 1;
-        $strlen = strlen($string);
-        $split_length = abs($split_length);
-
-        if (($split_length == 0) || ($strlen == 0)) {
-            $result = false;
-        } elseif ($split_length >= $strlen) {
-            $result[] = $string;
-        } else {
-            $length = $split_length;
-
-            for ($i = 0; $i < $strlen; $i++)
-            {
-                $i = (($sign < 0) ? $i + $length : $i);
-                $result[] = substr($string, $sign*$i, $length);
-                $i--;
-                $i = (($sign < 0) ? $i : $i + $length);
-
-                $length = (($i + $split_length) > $strlen)
-                          ? ($strlen - ($i + 1))
-                          : $split_length;
-            }
-        }
-
-        return $result;
-    }
-}
 
 /**
  * Main routine called from an application using this include.
@@ -396,17 +361,4 @@ if (!function_exists('sha256')) {
     }
 }
 
-// support to give php4 the hash() routine which abstracts this code.
-if (!function_exists('hash'))
-{
-    function hash($algo, $data)
-    {
-        if (empty($algo) || !is_string($algo) || !is_string($data)) {
-            return false;
-        }
 
-        if (function_exists($algo)) {
-            return $algo($data);
-        }
-    }
-}

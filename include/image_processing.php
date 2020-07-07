@@ -11,7 +11,6 @@
 
 include_once 'metadata_functions.php';
 
-if (!function_exists("upload_file")){
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true)
     {
     debug("upload_file(ref = $ref, no_exif = " . ($no_exif ? "TRUE" : "FALSE")  . ",revert = " . ($revert ? "TRUE" : "FALSE")  . ", autorotate = " . ($autorotate ? "TRUE" : "FALSE")  . ", file_path = $file_path, after_upload_processing = " . ($after_upload_processing ? "TRUE" : "FALSE")  . ")");
@@ -556,7 +555,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         }
     
     return true;
-    }}
+    }
 
 function extract_exif_comment($ref,$extension="")
     {
@@ -626,16 +625,7 @@ function extract_exif_comment($ref,$extension="")
         # into uppercase for easier lookup later
         foreach($metalines as $metaline)
             {
-            # Use stripos() if available, but support earlier PHP versions if not.
-            if (function_exists("stripos"))
-                {
-                $pos=stripos($metaline, ": ");
-                }
-            else
-                {
-                $pos=strpos($metaline, ": ");
-                }
-
+            $pos=stripos($metaline, ": ");
             if ($pos) #get position of first ": ", return false if not exist
                 {
                 # add to the associative array, also clean up leading/trailing space & single quote (on windows sometimes)
@@ -2670,7 +2660,6 @@ function check_duplicate_checksum($filepath,$replace_resource){
     return array(); 
 }
 
-if (!function_exists("upload_preview")){
 function upload_preview($ref)
     {       
     hook ("removeannotations","",array($ref));      
@@ -2707,7 +2696,7 @@ function upload_preview($ref)
         }
     
     return true;
-    }}
+    }
 
 /**
 * Extract text from the resource and save to the configured field
