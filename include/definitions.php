@@ -3,6 +3,9 @@
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
 define('SYSTEM_UPGRADE_LEVEL', 12);
 
+// PHP VERSION AND MINIMUM SUPPORTED
+define('PHP_VERSION_SUPPORTED', 50600); // 5.6 is the minimum supported.
+
 // ------------------------- FIELD TYPES -------------------------
 
 define ('FIELD_TYPE_TEXT_BOX_SINGLE_LINE',              0);

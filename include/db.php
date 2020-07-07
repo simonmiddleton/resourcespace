@@ -46,6 +46,9 @@ if ((!isset($suppress_headers) || !$suppress_headers) && !isset($nocache))
 
 set_error_handler("errorhandler");
 
+// Check the PHP version.
+if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your version: " . PHP_VERSION_ID . ", minimum supported: " . PHP_VERSION_SUPPORTED);}
+
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
 if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
