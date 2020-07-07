@@ -4,6 +4,12 @@
 define('SYSTEM_UPGRADE_LEVEL', 12);
 
 // PHP VERSION AND MINIMUM SUPPORTED
+if (!defined('PHP_VERSION_ID'))
+    {
+    // Only needed PHP versions < 5.2.7 - we don't support those versions in the rest of the code but this is the one place where we need to (to tell them to upgrade).
+    $version = explode('.', PHP_VERSION);
+    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+    }
 define('PHP_VERSION_SUPPORTED', 50600); // 5.6 is the minimum supported.
 
 // ------------------------- FIELD TYPES -------------------------
