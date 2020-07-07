@@ -200,7 +200,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
     {
         $name = str_replace('\\', '_', $class->name).'_'.$method->name;
-        $name = \('mb_strtolower') && preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
+        $name = \function_exists('mb_strtolower') && preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
         if ($this->defaultRouteIndex > 0) {
             $name .= '_'.$this->defaultRouteIndex;
         }
