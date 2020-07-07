@@ -11,36 +11,6 @@ include_once '../include/definitions.php';
 include_once '../include/general_functions.php';
 include_once '../include/user_functions.php';
 
-if (!function_exists('filter_var')){  //If running on PHP without filter_var, define a do-fer function, otherwise use php's filter_var (PHP > 5.2.0)
-    define(FILTER_SANITIZE_STRING, 1);
-    define(FILTER_SANITIZE_EMAIL, 2);
-    define(FILTER_VALIDATE_EMAIL, 3);
-    define(FILTER_VALIDATE_URL, 4);
-    /****
-     * Ad Hoc Function to replace filter_var on version of PHP prior to 5.2.0
-     * 
-     * @param string $data Data to sanitize.
-     * @param int $filter Constant indicating filter type.
-     * @return string Filtered data.
-     */
-    function filter_var($data, $filter){
-        switch ($filter){
-        case FILTER_VALIDATE_EMAIL:
-            if(preg_match('/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/',$data, $output)>0)
-                return true;
-            else return false;
-            break;
-        case FILTER_SANITIZE_STRING:
-            return addslashes($data); //Just do an escape quotes.  We're not doing anything too dangerous here after all
-            break;
-        case FILTER_VALIDATE_URL:       
-            //Rely on checking the license.txt file to validate URL.  
-            //This leaves a minor risk of the script being used to do bad things to other hosts if it is left available (i.e. RS is installed, but never configured)
-            return true;
-            break;
-        }
-    }
-}
 /**
  * Ad Hoc Function to support setup page
  * 
@@ -69,9 +39,6 @@ function ResolveKB($value) { //Copied from includes/db.php
 
 /**
  * Santitizes input from a given request key.
- * 
- * Uses filter_var if available, or uses an ad hoc version if filter_var is
- * not available. (PHP 4)
  * 
  * @param string $key _REQUEST key to sanitize and return
  * @return string Santized _REQUEST key.
