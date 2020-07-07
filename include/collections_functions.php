@@ -3748,3 +3748,19 @@ function delete_old_collections($userref=0, $days=30)
         }
     return $deletioncount;
     }
+
+
+    
+/**
+ * Process saving the theme name after a rename in the UI
+ *
+ * @return void
+ */
+function save_themename()
+	{
+	global $baseurl, $link, $themename, $collection_column;
+	$sql="update collection set	" . $collection_column . "='" . getvalescaped("rename","") . "' where " . $collection_column . "='" . escape_check($themename)."'";
+	sql_query($sql);
+	hook("after_save_themename");
+	redirect("pages/" . $link);
+	}

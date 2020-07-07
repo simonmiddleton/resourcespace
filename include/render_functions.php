@@ -4067,3 +4067,54 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
     </div>
     <?php
     }
+
+
+/**
+ * display_size_option
+ *
+ * @param  mixed $sizeID
+ * @param  mixed $sizeName
+ * @param  mixed $fordropdown
+ * @return void
+ */
+function display_size_option($sizeID, $sizeName, $fordropdown=true)
+	{
+	global $available_sizes, $lang, $result;
+	if(!hook('replace_display_size_option','',array($sizeID, $sizeName, $fordropdown))){
+    	if ($fordropdown)
+			{
+			?><option value="<?php echo htmlspecialchars($sizeID) ?>"><?php
+			echo $sizeName;
+			}
+    	if(isset($available_sizes[$sizeID]))
+			{
+			$availableCount = count($available_sizes[$sizeID]);
+			}
+		else
+			{
+			$availableCount=0;
+			}
+		$resultCount = count($result);
+		if ($availableCount != $resultCount)
+			{
+			echo " (" . $availableCount . " " . $lang["of"] . " " . $resultCount . " ";
+			switch ($availableCount)
+				{
+				case 0:
+					echo $lang["are_available-0"];
+					break;
+				case 1:
+					echo $lang["are_available-1"];
+					break;
+				default:
+					echo $lang["are_available-2"];
+					break;
+				}
+			echo ")";
+			}
+			 if ($fordropdown)
+				{
+			?></option><?php
+			}
+		}
+	}

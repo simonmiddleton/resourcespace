@@ -2778,3 +2778,93 @@ function update_search_from_request($search)
     
     return $search;
     }
+
+function get_search_default_restypes()
+	{
+	global $search_includes_resources, $collection_search_includes_resource_metadata;
+	$defaultrestypes=array();
+	if($search_includes_resources)
+		{
+		$defaultrestypes[] = "Global";
+		}
+	  else
+		{
+		$defaultrestypes[] = "Collections";
+		if($search_includes_user_collections){$defaultrestypes[] = "mycol";}
+		if($search_includes_public_collections){$defaultrestypes[] = "pubcol";}
+		if($search_includes_themes){$defaultrestypes[] = "themes";}
+		}	
+	return $defaultrestypes;
+	}
+	
+function get_selectedtypes()
+    {
+    global $search_includes_resources, $collection_search_includes_resource_metadata;
+
+	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
+	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
+	$restypes=getvalescaped("restypes","");
+    $advanced_search_section = getvalescaped("advanced_search_section", "");
+	
+	# If advanced_search_section is absent then load it from restypes
+	if (getval("submitted","")=="") 
+		{
+		if (!isset($advanced_search_section))
+			{
+			$advanced_search_section = $restypes;
+			}
+		}
+
+	# If clearbutton pressed then the selected types are reset based on configuration settings
+    if(getval('resetform', '') != '')
+        {
+        if (isset($default_advanced_search_mode)) 
+            {
+            $selectedtypes = explode(',',$default_advanced_search_mode);
+            }
+        else
+            {
+            if($search_includes_resources)
+                {
+                $selectedtypes = array('Global', 'Media');
+                }
+            else
+                {
+                $selectedtypes = array('Collections');
+                }
+            }
+        }
+    else # Not clearing, so get the currently selected types
+        {
+        $selectedtypes = explode(',', $advanced_search_section);
+        }
+
+    return $selectedtypes;
+    }
+
+function render_advanced_search_buttons() 
+    {
+    global $lang, $swap_clear_and_search_buttons, $baseurl_short;
+ 
+    $button_search = "<input name=\"dosearch\" class=\"dosearch\" type=\"submit\" value=\"" . $lang["action-viewmatchingresults"] . "\" />";
+    $button_reset = "<input name=\"resetform\" class=\"resetform\" type=\"submit\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "')\" value=\"". $lang["clearbutton"] . "\" />";
+        
+    $html= '
+            <div class="QuestionSubmit QuestionSticky">
+            <label for="buttons"> </label>
+            {button1}
+            &nbsp;
+            {button2}
+            </div>';
+        
+    if ($swap_clear_and_search_buttons)
+            {
+            $content_replace = array("{button1}" => $button_search, "{button2}" => $button_reset);
+            } else 
+            {	
+            $content_replace = array("{button1}" => $button_reset, "{button2}" => $button_search);
+            }
+        
+    echo strtr($html, $content_replace);
+    }
+    

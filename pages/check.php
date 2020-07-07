@@ -1,29 +1,7 @@
 <?php
 include "../include/db.php";
-
 include "../include/authenticate.php"; if (!checkperm("a")) {exit("Access denied.");}
 include "../include/header.php";
-
-# A simple script to check the ResourceSpace hosting environment supports our needs.
-
-function ResolveKB($value)
-	{
-	$value=trim(strtoupper($value));
-	if (substr($value,-1,1)=="K")
-		{
-		return substr($value,0,strlen($value)-1);
-		}
-	if (substr($value,-1,1)=="M")
-		{
-		return substr($value,0,strlen($value)-1) * 1024;
-		}
-	if (substr($value,-1,1)=="G")
-		{
-		return substr($value,0,strlen($value)-1) * 1024 * 1024;
-		}
-	return $value;
-	}
-
 ?>
 
 <div class="BasicsBox"> 

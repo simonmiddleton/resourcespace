@@ -4,14 +4,7 @@ include "../include/db.php";
 include "../include/authenticate.php";
 if (!$enable_theme_category_edit){ die ('$enable_theme_category_edit=false');}
 
-function save_themename()
-	{
-		global $baseurl, $link, $themename, $collection_column;
-		$sql="update collection set	" . $collection_column . "='" . getvalescaped("rename","") . "' where " . $collection_column . "='" . escape_check($themename)."'";
-		sql_query($sql);
-		hook("after_save_themename");
-		redirect("pages/" . $link);
-	}
+
 
 $themes=array();
 $themecount=0;

@@ -569,12 +569,7 @@ function ajax_download(download_offline)
                 }
      
     });
-		
-}
-
-
-        
-
+	}
 
 </script>
 
@@ -610,47 +605,6 @@ if (!hook('replacesizeoptions'))
 	# analyze available sizes and present options
 ?><select name="size" class="stdwidth" id="downloadsize"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
 
-function display_size_option($sizeID, $sizeName, $fordropdown=true)
-	{
-	global $available_sizes, $lang, $result;
-	if(!hook('replace_display_size_option','',array($sizeID, $sizeName, $fordropdown))){
-    	if ($fordropdown)
-			{
-			?><option value="<?php echo htmlspecialchars($sizeID) ?>"><?php
-			echo $sizeName;
-			}
-    	if(isset($available_sizes[$sizeID]))
-			{
-			$availableCount = count($available_sizes[$sizeID]);
-			}
-		else
-			{
-			$availableCount=0;
-			}
-		$resultCount = count($result);
-		if ($availableCount != $resultCount)
-			{
-			echo " (" . $availableCount . " " . $lang["of"] . " " . $resultCount . " ";
-			switch ($availableCount)
-				{
-				case 0:
-					echo $lang["are_available-0"];
-					break;
-				case 1:
-					echo $lang["are_available-1"];
-					break;
-				default:
-					echo $lang["are_available-2"];
-					break;
-				}
-			echo ")";
-			}
-			 if ($fordropdown)
-				{
-			?></option><?php
-			}
-		}
-	}
 
 if (array_key_exists('original',$available_sizes))
 	display_size_option('original', $lang['original'], true);

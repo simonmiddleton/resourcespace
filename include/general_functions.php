@@ -4104,3 +4104,28 @@ function get_ip()
 	# Can't find an IP address.
 	return "???";
 	}
+
+
+/**
+ * For a value such as 10M return the kilobyte equivalent such as 10240. Used  by check.php
+ *
+ * @param  mixed $value
+ * @return void
+ */
+function ResolveKB($value)
+{
+$value=trim(strtoupper($value));
+if (substr($value,-1,1)=="K")
+    {
+    return substr($value,0,strlen($value)-1);
+    }
+if (substr($value,-1,1)=="M")
+    {
+    return substr($value,0,strlen($value)-1) * 1024;
+    }
+if (substr($value,-1,1)=="G")
+    {
+    return substr($value,0,strlen($value)-1) * 1024 * 1024;
+    }
+return $value;
+}
