@@ -140,9 +140,10 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
         <table cellpadding="0" cellspacing="0" id="ResourceWorkflowTable">
             <tbody>
             <?php
-            
+        $cnt = 0 ; // counter for unique input field ids        
         foreach($validactions as $validaction)
             {
+                $cnt++;
                 $show_more_link = false;
                 if(!empty($validaction['more_notes_flag']) && $validaction['more_notes_flag'] == 1) {
                     $show_more_link = true;
@@ -153,10 +154,10 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
                 <td>
 					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
                           id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
-					<input id='resource_status_checksum' name='resource_status_check' type='hidden' value='<?php echo $resource["archive"]; ?>'>
+					<input id='resource_status_checksum<?php echo $cnt; ?>' name='resource_status_check' type='hidden' value='<?php echo $resource["archive"]; ?>'>
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
-					<input type="submit" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return CentralSpacePost(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
+					<input type="submit" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] . "_" . $cnt ?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return CentralSpacePost(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
 					<?php
                     generateFormToken("resource_{$ref}_workflowaction{$validaction['ref']}");
                     hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"]));

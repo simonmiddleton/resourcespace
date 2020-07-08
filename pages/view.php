@@ -2114,8 +2114,8 @@ if (count($keywords)!=0)
 		for ($n=0;$n<count($keywords);$n++)
 			{
 			?>
-			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
+			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
 			<?php
 			}
 	
