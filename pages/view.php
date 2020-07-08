@@ -893,6 +893,14 @@ else if(1 == $resource['has_image'])
                     }
                     ?>
 			 rs_tagging_plugin_added = true;
+			  // We have to wait for initialisation process to finish as this does ajax calls
+                        // in order to set itself up
+                        setTimeout(function ()
+                            {
+                            toggleAnnotationsOption(element);
+                            }, 
+                            1000);
+                        return false;
 						
                         }
 
