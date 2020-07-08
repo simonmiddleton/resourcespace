@@ -2191,23 +2191,6 @@ function check_share_password($key,$password,$cookie)
     return true;   
     }
 
-
-/**
-* Ability to get a list of users based on their permissions. See get_notification_users() for more information.
-* 
-* IMPORTANT: the lookup is done on an "all or nothing" basis.
-* 
-* @uses get_notification_users()
-* 
-* @param string|array $condition A specific user type (e.g SYSTEM_ADMIN) OR an array of permissions
-* 
-* @return array
-*/
-function get_users_from_permission_lookup($condition)
-    {
-    return get_notification_users($condition);
-    }
-
 /**
 * Offset a datetime to user local time zone
 * 

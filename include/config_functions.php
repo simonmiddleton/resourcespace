@@ -6,77 +6,7 @@
  * @subpackage Includes
  */
 
-/**
- * Validate the given field.
- * 
- * If the field validates, this function will store it in the provided configuration
- * module and key.
- * 
- * @param string $fieldname Name of field (provided to the render functions)
- * @param string $modulename Module name to store the field in.
- * @param string $modulekey Module key
- * @param string $type Validation patthern: (bool,safe,float,int,email,regex)
- * @param string $required Optional required flag.  Defaults to true.
- * @param string $pattern If $type is 'regex' the regex pattern to use.
- * @return bool Returns true if the field was stored in the config database.
- */
-function validate_field($fieldname, $modulename, $modulekey, $type, $required=true, $pattern=''){
-    global $errorfields, $lang;
-    $value = getvalescaped($fieldname, '');
-    if ($value=='' && $required==true){
-        $errorfields[$fieldname]=$lang['cfg-err-fieldrequired'];
-        return false;
-    }
-    elseif ($value=='' && $required==false){
-        set_module_config_key($modulename, $modulekey, $value); 
-    }
-    else {
-        switch ($type){
-            case 'safe':
-                if (!preg_match('/^.+$/', $value)){
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldsafe'];
-                    return false;
-                }
-                break;
-            case 'float':
-                if (!preg_match('/^[\d]+(\.[\d]*)?$/', $value)){
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldnumeric'];
-                    return false;
-                }
-                break;
-            case 'int':
-                if (!preg_match('/^[\d]+$/', $value)){
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldnumeric'];
-                    return false;
-                }
-                break;
-            case 'email':
-                if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $value)){
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldemail'];
-                    return false;
-                }
-                break;
-            case 'regex':
-                if (!preg_match($pattern, $value)){
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldsafe'];
-                    return false;
-                }
-                break;
-            case 'bool':
-                if (strtolower($value)=='true')
-                    $value=true;
-                elseif (strtolower($value)=='false')
-                    $value=false;
-                else {
-                    $errorfields[$fieldname] = $lang['cfg-err-fieldsafe'];
-                    return false;
-                }
-                break;
-        }
-       set_module_config_key($modulename, $modulekey, $value);
-       return true;             
-    }
-}
+ 
 /**
  * Renders a select element.
  * 

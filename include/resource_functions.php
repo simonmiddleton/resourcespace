@@ -3418,12 +3418,7 @@ function update_resource_type($ref,$type)
     return true;    	
 	}
 	
-function relate_to_array($ref,$array)	
-	{
-	# Relates a resource to each in a simple array of ref numbers
-		sql_query("delete from resource_related where resource='$ref' or related='$ref'");  
-		sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$array) . ")");
-	}		
+	
 
 /**
 * Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
@@ -4291,167 +4286,7 @@ function get_field($field)
         return $r[0];
         }
     }
-
-function get_field_options_with_stats($field)
-	{
-	# For a given field, list all options with usage stats.
-	# This is for the 'manage field options' page.
-
-	//$rawoptions=sql_value("select options value from resource_type_field where ref='$field'","");
-	//$options=trim_array(explode(",",i18n_get_translated($rawoptions)));
-    //$rawoptions=trim_array(explode(",",$rawoptions));
-
-    $rawoptions=array();
-    node_field_options_override($rawoptions,$field);
-
-	# For the given field, fetch a stats count for each keyword.
-	$usage=sql_query("
-		  SELECT rk.resource_type_field,
-		         k.keyword,
-		         count(DISTINCT rk.resource) c
-		    FROM resource_keyword rk
-		    JOIN keyword k ON rk.keyword = k.ref
-		   WHERE rk.resource > 0
-		     AND resource_type_field = '$field'
-		GROUP BY k.keyword;
-	");
-	
-	$return=array();
-	for ($n=0;$n<count($options);$n++)
-		{
-		if($options[$n]!=''){
-			# Find the option in the usage array and extract the count
-			$count=0;
-			for ($m=0;$m<count($usage);$m++)
-				{
-				$keyword=get_keyword_from_option($options[$n]);
-				if ($keyword==$usage[$m]["keyword"]) {$count=$usage[$m]["c"];}
-				}
-				
-			$return[]=array("option"=>$options[$n],"rawoption"=>$rawoptions[$n],"count"=>$count);
-			}
-		}
-	return $return;
-	}
-	
-function save_field_options($field)
-	{
-	# Save the field options after editing.
-	global $languages,$defaultlanguage;
-	
-	$fielddata=get_field($field);
-	$options=get_nodes($field);
-	//$options=trim_array(explode(",",$fielddata["options"]));
-
-	for ($n=0;$n<count($options);$n++)
-		{
-		hook("before_save_field_options","",array($field,$options,$n));
-		if (getval("submit_field_" . $n,"")!="")
-			{
-			# This option/language combination is being renamed.
-
-			# Construct a new option from the posted languages
-			$new="";$count=0;
-			foreach ($languages as $langcode=>$langname)
-				{
-				$val=getvalescaped("field_" . $langcode . "_" . $n,"");
-				if ($val!="") {$new.="~" . $langcode . ":" . $val;$count++;}
-				}
-			# Only one language, do not use language syntax.
-			if ($count==1) {$new=getvalescaped("field_" . $defaultlanguage . "_" . $n,"");}
-			
-			# Construct a new options value by creating a new array replacing the item in position $n
-			$newoptions=array_merge(array_slice($options,0,$n),array($new),array_slice($options,$n+1));
-
-            foreach ($newoptions as $no)
-                {
-                set_node(null,$field,$no,null,null);
-                }
-
-			# Loop through all matching resources.
-			# The matches list uses 'like' so could potentially return values that do not have this option set. However each value list split out and analysed separately.
-			$matching=sql_query("select resource,value from resource_data where resource_type_field='$field' and value like '%" . escape_check($options[$n]) . "%'");
-			for ($m=0;$m<count($matching);$m++)
-				{
-				$ref=$matching[$m]["resource"];
-								
-				$set=trim_array(explode(",",$matching[$m]["value"]));
-				
-				# Construct a new value omitting the old and adding the new.
-				$newval=array();
-				for ($s=0;$s<count($set);$s++)
-					{
-					if ($set[$s]!==$options[$n]) {$newval[]=$set[$s];}
-					}
-				$newval[]=$new; # Set the new value on the end of this string
-				$newval=join(",",$newval);
-				
-				#echo "Old value = '" . $matching[$m]["value"] . "', new value = '" . $newval . "'";
-				
-				if ($matching[$m]["value"]!== $newval)
-					{
-					# Value has changed. Update.
-
-					# Delete existing keywords index for this field.
-					sql_query("delete from resource_keyword where resource='$ref' and resource_type_field='$field'");
-					
-					# Store value and reindex
-					update_field($ref,$field,$newval);
-					}
-				}
-			
-			}
-
-
-		if (getval("delete_field_" . $n,"")!="")
-			{
-			# This field option is being deleted.
-			
-			# Construct a new options value by creating a new array ommitting the item in position $n
-			$new=array_merge(array_slice($options,0,$n),array_slice($options,$n+1));
-			
-            foreach ($new as $new_option)
-                {
-                set_node(null,$field,escape_check(trim($new_option)),null,null);
-                }
-			
-			# Loop through all matching resources.
-			# The matches list uses 'like' so could potentially return values that do not have this option set. However each value list split out and analysed separately.
-			$matching=sql_query("select resource,value from resource_data where resource_type_field='$field' and value like '%" . escape_check($options[$n]) . "%'");
-			for ($m=0;$m<count($matching);$m++)
-				{
-				$ref=$matching[$m]["resource"];
-								
-				$set=trim_array(explode(",",$matching[$m]["value"]));
-				$new=array();
-				for ($s=0;$s<count($set);$s++)
-					{
-					if ($set[$s]!==$options[$n]) {$new[]=$set[$s];}
-					}
-				$new=join(",",$new);
-				
-				if ($matching[$m]["value"]!== $new)
-					{
-					# Value has changed. Update.
-
-					# Delete existing keywords index for this field.
-					sql_query("delete from resource_keyword where resource='$ref' and resource_type_field='$field'");
-					
-					# Store value and reindex
-					update_field($ref,$field,$new);
-					}
-				}
-			}
-		}
-	}
-	
-function get_resources_matching_keyword($keyword,$field)
-	{
-	# Returns an array of resource references for resources matching the given keyword string.
-	$keyref=resolve_keyword($keyword);
-	return sql_array("select distinct resource value from resource_keyword where keyword='$keyref' and resource_type_field='$field'");
-	}
-	
+		
 function get_keyword_from_option($option)
 	{
 	# For the given field option, return the keyword that will be indexed.
@@ -4463,12 +4298,6 @@ function get_keyword_from_option($option)
 	}
 
 	return $keywords[1];
-	}
-	
-function add_field_option($field,$option)
-	{
-    set_node(null,$field,escape_check(trim($option)),null,null);
-	return true;
 	}
 
 function get_resource_access($resource)
@@ -5227,166 +5056,6 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         }
     return true;
     }
-
-function get_resource_files($ref,$includeorphan=false){
-    // returns array of all files associated with a resource
-    // if $includeorphan set to true, will also return all files in the
-    // resource dir even if the system doesn't understand why they're there.
-
-    $filearray = array();
-    $file_checklist = array();
-
-    global $config_windows;
-    if ($config_windows){ $sep = "\\"; } else { $sep = "/"; }
-
-
-    $sizearray = sql_array("select id value from preview_size",false);
-    $original_ext = sql_value("select file_extension value from resource where ref = '".escape_check($ref)."'",'');
-
-    $rootpath=dirname(get_resource_path($ref,true,"pre",true));
-
-    // get listing of all files in resource dir to compare mark off as we find them
-    if (is_dir($rootpath)) {
-    if ($dh = opendir($rootpath)) {
-            while (($file = readdir($dh)) !== false) {
-                if (!($file == '.' || $file == '..')){
-                    $file_checklist[$rootpath.$sep.$file] = 1;
-                }
-            }
-            closedir($dh);
-        }
-    }
-
-    // first get the resource itself
-    $original = get_resource_path($ref,true,'',false,$original_ext);
-    if (file_exists($original)){
-	    array_push($filearray,$original);
-	    unset($file_checklist[$original]);
-    }
-
-    // in some cases, the system also generates a jpeg equivalent of the original, so check for that
-    $original = get_resource_path($ref,true,'',false,'jpg');
-    if (file_exists($original)){
-	    array_push($filearray,$original);
-    	unset($file_checklist[$original]);
-    }
-
-    // in some cases, the system also generates an mp3 equivalent of the original, so check for that
-    $original = get_resource_path($ref,true,'',false,'mp3');
-    if (file_exists($original)){
-    	array_push($filearray,$original);
-    	unset($file_checklist[$original]);
-    }
-
-    // in some cases, the system also generates an extracted icc profile, so check for that
-    $original = get_resource_path($ref,true,'',false,'icc');
-    if (file_exists($original)){
-    	array_push($filearray,$original);
-    	unset($file_checklist[$original]);
-    }
-
-
-    # check for pages
-    $page = 1;
-    $misscount = 0;
-    // just to be safe, we'll try at least 4 pages ahead to make sure none got skipped
-    while($misscount < 4){
-        $thepath = get_resource_path($ref,true,"scr",false,'jpg',-1,$page,"","","");
-        if (file_exists($thepath)){
-            array_push($filearray,$thepath);
-            unset($file_checklist[$thepath]);
-            $page++;
-        } else {
-            $misscount++;
-            $page++;
-        }
-    }        
-
-    // now look for other sizes
-    foreach($sizearray as $size){
-        $thepath = get_resource_path($ref,true,$size,false,'jpg');
-        if (file_exists($thepath)){
-            array_push($filearray,$thepath);
-            unset($file_checklist[$thepath]);
-        }
-    }
-
-
-    // get alternative files
-    $altfiles = get_alternative_files($ref);
-    foreach($altfiles as $altfile){
-        // first get original
-        $alt_ext = sql_value("select file_extension value from resource_alt_files where ref = '" . $altfile['ref'] . "'",'');
-        $thepath = get_resource_path($ref,true,'',false,$alt_ext,-1,1,false,"",$altfile["ref"]);
-        if (file_exists($thepath)){
-            array_push($filearray,$thepath);
-            unset($file_checklist[$thepath]);
-        }
-
-
-        // now check for previews
-        foreach($sizearray as $size){
-            $thepath = get_resource_path($ref,true,$size,false,"jpg",-1,1,false,"",$altfile["ref"]);
-            if (file_exists($thepath)){
-                array_push($filearray,$thepath);
-                unset($file_checklist[$thepath]);
-            }
-        }
-
-        # check for pages
-        $page = 1;
-        while($page <> 0){
-            $thepath = get_resource_path($ref,true,"scr",false,'jpg',-1,$page,"","",$altfile['ref']);
-            if (file_exists($thepath)){
-                array_push($filearray,$thepath);
-                unset($file_checklist[$thepath]);
-                $page++;
-            } else {
-                $page = 0;
-            }
-        }
-        // in some cases, the system also generates a jpeg equivalent of the original, so check for that
-        $original = get_resource_path($ref,true,'',false,'jpg',-1,1,'','',$altfile['ref']);
-	if (file_exists($original)){
-	        array_push($filearray,$original);
-        	unset($file_checklist[$original]);
-    	}
-
-        // in some cases, the system also generates a mp3 equivalent of the original, so check for that
-        $original = get_resource_path($ref,true,'',false,'mp3',-1,1,'','',$altfile['ref']);
-	if (file_exists($original)){
-	        array_push($filearray,$original);
-       		unset($file_checklist[$original]);
-	}
-
-        // in some cases, the system also generates an extracted icc profile, so check for that
-        $original = get_resource_path($ref,true,'',false,'icc',-1,1,'','',$altfile['ref']);
-	if (file_exists($original)){
-	        array_push($filearray,$original);
-       		unset($file_checklist[$original]);
-	}
-    }
-
-
-    // check for ffmpeg previews
-    global $ffmpeg_preview_extension;
-    $flvfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
-    if (file_exists($flvfile)){
-        array_push($filearray,$flvfile);
-        unset($file_checklist[$flvfile]);
-    }
-
-
-    if (count($file_checklist)>0){
-	foreach (array_keys($file_checklist) as $thefile){
-		debug("ResourceSpace: Orphaned file, resource $ref: $thefile");
-	        if ($includeorphan) {
-			array_push($filearray,$thefile);
-		}
-       }
-    }
-    return array_unique($filearray);
-}
 
 function reindex_resource($ref)
 	{
@@ -7285,25 +6954,6 @@ function get_data_by_field($resource, $field)
     return $return;   
     }
 
-/**
-* Get all resources by resource_type_field and value
-* 
-* @param string $resource_type_field
-* @param string $value
-* 
-* @return array
-*/
-function get_resources_by_resource_data_value($resource_type_field, $value)
-    {
-    return sql_value("
-        SELECT rd.resource AS `value`
-          FROM resource_data AS rd
-         WHERE rd.resource > 0
-           AND resource_type_field = '{$resource_type_field}'
-           AND rd.`value` = '$value'
-    ", 0);
-    }
-
 function get_all_image_sizes($internal=false,$restricted=false)
     {
         # Returns all image sizes available.
@@ -7422,23 +7072,7 @@ function get_hidden_indexed_fields()
         return $hidden;
         }
     }
-    
-function get_category_tree_fields()
-    {
-    # Returns a list of fields with refs matching the supplied field refs.
-    global $cattreefields_cache;
-    if (is_array($cattreefields_cache)){
-        return $cattreefields_cache;
-    } else {
-        $fields=sql_query("select name from resource_type_field where type=7 and length(name)>0 order by order_by", "schema");
-        $cattreefields=array();
-        foreach ($fields as $field){
-            $cattreefields[]=$field['name'];
-        }
-        $cattreefields_cache=$cattreefields;
-        return $cattreefields;
-        }
-    }   
+
 
 function get_OR_fields()
     {

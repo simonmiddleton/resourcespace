@@ -55,16 +55,6 @@ function getvalescaped($val, $default, $force_numeric = false)
     }
 
 /**
- * generate a unique ID
- *
- * @return string
- */
-function getuid()
-    {
-    return strtr(escape_check(microtime() . " " . $_SERVER["REMOTE_ADDR"]),". ","--");
-    }
-
-/**
  * Escape a value prior to using it in SQL. Only escape a string if we need to,
  * to prevent escaping an already escaped string.
  *
@@ -383,16 +373,6 @@ function average_length($array)
 function get_stats_activity_types()
     {
     return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
-    }
-
-/**
- * Returns a list of years for which we have statistics.
- *
- * @return array
- */
-function get_stats_years()
-    {
-    return sql_array("select distinct year value from daily_stat order by year");
     }
 
 /**
@@ -718,32 +698,7 @@ function save_site_text($page,$name,$language,$group)
     // Clear cache
     clear_query_cache("sitetext");
     }
-    
-/**
- * Returns an integer score based on how similar the two strings are.
- * This was used when importing data for "fuzzy" keyword/option matching.
- *
- * @param  string $string1
- * @param  string $string2
- * @return integer
- */
-function string_similar($string1,$string2)
-    {
-    $score=0;
-    $string1=trim(strtolower($string1));$string2=trim(strtolower($string2));
-    if ($string1==$string2) {return 9999;}
-    if (substr($string1,0,1)==substr($string2,0,1)) {$score+=10;}
-    for ($n=0;$n<strlen($string1)-1;$n++)
-        {
-        $pair=substr($string1,$n,2);
-        for ($m=0;$m<strlen($string2)-1;$m++)
-            {
-            if ($pair==substr($string2,$m,2)) {$score++;}
-            }
-        }
-    
-    return $score;
-    }
+
 
 /**
  * Return a human-readable string representing $bytes in either KB or MB.
@@ -1578,46 +1533,6 @@ function remove_extension($strName)
     }
 
     
-
-/**
- * Does the filename passed have a permitted extension?
- *
- * @param  string $filename
- * @param  string $allowed_extensions
- * @return boolean
- */
-function verify_extension($filename,$allowed_extensions="")
-    {
-    # Allowed extension?
-    $extension=explode(".",$filename);
-    if(count($extension)>1)
-        {
-        $extension=trim(strtolower($extension[count($extension)-1]));
-        } else { return false;}
-        
-    if ($allowed_extensions!="")
-        {
-        $allowed_extensions=explode(",",strtolower($allowed_extensions));
-        if (!in_array($extension,$allowed_extensions)){ return false;}
-        }
-    return true;
-    }
-
-
-/**
- * Retrieve a list of permitted extensions for the given resource.
- *
- * @param  integer $ref   The resource ID
- * @return string
- */
-function get_allowed_extensions($ref)
-    {
-    $type = sql_value("select resource_type value from resource where ref=$ref","");
-    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","", "schema");
-    return $allowed_extensions;
-    }
-
-    
 /**
  * Retrieve a list of permitted extensions for the given resource type.
  *
@@ -2051,20 +1966,6 @@ function error_alert($error, $back = true, $code = 403)
         }
     }
 
-/**
- * Sanitize character for use in XML.
- *
- * @param  string $char
- * @return string
- */
-function sanitize_char($char)
-    {
-    $mb_ord = trim(mb_encode_numericentity($char, array(0x0, 0x10FFFF, 0, 0x10FFFF), "UTF-8"), "&#;");
-    if ($mb_ord==0x0009 || $mb_ord==0x000A || $mb_ord==0x000D) {return $char;}
-    if (($mb_ord>=0x0020 && $mb_ord<=0xD7FF) || ($mb_ord>=0xE000 && $mb_ord<=0xFFFD)) {return $char;}
-    if ($mb_ord>=0x10000 && $mb_ord<=0x10FFFF) {return $char;}
-    return ""; # Not a valid char, return an empty string.
-    }
 
 /**
  * When displaying metadata, applies trim/wordwrap/highlights.
@@ -3206,32 +3107,6 @@ function enforcePostRequest($ajax)
 
     return false;
     }
-
-/**
-* Find duplicates in array based on value
-* 
-* @param array $data   Array to search
-* @param mixed $search Value to search in the array
-* 
-* @return integer Returns number of duplicates found
-*/
-function findDuplicates(array $data, $search)
-    {
-    $duplicates = 0;
-
-    foreach($data as $key => $val)
-        {
-        if($val == $search)
-            {
-            $duplicates++;
-            }
-        }
-
-    return $duplicates;
-    }
-
-
-
 
 
 

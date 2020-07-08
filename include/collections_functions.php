@@ -2459,24 +2459,7 @@ function get_collection_log($collection, $fetchrows = -1)
                   WHERE collection = '{$collection}'
                ORDER BY c.ref DESC", false, $fetchrows);
 	}
-
-/**
-* Figure out how many videos are in a collection
-* 
-* @param integer $ref Collections ref
-* 
-* @return integer
-*/
-function get_collection_videocount($ref)
-	{
-	global $videotypes;
-	$resources = do_search("!collection" . $ref);
-	$videocount=0;
-	foreach ($resources as $resource){if (in_array($resource['resource_type'],$videotypes)){$videocount++;}}
-	return $videocount;
-	}
-    
-    
+        
 /**
  * Returns the maximum access (the most permissive) that the current user has to the resources in $collection.
  *
@@ -2538,23 +2521,6 @@ function collection_set_public($collection)
 	{
 		if (is_numeric($collection)){
 			$sql = "update collection set public = '1' where ref = '$collection'";
-			sql_query($sql);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-/**
- * Set an existing collection to be private
- *
- * @param  integer  $collection ID of collection
- * @return boolean
- */
-function collection_set_private($collection)
-	{
-		if (is_numeric($collection)){
-			$sql = "update collection set public = '0' where ref = '$collection'";
 			sql_query($sql);
 			return true;
 		} else {
@@ -3413,35 +3379,6 @@ function new_featured_collection_form(array $themearray = array())
     return;
 	}
     
-/**
-* Obtain details of the last resource edited in the given collection.
-*
-* @param int $collection    Collection ID
-*
-* @return array | false     Array containing details of last edit (resource ID, timestamp and username of user who performed edit)
-*/    
-function get_last_resource_edit($collection)
-    {
-    if(!is_numeric($collection))
-        {
-        return false;
-        }
-    $plugin_last_resource_edit=hook('override_last_resource_edit');
-    if($plugin_last_resource_edit===true){
-    	return false;
-    }
-    $lastmodified  = sql_query("SELECT r.ref, r.modified FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection='" . $collection . "' ORDER BY r.modified DESC");
-    $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
-    if(count($lastuserdetails) == 0)
-        {
-        return false;
-        }
-        
-    $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
-        
-    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
-    return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
-    }
 
 /**
 * Get a themes array

@@ -1275,27 +1275,6 @@ function render_user_group_multi_select($name, array $current = array(), $size =
 
 
 /**
-* @param string  $name
-* @param integer $current  Current selected value. Use user group ID
-*/
-function render_user_group_select($name, $current = null, $style = '')
-    {
-    ?>
-    <select id="<?php echo $name; ?>" name="<?php echo $name; ?>" style="<?php echo $style; ?>">
-    <?php
-    foreach(get_usergroups() as $usergroup)
-        {
-        ?>
-        <option value="<?php echo $usergroup['ref']; ?>"<?php echo ((!is_null($current) && $usergroup['ref'] == $current) ? ' selected' : ''); ?>><?php echo $usergroup['name']; ?></option>
-        <?php
-        }
-        ?>
-    </select>
-    <?php
-    }
-
-
-/**
 * Renders a list of user groups
 * 
 * @param string $name
