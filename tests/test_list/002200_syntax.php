@@ -1,5 +1,5 @@
 <?php
-# Simple syntax check of pages to ensure they all function at a very basic level and arrive at the footer.
+# Simple syntax check of pages 
 if('cli' != PHP_SAPI)
     {
     exit('This utility is command line only.');

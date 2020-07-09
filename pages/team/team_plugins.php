@@ -227,9 +227,9 @@ ksort ($plugins_avail);
 
 
 // Search functionality
-$searching          = ((getval("searching", "") != "" && getval("clear_search", "") == "") ? true : false);
+$searching          = ((getval("find", "") != "" && getval("clear_search", "") == "") ? true : false);
 $find               = getval("find", "");
-$search_placeholder = ($searching ? $find : $lang['plugins-search-plugin-placeholder']);
+if (!$searching) {$find="";}
 
 /**
 * Find plugin which contains the searched text in the name/ description
@@ -302,14 +302,15 @@ include "../../include/header.php"; ?>
 </script>
 <div class="BasicsBox"> 
 <h1><?php echo $lang["pluginmanager"]; ?>
-    <form id="SearchPlugins" method="get">
-        <input type="text" name="find" placeholder="<?php echo htmlspecialchars($search_placeholder); ?>">
+    <form id="SearchPlugins" method="post" onSubmit="return CentralSpacePost(this);">
+        <?php generateFormToken("plugin_search"); ?>
+        <input type="text" name="find" id="pluginsearch" value="<?php echo htmlspecialchars($find); ?>">
         <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
     <?php
     if($searching)
         {
         ?>
-        <input type="submit" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>">
+        <input type="button" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>" onClick="jQuery('#pluginsearch').val('');CentralSpacePost(document.getElementById('SearchPlugins'));">
         <?php
         }
         ?>
@@ -427,7 +428,7 @@ if($searching)
         ?>
             </tbody>
         </table>
-        <form id="anc-post" method="post" action="<?php echo $baseurl_short; ?>pages/team/team_plugins.php" >
+        <form id="anc-post" method="post" action="<?php echo $baseurl_short; ?>pages/team/team_plugins.php">
             <?php generateFormToken("anc_post"); ?>
             <input type="hidden" id="anc-input" name="" value="" />
         </form>
