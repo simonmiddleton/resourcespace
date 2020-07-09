@@ -177,7 +177,7 @@ function get_collection($ref)
 /**
  * Returns all resources in collection
  *
- * @param  mixed  $collection   ID of collection being requested
+ * @param  int  $collection   ID of collection being requested
  * 
  * @return void
  */
@@ -1203,7 +1203,7 @@ function collections_comparator_desc($a, $b)
 /**
  * Get collections linked to featured collcetion categories
  *
- * @param  array  $themes   Array of featured collection categories
+ * @param  array    $themes      Array of featured collection categories
  * @param  boolean  $subthemes   Include subthemes
  * 
  * @return array   Array of colllection results
@@ -2299,7 +2299,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 /**
  * Returns true if a collection is a research request
  *
- * @param  mixed $collection   Collection ID
+ * @param  int  $collection   Collection ID
  * 
  * @return boolean
  */
@@ -3414,7 +3414,7 @@ function GetThemesFromRequest($levels)
  * @param  string         $usertempdir
  * @param  string         $collection
  * @param  string         $size
- * @param  class          $zip
+ * @param  object         $zip
  * @param  string         $zipfile
  * 
  * @return string
