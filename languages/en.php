@@ -1902,6 +1902,7 @@ $lang["saveandreturntolist"]="Save and return to list";
 $lang["backtomanagecontent"]="Back to manage content";
 $lang["editcontent"]="Edit content";
 
+$lang['collection_download'] = 'Collection Download';
 $lang["confirmcollectiondownload"]="Please wait while we create the archive. This might take a while, depending on the total size of your resources.";
 $lang["collectiondownloadinprogress"]='Please wait while we create the archive. This might take a while, depending on the total size of your resources.<br /><br />To continue working, you may  <a href=\"home.php\" target=\"_blank\">> Open a New Browser Window</a><br /><br />';
 $lang["preparingzip"]="Preparing...";
@@ -2634,7 +2635,7 @@ $lang["replace_resource_original_description"]= "Original %EXTENSION file"; // %
 $lang['replace_resource_original_alt_filename'] = 'Alternative filename';
 $lang['jq_create_previews_success_text'] = 'Previews created for resource #%RESOURCE successfully';
 $lang['jq_create_previews_failure_text'] = 'Failed to create previews for resource #%RESOURCE';
-$lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection download! You will receive a notification once the archive is ready for download.';
+$lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection download. You can safely navigate away from this page and will receive a notification once the archive is ready for download.';
 
 /* Manage external shares */
 $lang['permission_manage_external_shares'] = 'Can manage external shares with expiry set to "Never"';

@@ -521,7 +521,7 @@ function ajax_download(download_offline)
 
     if(download_offline)
         {
-        styledalert('<?php echo $lang['downloadinprogress']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
+        styledalert('<?php echo $lang['collection_download']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
         document.getElementById('downloadbuttondiv').style.display='none';
         return false;
         }
