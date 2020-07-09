@@ -3525,11 +3525,18 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
     return;
     }
 
+/**
+ * Add resource data/collection_resource data to text file during a collection download.
+ *
+ * @param  integer $ref
+ * @param  integer $collection
+ * @param  string $filename
+ * @return void
+ */
 function collection_download_process_text_file($ref, $collection, $filename)
     {
     global $lang, $zipped_collection_textfile, $includetext, $size, $subbed_original, $k, $text, $sizetext;
 
-    #Add resource data/collection_resource data to text file
     if (($zipped_collection_textfile==true)&&($includetext=="true"))
         {
         if ($size==""){$sizetext="";}else{$sizetext="-".$size;}
@@ -3562,6 +3569,15 @@ function collection_download_process_text_file($ref, $collection, $filename)
     return;
     }
 
+
+/**
+ * Update the resource log to show the download during a collection download.
+ *
+ * @param  string $tmpfile
+ * @param  array $deletion_array
+ * @param  integer $ref The resource ID
+ * @return void
+ */
 function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref)
     {
     global $usage, $usagecomment, $size, $resource_hit_count_on_downloads;
@@ -3582,6 +3598,12 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     return;
     }
 
+/**
+ * Adds a progress indicator to the zip progress file, so we can show the zip progress to the user.
+ *
+ * @param  string $note The note to display
+ * @return void
+ */
 function update_zip_progress_file($note)
     {
     global $progress_file, $offline_job_in_progress;
@@ -3595,6 +3617,18 @@ function update_zip_progress_file($note)
     fclose($fp);
     }
 
+/**
+ * Add PDFs for "data only" types to a zip file during creation.
+ *
+ * @param  array $result
+ * @param  integer $id
+ * @param  boolean $collection_download_tar
+ * @param  string $usertempdir
+ * @param  object $zip
+ * @param  string $path
+ * @param  array $deletion_array
+ * @return void
+ */
 function collection_download_process_data_only_types(array $result, $id, $collection_download_tar, $usertempdir, &$zip, &$path, &$deletion_array)
     {
     global $data_only_resource_types, $k, $usage, $usagecomment, $resource_hit_count_on_downloads, $use_zip_extension;
@@ -3662,6 +3696,11 @@ function collection_download_process_data_only_types(array $result, $id, $collec
         }
     }
 
+/**
+ * Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion.
+ *
+ * @return void
+ */
 function collection_download_process_summary_notes(
     array $result,
     array $available_sizes,
@@ -3680,7 +3719,7 @@ function collection_download_process_summary_notes(
     &$zip)
     {
     global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
-    # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
+    
     if($zipped_collection_textfile == true && $includetext == "true")
         {
         $qty_sizes = count($available_sizes[$size]);
@@ -3742,6 +3781,19 @@ function collection_download_process_summary_notes(
     return;
     }
 
+/**
+ * Add a CSV containing resource metadata to a downloaded zip file during creation of the zip.
+ *
+ * @param  array $result
+ * @param  integer $id
+ * @param  integer $collection
+ * @param  boolean $collection_download_tar
+ * @param  boolean $use_zip_extension
+ * @param  object $zip
+ * @param  string $path
+ * @param  array $deletion_array
+ * @return void
+ */
 function collection_download_process_csv_metadata_file(array $result, $id, $collection, $collection_download_tar, $use_zip_extension, &$zip, &$path, array &$deletion_array)
     {
     // Include the CSV file with the metadata of the resources found in this collection
@@ -3769,11 +3821,22 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     $deletion_array[] = $csv_file;
     }
 
+/**
+ * Write the batch download command parameters to a file ready for execution.
+ *
+ * @param  boolean $use_zip_extension
+ * @param  boolean $collection_download_tar
+ * @param  integer $id
+ * @param  integer $collection
+ * @param  string $size
+ * @param  string $path
+ * @return void
+ */
 function collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, &$path)
     {
     global $config_windows, $cmdfile;
 
-    # Write command parameters to file.
+    # 
     //update_progress_file("writing zip command");  
     if (!$use_zip_extension && !$collection_download_tar)
         {
@@ -3819,6 +3882,18 @@ function collection_download_process_collection_download_name(&$filename, $colle
         }
     }
 
+/**
+ * Executes the archiver command when downloading a collection.
+ *
+ * @param  boolean $collection_download_tar
+ * @param  object $zip
+ * @param  string $filename
+ * @param  string $usertempdir
+ * @param  boolean $archiver
+ * @param  integer $settings_id
+ * @param  string $zipfile
+ * @return void
+ */
 function collection_download_process_archive_command($collection_download_tar, &$zip, $filename, $usertempdir, $archiver, $settings_id, &$zipfile)
     {
     global $lang, $use_zip_extension, $collection_download_settings, $archiver_listfile_argument, $cmdfile, $config_windows;
@@ -3866,6 +3941,12 @@ function collection_download_process_archive_command($collection_download_tar, &
         }
     }
 
+/**
+ * Remove temporary files created during download by exiftool for adding metadata.
+ *
+ * @param  array $deletion_array    An array of file paths
+ * @return void
+ */
 function collection_download_clean_temp_files(array $deletion_array)
     {
     global $use_zip_extension, $cmdfile;
