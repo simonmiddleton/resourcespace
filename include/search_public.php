@@ -15,9 +15,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		$shownresults=true;
 		?>
 
-		<div class="ResourcePanel"
-			style="height: <?php echo 180+(28*count($thumbs_display_fields)) ?>px;"
-			>
+		<div class="ResourcePanel">
 	
 		<div class="ImageWrapper" style="position: relative;height:150px;">
 		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo htmlspecialchars(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>">
