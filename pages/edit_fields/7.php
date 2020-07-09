@@ -30,7 +30,7 @@ if(!isset($selected_nodes))
 // receiving an error (e.g required field missing)
 if(isset($user_set_values[$field['ref']]) && is_array($user_set_values[$field['ref']]) && !empty($user_set_values[$field['ref']]))
     {
-    $selected_nodes = array_merge($selected_nodes, $user_set_values[$field['ref']]);
+    $selected_nodes = $user_set_values[$field['ref']];
     }
 
 foreach($selected_nodes as $node)
