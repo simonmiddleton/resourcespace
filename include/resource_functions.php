@@ -2010,6 +2010,20 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
     }
 
 
+/**
+ * Create a resource / keyword mapping
+ *
+ * @param  int      $ref                   ID of resource
+ * @param  string   $keyword               Keyword to be added
+ * @param  int      $resource_type_field   ID of resource type field
+ * @param  int      $position
+ * @param  string   $optional_column
+ * @param  string   $optional_value
+ * @param  boolean  $normalized            Normalize the keyword?
+ * @param  boolean  $stemmed               Use stemming?
+ * 
+ * @return void
+ */
 function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
     global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
@@ -2080,6 +2094,14 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
             }  	
     }
     
+/**
+ * Remove all entries from resource_keyword for this field, useful if setting is changed and changed back leaving stale data
+ *
+ * @param  int  $resource              ID of resource
+ * @param  int  $resource_type_field   ID of resource type field
+ * 
+ * @return void
+ */
 function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
     {
     sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
@@ -2971,9 +2993,16 @@ function get_max_resource_ref()
 	return sql_value("select max(ref) value from resource",0);
 	}
 
+/**
+ * Returns an array of resource references in the range $lower to $upper.
+ *
+ * @param  int  $lower    ID of resource, lower in range
+ * @param  int  $higher   ID of resource, upper in range
+ * 
+ * @return array
+ */
 function get_resource_ref_range($lower,$higher)
 	{
-	# Returns an array of resource references in the range $lower to $upper.
 	return sql_array("select ref value from resource where ref>='$lower' and ref<='$higher' and archive=0 order by ref",0);
 	}
 
@@ -4052,6 +4081,14 @@ function user_rating_save($userref,$ref,$rating)
 	}
 
 
+/**
+ * Get contributed by user formatted for inclusion in notifications
+ *
+ * @param  int     $ref         ID of resource
+ * @param  string  $htmlbreak   HTML break type
+ * 
+ * @return string
+ */
 function process_notify_user_contributed_submitted($ref,$htmlbreak)
 	{
 	global $use_phpmailer,$baseurl, $lang;
@@ -4079,9 +4116,16 @@ function process_notify_user_contributed_submitted($ref,$htmlbreak)
 	return $htmlbreak . $user . ': ' . $url;
 	}
 
+/**
+ * Send notifications when resources are moved from "User Contributed - Pending Submission" to "User Contributed - Pending Review"
+ *
+ * @param  array|int  $refs         ID of resource(s)
+ * @param  int        $collection   ID of collection
+ * 
+ * @return boolean|void
+ */
 function notify_user_contributed_submitted($refs,$collection=0)
 	{
-	// Send notifications when resources are moved from "User Contributed - Pending Submission" to "User Contributed - Pending Review"
 	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
 	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
 	$htmlbreak="\r\n";
@@ -4538,19 +4582,27 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	return true;
 	}
 
+/**
+ * For the given resource and size, can the current user download it?
+ * resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
+ * $resource can be a resource-specific search result array.
+ *
+ * @param  int     $resource        ID of resource
+ * @param  string  $size            ID of size
+ * @param  int     $resource_type   ID of resource type
+ * @param  int     $alternative     Use alternative?
+ * 
+ * @return boolean
+ */
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
 	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach;
-	# For the given resource and size, can the current user download it?
-	# resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
-	# $resource can be a resource-specific search result array.
 	$access=get_resource_access($resource);
 
     if (checkperm('T' . $resource_type . "_" . $size))
         {
         return false;
         }
-
 
 	if (checkperm('X' . $resource_type . "_" . $size) && $alternative==-1)
 		{
@@ -5210,11 +5262,14 @@ function update_disk_usage($resource)
 	return true;
 	}
 
+/**
+ * Update disk usage for all resources that have not yet been updated or have not been updated in the past 30 days.
+ * Limit to a reasonable amount so that this process is spread over several cron intervals for large data sets.
+ *
+ * @return boolean|void
+ */
 function update_disk_usage_cron()
 	{
-	# Update disk usage for all resources that have not yet been updated or have not been updated in the past 30 days.
-    # Limit to a reasonable amount so that this process is spread over several cron intervals for large data sets.
-    
     $lastrun = get_sysvar('last_update_disk_usage_cron', '1970-01-01');
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
@@ -5666,7 +5721,17 @@ function delete_resources_in_collection($collection) {
         }
 
 	return TRUE;
-	}
+    }
+    
+/**
+ * Update related resources - add new related resource or delete existing
+ *
+ * @param  int      $ref       ID of current resource
+ * @param  int      $related   ID of resource to link to current resource
+ * @param  boolean  $add       Add relationship?
+ * 
+ * @return boolean
+ */
 function update_related_resource($ref,$related,$add=true)
 	{	
 	if (!is_int($ref) || !is_int($related)){return false;}
@@ -5684,6 +5749,14 @@ function update_related_resource($ref,$related,$add=true)
 	return true;
 	}
 
+/**
+ * Check if sharing of resource is permitted
+ *
+ * @param  int  $ref      ID of resource
+ * @param  int  $access   Level of resource access  (0 - Open  1 - Restricted  2 - Confidential)
+ * 
+ * @return boolean
+ */
 function can_share_resource($ref, $access="")
 	{
 	global $allow_share, $restricted_share, $customgroupaccess,$customuseraccess, $allow_custom_access_share;
@@ -6709,11 +6782,19 @@ function copy_hitcount_to_live()
     sql_query("update resource_node set hit_count=new_hit_count");
     }
 
+/**
+ * Returns a table of available image sizes for resource $ref. The standard image sizes are translated using $lang. Custom image sizes are i18n translated.
+ * The original image file assumes the name of the 'nearest size (up)' in the table
+ *
+ * @param  int      $ref            ID of resource
+ * @param  boolean  $internal       
+ * @param  string   $extension      File extension of image
+ * @param  boolean  $onlyifexists
+ * 
+ * @return void
+ */
 function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
-    # Returns a table of available image sizes for resource $ref. The standard image sizes are translated using $lang. Custom image sizes are i18n translated.
-    # The original image file assumes the name of the 'nearest size (up)' in the table
-
     global $imagemagick_calculate_sizes;
 
     # Work out resource type
@@ -6813,6 +6894,13 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
     }
 
 
+/**
+ * Get quality value for a given preview size.
+ *
+ * @param  string  $size   ID of preview size
+ * 
+ * @return int
+ */
 function get_preview_quality($size)
     {
     global $imagemagick_quality,$preview_quality_unique;
@@ -7227,11 +7315,16 @@ function payment_set_complete($collection,$emailconfirmation="")
     }
 
 
-
-    function get_indexed_resource_type_fields()
+/**
+ * Get references of resource type fields that are indexed
+ *
+ * @return array
+ */
+function get_indexed_resource_type_fields()
     {
     return sql_array("select ref as value from resource_type_field where keywords_index=1","schema");
     }
+
 
 /**
 * Gets all metadata fields, optionally for a specified array of resource types 
