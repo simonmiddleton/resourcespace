@@ -175,6 +175,10 @@ and running.
 #$storageurl="http://my.storage.server/filestore"; # Where the storagedir is available. Can be absolute (http://files.example.com) or relative to the installation. Note: no trailing slash
 # If you are changing '$storagedir' in your config, please make sure '$storageurl' is also set.
 
+# Optional folder to use for temporary file storage. 
+# If using a remote filestore for resources e.g. a NAS this should be added to point to a local drive with fast disk access
+# $tempdir = '/var/rstemp';
+
 # Store original files separately from RS previews? If this setting is adjusted with resources in the system you'll need to run ../pages/tools/filestore_separation.php.
 $originals_separate_storage=false;
 
