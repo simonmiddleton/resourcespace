@@ -840,7 +840,26 @@ else if(1 == $resource['has_image'])
             function toggleMode(element)
                 {
                 jQuery(element).toggleClass('Enabled');
+
+
                 }
+
+			// resets CSS properties to indicate RS Tagging is now available
+			function unsetVisualIndicator(element)
+				{
+				element.css('opacity', 1);
+				jQuery("#previewimagecopy").css('opacity', 1);
+				}
+
+
+			// sets css properties to indicate RS Tagging initalisation
+			function setVisualIndicator(element)
+				{
+				element.css('opacity', '0.2'); // transparent resource image
+				jQuery("canvas").css("z-index", 1); // move image above preview tools bar so that bottom of image can be annotated
+				jQuery("div#PreviewTools").css("z-index", 0); // move previewtools under resource image using z-index	
+				}
+
             </script>
             <div id="PreviewToolsOptionsWrapper">
             <?php
@@ -861,9 +880,14 @@ else if(1 == $resource['has_image'])
                     var img_copy_id        = 'previewimagecopy';
                     var img_src            = preview_image.attr('src');
 
+					
+					
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
+						// indicate visually that tagging is being initialised
+						setVisualIndicator(preview_image);
+
                         anno.addPlugin('RSTagging',
                             {
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
@@ -899,9 +923,8 @@ else if(1 == $resource['has_image'])
                             {
                             toggleAnnotationsOption(element);
                             }, 
-                            1000);
-                        return false;
-						
+                            1500);
+						return false;
                         }
 
                     // Feature enabled? Then disable it.
@@ -939,6 +962,8 @@ else if(1 == $resource['has_image'])
 
                     toggleMode(element);
 
+					// reset image css to indicate tagging is now available
+					unsetVisualIndicator(preview_image);
                     return false;
                     }
                 </script>
