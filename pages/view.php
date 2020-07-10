@@ -825,12 +825,20 @@ else if(1 == $resource['has_image'])
     		}
         	?>
         <!-- Available tools to manipulate previews -->
-        <div id="PreviewTools">
+        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
             <script>
+
+
+		
+
             function showHidePreviewTools()
                 {
                 var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
                 var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+				// move tool bar behind image
+				jQuery("canvas").css("z-index", 1); // move image above preview tools bar so that bottom of image can be annotated
+				jQuery("div#PreviewTools").css("z-index", 0); // move previewtools under resource image using z-index	
 
                 tools_wrapper.toggleClass('Hidden');
 
@@ -856,12 +864,11 @@ else if(1 == $resource['has_image'])
 			function setVisualIndicator(element)
 				{
 				element.css('opacity', '0.2'); // transparent resource image
-				jQuery("canvas").css("z-index", 1); // move image above preview tools bar so that bottom of image can be annotated
-				jQuery("div#PreviewTools").css("z-index", 0); // move previewtools under resource image using z-index	
+				
 				}
 
             </script>
-            <div id="PreviewToolsOptionsWrapper">
+            <div id="PreviewToolsOptionsWrapper" class="Hidden">
             <?php
             if($annotate_enabled && file_exists($imagepath))
                 {
@@ -965,7 +972,20 @@ else if(1 == $resource['has_image'])
 					// reset image css to indicate tagging is now available
 					unsetVisualIndicator(preview_image);
                     return false;
+					}
+					
+					<?php
+                if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
+                    {
+                    ?>
+                    jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
+                        {
+                        toggleAnnotationsOption(jQuery('.AnnotationsOption'));
+                        });
+                    <?php
                     }
+					?>
+					
                 </script>
                 <?php
                 }
