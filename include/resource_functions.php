@@ -7681,7 +7681,11 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
             {
             if(in_array(strtolower($extension), $allowed_extensions))
                 {
-                return $resource_type_id;
+                $resource_types = sql_array("SELECT ref AS value FROM resource_type");
+                if(in_array($resource_type_id, $resource_types))
+                    {
+                    return $resource_type_id;
+                    }
                 }
             }
         }
