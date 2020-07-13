@@ -42,7 +42,7 @@ $profile = getProfileFileName(getvalescaped('profile', null));
 $baseDirectory = get_temp_dir() . '/format_chooser';
 @mkdir($baseDirectory);
 
-$target = $baseDirectory . '/' . getTargetFilename($ref, $ext, $size);
+$target = $baseDirectory . '/' . get_download_filename($ref,$size,-1,$ext);
 
 set_time_limit(0);
 
