@@ -1654,9 +1654,35 @@ function mb_basename($file)
  * @access public
  * @return string Return the file name without the extension part.
  */
-function strip_extension($name)
+function strip_extension($name,$use_ext_list=false)
     {
-    $s = strrpos($name, '.');if ($s===false) {return $name;} else {return substr($name,0,$s);}
+        $s = strrpos($name, '.');
+        if ($s===false) 
+        {
+            return $name;
+        }
+        else
+        {
+            global $download_filename_strip_extensions;
+            if ($use_ext_list == true && isset($download_filename_strip_extensions))
+            {
+                // Use list of specified extensions if config present.
+                $fn_extension=substr($name,$s+1);
+                if (in_array(strtolower($fn_extension),$download_filename_strip_extensions))
+                    {
+                        return substr($name, 0, $s);
+                    }
+                else
+                    {
+                        return $name;
+                    }
+            }
+            else
+            {
+                // Attempt to remove file extension from string where download_filename_strip_extensions is not configured.
+                return substr($name,0,$s);
+            }
+        }
     }
 
 /**
