@@ -1746,9 +1746,10 @@ function get_search_title($searchstring)
  * @param  string $sort
  * @param  string $daylimit
  * @param  string $starsearch
+ * @param  int    $res_access          The ID of the resource access level
  * @return boolean
  */
-function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $starsearch = "")
+function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $starsearch = "",$res_access = "")
 	{
     if((string)(int)$collection != $collection)
         {
@@ -1764,7 +1765,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit,"","","","","",$res_access);
 
 	if(!is_array($results) || count($results) == 0)
         {

@@ -17,6 +17,7 @@ $offset          = getvalescaped('offset', '');
 $resources_count = getvalescaped('resources_count', '');
 $collection      = getvalescaped('collection', '');
 $entername       = getvalescaped('entername', '');
+$res_access      = getvalescaped('access','');
 
 # if search is not a special search (ie. !recent), use starsearchvalue.
 if ($search !="" && strpos($search,"!")!==false)
@@ -602,7 +603,7 @@ if ($addsearch!=-1)
 			else
 				{
 				#add saved search (the items themselves rather than just the query)
-				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
+				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch, $res_access);
 				if (!empty($resourcesnotadded))
 					{
 					$warningtext="";
