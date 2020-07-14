@@ -59,7 +59,7 @@ function HookEmbedvideoViewAfterresourceactions()
         else
             {
             echo htmlspecialchars('
-            <object type="application/x-shockwave-flash" data="' . $baseurl . '/lib/flashplayer/player_flv_maxi.swf" width="' . $ffmpeg_preview_max_width . '" height="' . $ffmpeg_preview_max_height . '" class="Picture"><param name="allowFullScreen" value="true" /><param name="movie" value="' . $baseurl . '/lib/flashplayer/player_flv_maxi.swf" /><param name="FlashVars" value="flv=' . $flashpath . '&amp;width=' . $ffmpeg_preview_max_width . '&amp;height=' . $ffmpeg_preview_max_height . '&amp;margin=0&amp;buffer=10&amp;showvolume=1&amp;volume=200&amp;showtime=1&amp;autoplay=1&amp;autoload=0&amp;showfullscreen=1&amp;showstop=1&amp;playercolor=' . $colour . '&startimage=' . $thumb . '" /></object>
+            <object type="application/x-shockwave-flash" data="' . $baseurl . '/lib/flashplayer/player_flv_maxi.swf" width="' . $ffmpeg_preview_max_width . '" height="' . $ffmpeg_preview_max_height . '" class="Picture"><param name="allowFullScreen" value="true" /><param name="movie" value="' . $baseurl . '/lib/flashplayer/player_flv_maxi.swf" /><param name="FlashVars" value="flv=' . $flashpath . '&amp;width=' . $ffmpeg_preview_max_width . '&amp;height=' . $ffmpeg_preview_max_height . '&amp;margin=0&amp;buffer=10&amp;showvolume=1&amp;volume=200&amp;showtime=1&amp;autoplay=1&amp;autoload=0&amp;showfullscreen=1&amp;showstop=1&amp;playercolor=505050&startimage=' . $thumb . '" /></object>
             ');
             }
         } // end hook replaceembedcode
