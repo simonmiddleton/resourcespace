@@ -2641,9 +2641,6 @@ $camera_autorotation_checked = true;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 
-# display swf in full on the view page (note that jpg previews aren't created yet)
-$display_swf=false;
-
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
 # Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
@@ -2719,9 +2716,6 @@ $collection_dropdown_user_access_mode=false;
 
 # show mp3 player in xlarge thumbs view (if $mp3_player=true)
 $mp3_player_xlarge_view=true;
-
-# show embedded swfs in xlarge thumbs view 
-$display_swf_xlarge_view=false;
 
 # show mp3 player in thumbs view (if $mp3_player=true)
 $mp3_player_thumbs_view=false;

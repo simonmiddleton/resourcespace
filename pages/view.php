@@ -679,21 +679,6 @@ elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"
 		}
 	?></div><?php
 	}	
-elseif ($resource['file_extension']=="swf" && $display_swf){
-	$swffile=get_resource_path($ref,true,"",false,"swf");
-	if (file_exists($swffile))
-		{?>
-		<div id="previewimagewrapper">
-		<?php include "swf_play.php"; 
-		if(isset($previewcaption))
-			{
-			echo "<div class=\"clearerleft\"> </div>";					
-			display_field_data($previewcaption, true);
-			}
-		?>
-		</div><?php
-		}
-	}
 else if(1 == $resource['has_image'])
     {
     $use_watermark = check_use_watermark();
