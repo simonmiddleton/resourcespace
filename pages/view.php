@@ -624,7 +624,7 @@ else
 <?php
 
 # Try to find a preview file.
-$flvfile = get_resource_path(
+$video_preview_file = get_resource_path(
     $ref,
     true,
     'pre',
@@ -635,29 +635,22 @@ $flvfile = get_resource_path(
 # Default use_watermark if required by related_resources
 $use_watermark = false;
 
-if(!file_exists($flvfile) && 'flv' != $ffmpeg_preview_extension)
-    {
-    $flvfile = get_resource_path($ref, true, 'pre', false, 'flv');
-    } # Try FLV, for legacy systems.
 
-if(!file_exists($flvfile))
-    {
-    $flvfile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension);
-    }
+$videopreviewfile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension);
 
 if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	{
 	include "../players/type" . $resource["resource_type"] . ".php";
 	}
-elseif (hook("replacevideoplayerlogic","",array($flvfile))){ }
-elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($flvfile)))
+elseif (hook("replacevideoplayerlogic","",array($video_preview_file))){ }
+elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($videopreviewfile)))
 	{
 	# Include the player if a video preview file exists for this resource.
 	$download_multisize=false;
 	?>
 	<div id="previewimagewrapper">
 	<?php 
-    if(!hook("customflvplay"))
+    if(!hook("customflvplay")) // Note: Legacy hook name; video_player.php no longer deals with FLV files.
 	    {
 		include "video_player.php";
 	    }
@@ -670,7 +663,7 @@ elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
 	# If configured, and if the resource itself is not an FLV file (in which case the FLV can already be downloaded), then allow the FLV file to be downloaded.
 	if ($flv_preview_downloadable && $resource["file_extension"]!="flv") {$flv_download=true;}
 	}
-elseif ($videojs && $use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
+elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
 	{?>
 	<div id="previewimagewrapper">
 	<?php 
@@ -1502,13 +1495,13 @@ if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'
 	<?php
 	}
 	
-if (isset($flv_download) && isset($flvfile) && $flv_download && file_exists($flvfile) && resource_download_allowed($ref,"pre",$resource["resource_type"]))
+if (isset($flv_download) && isset($video_preview_file) && $flv_download && file_exists($video_preview_file) && resource_download_allowed($ref,"pre",$resource["resource_type"]))
     {
-	# Allow the FLV preview to be downloaded. $flv_download is set when showing the FLV preview video above.
+	# Allow the video preview to be downloaded. $flv_download is set when showing the preview video above.
 	?>
 	<tr class="DownloadDBlend">
 	<td class="DownloadFileName"><h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2></td>
-	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($flvfile))?></td>
+	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($video_preview_file))?></td>
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 	<?php if ($terms_download || $save_as){?>
 		<a href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=>generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
@@ -1531,11 +1524,6 @@ hook('additionalresourcetools2', '', array($resource, $access));
 	
 include "view_alternative_files.php";
 
-if (!$videojs && $use_mp3_player && file_exists($mp3realpath) && $access==0)
-	{
-	//Legacy custom mp3 player support - need to show in this location
-    include "mp3_play.php";
-	}
 ?>
 
 

@@ -561,9 +561,6 @@ $pdf_pages=30;
 # When uploading PDF files, split each page to a separate resource file?
 $pdf_split_pages_to_resources=false;
 
-# Use VideoJS for video playback (as opposed to FlashPlayer, which we are deprecating)
-$videojs=true;
-
 /*
 * Video Resolution selection: ability to use the original playback file and any files created via $ffmpeg_alternatives for resolution selection options on the view page.
 * Since $video_view_play_hover hides the control bar its use will override the use of resolution selection.
@@ -584,7 +581,7 @@ $videojs_resolution_selection_default_res='HD';
 # dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
 $videojs_resolution_selection_dynamicLabel=false;
 
-# Create a standard preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
+# Create a standard preview video for ffmpeg compatible files? 
 /* Examples of preview options to convert to different types (don't forget to set the extension as well):
 * MP4: $ffmpeg_preview_options = '-f mp4 -ar 22050 -b 650k -ab 32k -ac 1';
 */
@@ -2431,9 +2428,7 @@ $site_text_custom_create=false;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
-# allow player for mp3 files
-# player docs at http://flash-mp3-player.net/players/maxi/
-# Updated October 2015 so will use VideoJS if enabled ($videojs=true;)
+# Allow player for mp3 files using VideoJS.
 $mp3_player=true;
 
 # Show the performance metrics in the footer (for debug)
@@ -2648,6 +2643,7 @@ $camera_autorotation_gm = false;
 
 # display swf in full on the view page (note that jpg previews aren't created yet)
 $display_swf=false;
+
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
 # Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
@@ -2723,14 +2719,14 @@ $collection_dropdown_user_access_mode=false;
 
 # show mp3 player in xlarge thumbs view (if $mp3_player=true)
 $mp3_player_xlarge_view=true;
-# show flv player in xlarge thumbs view 
-$flv_player_xlarge_view=false;
+
 # show embedded swfs in xlarge thumbs view 
 $display_swf_xlarge_view=false;
 
 # show mp3 player in thumbs view (if $mp3_player=true)
 $mp3_player_thumbs_view=false;
-# show flv player in thumbs view 
+
+# show video player in thumbs view 
 $video_player_thumbs_view=false;
 
 

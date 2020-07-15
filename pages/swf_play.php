@@ -1,5 +1,5 @@
 <?php
-# FLV player - plays the FLV file created to preview video resources.
+# Support for playing uploaded SWF (Flash) files
 
 if (file_exists(get_resource_path($ref,true,"",false,"swf")))
 	{

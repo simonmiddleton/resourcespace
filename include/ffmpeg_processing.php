@@ -52,7 +52,7 @@ set_time_limit(0);
 
 $ffmpeg_fullpath = get_utility_path("ffmpeg");
 
-# Create a preview video (FLV)
+# Create a preview video
 $targetfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative); 
 
 $snapshotsize=getimagesize($target);

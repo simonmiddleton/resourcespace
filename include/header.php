@@ -130,7 +130,7 @@ if ($enable_ckeditor){?>
 	<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.plupload.queue/jquery.plupload.queue.min.js?<?php echo $css_reload_key;?>"></script>
 <?php } ?>
 <?php
-if($videojs && ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview))
+if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview)
     {
     ?>
 	<script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>

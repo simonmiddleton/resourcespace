@@ -453,7 +453,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         if (!$revert)
             {
-            # Clear any existing FLV file or multi-page previews.
+            # Clear any existing video preview file or multi-page previews.
             global $pdf_pages;
             for ($n=2;$n<=$pdf_pages;$n++)
                 {
@@ -465,14 +465,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 if (file_exists($path)) {unlink($path);}
                 }
         
-            # Remove any FLV video preview (except if the actual resource is an FLV file).
+            # Remove any video preview (except if the actual resource is in the preview format).
             global $ffmpeg_preview_extension;
             if ($extension!=$ffmpeg_preview_extension)
                 {
                 $path=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);
                 if (file_exists($path)) {unlink($path);}
                 }
-            # Remove any FLV preview-only file
+            # Remove any preview-only file
             $path=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
             if (file_exists($path)) {unlink($path);}
     

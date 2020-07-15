@@ -119,48 +119,7 @@ if (!hook("renderresultthumb"))
                 $thm_url = $result[$n]['thm_url'];
                 } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
 
-                $show_flv=false;
-                $use_mp3_player=false;
-                if((in_array($result[$n]["file_extension"],$ffmpeg_supported_extensions) || $result[$n]["file_extension"]=="flv") && $video_player_thumbs_view){ 
-                    $flvfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
-                    if (!file_exists($flvfile)){
-                        $flvfile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);
-                    }
-                    elseif(!(isset($result[$n]['is_transcoding']) && $result[$n]['is_transcoding']!=0) && file_exists($flvfile) && (strpos(strtolower($flvfile),".".$ffmpeg_preview_extension)!==false)){
-                        $show_flv=true;
-                    }
-                }
-                else
-                    {
-                    // Set $use_mp3_player switch if appropriate
-                    $use_mp3_player = ($mp3_player_thumbs_view && !(isset($result[$n]['is_transcoding']) && $result[$n]['is_transcoding']==1) && ((in_array($result[$n]["file_extension"],$ffmpeg_audio_extensions) || $result[$n]["file_extension"]=="mp3") && $mp3_player));
-                    if ($use_mp3_player)
-                        {
-                        $mp3realpath=get_resource_path($ref,true,"",false,"mp3");
-                        if (file_exists($mp3realpath))
-                            {$mp3path=get_resource_path($ref,false,"",false,"mp3");}
-                        }
-                    }
-                if(isset($flvfile) && hook("replacevideoplayerlogic","",array($flvfile,$result,$n))){
-                
-                }
-                elseif($show_flv){
-                    # Include the Flash player if an FLV file exists for this resource.
-                    if(!hook("customflvplay")){
-                        include "video_player.php";
-                    }
-                }
-                elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("custommp3player"))
-                    {
-                    $thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
-                    if(file_exists($thumb_path))
-                        {$thumb_url=get_resource_path($ref,false,"pre",false,"jpg"); }
-                    else
-                        {$thumb_url=$baseurl_short . "gfx/" . get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false);}
-
-                    include "mp3_play.php";
-                    }
-                else { ?>
+                ?>
                 <a
                     class="<?php echo ($display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper') ?>"
                     href="<?php echo $url?>"  
@@ -212,7 +171,6 @@ if (!hook("renderresultthumb"))
                    hook("aftersearchimg","",array($result[$n], $thm_url, $display))
                    ?>
                 </a>
-                <?php } ?>
             <?php 
             } ?> 
         <!-- END HOOK Renderimagethumb-->

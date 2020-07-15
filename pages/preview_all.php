@@ -200,13 +200,13 @@ if (!file_exists($path))
 	if ($modifiedurl){$url=$modifiedurl['url'];$imageheight=$modifiedurl['scr_height'];$border=true;}
 	
 	?>
-    <?php $flvfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
-if (!file_exists($flvfile)) {$flvfile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}
-if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($flvfile) && (strpos(strtolower($flvfile),".".$ffmpeg_preview_extension)!==false))
+    <?php $video_preview_file=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
+if (!file_exists($video_preview_file)) {$video_preview_file=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}
+if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($video_preview_file) && (strpos(strtolower($video_preview_file),".".$ffmpeg_preview_extension)!==false))
 	{
-	# Include the Flash player if an FLV file exists for this resource.
+	# Include the video player if a preview file exists for this resource.
 	$download_multisize=false;
-    if(!hook("customflvplay"))
+    if(!hook("customflvplay")) // Note - legacy hook name - we no longer play FLV files.
         {
         include "video_player.php";?><br /><br /><?php
         }

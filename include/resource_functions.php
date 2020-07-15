@@ -19,7 +19,7 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 * @param boolean $generate         Generate folder if not found
 * @param string  $extension        Extension of the file we are looking for. For original file, this would be the file
 *                                  extension, otherwise use the preview extension (e.g image preview will have JPG
-*                                  while video preview can have FLV/MP4 or others)
+*                                  while video preview can have MP4 or others)
 * @param boolean $scramble         Set to TRUE to get the scrambled folder (requires scramble key for it to work)
 * @param integer $page             For documents, use the page number we are trying to get the preview of.
 * @param boolean $watermarked      Get the watermark version?
