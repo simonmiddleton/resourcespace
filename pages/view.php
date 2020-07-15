@@ -1482,7 +1482,7 @@ if ($flv_preview_downloadable && isset($video_preview_file) && file_exists($vide
 	# Allow the video preview to be downloaded.
 	?>
 	<tr class="DownloadDBlend">
-	<td class="DownloadFileName"><h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2></td>
+	<td class="DownloadFileName" colspan="2"><h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2></td>
 	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($video_preview_file))?></td>
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 	<?php if ($terms_download || $save_as){?>
