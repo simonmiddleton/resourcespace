@@ -2337,7 +2337,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 			{
 			$truncated_value="null";
 			}		
-		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . $truncated_value . "'") ." where ref='$resource'");
+		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . escape_check($truncated_value) . "'") ." where ref='" . escape_check($resource) . "'");
 		}			
 	
     # Add any onchange code
