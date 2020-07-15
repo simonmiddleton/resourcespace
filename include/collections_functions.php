@@ -3837,7 +3837,7 @@ function collection_download_process_command_to_file($use_zip_extension, $collec
     {
     global $config_windows, $cmdfile;
 
-    # 
+
     //update_progress_file("writing zip command");  
     if (!$use_zip_extension && !$collection_download_tar)
         {
