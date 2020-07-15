@@ -84,7 +84,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		if(!hook("replacelistviewcolresults")){?>
 		<td nowrap><div class="ListTitle"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"", $collection_prefix . i18n_get_collection_name($collections[$n]))?>"><?php echo $collection_prefix . highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]),45),$search)?></a></div></td>
 		<?php 
-		for ($x=0;$x<count($df)-2;$x++){
+		for ($x=0;$x<count($df)-1;$x++){
 			?><td>-</td><?php
 			}
 				
