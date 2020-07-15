@@ -658,10 +658,7 @@ elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
 		{				
 		display_field_data($previewcaption, true);
 		}
-	?></div><?php
-	
-	# If configured, and if the resource itself is not an FLV file (in which case the FLV can already be downloaded), then allow the FLV file to be downloaded.
-	if ($flv_preview_downloadable && $resource["file_extension"]!="flv") {$flv_download=true;}
+	?></div><?php	
 	}
 elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
 	{?>
@@ -1480,9 +1477,9 @@ if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'
 	<?php
 	}
 	
-if (isset($flv_download) && isset($video_preview_file) && $flv_download && file_exists($video_preview_file) && resource_download_allowed($ref,"pre",$resource["resource_type"]))
+if ($flv_preview_downloadable && isset($video_preview_file) && file_exists($video_preview_file) && resource_download_allowed($ref,"pre",$resource["resource_type"]))
     {
-	# Allow the video preview to be downloaded. $flv_download is set when showing the preview video above.
+	# Allow the video preview to be downloaded.
 	?>
 	<tr class="DownloadDBlend">
 	<td class="DownloadFileName"><h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2></td>

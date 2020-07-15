@@ -1658,7 +1658,7 @@ $php_time_limit=300;
 # Cron jobs maximum execution time (Default: 30 minutes)
 $cron_job_time_limit = 1800;
 
-# Should the automatically produced FLV file be available as a separate download?
+# Should the automatically produced video preview file be available as a separate download?
 $flv_preview_downloadable=false;
 
 # What is the default value for the user select box, for example when e-mailing resources?
@@ -2079,8 +2079,8 @@ $show_detailed_errors=false;
 # Ability to set that the 'request' button on resources adds the item to the current collection (which then can be requested) instead of starting a request process for this individual item.
 $request_adds_to_collection=false;
 
-# Option to change the FFMPEG download name from the default ("FLV File" - in the used language) to a custom string.
-# $ffmpeg_preview_download_name = "Flash web preview";
+# Option to change the FFMPEG download name from the default  to a custom string.
+# $ffmpeg_preview_download_name = "Video preview";
 
 # Option to change the original download filename (Use %EXTENSION, %extension or %Extension as a placeholder. Using ? is now DEPRECATED. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION file" -> "Original WMV file")
 # $original_download_name="Original %EXTENSION file";
