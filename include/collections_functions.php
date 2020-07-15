@@ -1765,7 +1765,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit,"","","","","",$res_access);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit,false,true,false,false,false,$res_access);
 
 	if(!is_array($results) || count($results) == 0)
         {
