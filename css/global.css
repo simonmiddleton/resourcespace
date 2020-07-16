@@ -1765,7 +1765,7 @@ select.MultiSelect:before {
 .BrowseBarRoot {
     text-transform: uppercase;
     font-weight: bold;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
     padding-top: 2px;
     padding-bottom: 2px;
 }
