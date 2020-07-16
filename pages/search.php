@@ -41,7 +41,7 @@ if ($k=="" || $internal_share_access)
 
 // Disable checkboxes for external users.
 $use_selection_collection = true;
-if($k != "" && !$internal_share_access)
+if($k != "" && !$internal_share_access || (isset($anonymous_login) && $username == $anonymous_login && !$anonymous_user_session_collection))
     {
     $use_selection_collection = false;
     }
