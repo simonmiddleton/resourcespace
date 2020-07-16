@@ -245,7 +245,9 @@ if (!hook("renderresultthumb"))
                 {
                 if (!hook("replaceresourcepanelinfo"))
                     { ?>
-                    <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']?>">
+                    <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
+                    >
                         <div class="extended">
                         <?php 
                         if ($x==0)
@@ -253,7 +255,6 @@ if (!hook("renderresultthumb"))
                             <a 
                                 href="<?php echo $url?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                                title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
                             >
                             <?php 
                             } //end link
