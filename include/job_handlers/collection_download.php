@@ -6,7 +6,7 @@ Requires the following job data:
 $job_data['collection'] - 
 $job_data['collectiondata'] - 
 $job_data['result'] - Search result of !collectionX
-$job_data['size'] - 
+$job_data['size'] - Requested size
 $job_data['exiftool_write_option']
 $job_data['useoriginal'] - 
 $job_data['id'] - 
@@ -82,14 +82,16 @@ $deletion_array = array();
 $filenames = array(); # set up an array to store the filenames as they are found (to analyze dupes)
 $used_resources = array();
 $subbed_original_resources = array();
-
 for($n = 0; $n < count($collection_resources); $n++)
     {
-    resource_type_config_override($collection_resources[$n]['resource_type']);
+    $ref = $collection_resources[$n]["ref"];
+    $resource_data = get_resource_data($ref);
+    $collection_resources[$n]["resource_type"] = $resource_data['resource_type']; // Update as used in other functions
+    resource_type_config_override($resource_data['resource_type']);
 
     $copy = false; 
     $ref = $collection_resources[$n]['ref'];
-    $access = get_resource_access($collection_resources[$n]);
+    $access = get_resource_access($resource_data);
     $use_watermark = check_use_watermark();
 
     // Do not download resources without proper access level
@@ -98,7 +100,7 @@ for($n = 0; $n < count($collection_resources); $n++)
         continue;
         }
 
-    $pextension = get_extension($collection_resources[$n], $size);
+    $pextension = get_extension($resource_data, $size);
     $usesize = ($size == 'original' ? '' : $usesize = $size);
     $p = get_resource_path($ref, true, $usesize, false, $pextension, -1, 1, $use_watermark);
 
@@ -106,7 +108,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     $target_exists = file_exists($p);
     $replaced_file = false;
 
-    $new_file = hook('replacedownloadfile', '', array($collection_resources[$n], $usesize, $pextension, $target_exists));
+    $new_file = hook('replacedownloadfile', '', array($resource_data, $usesize, $pextension, $target_exists));
     if ($new_file != '' && $p != $new_file)
         {
         $p = $new_file;
@@ -114,11 +116,11 @@ for($n = 0; $n < count($collection_resources); $n++)
         $replaced_file = true;
         $target_exists = file_exists($p);
         }
-    else if(!$target_exists && $useoriginal == 'yes' && resource_download_allowed($ref,'',$collection_resources[$n]['resource_type']))
+    else if(!$target_exists && $useoriginal == 'yes' && resource_download_allowed($ref,'',$resource_data['resource_type']))
         {
         // this size doesn't exist, so we'll try using the original instead
-        $p = get_resource_path($ref, true, '', false, $collection_resources[$n]['file_extension'], -1, 1, $use_watermark);
-        $pextension = $collection_resources[$n]['file_extension'];
+        $p = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, $use_watermark);
+        $pextension = $resource_data['file_extension'];
         $subbed_original_resources[] = $ref;
         $subbed_original = true;
         $target_exists = file_exists($p);
@@ -135,7 +137,7 @@ for($n = 0; $n < count($collection_resources); $n++)
                     && (image_size_restricted_access($size) || ($usesize == '' && $restricted_full_download))
                 )
             )
-            && resource_download_allowed($ref, $usesize, $collection_resources[$n]['resource_type'])
+            && resource_download_allowed($ref, $usesize, $resource_data['resource_type'])
         )
     )
         {

@@ -168,10 +168,16 @@ if ($submitted != "")
 
     if(!$collection_download_tar && $offline_job_queue)
         {
+        foreach ($result as $key => $resdata)
+            {
+             // Only need to store resource IDS, not full search data
+            $jobresult[$key] = array("ref" => $resdata["ref"]);
+            }
+
         $collection_download_job_data = array(
             'collection'            => $collection,
             'collectiondata'        => $collectiondata,
-            'result'                => $result,
+            'result'                => $jobresult,
             'size'                  => $size,
             'exiftool_write_option' => $exiftool_write_option,
             'useoriginal'           => $useoriginal,
