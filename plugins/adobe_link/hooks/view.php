@@ -5,7 +5,7 @@
  */	
 function HookAdobe_linkViewBefore_footer_always()
     {
-    global $lang;
+    global $lang, $resource, $userref;
     if(!isset($_SERVER['HTTP_USER_AGENT'])
         ||
         !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
