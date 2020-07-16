@@ -5,7 +5,7 @@ include "{$rsroot}/include/db.php";
 include "{$rsroot}/include/authenticate.php";
 include_once "{$rsroot}/include/ajax_functions.php";
 
-if(checkperm("b"))
+if(checkperm("b") && !(isset($anonymous_login) && $username == $anonymous_login && $anonymous_user_session_collection))
     {
     ajax_unauthorized();
     }

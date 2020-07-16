@@ -2675,9 +2675,9 @@ function get_session_collections($rs_session,$userref="",$create=false)
 	$extrasql="";
 	if($userref!="")
 		{
-		$extrasql="and user='" . escape_check($userref) ."'";	
+		$extrasql="AND user='" . escape_check($userref) ."'";	
 		}
-	$collectionrefs=sql_array("select ref value from collection where session_id='" . escape_check($rs_session) . "' " . $extrasql,"");
+	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type = '" . COLLECTION_TYPE_STANDARD . "' " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
 		$collectionrefs[0]=create_collection($userref,"Default Collection",0,1); # Do not translate this string!	
@@ -2890,7 +2890,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
      // Remove all resources from collection
-     if(0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
+     if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
      {
      $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php",$urlparams,array("emptycollection"=>$collection_data['ref'],"removeall"=>"true","ajax"=>"true","submitted"=>"removeall"));
      $options[$o]['value']     = 'empty_collection';
@@ -3039,6 +3039,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         && ($k=="" || $internal_share_access) 
         && $manage_collections_share_link
         && $allow_share
+        && !checkperm("b")
         && (checkperm('v')
             || checkperm ('g') 
             || collection_min_access($collection_data['ref'])<=1 
@@ -4072,14 +4073,15 @@ function update_collection_type($cid, $type)
 */
 function get_user_selection_collection($user)
     {
+    global $rs_session;
     if(!is_numeric($user))
         {
         return null;
         }
-
-    $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' ORDER BY ref ASC",
+    $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' %s ORDER BY ref ASC",
         escape_check($user),
-        COLLECTION_TYPE_SELECTION
+        COLLECTION_TYPE_SELECTION,
+        ((isset($rs_session) && $rs_session != "") ? " AND session_id='" . $rs_session . "'"  : "")
     );
 
     return sql_value($sql, null);
