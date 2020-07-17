@@ -785,7 +785,7 @@ if ($_FILES)
                             // Extract data unless user has selected not to extract exif data and there are no per field options set
                             $no_exif = ('yes' == $no_exif) && '' == getval('exif_override', '');
                             $keep_original = getval('keep_original', '') != '';
-                            $success = replace_resource_file($replace_resource,$plupload_upload_location,$autorotate,$no_exif,$keep_original);
+                            $success = replace_resource_file($replace_resource,$plupload_upload_location,$no_exif,$autorotate,$keep_original);
                             if (!$success)
                                 {
                                 die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Failed to replace resource file"}, "id" : "' . htmlspecialchars($replace_resource) . '"}');
