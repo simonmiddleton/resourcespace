@@ -79,7 +79,8 @@ function errorhandler($errno, $errstr, $errfile, $errline)
             'pagename' => (isset($pagename)?$pagename:''),
             'error' => $error_info,
             'username' => (isset($username)?$username:''),
-            'ip' => (isset($_SERVER["REMOTE_ADDR"])?$_SERVER["REMOTE_ADDR"]:'')
+            'ip' => (isset($_SERVER["REMOTE_ADDR"])?$_SERVER["REMOTE_ADDR"]:''),
+            'user_agent' => (isset($_SERVER["HTTP_USER_AGENT"])?$_SERVER["HTTP_USER_AGENT"]:'')
             ));
 
         // Create a stream context with a low timeout.
