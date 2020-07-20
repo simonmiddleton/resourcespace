@@ -5295,8 +5295,7 @@ function update_disk_usage_cron()
 function get_total_disk_usage()
     {
     global $fstemplate_alt_threshold;
-    $used = sql_value("select sum(disk_usage) value from resource where ref>'$fstemplate_alt_threshold'",0);
-    return (int)$used;
+    return sql_value("select ifnull(sum(disk_usage),0) value from resource where ref>'$fstemplate_alt_threshold'",0);
     }
 
 function overquota()
