@@ -23,7 +23,7 @@ include_once __DIR__ . '/../csv_export_functions.php';
 
 global $lang, $baseurl, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
 $text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
-$collection_download_settings,$restricted_full_download;
+$collection_download_settings,$restricted_full_download, $download_file_lifetime;
 
 foreach($job_data as $arg => $value)
     {
@@ -266,6 +266,6 @@ message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data=array();
 $delete_job_data["file"]=$zipfile;
-$delete_date = date('Y-m-d H:i:s',time()+(60*60*24)); // Delete file after 1 day
+$delete_date = date('Y-m-d H:i:s',time()+(60*60*24*(int)$download_file_lifetime)); // Delete file after set number of days
 $job_code=md5($zipfile);
 job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);
