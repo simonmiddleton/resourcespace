@@ -17,7 +17,7 @@
  */
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
-    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username;
+    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
 
     if (!error_reporting()) 
         {
@@ -80,7 +80,8 @@ function errorhandler($errno, $errstr, $errfile, $errline)
             'error' => $error_info,
             'username' => (isset($username)?$username:''),
             'ip' => (isset($_SERVER["REMOTE_ADDR"])?$_SERVER["REMOTE_ADDR"]:''),
-            'user_agent' => (isset($_SERVER["HTTP_USER_AGENT"])?$_SERVER["HTTP_USER_AGENT"]:'')
+            'user_agent' => (isset($_SERVER["HTTP_USER_AGENT"])?$_SERVER["HTTP_USER_AGENT"]:''),
+            'plugins' => (isset($plugins)?join(",",$plugins):'?')
             ));
 
         // Create a stream context with a low timeout.
