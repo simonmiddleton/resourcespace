@@ -2073,6 +2073,9 @@ $collection_frame_height=153;
 # Ability to hide error messages
 $show_error_messages=true;
 
+# Log error messages to a central server. Error paramaters are POSTed along with the system's base URL.
+# $log_error_messages_url="https://my.server.url/script_path.php";
+
 # Include detail of errors to user
 $show_detailed_errors=false;
 

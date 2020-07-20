@@ -17,7 +17,7 @@
  */
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
-    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception;
+    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username;
 
     if (!error_reporting()) 
         {
@@ -70,6 +70,26 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         <?php
         }
 
+    // Optionally log errors to a cental server.
+    if (isset($log_error_messages_url))
+        {
+        // Prepare the post data.
+        $postdata = http_build_query(array(
+            'baseurl' => $baseurl,
+            'pagename' => (isset($pagename)?$pagename:''),
+            'error' => $error_info,
+            'username' => (isset($username)?$username:''),
+            'ip' => (isset($_SERVER["REMOTE_ADDR"])?$_SERVER["REMOTE_ADDR"]:'')
+            ));
+
+        // Create a stream context with a low timeout.
+        $ctx = stream_context_create(array('http' => array('method' => 'POST', 'timeout' => 2, 'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($postdata),'content' => $postdata)));
+		
+        // Attempt to POST but suppress errors; we don't want any errors here and the attempt must be aborted quickly.
+		echo @file_get_contents($log_error_messages_url,0,$ctx);
+        }
+
+    // Optionally e-mail errors to a configured address
     if ($email_errors)
         {
         global $email_notify, $email_from, $email_errors_address, $applicationname;
