@@ -405,5 +405,5 @@ if(
         exit();
         }
 
-    trigger_error($lang["error-csrf-verification-failed"]);
+    exit($lang["error-csrf-verification-failed"]);
     }
