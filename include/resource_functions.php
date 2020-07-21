@@ -3164,11 +3164,11 @@ function copy_resource($from,$resource_type=-1)
 function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
     {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
-    
+
     // Param type checks
     $param_str = array($type,$notes,$fromvalue,$tovalue,$purchase_size);
     $param_int = array($resource,$field,$usage);
-
+ 
     foreach($param_str as $par)
         {
         if (!is_string($par))
@@ -3176,19 +3176,19 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             return false;
             } 
         }
-
+ 
     foreach($param_int as $par)
         {
-        if (!isnumeric($par))
+        if (!is_numeric($par))
             {
             return false;
             } 
         }
-
+ 
     if (!is_float($purchase_price))
         {
         return false;
-        } 
+        }
 
     // If it is worthy of logging, update the modified date in the resource table
     update_timestamp($resource);
@@ -7716,14 +7716,13 @@ function metadata_field_edit_access($field)
 */
 function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
     {
-    $resource_types = sql_array("SELECT ref AS value FROM resource_type");
-
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
         if (!checkperm('T' . $resource_type_id))
             {
             if(in_array(strtolower($extension), $allowed_extensions))
                 {
+                $resource_types = sql_array("SELECT ref AS value FROM resource_type");
                 if(in_array($resource_type_id, $resource_types))
                     {
                     return $resource_type_id;
@@ -7732,15 +7731,7 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
             }
         }
 
-    if(in_array($default, $resource_types))
-        {
-        return $default;
-        }
-    else
-        {
-        # Just return the first valid resource type
-        return $resource_types[0];
-        }
+    return $default;
     }
 
 /**
