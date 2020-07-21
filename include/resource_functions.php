@@ -3143,11 +3143,53 @@ function copy_resource($from,$resource_type=-1)
 	
 	return $to;
 	}
-	
-function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
-	{
-	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
     
+/**
+ * Log resource activity
+ *
+ * 
+ * @param   int     $resource - resource ref                            -- resource_log.resource
+ * @param   string  $type - log code defined in include/definitions.php -- resource_log.type
+ * @param   int     $field - resource type field                        -- resource_log.resource_type_field
+ * @param   string  $notes - text notes                                 -- resource_log.notes
+ * @param   string  $fromvalue - original value                         -- resource_log.previous_value
+ * @param   string  $tovalue - new value
+ * @param   int     $usage                                              -- resource_log.usageoption
+ * @param   string  $purchase_size                                      -- resource_log.purchase_size
+ * @param   float   $purchase_price                                     -- resource_log.purchase_price
+ * 
+ * @return int (or false)
+ */
+
+function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
+    {
+    global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
+    
+    // Param type checks
+    $param_str = array($type,$notes,$fromvalue,$tovalue,$purchase_size);
+    $param_int = array($resource,$field,$usage);
+
+    foreach($param_str as $par)
+        {
+        if (!is_string($par))
+            {
+            return false;
+            } 
+        }
+
+    foreach($param_int as $par)
+        {
+        if (!isnumeric($par))
+            {
+            return false;
+            } 
+        }
+
+    if (!is_float($purchase_price))
+        {
+        return false;
+        } 
+
     // If it is worthy of logging, update the modified date in the resource table
     update_timestamp($resource);
     
@@ -7674,13 +7716,14 @@ function metadata_field_edit_access($field)
 */
 function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
     {
+    $resource_types = sql_array("SELECT ref AS value FROM resource_type");
+
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
         if (!checkperm('T' . $resource_type_id))
             {
             if(in_array(strtolower($extension), $allowed_extensions))
                 {
-                $resource_types = sql_array("SELECT ref AS value FROM resource_type");
                 if(in_array($resource_type_id, $resource_types))
                     {
                     return $resource_type_id;
@@ -7689,7 +7732,15 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
             }
         }
 
-    return $default;
+    if(in_array($default, $resource_types))
+        {
+        return $default;
+        }
+    else
+        {
+        # Just return the first valid resource type
+        return $resource_types[0];
+        }
     }
 
 /**
