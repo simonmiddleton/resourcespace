@@ -540,7 +540,6 @@ function save_user($ref)
         $password               = trim(getvalescaped('password', ''));
         $fullname               = trim(getvalescaped('fullname', ''));
         $email                  = trim(getval('email', '')); //To be escaped on usage in DB
-        $expires                = "'" . getvalescaped('account_expires', '') . "'";
         $usergroup              = trim(getvalescaped('usergroup', ''));
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
@@ -571,9 +570,15 @@ function save_user($ref)
                 }
             }
 
-        if($expires == "''")
+        # Get valid expiry date
+        $expires=getvalescaped("account_expires","");
+        if($expires == "" || strtotime($expires)==false)
             {
             $expires = 'null';
+            }
+        else   
+            {
+            $expires = "'" . date("Y-m-d",strtotime($expires)) . "'";
             }
 
         $passsql = '';
