@@ -109,7 +109,7 @@ function sendFile($filename)
 	$size = filesize_unlimited($filename);
 
 	header('Content-Transfer-Encoding: binary');
-	header('Content-Disposition: attachment; filename="' . mb_basename($filename) . '"');
+	header('Content-Disposition: attachment; filename="' . str_replace(array("\n","\r"),"",mb_basename($filename)) . '"');
 	header('Content-Type: ' . get_mime_type($filename, $suffix));
 	header('Content-Length: ' . $size);
 	header("Content-Type: application/octet-stream");
