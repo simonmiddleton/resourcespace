@@ -10,7 +10,7 @@ if (!defined('PHP_VERSION_ID'))
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
     }
-define('PHP_VERSION_SUPPORTED', 50600); // 5.6 is the minimum supported.
+define('PHP_VERSION_SUPPORTED', 70000); // 7.0 is the minimum supported.
 
 // ------------------------- FIELD TYPES -------------------------
 
