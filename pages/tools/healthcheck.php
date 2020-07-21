@@ -17,7 +17,7 @@ if ($check<=0) exit("FAIL - SQL query produced unexpected result");
 # Check write access to filestore
 if (!is_writable($storagedir)) {exit("FAIL - $storagedir is not writeable.");}
 $hash=md5(time());
-$file=$storagedir . "/write_text.txt";
+$file=$storagedir . "/write_test_$hash.txt";
 file_put_contents($file,$hash);$check=file_get_contents($file);unlink($file);
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
 
