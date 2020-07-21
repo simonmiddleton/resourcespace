@@ -226,11 +226,11 @@ if ($alternative != "-1")
         
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, array("alternative"=>$alt_previous));?>" title="<?php echo $lang["previousresult"]?>"></a>
+         <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($altprevious)?array("alternative"=>$alt_previous):"");?>" title="<?php echo $lang["previousresult"]?>"></a>
          &nbsp;
          <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/view.php", $defaultparams, array("from"=>""))."&".hook("viewextraurl");?>"><?php echo $lang["vieworiginalresource"]?></a>
          &nbsp;
-         <a class="prevLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, array("alternative"=>$alt_next));?>" title="<?php echo $lang["nextresult"]?>"></a><?php
+         <a class="prevLink fa fa-arrow-right" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_next)?array("alternative"=>$alt_next):"");?>" title="<?php echo $lang["nextresult"]?>"></a><?php
     }
 else
     {
