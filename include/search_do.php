@@ -957,7 +957,7 @@ function do_search(
 						}		
 					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
 					}
-				else
+				elseif (isset($freeunion))
 					{
 					$sql_keyword_union[] = $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . " GROUP BY resource ";
 					$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
