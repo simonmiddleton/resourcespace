@@ -370,11 +370,11 @@ function do_search(
 							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
 								{
 								// Find where the searched value is between the range values
-								$sql_join.=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name>='" . $val . "' JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND drn" . $c . "e.name<='" . $val . "'";
+								$sql_join.=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name>='" . escape_check($val) . "' JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND drn" . $c . "e.name<='" . escape_check($val) . "'";
 								}
 							else
 								{
-								$sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value like '". $val . "%' ";
+								$sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value like '". escape_check($val) . "%' ";
 								$sql_join.=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field='" . $datefield . "'";
 								}
                             }
@@ -390,17 +390,17 @@ function do_search(
                                 
                             if('basicday' == $kw[0])
                                 {
-                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-__-" . $keystring . "%' ";
+                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-__-" . escape_check($keystring) . "%' ";
                                 $c++;	
                                 }
                             else if('basicmonth' == $kw[0])
                                 {
-                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-" . $keystring . "%' ";
+                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-" . escape_check($keystring) . "%' ";
                                 $c++;
                                 }
                             elseif('basicyear' == $kw[0])
                                 {
-                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '" . $keystring . "%' ";
+                                $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '" . escape_check($keystring) . "%' ";
                                 $c++;
                                 }
                             }
@@ -411,7 +411,7 @@ function do_search(
                                 $sql_filter.=" AND ";
                                 }
                             //$sql_filter.="r.field$date_field >= '" . $keystring . "' ";
-                            $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value >= '" . $keystring . "' ";
+                            $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value >= '" . escape_check($keystring) . "' ";
 							$sql_join.=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field='" . $datefield . "'";
                             }
                         elseif ($kw[0]=="enddate")
@@ -421,7 +421,7 @@ function do_search(
                                 $sql_filter.=" AND ";
                                 }
                             //$sql_filter.="r.field$date_field <= '" . $keystring . " 23:59:59' ";
-                            $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value <= '" . $keystring . " 23:59:59' ";
+                            $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $c . ".value <= '" . escape_check($keystring) . " 23:59:59' ";
 							$sql_join.=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field='" . $datefield . "'";
                            
                             }
