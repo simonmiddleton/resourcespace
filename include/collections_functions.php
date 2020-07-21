@@ -625,6 +625,10 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 	global $userref;
 	$sql="";
 	$keysql="";
+
+    // Check for valid values of 'sort' only
+    if (!in_array($sort,array("ASC","DESC"))) {$sort="ASC";}
+
 	# Keywords searching?
 	$keywords=split_keywords($search);  
 	if (strlen($search)==1 && !is_numeric($search)) 
