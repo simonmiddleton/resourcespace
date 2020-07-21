@@ -5438,7 +5438,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 			{
 			if(!$o_size)
 				{
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check($filesize) . "')");
+				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
 				}
 			else
 				{
@@ -5457,7 +5457,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 			{
 			if(!$o_size)
 				{	
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check($filesize) . "')");
+				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
 				}
 			else
 				{
@@ -5498,7 +5498,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 			    # Size could be calculated after all
 			    if(!$o_size)
 					{
-					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check($filesize) . "')");
+					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
 					}
 				else
 					{
@@ -5513,7 +5513,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 				if(!$o_size)
 					{
 					# Insert a dummy row to prevent recalculation on every view.
-					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}','0', '0', '" . escape_check($filesize) . "')");
+					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}','0', '0', '" . escape_check((int)$filesize) . "')");
 					}
 				else
 					{

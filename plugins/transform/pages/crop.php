@@ -535,7 +535,7 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 
     # delete existing resource_dimensions
     sql_query("delete from resource_dimensions where resource='$ref'");
-    sql_query("insert into resource_dimensions (resource, width, height, file_size) values ('$ref', '$newfilewidth', '$newfileheight', '$newfilesize')");
+    sql_query("insert into resource_dimensions (resource, width, height, file_size) values ('$ref', '$newfilewidth', '$newfileheight', '" . (int)$newfilesize . "')");
 
     # call remove annotations, since they will not apply to transformed
     hook("removeannotations","",array($ref));
