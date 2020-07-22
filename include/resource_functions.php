@@ -3167,7 +3167,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
     // Param type checks
     $param_str = array($type,$notes,$fromvalue,$tovalue,$purchase_size);
-    $param_int = array($resource,$field,$usage);
+    $param_num = array($resource,$field,$usage,$purchase_price);
  
     foreach($param_str as $par)
         {
@@ -3177,7 +3177,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             } 
         }
  
-    foreach($param_int as $par)
+    foreach($param_num as $par)
         {
         if (!is_numeric($par))
             {
@@ -3185,11 +3185,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             } 
         }
  
-    if (!is_float($purchase_price))
-        {
-        return false;
-        }
-
     // If it is worthy of logging, update the modified date in the resource table
     update_timestamp($resource);
     
