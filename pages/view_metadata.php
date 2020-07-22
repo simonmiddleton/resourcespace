@@ -72,10 +72,18 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 	<div class="TabBar">
 	
 	<?php
-		foreach ($fields_tab_names as $tabname) { ?>
-
+		foreach ($fields_tab_names as $tabname) { 
+            if ($modal) 
+                {
+                $tabOnClick="SelectMetaTab(".$tabcount.",true);";
+                }
+            else
+                {
+                $tabOnClick="SelectMetaTab(".$tabcount.",false);";
+                }
+            ?>
 			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
-				<a href="#" onclick="SelectTab();"><?php echo i18n_get_translated($tabname)?></a>
+            <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo i18n_get_translated($tabname)?></a>
 			</div>
 		
 		<?php 
