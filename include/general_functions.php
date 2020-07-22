@@ -3863,7 +3863,10 @@ function daily_stat($activity_type,$object_ref)
     
     # Find usergroup
     global $usergroup;
-    if (!isset($usergroup)) {$usergroup=0;}
+    if ((!isset($usergroup)) || ($usergroup == "")) 
+        {
+        $usergroup=0;
+        }
     
     # External or not?
     global $k;$external=0;
