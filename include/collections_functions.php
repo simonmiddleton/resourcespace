@@ -2495,9 +2495,14 @@ function collection_max_access($collection)
 /**
  * Returns the minimum access (the least permissive) that the current user has to the resources in $collection.
  *
- * @param  integer $collection
- * @return integer
+ *  Can be passed a collection ID or the results of a collection search, the result will be the most restrictive 
+ *  access that is found.
+ * 
+ * @param  integer|array $collection    Collection ID as an integer or the result of a search as an array
+ * 
+ * @return integer                      0 - Open, 1 - restricted, 2 - Confidential
  */
+
 function collection_min_access($collection)
     {
     $minaccess = 0;
