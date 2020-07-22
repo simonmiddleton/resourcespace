@@ -754,8 +754,8 @@ function clear_query_cache($cache)
 		{
 		if (substr($file,0,strlen($cache)+1)==$cache . "_")
 			{
-			unlink($cache_location . "/" . $file);
-			}
+            if (file_exists($cache_location . "/" . $file)) {@unlink($cache_location . "/" . $file);} // Note genuine need for the '@' here as the file can still be deleted in between the check for the file and the delete operation, which would throw an error. This seems unlikely but has been shown to happen regularly.
+            }			
 		}
 	
 	$query_cache_already_completed_this_time[]=$cache;
