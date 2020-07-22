@@ -20,7 +20,7 @@ rs_setcookie("thumbs", $thumbs, 1000,"","",false,false);
 
 $ref=getvalescaped("ref","",true);
 $search=getvalescaped("search","");
-$offset=getvalescaped("offset","",true);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
