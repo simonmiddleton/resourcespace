@@ -3161,7 +3161,7 @@ function copy_resource($from,$resource_type=-1)
  * @return int (or false)
  */
 
-function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
+function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0.00)
     {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
