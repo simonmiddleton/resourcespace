@@ -237,7 +237,7 @@ if ($order_by=="")
     }
 
 $per_page=getvalescaped("per_page",$default_perpage);
-if(empty($per_page))
+if(empty($per_page) || $per_page < 1)
     {
     $per_page=$default_perpage;
     }
