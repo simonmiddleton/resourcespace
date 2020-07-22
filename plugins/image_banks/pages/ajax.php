@@ -31,13 +31,15 @@ if(!\ImageBanks\validFileSource($original_file_url, $image_banks_loaded_provider
 
 if($original_file_url != "")
     {
+    $resource_type_from_extension = get_resource_type_from_extension(pathinfo($original_file_url, PATHINFO_EXTENSION),
+    $resource_type_extension_mapping,$resource_type_extension_mapping_default);
     // Clear the user template and then copy resource from user template. This should deal with archive state permissions
     // and put the resource in active state if user has access to it
     clear_resource_data(0 - $userref);
-    $new_resource_ref = copy_resource(0 - $userref, $default_resource_type);
+    $new_resource_ref = copy_resource(0 - $userref, $resource_type_from_extension);
     if($new_resource_ref === false)
         {
-        $new_resource_ref = create_resource($default_resource_type, 999, $userref);
+        $new_resource_ref = create_resource($resource_type_from_extension, 999, $userref);
         }
 
     if(!$new_resource_ref)
