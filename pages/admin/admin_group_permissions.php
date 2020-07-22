@@ -54,7 +54,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	}
 
 $group=get_usergroup($ref);
-if(in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
+if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",$group["permissions"]));
 $permissions_done=array();
 

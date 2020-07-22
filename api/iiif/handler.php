@@ -21,6 +21,7 @@ $rootimageurl = $baseurl . "/iiif/image/";
 $request_url=strtok($_SERVER["REQUEST_URI"],'?');
 $path=substr($request_url,strpos($request_url,$rootlevel) + strlen($rootlevel));
 $xpath = explode("/",$path);
+$getext="";
 
 $validrequest = false;
 $iiif_headers = array();

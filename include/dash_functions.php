@@ -1668,7 +1668,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             </a>
         </div>
         <?php
-        if(checkPermission_dashadmin() || $tile['all_users'] == 0)
+        if(checkPermission_dashadmin() || (isset($tile['all_users']) && $tile['all_users'] == 0))
             {
             ?>
             <div class="tool edit">
@@ -1694,7 +1694,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             var usertileidname = "#<?php echo htmlspecialchars(substr($tile_id, 9)); ?>";
             var dashtileactionsid = "#DashTileActions_" + usertileid;
             var deletetileid = ".dash-delete_" + usertileid;
-            var editlink = "<?php echo $tile["url"]; ?>";
+            var editlink = "<?php echo (isset($tile["url"])?$tile["url"]:"") ; ?>";
             var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
             var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
     
