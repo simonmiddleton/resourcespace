@@ -2107,7 +2107,11 @@ function update_collection_order($neworder,$collection,$offset=0)
 function get_collection_resource_comment($resource,$collection)
 	{
 	$data=sql_query("select *,use_as_theme_thumbnail from collection_resource where collection='" . escape_check($collection) . "' and resource='" . escape_check($resource) . "'","");
-	return $data[0];
+    if (!isset($data[0]))
+		{
+		return false;
+		}
+    return $data[0];
 	}
 	
 /**
