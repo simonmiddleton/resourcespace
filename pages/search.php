@@ -1162,6 +1162,7 @@ if($responsive_ui)
         if(!isset($collectiondata) || !$collectiondata)
             {
             $collectiondata = array();
+            $collectionsearch = false;
             }
 
         $url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
