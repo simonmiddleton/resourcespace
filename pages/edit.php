@@ -202,7 +202,7 @@ if($editsearch)
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
     $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
     $items       = array_column($edititems,"ref");
-    if(count($searchitems) != count($edititems))
+    if(count($searchitems) != count($edititems) || count($items) == 0)
         {
         $error = $lang['error-permissiondenied'];
         error_alert($error);
