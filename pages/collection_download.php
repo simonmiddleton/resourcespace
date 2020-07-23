@@ -121,7 +121,7 @@ for ($n=0;$n<count($result);$n++)
         }
     }
     
-if(intval($user_dl_limit) > 0)
+if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
     {
     $download_limit_check = get_user_downloads($userref,$user_dl_days);
     if($download_limit_check + count($result) > $user_dl_limit)
