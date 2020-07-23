@@ -1642,8 +1642,6 @@ function check_access_key($resource,$key)
                     }
                 $emulate_plugins_set=true;                  
                 }
-                
-            }
             
             if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
                 {
@@ -1656,6 +1654,7 @@ function check_access_key($resource,$key)
                 eval($config_options);
 
                 }
+            }
         
         # Special case for anonymous logins.
         # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
