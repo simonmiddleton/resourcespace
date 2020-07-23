@@ -57,7 +57,7 @@ if ((isset($home_colour_style_override) && $home_colour_style_override != ''))
     ?>
     #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #BrowseBarTab, #NewsPanel, #remote_assist #SearchBoxPanel
         {
-        background: <?php echo $home_colour_style_override; ?> !important;
+        background: <?php echo $home_colour_style_override; ?>;
         }
     <?php
     }
