@@ -7711,22 +7711,30 @@ function metadata_field_edit_access($field)
 */
 function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
     {
+    $resource_types = sql_array("SELECT ref AS value FROM resource_type");
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
         if (!checkperm('T' . $resource_type_id))
             {
             if(in_array(strtolower($extension), $allowed_extensions))
                 {
-                $resource_types = sql_array("SELECT ref AS value FROM resource_type");
-                if(in_array($resource_type_id, $resource_types))
+                    if(in_array($resource_type_id, $resource_types))
                     {
                     return $resource_type_id;
                     }
                 }
             }
         }
-
-    return $default;
+    if(in_array($default, $resource_types))
+        {
+        return $default;
+        }
+    else
+        {
+        // default resource type does not exist so use the first available type
+        sort($resource_types,SORT_NUMERIC);
+        return $resource_types[0];
+        }
     }
 
 /**
