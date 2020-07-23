@@ -100,7 +100,7 @@ $lang["fieldtype-dynamic_keywords_list"]="Dynamische Stichwortliste";
 $lang["fieldtype-dynamic_tree_in_development"]="Dynamischer Baum (in Entwicklung)";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Weitere Informationen über die Berechtigungen finden Sie in der <a href=../../documentation/permissions.txt target=_blank>Berechtigungen Hilfe-Datei</a>.";
+$lang["documentation-permissions"]="Weitere Informationen über die Berechtigungen finden Sie in der <a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a>.";
 $lang["property-reference"]="Referenz";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Berechtigungen";
