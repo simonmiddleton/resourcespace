@@ -475,7 +475,10 @@ function create_resource($resource_type,$archive=999,$user=-1)
 		global $userref;
 		$user = $userref;
 		}
-        
+    
+    // Archive cannot be blank
+    if ($archive == "") {$archive = 0;}
+
 	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
 	
 	$insert=sql_insert_id();
