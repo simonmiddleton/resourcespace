@@ -861,7 +861,7 @@ hook('searchresultsheader');
 
 #if (is_array($result)||(isset($collections)&&(count($collections)>0)))
 
-if(array_key_exists("name",$collectiondata) && $enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
+if((isset($collectiondata) && array_key_exists("name",$collectiondata)) && $enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
     {
     // Show the themes breadcrumbs if they exist, but not if we are using the search_titles
     renderBreadcrumbs(
@@ -1232,14 +1232,14 @@ if($responsive_ui)
     // Show collection title and description.
     if ($collectionsearch)
         {
-        if (array_key_exists("name",$collectiondata) && $show_collection_name)
+        if ((isset($collectiondata) && array_key_exists("name",$collectiondata)) && $show_collection_name)
             { ?>
             <div class="RecordHeader">
                 <h1 class="SearchTitle">
                 <?php echo i18n_get_collection_name($collectiondata); ?>
                 </h1>
             <?php
-            if(array_key_exists("description",$collectiondata) && trim($collectiondata['description']) != "")
+            if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
                 {
                 echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
                 }
