@@ -18,6 +18,11 @@ $original_user=getval("user","");
 
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
+if ($resourceconnect_user == "" || !isset($resourceconnect_user))
+{
+echo $lang["resourceconnect_user_not_configured"];
+exit();
+}
 $userdata=validate_user("u.ref='$resourceconnect_user'");
 setup_user($userdata[0]);
 
