@@ -3973,9 +3973,49 @@ function get_alternative_files($resource,$order_by="",$sort="",$type="")
 
 	return sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='".escape_check($resource)."' $extrasql order by ".escape_check($ordersort)." name asc, file_size desc");
 	}
-	
+
+/**
+* Add alternative file
+* 
+* @param integer $resource
+* @param string  $name
+* @param string  $description
+* @param string  $file_name
+* @param string  $file_extension
+* @param integer $file_size
+* @param string  $alt_type
+* 
+* @return integer
+*/
 function add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
 	{
+    debug_function_call("add_alternative_file", func_get_args());
+
+    $try_trim_str = function(string $s)
+        {
+        $str_len = mb_strlen($s);
+        if($str_len <= 255)
+            {
+            return $s;
+            }
+
+        $extension = pathinfo($s, PATHINFO_EXTENSION);
+        if(is_null($extension) || $extension == "")
+            {
+            return mb_strcut($s, 0, 255);
+            }
+        
+        $ext_len = mb_strlen(".{$extension}");
+        $len = 255 - $ext_len;
+        $s = mb_strcut($s, 0, $len);
+        $s .= ".{$extension}";
+
+        return $s;
+        };
+
+    $name = $try_trim_str($name);
+    $file_name = $try_trim_str($file_name);
+
 	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
