@@ -73,6 +73,12 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     // Optionally log errors to a cental server.
     if (isset($log_error_messages_url))
         {
+        // Work out the backtrace
+        ob_flush();ob_start();
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $backtrace = ob_get_contents();
+        ob_end_clean();
+
         // Prepare the post data.
         $postdata = http_build_query(array(
             'baseurl' => $baseurl,
@@ -82,7 +88,8 @@ function errorhandler($errno, $errstr, $errfile, $errline)
             'ip' => (isset($_SERVER["REMOTE_ADDR"])?$_SERVER["REMOTE_ADDR"]:''),
             'user_agent' => (isset($_SERVER["HTTP_USER_AGENT"])?$_SERVER["HTTP_USER_AGENT"]:''),
             'plugins' => (isset($plugins)?join(",",$plugins):'?'),
-            'query_string' => (isset($_SERVER["QUERY_STRING"])?$_SERVER["QUERY_STRING"]:'')
+            'query_string' => (isset($_SERVER["QUERY_STRING"])?$_SERVER["QUERY_STRING"]:''),
+            'backtrace' => $backtrace
             ));
 
         // Create a stream context with a low timeout.
