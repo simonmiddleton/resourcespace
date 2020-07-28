@@ -208,7 +208,6 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 			}
 		}
 	?>
-    <!-- <h2 class="title notitle"> <?php if(isset($lang[strtolower($tile["txt"])])){echo $lang[strtolower($tile["txt"])];} ?></h2> -->
 	<p class="tile_corner_box">
 		<span aria-hidden="true" class="fa fa-clone"></span>
 		<?php echo $count; ?>
