@@ -61,6 +61,22 @@ elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 
 # Fetch user data
 $user=get_user($ref);
+if ($user===false)
+    {
+    $error = $lang['accountdoesnotexist'];
+    if(getval("ajax","") != "")
+        {
+        error_alert($error, false);
+        }
+    else
+        {
+        include __DIR__ . "/../../include/header.php";
+        $onload_message = array("title" => $lang["error"],"text" => $error);
+        include __DIR__ . "/../../include/footer.php";
+        }
+    exit();
+    }
+    
 if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
 
 if (!checkperm_user_edit($user))
@@ -73,11 +89,7 @@ if (!checkperm_user_edit($user))
 
 include "../../include/header.php";
 
-if ($user == ''){
-	echo $lang["accountdoesnotexist"];
-	include "../../include/footer.php";
-	exit();
-	}
+
 
 // Log in as this user. A user key must be generated to enable login using the MD5 hash as the password.
 if(getval('loginas', '') != '')
