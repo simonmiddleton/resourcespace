@@ -29,6 +29,12 @@ $page=getvalescaped("page",1);
 $alternative=getvalescaped("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
+// If a "fieldX" order_by is used, check it's a valid value.
+if (substr($order_by,0,5)=="field" && !in_array(substr($order_by,5),get_resource_table_joins()))
+{
+exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
+}
+
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
