@@ -253,8 +253,8 @@ if (maxheight><?php echo $imageheight?>){
 </table>
 
 <script type="text/javascript">
-<?php if ($preview_all_hide_collections){ ?>
-	CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
+<?php if ($preview_all_hide_collections) { ?>
+	CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($collection) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
 <?php } ?>
 
 	window.onresize=function(event){
