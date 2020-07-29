@@ -1579,7 +1579,6 @@ $required_fields_exempt=array(); # new array to contain required fields that hav
 
 # Work out if any fields are displayed, and if so, enable copy from feature (+others)
 $display_any_fields=false;
-## $fieldcount=0;
 $tabname="";
 $tabcount=0;
 for ($n=0;$n<count($fields);$n++)
