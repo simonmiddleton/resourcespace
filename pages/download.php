@@ -251,7 +251,7 @@ header("Content-Type: {$mime}");
 debug("PAGES/DOWNLOAD.PHP: Set MIME type to '{$mime}'");
 
 // Check if http_range is sent by browser (or download manager)
-if(isset($_SERVER['HTTP_RANGE']))
+if(isset($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],"=")!==false) # Check it's set and also contains the expected = delimiter
     {
     debug("PAGES/DOWNLOAD.PHP: HTTP_RANGE is set to '{$_SERVER['HTTP_RANGE']}'");
 
