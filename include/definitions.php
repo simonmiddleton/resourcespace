@@ -165,6 +165,7 @@ $advanced_search_properties=array("media_heightmin"=>"hmin",
 define ('STATUS_DISABLED',				0);
 define ('STATUS_ACTIVE',				1);
 define ('STATUS_COMPLETE',				2);	
+define ('STATUS_INPROGRESS',            3);	
 define ('STATUS_ERROR',					5);
 
 // -------------------- General definitions --------------------

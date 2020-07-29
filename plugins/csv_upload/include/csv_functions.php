@@ -2,12 +2,53 @@
 
 include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
 
+/**
+ * Process the uploaded CSV
+ *
+ * @param  string $filename         Path to CSV file
+ * @param  array $meta              Array of resource types and associated fields returned by meta_get_map() in include/meta_functions.php
+ * @param  array $resource_types    Array of resource type data, with the resource type ID as the key
+ * @param  array $messages          Array to store processing, information and error messages, passed by reference
+ * @param  int $max_error_count     Maximum number of fatal errors to accept before aborting
+ * @param  bool $processcsv         Process data? If false data will be checked without making changes
+ * @param  array $csv_set_options   Array of CSV processsing options, includes CSV column to metadtaa field mappings
+ * @return void 
+ */
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_error_count=100,$processcsv=false,$csv_set_options)
 	{
     // Ensure /r line endings (such as those created in MS Excel) are handled correctly
 	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
-    global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref,
-    $category_tree_add_parents, $mysql_verbatim_queries;
+    global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref,$username,
+    $category_tree_add_parents, $mysql_verbatim_queries, $baseurl, $scramble_key, $lang;
+    
+    if(!file_exists($filename))
+        {
+        array_push ($messages,str_replace("%%FILE%%", $filename,$lang["csv_upload_error_file_missing"]));
+        }
+
+    if($processcsv)
+        {
+        // Set a flag to prevent processing the same CSV multiple times
+        $flagpath = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . "csv_processing_" . (isset($csv_set_options["csvchecksum"]) ? $csv_set_options["csvchecksum"] : md5_file($filename));
+        if(file_exists($flagpath))
+            {
+            array_push ($messages,$lang["csv_upload_error_in_progress"]); 
+            return false;
+            }        
+        touch($flagpath);
+        }
+
+    // Set up logging
+    $logfile = "";
+    if(isset($csv_set_options["log_file"]))
+        {
+        $logfile = $csv_set_options["log_file"];
+        }
+   
+    csv_upload_log($logfile,"CSV upload started at " . date("Y-m-d H:i",time()));
+    csv_upload_log($logfile,"Using CSV file: " . $filename);
+
+    $processing_start_time = microtime(true);
 
     $file=fopen($filename,'r');
     $line_count=0;
@@ -73,7 +114,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         $line_count++;
 		if (!$processcsv && count($line) != count($headers))	// check that the current row has the correct number of columns
 			{
-			array_push ($messages,"Error: Incorrect number of columns(" . count($line) . ") found on line " . $line_count . " (should be " . count($header) . ")");
+            $logtext = "Error: Incorrect number of columns(" . count($line) . ") found on line " . $line_count . " (should be " . count($header) . ")";
+            csv_upload_log($logfile,$logtext);
+            array_push ($messages,$logtext);
 			$error_count++;
 			continue;
 			}
@@ -113,8 +156,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             // Check that this is a valid resource type    
             if(trim($resource_type_set) != "" && !in_array($resource_type_set,array_keys($resource_types)))
                 {
-                array_push ($messages,"Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line));
-                $error_count++;
+                $logtext = "Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line);
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
+			    $error_count++;
                 $resource_type_set = $csv_set_options["resource_type_default"];
                 }
 
@@ -136,6 +181,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         // Check that required fields are present for new resources
         if(!$csv_set_options["update_existing"])
             {
+            if(!in_array($resource_type_set,array_keys($resource_types)))
+                {
+                reset($resource_types);
+                $resource_type_set = key($resource_types);
+                $logtext = "Invalid resource type, using resource type " . $resource_types[$resource_type_set]["name"];
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
+                }
+
             $missing_fields=array();
             if (isset($meta[$resource_type_set]))
                 {
@@ -157,7 +211,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 }
             else
                 {
-                array_push($messages,"Warning: (line #" . $line_count . ") resource_type " . $resource_type_set . " (" . $resource_types[$resource_type_set]["name"] . ") has missing field headers (" . implode(",",$missing_fields) . ") and will be ignored");
+                $logtext = "Warning: (line #" . $line_count . ") resource_type " . $resource_type_set . " (" . $resource_types[$resource_type_set]["name"] . ") has missing field headers (" . implode(",",$missing_fields) . ") and will be ignored";
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
                 }
             }
 
@@ -170,7 +226,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $resource_id = (int)$line[$csv_set_options["id_column"]];
                 if(!in_array($resource_id,$replaceresources))
                     {
-                    array_push ($messages,"Error: Invalid resource (" . $resource_id . ")specified in line " . count($line));
+                    $logtext = "Error: Invalid resource (" . $resource_id . ")specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
+                    
 			        $error_count++;
 			        continue;
                     }
@@ -183,7 +242,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $match_val = $line[$csv_set_options["id_column"]];
                 if(trim($match_val) == "")
                     {
-                    array_push ($messages,"Error: Invalid resource identifier specified in line " . count($line));
+                    $logtext = "Error: Invalid resource identifier specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $error_count++;
                     continue;
                     }
@@ -199,7 +260,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
                 if(!is_array($allmatches))
                     {
-                    array_push ($messages,"Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line));
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $error_count++;
                     continue;
                     }
@@ -207,23 +270,31 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
                 if(count($validmatches) == 0)
                     {
-                    array_push ($messages,"Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line));
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $error_count++;
                     continue;
                     }
                 elseif(count($validmatches) == 1)
                     {
-                    array_push ($messages,"Found resource ID : " . $validmatches[0] . " matching the identifier " . $match_val . " specified in line " . count($line));
+                    $logtext = "Found resource ID : " . $validmatches[0] . " matching the identifier " . $match_val . " specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $resourcerefs = $validmatches;
                     }
                 elseif($csv_set_options["multiple_match"])
                     {
-                    array_push ($messages,"Processing multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line));
+                    $logtext = "Processing multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $resourcerefs = $validmatches;
                     }
                 else
                     {
-                    array_push ($messages,"Error: Multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line));
+                    $logtext = "Error: Multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $error_count++;
                     continue;
                     }
@@ -258,7 +329,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 // Create the new resource
                 $newref = create_resource($resource_type_set, $setstatus);
                 sql_query("update resource set access='" . $setaccess . "' where ref='$newref'");
-                array_push ($messages,"Created new resource: #" . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")");
+                $logtext = "Created new resource: #" . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")";
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
+
                 if($add_to_collection)
                     {
                     add_resource_to_collection($newref,$usercollection);
@@ -275,12 +349,16 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     {
                     $newref  = $newref + 1;
                     }
-                array_push ($messages," - create new resource: # " . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")");
+                $logtext = " - create new resource: # " . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")";
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
                 }
             $resourcerefs = array($newref);
             }
         
-        array_push($messages," Line " . $line_count . ": " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs));
+        $logtext = "Line " . $line_count . ": " . ($processcsv ? "Updating" : "Update") . " resources: " . implode(",",$resourcerefs);
+        csv_upload_log($logfile,$logtext);
+        array_push ($messages,$logtext);
         
 		$cell_count=-1;
 		$workflow_states = get_editable_states($userref);
@@ -290,7 +368,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             {
             foreach($resourcerefs as $resource_id)
                 {
-                array_push($messages," - " . ($processcsv ? "Updating" : "Update") . " resource type for resource id #" . $resource_id . " to " . $resource_type_set);
+                $logtext = " - " . ($processcsv ? "Updating" : "Update") . " resource type for resource id #" . $resource_id . " to " . $resource_type_set;
+                csv_upload_log($logfile,$logtext);
+                array_push ($messages,$logtext);
                 if($processcsv)
                     {
                     update_resource_type($resource_id,$resource_type_set);
@@ -398,7 +478,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 // raise error if required field
                 if ($required) 
                     {
-                    array_push($messages, "Error: \"{$field_name}\" is a required field - empty value - line {$line_count}");
+                    $logtext = "Error: \"{$field_name}\" is a required field - empty value - line {$line_count}";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     $error_count++;
                     continue;
                     }
@@ -456,7 +538,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                                 if(checkperm("bdk" . $fieldid))
                                     {
                                     $error_count++;
-                                    array_push($messages, "No permission to add option " . $cell_value_item . " to field: " . $field_name);
+                                    $logtext = "No permission to add option " . $cell_value_item . " to field: " . $field_name;
+                                    csv_upload_log($logfile,$logtext);
+                                    array_push ($messages,$logtext);
                                     continue 2;
                                     }
                                 // Update the field with the new option
@@ -468,7 +552,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                                     {
                                     $lastref = sql_value("SELECT MAX(ref) value FROM node;",0);
                                     $new_node  = isset($new_node) ? $new_node + 1 : $lastref + 1;
-                                    array_push($messages," - " . ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'");
+                                    $logtext = ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'";
+                                    csv_upload_log($logfile,$logtext);
+                                    array_push ($messages,$logtext);
                                     }
                                 
                                 $node_trans_arr[$fieldid][$new_node] = array($cell_value_item);
@@ -482,7 +568,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                                     {
                                     # raise error - invalid date format
                                     $error_count++;
-                                    array_push($messages, " - Invalid date range format - use EDTF format");
+                                    $logtext = " - Invalid date range format - use EDTF format";
+                                    csv_upload_log($logfile,$logtext);
+                                    array_push ($messages,$logtext);
                                     continue 2;
                                     }    
                             break;
@@ -490,7 +578,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                             default:
                                 # field doesn't allow options to be added so raise error
                                 $error_count++;
-                                array_push($messages, "Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}");
+                                $logtext = "Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
+                                csv_upload_log($logfile,$logtext);
+                                array_push ($messages,$logtext);
                                 continue 2;
                             }
                         }
@@ -504,7 +594,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                         {
                         # raise error - invalid date format
                         $error_count++;
-                        array_push($messages, str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_date ));
+                        $logtext = str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_date);
+                        csv_upload_log($logfile,$logtext);
+                        array_push ($messages,$logtext);
                         continue 2;
                         }
                     }
@@ -517,7 +609,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $nodes_to_remove    = array();
                 if ($processcsv)
                     {
-                    array_push($messages, " - Updated field '" . $fieldid . "' (" . $field_def['title'] . ") with value '" . $cell_value . "'");
+                    $logtext = " - Updated field '" . $fieldid . "' (" . $field_def['title'] . ") with value '" . $cell_value . "'";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     if($field_def['type']==FIELD_TYPE_DATE_RANGE)
                         {
                         # each value will be a node so we end up with a pair of nodes to represent the start and end dates
@@ -629,7 +723,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     }
                 elseif($cell_value != "")
                     {
-                    array_push($messages," - " . ($processcsv ? "Updating" : "Update") . " resource " . $resource_id . ", field '" . $field_name . "' with value '" . $cell_value . "'");
+                    $logtext = ($processcsv ? "Updating" : "Update") . " resource " . $resource_id . ", field '" . $field_name . "' with value '" . $cell_value . "'";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     }
                 } // End of foreach resourcerefs
 
@@ -642,23 +738,51 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
     // add an error if there are no lines of data to process (i.e. just the header)
 	if (0 == $line_count && !$processcsv)
 		{
-		array_push($messages,"Error: No lines of data found in file");
+		$logtext = "Error: No lines of data found in file";
+        csv_upload_log($logfile,$logtext);
+        array_push ($messages,$logtext);
 		}
 
 	if ($error_count > 0 && !$processcsv)
 		{
 		if ($max_error_count > 0 && $error_count>=$max_error_count)
 			{
-			array_push($messages,"Warning: Showing first {$max_error_count} data validation errors only - more may exist");
+			$logtext = "Warning: Showing first {$max_error_count} data validation errors only - more may exist";
+            csv_upload_log($logfile,$logtext);
+            array_push ($messages,$logtext);
 			}
 		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
+        if($processcsv && file_exists($flagpath))            {
+            unlink($flagpath);
+            }
 		return false;
         }
 
-	array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
+    array_push($messages,"Info: data successfully " . ($processcsv ? "processed" : "validated"));
+    
+    $find = array("%%TIME%%","%%HOURS%%","%%MINUTES%%","%%SECONDS%%");
+    $secondselapsed = microtime(true) - $processing_start_time;
+    $hours = floor($secondselapsed/(60*60));
+    $minutes = floor(($secondselapsed - $hours*60*60)/60);
+    $seconds = floor((($secondselapsed - $hours*60*60) - $minutes*60)/60);
+    $replace = array(
+        date("Y-m-d H:i",time()),
+        $hours,
+        $minutes,
+        $seconds
+        );
 
+    $logtext = str_replace($find,$replace,$lang["csv_upload_processing_complete"]);
+    csv_upload_log($logfile, $logtext);
+    
+    sprintf("Completed in %01.2f seconds.\n", microtime(true) - $processing_start_time);
+    
 	ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
-	return true;
+	if($processcsv && file_exists($flagpath))
+        {
+        unlink($flagpath);
+        }
+    return true;
     }
 
 
@@ -704,4 +828,22 @@ function csv_upload_get_info($filename, &$messages)
         }
 
     return $csv_data;
+    }
+
+/**
+ * Append text to csv log file
+ *
+ * @param  string $logfile path to log file
+ * @param  mixed $logtext text to append
+ * @return void
+ */
+function csv_upload_log($logfile,$logtext)
+    {
+    if(trim($logfile) == "")
+        {
+        return false;
+        }
+    $log = fopen($logfile, 'a');
+    fwrite($log, $logtext . "\n");
+    fclose($log);           
     }

@@ -186,7 +186,6 @@ if ($submitted != "")
             'count_data_only_types' => $count_data_only_types,
             'usage'                 => $usage,
             'usagecomment'          => $usagecomment,
-            'available_sizes'       => $available_sizes,
             'settings_id'           => $settings_id,
             'include_csv_file'      => $include_csv_file
         );

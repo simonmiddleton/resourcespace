@@ -85,10 +85,11 @@ function isPathWhitelisted($path, array $whitelisted_paths)
 * Return a checksum for the given file path.
 * 
 * @param  string  $path     Path to file
+* @param  bool  $forcefull  Force use of whole file and ignore $file_checksums_50k setting
 * 
 * @return string
 */
-function get_checksum($path)
+function get_checksum($path, $forcefull = false)
     {
     debug("get_checksum( \$path = {$path} );");
     global $file_checksums_50k;
@@ -98,7 +99,7 @@ function get_checksum($path)
         }
 
     # Generate the ID
-    if ($file_checksums_50k)
+    if ($file_checksums_50k && !$forcefull)
         {
         # Fetch the string used to generate the unique ID
         $use=filesize_unlimited($path) . "_" . file_get_contents($path,null,null,0,50000);

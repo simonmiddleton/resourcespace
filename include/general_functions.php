@@ -2778,13 +2778,14 @@ function form_value_display($row,$name,$default="")
  * @param  string $success_text
  * @param  string $failure_text
  * @param  string $job_code
- * @return boolean
+ * @return string|integer ID of newly created job or error text
  */
 function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_text="", $failure_text="", $job_code="")
     {
+    global $lang, $userref;
     if($time==""){$time=date('Y-m-d H:i:s');}
     if($type==""){return false;}
-    if($user==""){global $userref;$user=isset($userref)?$userref:0;}
+    if($user==""){$user=isset($userref)?$userref:0;}
     $job_data_json=json_encode($job_data,JSON_UNESCAPED_SLASHES); // JSON_UNESCAPED_SLASHES is needed so we can effectively compare jobs
     
     if($job_code == "")
@@ -2797,11 +2798,10 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
     $existing_user_jobs=job_queue_get_jobs($type,STATUS_ACTIVE,"",$job_code);
     if(count($existing_user_jobs)>0)
             {
-            global $lang;
             return $lang["job_queue_duplicate_message"];
             }
     sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . $success_text . "','" . $failure_text . "','" . escape_check($job_code) . "')");
-    return true;
+    return sql_insert_id();
     }
     
 /**
@@ -2889,7 +2889,7 @@ function job_queue_run_job($job, $clear_process_lock)
 
     // Variable used to avoid spinning off offline jobs from an already existing job.
     // Example: create_previews() is using extract_text() and both can run offline.
-    global $offline_job_in_progress;
+    global $offline_job_in_progress, $plugins;
     $offline_job_in_progress = false;
 
     if(is_process_lock('job_' . $jobref) && !$clear_process_lock)
@@ -2928,6 +2928,23 @@ function job_queue_run_job($job, $clear_process_lock)
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
         }
     else
+        {
+        // Check for handler in plugin
+        foreach($plugins as $plugin)
+            {
+            if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php"))
+                {
+                $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
+                echo $logmessage;
+                debug($logmessage);
+                $offline_job_in_progress = true;
+                include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
+                break;
+                }
+            }
+        }
+    
+    if(!$offline_job_in_progress)
         {
         $logmessage="Unable to find handlerfile: " . $job["type"]. PHP_EOL;
         echo $logmessage;
