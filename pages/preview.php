@@ -1,5 +1,6 @@
 <?php
 include "../include/db.php";
+include_once "../include/metadata_functions.php";
 
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
@@ -29,11 +30,7 @@ $page=getvalescaped("page",1);
 $alternative=getvalescaped("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
-// If a "fieldX" order_by is used, check it's a valid value.
-if (substr($order_by,0,5)=="field" && !in_array(substr($order_by,5),get_resource_table_joins()))
-{
-exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
-}
+check_order_by_in_table_joins($order_by);
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
