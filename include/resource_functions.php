@@ -444,6 +444,11 @@ function create_resource($resource_type,$archive=999,$user=-1)
     # Create a new resource.
     global $always_record_resource_creator,$index_contributed_by;
 
+    if(!is_numeric($archive))
+    {
+    return false;   
+    }
+
     $alltypes=get_resource_types();    
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
@@ -475,9 +480,6 @@ function create_resource($resource_type,$archive=999,$user=-1)
 		global $userref;
 		$user = $userref;
 		}
-    
-    // Archive cannot be blank
-    if (!isset($archive) || $archive == "") {$archive = 0;}
 
 	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
 	
