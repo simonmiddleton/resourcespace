@@ -506,7 +506,7 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
         }   
     else 
         {
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        $return=upload_file($ref,$no_exif,$revert,$autorotate,$file_path);
         if ($return===false) {return false;}
         } 
 

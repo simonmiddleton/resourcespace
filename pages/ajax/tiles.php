@@ -15,6 +15,10 @@ else
     $tilecache = get_temp_dir()."/tiles";
     if(!is_dir($tilecache))
         {
+        if(file_exists($tilecache))
+            {
+            unlink($tilecache);
+            }
         mkdir($tilecache,0777);
         }
     }

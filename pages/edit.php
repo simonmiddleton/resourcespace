@@ -212,7 +212,7 @@ if($editsearch)
     $last_resource_edit = get_last_resource_edit_array($items); 
 
     # This is a multiple item edit (even if there is only one item in the list), so use the first resource as the template
-    $ref = $items[0];
+    $ref = array_values($items)[0];
     $use = $ref;
     }
 else

@@ -147,7 +147,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
                     // If the user filename doesn't have an extension add the original one
                     $path_parts = pathinfo($filename);
-                    if(!isset($path_parts['extension']) && $original_extension != "") 
+                    if(!isset($path_parts['extension']) && isset($original_extension) && $original_extension != "") 
                         {
                         $filename .= '.' . $uploaded_extension;
                         }
