@@ -130,6 +130,7 @@ $restypedata=sql_query ("
        WHERE ref = '{$ref}'
     ORDER BY `name`
 ", "schema");
+if (count($restypedata)==0) {exit("Resource type not found.");} // Should arrive here unless someone has an old/incorrect URL.
 $restypedata=$restypedata[0];
 
 $inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ? 'checked' : '');
