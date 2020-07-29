@@ -626,7 +626,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 	// Write to the cache
 	if ($cache_write)
 		{
-		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777);}
+		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777,true);}
 		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}
 		$cachedata=array();
 		$cachedata["query"]=$sql;
