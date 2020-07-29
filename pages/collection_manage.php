@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}
 
+$k=getvalescaped("k","");
 $offset=getvalescaped("offset",0);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
 $col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
