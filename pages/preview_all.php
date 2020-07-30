@@ -126,7 +126,7 @@ function ReorderResources(id1,id2)
 <?php 
 echo $search_title;
 
-$n=0;
+$heightmod = 120;
 for ($x=0;$x<count($result);$x++){
 # Load access level
 $ref=$result[$x]['ref'];
@@ -217,7 +217,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
     else { ?>
 <?php if (!$allow_reorder){?><a id="resourcelink<?php echo $ref?>" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>"><?php } //end if !reorder?><img class="Picture<?php if (!$border){?>Doc<?php } ?>" id="image<?php echo htmlspecialchars($ref)?>" imageheight="<?php echo $imageheight?>" src="<?php echo $url?>" alt="" style="height:<?php echo $height?>px;" /><?php if (!$allow_reorder){?></a><?php } //end if !reorder?><br/><br/>
 <?php } ?>
-<?php if ($search_titles){$heightmod=150;} else {$heightmod=120;}
+<?php if ($search_titles){$heightmod=150;}
 if (isset($collections_compact_style) && ($collections_compact_style)){$heightmod=$heightmod+20;}?>
 <script type="text/javascript">
 var maxheight=window.innerHeight-<?php echo $heightmod?>;
@@ -245,10 +245,6 @@ if (maxheight><?php echo $imageheight?>){
 		<?php } ?>
 <?php if ($vertical=="v"){?><tr><?php } else  { ?></td> <?php } ?>
 <?php } ?>
-<?php $n++;
-?>
-
-
 </tr>
 </table>
 
