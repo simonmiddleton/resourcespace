@@ -725,7 +725,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         }
                         ?>
 
-                    CentralSpacePost(temp_form, true, false, false);
+                    document.body.appendChild(temp_form);
+                    temp_form.submit();
                     </script>
                     <?php
                     exit();
