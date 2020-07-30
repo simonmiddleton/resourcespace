@@ -4054,3 +4054,33 @@ if (substr($value,-1,1)=="G")
     }
 return $value;
 }
+
+
+/**
+* Trim a filename that is longer than 255 characters while keeping its extension (if present)
+* 
+* @param string s File name to trim
+* 
+* @return string
+*/
+function trim_filename(string $s)
+    {
+    $str_len = mb_strlen($s);
+    if($str_len <= 255)
+        {
+        return $s;
+        }
+
+    $extension = pathinfo($s, PATHINFO_EXTENSION);
+    if(is_null($extension) || $extension == "")
+        {
+        return mb_strcut($s, 0, 255);
+        }
+    
+    $ext_len = mb_strlen(".{$extension}");
+    $len = 255 - $ext_len;
+    $s = mb_strcut($s, 0, $len);
+    $s .= ".{$extension}";
+
+    return $s;
+    };
