@@ -29,8 +29,7 @@ $lang['museumplus_rs_mappings_header'] = 'MuseumPlus - ResourceSpace mappings';
 $lang['museumplus_add_mapping'] = 'Add mapping';
 $lang['museumplus_mplus_field_name'] = 'MuseumPlus field name';
 $lang['museumplus_rs_field'] = 'ResourceSpace field';
-$lang['museumplus_'] = '';
-$lang['museumplus_'] = '';
+$lang['museumplus_view_in_museumplus'] = 'View in MuseumPlus';
 
 // Errors/ warnings
 $lang['museumplus_error_bad_conn_data'] = 'MuseumPlus Connection Data invalid';
@@ -39,4 +38,3 @@ $lang['museumplus_error_no_data_found'] = 'No data found in MuseumPlus for this 
 $lang['museumplus_warning_script_not_completed'] = "WARNING: The MuseumPlus script has not completed since '%script_last_ran'.\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.";
 $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\nphp museumplus_script.php --clear-lock";
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
-$lang['museumplus_'] = '';
