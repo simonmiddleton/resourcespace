@@ -17,6 +17,7 @@ $museumplus_search_mpid_field = '';
 // ResourceSpace settings
 $museumplus_mpid_field = null;
 $museumplus_resource_types = array();
+$museumplus_cms_url_form_part = "";
 
 // Script settings
 $museumplus_enable_script = true;

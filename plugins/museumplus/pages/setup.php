@@ -65,6 +65,7 @@ $page_def[] = config_add_text_input('museumplus_search_mpid_field', $lang['museu
 $page_def[] = config_add_section_header($lang['museumplus_RS_settings_header']);
 $page_def[] = config_add_single_ftype_select('museumplus_mpid_field', $lang['museumplus_mpid_field'], 420);
 $page_def[] = config_add_multi_rtype_select('museumplus_resource_types', $lang['museumplus_resource_types'], 420);
+$page_def[] = config_add_text_input('museumplus_cms_url_form_part', $lang['museumplus_cms_form_part']);
 
 // Script settings
 $page_def[] = config_add_section_header($lang['museumplus_script_header']);
