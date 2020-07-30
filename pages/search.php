@@ -1,6 +1,5 @@
 <?php
 include_once "../include/db.php";
-include_once "../include/metadata_functions.php";
 
 if($annotate_enabled)
     {

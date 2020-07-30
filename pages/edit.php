@@ -3,7 +3,6 @@ include_once "../include/db.php";
 include "../include/authenticate.php"; 
 include_once "../include/image_processing.php";
 include_once '../include/node_functions.php';
-include_once "../include/metadata_functions.php";
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);

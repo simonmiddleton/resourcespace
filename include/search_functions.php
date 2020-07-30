@@ -2868,3 +2868,17 @@ function render_advanced_search_buttons()
     echo strtr($html, $content_replace);
     }
     
+/**
+* If a "fieldX" order_by is used, check it's a valid value
+* 
+* @param string         string of order by
+*/
+function check_order_by_in_table_joins($order_by)
+    {
+    global $lang;
+
+    if (substr($order_by,0,5)=="field" && !in_array(substr($order_by,5),get_resource_table_joins()))
+        {
+        exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
+        }
+    }
