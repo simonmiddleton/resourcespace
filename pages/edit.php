@@ -201,6 +201,7 @@ if($editsearch)
     // Check all resources are editable
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
     $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
+    if (!is_array($edititems)){$edititems = array();}
     $items       = array_column($edititems,"ref");
     if(count($searchitems) != count($edititems) || count($items) == 0)
         {
