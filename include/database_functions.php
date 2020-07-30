@@ -438,11 +438,14 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
             }
         }
 
-	if (!isset($debug_log_override))
-		{
-		check_debug_log_override();
-		}
-	
+    if(!isset($debug_log_override))
+        {
+        $original_con_mode = db_get_connection_mode();
+        db_clear_connection_mode();
+        check_debug_log_override();
+        db_set_connection_mode($original_con_mode);
+        }
+
     if ($config_show_performance_footer)
     	{
     	# Stats
