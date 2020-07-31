@@ -236,8 +236,8 @@ if ($order_by=="")
         }
     }
 
-$per_page=getvalescaped("per_page",$default_perpage, true); // force numeric value
-if(empty($per_page) || $per_page < 1)
+$per_page=getvalescaped("per_page",$default_perpage, true); 
+if(empty($per_page) || $per_page < 1 || $per_page > 100000000)
     {
     $per_page=$default_perpage;
     }
