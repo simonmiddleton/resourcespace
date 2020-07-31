@@ -236,11 +236,10 @@ if ($order_by=="")
         }
     }
 
+global $results_display_array;
 $per_page=getvalescaped("per_page",$default_perpage, true); 
-if(empty($per_page) || $per_page < 1 || $per_page > 100000000)
-    {
-    $per_page=$default_perpage;
-    }
+$per_page= (empty($per_page) || $per_page < 1 || !in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
+
 rs_setcookie('per_page', $per_page,0,"","",false,false);
 
 // Clear special selection collection if user runs a new search. Paging is not a new search. Also we allow for users that
