@@ -25,7 +25,7 @@ $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
-$page=getvalescaped("page",1);
+$page=getvalescaped("page",1,true);
 $alternative=getvalescaped("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
