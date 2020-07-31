@@ -779,6 +779,8 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     $open_access_for_contributor, $searchstates;
     
     if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
+    $userpermissions = (isset($userpermissions)) ? $userpermissions : array();
+    
     # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
     if(!is_array($archive)){$archive=explode(",",$archive);}
     $archive = array_filter($archive,function($state){return (string)(int)$state==(string)$state;}); // remove non-numeric values
