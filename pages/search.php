@@ -606,6 +606,9 @@ if(!$collectionsearch)
     ?>
     <!-- Search items should only be draggable if results are not a collection -->
     <script>    
+    // The below numbers are hardcoded mid points for thumbs and xlthumbs
+    var thumb_vartical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
+    var thumb_horizontal_mid = <?php if($display=='xlthumbs'){?>160<?php } else {?>87<?php }?>;
     jQuery(document).ready(function() {
         if(is_touch_device())
             {
@@ -619,25 +622,12 @@ if(!$collectionsearch)
             helper: 'clone',
             revert: false,
             scroll: false,
+            cursorAt: {top: thumb_vartical_mid, left: thumb_horizontal_mid},
             drag: function (event, ui)
                 {
-                jQuery(ui.helper).width(175);
-                jQuery(ui.helper).height(175);
-                jQuery(ui.helper).css('opacity','0.5');
+                jQuery(ui.helper).css('opacity','0.6');
                 jQuery(ui.helper).css('transform','scale(0.8)');
-                jQuery(ui.helper).children('.ResourcePanelIcons').hide();
                 },
-            
-            start: function(event, ui)
-                {
-                InfoBoxEnabled = false;
-                jQuery(this).css('visibility', 'hidden');
-                },
-            stop: function(event, ui)
-                {
-                InfoBoxEnabled = true;
-                jQuery(this).css('visibility', '');
-                }
         });
     });
     </script>
