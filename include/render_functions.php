@@ -4074,7 +4074,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 			$availableCount=0;
 			}
 		$resultCount = count($result);
-		if ($availableCount != $resultCount)
+		if ($availableCount != $resultCount && $sizeID != "largest")
 			{
 			echo " (" . $availableCount . " " . $lang["of"] . " " . $resultCount . " ";
 			switch ($availableCount)

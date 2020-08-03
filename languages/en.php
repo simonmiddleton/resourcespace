@@ -33,6 +33,7 @@ $lang["imagesize-screen"]="Screen";
 $lang["imagesize-low_resolution_print"]="Low resolution print";
 $lang["imagesize-high_resolution_print"]="High resolution print";
 $lang["imagesize-collection"]="Collection";
+$lang["imagesize-largest"]="Largest available";
 
 # Field titles (for the default fields)
 $lang["fieldtitle-keywords"]="Keywords";

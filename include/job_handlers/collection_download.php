@@ -14,7 +14,6 @@ $job_data['includetext'] -
 $job_data['count_data_only_types'] - 
 $job_data['usage'] - 
 $job_data['usagecomment'] - 
-$job_data['available_sizes'] - 
 $job_data['settings_id'] - 
 $job_data['include_csv_file'] - User input opting to include the CSV file in the downloaded archive
 */
@@ -100,8 +99,53 @@ for($n = 0; $n < count($collection_resources); $n++)
         continue;
         }
 
-    $pextension = get_extension($resource_data, $size);
-    $usesize = ($size == 'original' ? '' : $usesize = $size);
+    # Get all possible sizes for this resource. If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
+    $sizes=get_all_image_sizes($size=="largest",$access>=1);
+
+    # Check availability of original file 
+    $p=get_resource_path($ref,true,"",false,$resource_data["file_extension"]);
+    if (file_exists($p) && (($access==0) || ($access==1 && $restricted_full_download)) && resource_download_allowed($ref,'',$resource_data['resource_type']))
+        {
+        $available_sizes['original'][]=$ref;
+        }
+
+    # Check for the availability of each size and load it to the available_sizes array
+    foreach ($sizes as $sizeinfo)
+        {
+        $size_id=$sizeinfo['id'];
+        $size_extension = get_extension($resource_data, $size_id);
+        $p=get_resource_path($ref,true,$size_id,false,$size_extension);
+
+        if (resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
+            {
+            if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
+                $available_sizes[$size_id][]=$ref;
+            }
+        }      
+
+    // Check which size to use
+    if($size=="largest")
+        {
+        foreach($available_sizes as $available_size => $resources)
+            {
+            if(in_array($ref,$resources))
+                {   
+                $usesize = $available_size;
+                if($available_size == 'original')
+                    {
+                    $usesize = "";
+                    // Has access to the original so no need to check previews
+                    break;
+                    }
+                }
+            }
+        }
+    else
+        {
+        $usesize = ($size == 'original') ? "" : $size;
+        }
+
+    $pextension = get_extension($resource_data, $usesize);
     $p = get_resource_path($ref, true, $usesize, false, $pextension, -1, 1, $use_watermark);
 
     $subbed_original = false;
@@ -164,7 +208,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     // If using original filenames when downloading, copy the file to new location so the name is included.
     $filename = '';
     # Compute a filename for this resource
-    $filename=get_download_filename($ref,$size,0,$pextension);
+    $filename=get_download_filename($ref,$usesize,0,$pextension);
 
     if($GLOBALS["original_filenames_when_downloading"])
         {

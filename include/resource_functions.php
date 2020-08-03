@@ -7608,19 +7608,34 @@ function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $calle
 
 
         
+/**
+ * Check the current user's edit access to given metadata field ID
+ *
+ * @param  int $field
+ * @return bool 
+ */
 function metadata_field_edit_access($field)
     {
     return (!checkperm("F*") || checkperm("F-" . $field))&& !checkperm("F" . $field);
     }
 
-    function get_download_filename($ref,$size,$alternative,$ext)
+/**
+ * Work out the filename to use when downloading the specified resource file with the given settings
+ *
+ * @param  int $ref Resource ID
+ * @param  string $size size code
+ * @param  int $alternative Alternative file ID 
+ * @param  string $ext File extension
+ * @return string  Filename to use
+ */
+function get_download_filename($ref,$size,$alternative,$ext)
     {
     # Constructs a filename for download
     global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
     $download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,
     $prefix_filename_string, $filename,$server_charset;
     
-    $filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
+    $filename = (($download_filenames_without_size || $size == "") ? "" : "_" . $size . "") . ($alternative>0 ? "_" . $alternative : "") . "." . $ext;
     
     if ($original_filenames_when_downloading)
         {
@@ -7649,36 +7664,29 @@ function metadata_field_edit_access($field)
             # append preview size to base name if not the original
             if($size != '' && !$download_filenames_without_size)
                 {
-                    $filename = strip_extension(mb_basename($origfile),true) . '-' . $size . '.' . $ext;
+                $filename = strip_extension(mb_basename($origfile),true) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                    $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
-                }
-
-            if($prefix_resource_id_to_filename)
-                {
-                $filename = $prefix_filename_string . $ref . "_" . $filename;
+                $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
                 }
             }
         }
 
-    if ($download_filename_id_only){
-        if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative))) {
+    elseif ($download_filename_id_only)
+        {
+        if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative)))
+            {
             $filename=$ref . "." . $ext;
 
-            if($size != '' && $download_id_only_with_size) {
+            if($size != '' && $download_id_only_with_size)
+                {
                 $filename = $ref . '-' . $size . '.' . $ext;
+                }            
             }
-
-            if(isset($prefix_filename_string) && trim($prefix_filename_string) != '') {
-                $filename = $prefix_filename_string . $filename;
-            }
-
         }
-    }
     
-    if (isset($download_filename_field))
+    elseif (isset($download_filename_field))
         {
         $newfilename=get_data_by_field($ref,$download_filename_field);
         if ($newfilename)
@@ -7686,18 +7694,23 @@ function metadata_field_edit_access($field)
             $filename = trim(nl2br(strip_tags($newfilename)));
             if($size != "" && !$download_filenames_without_size)
                 {
-                    $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '-' . $size . '.' . $ext;
+                $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                    $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '.' . $ext;
-                }
-
-            if($prefix_resource_id_to_filename)
-                {
-                $filename = $prefix_filename_string . $ref . '_' . $filename;
+                $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '.' . $ext;
                 }
             }
+        }
+
+    if($prefix_resource_id_to_filename)
+        {
+        $filename = $ref . (substr($filename,0,1) == "." ? "" : '_') . $filename;
+        }
+    
+    if(isset($prefix_filename_string) && trim($prefix_filename_string) != '')
+        {
+        $filename = $prefix_filename_string . $filename;
         }
 
     # Remove critical characters from filename
