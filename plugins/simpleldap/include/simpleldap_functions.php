@@ -266,7 +266,7 @@ function simpleldap_to_utf8($str)
     {
     global $simpleldap;
 
-    if(!is_string($str) || (!isset($simpleldap['ldap_encoding']) && trim($simpleldap['ldap_encoding']) == ""))
+    if(!is_string($str) || !isset($simpleldap['ldap_encoding']) || trim($simpleldap['ldap_encoding']) == "")
         {
         return $str;
         }
