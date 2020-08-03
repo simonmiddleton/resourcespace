@@ -220,8 +220,9 @@ if($collectionsearch)
 hook("searchstringprocessing");
 
 # Fetch and set the values
-$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset,0,"","",false,false);}
-if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
+$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset,0,"","",false,false);}
+$offset = intval($offset); 
+if ($offset<0) {$offset=0;} 
 
 $order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
 if ($order_by=="")
