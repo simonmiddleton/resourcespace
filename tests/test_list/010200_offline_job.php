@@ -22,7 +22,11 @@ $offlinejob = job_queue_add('extract_text', $extract_text_job_data);
 
 // Run the job
 $alljobs = job_queue_get_jobs("extract_text",STATUS_ACTIVE,$userref);
+
+ob_start();
 job_queue_run_job($alljobs[0], true);
+ob_clean();
+
 $gettext = get_data_by_field($testresource,$extracted_text_field);
 
 if($gettext != $settext)
