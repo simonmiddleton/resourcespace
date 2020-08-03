@@ -2380,7 +2380,7 @@ $hide_uploadertryother = false;
 ## $unoconv_path="/usr/bin";
 # Files with these extensions will be passed to unoconv (if enabled above) for conversion to PDF and auto thumb-preview generation.
 # Default list taken from http://svn.rpmforge.net/svn/trunk/tools/unoconv/docs/formats.txt
-$unoconv_extensions=array("ods","xls","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","html","psw","rtf","sdw","pdb","bib","txt","ltx","sdd","sda","odg","sdc","potx","key");
+$unoconv_extensions=array("ods","xls","xlsx","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","html","psw","rtf","sdw","pdb","bib","txt","ltx","sdd","sda","odg","sdc","potx","key");
 
 # Set path to Libre/OpenOffic's packaged python (required for Windows only).
 # $unoconv_python_path='';
