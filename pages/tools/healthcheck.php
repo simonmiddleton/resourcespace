@@ -40,7 +40,11 @@ if ($check<=0) exit("FAIL - SQL query produced unexpected result");
 if (!is_writable($storagedir)) {exit("FAIL - $storagedir is not writeable.");}
 $hash=md5(time());
 $file=$storagedir . "/write_test_$hash.txt";
-file_put_contents($file,$hash);$check=file_get_contents($file);unlink($file);
+if(file_put_contents($file,$hash) === false)
+    {
+    exit("FAIL - Unable to save the hash in file '{$file}'. File permissions are: " . fileperms($file));
+    }
+$check=file_get_contents($file);unlink($file);
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
 
 // Check write access to sql_log
