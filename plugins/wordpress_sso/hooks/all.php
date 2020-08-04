@@ -58,6 +58,7 @@ function HookWordpress_ssoAllProvideusercredentials()
 									debug("wordpress_sso - need to get email details. Redirecting to WordPress");
 									wordpress_sso_redirect(true,false);
 									}
+                                debug("wordpress_sso: Auto creating user ({$username} - {$wpemail})");
 								sql_query("insert into user (username,password,origin,fullname,email,usergroup,comments,approved) values ('" . $username . "','" . $hash . "','wordpress_sso','" . $wpdisplayname . "','" . $wpemail . "','" . $wordpress_sso_auto_create_group . "','" . $lang['wordpress_sso_auto_created'] . "'," . (($wordpress_sso_auto_approve)?1:0) . ")");
 								}
 							else // not current user, need to redirect
