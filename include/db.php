@@ -25,7 +25,6 @@ include_once dirname(__FILE__) . '/log_functions.php';
 include_once dirname(__FILE__) . '/file_functions.php';
 include_once dirname(__FILE__) . '/config_functions.php';
 include_once dirname(__FILE__) . '/plugin_functions.php';
-include_once dirname(__FILE__) . '/hash_functions.php';
 include_once dirname(__FILE__) . '/migration_functions.php';
 include_once dirname(__FILE__) . '/metadata_functions.php';
 
