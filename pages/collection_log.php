@@ -60,7 +60,7 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 <td><?php echo $lang["user"]?></td>
 <td><?php echo $lang["action"]?></td>
 <td><?php echo $lang["resourceid"]?></td>
-<td><?php $field=get_fields(array($view_title_field));echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");?></td>
+<td><?php $field=get_fields(array($view_title_field)); if (!empty($field[0]["title"])) {echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");}?></td>
 <?php hook("log_extra_columns_header"); ?>
 </tr>
 
