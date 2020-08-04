@@ -237,7 +237,6 @@ if ($order_by=="")
         }
     }
 
-global $results_display_array;
 $per_page=getvalescaped("per_page",$default_perpage, true); 
 $per_page= (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 
