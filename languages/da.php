@@ -557,7 +557,7 @@ $lang["sharedcollectionaddwarning"]="Advarsel: Denne samling er blevet delt med 
 $lang["addresourcebatchlocalfolder"]="Tilføj Resource Batch - Hent fra lokale upload mappe";
 $lang["setup-alreadyconfigured"]="Din ResourceSpace installationen er allerede konfigureret. At omkonfigurere, kan du slette &lt;pre&gt; omfatte / config.php &lt;/ pre&gt; og punkt din browser til denne side igen.";
 $lang["setup-successheader"]="Tillykke!";
-$lang["setup-successdetails"]="Deres første ResourceSpace opsætningen er færdig. Sørg for at tjekke ud &#39;omfatte / default.config.php &quot;for yderligere konfiguration valgmuligheder.";
+$lang["setup-successdetails"]="Deres første ResourceSpace opsætningen er færdig. Sørg for at tjekke ud &#39;omfatte / config.default.php &quot;for yderligere konfiguration valgmuligheder.";
 $lang["setup-successnextsteps"]="Næste trin:";
 $lang["setup-successremovewrite"]="Du kan nu fjerne skrive adgang til &#39;omfatte /&#39;.";
 $lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation';

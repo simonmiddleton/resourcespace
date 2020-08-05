@@ -1160,7 +1160,7 @@ $lang["phpextensions"]="PHP rozšírenia";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Vaša inštalácia ResourceSpace je už nakonfigurovaná. Ak chcete spustit nanovo konfiguráciu, môžete odstrániť <pre> include/config.php </pre> a znova načítať túto stránku.";
 $lang["setup-successheader"]="Blahoželáme!";
-$lang["setup-successdetails"]="Vaše počiatočné nastavenie ResourceSpace je dokončené. Nezabudnite sa pozrieť na 'include/default.config.php', kde nájdete ďalšie možnosti konfigurácie.";
+$lang["setup-successdetails"]="Vaše počiatočné nastavenie ResourceSpace je dokončené. Nezabudnite sa pozrieť na 'include/config.default.php', kde nájdete ďalšie možnosti konfigurácie.";
 $lang["setup-successnextsteps"]="Ďalšie kroky:";
 $lang["setup-successremovewrite"]="Teraz môžete odstrániť právo na zápis do priečinka „include/“.";
 $lang["setup-visitwiki"]='Navštívte <a target="_blank" href="https://www.resourcespace.com/knowledge-base/"> znalostnú základňu ResourceSpace </a> pre ďalšie informácie o prispôsobení inštalácie.';

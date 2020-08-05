@@ -618,7 +618,7 @@ $lang["addresourcebatchlocalfolder"]="バッチでリソース追加 - ローカ
 # Setup Script
 $lang["setup-alreadyconfigured"]="あなたのResourceSpaceインスタレーションはすでに構成されています。再構成するには<pre>include/config.php</pre>を削除し再度本ページにブラウザでアクセスしてください。";
 $lang["setup-successheader"]="おめでとうございます!";
-$lang["setup-successdetails"]="初期のResourceSpaceセットアップは完了しました。詳細な構成オプションについては'include/default.config.php'を確認してください。";
+$lang["setup-successdetails"]="初期のResourceSpaceセットアップは完了しました。詳細な構成オプションについては'include/config.default.php'を確認してください。";
 $lang["setup-successnextsteps"]="次のステップ:";
 $lang["setup-successremovewrite"]="あなたは'include/'から書き込み権限を削除できます。.";
 $lang["setup-visitwiki"]='あなたのインスタレーションをカスタマイズするための詳細な情報を得るには<a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a>を訪問してください。';

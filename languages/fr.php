@@ -617,7 +617,7 @@ $lang["addresourcebatchlocalfolder"]="Ajouter un lot de documents - récupérés
 # Setup Script
 $lang["setup-alreadyconfigured"]="Votre installation ResourceSpace est déjà configurée. Pour reconfigurer, vous devez supprimer <pre>include/config.php</pre> et revenir sur cette page.";
 $lang["setup-successheader"]="Félicitations !";
-$lang["setup-successdetails"]="Votre configuration initiale de ResourceSpace est terminée. Pour disposer de plus d'options de configuration, lisez 'include/default.config.php'.";
+$lang["setup-successdetails"]="Votre configuration initiale de ResourceSpace est terminée. Pour disposer de plus d'options de configuration, lisez 'include/config.default.php'.";
 $lang["setup-successnextsteps"]="Étapes suivantes :";
 $lang["setup-successremovewrite"]="Vous pouvez maintenant retirer l'accès en écriture au dossier 'include/'.";
 $lang["setup-visitwiki"]='Visitez le <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">Wiki de documentation de ResourceSpace</a> pour plus d\'informations sur la personnalisation de votre installation';

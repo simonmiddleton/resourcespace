@@ -1004,7 +1004,7 @@ $lang["phpextensions"]="PHP-utökningar";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Installationen av ResourceSpace är redan konfigurerad. Om du vill göra om konfigurationen tar du bort <pre>’include/config.php’</pre> och pekar webbläsaren till den här sidan igen.";
 $lang["setup-successheader"]="Gratulerar!";
-$lang["setup-successdetails"]="Den grundläggande delen av installationen av ResourceSpace är nu slutförd. Gå igenom filen ’include/default.config.php’ om du vill se fler konfigurationsmöjligheter.";
+$lang["setup-successdetails"]="Den grundläggande delen av installationen av ResourceSpace är nu slutförd. Gå igenom filen ’include/config.default.php’ om du vill se fler konfigurationsmöjligheter.";
 $lang["setup-successnextsteps"]="Nästa steg:";
 $lang["setup-successremovewrite"]="Du bör nu avlägsna skrivrättigheten till katalogen ’include/’.";
 $lang["setup-visitwiki"]='Besök <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> (engelskspråkig wiki) om du vill hitta mer information om hur du anpassar din installation.';

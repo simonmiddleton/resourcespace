@@ -758,7 +758,7 @@ $lang["addresourcebatchlocalfolder"]="Batch-opplasting - hent filer fra lokal op
 # Setup Script
 $lang["setup-alreadyconfigured"]="Din ResourceSpace-installasjon er allerede konfigurert. For å rekonfigurere kan du slette <pre>include/config.php</pre> og åpne denne siden på nytt i nettleseren din.";
 $lang["setup-successheader"]="Gratulerer!";
-$lang["setup-successdetails"]="Din innledende installasjon av ResourceSpace er ferdig. Gå gjennom 'include/default.config.php' for øvrige konfigurasjonsvalg.";
+$lang["setup-successdetails"]="Din innledende installasjon av ResourceSpace er ferdig. Gå gjennom 'include/config.default.php' for øvrige konfigurasjonsvalg.";
 $lang["setup-successnextsteps"]="Neste skritt:";
 $lang["setup-successremovewrite"]="Du kan nå fjerne skrivetilgangen for 'include/'.";
 $lang["setup-visitwiki"]='Besøk <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for mer informasjon om hvordan du kan tilpasse din ResourceSpace-installasjon.';

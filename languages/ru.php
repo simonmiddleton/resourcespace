@@ -576,7 +576,7 @@ $lang["sharedcollectionaddwarning"]="Внимание: Эта коллекция
 $lang["addresourcebatchlocalfolder"]="Пакетное добавление объектов из локальной папки";
 $lang["setup-alreadyconfigured"]="Ваш ResourceSpace установки уже настроен. Чтобы перенастроить, вы можете удалить &lt;pre&gt; включать / config.php &lt;/ предсессионной&gt; и браузер с этой страницы.";
 $lang["setup-successheader"]="Поздравления!";
-$lang["setup-successdetails"]="Ваш первоначальный ResourceSpace настройка завершена. Не забудьте проверить &#39;включить / default.config.php&#39; Для получения дополнительной настройки.";
+$lang["setup-successdetails"]="Ваш первоначальный ResourceSpace настройка завершена. Не забудьте проверить &#39;включить / config.default.php&#39; Для получения дополнительной настройки.";
 $lang["setup-successnextsteps"]="Следующие шаги:";
 $lang["setup-successremovewrite"]="Теперь Вы можете удалить запись с &quot;включить / &#39;.";
 #$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation';

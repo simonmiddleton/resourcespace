@@ -924,7 +924,7 @@ $lang["phpextensions"]="PHP-tiedostopäätteet";
 # Setup Script
 $lang["setup-alreadyconfigured"]="ResourceSpace-asennuksen asetukset on jo tehty. Asetukset voi tehdä uudestaan poistamalla tiedoston <pre>include/config.php</pre> ja avaamalla tämän sivun uudestaan selaimella.";
 $lang["setup-successheader"]="Onnittelut!";
-$lang["setup-successdetails"]="ResourceSpacen alustavat asetukset ovat valmiina. Tiedostosta 'include/default.config.php' näkee muita asetusvaihtoehtoja.";
+$lang["setup-successdetails"]="ResourceSpacen alustavat asetukset ovat valmiina. Tiedostosta 'include/config.default.php' näkee muita asetusvaihtoehtoja.";
 $lang["setup-successnextsteps"]="Seuraavat askeleet:";
 $lang["setup-successremovewrite"]="Voit nyt poistaa kirjoitusoikeuden kansiosta 'include/'.";
 $lang["setup-visitwiki"]='Lisätietoa asetuksista wikissä osoitteessa <a target="_blank" href="https://www.resourcespace.com/knowledge-base">ResourceSpace Knowledge Base</a>.';

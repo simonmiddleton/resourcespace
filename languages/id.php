@@ -619,7 +619,7 @@ $lang["addresourcebatchlocalfolder"]="Tambahkan Kumpulan Aset- Fetch dari upload
 # Setup Script
 $lang["setup-alreadyconfigured"]="Instalasi ResourceSpace anda telah di konfigurasi. Untuk meng-konfigurasi ulang, anda boleh menghapus  <pre>include/config.php</pre> dan menggunakan browser anda untuk mengakses halaman ini lagi.";
 $lang["setup-successheader"]="Selamat!";
-$lang["setup-successdetails"]="Setup awal ResourceSpace anda telah selesai.  Silahkan periksa  'include/default.config.php' untuk pilihan konfigurasi lain.";
+$lang["setup-successdetails"]="Setup awal ResourceSpace anda telah selesai.  Silahkan periksa  'include/config.default.php' untuk pilihan konfigurasi lain.";
 $lang["setup-successnextsteps"]="Langkah Berikutnya:";
 $lang["setup-successremovewrite"]="Sekarang anda bisa menyingkirkan akses pengisian untuk memasukkan  'include/'.";
 $lang["setup-visitwiki"]='Silahkan kunjungi <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> untuk informasi lebih lanjut tentang setup instalasi anda';

@@ -1001,7 +1001,7 @@ $lang["phpextensions"]="PHP Extensions";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Ihre ResourceSpace installation ist bereits konfiguriert. Um die Installation neu zu konfigurieren, können Sie die Datei <pre>include/config.php</pre> und dann diese Seite neu laden.";
 $lang["setup-successheader"]="Glückwunsch!";
-$lang["setup-successdetails"]="Ihre ResourceSpace Installation ist abgeschlossen. Weitere Konfigurationsoptionen finden Sie in der Datei 'include/default.config.php'.";
+$lang["setup-successdetails"]="Ihre ResourceSpace Installation ist abgeschlossen. Weitere Konfigurationsoptionen finden Sie in der Datei 'include/config.default.php'.";
 $lang["setup-successnextsteps"]="Nächste Schritte:";
 $lang["setup-successremovewrite"]="Sie können nun den Schreibzugriff auf den Ordner 'include/' entfernen.";
 $lang["setup-visitwiki"]='Besuchen Sie das <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> für weitere Informationen über die Anpassung Ihrer Installation';
