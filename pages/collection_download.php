@@ -35,6 +35,7 @@ else
 		{
 		// Set tar as default above certain collection size
 		$results=do_search("!collection" . $collection,"","relevance","",-1,"",false,0,false,true,"");
+		if (empty($results)) {exit($lang["nothing_to_download"]);}
 		$disk_usage=$results[0]["total_disk_usage"];
 		if($disk_usage >= $collection_download_tar_size*1024*1024)
 			{
