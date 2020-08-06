@@ -2969,7 +2969,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Select collection option - not for collection bar
     if($pagename != 'collections' && ($k == '' || $internal_share_access) && !checkperm('b')
-        && ($pagename == 'themes' || $pagename === 'collection_manage' || $pagename === 'resource_collection_list' || $top_actions)
+        && ($pagename == 'load_actions' || $pagename == 'themes' || $pagename === 'collection_manage' || $pagename === 'resource_collection_list' || $top_actions)
         && ((isset($search_collection) && isset($usercollection) && $search_collection != $usercollection) || !isset($search_collection))
         && collection_readable($collection_data['ref'])
     )
