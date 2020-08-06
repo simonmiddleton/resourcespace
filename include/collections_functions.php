@@ -4076,6 +4076,28 @@ function update_collection_type($cid, $type)
 
 
 /**
+* Update collection parent for this collection
+* 
+* @param integer @cid    The collection ID
+* @param integer @parent The featured collection ID that is the parent of this collection
+* 
+* @return boolean
+*/
+function update_collection_parent(int $cid, int $parent)
+    {
+    if($cid <= 0 || $parent <= 0)
+        {
+        return false;
+        }
+
+    collection_log($cid, LOG_CODE_EDITED, "", "Update collection parent to '{$parent}'");
+    sql_query("UPDATE collection SET `parent` = '{$parent}' WHERE ref = '{$cid}'");
+
+    return true;
+    }
+
+
+/**
 * Get a users' collection of type SELECTION.
 * 
 * There can only be one collection of this type per user. If more, the first one found will be used instead.
