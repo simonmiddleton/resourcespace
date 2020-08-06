@@ -2765,7 +2765,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $fields = sql_query($fieldsSQL);
 
     // Add category tree values, reflecting tree structure
-    $tree_fields = get_resource_type_fields('',"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    $tree_fields = get_resource_type_fields(array('0',$rtype),"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     foreach($tree_fields as $tree_field)
         {
         $addfield= $tree_field;
