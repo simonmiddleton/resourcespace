@@ -311,6 +311,7 @@ $corefields = array(
 define("COLLECTION_TYPE_STANDARD",  0);
 define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then edit mode
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
+define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
 
 
 
