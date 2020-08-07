@@ -1,8 +1,6 @@
 <?php
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Starting migrating themes to collections using parent structure...");
 $featured_collections = sql_query("SELECT * FROM collection WHERE public = 1 AND length(theme) > 0");
-
-echo "<pre>";print_r($featured_collections);echo "</pre>";
-
 foreach($featured_collections as $collection)
     {
     // Ensure the full tree structure exists first to support this.
@@ -16,27 +14,28 @@ foreach($featured_collections as $collection)
             continue;
             }
 
-        $parent_sql_val = (is_null($parent) ? "NULL" : escape_check($parent));
+        $parent_sql_val = (is_null($parent) ? "IS NULL" : " = '" . escape_check($parent) . "'");
         $new_fc_name = escape_check($collection[$col]);
 
-        logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent = '{$parent_sql_val}'");
+        logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql_val}");
 
-        $fc_ref = sql_value("SELECT ref AS `value` FROM collection WHERE public = 1 AND name = '{$new_fc_name}' AND parent = '$parent'", null);
+        $fc_ref = sql_value(
+            sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND public = 1 AND `type` = '%s' AND parent %s",
+                $new_fc_name,               // name
+                COLLECTION_TYPE_FEATURED,   // type
+                $parent_sql_val             // parent
+            ), null);
+
         if(is_null($fc_ref))
             {
-            // logScript("INSERT INTO collection(name, public, type, parent) VALUES ('{$new_fc_name}', 1, '".COLLECTION_TYPE_FEATURED."', '{$parent_sql_val}')");
-            $fc_ref = create_collection($collection["user"], $collection[$col], 0, 0, 0, true);
-
-            if(!is_null($parent) && !update_collection_parent($fc_ref, $parent))
-                {
-                set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Upgrade script: Unable to set collection parent to '{$parent}' for collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}'");
-                }
-
-            if(!update_collection_type($fc_ref, COLLECTION_TYPE_FEATURED))
-                {
-                set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Upgrade script: Unable to set collection type to COLLECTION_TYPE_FEATURED for collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent = '{$parent_sql_val}'");
-                }
-
+            $sql = sprintf("INSERT INTO collection(name, public, type, parent) VALUES ('%s', 1, '%s', %s)",
+                $new_fc_name,
+                COLLECTION_TYPE_FEATURED,
+                (is_null($parent) ? "NULL" : "'" . escape_check($parent) . "'")
+            );
+            logScript($sql);
+            sql_query($sql);
+            $fc_ref = sql_insert_id();
             logScript("Created new FC #{$fc_ref}");
             }
 
@@ -45,9 +44,12 @@ foreach($featured_collections as $collection)
         }
     
     // The necessary parts of the tree now exist to support this collection. Drop it into the tree.
-    update_collection_parent($collection["ref"], $parent);
+    logScript("Update collection parent for the actual collection: {$collection["ref"]} with parent '$parent'");
+    sql_query(sprintf("UPDATE collection SET `type` = '%s', parent = %s WHERE ref = '%s'",
+        COLLECTION_TYPE_FEATURED,
+        (is_null($parent) ? "NULL" : "'" . escape_check($parent) . "'"),
+        $collection["ref"]
+    ));
     }
 
-# TO DO - map existing j perms to new collection/user group access system
-
-// set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "");
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Successfully migrated themes to collections using the parent structure");
