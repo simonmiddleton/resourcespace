@@ -5,6 +5,32 @@
  * 
  */
 
+/**
+ * returns a ref for an existing dash tile in dash_tile table, returns 0 if no existing dash tile
+ * 
+ * @param   string      $url
+ * @param   string      $link        
+ * @param   string      $title           
+ * @param   string      $text          
+ * @param   integer     $reload_interval     
+ * @param   integer     $all_users                   
+ * @param   integer     $resource_count      
+ * 
+ * @return  integer
+ */
+
+function existing_dash_tile($url="", $link="",$title="",$text="",$reload_interval="",$all_users="",$resource_count="")
+    {
+
+	$existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='".$url."' AND link='".$link."' AND title='".escape_check($title)."' AND txt='".escape_check($text)."' AND reload_interval_secs='".$reload_interval."' AND all_users='".$all_users."' AND resource_count='". $resource_count ."'", 0);
+    
+    
+    return $existing_tile_ref;
+    }
+
+
+
+
 /*
  * Create a dash tile template
  * @$all_users, 
@@ -31,11 +57,11 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
 		}
 	$resource_count = $resource_count?1:0;
 
-	# De-duplication of tiles on creation
-	$existing = sql_query("SELECT ref FROM dash_tile WHERE url='".$url."' AND link='".$link."' AND title='".escape_check($title)."' AND txt='".escape_check($text)."' AND reload_interval_secs=".$reload_interval." AND all_users=".$all_users." AND resource_count=".$resource_count);
-	if(isset($existing[0]["ref"]))
+	$existing_tile_ref = existing_dash_tile($url, $link,$title,$text,$reload_interval,$all_users,$resource_count);
+	
+	if($existing_tile_ref > 0)
 		{
-		$tile=$existing[0]["ref"];
+		$tile=$existing_tile_ref;
 		$rebuild_order=FALSE;
 		}
 	else
