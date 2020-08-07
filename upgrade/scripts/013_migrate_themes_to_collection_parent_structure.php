@@ -14,7 +14,7 @@ foreach($featured_collections as $collection)
             continue;
             }
 
-        $parent_sql_val = (is_null($parent) ? "IS NULL" : " = '" . escape_check($parent) . "'");
+        $parent_sql_val = sql_where_null_or_eq_val((string) $parent, is_null($parent));
         $new_fc_name = escape_check($collection[$col]);
 
         logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql_val}");
@@ -31,7 +31,7 @@ foreach($featured_collections as $collection)
             $sql = sprintf("INSERT INTO collection(name, public, type, parent) VALUES ('%s', 1, '%s', %s)",
                 $new_fc_name,
                 COLLECTION_TYPE_FEATURED,
-                (is_null($parent) ? "NULL" : "'" . escape_check($parent) . "'")
+                sql_set_null_or_val((string) $parent, is_null($parent))
             );
             logScript($sql);
             sql_query($sql);
@@ -47,7 +47,7 @@ foreach($featured_collections as $collection)
     logScript("Update collection parent for the actual collection: {$collection["ref"]} with parent '$parent'");
     sql_query(sprintf("UPDATE collection SET `type` = '%s', parent = %s WHERE ref = '%s'",
         COLLECTION_TYPE_FEATURED,
-        (is_null($parent) ? "NULL" : "'" . escape_check($parent) . "'"),
+        sql_set_null_or_val((string) $parent, is_null($parent)),
         $collection["ref"]
     ));
     }

@@ -207,10 +207,10 @@ include "../include/header.php";
 			} /* end hook replaceuserselect */
 		} 
 	
-	if ($collection['public']==1)
-		{
-		include __DIR__ . '/../include/collection_theme_select.php';
-		}
+    if($collection['public'] == 1)
+        {
+        include __DIR__ . '/../include/collection_theme_select.php';
+        }
 		
 	if (checkperm("h") && $collection['public']==1 && !$home_dash)
 		{
@@ -282,13 +282,10 @@ include "../include/header.php";
 	</div>
 </form>
 </div>
-
 <?php
-
 if(getval("reload","") == "true" && getval("ajax","") != "")
     {
     refresh_collection_frame();
     }    
     
 include "../include/footer.php";
-?>

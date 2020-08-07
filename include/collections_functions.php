@@ -4163,3 +4163,27 @@ function save_themename()
 	hook("after_save_themename");
 	redirect("pages/" . $link);
 	}
+
+
+function get_featured_collections(int $parent)
+    {
+    if($parent < 0)
+        {
+        return array();
+        }
+
+    return sql_query(
+        sprintf(
+            "SELECT ref,
+                    `name`,
+                    `type`,
+                    parent,
+                    (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
+               FROM collection AS c
+              WHERE public = 1
+                AND `type` = %s
+                AND parent %s",
+            COLLECTION_TYPE_FEATURED,
+            sql_where_null_or_eq_val((string) $parent, $parent == 0)
+        ));
+    }

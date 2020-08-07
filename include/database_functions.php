@@ -1065,8 +1065,6 @@ function CheckDBStruct($path,$verbose=false)
 	}
 	
 
-
-
 /**
 * Generate the LIMIT statement for a SQL query
 * 
@@ -1099,4 +1097,32 @@ function sql_limit($offset, $rows)
         }
 
     return $limit;
+    }
+
+
+/**
+* Query helper function for the WHERE clause to avoid boilerplate checks when value might be NULL or an actual value
+* 
+* @param string  $v     Non-null value
+* @param boolean $cond  Condition to use IS NULL or to use the escaped value
+* 
+* @return string
+*/
+function sql_where_null_or_eq_val(string $v, bool $cond)
+    {
+    return ($cond ? "IS NULL" : "= '" . escape_check($v) . "'");
+    }
+
+
+/**
+* Query helper function for insert/update statements to avoid boilerplate checks when value might be NULL or an actual value
+* 
+* @param string  $v     Non-null value
+* @param boolean $cond  Condition to set it to NULL or to use the escaped value
+* 
+* @return string
+*/
+function sql_set_null_or_val(string $v, bool $cond)
+    {
+    return ($cond ? "NULL" : "'" . escape_check($v) . "'");
     }
