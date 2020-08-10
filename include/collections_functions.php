@@ -4184,6 +4184,6 @@ function get_featured_collections(int $parent)
                 AND `type` = %s
                 AND parent %s",
             COLLECTION_TYPE_FEATURED,
-            sql_where_null_or_eq_val((string) $parent, $parent == 0)
+            sql_is_null_or_eq_val((string) $parent, $parent == 0)
         ));
     }
