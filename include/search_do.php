@@ -383,7 +383,6 @@ function do_search(
                                 
                             if(!isset($datefieldjoin))
                                 {
-                                $c++;
                                 // We only want to join once to the date_field 
                                 $sql_join.=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field='" . $date_field . "'";
                                 $datefieldjoin = $c;
