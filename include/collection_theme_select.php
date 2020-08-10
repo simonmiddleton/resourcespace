@@ -32,12 +32,12 @@ foreach($collection as $key=>$value)
     }		
 if(!hook("overridethemesel"))
     {
-    if (checkperm("h") && $enable_themes) 
-        { # Only users with the 'h' permission can publish public collections as themes.
+    if($enable_themes && checkperm("h")) 
+        {
         ?>
-        <input type=hidden name="addlevel" id="addlevel" value=""/>
+        <!-- <input type=hidden name="addlevel" id="addlevel" value=""/> -->
         <?php
-        if (getval("addlevel","")=="yes")
+        /*if (getval("addlevel","")=="yes")
             {$themecount++;}
         $lastselected=false;
         # Theme category levels
@@ -104,65 +104,15 @@ if(!hook("overridethemesel"))
                         }?>
                         <div class="clearerleft"> </div>
                 </div>
-
-
-
-
-
-
-                <?php
-                $featured_collections = get_featured_collections(0);
-                $featured_collections = array_filter($featured_collections, function($fc)
-                    {
-                    return $fc["has_resources"] == 0;
-                    });
-                ?>
-                <p>##############################################</p>
-                <div class="Question">
-                    <label for="featured_collection_category_level_X">Featured collection category</label>
-                    <?php
-                    if(count($featured_collections) > 0)
-                        {
-                        ?>
-                    <select id="featured_collection_category_level_X" class="stdwidth" name="featured_collection_category_level_X">
-                        <option value=""><?php echo $lang["select"]; ?></option>
-                        <?php
-                        foreach($featured_collections as $fc_category)
-                            {
-                            ?>
-                            <option><?php echo htmlspecialchars($fc_category["name"]); ?></option>
-                            <?php
-                            }
-                        ?>
-                    </select>
-                    <div class="clearerleft"></div>
-                    <label><?php echo $lang["newcategoryname"]; ?></label>
-                        <?php
-                        }
-                        ?>
-                        TODO: add input for new FC categories
-                    <div class="clearerleft"></div>
-                </div>
-                <p>##############################################</p>
                 <?php
                 }
-            }
-        }
-    // TODO: delete this but make sure on submission, we make sure we don't blank out the parent if it wasn't posted
-    else 
-        {
-        // in case a user can edit collections but doesn't have themes enabled, preserve them
-        for ($i=1;$i<=$themecount;$i++)
-            {
-            if ($theme_category_levels>=$i)	
-                {
-                if ($i==1)
-                    {$themeindex="";}
-                else
-                    {$themeindex=$i;} ?>
-                <input type=hidden name="theme<?php echo $themeindex?>" value="<?php echo htmlspecialchars($collection["theme".$themeindex]) ?>">
-                <?php
-                }
-            }	
+            }*/
+
+
+        $context = array(
+            "collection" => $collection,
+            "depth" => 0,
+        );
+        render_featured_collection_category_selector(0, $context);
         }
     }

@@ -84,7 +84,23 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             $coldata["home_page_image"] = getval("home_page_image","");
             }
         }
+
+
+
+
+
+
+    $new_featured_collection_category_name = trim(getval("new_featured_collection_category_name", ""));
+    if($new_featured_collection_category_name != "")
+        {
+        // create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
+        // add new FC category as the parent of this collection ($ref)
+        }
+
+    echo "<pre>";print_r($coldata);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+
 	save_collection($ref, $coldata);
+
 	if (getval("redirect","")!="")
 		{
 		if (getval("addlevel","")=="yes"){

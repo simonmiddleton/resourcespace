@@ -4097,3 +4097,65 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 			}
 		}
 	}
+
+
+/**
+* Render the featured collection category selector
+* 
+* @param integer $parent   Parent collection ref
+* @param array   $context  Contextual data (e.g collection data, )
+* 
+* @return void
+*/
+function render_featured_collection_category_selector(int $parent, array $context)
+    {
+    global $lang;
+
+    $collection = $context["collection"];
+    $depth = ($context["depth"] == 0 ? "" : $context["depth"]); // for legacy reasons, root level says just "Featured collection category", without the depth level
+
+    $featured_collections = get_featured_collection_categories($parent);
+    $html_new_fc_btn_val = (is_null(validate_collection_parent($collection["parent"])) ? $lang["add"] : $lang["save"]);
+    ?>
+    <div class="Question">
+        <label for="featured_collection_category_level_X"><?php echo "{$lang["themecategory"]} {$depth}"; ?></label>
+        <?php
+        $next_level_parent = null;
+        if(count($featured_collections) > 0)
+            {
+            ?>
+            <select id="featured_collection_category_level_X" class="stdwidth" name="featured_collection_category_level_X">
+                <option value=""><?php echo $lang["select"]; ?></option>
+            <?php
+            $html_attr_selected = "";
+            foreach($featured_collections as $fc_category)
+                {
+                if($fc_category["ref"] == $collection["ref"])
+                    {
+                    $html_attr_selected = "selected";
+                    $next_level_parent = $fc_category["ref"];
+                    }
+                ?>
+                <option <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
+                <?php
+                }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+            <label><?php echo $lang["newcategoryname"]; ?></label>
+            <?php
+            }
+            ?>
+            <input type="text" name="new_fc_category_name_" value="" id="new_fc_category_name_" class="medwidth" maxlength="100">
+            <input type="button" name="" value="<?php echo $html_new_fc_btn_val; ?>" class="medcomplementwidth" onclick="return new_featured_collection_category();">
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    if(is_null($next_level_parent))
+        {
+        return;
+        }
+
+    $context["depth"]++;
+    return render_featured_collection_category_selector($next_level_parent, $context);
+    }

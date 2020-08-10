@@ -4165,6 +4165,14 @@ function save_themename()
 	}
 
 
+/**
+* Get all featured collections
+* 
+* @param integer $parent  The ref of the parent collection. When a featured collection contains another collection, it is
+*                         then considered a featured collection category and won't have any resources associated with it.
+* 
+* @return array List of featured collections (with data) 
+*/
 function get_featured_collections(int $parent)
     {
     if($parent < 0)
@@ -4186,4 +4194,49 @@ function get_featured_collections(int $parent)
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, $parent == 0)
         ));
+    }
+
+
+/**
+* Get featured collection categories at the specified depth level
+* 
+* 
+* 
+* @return array
+*/
+function get_featured_collection_categories(int $parent)
+    {
+    $featured_collections = get_featured_collections($parent);
+    return array_filter($featured_collections, function($fc)
+        {
+        return $fc["has_resources"] == 0;
+        });
+    }
+
+
+/**
+* Validate a collection parent value
+* 
+* @param int|array $c  Collection ref -or- collection data as returned by @see get_collection()
+* 
+* @return null|integer 
+*/
+function validate_collection_parent($c)
+    {
+    if(!is_array($c) && !is_int($c))
+        {
+        return null;
+        }
+    
+    $collection = $c;
+    if(!is_array($c) && is_int($c))
+        {
+        $collection = get_collection($c);
+        if($collection === false)
+            {
+            return null;
+            }
+        }
+
+    return (trim($collection["parent"]) == "" ? null : (int) $collection["parent"]);
     }
