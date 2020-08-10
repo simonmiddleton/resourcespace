@@ -743,9 +743,9 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata, $default_collection_sort;
     
     if($order_by=='')
-    	{
-    	$order_by=$default_collection_sort;
-    	}
+        {
+        $order_by=$default_collection_sort;
+        }
     $result=array();
     
     # Recognise a quoted search, which is a search for an exact string
@@ -769,28 +769,28 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($search_includes_themes_now || $search_includes_public_collections_now || $search_includes_user_collections_now)
         {
         if ($collection_search_includes_resource_metadata)
-		{
-		# Include metadata from resources when searching - using a special search
-	        $collections=do_search("!contentscollection"
-				. ($search_includes_user_collections_now?'U':'')
-				. ($search_includes_public_collections_now?'P':'')
-				. ($search_includes_themes_now?'T':'')
-				. " " . $search,"",$order_by,0,-1,$sort);
-		}
-	else
-		{
-		# The old way - same search as when searching within publich collections.
-		$collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
-		}
-	
-	
-        $condensedcollectionsresults=array();
-        $result=$collections;
+            {
+            # Include metadata from resources when searching - using a special search
+                $collections=do_search("!contentscollection"
+                    . ($search_includes_user_collections_now?'U':'')
+                    . ($search_includes_public_collections_now?'P':'')
+                    . ($search_includes_themes_now?'T':'')
+                    . " " . $search,"",$order_by,0,-1,$sort);
+            }
+        else
+            {
+            # The old way - same search as when searching within publich collections.
+            $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
+            }
+        
+        
+            $condensedcollectionsresults=array();
+            $result=$collections;
 
-    	}
+        }
        
     
-    		
+    
     return $result;
     }
 
