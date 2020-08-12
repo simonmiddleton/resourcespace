@@ -1309,14 +1309,18 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
 * @param  array        $nodes              Array of node IDs to remove
 * @param  boolean      $logthis            Log this? Log entries are ideally added when more data on all changes made is available to make reverts easier.
 *  
-* @return boolean
+* @return void
 */
-    
 function delete_resource_nodes($resourceid,$nodes=array(),$logthis=true)
     {
     if(!is_array($nodes))
-        {$nodes=array($nodes);}
-    sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
+        {
+        $nodes = array($nodes);
+        }
+
+    $nodes = array_filter($nodes, "is_numeric");
+
+    sql_query("DELETE FROM resource_node WHERE resource = '" . escape_check($resourceid) . "' AND node IN ('" . implode("', '", escape_check_array_values($nodes)) . "')"); 
 
     if($logthis)
         {

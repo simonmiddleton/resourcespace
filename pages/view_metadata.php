@@ -94,8 +94,8 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 
 <?php
 } ?>
-
-<div id="<?php echo ($modal ? "Modal" : "")?>tab0" class="TabbedPanel<?php if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
+<?php $tabModalityClass = ($modal ? " MetaTabIsModal" : " MetaTabIsNotModal");?>
+<div id="<?php echo ($modal ? "Modal" : "")?>tab0" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
 <div class="clearerleft"> </div>
 <div>
 <?php 
@@ -158,7 +158,7 @@ foreach($fields_tab_names as $tabname)
         <div class="clearerleft"></div>
         </div>
         </div>
-        <div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div>
+        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div>
         <?php
         }
     }
