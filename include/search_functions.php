@@ -1148,8 +1148,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Extract the number of records to produce
         $last=explode(",",$search);
         $last=str_replace("!last","",$last[0]);
+
         
-        if (!is_numeric($last)) {$last=1000;$search="!last1000";} # 'Last' must be a number. SQL injection filter.
+        if (!is_int($last)) {$last=1000;$search="!last1000";} # 'Last' must be an integer. SQL injection filter.
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
