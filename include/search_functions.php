@@ -7,6 +7,9 @@ function resolve_soundex($keyword)
     {
     # returns the most commonly used keyword that sounds like $keyword, or failing a soundex match,
     # the most commonly used keyword that starts with the same few letters.
+
+    $keyword = escape_check($keyword);
+
     global $soundex_suggest_limit;
     $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='".soundex($keyword)."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
     if (($soundex===false) && (strlen($keyword)>=4))
