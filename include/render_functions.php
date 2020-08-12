@@ -4112,19 +4112,22 @@ function render_featured_collection_category_selector(int $parent, array $contex
     global $lang;
 
     $collection = $context["collection"];
-    $depth = ($context["depth"] == 0 ? "" : $context["depth"]); // for legacy reasons, root level says just "Featured collection category", without the depth level
+    $depth = (int) $context["depth"];
 
     $featured_collections = get_featured_collection_categories($parent);
+
+    $html_selector_name = "featured_collection_category_level_{$depth}";
+    $html_question_label_txt = $lang["themecategory"] . ($depth == 0 ? "" : " {$depth}");
     $html_new_fc_btn_val = (is_null(validate_collection_parent($collection["parent"])) ? $lang["add"] : $lang["save"]);
     ?>
     <div class="Question">
-        <label for="featured_collection_category_level_X"><?php echo "{$lang["themecategory"]} {$depth}"; ?></label>
+        <label for="<?php echo $html_selector_name; ?>"><?php echo $html_question_label_txt; ?></label>
         <?php
         $next_level_parent = null;
         if(count($featured_collections) > 0)
             {
             ?>
-            <select id="featured_collection_category_level_X" class="stdwidth" name="featured_collection_category_level_X">
+            <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>">
                 <option value=""><?php echo $lang["select"]; ?></option>
             <?php
             $html_attr_selected = "";
@@ -4136,7 +4139,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
                     $next_level_parent = $fc_category["ref"];
                     }
                 ?>
-                <option <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
+                <option value="<?php echo $fc_category["ref"]; ?>" <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
                 <?php
                 }
                 ?>
@@ -4145,9 +4148,11 @@ function render_featured_collection_category_selector(int $parent, array $contex
             <label><?php echo $lang["newcategoryname"]; ?></label>
             <?php
             }
+
+        $html_input_name = "new_fc_category_name_{$depth}";
             ?>
-            <input type="text" name="new_fc_category_name_" value="" id="new_fc_category_name_" class="medwidth" maxlength="100">
-            <input type="button" name="" value="<?php echo $html_new_fc_btn_val; ?>" class="medcomplementwidth" onclick="return new_featured_collection_category();">
+            <input type="text" name="<?php echo $html_input_name; ?>" value="" id="<?php echo $html_input_name; ?>" class="medwidth" data-collectionsnothemeselected="<?php echo $lang["collectionsnothemeselected"]; ?>" maxlength="100">
+            <input type="button" value="<?php echo $html_new_fc_btn_val; ?>" class="medcomplementwidth" onclick="return new_featured_collection_category('<?php echo $html_input_name; ?>');">
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -4156,6 +4161,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
         return;
         }
 
-    $context["depth"]++;
+    $context["depth"] = ++$depth;
     return render_featured_collection_category_selector($next_level_parent, $context);
     }

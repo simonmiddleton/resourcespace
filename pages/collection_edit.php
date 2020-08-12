@@ -56,24 +56,21 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     $coldata["description"]     = getval("description","");
     hook('saveadditionalfields');
 
-    for($n=1;$n<=$theme_category_levels;$n++)
+    $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
+    $featured_collections_changes = process_posted_featured_collection_categories(0, $collection, $current_branch_path);
+    if(!empty($featured_collections_changes))
         {
-        if ($n==1)
-            {
-            $themeindex = "";
-            }
-        else
-            {
-            $themeindex = $n;
-            }
-        $themename = getval("theme$themeindex","");
-        $coldata["theme" . $themeindex] = $themename;
-        
-        if (getval("newtheme$themeindex","")!="")
-            {
-            $coldata["theme". $themeindex] = trim(getval("newtheme$themeindex",""));
-            }    
+        // create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
+        // add new FC category as the parent of this collection ($ref)
+        $coldata["featured_collections_changes"] = true;
         }
+
+    echo "<pre>";print_r($coldata);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+
+
+
+
+
         
     if (checkperm("h"))
         {
@@ -84,20 +81,6 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             $coldata["home_page_image"] = getval("home_page_image","");
             }
         }
-
-
-
-
-
-
-    $new_featured_collection_category_name = trim(getval("new_featured_collection_category_name", ""));
-    if($new_featured_collection_category_name != "")
-        {
-        // create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
-        // add new FC category as the parent of this collection ($ref)
-        }
-
-    echo "<pre>";print_r($coldata);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
 
 	save_collection($ref, $coldata);
 

@@ -925,7 +925,15 @@ function save_collection($ref, $coldata=array())
 				$coldata["theme". $n] = trim(getval("newtheme$themeindex",""));
 				}    
             }
-            
+
+        /* 
+        TODO: add check for new parent structure in featured collections
+        create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
+        add new FC category as the parent of this collection ($ref)
+        $coldata["parent"] = collection_parent_change
+        $coldata["type"] = COLLECTION_TYPE_FEATURED;
+        */
+
         if (checkperm("h"))
             {
             $coldata["home_page_publish"]   = (getval("home_page_publish","") != "") ? "1" : "0";
@@ -4200,7 +4208,7 @@ function get_featured_collections(int $parent)
 /**
 * Get featured collection categories at the specified depth level
 * 
-* 
+* @param integer $parent  The ref of the parent collection.
 * 
 * @return array
 */
@@ -4239,4 +4247,81 @@ function validate_collection_parent($c)
         }
 
     return (trim($collection["parent"]) == "" ? null : (int) $collection["parent"]);
+    }
+
+
+/**
+* Get to the root of the branch starting from the leaf featured collection category
+* 
+* @param  integer  $ref    Collection ref which is considered a leaf of the tree
+* @param  array    $carry  Branch structure data which is carried forward. Normally this is an empty array when we start
+*                          from the beginning (ie. an actual leaf).
+* 
+* @return array Branch path structure starting from root to the leaf
+*/
+function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
+    {
+    if($ref <= 0)
+        {
+        return array_reverse($carry);
+        }
+
+    $collection = sql_query(
+        sprintf("SELECT ref, `name`, parent FROM collection WHERE ref = '%s' AND public = 1 AND `type` = '%s'",
+            $ref,
+            COLLECTION_TYPE_FEATURED
+        )
+    );
+
+    if(empty($collection))
+        {
+        return array_reverse($carry);
+        }
+    $collection = $collection[0];
+
+    $carry[] = array(
+        "ref"  => $collection["ref"],
+        "name" => $collection["name"]
+    );
+
+    if(is_null(validate_collection_parent($collection)))
+        {
+        return array_reverse($carry);
+        }
+
+    return get_featured_collection_category_branch_by_leaf((int) $collection["parent"], $carry);
+    }
+
+
+/**
+* 
+* 
+*/
+function process_posted_featured_collection_categories(int $depth, array $collection, array $branch_path)
+    {
+    if($depth < 0)
+        {
+        return array();
+        }
+
+    // if(empty($collection))
+    //     {
+    //     return array();
+    //     }
+
+    // $current_parent = validate_collection_parent($collection);
+    $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
+
+    $featured_collection_category = getval("featured_collection_category_at_level_{$depth}", null, true);
+    $new_fc_category_name = getval("new_fc_category_name_{$depth}", "");
+
+    if($featured_collection_category == $fc_category_at_level)
+        {
+        //
+        }
+
+
+
+
+    return array();
     }

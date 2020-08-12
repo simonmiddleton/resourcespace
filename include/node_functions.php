@@ -350,8 +350,7 @@ function is_parent_node($ref)
 
 
 /**
-* Determine how many level deep a node is. Useful for knowing how much
-* indent a node
+* Determine how many level deep a node is. Useful for knowing how much to indent a node
 *
 * @param  integer    $ref    Node ref
 *
