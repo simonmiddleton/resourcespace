@@ -267,7 +267,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 elseif (!$replace_batch_existing && $file_path!="")
                     {
                     # File path has been specified. Let's use that directly.
+                    if (file_exists($file_path))
+                        {
                     $result=rename($file_path, $filepath);
+                        }
+                    else
+                        {
+                        return false;
+                        }
                     }
                
                 else
@@ -1185,7 +1192,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 $apath = get_resource_path($ref, true, '', true, $image_alternatives[$n]['target_extension'], -1, 1, false, '', $aref);
 
                 $source_profile = '';
-                if($image_alternatives[$n]['icc'] === true)
+                if(isset($image_alternatives[$n]['icc']) && $image_alternatives[$n]['icc'] === true)
                     {
                     $iccpath = get_resource_path($ref, true, '', false, 'icc');
                     
@@ -2690,7 +2697,7 @@ function upload_preview($ref)
     create_previews($ref,false,$extension,true);
     
     # Delete temporary file, if not transcoding.
-    if(!sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false))
+    if(!sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false) && file_exists($filepath))
         {
         unlink($filepath);
         }
