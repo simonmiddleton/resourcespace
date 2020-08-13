@@ -1716,7 +1716,6 @@ function is_process_lock($name)
  */
 function set_process_lock($name)
     {
-    if(!is_writeable(get_temp_dir() . "/process_locks/")){exit("ERROR: Unable to set process lock");}
     file_put_contents(get_temp_dir() . "/process_locks/" . $name,time());
     // make sure this is editable by the server in case a process lock could be set by different system users
     chmod(get_temp_dir() . "/process_locks/" . $name,0777);
