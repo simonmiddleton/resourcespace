@@ -882,11 +882,12 @@ function index_collection($ref,$index_string='')
 
 
 /**
- * Process the save action when saving a colleciton
+ * Process the save action when saving a collection
  *
  * @param  integer $ref
  * @param  array $coldata
- * @return void
+ * 
+ * @return false|void
  */
 function save_collection($ref, $coldata=array())
 	{
@@ -904,35 +905,6 @@ function save_collection($ref, $coldata=array())
         $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
         $coldata["public"]          = getval('public', 0, true);
         $coldata["keywords"]        = getval("keywords","");
-        for($n=1;$n<=$theme_category_levels;$n++)
-            {
-            if ($n==1)
-                {
-                $themeindex = "";
-                }
-            else
-                {
-                $themeindex = $n;
-                }
-            $themename = getvalescaped("theme$themeindex","");
-			if($themename != "")
-                {
-                $coldata["theme" . $themeindex] = $themename;
-                }
-            
-			if (getval("newtheme$themeindex","")!="")
-                {
-				$coldata["theme". $n] = trim(getval("newtheme$themeindex",""));
-				}    
-            }
-
-        /* 
-        TODO: add check for new parent structure in featured collections
-        create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
-        add new FC category as the parent of this collection ($ref)
-        $coldata["parent"] = collection_parent_change
-        $coldata["type"] = COLLECTION_TYPE_FEATURED;
-        */
 
         if (checkperm("h"))
             {
@@ -951,14 +923,37 @@ function save_collection($ref, $coldata=array())
 	if (!hook('modifysavecollection'))
         {
         $sqlset = array();
-        foreach($coldata as $colopt=>$colset)
+        foreach($coldata as $colopt => $colset)
             {
+            /* 
+            TODO: add check for new parent structure in featured collections
+            create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
+            add new FC category as the parent of this collection ($ref)
+            $coldata["parent"] = collection_parent_change
+            $coldata["type"] = COLLECTION_TYPE_FEATURED;
+            */
+            if($colopt == "featured_collections_changes" && !empty($colset))
+                {
+                if((bool) $colset["update_leaf_type"])
+                    {
+                    $sqlset["type"] = COLLECTION_TYPE_FEATURED;
+                    }
+
+                // todo: record new category and then assign it as a parent for this collection
+
+
+
+                echo "<pre>";print_r($colset);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+                continue;
+                }
+
+
             if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
                 {
-                $sqlset[$colopt] = $colset;    
-                }                
+                $sqlset[$colopt] = $colset;
+                }
             }
-        
+echo "<pre>";print_r($sqlset);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
@@ -972,6 +967,7 @@ function save_collection($ref, $coldata=array())
                 }
                 
             $sql = "UPDATE collection SET " . $sqlupdate . " WHERE ref='" . $ref . "'";
+echo "<pre>";print_r($sql);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
             sql_query($sql);
             
             // Log the changes
@@ -4297,23 +4293,21 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 * 
 * 
 */
-function process_posted_featured_collection_categories(int $depth, array $collection, array $branch_path)
+function process_posted_featured_collection_categories(int $depth, array $carry, array $collection, array $branch_path)
     {
-    if($depth < 0)
+    if($depth < 0 || empty($collection))
         {
-        return array();
+        return $carry;
         }
 
-    // if(empty($collection))
-    //     {
-    //     return array();
-    //     }
-
     // $current_parent = validate_collection_parent($collection);
-    $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
 
+
+
+    $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
     $featured_collection_category = getval("featured_collection_category_at_level_{$depth}", null, true);
-    $new_fc_category_name = getval("new_fc_category_name_{$depth}", "");
+    $new_fc_category_name = trim(getval("new_fc_category_name_{$depth}", ""));
+    $update_leaf_type = ($collection["type"] != COLLECTION_TYPE_FEATURED);
 
     if($featured_collection_category == $fc_category_at_level)
         {
@@ -4321,7 +4315,13 @@ function process_posted_featured_collection_categories(int $depth, array $collec
         }
 
 
+    if($new_fc_category_name != "")
+        {
+        return array(
+            "update_leaf_type" => $update_leaf_type,
+            "new_categories" => array($new_fc_category_name),
+        );
+        }
 
-
-    return array();
+    return process_posted_featured_collection_categories(++$depth, $carry, $collection, $branch_path);
     }
