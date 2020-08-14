@@ -2364,7 +2364,7 @@ $lang["savethissearchtodash"]="Save to dash tile";
 $lang["createnewdashtile"]="Create new dash tile";
 $lang["specialdashtiles"]="Special dash tiles";
 $lang["editdashtile"]="Edit dash tile";
-$lang["existingdashtilefound-2"]="The tile specified already exists.";
+$lang["existingdashtilefound-2"]="The tile specified already exists. Please visit the following page to review and update: <a href=\"?edit=[existing_tile_ref]\">" . $lang["editdashtile"] . "</a>";
 $lang["createdashtilefreetext"]="Create text only dash tile";
 $lang["enterdefaultorderby"]="Enter default position number";
 $lang["dashtiletitle"]="Title";

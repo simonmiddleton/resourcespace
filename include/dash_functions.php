@@ -18,14 +18,12 @@
  * 
  * @return  integer
  */
-
-function existing_dash_tile($url="", $link="",$title="",$text="",$reload_interval="",$all_users="",$resource_count="")
+function existing_dash_tile(string $url="", string $link="", string $title="", string $text="", int $reload_interval=0, int $all_users=0, int $resource_count=0)
     {
 
-	$existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='".$url."' AND link='".$link."' AND title='".escape_check($title)."' AND txt='".escape_check($text)."' AND reload_interval_secs='".$reload_interval."' AND all_users='".$all_users."' AND resource_count='". $resource_count ."'", 0);
+	$existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='". escape_check($url)."' AND link='". escape_check($link) ."' AND title='" . escape_check($title)."' AND txt='".escape_check($text) . "' AND reload_interval_secs='". escape_check($reload_interval) ."' AND all_users='". escape_check($all_users) . "' AND resource_count='". escape_check($resource_count)."'" , 0);
     
-    
-    return $existing_tile_ref;
+    return (int) $existing_tile_ref;
     }
 
 
@@ -57,7 +55,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
 		}
 	$resource_count = $resource_count?1:0;
 
-	$existing_tile_ref = existing_dash_tile($url, $link,$title,$text,$reload_interval,$all_users,$resource_count);
+	$existing_tile_ref = existing_dash_tile($url, $link,$title,$text,(int) $reload_interval,$all_users,$resource_count);
 	
 	if($existing_tile_ref > 0)
 		{
