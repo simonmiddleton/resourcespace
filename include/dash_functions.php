@@ -989,6 +989,10 @@ function empty_user_dash($user,$purge=true)
 function reorder_user_dash($user)
 	{
 	$user_tiles = sql_query("SELECT user_dash_tile.ref FROM user_dash_tile LEFT JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+	if (count($user_tiles) < 2)
+		{
+		return;	
+		}
 	$order_by=10 * count($user_tiles);
 	
 	$sql="UPDATE user_dash_tile SET order_by = (CASE ";
