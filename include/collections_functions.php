@@ -919,41 +919,46 @@ function save_collection($ref, $coldata=array())
         
     $oldcoldata = get_collection($ref);    
 
-	// Create sql column update text
 	if (!hook('modifysavecollection'))
         {
         $sqlset = array();
         foreach($coldata as $colopt => $colset)
             {
-            /* 
-            TODO: add check for new parent structure in featured collections
-            create new collection with this name (new_featured_collection_category_name) at the correct depth in the tree
-            add new FC category as the parent of this collection ($ref)
-            $coldata["parent"] = collection_parent_change
-            $coldata["type"] = COLLECTION_TYPE_FEATURED;
-            */
+            // featured_collections_changes value is data as returned by process_posted_featured_collection_categories()
             if($colopt == "featured_collections_changes" && !empty($colset))
                 {
-                if((bool) $colset["update_leaf_type"])
+                $sqlset["type"]   = COLLECTION_TYPE_STANDARD;
+                $sqlset["parent"] = null;
+
+                if(isset($colset["update_parent"]))
                     {
                     $sqlset["type"] = COLLECTION_TYPE_FEATURED;
+                    $sqlset["parent"] = (int) $colset["update_parent"];
                     }
 
-                // todo: record new category and then assign it as a parent for this collection
+                if(isset($colset["new_category"]) && !empty($colset["new_category"]))
+                    {
+                    $new_category_info = $colset["new_category"];
 
+                    $sqlset["type"] = COLLECTION_TYPE_FEATURED;
+                    $sqlset["parent"] = new_featured_collection($new_category_info["name"], $new_category_info["parent"]);
+                    }
 
+                // Prevent unnecessary changes
+                if($oldcoldata["type"] == $sqlset["type"])
+                    {
+                    unset($sqlset["type"]);
+                    }
 
-                echo "<pre>";print_r($colset);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
                 continue;
                 }
-
 
             if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
                 {
                 $sqlset[$colopt] = $colset;
                 }
             }
-echo "<pre>";print_r($sqlset);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
@@ -961,13 +966,19 @@ echo "<pre>";print_r($sqlset);echo "</pre>";die("You died in file " . __FILE__ .
                 {
                 if($sqlupdate != "")
                     {
-                    $sqlupdate .= ",";    
+                    $sqlupdate .= ", ";    
                     }
-                $sqlupdate .= $colopt . "='" . escape_check($colset) . "' ";   
+
+                if($colopt == "parent")
+                    {
+                    $sqlupdate .= $colopt . " = " . sql_null_or_val((string) $colset, $colset == 0);
+                    continue;
+                    }
+
+                $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
                 
-            $sql = "UPDATE collection SET " . $sqlupdate . " WHERE ref='" . $ref . "'";
-echo "<pre>";print_r($sql);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+            $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
             
             // Log the changes
@@ -4247,7 +4258,7 @@ function validate_collection_parent($c)
 
 
 /**
-* Get to the root of the branch starting from the leaf featured collection category
+* Get to the root of the branch starting from the leaf featured collection
 * 
 * @param  integer  $ref    Collection ref which is considered a leaf of the tree
 * @param  array    $carry  Branch structure data which is carried forward. Normally this is an empty array when we start
@@ -4276,8 +4287,9 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
     $collection = $collection[0];
 
     $carry[] = array(
-        "ref"  => $collection["ref"],
-        "name" => $collection["name"]
+        "ref"    => $collection["ref"],
+        "name"   => $collection["name"],
+        "parent" => validate_collection_parent($collection),
     );
 
     if(is_null(validate_collection_parent($collection)))
@@ -4290,38 +4302,133 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 
 
 /**
+* Process POSTed featured collections categories data for a collection
 * 
+* @param integer $depth       The depth from which to start from. Usually zero.
+* @param array   $branch_path A full branch path of the collection. @see get_featured_collection_category_branch_by_leaf()
 * 
+* @return array Returns changes done regarding the collection featured collection category structure. This information
+*               then can be provided to @see save_collection() as: $coldata["featured_collections_changes"]
 */
-function process_posted_featured_collection_categories(int $depth, array $carry, array $collection, array $branch_path)
+function process_posted_featured_collection_categories(int $depth, array $branch_path)
     {
-    if($depth < 0 || empty($collection))
+    global $enable_themes;
+
+    if(!($enable_themes && checkperm("h")))
         {
-        return $carry;
+        return array();
         }
 
-    // $current_parent = validate_collection_parent($collection);
-
-
+    if($depth < 0)
+        {
+        return array();
+        }
 
     $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
-    $featured_collection_category = getval("featured_collection_category_at_level_{$depth}", null, true);
-    $new_fc_category_name = trim(getval("new_fc_category_name_{$depth}", ""));
-    $update_leaf_type = ($collection["type"] != COLLECTION_TYPE_FEATURED);
 
-    if($featured_collection_category == $fc_category_at_level)
+    $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
+    $new_fc_category_name = getval("new_featured_collection_category_name_{$depth}", null);
+
+    // Base case: either we reached the height of the tree -or- $enable_themes && checkperm("h") are false.
+    if(is_null($selected_fc_category) && is_null($new_fc_category_name))
         {
-        //
+        return array();
         }
 
-
+    $new_fc_category_name = trim(getval("new_featured_collection_category_name_{$depth}", ""));
     if($new_fc_category_name != "")
         {
+        $new_category_parent = null;
+        if(!empty($branch_path) && isset($branch_path[$depth]))
+            {
+            $new_category_parent = $branch_path[$depth]["parent"];
+            }
+
         return array(
-            "update_leaf_type" => $update_leaf_type,
-            "new_categories" => array($new_fc_category_name),
+            "new_category" => array(
+                "name" => $new_fc_category_name,
+                "parent" => $new_category_parent,
+            ),
         );
         }
 
-    return process_posted_featured_collection_categories(++$depth, $carry, $collection, $branch_path);
+    // Validate the POSTed featured collection category
+    if(
+        !is_null($selected_fc_category)
+        && isset($branch_path[$depth])
+        && !in_array($selected_fc_category, array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"]), "ref")))
+        {
+        return array();
+        }
+
+    if($selected_fc_category != $fc_category_at_level)
+        {
+        $new_parent = (is_null($selected_fc_category) ? $branch_path[$depth]["parent"] : $selected_fc_category);
+
+        return array("update_parent" => $new_parent);
+        }
+
+    return process_posted_featured_collection_categories(++$depth, $branch_path);
+    }
+
+
+/**
+* Find existing featured collection ref using its name
+* 
+* @param string $name Featured collection name to search by
+* @param null|integer $parent The featured collection parent
+* 
+* @return null|integer
+*/
+function get_featured_collection_ref_by_name(string $name, $parent)
+    {
+    if(!is_null($parent) && !is_int($parent))
+        {
+        return null;
+        }
+
+    $ref = sql_value(
+        sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND public = 1 AND `type` = '%s' AND parent %s",
+            escape_check(trim($name)),
+            COLLECTION_TYPE_FEATURED,
+            sql_is_null_or_eq_val((string) $parent, is_null($parent))
+        ), 
+        null
+    );
+
+    return (is_null($ref) ? null : (int) $ref);
+    }
+
+
+/**
+* Create a new featured collection
+* 
+* @param string       $name   Featured collection name to search by
+* @param null|integer $parent The featured collection parent
+* 
+* @return integer
+*/
+function new_featured_collection(string $name, $parent)
+    {
+    if(!is_null($parent) && !is_int($parent))
+        {
+        return 0;
+        }
+
+    $fc_ref = get_featured_collection_ref_by_name($name, $parent);
+    if(!is_null($fc_ref))
+        {
+        return $fc_ref;
+        }
+
+    sql_query(
+        sprintf("INSERT INTO collection(`name`, public, `type`, parent) VALUES ('%s', 1, '%s', %s)",
+            escape_check($name),
+            COLLECTION_TYPE_FEATURED,
+            sql_null_or_val((string) $parent, is_null($parent))
+        )
+    );
+    $fc_ref = sql_insert_id();
+
+    return (int) $fc_ref;
     }

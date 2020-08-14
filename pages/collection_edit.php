@@ -29,7 +29,7 @@ if ($collection===false)
 	exit();
 	}
 
-if($collection["type"] != COLLECTION_TYPE_STANDARD)
+if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_FEATURED)))
     {
     exit(error_alert($lang["error-permissiondenied"], true, 401));
     }
@@ -58,7 +58,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 
     // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
     $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
-    $featured_collections_changes = process_posted_featured_collection_categories(0, array(), $collection, $current_branch_path);
+    $featured_collections_changes = process_posted_featured_collection_categories(0, $current_branch_path);
     if(!empty($featured_collections_changes))
         {
         $coldata["featured_collections_changes"] = $featured_collections_changes;
