@@ -607,7 +607,7 @@ if(!$collectionsearch)
     <!-- Search items should only be draggable if results are not a collection -->
     <script>    
     // The below numbers are hardcoded mid points for thumbs and xlthumbs
-    var thumb_vartical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
+    var thumb_vertical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
     var thumb_horizontal_mid = <?php if($display=='xlthumbs'){?>160<?php } else {?>87<?php }?>;
     jQuery(document).ready(function() {
         if(is_touch_device())
@@ -622,7 +622,7 @@ if(!$collectionsearch)
             helper: 'clone',
             revert: false,
             scroll: false,
-            cursorAt: {top: thumb_vartical_mid, left: thumb_horizontal_mid},
+            cursorAt: {top: thumb_vertical_mid, left: thumb_horizontal_mid},
             drag: function (event, ui)
                 {
                 jQuery(ui.helper).css('opacity','0.6');
