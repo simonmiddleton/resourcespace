@@ -21,6 +21,8 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	# Save comment
 	$comment=trim(getvalescaped("comment",""));
 	$rating=trim(getvalescaped("rating",""));
+	# Clear cache for immediate display of thumbnail change.
+	clear_query_cache("themeimage");
 	save_collection_resource_comment($ref,$collection,$comment,$rating);
 	if ($k=="")
 		{
