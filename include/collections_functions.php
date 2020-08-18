@@ -3257,10 +3257,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Relate all resources
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result) 
         {
-        $data_attribute['url']='';
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];
-        $options[$o]['data_attr']=$data_attribute;
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
         $o++;
