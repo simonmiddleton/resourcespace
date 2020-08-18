@@ -2739,7 +2739,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
 		{
-        if(is_null($result))
+        if(!is_array($result))
             {
             $result = get_collection_resources_with_data($collection_data['ref']);
             }
@@ -3257,6 +3257,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Relate all resources
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result) 
         {
+        $data_attribute['url']='';
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];
         $options[$o]['data_attr']=$data_attribute;
