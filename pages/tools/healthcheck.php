@@ -40,7 +40,7 @@ if ($check<=0) exit("FAIL - SQL query produced unexpected result");
 if (!is_writable($storagedir)) {exit("FAIL - $storagedir is not writeable.");}
 $hash=md5(time());
 $file=$storagedir . "/write_test_$hash.txt";
-if(file_put_contents($file,$hash) === false)
+if(file_put_contents($file,$hash) === false && file_exists($file))
     {
     exit("FAIL - Unable to save the hash in file '{$file}'. File permissions are: " . fileperms($file));
     }
