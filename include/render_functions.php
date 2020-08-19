@@ -4157,3 +4157,17 @@ function render_featured_collection_category_selector(int $parent, array $contex
     $context["depth"] = ++$depth;
     return render_featured_collection_category_selector($next_level_parent, $context);
     }
+
+
+/**
+* Render featured collections (as tiles on the collections_featured.php page)
+* 
+* 
+* 
+* @return void
+*/
+function render_featured_collections(array $context, int $parent)
+    {
+    $featured_collections = get_featured_collections($parent);
+    return;
+    }
