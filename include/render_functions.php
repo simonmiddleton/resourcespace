@@ -4103,7 +4103,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 * Render the featured collection category selector
 * 
 * @param integer $parent   Parent collection ref
-* @param array   $context  Contextual data (e.g collection data, )
+* @param array   $context  Contextual data (e.g collection data)
 * 
 * @return void
 */
@@ -4111,6 +4111,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
     {
     global $lang;
 
+    // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
     $collection = $context["collection"];
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"];
@@ -4128,7 +4129,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
         if(count($featured_collections) > 0)
             {
             ?>
-            <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>">
+            <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>" onchange="CentralSpacePost(jQuery('#collectionform')[0]);">
                 <option value=""><?php echo $lang["select"]; ?></option>
             <?php
             foreach($featured_collections as $fc_category)
