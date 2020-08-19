@@ -4344,7 +4344,6 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         return array("update_parent" => $new_parent);
         }
 
-
     if(is_null($selected_fc_category))
         {
         return array();

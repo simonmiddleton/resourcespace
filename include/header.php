@@ -300,7 +300,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
 
 <?php
 $homepage_url=$baseurl."/pages/".$default_home_page;
-if ($use_theme_as_home){$homepage_url=$baseurl."/pages/themes.php";}
+if($use_theme_as_home) { $homepage_url = $baseurl."/pages/collections_featured.php"; }
 if ($use_recent_as_home){$homepage_url=$baseurl."/pages/search.php?search=".urlencode('!last'.$recent_search_quantity);}
 if ($pagename=="login" || $pagename=="user_request" || $pagename=="user_password"){$homepage_url=$baseurl."/index.php";}
 
