@@ -63,7 +63,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         {
         $coldata["featured_collections_changes"] = $featured_collections_changes;
         }
-        
+
     if (checkperm("h"))
         {
         $coldata["home_page_publish"]   = (getval("home_page_publish","") != "") ? "1" : "0";
@@ -76,24 +76,22 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 
 	save_collection($ref, $coldata);
 
-	if (getval("redirect","")!="")
-		{
-		if (getval("addlevel","")=="yes"){
-			redirect ($baseurl_short."pages/collection_edit.php?ref=".$ref."&addlevel=yes");
-			}		
-		else if ((getval("theme","")!="") || (getval("newtheme","")!=""))
-			{
-			redirect ($baseurl_short."pages/themes.php?manage=true");
-			}
-		else
-			{
-			redirect($baseurl_short . 'pages/collection_manage.php?offset=' . $offset . '&col_order_by=' . $col_order_by . '&sort=' . $sort . '&find=' . urlencode($find) . '&reload=true');
-			}
-		}
-	else
-		{
-		# No redirect, we stay on this page. Reload the collection info.
-		$collection=get_collection($ref);
+    if(getval("redirect", "") != "")
+        {
+        redirect(generateURL(
+            "{$baseurl_short}pages/collection_manage.php",
+            array(
+                "offset" => $offset,
+                "col_order_by" => $col_order_by,
+                "sort" => $sort,
+                "find" => $find,
+                "reload" => "true",
+            )));
+        }
+    else
+        {
+        # No redirect, we stay on this page. Reload the collection info.
+        $collection = get_collection($ref);
         }
 	}
 	

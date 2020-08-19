@@ -4324,35 +4324,9 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         return array();
         }
 
-    $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
-
     $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
-    $new_fc_category_name = getval("new_featured_collection_category_name_{$depth}", null);
 
-    // Base case: either we reached the height of the tree -or- $enable_themes && checkperm("h") are false.
-    if(is_null($selected_fc_category) && is_null($new_fc_category_name))
-        {
-        return array();
-        }
-
-    $new_fc_category_name = trim(getval("new_featured_collection_category_name_{$depth}", ""));
-    if($new_fc_category_name != "")
-        {
-        $new_category_parent = null;
-        if(!empty($branch_path) && isset($branch_path[$depth]))
-            {
-            $new_category_parent = $branch_path[$depth]["parent"];
-            }
-
-        return array(
-            "new_category" => array(
-                "name" => $new_fc_category_name,
-                "parent" => $new_category_parent,
-            ),
-        );
-        }
-
-    // Validate the POSTed featured collection category
+    // Validate the POSTed featured collection category for this depth level
     if(
         !is_null($selected_fc_category)
         && isset($branch_path[$depth])
@@ -4361,11 +4335,19 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         return array();
         }
 
+    $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
+
     if($selected_fc_category != $fc_category_at_level)
         {
         $new_parent = (is_null($selected_fc_category) ? $branch_path[$depth]["parent"] : $selected_fc_category);
 
         return array("update_parent" => $new_parent);
+        }
+
+
+    if(is_null($selected_fc_category))
+        {
+        return array();
         }
 
     return process_posted_featured_collection_categories(++$depth, $branch_path);

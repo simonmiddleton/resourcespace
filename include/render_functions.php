@@ -4103,7 +4103,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 * Render the featured collection category selector
 * 
 * @param integer $parent   Parent collection ref
-* @param array   $context  Contextual data (e.g collection data)
+* @param array   $context  Contextual data (e.g depth level to render or the current branch path)
 * 
 * @return void
 */
@@ -4112,49 +4112,40 @@ function render_featured_collection_category_selector(int $parent, array $contex
     global $lang;
 
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
-    $collection = $context["collection"];
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"];
 
-    $featured_collections = get_featured_collection_categories($parent);
+    $featured_collection_categories = get_featured_collection_categories($parent);
+    if(empty($featured_collection_categories))
+        {
+        return;
+        }
 
     $html_selector_name = "selected_featured_collection_category_{$depth}";
     $html_question_label_txt = $lang["themecategory"] . ($depth == 0 ? "" : " {$depth}");
-    $html_new_fc_btn_val = (is_null(validate_collection_parent($collection["parent"])) ? $lang["add"] : $lang["save"]);
     ?>
     <div class="Question">
         <label for="<?php echo $html_selector_name; ?>"><?php echo $html_question_label_txt; ?></label>
         <?php
         $next_level_parent = null;
-        if(count($featured_collections) > 0)
+        ?>
+        <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>" onchange="document.getElementById('redirect').value = ''; CentralSpacePost(jQuery('#collectionform')[0]);">
+            <option value=""><?php echo $lang["select"]; ?></option>
+        <?php
+        foreach($featured_collection_categories as $fc_category)
             {
-            ?>
-            <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>" onchange="CentralSpacePost(jQuery('#collectionform')[0]);">
-                <option value=""><?php echo $lang["select"]; ?></option>
-            <?php
-            foreach($featured_collections as $fc_category)
+            $html_attr_selected = "";
+            if(isset($current_branch_path[$depth]) && $fc_category["ref"] == $current_branch_path[$depth]["ref"])
                 {
-                $html_attr_selected = "";
-                if(isset($current_branch_path[$depth]) && $fc_category["ref"] == $current_branch_path[$depth]["ref"])
-                    {
-                    $html_attr_selected = "selected";
-                    $next_level_parent = $fc_category["ref"];
-                    }
-                ?>
-                <option value="<?php echo $fc_category["ref"]; ?>" <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
-                <?php
+                $html_attr_selected = "selected";
+                $next_level_parent = $fc_category["ref"];
                 }
-                ?>
-            </select>
-            <div class="clearerleft"></div>
-            <label><?php echo $lang["newcategoryname"]; ?></label>
+            ?>
+            <option value="<?php echo $fc_category["ref"]; ?>" <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
             <?php
             }
-
-        $html_input_name = "new_featured_collection_category_name_{$depth}";
             ?>
-            <input type="text" name="<?php echo $html_input_name; ?>" value="" id="<?php echo $html_input_name; ?>" class="medwidth" data-collectionsnothemeselected="<?php echo $lang["collectionsnothemeselected"]; ?>" maxlength="100">
-            <input type="button" value="<?php echo $html_new_fc_btn_val; ?>" class="medcomplementwidth" onclick="return new_featured_collection_category('<?php echo $html_input_name; ?>');">
+        </select>
         <div class="clearerleft"></div>
     </div>
     <?php
