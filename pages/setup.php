@@ -12,32 +12,6 @@ include_once '../include/general_functions.php';
 include_once '../include/user_functions.php';
 
 /**
- * Ad Hoc Function to support setup page
- * 
- * Copied from includes/db.php
- * 
- * @param string $value String representaion of byte size (including K, M, or G
- * @return int Number of KB
- */
-function ResolveKB($value) { //Copied from includes/db.php
-    $value=trim(strtoupper($value));
-    if (substr($value,-1,1)=="K")
-        {
-        return substr($value,0,strlen($value)-1);
-        }
-    if (substr($value,-1,1)=="M")
-        {
-        return substr($value,0,strlen($value)-1) * 1024;
-        }
-    if (substr($value,-1,1)=="G")
-        {
-        return substr($value,0,strlen($value)-1) * 1024 * 1024;
-        }
-    return $value;
-}
-
-
-/**
  * Santitizes input from a given request key.
  * 
  * @param string $key _REQUEST key to sanitize and return
