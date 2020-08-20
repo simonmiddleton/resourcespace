@@ -2800,7 +2800,7 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
             {
             return $lang["job_queue_duplicate_message"];
             }
-    sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . $success_text . "','" . $failure_text . "','" . escape_check($job_code) . "')");
+    sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "')");
     return sql_insert_id();
     }
     
