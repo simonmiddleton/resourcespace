@@ -8,23 +8,52 @@ if(!$enable_themes)
     exit($lang['error-permissiondenied']);
     }
 
-$parent = getval("parent", 0, true);
-$smart_theme = getvalescaped("smart_theme", "");
+$parent = (int) getval("parent", 0, true);
+$smart_theme = (int) getval("smart_theme", 0, true);
 
 
 include "../include/header.php";
 ?>
+<script>
+jQuery(document).ready(function ()
+    {
+    jQuery('.FeaturedSimpleTile').hover(
+    function(e)
+        {
+        tileid = jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
+        },
+    function(e)
+        {
+        tileid=jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
+        });
+    });
+</script>
 <div class="BasicsBox FeaturedSimpleLinks">
 <?php
-echo "TODO: render breadcrumbs";
+echo "<p>TODO: render breadcrumbs (@line ".__LINE__.")</p>";
 
-$context = array(); // TODO; remove if we don't need it in the end
-render_featured_collections($context, $parent);
+$featured_collections = get_featured_collections($parent);
+usort($featured_collections, function(array $a, array $b)
+    {
+    if($a["has_resources"] == $b["has_resources"])
+        {
+        return 0;
+        }
+
+    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    });
+
+$rendering_options = array(
+    "full_width" => false, # TODO: Add a new full width tile mode to the page that simulates the existing list view
+);
+render_featured_collections($rendering_options, $featured_collections);
 
 
-
-
-
+// TODO: Add support for 'Smart themes' configured from the metadata field edit page
+// $rendering_options["smart_featured_collections"] = ($smart_theme > 0);
+// render_featured_collections($rendering_options, $smart_themes);
 
 $new_collection_additional_params = array(); // TODO: add extra params needed to process new FC categories being created.
 
@@ -35,8 +64,9 @@ if(!$smart_theme && checkperm('h'))
        generateURL(
            "{$baseurl_short}pages/collections_featured.php",
            array(
-               'new' => 'true',
-               'call_to_action_tile' => 'true'
+               "new" => "true",
+               "call_to_action_tile" => "true",
+               "parent" => $parent,
            ),
            $new_collection_additional_params
        ));

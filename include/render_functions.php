@@ -4162,12 +4162,144 @@ function render_featured_collection_category_selector(int $parent, array $contex
 /**
 * Render featured collections (as tiles on the collections_featured.php page)
 * 
-* 
+* @param array $ctx    Context data to allow caller code to decide rendering requirements
+* @param array $items  List of items to render (featured collection category, actual collection or smart collection)
 * 
 * @return void
 */
-function render_featured_collections(array $context, int $parent)
+function render_featured_collections(array $ctx, array $items)
     {
-    $featured_collections = get_featured_collections($parent);
+    foreach($items as $fc)
+        {
+        if(is_featured_collection_category($fc))
+            {
+            // TODO: change rendering requirements for FC categs
+            // consider injecting which tools to show
+            // change icon to "fa fa-folder" (make new definition entry?)
+            $ctx[""] = true;
+            }
+
+        render_featured_collection($ctx, $fc);
+        }
+
+    return;
+    }
+
+
+/**
+* Render a featured collection (as tiles on the collections_featured.php page)
+* 
+* @param array $ctx Context data to allow caller code to decide rendering requirements
+* @param array $fc  Featured collection data structure
+* 
+* @return void
+*/
+function render_featured_collection(array $ctx, array $fc)
+    {
+    if(empty($fc))
+        {
+        return;
+        }
+
+    global $baseurl_short, $lang, $themes_simple_images;
+
+    $html_fc_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
+    $html_fc_tile_style = array();
+    // TODO: add logic to find right image (extract to new fct?)
+    $theme_image_path = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
+    $theme_image_path = "";
+    if($theme_image_path!="")
+        {
+        $html_fc_tile_class[] = "FeaturedSimpleTileImage";
+        $html_fc_tile_style[] = "background: url({$theme_image_path});";
+        $html_fc_tile_style[] = "background-size: cover;";
+        }
+
+    $html_fc_tile_a_href = generateURL(
+        "{$baseurl_short}pages/search.php",
+        array(
+            "search" => "!collection{$fc["ref"]}",
+        ));
+    $html_fc_tile_a_class = ($themes_simple_images ? "TileContentShadow" : "");
+
+    $tools = array();
+    if(checkPermission_dashmanage())
+        {
+        $tools[] = array(
+            "href" => generateURL(
+                "{$baseurl_short}pages/dash_tile.php",
+                array(
+                    'create'            => 'true',
+                    'tltype'            => 'srch',
+                    'title'             => "{$fc['name']}",
+                    'freetext'          => 'true',
+                    'tile_audience'     => 'false',
+                    'all_users'         => 1,
+                    'promoted_resource' => 'true',
+                    'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
+                )
+            ),
+            "text" => $lang['add_to_dash'],
+        );
+        }
+
+    if(collection_readable($fc['ref']))
+        {
+        $tools[] = array(
+            "text" => $lang['action-select'],
+            "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');",
+        );
+        }
+
+    if(collection_writeable($fc['ref']))
+        {
+        $tools[] = array(
+            "href" => generateURL(
+                "{$baseurl_short}pages/collection_edit.php",
+                array('ref' => $fc['ref'])
+            ),
+            "text" => $lang['action-edit'],
+            "modal_load" => true,
+        );
+        }
+
+
+    // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
+    ?>
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_fc_tile_class); ?>" style="<?php echo implode(" ", $html_fc_tile_style); ?>">
+        <a href="<?php echo $html_fc_tile_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink <?php echo $html_fc_tile_a_class; ?>">
+            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>"  class="FeaturedSimpleTileContents">
+                <h2><span class="fa fa-cube"></span><?php echo i18n_get_collection_name($fc); ?></h2>
+            </div>
+        </a>
+        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone">
+        <?php
+        foreach($tools as $tool)
+            {
+            if(empty($tool))
+                {
+                continue;
+                }
+
+            $href = (isset($tool["href"]) ? $tool["href"] : "#");
+            $text = $tool["text"]; // if this is missing, code is wrong somewhere else
+
+            $tool_onclick = (isset($tool["modal_load"]) && $tool["modal_load"] ? 'return ModalLoad(this, true);' : 'return CentralSpaceLoad(this, true);');
+            if(isset($tool["custom_onclick"]) && trim($tool["custom_onclick"]) != "")
+                {
+                $tool_onclick = $tool["custom_onclick"];
+                }
+            ?>
+            <div class="tool">
+                <a href="<?php echo $href; ?>" onclick="<?php echo $tool_onclick; ?>">
+                    <span><?php echo LINK_CARET; ?><?php echo htmlspecialchars($text); ?></span>
+                </a>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+    </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
+    <?php
     return;
     }

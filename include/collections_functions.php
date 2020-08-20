@@ -4221,18 +4221,32 @@ function get_featured_collections(int $parent)
 */
 function get_featured_collection_categories(int $parent)
     {
-    $featured_collections = get_featured_collections($parent);
-    return array_filter($featured_collections, function($fc)
+    return array_filter(get_featured_collections($parent), "is_featured_collection_category");
+    }
+
+
+/**
+* Check if a collection is a featured collection category
+* 
+* @param array $fc A featured collection data structure as returned by {@see get_featured_collections()}
+* 
+* @return boolean
+*/
+function is_featured_collection_category(array $fc)
+    {
+    if(!isset($fc["type"]) || !isset($fc["has_resources"]))
         {
-        return $fc["has_resources"] == 0;
-        });
+        return false;
+        }
+
+    return ($fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0);
     }
 
 
 /**
 * Validate a collection parent value
 * 
-* @param int|array $c  Collection ref -or- collection data as returned by @see get_collection()
+* @param int|array $c  Collection ref -or- collection data as returned by {@see get_collection()}
 * 
 * @return null|integer 
 */
@@ -4305,10 +4319,10 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 * Process POSTed featured collections categories data for a collection
 * 
 * @param integer $depth       The depth from which to start from. Usually zero.
-* @param array   $branch_path A full branch path of the collection. @see get_featured_collection_category_branch_by_leaf()
+* @param array   $branch_path A full branch path of the collection. {@see get_featured_collection_category_branch_by_leaf()}
 * 
 * @return array Returns changes done regarding the collection featured collection category structure. This information
-*               then can be provided to @see save_collection() as: $coldata["featured_collections_changes"]
+*               then can be provided to {@see save_collection()} as: $coldata["featured_collections_changes"]
 */
 function process_posted_featured_collection_categories(int $depth, array $branch_path)
     {
