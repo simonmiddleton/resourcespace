@@ -382,7 +382,7 @@ else
                                 iiif_error(503,$errors);
                                 }
                             set_process_lock('create_previews_' . $resource["ref"] . "_tiles");
-                            $imgfound = @create_previews($resourceid,false,$resource["file_extension"],false,false,-1,true,false,false,array("tiles"));
+                            $imgfound = @create_previews($resourceid,false,"jpg",false,true,-1,true,false,false,array("tiles"));
                             clear_process_lock('create_previews_' . $resource["ref"] . "_tiles");
 							}
                         else
@@ -392,7 +392,7 @@ else
                                 $errors[] = "Requested image is not currently available"; 
                                 iiif_error(503,$errors);
                                 }
-                            $imgfound = @create_previews($resourceid,false,$resource["file_extension"],false,false,-1,true,false,false,array($getsize));
+                            $imgfound = @create_previews($resourceid,false,"jpg",false,true,-1,true,false,false,array($getsize));
                             clear_process_lock('create_previews_' . $resource["ref"] . "_" . $getsize);
                             }
 						}

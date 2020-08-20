@@ -1120,31 +1120,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # pages/tools/update_previews.php?previewbased=true
     # use previewbased to avoid touching original files (to preserve manually-uploaded preview images
     # when regenerating previews (i.e. for watermarks)
-    if($previewbased || ($autorotate_no_ingest && !$ingested))
-        {
-        $file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);    
-        if (!file_exists($file))
-            {
-            $file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);        
-            if (!file_exists($file))
-                {
-                $file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",$alternative);        
-                if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
-                    {
-                    $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                    }
-                }
-            }
-        }
-    else if (!$previewonly)
-        {
-        $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-        }
-    else
-        {
-        # We're generating based on a new preview (scr) image.
-        $file=get_resource_path($ref,true,"tmp",false,"jpg");   
-        }
+    $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
 
     debug("File source is $file");
 
@@ -1154,8 +1130,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
         return false;
         }
-                    
-
     
     # If configured, make sure the file is within the size limit for preview generation
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize)
@@ -1381,37 +1355,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
         # For resource $ref, (re)create the various preview sizes listed in the table preview_sizes
         # Set thumbonly=true to (re)generate thumbnails only.
-        if($previewbased || ($autorotate_no_ingest && !$ingested))
-            {
-            $file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative); 
-            if (!file_exists($file))
-                {
-                $file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);      
-                if (!file_exists($file))
-                    {
-                    $file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);      
-                    /* staged, but not needed in testing
-                    if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
-                        {
-                        $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                        }*/
-                    }
-                }
-            if ($autorotate_no_ingest && !$ingested && !$previewonly)
-                {
-                # extra check for !previewonly should there also be ingested resources in the system
-                $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                }
-            }
-        else if (!$previewonly)
-            {
-            $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-            }
-        else
-            {
-            # We're generating based on a new preview (scr) image.
-            $file=get_resource_path($ref,true,"tmp",false,"jpg");   
-            }
+
+        $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
         $origfile=$file;
         
         $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
@@ -3334,4 +3279,46 @@ function replace_preview_from_resource($ref,$previewresource,$previewalt)
             }
         }
     return false;    
+    }
+
+/**
+ * Get the source file to use for creating a preview
+ *
+ * @param  int $ref             Resource ID
+ * @param  string $extension    Resource extension
+ * @param  bool $previewonly    Create previews only
+ * @param  bool $previewbased   Use existing preview as source
+ * @param  int $alternative     Alternative file reference
+ * @param  bool $ingested       Has file been ingested?
+ * 
+ * @return string 
+ */
+function get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested)
+    {
+    global $autorotate_no_ingest;
+
+    if($previewbased || ($autorotate_no_ingest && !$ingested))
+        {
+        $sourcesizes =  get_all_image_sizes(true);
+        $sourcesizes =  array_reverse($sourcesizes,true);
+
+        foreach($sourcesizes as $sourcesize)
+            {
+            $file=get_resource_path($ref,true,$sourcesize["id"],false,"jpg",-1,1,false,"",$alternative);
+            if(file_exists($file))
+                {
+                break;
+                }
+            }
+        }
+    else if (!$previewonly)
+        {
+        $file = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+        }
+    else
+        {
+        # We're generating based on a new preview (scr) image.
+        $file = get_resource_path($ref,true,"tmp",false,"jpg");   
+        }
+    return $file;
     }
