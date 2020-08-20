@@ -2789,6 +2789,11 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
+        
+    if (empty($fields))
+        {
+        return false;
+        }
     
     foreach($fields as $fkey => $field)
         {
