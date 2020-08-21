@@ -103,7 +103,7 @@ function do_search(
         }
 
     # Check if order_by is empty string as this avoids 'relevance' default
-    $order_by === "" ? $order_by = "relevance" : $order_by;
+    if ($order_by === "") {$order_by="relevance";}
 
     $order = array(
         "collection"      => "c.sortorder $sort,c.date_added $revsort,r.ref $sort",
