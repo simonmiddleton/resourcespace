@@ -4169,17 +4169,96 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
+    global $baseurl_short, $lang;
+
     foreach($items as $fc)
         {
-        if(is_featured_collection_category($fc))
+        $render_ctx = $ctx;
+        $is_featured_collection_category = is_featured_collection_category($fc);
+
+        $tool_edit = array(
+            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"])),
+            "text" => $lang['action-edit'],
+            "modal_load" => true,
+        );
+
+        // Featured collection default tools
+        if(!$is_featured_collection_category && checkPermission_dashmanage())
             {
-            // TODO: change rendering requirements for FC categs
-            // consider injecting which tools to show
-            // change icon to "fa fa-folder" (make new definition entry?)
-            $ctx[""] = true;
+            $render_ctx["tools"][] = array(
+                "href" => generateURL(
+                    "{$baseurl_short}pages/dash_tile.php",
+                    array(
+                        'create'            => 'true',
+                        'tltype'            => 'srch',
+                        'title'             => "{$fc['name']}",
+                        'freetext'          => 'true',
+                        'tile_audience'     => 'false',
+                        'all_users'         => 1,
+                        'promoted_resource' => 'true',
+                        'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
+                    )
+                ),
+                "text" => $lang['add_to_dash']);
             }
 
-        render_featured_collection($ctx, $fc);
+        if(!$is_featured_collection_category && collection_readable($fc['ref']))
+            {
+            $render_ctx["tools"][] = array(
+                "text" => $lang['action-select'],
+                "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');");
+            }
+
+        if(!$is_featured_collection_category && collection_writeable($fc['ref']))
+            {
+            $render_ctx["tools"][] = $tool_edit;
+            }
+
+
+        if($is_featured_collection_category)
+            {
+            global $enable_theme_category_edit, $enable_theme_category_sharing;
+
+            $fc_category_link = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
+
+            $render_ctx["href"] = $fc_category_link;
+            $render_ctx["icon"] = ICON_FOLDER;
+            $render_ctx["tools"] = array();
+
+            if(checkPermission_dashmanage())
+                {
+                $render_ctx["tools"][] = array(
+                    "href" => generateURL(
+                        "{$baseurl_short}pages/dash_tile.php",
+                        array(
+                            'create'            => 'true',
+                            'tltype'            => 'fcthm',
+                            'tlstyle'           => 'thmbs',
+                            'title'             => "{$fc['name']}",
+                            'freetext'          => 'true',
+                            'tile_audience'     => 'false',
+                            'promoted_resource' => 'true',
+                            'link'              => $fc_category_link
+                        )
+                    ),
+                    "text" => $lang["add_to_dash"]);
+                }
+
+            // TODO: deprecate $enable_theme_category_sharing. See item "Collection sharing"
+            if($enable_theme_category_sharing && checkperm("h"))
+                {
+                $render_ctx["tools"][] = array(
+                    "href" => generateURL("{$baseurl_short}pages/theme_category_share.php", array("ref" => $fc["ref"])),
+                    "text" => $lang["share"]);
+                }
+
+            if($enable_theme_category_edit && checkperm("t"))
+                {
+                $render_ctx["tools"][] = $tool_edit;
+                }
+            }
+
+        render_featured_collection($render_ctx, $fc);
         }
 
     return;
@@ -4203,75 +4282,46 @@ function render_featured_collection(array $ctx, array $fc)
 
     global $baseurl_short, $lang, $themes_simple_images;
 
-    $html_fc_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
-    $html_fc_tile_style = array();
-    // TODO: add logic to find right image (extract to new fct?)
+    $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
+    $html_container_style = array();
+    // TODO: add logic to find right image (extract to new fct? -or- inject via ctx)
     $theme_image_path = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
     $theme_image_path = "";
     if($theme_image_path!="")
         {
-        $html_fc_tile_class[] = "FeaturedSimpleTileImage";
-        $html_fc_tile_style[] = "background: url({$theme_image_path});";
-        $html_fc_tile_style[] = "background-size: cover;";
+        $html_container_class[] = "FeaturedSimpleTileImage";
+        $html_container_style[] = "background: url({$theme_image_path});";
+        $html_container_style[] = "background-size: cover;";
         }
 
-    $html_fc_tile_a_href = generateURL(
-        "{$baseurl_short}pages/search.php",
-        array(
-            "search" => "!collection{$fc["ref"]}",
-        ));
-    $html_fc_tile_a_class = ($themes_simple_images ? "TileContentShadow" : "");
 
-    $tools = array();
-    if(checkPermission_dashmanage())
+    // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
+    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}"));
+    $html_fc_a_href = (isset($ctx["href"]) && trim($ctx["href"]) !== "" ? $ctx["href"] : $html_fc_a_href);
+
+
+    $html_contents_class = array("FeaturedSimpleTileContents");
+    if($themes_simple_images)
         {
-        $tools[] = array(
-            "href" => generateURL(
-                "{$baseurl_short}pages/dash_tile.php",
-                array(
-                    'create'            => 'true',
-                    'tltype'            => 'srch',
-                    'title'             => "{$fc['name']}",
-                    'freetext'          => 'true',
-                    'tile_audience'     => 'false',
-                    'all_users'         => 1,
-                    'promoted_resource' => 'true',
-                    'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
-                )
-            ),
-            "text" => $lang['add_to_dash'],
-        );
+        $html_contents_class[] = "TileContentShadow";
         }
+    $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
 
-    if(collection_readable($fc['ref']))
-        {
-        $tools[] = array(
-            "text" => $lang['action-select'],
-            "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');",
-        );
-        }
-
-    if(collection_writeable($fc['ref']))
-        {
-        $tools[] = array(
-            "href" => generateURL(
-                "{$baseurl_short}pages/collection_edit.php",
-                array('ref' => $fc['ref'])
-            ),
-            "text" => $lang['action-edit'],
-            "modal_load" => true,
-        );
-        }
+    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) ? $ctx["tools"] : array());
 
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
-    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_fc_tile_class); ?>" style="<?php echo implode(" ", $html_fc_tile_style); ?>">
-        <a href="<?php echo $html_fc_tile_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink <?php echo $html_fc_tile_a_class; ?>">
-            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>"  class="FeaturedSimpleTileContents">
-                <h2><span class="fa fa-cube"></span><?php echo i18n_get_collection_name($fc); ?></h2>
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
+        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
+            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>"  class="<?php echo implode(" ", $html_contents_class); ?>">
+                <h2><?php echo $html_contents_icon . i18n_get_collection_name($fc); ?></h2>
             </div>
         </a>
+    <?php
+    if(!empty($tools))
+        {
+        ?>
         <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone">
         <?php
         foreach($tools as $tool)
@@ -4299,6 +4349,9 @@ function render_featured_collection(array $ctx, array $fc)
             }
             ?>
         </div>
+        <?php
+        }
+        ?>
     </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
     <?php
     return;

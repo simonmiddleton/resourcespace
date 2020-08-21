@@ -185,6 +185,8 @@ define('HOME_ICON','<i aria-hidden="true" class="fa fa-fw fa-home"></i>&nbsp;');
 define('SEARCH_ICON', '<i class="fa fa-search" aria-hidden="true"></i>&nbsp;');
 define('ICON_EDIT', '<i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;');
 define('ICON_REMOVE', '<i class="fa fa-minus-circle" aria-hidden="true"></i>&nbsp;');
+define('ICON_FOLDER', '<i class="fas fa-folder" aria-hidden="true"></i>&nbsp;');
+define('ICON_CUBE', '<i class="fas fa-cube" aria-hidden="true"></i>&nbsp;');
 
 define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
