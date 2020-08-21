@@ -2084,14 +2084,16 @@ function update_collection_order($neworder,$collection,$offset=0)
 		exit ("Error: invalid input to update collection function.");
 	}
 
-	$updatesql= "update collection_resource set sortorder=(case resource ";
-	$counter = 1 + $offset;
-	foreach ($neworder as $colresource){
-		$updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
-		$counter++;
-	}
-	$updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
-	sql_query($updatesql);
+    if (count($neworder)>0) {
+        $updatesql= "update collection_resource set sortorder=(case resource ";
+        $counter = 1 + $offset;
+        foreach ($neworder as $colresource){
+            $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
+            $counter++;
+        }
+        $updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
+        sql_query($updatesql);
+    }
 	$updatesql="update collection_resource set sortorder=99999 WHERE collection='" . escape_check($collection) . "' and sortorder is NULL";
 	sql_query($updatesql);
 	}
