@@ -8,14 +8,12 @@ function resolve_soundex($keyword)
     # returns the most commonly used keyword that sounds like $keyword, or failing a soundex match,
     # the most commonly used keyword that starts with the same few letters.
 
-    $keyword = escape_check($keyword);
-
     global $soundex_suggest_limit;
-    $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='".soundex($keyword)."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
+    $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='". escape_check(soundex($keyword))."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
     if (($soundex===false) && (strlen($keyword)>=4))
         {
         # No soundex match, suggest words that start with the same first few letters.
-        return sql_value("SELECT keyword value FROM keyword WHERE keyword LIKE '" . substr($keyword,0,4) . "%' AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",false);
+        return sql_value("SELECT keyword value FROM keyword WHERE keyword LIKE '" . escape_check(substr($keyword,0,4)) . "%' AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",false);
         }
     return $soundex;
     }
