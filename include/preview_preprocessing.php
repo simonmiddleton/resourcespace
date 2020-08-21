@@ -487,7 +487,7 @@ if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($e
    ----------------------------------------
 */
 
-if ($extension=="blend" && !isset($newfile))
+if ($extension=="blend" && isset($blender_path) && !isset($newfile))
     {
     global $blender_path;
     $blendercommand=$blender_path;  
