@@ -3319,7 +3319,7 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
     }
 
 /**
-* Show the new featured collection form.
+* Render the new featured collection form
 *
 * @param array $themearray array of theme levels at which featured collection will be created 
 * 

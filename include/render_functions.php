@@ -2346,7 +2346,7 @@ function renderCallToActionTile($link)
         }
         ?>
     <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile FeaturedCallToActionTile">
-        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
+        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
                     <h2><span class='fas fa-plus-circle'></span></h2>
@@ -4169,7 +4169,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang;
+    global $baseurl_short, $lang, $themes_simple_images;
 
     foreach($items as $fc)
         {
@@ -4181,6 +4181,12 @@ function render_featured_collections(array $ctx, array $items)
             "text" => $lang['action-edit'],
             "modal_load" => true,
         );
+
+        if($themes_simple_images)
+            {
+            // TODO: add logic to find right image (see item "Reimplement background images on new collections_featured.php page")
+            $render_ctx["image_url"] = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
+            }
 
         // Featured collection default tools
         if(!$is_featured_collection_category && checkPermission_dashmanage())
@@ -4224,6 +4230,7 @@ function render_featured_collections(array $ctx, array $items)
             $render_ctx["href"] = $fc_category_link;
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
+            $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done
 
             if(checkPermission_dashmanage())
                 {
@@ -4280,19 +4287,10 @@ function render_featured_collection(array $ctx, array $fc)
         return;
         }
 
-    global $baseurl_short, $lang, $themes_simple_images;
+    global $baseurl_short, $lang;
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
     $html_container_style = array();
-    // TODO: add logic to find right image (extract to new fct? -or- inject via ctx)
-    $theme_image_path = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
-    $theme_image_path = "";
-    if($theme_image_path!="")
-        {
-        $html_container_class[] = "FeaturedSimpleTileImage";
-        $html_container_style[] = "background: url({$theme_image_path});";
-        $html_container_style[] = "background-size: cover;";
-        }
 
 
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
@@ -4301,11 +4299,18 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     $html_contents_class = array("FeaturedSimpleTileContents");
-    if($themes_simple_images)
+    $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
+
+
+    $theme_image_path = (isset($ctx["image_url"]) && trim($ctx["image_url"]) != "" ? $ctx["image_url"] : "");
+    if($theme_image_path != "")
         {
+        $html_container_class[] = "FeaturedSimpleTileImage";
+        $html_container_style[] = "background: url({$theme_image_path});";
+        $html_container_style[] = "background-size: cover;";
         $html_contents_class[] = "TileContentShadow";
         }
-    $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
+
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) ? $ctx["tools"] : array());
 

@@ -12,6 +12,19 @@ $parent = (int) getval("parent", 0, true);
 $smart_theme = (int) getval("smart_theme", 0, true);
 
 
+if(getval("new", "") == "true" && getval("cta", "") == "true")
+    {
+    // TODO: refactor the new_featured_collection_form() once discussed more with the Dan
+    // collections_featured is meant to be the managing page for FCs yet you have to create new collections for new categories.
+    // A clean UX is needed here. What are we expecting of users here?
+    new_featured_collection_form($parent);
+    exit();
+    }
+
+
+
+
+
 include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
@@ -48,7 +61,7 @@ if(!$smart_theme && checkperm('h'))
             "{$baseurl_short}pages/collections_featured.php",
             array(
                 "new" => "true",
-                "call_to_action_tile" => "true",
+                "cta" => "true",
                 "parent" => $parent,
             )
         ));
