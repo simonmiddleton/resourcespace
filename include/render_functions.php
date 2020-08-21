@@ -4171,10 +4171,13 @@ function render_featured_collections(array $ctx, array $items)
     {
     global $baseurl_short, $lang, $themes_simple_images;
 
+    $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
+
     foreach($items as $fc)
         {
         $render_ctx = $ctx;
         $is_featured_collection_category = is_featured_collection_category($fc);
+        $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
 
         $tool_edit = array(
             "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"])),
@@ -4189,7 +4192,7 @@ function render_featured_collections(array $ctx, array $items)
             }
 
         // Featured collection default tools
-        if(!$is_featured_collection_category && checkPermission_dashmanage())
+        if($is_featured_collection && checkPermission_dashmanage())
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL(
@@ -4208,26 +4211,26 @@ function render_featured_collections(array $ctx, array $items)
                 "text" => $lang['add_to_dash']);
             }
 
-        if(!$is_featured_collection_category && collection_readable($fc['ref']))
+        if($is_featured_collection && collection_readable($fc['ref']))
             {
             $render_ctx["tools"][] = array(
                 "text" => $lang['action-select'],
                 "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');");
             }
 
-        if(!$is_featured_collection_category && collection_writeable($fc['ref']))
+        if($is_featured_collection && collection_writeable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_edit;
             }
 
 
-        if($is_featured_collection_category)
+        if($is_featured_collection_category && !$is_smart_featured_collection)
             {
             global $enable_theme_category_edit, $enable_theme_category_sharing;
 
-            $fc_category_link = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
+            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
 
-            $render_ctx["href"] = $fc_category_link;
+            $render_ctx["href"] = $fc_category_url;
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done
@@ -4245,7 +4248,7 @@ function render_featured_collections(array $ctx, array $items)
                             'freetext'          => 'true',
                             'tile_audience'     => 'false',
                             'promoted_resource' => 'true',
-                            'link'              => $fc_category_link
+                            'link'              => $fc_category_url
                         )
                     ),
                     "text" => $lang["add_to_dash"]);
@@ -4263,6 +4266,21 @@ function render_featured_collections(array $ctx, array $items)
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
+            }
+
+        if($is_smart_featured_collection)
+            {
+            $render_ctx["href"] = generateURL(
+                "{$baseurl_short}pages/collections_featured.php",
+                array(
+                    "smart_fc" => $fc["resource_type_field"],
+                    "smart_fc_node" => $fc["ref"],
+                    "smart_fc_parent" => $fc["parent"],
+                )
+            );
+            $render_ctx["icon"] = ICON_FOLDER;
+            $render_ctx["tools"] = array();
+            $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done
             }
 
         render_featured_collection($render_ctx, $fc);
