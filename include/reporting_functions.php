@@ -328,7 +328,7 @@ function send_periodic_report_emails($echo_out = true)
         // Send e-mail reports to users belonging to the specific user groups
         if(!empty($report['user_groups']))
             {
-            $users = get_users($report['user_groups']);
+            $users = get_users($report['user_groups'],"","u.username",false,-1,1);
             }
 
         foreach($users as $user)
