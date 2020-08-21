@@ -53,6 +53,7 @@ $username=trim(getvalescaped("username",""));
 if($case_insensitive_username)
     {
     $username=sql_value("select username value from user where lower(username)=lower('" . $username ."')",$username);       
+    $username=escape_check($username);
     }
     
 # Also check that the username provided has not been locked out due to excessive login attempts.
