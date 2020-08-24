@@ -2903,3 +2903,6 @@ $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
+
+$lang["job_details"]                        = "Job details";
+$lang['manage_jobs']                        = "Manage offline jobs";

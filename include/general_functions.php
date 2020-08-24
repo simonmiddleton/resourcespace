@@ -2850,7 +2850,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
     $condition=array();
     if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
     if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
-    if($user!=""){$condition[] =" user ='" . escape_check($user) . "'";}
+    if($user!="" && (int)$user > 0){$condition[] =" user ='" . escape_check($user) . "'";}
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
         {

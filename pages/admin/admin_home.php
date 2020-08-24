@@ -38,6 +38,7 @@ include ("../../include/header.php");
             {
             ?>
             <li><i aria-hidden="true" class="fa fa-fw fa-picture-o"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/admin/admin_manage_slideshow.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_slideshow']; ?></a></li>
+            <li><i aria-hidden="true" class="fas fa-tasks"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/manage_jobs.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_jobs']; ?></a></li>
             <?php
             }
 
