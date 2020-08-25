@@ -2905,4 +2905,13 @@ $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
 
 $lang["job_details"]                        = "Job details";
-$lang['manage_jobs']                        = "Manage offline jobs";
+$lang["job_text"]                           = "Job";
+$lang['manage_jobs']                        = "Manage system jobs";
+$lang["manage_jobs_title"]                  = "Manage jobs";
+$lang["my_jobs"]                            = "My jobs";
+$lang["job_reset"]                          = "Reset";
+$lang["job_status_0"]                       = "Disabled";
+$lang["job_status_1"]                       = "Active";
+$lang["job_status_2"]                       = "Complete";
+$lang["job_status_3"]                       = "In Progress";
+$lang["job_status_5"]                       = "Failed";

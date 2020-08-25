@@ -4097,3 +4097,164 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 			}
 		}
 	}
+
+
+/**
+ * Render a table based on ResourceSpace data to include sorting by various columns
+ *
+ * @param  array $tabledata - This must be constructed as detailed below
+ * 
+ * Required elements:-
+ * 
+ * "class"  Optional class to add to table div
+ * "headers"  - Column headings using the identifier as the index,
+ *  - name - Title to display
+ *  - Sortable - can column be sorted?
+ * 
+ * "orderbyname"    - name of variable used on page to determine orderby (used to differentiate from standard search values)
+ * "orderby"        - Current order by value
+ * "sortbyname"     - name of variable used on page to determine sort
+ * "sort"           - Current sort
+ * "defaulturl"     - Default URL to construct links
+ * "params"         - Current parameters to use in URL
+ * "pager"          - Pager settings 
+ *  - current page
+ *  - total pages
+ * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - An additional 'tools' element can be included to add custom action icons
+ *  - "class" - FontAwesome class to use for icon
+ *  - "text" - title attribute
+ *  - "url" - URl to link to
+ *  - "modal" - (boolean) Open link in modal?
+ *  - "onclick" - OnClick action to add to icon
+ *  
+ *   e.g.
+ * 
+ *   array(
+ *       "class"=>"fa fa-trash",
+ *       "text"=>$lang["action-delete"],
+ *       "url"=>"",
+ *       "modal"=>false,
+ *       "onclick"=>"delete_job(" . $jobs[$n]["ref"] . ");return false;"
+ *       );
+ *
+ *   array(
+ *       "class"=>"fa fa-info",
+ *       "text"=>$lang["job_details"],
+ *       "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+ *       "modal"=>true,
+ *       );
+ * 
+ * @return void
+ */
+function render_table($tabledata)
+    {
+    pager(true);
+
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
+    echo "<tbody><tr class='ListviewTitleStyle'>";
+    foreach($tabledata["headers"] as $header=>$headerdetails)
+        {
+        echo "<th>";
+        if($headerdetails["sortable"])
+            {
+            $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
+            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return CentralSpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
+            if($tabledata["orderby"] == $header)
+                {
+                // Currently sorted by this column
+                echo "<span class='" . $revsort . "'></span>";
+                }
+            echo "</a>";
+            }
+        else
+            {
+            echo htmlspecialchars($headerdetails["name"]);
+            }
+        
+        
+        echo "</th>";
+        }
+    echo "</tr>"; // End of table header row
+
+    foreach($tabledata["data"] as $rowdata)
+        {
+        echo "<tr>";
+        foreach($tabledata["headers"] as $header=>$headerdetails)
+            {
+            if(isset($rowdata[$header]))
+                {
+                echo "<td>";
+                // Data is present
+                if($header == "tools")
+                    {
+                    echo "<div class='ListTools'>";
+                    foreach($rowdata["tools"] as $toolitem)
+                        {
+                        echo "<a aria-hidden='true' class='" . htmlspecialchars($toolitem["class"]) . "'
+                        href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                        if(isset($toolitem["onclick"]))
+                            {
+                            echo $toolitem["onclick"];
+                            }
+                        else
+                            {
+                            echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
+                            }
+                        echo "' title='" . htmlspecialchars($toolitem["text"]) . "'></a>";
+                        }
+                    echo "</div>";
+                    }
+                else
+                    {
+                    echo htmlspecialchars($rowdata[$header]);
+                    }
+                echo "</td>";
+                }
+            else
+                {
+                echo "<td></td>";
+                }
+            }
+        echo "</tr>";
+        }
+    echo "</tbody>";
+    echo "</table>";
+    echo "</div>";
+    }
+
+/**
+ * Render multimensional array or object to display within table cells
+ *
+ * @param  array $array
+ * @return void
+ */
+function render_array_in_table_cells($array)
+    {
+    foreach($array as $name => $value)
+        {
+        echo "<table border=1>";
+        echo "<tr><td>";
+        echo htmlspecialchars($name);
+        echo "</td><td>";
+
+        if(is_array($value) || is_object($value))
+            {
+            render_array_in_table_cells($value);
+            }
+        elseif(is_bool($value))
+            {
+            echo ($value ? "TRUE" : "FALSE");
+            }
+        else
+            {
+            echo htmlspecialchars($value);
+            }
+                
+        echo "</td></tr>";
+        echo "</table>";
+        }
+    }
+
+

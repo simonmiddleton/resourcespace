@@ -1865,3 +1865,9 @@ a.BrowseRefresh{
 .userselect {
     z-index:500;
 }
+
+.JobTable .ListTools a {
+    float: left;
+    margin-left: 10px;
+}
+

@@ -2823,14 +2823,16 @@ function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     }
 
 /**
- * Delete a job queue entry
+ * Delete a job queue entry if user owns job or user is admin
  *
  * @param  mixed $ref
  * @return void
  */
 function job_queue_delete($ref)
     {
-    sql_query("delete from job_queue where ref='" . $ref . "'");
+    global $userref;
+    $limitsql = (checkperm('a') || php_sapi_name() == "cli") ? "" : " AND user='" . $userref . "'";
+    sql_query("delete from job_queue where ref='" . $ref . "' " .  $limitsql);
     }
 
 /**
@@ -2849,7 +2851,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
     {
     $condition=array();
     if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
-    if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
+    if($status != "" && (int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
     if($user!="" && (int)$user > 0){$condition[] =" user ='" . escape_check($user) . "'";}
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
@@ -2864,7 +2866,20 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
     $jobs=sql_query($sql);
     return $jobs;
     }
-    
+
+/**
+ * Get details of specified offline job
+ *
+ * @param  int $job identifier
+ * @return array
+ */
+function job_queue_get_job($ref)
+    {
+    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user WHERE j.ref='" . (int)$ref . "'";
+    $job_data=sql_query($sql);
+
+    return (is_array($job_data) && count($job_data)>0) ? $job_data[0] : array();
+    }    
 
 /**
 * Run offline job

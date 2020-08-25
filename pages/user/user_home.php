@@ -61,6 +61,9 @@ $introtext=text("introtext");
             <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['mymessages']; ?></a>
             <span style="display: none;" class="MessageCountPill Pill"></span>
         </li>
+
+        <li><i aria-hidden="true" class="fas fa-tasks"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/manage_jobs.php?job_user=<?php echo $userref ; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['my_jobs']; ?></a></li>
+
 		
 		<?php
 		if($home_dash && checkPermission_dashmanage())
