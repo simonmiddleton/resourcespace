@@ -395,14 +395,6 @@ function get_resource_data($ref,$cache=true)
             }
         }
     
-    # Update default archive for user if override_status_default changes.
-    global $override_status_default;
-    if ($ref < 0 && $resource[0]['archive'] !== $override_status_default)
-        {
-        update_archive_status($ref, escape_check(get_default_archive_state()));
-        $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
-        }
-
     if (isset($resource[0]))
         {
         $get_resource_data_cache[$ref]=$resource[0];
