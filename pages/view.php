@@ -642,15 +642,12 @@ $video_preview_file = get_resource_path(
 # Default use_watermark if required by related_resources
 $use_watermark = false;
 
-
-$videopreviewfile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension);
-
 if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	{
 	include "../players/type" . $resource["resource_type"] . ".php";
 	}
 elseif (hook("replacevideoplayerlogic","",array($video_preview_file))){ }
-elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($videopreviewfile)))
+elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($video_preview_file)))
 	{
 	# Include the player if a video preview file exists for this resource.
 	$download_multisize=false;
