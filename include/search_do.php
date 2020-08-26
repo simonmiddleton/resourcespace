@@ -392,7 +392,7 @@ function do_search(
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
-                                
+                            $c++;    
                             if(!isset($datefieldjoin))
                                 {
                                 // We only want to join once to the date_field 
