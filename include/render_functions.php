@@ -4270,14 +4270,19 @@ function render_featured_collections(array $ctx, array $items)
 
         if($is_smart_featured_collection)
             {
-            $render_ctx["href"] = generateURL(
-                "{$baseurl_short}pages/collections_featured.php",
-                array(
-                    "smart_fc" => $fc["resource_type_field"],
-                    "smart_fc_node" => $fc["ref"],
-                    "smart_fc_parent" => $fc["parent"],
-                )
-            );
+            $search = NODE_TOKEN_PREFIX . $fc["ref"];
+            $render_ctx["href"] = generateURL("{$baseurl_short}pages/search.php", array("search" => $search, "resetrestypes" => "true"));
+
+            $node_is_parent = (isset($fc["node_is_parent"]) ? $fc["node_is_parent"] : true);
+            if($node_is_parent)
+                {
+                $render_ctx["href"] = generateURL(
+                    "{$baseurl_short}pages/collections_featured.php",
+                    array(
+                        "smart_rtf" => $fc["resource_type_field"],
+                        "smart_fc_parent" => $fc["parent"],
+                    ));
+                }
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done

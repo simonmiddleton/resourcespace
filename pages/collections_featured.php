@@ -9,16 +9,16 @@ if(!$enable_themes)
     }
 
 $parent = (int) getval("parent", 0, true);
-$smart_fc = (int) getval("smart_fc", 0, true); # default null. We need to distinguish between we are at root and we went into a different FC categ
+$smart_rtf = (int) getval("smart_rtf", 0, true);
 $smart_fc_parent = getval("smart_fc_parent", 0, true);
 $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
 
 
 if(getval("new", "") == "true" && getval("cta", "") == "true")
     {
-    // TODO: refactor the new_featured_collection_form() once discussed more with the Dan
-    // collections_featured is meant to be the managing page for FCs yet you have to create new collections for new categories.
-    // A clean UX is needed here. What are we expecting of users here?
+    // TODO: refactor the new_featured_collection_form()
+    // Agreed this is essentially just for new collections. By default, they will be new FC categories (since it won't 
+    // contain resources) until the user adds resources to that collection, at which point it will be a normal FC.
     new_featured_collection_form($parent);
     exit();
     }
@@ -33,8 +33,7 @@ include "../include/header.php";
 <?php
 echo "<p>TODO: render breadcrumbs (@line ".__LINE__.")</p>";
 
-// TODO: render these FCs only if we don't have a smart_fc 
-$featured_collections = get_featured_collections($parent);
+$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent) : array());
 usort($featured_collections, function(array $a, array $b)
     {
     if($a["has_resources"] == $b["has_resources"])
@@ -51,11 +50,10 @@ $rendering_options = array(
 render_featured_collections($rendering_options, $featured_collections);
 
 
-// TODO: Add support for 'Smart themes' configured from the metadata field edit page
 $smart_fcs_list = array();
-if($smart_fc == 0)
+if($parent == 0 && $smart_rtf == 0)
     {
-    // root level
+    // Root level - this is made up of all the fields that have a Smart theme name set.
     $smart_fc_headers = array_filter(get_smart_theme_headers(), function(array $v) { return metadata_field_view_access($v["ref"]); });
     $smart_fcs_list = array_map(function(array $v)
         {
@@ -69,17 +67,32 @@ if($smart_fc == 0)
         },
         $smart_fc_headers);
     }
-else if($smart_fc > 0 && metadata_field_view_access($smart_fc))
+else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf))
     {
-    // we know which field and have access
-    // TODO: work going to the next level in the SMART FC
-    // $smart_fcs_list = get_smart_themes_nodes($smart_fc, (7 == $headers[$n]['type']), $smart_fc_parent);
+    // Smart fields. If a category tree, then a parent could be passed once user requests a lower level than root of the tree
+    $resource_type_field = get_resource_type_field($smart_rtf);
+    if($resource_type_field !== false)
+        {
+        $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, (FIELD_TYPE_CATEGORY_TREE == $resource_type_field["type"]), $smart_fc_parent);
+        $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent)
+            {
+            return array(
+                "ref" => $v["ref"],
+                "name" => $v["name"],
+                "type" => COLLECTION_TYPE_FEATURED,
+                "parent" => $v["ref"], # parent here is the node ID. When transformed to a FC this parent will be used for going to the next level down the branch
+                "has_resources" => 0,
+                "resource_type_field" => $smart_rtf,
+                "node_is_parent" => $v["is_parent"]);
+            },
+            $smart_fc_nodes);
+        }
     }
 $rendering_options["smart"] = (count($smart_fcs_list) > 0);
 render_featured_collections($rendering_options, $smart_fcs_list);
 
 
-if(checkperm('h'))
+if($smart_rtf == 0 && checkperm('h'))
     {
     renderCallToActionTile(
         generateURL(
