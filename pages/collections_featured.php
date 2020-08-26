@@ -16,9 +16,6 @@ $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
 
 if(getval("new", "") == "true" && getval("cta", "") == "true")
     {
-    // TODO: refactor the new_featured_collection_form()
-    // Agreed this is essentially just for new collections. By default, they will be new FC categories (since it won't 
-    // contain resources) until the user adds resources to that collection, at which point it will be a normal FC.
     new_featured_collection_form($parent);
     exit();
     }
@@ -92,7 +89,7 @@ $rendering_options["smart"] = (count($smart_fcs_list) > 0);
 render_featured_collections($rendering_options, $smart_fcs_list);
 
 
-if($smart_rtf == 0 && checkperm('h'))
+if($smart_rtf == 0 && checkperm("h") && $collection_allow_creation)
     {
     renderCallToActionTile(
         generateURL(

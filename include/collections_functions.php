@@ -3322,13 +3322,18 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 /**
 * Render the new featured collection form
 *
-* @param array $themearray array of theme levels at which featured collection will be created 
+* @param int $parent Featured collection parent. Use zero for root featured collection category 
 * 
 * @return void
 */
-function new_featured_collection_form(array $themearray = array())
+function new_featured_collection_form(int $parent)
     {
-    global $lang;
+    global $baseurl_short, $lang, $collection_allow_creation;
+
+    if(!$collection_allow_creation)
+        {
+        return;
+        }
 
     if(!checkperm('h'))
         {
@@ -3336,74 +3341,23 @@ function new_featured_collection_form(array $themearray = array())
         exit($lang['error-permissiondenied']);
         }
 
-    $themes_count = count($themearray);
+    $form_action = "{$baseurl_short}pages/collection_manage.php";
     ?>
     <div class="BasicsBox">
-        <h1><?php echo $lang["createnewcollection"] ?></h1>
-        <form id="new_collection_form"
-              name="new_collection_form"
-              class="modalform"
-              method="POST"
-              action="<?php echo $_SERVER['PHP_SELF'] ?>"
-              onsubmit="return CentralSpacePost(this, true);">
+        <h1><?php echo $lang["createnewcollection"]; ?></h1>
+        <form name="new_collection_form" id="new_collection_form" class="modalform"
+              method="POST" action="<?php echo $form_action; ?>" onsubmit="return CentralSpacePost(this, true);">
             <?php generateFormToken("new_collection_form"); ?>
+            <input type="hidden" name="call_to_action_tile" value="true"></input>
+            <input type="hidden" name="parent" value="<?php echo $parent; ?>"></input>
             <div class="Question">
-                <label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
-                <input type="text" name="collectionname" required="true"></input>
+                <label for="newcollection" ><?php echo $lang["collectionname"]; ?></label>
+                <input type="text" name="name" id="newcollection" maxlength="100" required="true"></input>
                 <div class="clearleft"></div>
             </div>
-
-        <?php
-        if(0 < $themes_count)
-            {
-            ?>
-            <div class="Question">
-                <label for="location" ></label>
-                <div>
-                    <input type="radio"
-                           name="location" 
-                           value="root" 
-                           onclick="jQuery('#theme_category_name').slideUp();jQuery('#category_name_input').prop('required',false);"
-                           checked
-                           ><?php echo "&nbsp;" . $lang["create_new_here"]; ?></input>
-                </div>
-                <label for="location" ></label>
-                <div>
-                    <input type="radio"
-                           name="location"
-                           value="subfolder"
-                           onclick="jQuery('#theme_category_name').slideDown();jQuery('#category_name_input').prop('required',true);"
-                           ><?php echo "&nbsp;" . $lang["create_new_below"]; ?></input>
-                </div>
-                <div class="clearleft"></div>
-            </div>
-            <?php
-            }
-            ?>
-            <div class="Question" id="theme_category_name" <?php if($themes_count > 0) {?>style="display:none;" <?php }?></div>
-                <label for="category_name" ><?php echo $lang["themecategory"] ?></label>
-                <input type="text" name="category_name" id="category_name_input" <?php if($themes_count == 0) {?>required="true" <?php }?>></input>
-                <div class="clearleft"></div>
-            </div>
-        <?php
-        for($n = 0; $n < $themes_count; $n++)
-            {
-            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . htmlspecialchars($themearray[$n], ENT_QUOTES) . "'></input>";
-            }
-
-        // Root level does not allow collections so the only option for the user is to just create a featured collection
-        // category level
-        if(0 === $themes_count)
-            {
-            ?>
-            <input type="hidden" name="location" value="subfolder">
-            <?php
-            }
-            ?>
-            <input type='hidden' name='create' value='true'></input>
             <div class="QuestionSubmit" >
                 <label></label>
-                <input type="submit" name="create" value="<?php echo $lang["create"] ?>"></input>
+                <input type="submit" name="create" value="<?php echo $lang["create"]; ?>"></input>
                 <div class="clearleft"></div>
             </div>
         </form>

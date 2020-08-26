@@ -26,11 +26,20 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     {
     // Create new collection
     $new = create_collection($userref, $name);
+    $redirect_url = "pages/collection_edit.php?ref={$new}&reload=true";
 
-    // This is used to create collections directly from featured collections page when in simpleview mode
-    if($themes_simple_view && filter_var(getvalescaped('call_to_action_tile', false), FILTER_VALIDATE_BOOLEAN))
+    // This is used to create featured collections directly from the featured collections page
+    if($enable_themes && getval("call_to_action_tile", "") === "true" && checkperm("h"))
         {
-        $coldata = array("name" => $name);
+        $parent = getval("parent", null, true);
+        $coldata = array(
+            "name" => $name,
+            "public" => 1,
+            "featured_collections_changes" => array("update_parent" => $parent),
+        );
+        $redirect_params = (is_null($parent) ? array() : array("parent" => $parent));
+        $redirect_url = generateURL("{$baseurl_short}pages/collections_featured.php", $redirect_params);
+
         save_collection($new,$coldata);
         }
 
@@ -39,7 +48,7 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     // Log this
     daily_stat('New collection', $userref);
 
-    redirect("pages/collection_edit.php?ref={$new}&reload=true");
+    redirect($redirect_url);
     }
 
 $delete=getvalescaped("delete","");
