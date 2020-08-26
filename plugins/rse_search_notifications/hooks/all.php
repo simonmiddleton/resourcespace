@@ -8,7 +8,7 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
 
     if($k != '')
         {
-        return;
+        return false;
         }
 
     // Prevent watch if search criteria are absent

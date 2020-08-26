@@ -306,6 +306,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["status_column"] != "")
                 {
                 $setstatus = $line[$csv_set_options["status_column"]];
+                if (!is_numeric($setstatus))
+                    {
+                    $setstatus = (int)$csv_set_options["status_default"];
+                    }
                 $processed_columns[] = (int)$csv_set_options["status_column"];
                 }
             else
@@ -317,6 +321,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["access_column"] != "")
                 {
                 $setaccess = $line[$csv_set_options["access_column"]];
+                if (!is_numeric($setaccess))
+                    {
+                $setaccess = (int)$csv_set_options["access_default"];
+                    }
                 $processed_columns[] = $csv_set_options["access_column"];
                 }
             else

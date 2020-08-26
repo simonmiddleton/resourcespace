@@ -959,8 +959,11 @@ if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $in
 # Loop through thumbnails
 if ($count_result>0) 
 	{
-	if($count_result>$max_collection_thumbs){$results_count=$max_collection_thumbs;}
-	else{$results_count=count($result);}
+	$results_count=count($result);
+	if($results_count>$max_collection_thumbs)
+		{
+		$results_count=$max_collection_thumbs;
+		}
 	# loop and display the results
 	for ($n=0;$n<$results_count;$n++)					
 		{

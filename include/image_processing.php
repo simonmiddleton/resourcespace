@@ -267,7 +267,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 elseif (!$replace_batch_existing && $file_path!="")
                     {
                     # File path has been specified. Let's use that directly.
+                    if (file_exists($file_path))
+                        {
                     $result=rename($file_path, $filepath);
+                        }
+                    else
+                        {
+                        return false;
+                        }
                     }
                
                 else
@@ -1113,31 +1120,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # pages/tools/update_previews.php?previewbased=true
     # use previewbased to avoid touching original files (to preserve manually-uploaded preview images
     # when regenerating previews (i.e. for watermarks)
-    if($previewbased || ($autorotate_no_ingest && !$ingested))
-        {
-        $file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);    
-        if (!file_exists($file))
-            {
-            $file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);        
-            if (!file_exists($file))
-                {
-                $file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",$alternative);        
-                if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
-                    {
-                    $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                    }
-                }
-            }
-        }
-    else if (!$previewonly)
-        {
-        $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-        }
-    else
-        {
-        # We're generating based on a new preview (scr) image.
-        $file=get_resource_path($ref,true,"tmp",false,"jpg");   
-        }
+    $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
 
     debug("File source is $file");
 
@@ -1147,8 +1130,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
         return false;
         }
-                    
-
     
     # If configured, make sure the file is within the size limit for preview generation
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize)
@@ -1185,7 +1166,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 $apath = get_resource_path($ref, true, '', true, $image_alternatives[$n]['target_extension'], -1, 1, false, '', $aref);
 
                 $source_profile = '';
-                if($image_alternatives[$n]['icc'] === true)
+                if(isset($image_alternatives[$n]['icc']) && $image_alternatives[$n]['icc'] === true)
                     {
                     $iccpath = get_resource_path($ref, true, '', false, 'icc');
                     
@@ -1214,7 +1195,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 if($version[0] > 5 || ($version[0] == 5 && $version[1] > 5) || ($version[0] == 5 && $version[1] == 5 && $version[2] > 7 ))
                     {
                     // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] -alpha Off' : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
+                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] +matte' : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
                     }
                 else
                     {
@@ -1374,37 +1355,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
         # For resource $ref, (re)create the various preview sizes listed in the table preview_sizes
         # Set thumbonly=true to (re)generate thumbnails only.
-        if($previewbased || ($autorotate_no_ingest && !$ingested))
-            {
-            $file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative); 
-            if (!file_exists($file))
-                {
-                $file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);      
-                if (!file_exists($file))
-                    {
-                    $file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);      
-                    /* staged, but not needed in testing
-                    if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
-                        {
-                        $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                        }*/
-                    }
-                }
-            if ($autorotate_no_ingest && !$ingested && !$previewonly)
-                {
-                # extra check for !previewonly should there also be ingested resources in the system
-                $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-                }
-            }
-        else if (!$previewonly)
-            {
-            $file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-            }
-        else
-            {
-            # We're generating based on a new preview (scr) image.
-            $file=get_resource_path($ref,true,"tmp",false,"jpg");   
-            }
+
+        $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
         $origfile=$file;
         
         $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
@@ -1646,7 +1598,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
        
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha Off ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
                 }
 
             # fetch target width and height
@@ -1813,7 +1765,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" -alpha Off $profile ":"");
+                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"");
                         
                         if($crop)
                             {
@@ -1875,13 +1827,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
                         {
-                        $runcommand = $command ." -alpha Off $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
                     // alternate command for png/gif using the path from above, and omitting resizing
                     if ($extension=="png" || $extension=="gif")
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] -alpha Off ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2024,7 +1976,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet +matte' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -2690,7 +2642,7 @@ function upload_preview($ref)
     create_previews($ref,false,$extension,true);
     
     # Delete temporary file, if not transcoding.
-    if(!sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false))
+    if(file_exists($filepath) && !sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false))
         {
         unlink($filepath);
         }
@@ -3327,4 +3279,46 @@ function replace_preview_from_resource($ref,$previewresource,$previewalt)
             }
         }
     return false;    
+    }
+
+/**
+ * Get the source file to use for creating a preview
+ *
+ * @param  int $ref             Resource ID
+ * @param  string $extension    Resource extension
+ * @param  bool $previewonly    Create previews only
+ * @param  bool $previewbased   Use existing preview as source
+ * @param  int $alternative     Alternative file reference
+ * @param  bool $ingested       Has file been ingested?
+ * 
+ * @return string 
+ */
+function get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested)
+    {
+    global $autorotate_no_ingest;
+
+    if($previewbased || ($autorotate_no_ingest && !$ingested))
+        {
+        $sourcesizes =  get_all_image_sizes(true);
+        $sourcesizes =  array_reverse($sourcesizes,true);
+
+        foreach($sourcesizes as $sourcesize)
+            {
+            $file=get_resource_path($ref,true,$sourcesize["id"],false,"jpg",-1,1,false,"",$alternative);
+            if(file_exists($file))
+                {
+                break;
+                }
+            }
+        }
+    else if (!$previewonly)
+        {
+        $file = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+        }
+    else
+        {
+        # We're generating based on a new preview (scr) image.
+        $file = get_resource_path($ref,true,"tmp",false,"jpg");   
+        }
+    return $file;
     }

@@ -14,6 +14,7 @@ function HookRse_workflowViewPageevaluation()
     global $sort;
     global $k;
     global $applicationname;
+    global $userref;
     
     # Retrieve list of existing defined actions 
     $workflowactions = rse_workflow_get_actions();

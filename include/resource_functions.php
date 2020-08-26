@@ -394,6 +394,7 @@ function get_resource_data($ref,$cache=true)
                 }
             }
         }
+    
     if (isset($resource[0]))
         {
         $get_resource_data_cache[$ref]=$resource[0];
@@ -2779,6 +2780,11 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         $addfield["resource_type_field"] = $tree_field["ref"];
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
+        }
+        
+    if (empty($fields))
+        {
+        return false;
         }
     
     foreach($fields as $fkey => $field)

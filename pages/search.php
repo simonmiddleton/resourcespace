@@ -247,8 +247,10 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 // (e.g when batch editing)
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
+$thumbtypechange=in_array(isset($_GET['display']), array('xlthumbs', 'thumbs', 'strip', 'list'));
+if(!$thumbtypechange){$thumbtypechange=in_array(isset($_POST['display']), array('xlthumbs', 'thumbs', 'strip', 'list'));}
 $view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
-if($use_selection_collection && $clear_selection_collection && !$paging_request && !$view_selected_request)
+if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request)
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
     }
@@ -467,14 +469,8 @@ $rowstoretrieve = $per_page+$offset;
 if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard)
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
-    if (is_countable($collections))
-        {
-        $colcount = count($collections);
-        }
-    else
-        {
-        $colcount = 0;
-        }
+    try {$colcount = count($collections);}
+    catch (Exception $e) {$colcount = 0;}
     $resourcestoretrieve = max(($rowstoretrieve-$colcount),0);
     }
 else
@@ -613,7 +609,7 @@ if(!$collectionsearch)
     <!-- Search items should only be draggable if results are not a collection -->
     <script>    
     // The below numbers are hardcoded mid points for thumbs and xlthumbs
-    var thumb_vartical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
+    var thumb_vertical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
     var thumb_horizontal_mid = <?php if($display=='xlthumbs'){?>160<?php } else {?>87<?php }?>;
     jQuery(document).ready(function() {
         if(is_touch_device())
@@ -628,7 +624,7 @@ if(!$collectionsearch)
             helper: 'clone',
             revert: false,
             scroll: false,
-            cursorAt: {top: thumb_vartical_mid, left: thumb_horizontal_mid},
+            cursorAt: {top: thumb_vertical_mid, left: thumb_horizontal_mid},
             drag: function (event, ui)
                 {
                 jQuery(ui.helper).css('opacity','0.6');

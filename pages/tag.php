@@ -94,7 +94,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		
 
 # Fetch a resource
-
+if ($sql_filter!="") {$sql_filter= " AND " . $sql_filter;}
 $ref=sql_value("select r.ref value,count(*) c from resource r left outer join resource_keyword rk on r.ref=rk.resource and rk.resource_type_field='$speedtaggingfield' $sql_join where r.has_image=1 and archive=0 $sql_filter group by r.ref  order by c,rand() limit 1",0);
 if ($ref==0) {exit ("No resources to tag.");}
 

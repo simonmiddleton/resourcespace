@@ -35,7 +35,7 @@ function HookVideo_spliceViewAfterresourceactions()
 		# Any problems?
 		if ($seconds<=0) {$error = $lang["error-from_time_after_to_time"];}
 		
-		# Convert seconds to HH:MM:SS as required by FFmpeg.
+		# Convert seconds to a duration in HH:MM:SS format as required by FFmpeg.
 		$dh=floor($seconds/(60*60));
 		$dm=floor(($seconds-($dh*60*60))/60);
 		$ds=floor($seconds-($dh*60*60)-($dm*60));
@@ -51,9 +51,11 @@ function HookVideo_spliceViewAfterresourceactions()
 			}
 		else
 			{
-			# Process video.
+			# Process video
+			# Set up the "ss" start timepoint which will be used in fast seek mode (ss is before the input file parameter) 
 			$ss=$fh . ":" . $fm . ":" . $fs;
-			$t=str_pad($dh,2,"0",STR_PAD_LEFT) . ":" . str_pad($dm,2,"0",STR_PAD_LEFT) . ":" . str_pad($ds,2,"0",STR_PAD_LEFT);
+			# Fast seek mode means that the "to" timepoint is effectively the duration
+			$to=str_pad($dh,2,"0",STR_PAD_LEFT) . ":" . str_pad($dm,2,"0",STR_PAD_LEFT) . ":" . str_pad($ds,2,"0",STR_PAD_LEFT);
 			
 			# Establish FFMPEG location.
 			$ffmpeg_fullpath = get_utility_path("ffmpeg");
@@ -104,14 +106,14 @@ function HookVideo_spliceViewAfterresourceactions()
 				$source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
 				$source_temp = str_replace("/", "\\", $source_temp);
 				copy($source, $source_temp);
-				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source_temp) . " -ss $ss -t $t " . ($use_avconv ? '-strict experimental -acodec copy ' : '') . escapeshellarg($target_temp);
+				$shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ss -i " . escapeshellarg($source_temp) . " -t $to " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
 				$output = exec($shell_exec_cmd);
 				rename($target_temp, $target);
 				unlink($source_temp);
 				}
 			else
 				{
-				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source) . " -ss $ss -t $t " . ($use_avconv ? '-strict experimental -acodec copy ' : '') . escapeshellarg($target);
+				$shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ss -i " . escapeshellarg($source) . " -t $to " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
 				$output = exec($shell_exec_cmd);
 				}
 			#echo "<p>" . $shell_exec_cmd . "</p>";
@@ -175,6 +177,7 @@ function HookVideo_spliceViewAfterresourceactions()
 <?php
 if (isset($preview) && $preview)
 	{
+	$random_param=rand();
 	?>
 	<tr><td colspan=4 align="center">
 	<div class="videojscontent">
@@ -187,7 +190,7 @@ if (isset($preview) && $preview)
 			class="video-js vjs-default-skin vjs-big-play-centered" 
 			poster=""
 		>
-		<source src="<?php echo convert_path_to_url($target) ?>" type="video/mp4"/>
+		<source src="<?php echo convert_path_to_url($target)."?alwaysload=$random_param" ?>" type="video/mp4"/>
 		<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 		<?php hook("html5videoextra"); ?>
 		</video>

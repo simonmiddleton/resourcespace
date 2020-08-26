@@ -102,6 +102,9 @@ function do_search(
         $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
         }
 
+    # Check if order_by is empty string as this avoids 'relevance' default
+    if ($order_by === "") {$order_by="relevance";}
+
     $order = array(
         "collection"      => "c.sortorder $sort,c.date_added $revsort,r.ref $sort",
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
@@ -120,6 +123,13 @@ function do_search(
         "modified"        => "modified $sort"
     );
 
+    # Check if date_field is being used as this will be needed in the inner select to be used in ordering
+    $include_fieldx=false;
+    if (isset($order_by_date_sql)&&in_array($order_by,$order)&&strpos($order[$order_by],$order_by_date_sql)!==false) 
+        {
+        $include_fieldx=true;
+        }
+
     # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
     if (!in_array($order_by,$order)&&(substr($order_by,0,5)=="field"))
         {
@@ -127,6 +137,8 @@ function do_search(
             {
             exit("Order field incorrect.");
             }
+        # If fieldx is being used this will be needed in the inner select to be used in ordering
+        $include_fieldx=true;
         # Check for field type
         $field_order_check=sql_value("SELECT field_constraint value FROM resource_type_field WHERE ref=".str_replace("field","",$order_by),"", "schema");
         # Establish sort order (numeric or otherwise)
@@ -259,7 +271,7 @@ function do_search(
         }
 
     # add 'joins' to select (only add fields if not returning the refs only)
-    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
+    $joins=$return_refs_only===false||$include_fieldx===true ? get_resource_table_joins() : array();
     foreach($joins as $datajoin)
         {
         if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
@@ -380,7 +392,7 @@ function do_search(
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
-                                
+                            $c++;    
                             if(!isset($datefieldjoin))
                                 {
                                 // We only want to join once to the date_field 

@@ -13,7 +13,7 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
 
     if($k != '' || !checkperm("a"))
         {
-        return;
+        return false;
         }
 
     $collection = (isset($collection_data["ref"]) ? $collection_data["ref"] : null);

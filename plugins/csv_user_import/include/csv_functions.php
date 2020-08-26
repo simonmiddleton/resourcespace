@@ -100,7 +100,8 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
             if('username' === $header || 'email' === $header)
                 {
-                $check = sql_value("SELECT count(*) AS value FROM user WHERE `{$header}` = '{$cell_value}'", 0);
+                $escaped_cell_value = escape_check($cell_value);
+                $check = sql_value("SELECT count(*) AS value FROM user WHERE `{$header}` = '{$escaped_cell_value}'", 0);
                 if(0 < $check)
                     {
                     array_push($messages, ucfirst($header). ' "' . $cell_value . '" exists already in ResourceSpace');

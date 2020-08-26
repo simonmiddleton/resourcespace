@@ -565,8 +565,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         exit();
                         }
                   }
-                if (!hook('redirectaftersave') && !$modal)
+                if (!hook('redirectaftersave'))
                   {
+                  $urlparams += ["modal" => "true"];
                   redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                   }
                 }
@@ -1041,7 +1042,6 @@ else
         return <?php echo ($modal ? 'Modal' : 'CentralSpace'); ?>Post(this, true);
       ">
     <?php generateFormToken("mainform"); ?>
-    <input type="hidden" name="modal" value="<?php echo ($modal?"true":"")?>" />
     <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     

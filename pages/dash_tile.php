@@ -170,10 +170,10 @@ if($submitdashtile && enforcePostRequest(false))
 		{
         #CREATE NEW
         # check for existing tile with same values
-        $existing_tile_ref = existing_dash_tile($buildurl, $link,$title,$text,$reload_interval,$all_users,$resource_count);
+        $existing_tile_ref = existing_dash_tile($buildurl, $link,$title,$text,(int) $reload_interval,(int) $all_users,(int) $resource_count);
         if ($existing_tile_ref > 0 && !empty($specific_user_groups))
             {
-        $message = $lang["existingdashtilefound-2"] . " Please visit the following page: <a href=\"?edit=" . $existing_tile_ref . "\">'" . $lang["editdashtile"] . "'</a> ";  
+            $message = str_replace("[existing_tile_ref]", $existing_tile_ref,$lang["existingdashtilefound-2"]) ;  
             }
 
 		$tile = create_dash_tile($buildurl, $link, $title, $reload_interval, $all_users, $default_order_by, $resource_count, $text, 1, $specific_user_groups);

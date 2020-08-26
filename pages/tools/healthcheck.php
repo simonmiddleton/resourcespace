@@ -42,8 +42,14 @@ $hash=md5(time());
 $file=$storagedir . "/write_test_$hash.txt";
 if(file_put_contents($file,$hash) === false)
     {
-    exit("FAIL - Unable to save the hash in file '{$file}'. File permissions are: " . fileperms($file));
+    exit("FAIL - Unable to save the hash in file '{$file}'. Folder permissions are: " . fileperms($storagedir));
     }
+
+if(!file_exists($file))
+    {
+    exit("FAIL - Hash not saved or unreadable in file'{$file}'");
+    }
+
 $check=file_get_contents($file);unlink($file);
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
 

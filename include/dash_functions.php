@@ -18,14 +18,12 @@
  * 
  * @return  integer
  */
-
-function existing_dash_tile($url="", $link="",$title="",$text="",$reload_interval="",$all_users="",$resource_count="")
+function existing_dash_tile(string $url="", string $link="", string $title="", string $text="", int $reload_interval=0, int $all_users=0, int $resource_count=0)
     {
 
-	$existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='".$url."' AND link='".$link."' AND title='".escape_check($title)."' AND txt='".escape_check($text)."' AND reload_interval_secs='".$reload_interval."' AND all_users='".$all_users."' AND resource_count='". $resource_count ."'", 0);
+	$existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='". escape_check($url)."' AND link='". escape_check($link) ."' AND title='" . escape_check($title)."' AND txt='".escape_check($text) . "' AND reload_interval_secs='". escape_check($reload_interval) ."' AND all_users='". escape_check($all_users) . "' AND resource_count='". escape_check($resource_count)."'" , 0);
     
-    
-    return $existing_tile_ref;
+    return (int) $existing_tile_ref;
     }
 
 
@@ -57,7 +55,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
 		}
 	$resource_count = $resource_count?1:0;
 
-	$existing_tile_ref = existing_dash_tile($url, $link,$title,$text,$reload_interval,$all_users,$resource_count);
+	$existing_tile_ref = existing_dash_tile($url, $link,$title,$text,(int) $reload_interval,$all_users,$resource_count);
 	
 	if($existing_tile_ref > 0)
 		{
@@ -989,6 +987,10 @@ function empty_user_dash($user,$purge=true)
 function reorder_user_dash($user)
 	{
 	$user_tiles = sql_query("SELECT user_dash_tile.ref FROM user_dash_tile LEFT JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+	if (count($user_tiles) < 2)
+		{
+		return;	
+		}
 	$order_by=10 * count($user_tiles);
 	
 	$sql="UPDATE user_dash_tile SET order_by = (CASE ";

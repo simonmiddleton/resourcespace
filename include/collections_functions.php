@@ -2099,14 +2099,16 @@ function update_collection_order($neworder,$collection,$offset=0)
 		exit ("Error: invalid input to update collection function.");
 	}
 
-	$updatesql= "update collection_resource set sortorder=(case resource ";
-	$counter = 1 + $offset;
-	foreach ($neworder as $colresource){
-		$updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
-		$counter++;
-	}
-	$updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
-	sql_query($updatesql);
+    if (count($neworder)>0) {
+        $updatesql= "update collection_resource set sortorder=(case resource ";
+        $counter = 1 + $offset;
+        foreach ($neworder as $colresource){
+            $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
+            $counter++;
+        }
+        $updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
+        sql_query($updatesql);
+    }
 	$updatesql="update collection_resource set sortorder=99999 WHERE collection='" . escape_check($collection) . "' and sortorder is NULL";
 	sql_query($updatesql);
 	}
@@ -2754,7 +2756,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
 		{
-        if(is_null($result))
+        if(!is_array($result))
             {
             $result = get_collection_resources_with_data($collection_data['ref']);
             }
@@ -3270,11 +3272,10 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         
     
     // Relate all resources
-    if($enable_related_resources && $allow_multi_edit && 0 < $count_result) 
+    if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];
-        $options[$o]['data_attr']=$data_attribute;
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
         $o++;
