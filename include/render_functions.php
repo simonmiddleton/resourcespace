@@ -4235,9 +4235,9 @@ function render_array_in_table_cells($array)
     foreach($array as $name => $value)
         {
         echo "<table border=1>";
-        echo "<tr><td>";
+        echo "<tr><td width='50%'>";
         echo htmlspecialchars($name);
-        echo "</td><td>";
+        echo "</td><td width='50%'>";
 
         if(is_array($value) || is_object($value))
             {

@@ -19,15 +19,20 @@ else
     }
 
 $deletejob = getval("delete_job",0,true);
+$resetjob = getval("reset_job",0,true);
 if($deletejob > 0 && enforcePostRequest(true))
     {
     job_queue_delete($deletejob);
     }
-
-$resetjob = getval("reset_job",0,true);
-if($resetjob > 0 && enforcePostRequest(true))
+elseif($resetjob > 0 && enforcePostRequest(true))
     {
+    clear_process_lock("job_{$resetjob}");
     job_queue_update($resetjob,array(),1);
+    }
+elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true))
+    {
+    job_queue_purge(STATUS_COMPLETE);
+    job_queue_purge(STATUS_ERROR);
     }
 
 $jobs = job_queue_get_jobs($job_type,$job_status,$job_user,'',$job_orderby,$job_sort,$job_find);
@@ -49,7 +54,7 @@ $curparams = array(
     "job_find"=>$job_find
 );
 
-$cururl = generateurl($baseurl . "/pages/manage_jobs.php",$curparams);
+$url = generateurl($baseurl . "/pages/manage_jobs.php",$curparams);
 
 
 
@@ -110,13 +115,16 @@ for($n=$offset;$n<$jobcount;$n++)
         "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
         );
 
-    $tablejob["tools"][] = array(
-        "class"=>"fa fa-chevron-circle-right",
-        "text"=>$lang["job_reset"],
-        "url"=>"#",
-        "modal"=>false,
-        "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"reset_job\");return false;"
-        );
+    if($jobs[$n]["status"] != STATUS_ACTIVE)
+        {
+        $tablejob["tools"][] = array(
+            "class"=>"fa fa-chevron-circle-right",
+            "text"=>$lang["job_reset"],
+            "url"=>"#",
+            "modal"=>false,
+            "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"reset_job\");return false;"
+            );
+        }
 
 
     $tabledata["data"][] = $tablejob;
@@ -132,7 +140,7 @@ include '../include/header.php';
         var temp_form = document.createElement("form");
         temp_form.setAttribute("id", "jobform");
         temp_form.setAttribute("method", "post");
-        temp_form.setAttribute("action", '<?php echo $cururl ?>');
+        temp_form.setAttribute("action", '<?php echo $url ?>');
 
         var i = document.createElement("input");
         i.setAttribute("type", "hidden");
@@ -164,10 +172,11 @@ include '../include/header.php';
 <?php
 $introtext=text("introtext");
 if ($introtext!="")
-{
-echo "<p>" . text("introtext") . "</p>";
-}
+    {
+    echo "<p>" . text("introtext") . "</p>";
+    }
 
+echo "<p><a href='#' onclick='update_job(true,\"purge_jobs\")'>" . LINK_CARET . $lang["jobs_action_purge_complete"] . "</a></p>";
 echo "<div id='job_list_container' class='BasicsBox'>\n";
 render_table($tabledata);
 echo "\n</div><!-- End of BasicsBox -->\n";

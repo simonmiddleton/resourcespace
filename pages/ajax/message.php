@@ -93,6 +93,15 @@
 				{
 				$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
 				}
+            }
+        if($offline_job_queue)
+			{
+            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref));
+            $failedjobcount = count($failedjobs);
+            if($failedjobcount>0)
+				{
+				$messages[]=array('ref'=>0,'failedjobcount'=>$failedjobcount);
+				}
 			}
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
@@ -135,6 +144,12 @@
 					messagecount=totalcount=jQuery(messages).length;
 					actioncount=0;
 					if (typeof(messages[messagecount-1]['actioncount']) !== 'undefined') // There are actions as well as messages
+						{
+						actioncount=parseInt(messages[messagecount-1]['actioncount']);
+						messagecount=messagecount-1;
+						totalcount=actioncount+messagecount;
+                        }
+                    if (typeof(messages[messagecount-1]['failedjobcount']) !== 'undefined') // There are actions as well as messages
 						{
 						actioncount=parseInt(messages[messagecount-1]['actioncount']);
 						messagecount=messagecount-1;

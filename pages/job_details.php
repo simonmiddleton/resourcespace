@@ -30,13 +30,13 @@ if(!is_array($job_details) || count($job_details) == 0)
 
 
     <div class="BasicsBox">
-        <div class="Listview">
+        <div class="Listview infotable">
             <table>
             <?php foreach($job_details as $name => $value)
                 {
-                echo "<tr><td>";
+                echo "<tr><td width='50%'>";
                 echo htmlspecialchars($name);
-                echo "</td><td>";
+                echo "</td><td width='50%'>";
                 if($name =="job_data")
                     {
                     $job_data= json_decode($value);

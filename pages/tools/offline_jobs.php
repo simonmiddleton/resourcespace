@@ -1,47 +1,65 @@
 <?php
 include_once dirname(__FILE__) . "/../../include/db.php";
-
 include_once dirname(__FILE__) . "/../../include/reporting_functions.php";
 
-set_time_limit(0);
-
 // This MUST only be done by having access to the server
-if(PHP_SAPI == 'cli')
+if(PHP_SAPI != 'cli')
     {
-    $offline_job_cli_long_options  = array(
-        'clear-lock',
-        'job:'
-    );
-    $clear_lock = false;
-    $jobs = array();
+    exit("This script cannot be run from a browser");
+    }
 
-    // CLI options check
-    foreach(getopt('', $offline_job_cli_long_options) as $option_name => $option_value)
+set_time_limit(0);
+$offline_job_cli_long_options  = array(
+    'clear-lock',
+    'job:'
+);
+$clear_lock = false;
+$jobs = array();
+
+// CLI options check
+foreach(getopt('', $offline_job_cli_long_options) as $option_name => $option_value)
+    {
+    if($option_name == 'clear-lock')
         {
-        if($option_name == 'clear-lock')
+        $clear_lock = true;
+        }
+
+    // IMPORTANT: job can be an integer when option is used once or an array when options is used multiple times
+    // (e.g. php offline_jobs.php --clear-lock --job=2 --job=10)
+    if($option_name == 'job')
+        {
+        if(!is_array($option_value))
             {
-            $clear_lock = true;
+            $jobs[] = $option_value;
+
+            continue;
             }
 
-        // IMPORTANT: job can be an integer when option is used once or an array when options is used multiple times
-        // (e.g. php offline_jobs.php --clear-lock --job=2 --job=10)
-        if($option_name == 'job')
-            {
-            if(!is_array($option_value))
-                {
-                $jobs[] = $option_value;
-
-                continue;
-                }
-
-            $jobs = $option_value;
-            }
+        $jobs = $option_value;
         }
     }
 
 if($offline_job_queue)
     {
-    # Run offline jobs (may be useful in the event a cron job hasn't yet been created for the new offline_jobs.php)
+    // Mark any jobs that are still marked as in progress but have an old process lock as failed
+    $runningjobs=job_queue_get_jobs("",STATUS_INPROGRESS,"","","ref", "ASC");
+    foreach($runningjobs as $runningjob)
+        {
+        if(!is_process_lock("job_" . $runningjob["ref"]))
+            {
+            echo "no process lock";
+            // No current lock in place. Check for presence of an old lock and mark as failed
+            $saved_process_lock_max_seconds = $process_locks_max_seconds;
+            $process_locks_max_seconds = 9999999;
+            if(is_process_lock("job_" . $runningjob["ref"]))
+                {
+                    echo "MARKING as failed";
+                job_queue_update($jobref,$job_data,STATUS_ERROR);
+                }
+            $process_locks_max_seconds = $saved_process_lock_max_seconds;
+            }
+        }
+
     $offlinejobs=job_queue_get_jobs("", STATUS_ACTIVE, "","","ref", "ASC");
 
     foreach($offlinejobs as $offlinejob)

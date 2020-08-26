@@ -1450,6 +1450,11 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
 
 /**
  * A generic pager function used by many display lists in ResourceSpace.
+ * 
+ * Requires the following globals to be set
+ * $url         - Current page url
+ * $curpage     - Current page
+ * $totalpages  - Total number of pages
  *
  * @param  boolean $break
  * @param  boolean $scrolltotop
@@ -2746,9 +2751,6 @@ function get_slideshow_files_data()
 
     return $slideshow_files;
     }
-
-    
-    
         
 /**
  * Returns a sanitised row from the table in a safe form for use in a form value, 
@@ -2765,8 +2767,6 @@ function form_value_display($row,$name,$default="")
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }
-
-
 
 /**
  * Adds a job to the job_queue table.
@@ -2800,7 +2800,7 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
             {
             return $lang["job_queue_duplicate_message"];
             }
-    sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "')");
+    sql_query("INSERT INTO job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) VALUES('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "')");
     return sql_insert_id();
     }
     
@@ -2815,10 +2815,10 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
  */
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     {
-    $sql="update  job_queue set job_data='" . escape_check(json_encode($job_data)) . "'";
+    $sql="UPDATE job_queue SET job_data='" . escape_check(json_encode($job_data)) . "'";
     if($newtime!=""){$sql.=",start_date='" . $newtime . "'";}
     if($newstatus!=""){$sql.=",status='" . $newstatus . "'";}
-    $sql.=" where ref='" . $ref . "'";
+    $sql.=" WHERE ref='" . $ref . "'";
     sql_query($sql);
     }
 
@@ -2832,7 +2832,7 @@ function job_queue_delete($ref)
     {
     global $userref;
     $limitsql = (checkperm('a') || php_sapi_name() == "cli") ? "" : " AND user='" . $userref . "'";
-    sql_query("delete from job_queue where ref='" . $ref . "' " .  $limitsql);
+    sql_query("DELETE FROM job_queue WHERE ref='" . $ref . "' " .  $limitsql);
     }
 
 /**
@@ -2857,12 +2857,12 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
     if($find!="")
         {
         $find=escape_check($find);
-        $condition[] = " (j.ref like '%" . $find . "%'  or j.job_data like '%" . $find . "%' or j.success_text like '%" . $find . "%' or j.failure_text like '%" . $find . "%' or j.user like '%" . $find . "%' or u.username like '%" . $find . "%' or u.fullname like '%" . $find . "%')";
+        $condition[] = " (j.ref LIKE '%" . $find . "%'  OR j.job_data LIKE '%" . $find . "%' OR j.success_text LIKE '%" . $find . "%' OR j.failure_text LIKE '%" . $find . "%' OR j.user LIKE '%" . $find . "%' OR u.username LIKE '%" . $find . "%' or u.fullname LIKE '%" . $find . "%')";
         }
     $conditional_sql="";
     if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
         
-    $sql = "select j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname from job_queue j left join user u on u.ref=j.user " . $conditional_sql . " order by " . escape_check($job_order_by) . " " . escape_check($job_sort);
+    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user " . $conditional_sql . " ORDER BY " . escape_check($job_order_by) . " " . escape_check($job_sort);
     $jobs=sql_query($sql);
     return $jobs;
     }
@@ -2880,6 +2880,21 @@ function job_queue_get_job($ref)
 
     return (is_array($job_data) && count($job_data)>0) ? $job_data[0] : array();
     }    
+
+/**
+ * Delete all jobs in the specified state
+ *
+ * @param  int $status to purge, whole queue will be purged if not set
+ * @return void
+ */
+function job_queue_purge($status=0)
+    {
+    $deletejobs = job_queue_get_jobs('',$status == 0 ? '' : $status);
+    if(count($deletejobs) > 0)
+        {
+        sql_query("DELETE FROM job_queue WHERE ref IN ('" . implode("','",array_column($deletejobs,"ref")) . "')");
+        }
+    }
 
 /**
 * Run offline job
@@ -2921,7 +2936,7 @@ function job_queue_run_job($job, $clear_process_lock)
         debug($logmessage);
         clear_process_lock("job_{$jobref}");
         }
-
+    
     set_process_lock('job_' . $jobref);
     
     $logmessage =  "Running job #" . $jobref . PHP_EOL;
@@ -2937,10 +2952,10 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-
+        job_queue_update($jobref,$job_data,STATUS_INPROGRESS);
         $offline_job_in_progress = true;
-
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
+        job_queue_update($jobref,$job_data,STATUS_COMPLETE);
         }
     else
         {
@@ -2952,8 +2967,10 @@ function job_queue_run_job($job, $clear_process_lock)
                 $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
                 echo $logmessage;
                 debug($logmessage);
+                job_queue_update($jobref,$job_data,STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
+                job_queue_update($jobref,$job_data,STATUS_COMPLETE);
                 break;
                 }
             }
