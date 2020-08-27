@@ -4340,37 +4340,3 @@ function get_featured_collection_ref_by_name(string $name, $parent)
 
     return (is_null($ref) ? null : (int) $ref);
     }
-
-
-/**
-* Create a new featured collection
-* 
-* @param string       $name   Featured collection name to search by
-* @param null|integer $parent The featured collection parent
-* 
-* @return integer
-*/
-function new_featured_collection(string $name, $parent)
-    {
-    if(!is_null($parent) && !is_int($parent))
-        {
-        return 0;
-        }
-
-    $fc_ref = get_featured_collection_ref_by_name($name, $parent);
-    if(!is_null($fc_ref))
-        {
-        return $fc_ref;
-        }
-
-    sql_query(
-        sprintf("INSERT INTO collection(`name`, public, `type`, parent) VALUES ('%s', 1, '%s', %s)",
-            escape_check($name),
-            COLLECTION_TYPE_FEATURED,
-            sql_null_or_val((string) $parent, is_null($parent))
-        )
-    );
-    $fc_ref = sql_insert_id();
-
-    return (int) $fc_ref;
-    }
