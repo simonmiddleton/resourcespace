@@ -924,7 +924,7 @@ function save_collection($ref, $coldata=array())
         $sqlset = array();
         foreach($coldata as $colopt => $colset)
             {
-            // featured_collections_changes value is data as returned by process_posted_featured_collection_categories()
+            // "featured_collections_changes" value is data as returned by process_posted_featured_collection_categories()
             if($colopt == "featured_collections_changes" && !empty($colset))
                 {
                 $sqlset["type"]   = COLLECTION_TYPE_STANDARD;
@@ -934,14 +934,6 @@ function save_collection($ref, $coldata=array())
                     {
                     $sqlset["type"] = COLLECTION_TYPE_FEATURED;
                     $sqlset["parent"] = (int) $colset["update_parent"];
-                    }
-
-                if(isset($colset["new_category"]) && !empty($colset["new_category"]))
-                    {
-                    $new_category_info = $colset["new_category"];
-
-                    $sqlset["type"] = COLLECTION_TYPE_FEATURED;
-                    $sqlset["parent"] = new_featured_collection($new_category_info["name"], $new_category_info["parent"]);
                     }
 
                 // Prevent unnecessary changes

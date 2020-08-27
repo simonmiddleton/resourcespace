@@ -31,13 +31,13 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     // This is used to create featured collections directly from the featured collections page
     if($enable_themes && getval("call_to_action_tile", "") === "true" && checkperm("h"))
         {
-        $parent = getval("parent", null, true);
+        $parent = (int) getval("parent", 0, true);
         $coldata = array(
             "name" => $name,
             "public" => 1,
             "featured_collections_changes" => array("update_parent" => $parent),
         );
-        $redirect_params = (is_null($parent) ? array() : array("parent" => $parent));
+        $redirect_params = ($parent == 0 ? array() : array("parent" => $parent));
         $redirect_url = generateURL("{$baseurl_short}pages/collections_featured.php", $redirect_params);
 
         save_collection($new,$coldata);
@@ -45,7 +45,6 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
 
     set_user_collection($userref, $new);
 
-    // Log this
     daily_stat('New collection', $userref);
 
     redirect($redirect_url);
