@@ -1175,7 +1175,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
     if (!isset($body)){$body=$message;}
 
-    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log;
+    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log,$smtpautotls;
     $mail = new PHPMailer\PHPMailer\PHPMailer();
     // use an external SMTP server? (e.g. Gmail)
     if ($use_smtp) {
@@ -1183,6 +1183,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         $mail->SMTPDebug = $debug_log ? 1 : 0;  // debugging: 1 = errors and messages, 2 = messages only
         $mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
         $mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
+        $mail->SMTPAutoTLS = $smtpautotls; 
         $mail->Host = $smtp_host; // hostname
         $mail->Port = $smtp_port; // port number
         $mail->Username = $smtp_username; // username

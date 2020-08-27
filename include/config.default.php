@@ -2761,6 +2761,7 @@ $smtp_port=25; # Port number, e.g. 465 for Gmail using SSL.
 $smtp_auth=true; # Send credentials to SMTP server (false to use anonymous access)
 $smtp_username=''; # Username (full email address).
 $smtp_password=''; # Password.
+$smtpautotls = false; # If using PHPMailer, whether to enable TLS encryption automatically if a server supports it, even if `SMTPSecure` is not set to 'tls'.
 
 $sharing_userlists=false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
