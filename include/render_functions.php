@@ -4344,7 +4344,7 @@ function render_featured_collection(array $ctx, array $fc)
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
         }
-    if($full_width && !$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
         {
         $html_contents_h2 .= " <div class=\"NewFlag\">{$lang['newflag']}</div>";
         }
