@@ -4336,6 +4336,11 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) ? $ctx["tools"] : array());
+    $html_actions_style = array();
+    if(count($tools) > 3)
+        {
+        $html_actions_style[] = "height: 43px;";
+        }
 
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
@@ -4350,7 +4355,7 @@ function render_featured_collection(array $ctx, array $fc)
     if(!empty($tools))
         {
         ?>
-        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone">
+        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone" style="<?php echo implode(" ", $html_actions_style); ?>">
         <?php
         foreach($tools as $tool)
             {
@@ -4359,7 +4364,7 @@ function render_featured_collection(array $ctx, array $fc)
                 continue;
                 }
 
-            $href = (isset($tool["href"]) ? $tool["href"] : "#");
+            $href = (isset($tool["href"]) && trim($tool["href"]) != "" ? $tool["href"] : "#");
             $text = $tool["text"]; // if this is missing, code is wrong somewhere else
 
             $tool_onclick = (isset($tool["modal_load"]) && $tool["modal_load"] ? 'return ModalLoad(this, true);' : 'return CentralSpaceLoad(this, true);');
