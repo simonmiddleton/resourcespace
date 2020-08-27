@@ -1098,19 +1098,6 @@ if ($header=="" && !isset($themes[0]))
 			} //end of if ((checkperm("f*") || checkperm("f" . $headers[$n]["ref"])) && !checkperm("f-" . $headers[$n]["ref"]) && ($smart_theme=="" || $smart_theme==$headers[$n]["ref"]))
 		} // end of for ($n=0;$n<count($headers);$n++)
 	} // end of if ($header=="" && !isset($themes[0]))
-
-if($simpleview && !$smart_theme && checkperm('h'))
-       {
-       renderCallToActionTile(
-           generateURL(
-               "{$baseurl_short}pages/themes.php",
-               array(
-                   'new'              => 'true',
-                   'call_to_action_tile' => 'true'
-               ),
-               $new_collection_additional_params
-           ));
-       }
 ?>
 </div><!-- End of FeaturedSimpleLinks -->
 <?php

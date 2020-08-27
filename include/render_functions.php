@@ -2327,29 +2327,35 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
 /**
 * Render a blank tile used for call to actions (e.g: on featured collections, a tile for creating new collections)
 * 
-* @param string $link URL
+* @param string $url URL
+* @param array  $ctx Rendering options determined by the outside context
 * 
 * @return void
 */
-function renderCallToActionTile($link)
+function render_new_featured_collection_cta(string $url, array $ctx)
     {
-    global $themes_simple_view;
+    global $collection_allow_creation;
 
-    if(!$themes_simple_view || checkperm('b'))
+    if('' === $url)
         {
         return;
         }
 
-    if('' === $link)
+    $html_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile", "FeaturedCallToActionTile");
+    $html_contents_h2_class = array();
+
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    if($full_width)
         {
-        return;
+        $html_tile_class[] = "FullWidth";
+        $html_contents_h2_class[] = "MarginZeroAuto";
         }
         ?>
-    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile FeaturedCallToActionTile">
-        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);">
+    <div id="FeaturedSimpleTile" class="<?php echo implode(" ", $html_tile_class); ?>">
+        <a href="<?php echo $url; ?>" onclick="return ModalLoad(this, true, true);">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2><span class='fas fa-plus-circle'></span></h2>
+                    <h2 class="<?php echo implode(" ", $html_contents_h2_class); ?>"><span class='fas fa-plus-circle'></span></h2>
                 </div>
             </div>
         </a>
@@ -4172,6 +4178,7 @@ function render_featured_collections(array $ctx, array $items)
     global $baseurl_short, $lang, $themes_simple_images;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
 
     foreach($items as $fc)
         {
@@ -4324,9 +4331,17 @@ function render_featured_collection(array $ctx, array $fc)
     $html_contents_class = array("FeaturedSimpleTileContents");
     $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
 
+    $html_contents_h2_style = array();
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    if($full_width)
+        {
+        $html_container_class[] = "FullWidth";
+        $html_contents_h2_style[] = "max-width: unset;";
+        }
+
 
     $theme_image_path = (isset($ctx["image_url"]) && trim($ctx["image_url"]) != "" ? $ctx["image_url"] : "");
-    if($theme_image_path != "")
+    if($theme_image_path != "" && !$full_width)
         {
         $html_container_class[] = "FeaturedSimpleTileImage";
         $html_container_style[] = "background: url({$theme_image_path});";
@@ -4335,7 +4350,7 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
 
-    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) ? $ctx["tools"] : array());
+    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"] && !$full_width) ? $ctx["tools"] : array());
     $html_actions_style = array();
     if(count($tools) > 3)
         {
@@ -4347,8 +4362,8 @@ function render_featured_collection(array $ctx, array $fc)
     ?>
     <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
-            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>"  class="<?php echo implode(" ", $html_contents_class); ?>">
-                <h2><?php echo $html_contents_icon . i18n_get_collection_name($fc); ?></h2>
+            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_icon . i18n_get_collection_name($fc); ?></h2>
             </div>
         </a>
     <?php

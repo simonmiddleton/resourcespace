@@ -1343,6 +1343,11 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-right: 5px;    
 }
 
+.FeaturedSimpleTile.FullWidth { height: 40px; }
+.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 { background-color: unset; }
+.FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents { background-color: rgba(0,0,0,0.4); }
+.FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }
+
 .MessageUnread {
     font-weight: bold;
 }
@@ -1865,3 +1870,6 @@ a.BrowseRefresh{
 .userselect {
     z-index:500;
 }
+
+.FullWidth { width: 100%; }
+.MarginZeroAuto { margin: 0 auto; }

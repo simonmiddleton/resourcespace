@@ -30,6 +30,12 @@ include "../include/header.php";
 <?php
 echo "<p>TODO: render breadcrumbs (@line ".__LINE__.")</p>";
 
+// Default rendering options (should apply to both FCs and smart FCs)
+$rendering_options = array(
+    "full_width" => !$themes_simple_view,
+);
+
+
 $featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent) : array());
 usort($featured_collections, function(array $a, array $b)
     {
@@ -40,10 +46,6 @@ usort($featured_collections, function(array $a, array $b)
 
     return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
     });
-
-$rendering_options = array(
-    "full_width" => false, # TODO: Add a new full width tile mode to the page that simulates the existing list view
-);
 render_featured_collections($rendering_options, $featured_collections);
 
 
@@ -87,11 +89,12 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     }
 $rendering_options["smart"] = (count($smart_fcs_list) > 0);
 render_featured_collections($rendering_options, $smart_fcs_list);
+unset($rendering_options["smart"]);
 
 
 if($smart_rtf == 0 && checkperm("h") && $collection_allow_creation)
     {
-    renderCallToActionTile(
+    render_new_featured_collection_cta(
         generateURL(
             "{$baseurl_short}pages/collections_featured.php",
             array(
@@ -99,7 +102,8 @@ if($smart_rtf == 0 && checkperm("h") && $collection_allow_creation)
                 "cta" => "true",
                 "parent" => $parent,
             )
-        ));
+        ),
+        $rendering_options);
     }
 ?>
 </div> <!-- End of BasicsBox FeaturedSimpleLinks -->
