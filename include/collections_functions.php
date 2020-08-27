@@ -4148,6 +4148,7 @@ function get_featured_collections(int $parent)
                     `name`,
                     `type`,
                     parent,
+                    created,
                     (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
                FROM collection AS c
               WHERE public = 1

@@ -632,7 +632,7 @@ behavior: url('../css/iepngfix.htc');
 .PDFnav {font-size: 4em; padding:6px;font-weight:bold;}
 .PDFnav:hover {text-decoration: none;}
 
-.NewFlag {display:inline;font-size:0.6em;margin-left:5px;padding:1px 3px 1px 3px;}
+.NewFlag { display: inline; font-size: 0.6em; margin-left: 5px; padding: 1px 3px; font-weight: bolder; }
 .Breadcrumbs {float:left;margin-top:4px;}
 .SearchBreadcrumbs {margin-top:15px;}
 .SearchTitle {padding: 0px;margin-top:-10px;margin-bottom:5px;}
@@ -1344,7 +1344,9 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 .FeaturedSimpleTile.FullWidth { height: 40px; }
+.FeaturedSimpleTile.FullWidth .FeaturedSimpleLink { width: 85%; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 { background-color: unset; }
+.FeaturedSimpleTile.FullWidth .ListTools .ActionsContainer select { margin: 5px 5px; }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents { background-color: rgba(0,0,0,0.4); }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }
 
