@@ -9,7 +9,7 @@ function wordpress_sso_redirect($getdetails=false,$knownuser=false)
 		{
 		// Update the user account with the request id so it can be detected on return
 		$requestid=uniqid("wp_sso");
-		sql_query("update user set wp_authrequest='$requestid' where username='$username'");
+		sql_query("UPDATE user SET wp_authrequest='" . $requestid . "' WHERE username='" . escape_check($username) . "'");
 		//echo "wordpress_sso - Set request ID $requestid for $username";
 		debug("wordpress_sso - sending second request to WP, setting request ID for $username in database");
 		}
