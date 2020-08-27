@@ -1487,19 +1487,26 @@ function resolve_users($users)
 /**
  * Verify a supplied external access key
  *
- * @param  integer $resource    The resource ID
+ * @param  array | integer $resources   Resource ID | Array of resource IDs 
  * @param  string $key          The external access key
  * @return boolean Valid?
  */
-function check_access_key($resource,$key)
-    {
-    $resource = (int)$resource;
-    # Option to plugin in some extra functionality to check keys
-    if(hook("check_access_key", "", array($resource, $key)) === true)
+function check_access_key($resources,$key)
+    {    
+    if(!is_array($resources))
         {
-        return true;
+        $resources = array($resources);
         }
 
+    foreach($resources as $resource)
+        {
+        $resource = (int)$resource;
+        # Option to plugin in some extra functionality to check keys
+        if(hook("check_access_key", "", array($resource, $key)) === true)
+            {
+            return true;
+            }
+        }
     hook("external_share_view_as_internal_override");
 
     global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
@@ -1518,166 +1525,166 @@ function check_access_key($resource,$key)
     $key_escaped = escape_check($key);
 
     $keys = sql_query("
-            SELECT user,
-                   usergroup,
-                   expires,
-                   password_hash, 
-                   access
-              FROM external_access_keys
-             WHERE user IN (SELECT ref FROM user)
-               AND resource = '$resource'
-               AND access_key = '$key_escaped'
-               AND (expires IS NULL OR expires > now())
-               ORDER BY access");
+            SELECT k.user,
+                   k.usergroup,
+                   k.expires,
+                   k.password_hash, 
+                   k.access,
+                   k.resource
+            FROM external_access_keys k 
+            LEFT JOIN user u ON u.ref=k.user
+            WHERE k.access_key = '$key_escaped'
+               AND k.resource IN ('" . implode("','",$resources) . "')
+               AND (k.expires IS NULL OR k.expires > now())
+               AND u.approved=1
+               ORDER BY k.access");
 
-    if (count($keys)==0)
+    if(count($keys) == 0 || count(array_diff($resources,array_column($keys,"resource"))) > 0)
         {
         return false;
         }
-    else
-        {
-        if($keys[0]["access"] == -1)
-            {
-            // If the resources have -1 as access they may have been added without the correct expiry etc.
-            sql_query("UPDATE external_access_keys ak
-                LEFT JOIN (SELECT * FROM external_access_keys ake WHERE access_key='$key_escaped' ORDER BY access DESC, expires ASC LIMIT 1) ake
-                    ON ake.access_key=ak.access_key
-                    AND ake.collection=ak.collection
-                SET ak.expires=ake.expires, 
-                    ak.access=ake.access,
-                    ak.usergroup=ake.usergroup,
-                    ak.email=ake.email,
-                    ak.password_hash=ake.password_hash
-                WHERE ak.access_key = '$key_escaped'
-                AND ak.access='-1'
-                AND ak.expires IS NULL");
-            return false;            
-            }
 
-        if($keys[0]["password_hash"] != "" && PHP_SAPI != "cli")
+    if($keys[0]["access"] == -1)
+        {
+        // If the resources have -1 as access they may have been added without the correct expiry etc.
+        sql_query("UPDATE external_access_keys ak
+            LEFT JOIN (SELECT * FROM external_access_keys ake WHERE access_key='$key_escaped' ORDER BY access DESC, expires ASC LIMIT 1) ake
+                ON ake.access_key=ak.access_key
+                AND ake.collection=ak.collection
+            SET ak.expires=ake.expires, 
+                ak.access=ake.access,
+                ak.usergroup=ake.usergroup,
+                ak.email=ake.email,
+                ak.password_hash=ake.password_hash
+            WHERE ak.access_key = '$key_escaped'
+            AND ak.access='-1'
+            AND ak.expires IS NULL");
+        return false;            
+        }
+
+    if($keys[0]["password_hash"] != "" && PHP_SAPI != "cli")
+        {
+        // A share password has been set. Check if user has a valid cookie set
+        $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
+        $check = check_share_password($key,"",$share_access_cookie);
+        if(!$check)
             {
-            // A share password has been set. Check if user has a valid cookie set
-            $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
-            $check = check_share_password($key,"",$share_access_cookie);
-            if(!$check)
-                {
-                $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"resource"=>$resource,"return_url" => $baseurl . (isset($_SERVER["REQUEST_URI"]) ? urlencode(str_replace($baseurl_short,"/",$_SERVER["REQUEST_URI"])) : "/r=" . $resource . "&k=" . $key)));
-                redirect($url);
-                exit();
-                }
-            }
-            
-        # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
-        $user=$keys[0]["user"];
-        $expires=$keys[0]["expires"];
-                
-        # Has this expired?
-        if ($expires!="" && strtotime($expires)<time())
-            {
-            global $lang;
-            ?>
-            <script type="text/javascript">
-            alert("<?php echo $lang["externalshareexpired"] ?>");
-            history.go(-1);
-            </script>
-            <?php
+            $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"resource"=>$resources[0],"return_url" => $baseurl . (isset($_SERVER["REQUEST_URI"]) ? urlencode(str_replace($baseurl_short,"/",$_SERVER["REQUEST_URI"])) : "/r=" . $resource . "&k=" . $key)));
+            redirect($url);
             exit();
             }
-        
-        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
-                $groupjoin="u.usergroup=g.ref";
-                $permissionselect="g.permissions";
-                if ($keys[0]["usergroup"]!="")
-                    {
-                    # Select the user group from the access key instead.
-                    $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
-                    $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
-                    }
-        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
-        if (count($userinfo)>0)
-            {
-            $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
-            $userpermissions=explode(",",$userinfo[0]["permissions"]);
-            
-            if ($search_filter_nodes)
-                {
-                if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
-                    {
-                    // User search filter override
-                    $usersearchfilter = $userinfo[0]["search_filter_o_id"];
-                    }
-                elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
-                    {
-                    // Group search filter
-                    $usersearchfilter = $userinfo[0]["search_filter_id"];
-                    }
-                }
-            else
-                {
-                // Old style search filter that hasn't been migrated
-                $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
-                }
-
-            if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
-            $userrequestmode=0; # Always use 'email' request mode for external users
-            
-            # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
-            global $emulate_plugins_set;            
-            if ($emulate_plugins_set!==true)
-                {
-                global $plugins;
-                $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
-                foreach($enabled_plugins as $plugin)
-                    {
-                    $s=explode(",",$plugin['enabled_groups']);
-                    if (in_array($usergroup,$s))
-                        {
-                        include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-                        register_plugin($plugin['name']);
-                        $plugins[]=$plugin['name'];
-                        }
-                    }
-                for ($n=count($plugins)-1;$n>=0;$n--)
-                    {
-                    register_plugin_language($plugins[$n]);
-                    }
-                $emulate_plugins_set=true;                  
-                }
-            
-            if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
-                {
-
-                # Apply config override options
-                $config_options=trim($userinfo[0]["config_options"]);
-
-                // We need to get all globals as we don't know what may be referenced here
-                extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-                eval($config_options);
-
-                }
-            }
-        
-        # Special case for anonymous logins.
-        # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
-        global $anonymous_login;
-        if (isset($anonymous_login))
-            {
-            global $username,$baseurl;
-            if(is_array($anonymous_login))
-            {
-            foreach($anonymous_login as $key => $val)
-                {
-                if($baseurl==$key){$anonymous_login=$val;}
-                }
-            }
-            $username=$anonymous_login;     
-            }
-        
-        # Set the 'last used' date for this key
-        sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource = '$resource' AND access_key = '$key_escaped'");
-        
-        return true;
         }
+        
+    # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
+    $user=$keys[0]["user"];
+    $expires=$keys[0]["expires"];
+            
+    # Has this expired?
+    if ($expires!="" && strtotime($expires)<time())
+        {
+        global $lang;
+        ?>
+        <script type="text/javascript">
+        alert("<?php echo $lang["externalshareexpired"] ?>");
+        history.go(-1);
+        </script>
+        <?php
+        exit();
+        }
+    
+    global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
+            $groupjoin="u.usergroup=g.ref";
+            $permissionselect="g.permissions";
+            if ($keys[0]["usergroup"]!="")
+                {
+                # Select the user group from the access key instead.
+                $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
+                $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+                }
+    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
+    if (count($userinfo)>0)
+        {
+        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+        $userpermissions=explode(",",$userinfo[0]["permissions"]);
+        
+        if ($search_filter_nodes)
+            {
+            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
+                }
+            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userinfo[0]["search_filter_id"];
+                }
+            }
+        else
+            {
+            // Old style search filter that hasn't been migrated
+            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            }
+
+        if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
+        $userrequestmode=0; # Always use 'email' request mode for external users
+        
+        # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
+        global $emulate_plugins_set;            
+        if ($emulate_plugins_set!==true)
+            {
+            global $plugins;
+            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            foreach($enabled_plugins as $plugin)
+                {
+                $s=explode(",",$plugin['enabled_groups']);
+                if (in_array($usergroup,$s))
+                    {
+                    include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+                    register_plugin($plugin['name']);
+                    $plugins[]=$plugin['name'];
+                    }
+                }
+            for ($n=count($plugins)-1;$n>=0;$n--)
+                {
+                register_plugin_language($plugins[$n]);
+                }
+            $emulate_plugins_set=true;                  
+            }
+        
+        if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
+            {
+
+            # Apply config override options
+            $config_options=trim($userinfo[0]["config_options"]);
+
+            // We need to get all globals as we don't know what may be referenced here
+            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+            eval($config_options);
+
+            }
+        }
+    
+    # Special case for anonymous logins.
+    # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
+    global $anonymous_login;
+    if (isset($anonymous_login))
+        {
+        global $username,$baseurl;
+        if(is_array($anonymous_login))
+        {
+        foreach($anonymous_login as $key => $val)
+            {
+            if($baseurl==$key){$anonymous_login=$val;}
+            }
+        }
+        $username=$anonymous_login;     
+        }
+    
+    # Set the 'last used' date for this key
+    sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource IN ('" . implode("','",$resources) . "') AND access_key = '$key_escaped'");
+    
+    return true;
     }
 
 
@@ -1706,7 +1713,6 @@ function check_access_key_collection($collection, $key)
         }
 
     $resources = get_collection_resources($collection);
-
    
     if(0 == count($resources))
         {
@@ -1719,18 +1725,8 @@ function check_access_key_collection($collection, $key)
 
     // only check access key when there are resources to check
     if (count($resources) > 0)
-        {    
-        $invalid_resources = array();
-        foreach($resources as $resource_id)
-            {    
-            // Verify a supplied external access key for all local resources in the collection
-            if(!check_access_key($resource_id, $key))
-                {
-                $invalid_resources[] = $resource_id;
-                }
-            }
-    
-        if(count($resources) === count($invalid_resources))
+        {
+        if(!check_access_key($resources, $key))
             {
             return false;
             }

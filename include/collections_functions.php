@@ -2507,7 +2507,7 @@ function collection_max_access($collection)
 
 function collection_min_access($collection)
     {
-    $minaccess = 0;
+    global $k, $internal_share_access;
     if(is_array($collection))
         {
         $result = $collection;
@@ -2516,6 +2516,16 @@ function collection_min_access($collection)
         {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
         }
+    $minaccess= max(array_column($result,"access"));
+    if($k != "")
+		{
+		# External access - check how this was shared. If internal share access and share is more open than the user's access return that
+		$minextaccess = sql_value("SELECT max(access) value FROM external_access_keys WHERE resource IN ('" . implode("','",array_column($result,"ref")) . "') AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+        if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
+            {
+            return ($minextaccess);
+            }
+		}
 
     for($n = 0; $n < count($result); $n++)
         {
