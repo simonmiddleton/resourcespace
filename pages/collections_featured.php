@@ -31,8 +31,9 @@ include "../include/header.php";
 echo "<p>TODO: render breadcrumbs (@line ".__LINE__.")</p>";
 
 // Default rendering options (should apply to both FCs and smart FCs)
+$full_width = !$themes_simple_view;
 $rendering_options = array(
-    "full_width" => !$themes_simple_view,
+    "full_width" => $full_width,
 );
 
 
@@ -124,4 +125,42 @@ jQuery(document).ready(function ()
     });
 </script>
 <?php
+if($themes_show_background_image && !$full_width)
+    {
+    $slideshow_files = get_slideshow_files_data();
+    ?>
+    <script>
+    var SlideshowImages = new Array();
+    var SlideshowCurrent = -1;
+    var big_slideshow_timer = <?php echo $slideshow_photo_delay; ?>;
+    <?php
+    foreach($slideshow_files as $slideshow_file_info)
+        {
+        if((bool) $slideshow_file_info['featured_collections_show'] === false)
+            {
+            continue;
+            }
+
+        $image_download_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
+        $image_resource = isset($slideshow_file_info['link']) ? $slideshow_file_info['link'] : '';
+        ?>
+        RegisterSlideshowImage('<?php echo $image_download_url; ?>', '<?php echo $image_resource; ?>');
+        <?php
+        }
+
+    if(!$featured_collection_static_bg && isset($background_image_url) && trim($background_image_url) != '')
+        {
+        ?>
+        RegisterSlideshowImage('<?php echo $background_image_url; ?>', '', true);
+        <?php
+        }
+    ?>
+    jQuery(document).ready(function() 
+        {
+        ClearTimers();
+        ActivateSlideshow();
+        });
+    </script>
+    <?php
+    }
 include "../include/footer.php";
