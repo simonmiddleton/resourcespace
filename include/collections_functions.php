@@ -3097,19 +3097,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 150;
         $o++;
         }
-		
-	// Add option to publish as featured collection
-    if(checkperm("h") && ($k == '' || $internal_share_access))
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php",$urlparams);
-        $options[$o]['value']='collection_set_category';
-        $options[$o]['label']=$lang['collection_set_theme_category'];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_SHARE;
-        $options[$o]['order_by']  = 160;
-        $o++;
-        }
-		
+
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {

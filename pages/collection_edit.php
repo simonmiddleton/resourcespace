@@ -196,9 +196,15 @@ include "../include/header.php";
 			} /* end hook replaceuserselect */
 		} 
 	
-    if($collection['public'] == 1)
+    if($collection['public'] == 1 && $enable_themes && checkperm("h"))
         {
-        include __DIR__ . '/../include/collection_theme_select.php';
+        render_featured_collection_category_selector(
+            0,
+            array(
+                "collection" => $collection,
+                "depth" => 0,
+                "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
+            ));
         }
 		
 	if (checkperm("h") && $collection['public']==1 && !$home_dash)

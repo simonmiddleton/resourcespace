@@ -4120,7 +4120,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"];
-
+echo "<pre>";print_r($context);echo "</pre>"; # TODO: investigating why FC categories are showing themselves as a set for the current level when clearly it's not the case as the parent is the previous level
     $featured_collection_categories = get_featured_collection_categories($parent);
     if(empty($featured_collection_categories))
         {
