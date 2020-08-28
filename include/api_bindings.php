@@ -111,6 +111,11 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
     
+    if (!is_int($ref))
+        {
+        return false;
+        }
+
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
