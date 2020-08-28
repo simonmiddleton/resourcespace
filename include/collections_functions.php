@@ -4240,6 +4240,11 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
         "ref"    => $collection["ref"],
         "name"   => $collection["name"],
         "parent" => validate_collection_parent($collection),
+        // starting_leaf is the leaf collection on a branch. This allows us to not show the same collection as one of 
+        // the selected categories when editing a FC category (which is a collection as well). Without this in place, 
+        // collection "FC1/1.1" (name represents hierarchy to make it clear) would have the "Featured collection category 1"
+        // set to "FC1/1.1" when it should've had "Select..."
+        "starting_leaf" => empty(array_column($carry, "starting_leaf")),
     );
 
     if(is_null(validate_collection_parent($collection)))

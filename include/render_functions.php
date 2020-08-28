@@ -4120,7 +4120,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"];
-echo "<pre>";print_r($context);echo "</pre>"; # TODO: investigating why FC categories are showing themselves as a set for the current level when clearly it's not the case as the parent is the previous level
     $featured_collection_categories = get_featured_collection_categories($parent);
     if(empty($featured_collection_categories))
         {
@@ -4141,7 +4140,14 @@ echo "<pre>";print_r($context);echo "</pre>"; # TODO: investigating why FC categ
         foreach($featured_collection_categories as $fc_category)
             {
             $html_attr_selected = "";
-            if(isset($current_branch_path[$depth]) && $fc_category["ref"] == $current_branch_path[$depth]["ref"])
+            if(
+                isset($current_branch_path[$depth])
+                && $fc_category["ref"] == $current_branch_path[$depth]["ref"]
+                // starting_leaf is the leaf collection on a branch. This allows us to not show the same collection as one of 
+                // the selected categories when editing a FC category (which is a collection as well). Without this in place, 
+                // collection "FC1/1.1" (name represents hierarchy to make it clear) would have the "Featured collection category 1"
+                // set to "FC1/1.1" when it should've had "Select..."
+                && !$current_branch_path[$depth]["starting_leaf"])
                 {
                 $html_attr_selected = "selected";
                 $next_level_parent = $fc_category["ref"];
