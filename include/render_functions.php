@@ -4178,7 +4178,6 @@ function render_featured_collections(array $ctx, array $items)
     global $baseurl_short, $lang, $themes_simple_images;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
-    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
 
     foreach($items as $fc)
         {
@@ -4359,7 +4358,7 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
 
-    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"] && !$full_width) ? $ctx["tools"] : array());
+    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = array();
     if(count($tools) > 3)
         {
