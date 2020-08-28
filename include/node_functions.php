@@ -219,6 +219,12 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     $use_count = false, $order_by_translated_name = false)
     {
     debug_function_call("get_nodes", func_get_args());
+
+    if(!is_numeric( $resource_type_field))
+            {
+            return [];    
+            }   
+            
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
 
