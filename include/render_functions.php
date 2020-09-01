@@ -608,7 +608,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             foreach($searched_nodes as $node)
                 {
                 $n_details = array();
-                if(get_node($node, $n_details) && $n_details["resource_type_field"] != $field["ref"])
+
+                if(get_node($node, $n_details)===false)
+                    {
+                    continue;
+                    }
+
+                if($n_details["resource_type_field"] != $field["ref"])
                     {
                     continue;
                     }
