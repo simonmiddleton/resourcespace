@@ -199,6 +199,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         global $banned_extensions;
         if (in_array($extension,$banned_extensions)) {return false;}
 
+        # extension longer than 10 characters?
+        if (strlen($extension) > 10) {return false;}
+
         $filepath=get_resource_path($ref,true,"",true,$extension);
 
         if (!$revert)
