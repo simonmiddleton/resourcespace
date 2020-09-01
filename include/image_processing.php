@@ -1979,7 +1979,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet +matte' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
