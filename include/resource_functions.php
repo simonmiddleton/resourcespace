@@ -2851,6 +2851,10 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $return[] = $fields[$n];
             }
         }   
+
+    # Remove duplicate fields e.g. $view_title_field included when $inherit_global_fields is false and also as a valid field. 
+    $return = array_unique($return, SORT_REGULAR);
+    
     return $return;
     }
 
