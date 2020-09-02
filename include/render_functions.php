@@ -1362,14 +1362,24 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 /**
 * render_dropdown_question - Used to display a question with a dropdown selector
 * 
-* @param string $label	Label of question
-* @param string $input  name of input field
-* @param array  $options  Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
+* @param string $label	   Label of question
+* @param string $inputname Name of input field
+* @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
+* @param string $current   The current selected value
+* @param string $extra     Extra attributes used on the selector element
+* @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select)
+* 
+* @return void
 */
-function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="")
+function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
     {
+    $div_class = array("Question");
+    if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
+        {
+        $div_class = array_merge($div_class, $ctx["div_class"]);
+        }
 	?>
-	<div class="Question" id = "pixelwidth">
+	<div class="<?php echo implode(" ", $div_class); ?>">
 		<label><?php echo $label; ?></label>
 		<select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
 		<?php
@@ -1381,10 +1391,10 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 			}
 		?>
 		</select>
-
+        <div class="clearerleft"></div>
 	</div>
-	<div class="clearerleft"> </div>
 	<?php
+    return;
 	}
 
 /**

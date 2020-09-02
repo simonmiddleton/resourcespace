@@ -2030,6 +2030,25 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	return false;
 	}
 
+
+function get_featured_collection_images(int $c_ref)
+    {
+    TODO: stopped here
+    /*
+    determine if this is a FC categ or normal FC:
+    - if normal FC:
+    -- use the colleciton_resources to find the resources that could be used for thumbnail
+    - if FC categ:
+    -- if most popular option(s) then we need to find all normal FC for that FC categ and find the most popular using 
+       the collection_resources table (access control still in place)
+    -- if manual selection, then we check in the collection table which resource is used as thumbnail (access control can prevent image from showing)
+
+    Context needs to inject if we need all available images or just the one(s) selected for use_as_theme_thumbnail
+    */
+    return array();
+    }
+
+
 /**
  * Inserts $resource1 into the position currently occupied by $resource2 
  *

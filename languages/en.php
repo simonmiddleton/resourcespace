@@ -455,6 +455,11 @@ $lang["emailthemecollectionmessageexternal"]="has e-mailed you collections of re
 $lang["emailthememessage"]="has e-mailed you a selection of featured collections from $applicationname which have been added to your 'My collections' page.";
 $lang["clicklinkviewthemes"]="Click the link below to view the featured collections.";
 $lang["clicklinkviewcollections"]="Click the links below to view the collections.";
+$lang["background_image"] = "Background image";
+$lang["background_most_popular_image"] = "Most popular image";
+$lang["background_most_popular_images"] = "Most popular images";
+$lang["background_manual_selection"] = "Choose an image";
+$lang["background_image_manual_selection"] = "Background image - manual selection";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";

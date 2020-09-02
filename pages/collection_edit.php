@@ -205,6 +205,53 @@ include "../include/header.php";
                 "depth" => 0,
                 "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
             ));
+
+        if($themes_simple_images)
+            {
+            render_dropdown_question(
+                $lang["background_image"],
+                "background_image",
+                array(
+                    "" => $lang["select"],
+                    "most_popular_image" => $lang["background_most_popular_image"],
+                    "most_popular_images" => $lang["background_most_popular_images"],
+                    "manual" => $lang["background_manual_selection"],
+                ),
+                $current="",
+                implode(" ", array('class="stdwidth"', 'onchange="BackgroundImageChange(this);"'))
+            );
+
+            // Manual selection of a FC thumbnail
+            render_dropdown_question(
+                $lang["background_image_manual_selection"],
+                "bg_img_man_sel",
+                array_merge(
+                    array("" => $lang["select"]),
+                    get_featured_collection_images((int) $collection["ref"])
+                ), # TODO: get the FC list of images: a list made up of resource ID and truncated title
+                $current="",
+                'class="stdwidth"',
+                array(
+                    "div_class" => array("DisplayNone"),
+                ));
+            ?>
+            <script>
+            function BackgroundImageChange(el)
+                {
+                var bg_img_man_div = jQuery("#bg_img_man_sel").parent();
+
+                bg_img_man_div.addClass("DisplayNone");
+
+                if(el.value == "manual")
+                    {
+                    bg_img_man_div.removeClass("DisplayNone");
+                    }
+
+                return;
+                }
+            </script>
+            <?php
+            }
         }
 		
 	if (checkperm("h") && $collection['public']==1 && !$home_dash)
