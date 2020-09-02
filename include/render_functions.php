@@ -4118,13 +4118,16 @@ function render_featured_collection_category_selector(int $parent, array $contex
     global $lang;
 
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
+    $collection = $context["collection"]; # as returned by get_collection()
     $depth = (int) $context["depth"];
-    $current_branch_path = $context["current_branch_path"];
+    $current_branch_path = $context["current_branch_path"]; # as returned by get_featured_collection_category_branch_by_leaf()
+
     $featured_collection_categories = get_featured_collection_categories($parent);
     if(empty($featured_collection_categories))
         {
         return;
         }
+
 
     $html_selector_name = "selected_featured_collection_category_{$depth}";
     $html_question_label_txt = $lang["themecategory"] . ($depth == 0 ? "" : " {$depth}");
@@ -4139,15 +4142,14 @@ function render_featured_collection_category_selector(int $parent, array $contex
         <?php
         foreach($featured_collection_categories as $fc_category)
             {
+            // Never show as an option the FC you're editing
+            if($fc_category["ref"] == $collection["ref"])
+                {
+                continue;
+                }
+
             $html_attr_selected = "";
-            if(
-                isset($current_branch_path[$depth])
-                && $fc_category["ref"] == $current_branch_path[$depth]["ref"]
-                // starting_leaf is the leaf collection on a branch. This allows us to not show the same collection as one of 
-                // the selected categories when editing a FC category (which is a collection as well). Without this in place, 
-                // collection "FC1/1.1" (name represents hierarchy to make it clear) would have the "Featured collection category 1"
-                // set to "FC1/1.1" when it should've had "Select..."
-                && !$current_branch_path[$depth]["starting_leaf"])
+            if(isset($current_branch_path[$depth]) && $fc_category["ref"] == $current_branch_path[$depth]["ref"])
                 {
                 $html_attr_selected = "selected";
                 $next_level_parent = $fc_category["ref"];
