@@ -247,8 +247,13 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 // (e.g when batch editing)
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
-$thumbtypechange=in_array(isset($_GET['display']), array('xlthumbs', 'thumbs', 'strip', 'list'));
-if(!$thumbtypechange){$thumbtypechange=in_array(isset($_POST['display']), array('xlthumbs', 'thumbs', 'strip', 'list'));}
+// Preserve selection on display layout change.
+$displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
+$thumbtypechange = in_array(isset($_GET['display']), $displaytypes);
+if(!$thumbtypechange)
+    {
+    $thumbtypechange = in_array(isset($_POST['display']), $displaytypes);
+    }
 $view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
 if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request)
     {
