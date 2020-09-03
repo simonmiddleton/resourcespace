@@ -134,7 +134,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
  */
 function get_collection($ref)
 	{
-    $return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+    $return=sql_query("select c.*, c.theme2, c .theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
         return false;
@@ -2031,9 +2031,14 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	}
 
 
-function get_featured_collection_images(int $c_ref)
+/**
+* 
+* 
+* 
+* @return array
+*/
+function get_featured_collection_images(int $c_ref, array $ctx)
     {
-    TODO: stopped here
     /*
     determine if this is a FC categ or normal FC:
     - if normal FC:
@@ -4296,10 +4301,11 @@ function process_posted_featured_collection_categories(int $depth, array $branch
     $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
 
     // Validate the POSTed featured collection category for this depth level
+    $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"]), "ref"));
     if(
         !is_null($selected_fc_category)
         && isset($branch_path[$depth])
-        && !in_array($selected_fc_category, array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"]), "ref")))
+        && !in_array($selected_fc_category, $valid_categories))
         {
         return array();
         }

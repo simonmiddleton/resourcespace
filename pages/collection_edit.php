@@ -50,11 +50,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	# Save collection data
     $coldata["name"]            = getval("name","");
     $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
-    //$public = getvalescaped('public', 0, true);
     $coldata["public"]          = getval('public', 0, true);
     $coldata["keywords"]        = getval("keywords","");
     $coldata["description"]     = getval("description","");
-    hook('saveadditionalfields');
 
     // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
     $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
@@ -62,6 +60,17 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     if(!empty($featured_collections_changes))
         {
         $coldata["featured_collections_changes"] = $featured_collections_changes;
+        }
+
+    // User selected a background image
+    if($collection['public'] == 1 && $enable_themes && $themes_simple_images && checkperm("h"))
+        {
+        $thumbnail_selection_method = getval("thumbnail_selection_method", $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"], true);
+        if(!in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
+            {
+            $thumbnail_selection_method = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"];
+            }
+        $coldata["thumbnail_selection_method"] = $thumbnail_selection_method;
         }
 
     if (checkperm("h"))
@@ -74,6 +83,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             }
         }
 
+    hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
 	save_collection($ref, $coldata);
 
     if(getval("redirect", "") != "")
@@ -208,49 +218,24 @@ include "../include/header.php";
 
         if($themes_simple_images)
             {
-            render_dropdown_question(
-                $lang["background_image"],
-                "background_image",
-                array(
-                    "" => $lang["select"],
-                    "most_popular_image" => $lang["background_most_popular_image"],
-                    "most_popular_images" => $lang["background_most_popular_images"],
-                    "manual" => $lang["background_manual_selection"],
-                ),
-                $current="",
-                implode(" ", array('class="stdwidth"', 'onchange="BackgroundImageChange(this);"'))
+            $configurable_options = array(
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] => $lang["background_most_popular_image"],
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => $lang["background_most_popular_images"],
             );
 
-            // Manual selection of a FC thumbnail
-            render_dropdown_question(
-                $lang["background_image_manual_selection"],
-                "bg_img_man_sel",
-                array_merge(
-                    array("" => $lang["select"]),
-                    get_featured_collection_images((int) $collection["ref"])
-                ), # TODO: get the FC list of images: a list made up of resource ID and truncated title
-                $current="",
-                'class="stdwidth"',
-                array(
-                    "div_class" => array("DisplayNone"),
-                ));
-            ?>
-            <script>
-            function BackgroundImageChange(el)
+            if($collection_commenting)
                 {
-                var bg_img_man_div = jQuery("#bg_img_man_sel").parent();
-
-                bg_img_man_div.addClass("DisplayNone");
-
-                if(el.value == "manual")
-                    {
-                    bg_img_man_div.removeClass("DisplayNone");
-                    }
-
-                return;
+                $configurable_options[$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]] = $lang["background_manual_selection"];
                 }
-            </script>
-            <?php
+
+            render_dropdown_question(
+                $lang["background_image"],
+                "thumbnail_selection_method",
+                $configurable_options,
+                $collection["thumbnail_selection_method"],
+                'class="stdwidth"'
+            );
             }
         }
 		
