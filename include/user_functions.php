@@ -1924,7 +1924,12 @@ function resolve_user_emails($user_list)
     foreach($user_list as $user)
         {
         $escaped_username = escape_check($user);
-        $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}' AND (account_expires IS NULL OR account_expires > NOW())");
+        $email_details    = sql_query("SELECT email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
+
+        if(isset($email_details) && (time() < strtotime($email_details[0]['account_expires']))) 
+          {
+          continue;
+          }
 
         // Not a recognised user, if @ sign present, assume e-mail address specified
         if(0 === count($email_details))
