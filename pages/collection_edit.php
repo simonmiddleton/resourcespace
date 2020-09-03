@@ -66,11 +66,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     if($collection['public'] == 1 && $enable_themes && $themes_simple_images && checkperm("h"))
         {
         $thumbnail_selection_method = getval("thumbnail_selection_method", $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"], true);
-        if(!in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
+        if(in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
             {
-            $thumbnail_selection_method = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"];
+            $coldata["thumbnail_selection_method"] = $thumbnail_selection_method;
             }
-        $coldata["thumbnail_selection_method"] = $thumbnail_selection_method;
         }
 
     if (checkperm("h"))

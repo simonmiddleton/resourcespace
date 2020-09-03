@@ -961,7 +961,7 @@ function save_collection($ref, $coldata=array())
                     $sqlupdate .= ", ";    
                     }
 
-                if($colopt == "parent")
+                if(in_array($colopt, array("parent", "thumbnail_selection_method")))
                     {
                     $sqlupdate .= $colopt . " = " . sql_null_or_val((string) $colset, $colset == 0);
                     continue;
