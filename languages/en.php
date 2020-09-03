@@ -2916,3 +2916,6 @@ $lang["job_status_2"]                       = "Complete";
 $lang["job_status_3"]                       = "In Progress";
 $lang["job_status_5"]                       = "Failed";
 $lang['jobs_action_purge_complete']         = "Purge completed and failed jobs";
+$lang["job_filter_type"]                    = "Filter by type";
+$lang["job_filter_status"]                  = "Filter by status";
+$lang["job_filter_user"]                    = "Filter by user";

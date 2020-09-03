@@ -1866,8 +1866,19 @@ a.BrowseRefresh{
     z-index:500;
 }
 
+.JobTable {
+    clear: both;
+}
 .JobTable .ListTools a {
     float: left;
     margin-left: 10px;
 }
 
+.TablePagerHolder .TopInpageNavRight {
+    position: inherit;    
+}
+
+.TablePagerHolder {
+    float: right;
+    margin-bottom: 5px;
+}

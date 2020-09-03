@@ -71,7 +71,7 @@ $introtext=text("introtext");
             echo "<li><i aria-hidden='true' class='fas fa-tasks'></i>&nbsp;<a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'>" . $lang['my_jobs'] . "</a>";
             if ($failedjobcount>0)
         	    {
-		        echo "&nbsp;<span class='Pill'>" . $failedjobcount  . "</span>";
+		        echo "&nbsp;<span class='Pill FailedJobCountPill'>" . $failedjobcount  . "</span>";
                 }
             echo "</li>";
             }

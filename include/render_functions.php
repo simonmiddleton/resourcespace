@@ -4149,11 +4149,13 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
  */
 function render_table($tabledata)
     {
-    pager(true);
+    ?>
+    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
 
     echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
     echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
     echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
         echo "<th>";
@@ -4178,46 +4180,61 @@ function render_table($tabledata)
         }
     echo "</tr>"; // End of table header row
 
-    foreach($tabledata["data"] as $rowdata)
+    if(count($tabledata["data"]) == 0)
         {
-        echo "<tr>";
-        foreach($tabledata["headers"] as $header=>$headerdetails)
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        }
+    else
+        {
+        foreach($tabledata["data"] as $rowdata)
             {
-            if(isset($rowdata[$header]))
+            echo "<tr>";
+
+            if(isset($rowdata['alerticon']))
                 {
-                echo "<td>";
-                // Data is present
-                if($header == "tools")
-                    {
-                    echo "<div class='ListTools'>";
-                    foreach($rowdata["tools"] as $toolitem)
-                        {
-                        echo "<a aria-hidden='true' class='" . htmlspecialchars($toolitem["class"]) . "'
-                        href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
-                        if(isset($toolitem["onclick"]))
-                            {
-                            echo $toolitem["onclick"];
-                            }
-                        else
-                            {
-                            echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
-                            }
-                        echo "' title='" . htmlspecialchars($toolitem["text"]) . "'></a>";
-                        }
-                    echo "</div>";
-                    }
-                else
-                    {
-                    echo htmlspecialchars($rowdata[$header]);
-                    }
-                echo "</td>";
+                echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
                 }
             else
                 {
-                echo "<td></td>";
+                echo "<td></td>"; 
                 }
+            foreach($tabledata["headers"] as $header=>$headerdetails)
+                {
+                if(isset($rowdata[$header]))
+                    {
+                    echo "<td>";
+                    // Data is present
+                    if($header == "tools")
+                        {
+                        echo "<div class='ListTools'>";
+                        foreach($rowdata["tools"] as $toolitem)
+                            {
+                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                            if(isset($toolitem["onclick"]))
+                                {
+                                echo $toolitem["onclick"];
+                                }
+                            else
+                                {
+                                echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
+                                }
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span></a>";
+                            }
+                        echo "</div>";
+                        }
+                    else
+                        {
+                        echo htmlspecialchars($rowdata[$header]);
+                        }
+                    echo "</td>";
+                    }
+                else
+                    {
+                    echo "<td></td>";
+                    }
+                }
+            echo "</tr>";
             }
-        echo "</tr>";
         }
     echo "</tbody>";
     echo "</table>";

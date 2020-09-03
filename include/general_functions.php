@@ -2838,21 +2838,35 @@ function job_queue_delete($ref)
 /**
  * Gets a list of offline jobs
  *
- * @param  string $type
- * @param  string $status
- * @param  string $user
- * @param  string $job_code
- * @param  string $job_order_by
+ * @param  string $type         Job type
+ * @param  string $status       Job status - see definitions.php
+ * @param  int    $user         Job user
+ * @param  string $job_code     Unique job code
+ * @param  string $job_order_by 
  * @param  string $job_sort
  * @param  string $find
  * @return array
  */
 function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_order_by="ref", $job_sort="desc", $find="")
     {
+    global $userref;
     $condition=array();
-    if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
+    if($type!="")
+        {
+        $condition[] = " type ='" . escape_check($type) . "'";
+        }
+    if(!checkperm('a'))
+        {
+        // Don't show certain jobs for normal users
+        $hiddentypes = array();
+        $hiddentypes[] = "delete_file";
+        $condition[] = " type NOT IN ('" . implode("','",$hiddentypes) . "')";  
+        }
     if($status != "" && (int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
-    if($user!="" && (int)$user > 0){$condition[] =" user ='" . escape_check($user) . "'";}
+    if($user!="" && (int)$user > 0 && ($user == $userref || checkperm_user_edit($user)))
+        {
+        $condition[] = " user ='" . escape_check($user) . "'";
+        }
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
         {
@@ -2910,7 +2924,7 @@ function job_queue_run_job($job, $clear_process_lock)
     $jobref = $job["ref"];
     
     // Control characters in job_data can cause decoding issues
-    $job["job_data"] = escape_check($job["job_data"]);
+    //$job["job_data"] = escape_check($job["job_data"]);
 
     $job_data=json_decode($job["job_data"], true);
     $jobuser = $job["user"];
@@ -2952,10 +2966,10 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-        job_queue_update($jobref,$job_data,STATUS_INPROGRESS);
+        job_queue_update($jobref, $job_data,STATUS_INPROGRESS);
         $offline_job_in_progress = true;
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
-        job_queue_update($jobref,$job_data,STATUS_COMPLETE);
+        job_queue_update($jobref, $job_data,STATUS_COMPLETE);
         }
     else
         {
@@ -2967,10 +2981,10 @@ function job_queue_run_job($job, $clear_process_lock)
                 $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
                 echo $logmessage;
                 debug($logmessage);
-                job_queue_update($jobref,$job_data,STATUS_INPROGRESS);
+                job_queue_update($jobref, $job_data,STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
-                job_queue_update($jobref,$job_data,STATUS_COMPLETE);
+                job_queue_update($jobref, $job_data,STATUS_COMPLETE);
                 break;
                 }
             }

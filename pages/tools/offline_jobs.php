@@ -45,16 +45,17 @@ if($offline_job_queue)
     $runningjobs=job_queue_get_jobs("",STATUS_INPROGRESS,"","","ref", "ASC");
     foreach($runningjobs as $runningjob)
         {
+        $runningjob_data = json_decode($runningjob["job_data"]);
+        job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
         if(!is_process_lock("job_" . $runningjob["ref"]))
             {
-            echo "no process lock";
             // No current lock in place. Check for presence of an old lock and mark as failed
             $saved_process_lock_max_seconds = $process_locks_max_seconds;
             $process_locks_max_seconds = 9999999;
             if(is_process_lock("job_" . $runningjob["ref"]))
                 {
-                    echo "MARKING as failed";
-                job_queue_update($jobref,$job_data,STATUS_ERROR);
+                echo "Job is in progress but has exceeded maximum lock time - marking as failed\n";
+                job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
                 }
             $process_locks_max_seconds = $saved_process_lock_max_seconds;
             }

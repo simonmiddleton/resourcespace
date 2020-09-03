@@ -85,13 +85,14 @@
 
 		// Check if there are messages
 		$messages = array();
-		message_get($messages,$user);	// note: messages are passed by reference
+        message_get($messages,$user);	// note: messages are passed by reference
+        $extracount = array('ref'=>0);
 		if($actions_on)
 			{
 			$actioncount=get_user_actions(true);
 			if($actioncount>0)
 				{
-				$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+                $extracount['actioncount'] = $actioncount;
 				}
             }
         if($offline_job_queue)
@@ -100,9 +101,11 @@
             $failedjobcount = count($failedjobs);
             if($failedjobcount>0)
 				{
-				$messages[]=array('ref'=>0,'failedjobcount'=>$failedjobcount);
+                $extracount['failedjobcount'] = $failedjobcount;
 				}
-			}
+            }
+        $messages[] = $extracount;
+
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
 		return;
@@ -141,19 +144,25 @@
 			success: function(messages, textStatus, xhr) {
 				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
 					{
-					messagecount=totalcount=jQuery(messages).length;
+					messagecount = jQuery(messages).length-1; // The last message is a dummy entry with a count of actions and failed jobs
+                    totalcount   = messagecount; 
+                    //console.log(messages);
+                    console.log('count = ' + messagecount);
+                    console.log('totalcount = ' + totalcount);
+
 					actioncount=0;
-					if (typeof(messages[messagecount-1]['actioncount']) !== 'undefined') // There are actions as well as messages
+                    failedjobcount=0;
+					if (typeof(messages[messagecount]['actioncount']) !== 'undefined') // There are actions as well as messages
 						{
-						actioncount=parseInt(messages[messagecount-1]['actioncount']);
-						messagecount=messagecount-1;
-						totalcount=actioncount+messagecount;
+						actioncount=parseInt(messages[messagecount]['actioncount']);
+						totalcount=totalcount+actioncount;
+                    console.log('totalcount with actions = ' + totalcount);
                         }
-                    if (typeof(messages[messagecount-1]['failedjobcount']) !== 'undefined') // There are actions as well as messages
+                    if (typeof(messages[messagecount]['failedjobcount']) !== 'undefined') 
 						{
-						actioncount=parseInt(messages[messagecount-1]['actioncount']);
-						messagecount=messagecount-1;
-						totalcount=actioncount+messagecount;
+                        failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
+						totalcount=totalcount+failedjobcount;
+                    console.log('totalcount with jobs= ' + totalcount);
 						}
 					jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
 					if (activeSeconds > 0 || message_poll_first_run)
@@ -187,21 +196,29 @@
 							}
 						}
 					if (actioncount>0)
-							{
-							jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
-							}
-						else
-							{
-							jQuery('span.ActionCountPill').hide();	
-							}
-						if (messagecount>0)
-							{
-							jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
-							}
-						else
-							{
-							jQuery('span.MessageCountPill').hide();	
-							}
+                        {
+                        jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.ActionCountPill').hide();	
+                        }
+                    if (messagecount>0)
+                        {
+                        jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.MessageCountPill').hide();	
+                        }
+                    if (failedjobcount>0)
+                        {
+                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.FailedJobCountPill').hide();	
+                        }
 					}
 				else
 					{
