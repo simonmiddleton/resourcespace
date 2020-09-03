@@ -192,7 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-	
+
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
 		{
@@ -221,7 +221,7 @@ if($submitdashtile && enforcePostRequest(false))
 		<?php
 		}?>
 
-	<a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
+	<a href="<?php echo $baseurl."/".$link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
 	<?php
 	include "../include/footer.php";
 	exit();
