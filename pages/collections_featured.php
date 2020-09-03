@@ -62,6 +62,7 @@ if($parent == 0 && $smart_rtf == 0)
             "name" => $v["smart_theme_name"],
             "type" => COLLECTION_TYPE_FEATURED,
             "parent" => null,
+            "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
             "has_resources" => 0,
             "resource_type_field" => $v["ref"]);
         },
@@ -81,6 +82,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
                 "name" => $v["name"],
                 "type" => COLLECTION_TYPE_FEATURED,
                 "parent" => $v["ref"], # parent here is the node ID. When transformed to a FC this parent will be used for going to the next level down the branch
+                "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
                 "has_resources" => 0,
                 "resource_type_field" => $smart_rtf,
                 "node_is_parent" => $v["is_parent"]);

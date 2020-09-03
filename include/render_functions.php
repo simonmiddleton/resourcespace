@@ -4193,7 +4193,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $themes_simple_images;
+    global $baseurl_short, $lang, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
 
@@ -4209,10 +4209,33 @@ function render_featured_collections(array $ctx, array $items)
             "modal_load" => true,
         );
 
-        if($themes_simple_images)
+        // Prepare FC images
+        $thumbnail_selection_method = $fc["thumbnail_selection_method"];
+        $show_images = (in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+        if($themes_simple_images && $show_images)
             {
             // TODO: add logic to find right image (see item "Reimplement background images on new collections_featured.php page")
-            $render_ctx["image_url"] = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
+            $images_list = array();
+            $fc_images = get_featured_collection_images(
+                $fc["ref"],
+                array(
+                    "smart" => $is_smart_featured_collection,
+                    "limit" => ($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] ? $theme_images_number : 1),
+                ));
+
+            if($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"])
+                {
+                $images_list = $fc_images;
+                }
+            else
+                {
+                $images_list[] = $fc_images[0];
+                $render_ctx["image_url"] = $fc_images[0];
+                }
+
+            // TODO: add the ability to send & display multiple images (like on dash tiles)
+            // $render_ctx["image_url"] = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
+            // $render_ctx["images"] = $images_list;
             }
 
         // Featured collection default tools

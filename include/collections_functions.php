@@ -2046,11 +2046,39 @@ function get_featured_collection_images(int $c_ref, array $ctx)
     - if FC categ:
     -- if most popular option(s) then we need to find all normal FC for that FC categ and find the most popular using 
        the collection_resources table (access control still in place)
-    -- if manual selection, then we check in the collection table which resource is used as thumbnail (access control can prevent image from showing)
-
-    Context needs to inject if we need all available images or just the one(s) selected for use_as_theme_thumbnail
+    -- if manual selection, then we check in the collection table which resource is used as thumbnail (access control 
+       can prevent image from showing)
     */
-    return array();
+    if(isset($ctx["smart"]) && $ctx["smart"] === true)
+        {
+        // TODO: work out the "themes" (ie nodes) in order to build the right search string
+        $nodestring = '';
+        foreach($themes as $node)
+            {
+            $nodestring .= NODE_TOKEN_PREFIX . $node['ref'];
+            }
+            
+        if($nodestring=='')
+            {
+            return array();
+            }
+            
+        // Access control is still in place (ie permissions are honoured)
+        $images = do_search($nodestring, '', 'hit_count', 0, -1, 'desc', false, 0, false, false, '', true, false, true);
+        return (is_array($images) ? array_column($images, "ref") : array());
+        }
+
+
+    $sqlselect = "";
+    TODO: continue building the SQL
+
+    $sql_limit = sql_limit(null, (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? $ctx["limit"] : 1));
+
+    $sql = "SELECT ti.ref AS `value`
+              FROM ({$sqlselect} {$orderby_theme}) AS ti
+          ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC {$sql_limit}";
+
+    return sql_array($sql); # TODO: use the cache version (ie sql_array($sql, "themeimage"); ) once done testing
     }
 
 
@@ -4160,6 +4188,7 @@ function get_featured_collections(int $parent)
                     `name`,
                     `type`,
                     parent,
+                    thumbnail_selection_method,
                     created,
                     (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
                FROM collection AS c
