@@ -23,6 +23,16 @@ update_hitcount($ref);
 # fetch the current search (for finding similar matches)
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
+
+# add order_by check to filter values prefixed by 'field'
+if(preg_match("/^field(.*)/", $order_by, $matches))
+    {
+    if (!in_array($matches[1],$sort_fields)) # check that field ref  is in config $sort_fields array
+        {
+        $order_by="relevance"; # if not, then sort by relevance
+        }
+    }
+
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
