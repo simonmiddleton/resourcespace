@@ -220,7 +220,7 @@ include "../include/header.php";
             $configurable_options = array(
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] => $lang["background_most_popular_image"],
-                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => $lang["background_most_popular_images"],
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => str_replace("%n", $theme_images_number, $lang["background_most_popular_images"]),
             );
 
             if($collection_commenting)

@@ -457,7 +457,7 @@ $lang["clicklinkviewthemes"]="Click the link below to view the featured collecti
 $lang["clicklinkviewcollections"]="Click the links below to view the collections.";
 $lang["background_image"] = "Background image";
 $lang["background_most_popular_image"] = "Most popular image";
-$lang["background_most_popular_images"] = "Most popular images";
+$lang["background_most_popular_images"] = "Most popular %n images";
 $lang["background_manual_selection"] = "Choose images (collection commenting)";
 
 # Lightbox
