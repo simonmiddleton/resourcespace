@@ -1626,7 +1626,7 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
-$tabModalityClass = ($modal ? " MetaTabIsModal" : " MetaTabIsNotModal");
+$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
@@ -1686,9 +1686,9 @@ if($tabs_on_edit)
                     $newtabname = "";
                     }
                 if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
-                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "\" class=\"Tab";
+                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
                 if($tabcount==0){$tabtophtml.=" TabSelected ";}
-                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
+                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$ref.",".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
                 $tabcount++;
                 $tabname=$fields[$n]["tab_name"];
                 }
@@ -1730,7 +1730,7 @@ if($tabs_on_edit)
                 ?><div class="clearerleft"> </div>
                 <?php if(isset($extra)){echo $extra;} ?>
                 </div><!-- end of TabPanelInner --></div>
-                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
+                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div class="TabPanelInner"><?php  
                 $tabcount++;
                 $extra="";
                 $newtab=true;
