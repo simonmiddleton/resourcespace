@@ -4214,28 +4214,22 @@ function render_featured_collections(array $ctx, array $items)
         $show_images = (in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
         if($themes_simple_images && $show_images)
             {
-            // TODO: add logic to find right image (see item "Reimplement background images on new collections_featured.php page")
-            $images_list = array();
             $fc_images = get_featured_collection_images(
-                $fc["ref"],
+                $fc,
                 array(
                     "smart" => $is_smart_featured_collection,
                     "limit" => ($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] ? $theme_images_number : 1),
                 ));
+            $fc_images = generate_featured_collection_image_urls($fc_images, "pre");
 
-            if($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"])
+            if(!empty($fc_images))
                 {
-                $images_list = $fc_images;
-                }
-            else
-                {
-                $images_list[] = $fc_images[0];
                 $render_ctx["image_url"] = $fc_images[0];
                 }
 
             // TODO: add the ability to send & display multiple images (like on dash tiles)
             // $render_ctx["image_url"] = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
-            // $render_ctx["images"] = $images_list;
+            // $render_ctx["images"] = $fc_images;
             }
 
         // Featured collection default tools
@@ -4280,7 +4274,6 @@ function render_featured_collections(array $ctx, array $items)
             $render_ctx["href"] = $fc_category_url;
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
-            $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done
 
             if(checkPermission_dashmanage())
                 {
@@ -4332,7 +4325,6 @@ function render_featured_collections(array $ctx, array $items)
                 }
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
-            $render_ctx["image_url"] = ""; // TODO: remove this once the logic to find right image is done
             }
 
         render_featured_collection($render_ctx, $fc);

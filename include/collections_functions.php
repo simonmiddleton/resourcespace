@@ -2032,12 +2032,15 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 
 
 /**
+* Get featured collection images. For normal FCs this is using the collection_resource table. For FC categories, this will
+* check within normal FCs contained by that category.
 * 
-* 
+* @param array $c Collection data structure similar to the one returned by {@see get_featured_collections()}
+* @param array $ctx Extra context used to get FC images (e.g smart FC?, limit on number of images returned)
 * 
 * @return array
 */
-function get_featured_collection_images(int $c_ref, array $ctx)
+function get_featured_collection_images(array $c, array $ctx)
     {
     /*
     determine if this is a FC categ or normal FC:
@@ -2049,36 +2052,102 @@ function get_featured_collection_images(int $c_ref, array $ctx)
     -- if manual selection, then we check in the collection table which resource is used as thumbnail (access control 
        can prevent image from showing)
     */
+
+    if(!is_int((int) $c["ref"]))
+        {
+        return array();
+        }
+
+    $imgs_limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? $ctx["limit"] : 1);
+
+    // Smart FCs
     if(isset($ctx["smart"]) && $ctx["smart"] === true)
         {
-        // TODO: work out the "themes" (ie nodes) in order to build the right search string
-        $nodestring = '';
-        foreach($themes as $node)
-            {
-            $nodestring .= NODE_TOKEN_PREFIX . $node['ref'];
-            }
-            
-        if($nodestring=='')
+        // Root smart FCs don't have an image
+        if(is_null($c["parent"]))
             {
             return array();
             }
-            
+
+        $node_search = NODE_TOKEN_PREFIX . $c['ref'];
+
         // Access control is still in place (ie permissions are honoured)
-        $images = do_search($nodestring, '', 'hit_count', 0, -1, 'desc', false, 0, false, false, '', true, false, true);
+        $images = do_search($node_search, '', 'hit_count', 0, $imgs_limit, 'desc', false, 0, false, false, '', true, false, true);
         return (is_array($images) ? array_column($images, "ref") : array());
         }
 
+    $is_featured_collection_category = is_featured_collection_category($c);
+    // TODO: handle category case (idea: recurse a limited number of times until you get at least one image or end of branch)
 
-    $sqlselect = "";
-    TODO: continue building the SQL
+    /**
+    * @var Array holding a SQL statement data structure. Each property represents a different SQL clause.
+    */
+    $subquery = array(
+        "select" => "SELECT r.ref, cr.use_as_theme_thumbnail, r.hit_count",
+        "from" => "FROM collection AS c",
+        "join" => array(
+            "JOIN collection_resource AS cr ON cr.collection = c.ref",
+            "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0 AND r.has_image = 1"
+        ),
+        "where" => "WHERE c.ref = 9 AND c.public = 1",
+        "order_by" => "", # TODO: figure out the correct order by when selecting for FC category
+    );
 
-    $sql_limit = sql_limit(null, (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? $ctx["limit"] : 1));
+    // Access control
+    if(!checkperm("v"))
+        {
+        global $usergroup, $userref;
+        $subquery["join"][] = "LEFT OUTER JOIN resource_custom_access AS rca2" 
+            ." ON r.ref = rca2.resource"
+            ." AND rca2.user = '" . escape_check($userref) . "'"
+            ." AND (rca2.user_expires IS NULL OR rca2.user_expires > now())"
+            ." AND rca2.access <> 2";
+        $subquery["join"][] = "LEFT OUTER JOIN resource_custom_access AS rca"
+            ." ON r.ref = rca.resource"
+            ." AND rca.usergroup = '" . escape_check($usergroup) . "'"
+            ." AND rca.access <> 2";
 
-    $sql = "SELECT ti.ref AS `value`
-              FROM ({$sqlselect} {$orderby_theme}) AS ti
-          ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC {$sql_limit}";
+        # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
+        $subquery["where"] .= " AND (r.access <> 2 OR (r.access = 2 AND ((rca.access IS NOT NULL AND rca.access <> 2) OR (rca2.access IS NOT NULL AND rca2.access <> 2))))";
+        }
+
+    $subquery["join"] = implode(" ", $subquery["join"]);
+
+    $sql = sprintf("SELECT ti.ref AS `value` FROM (%s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+        implode(" ", $subquery),
+        sql_limit(null, $imgs_limit)
+    );
 
     return sql_array($sql); # TODO: use the cache version (ie sql_array($sql, "themeimage"); ) once done testing
+    }
+
+
+/**
+* Get preview URLs for a list of resource IDs
+* 
+* @param array  $resource_refs  List of resources
+* @param string $size           Preview size
+* 
+* @return array List of images URLs
+*/
+function generate_featured_collection_image_urls(array $resource_refs, string $size)
+    {
+    $images = array();
+
+    foreach($resource_refs as $ref)
+        {
+        if(!is_int((int) $ref))
+            {
+            continue;
+            }
+
+        if(file_exists(get_resource_path($ref, true, $size, false)))
+            {
+            $images[] = get_resource_path($ref, false, $size, false);
+            }
+        }
+
+    return $images;
     }
 
 

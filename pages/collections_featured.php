@@ -55,7 +55,7 @@ if($parent == 0 && $smart_rtf == 0)
     {
     // Root level - this is made up of all the fields that have a Smart theme name set.
     $smart_fc_headers = array_filter(get_smart_theme_headers(), function(array $v) { return metadata_field_view_access($v["ref"]); });
-    $smart_fcs_list = array_map(function(array $v)
+    $smart_fcs_list = array_map(function(array $v) use ($FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
         {
         return array(
             "ref" => $v["ref"],
@@ -75,7 +75,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     if($resource_type_field !== false)
         {
         $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, (FIELD_TYPE_CATEGORY_TREE == $resource_type_field["type"]), $smart_fc_parent);
-        $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent)
+        $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
             {
             return array(
                 "ref" => $v["ref"],
