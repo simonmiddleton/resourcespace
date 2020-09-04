@@ -1716,6 +1716,7 @@ function check_access_key_collection($collection, $key)
    
     if(!is_array($resources) || 0 == count($resources))
         {
+        // No resources; treat as failure
         return false;
         }
 
