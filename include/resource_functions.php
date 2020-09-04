@@ -8075,7 +8075,6 @@ function tab_names($fields)
 function get_resource_table_joins(){
 
     global 
-    $rating_field,
     $sort_fields,
     $thumbs_display_fields,
     $list_display_fields,
@@ -8096,7 +8095,6 @@ function get_resource_table_joins(){
     $config_sheetthumb_fields,
     $config_sheetsingle_fields,
         array(
-        $rating_field,
         $metadata_template_title_field,
         $view_title_field,
         $date_field)

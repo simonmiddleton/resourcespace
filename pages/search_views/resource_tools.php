@@ -17,19 +17,13 @@ if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook
                 }
         } ?>	
           
-<!-- Star icon -->
-<?php 
-if (isset($result[$n][$rating]) && $result[$n][$rating]>0) 
-        { ?>
-        <div class="IconStar"></div>
-        <?php $showkeystar = true; 
-        } ?>
 
 <!-- Collection comment icon -->
 <?php 
 if($k=="" || $internal_share_access)
         {
-        if (($collection_reorder_caption || $collection_commenting) && (substr($search,0,11)=="!collection")) 
+        // $collection_reorder_caption is an older config, although no longer in config.default.php some older systems may still have it set.
+        if (((isset($collection_reorder_caption) && $collection_reorder_caption) || $collection_commenting) && (substr($search,0,11)=="!collection")) 
                 { ?>
                         <a aria-hidden="true" class="fa fa-comment"
                                 href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref)?>&collection=<?php echo urlencode(trim(substr($search,11)))?>"
