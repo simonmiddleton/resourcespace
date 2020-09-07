@@ -2137,8 +2137,9 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
 
     # Thanks to Aidan Lister <aidan@php.net>
     # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
-    # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
-    # http://aidanlister.com/repos/license/
+    # As of 2020-09-07 code is now at https://github.com/aidanlister/code/blob/master/function.str_highlight.php 
+    # The GitHub code repository README states: "The code resides entirely in the public domain."
+    # https://github.com/aidanlister/code
 
     $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
     $text=str_replace("#zwspace;","♣",$text);
@@ -2169,8 +2170,7 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
 
     foreach ($needle as $needle_s) {
         if (strlen($needle_s) > 0) {
-            $needle_s = preg_quote($needle_s);
-            $needle_s = str_replace("#","\\#",$needle_s);
+            $needle_s = preg_quote($needle_s, "#");
         
             // Escape needle with optional whole word check
             if ($options & STR_HIGHLIGHT_WHOLEWD) {
