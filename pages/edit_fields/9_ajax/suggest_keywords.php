@@ -15,7 +15,7 @@ $first      = true;
 $exactmatch = false;
 $results    = array();
 
-if(is_array($fielddata))
+if(!is_array($fielddata))
     {
         echo json_encode($results);
         exit();
