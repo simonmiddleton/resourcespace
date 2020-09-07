@@ -402,7 +402,11 @@ else if($edit)
 	
 	#Get field data
 	$buildstring = explode('?',$tile["url"]);
-	parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+    if(isset($buildstring[1])) 
+        {
+        parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+        }
+	
 	if(isset($buildstring["tltype"]))
 		{
 		$tile_type=$buildstring["tltype"];
