@@ -17,8 +17,8 @@ $results    = array();
 
 if(!is_array($fielddata))
     {
-        echo json_encode($results);
-        exit();
+    echo json_encode($results);
+    exit();
     }
 
 foreach($fielddata['nodes'] as $node)
