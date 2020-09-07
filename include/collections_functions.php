@@ -1130,11 +1130,17 @@ function get_max_theme_levels(){
  */
 function get_theme_headers($themes=array())
 	{
+    global $theme_category_levels;
 	# Work out which theme category level we are selecting 
 	$selecting="theme";
 
 	$theme_path = "";	
-	$sql="";	
+    $sql="";	
+    if(count($themes) > $theme_category_levels-1)
+        {
+        return array();
+        }
+
 	for ($x=0;$x<count($themes);$x++){		
 		if ($x>0) $theme_path .= "|";		
 		$theme_path .= $themes[$x];		
@@ -2516,7 +2522,14 @@ function collection_min_access($collection)
         {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
         }
-    $minaccess= max(array_column($result,"access"));
+    if(count($result) > 0 && isset($result[0]["access"]))
+        {
+        $minaccess = max(array_column($result,"access"));
+        }
+    else
+        {
+        $minaccess = 0;
+        }
     if($k != "")
 		{
 		# External access - check how this was shared. If internal share access and share is more open than the user's access return that
@@ -3323,7 +3336,7 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 */
 function new_featured_collection_form(array $themearray = array())
     {
-    global $lang;
+    global $lang, $theme_category_levels;
 
     if(!checkperm('h'))
         {
@@ -3349,7 +3362,7 @@ function new_featured_collection_form(array $themearray = array())
             </div>
 
         <?php
-        if(0 < $themes_count)
+        if(0 < $themes_count && $themes_count < $theme_category_levels-1)
             {
             ?>
             <div class="Question">
