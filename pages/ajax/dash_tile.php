@@ -125,8 +125,8 @@ $tile_type      = getvalescaped("tltype","");
 $tile['tlsize'] = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 $tile_style     = getvalescaped("tlstyle","");
 $tile_id        = (isset($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
-$tile_width     = getvalescaped("tlwidth","");
-$tile_height    = getvalescaped("tlheight","");
+$tile_width     = getvalescaped("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
+$tile_height    = getvalescaped("tlheight",180,true);    
 
 if(!is_numeric($tile_width) || !is_numeric($tile_height)){exit($lang["error-missingtileheightorwidth"]);}
 include "../../include/dash_tile_generation.php";

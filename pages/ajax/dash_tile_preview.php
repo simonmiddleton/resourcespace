@@ -26,8 +26,8 @@ $tile['tlsize']         = ('double' === getvalescaped('tlsize', '') ? 'double' :
 
 
 $tile_id="previewdashtile";
-$tile_width = getvalescaped("tlwidth","");
-$tile_height = getvalescaped("tlheight","");
+$tile_width = getvalescaped("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
+$tile_height = getvalescaped("tlheight",180,true); 
 if(!is_numeric($tile_width) || !is_numeric($tile_height)){exit($lang["error-missingtileheightorwidth"]);}
 include "../../include/dash_tile_generation.php";
 tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_height);
