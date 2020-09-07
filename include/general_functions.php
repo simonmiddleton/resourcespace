@@ -3418,12 +3418,12 @@ function set_sysvar($name,$value=null)
     {
     global $sysvars;
     $name=escape_check($name);
-    $value=escape_check($value);
-	db_begin_transaction("set_sysvar");
+    db_begin_transaction("set_sysvar");
     sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
-        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        $safevalue=escape_check($value);
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$safevalue}')");
         }
     db_end_transaction("set_sysvar");
 
