@@ -14,8 +14,12 @@ $transition = (int)getvalescaped('transition', 4);
 $showtext   = getvalescaped('showtext', '0');
 
 $player_width        = getvalescaped('width', '');
-$player_height        = getvalescaped('height', '') - 48;
-
+$player_height        = getvalescaped('height', '');
+if (!is_numeric($player_width) || !is_numeric($player_height))
+{
+	exit("Width and height parameters must be numeric.");
+}
+$player_height = $player_height - 48;
 $player_ratio = $player_width / $player_height;
 	
 # Check key is valid
