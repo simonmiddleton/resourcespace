@@ -302,6 +302,7 @@ function db_begin_transaction($name)
 
 	if(function_exists('mysqli_begin_transaction'))
 		{
+        debug("SQL: begin transaction '{$name}'");
 		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
 
@@ -365,6 +366,7 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
+        debug("SQL: commit transaction '{$name}'");
 		return mysqli_commit($db["read_write"], 0, $name);
 		}
 
@@ -389,6 +391,7 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
+        debug("SQL: rollback transaction '{$name}'");
 		return mysqli_rollback($db["read_write"], 0, $name);
 		}
 
