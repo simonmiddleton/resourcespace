@@ -29,9 +29,9 @@ function rrmdir($dir)
                 } 
             }
         if ($dir != $storagedir . "/system" && $dir != $storagedir . "/system/".$slideshow_dir)
-        {
-        echo "remove directory ".($dir)."</br>";
-        }
+            {
+            debug("remove directory " . $dir);
+            }
         }
     }
 
