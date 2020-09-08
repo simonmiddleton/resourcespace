@@ -203,11 +203,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     }
                 }
 
-            // if ($resource_type_set == 0)
-            // {
-            //     error_alert($lang["csv_upload_oj_failed"], false);
-            //     exit();
-            // }
+            if ($resource_type_set == 0)
+            {
+                error_alert($lang["csv_upload_oj_failed"], false);
+                exit();
+            }
 
             if (count($missing_fields) == 0)
                 {
