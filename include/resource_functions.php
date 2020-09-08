@@ -1980,7 +1980,7 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
 
 
 
-function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
+function add_keyword_mappings(int $ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
     {
     /* For each instance of a keyword in $string, add a keyword->resource mapping.
     * Create keywords that do not yet exist.
@@ -2030,7 +2030,7 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
  * 
  * @return void
  */
-function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
+function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
     global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
     
