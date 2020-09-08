@@ -45,7 +45,7 @@ if(file_put_contents($file,$hash) === false)
     exit("FAIL - Unable to save the hash in file '{$file}'. Folder permissions are: " . fileperms($storagedir));
     }
 
-if(!file_exists($file))
+if(!file_exists($file) || !is_readable($file))
     {
     exit("FAIL - Hash not saved or unreadable in file'{$file}'");
     }
