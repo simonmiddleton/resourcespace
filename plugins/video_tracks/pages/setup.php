@@ -19,7 +19,10 @@ $errorfields=array();
 if (getval("submit","")!="" || getval("save","")!="" && !$execution_lockout)
 	{
 	// Decode the mappings variable so we can amend it
-	
+    if (!array_key_exists('video_tracks_index',$_REQUEST) || !array_key_exists('video_tracks_command',$_REQUEST) || !array_key_exists('video_tracks_extension',$_REQUEST))
+        {
+        exit($lang["video_tracks_command_missing"]);
+        }
 	$video_tracks_index = $_REQUEST['video_tracks_index'];
 	$video_tracks_command = $_REQUEST['video_tracks_command'];
 	$video_tracks_extension = $_REQUEST['video_tracks_extension'];
