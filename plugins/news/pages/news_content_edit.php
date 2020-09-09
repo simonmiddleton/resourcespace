@@ -15,13 +15,24 @@ $offset=getvalescaped("offset",0);
 $findtext=getvalescaped("findtext","");
 
 $date=getval("date",date("Y-m-d H:i:s"));
+
+$error = "";
+# if empty string returned, it's a valid date
+$valid_date = check_date_format($date);
+if ($valid_date != "")
+    {
+    # raise error - invalid date format
+    $error = str_replace("%date%", $date, $lang["invalid_date_error2"]) ;
+    }
+
+
 $title=getvalescaped("title",0);
 $body=getvalescaped("body",0);
 
 # get ref value from database, unless it is set to new 
 if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"",""); $createnews=false;}
 
-if (getval("save","")!="" && enforcePostRequest(false))
+if ($error == "" && getval("save","")!=""  && enforcePostRequest(false))
 	{
 	# Save news
 	If ($createnews) {add_news($date,$title,$body);}
@@ -40,7 +51,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo $lang["news_edit"]?></h1>
-
+    <span style="font-size:20px;color:red;padding:14px;"><?php echo $error ?></span>
     <form method=post id="mainform">
         <?php generateFormToken("mainform"); ?>
 
