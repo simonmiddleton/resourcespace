@@ -2204,7 +2204,7 @@ if($annotate_enabled)
 jQuery('document').ready(function()
     {
 	/* Call SelectTab upon page load to select first tab*/
-    SelectMetaTab(0,<?php echo ($modal ? "true" : "false") ?>);
+    SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
     registerCollapsibleSections(false);
     });
 </script>

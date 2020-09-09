@@ -2217,7 +2217,7 @@ hook("autolivejs");
 jQuery('document').ready(function()
     {
 	/* Call SelectTab upon page load to select first tab*/
-    SelectMetaTab(0,<?php echo $modalTrueFalse?>);
+    SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
     registerCollapsibleSections(false);
     });
 </script>
