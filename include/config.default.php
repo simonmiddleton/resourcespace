@@ -2762,6 +2762,15 @@ $smtp_auth=true; # Send credentials to SMTP server (false to use anonymous acces
 $smtp_username=''; # Username (full email address).
 $smtp_password=''; # Password.
 $smtpautotls = false; # If using PHPMailer, whether to enable TLS encryption automatically if a server supports it, even if `SMTPSecure` is not set to 'tls'.
+/* Enable STMP debug for PHPMailer. Available options are (from none to very verbose):
+ - 0 - no debug output. If $debug_log is false, this is off as well
+ - 1 - output messages sent by the client
+ - 2 - responses received from the server
+ - 3 - connection information, can help diagnose STARTTLS failures
+ - 4 - low-level information, very verbose, don't use for debugging SMTP, only low-level problems
+Note: selecting level 3, will also show debug info for level 1 and 2.
+*/
+$smtp_debug_lvl = 2;
 
 $sharing_userlists=false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
