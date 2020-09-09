@@ -2278,20 +2278,24 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             $newvalues[] = $value;
             }
+        
+        $current_field_nodes = get_resource_nodes($resource,$field);
+        $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
+        $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
 
         # Update resource_node table
         db_begin_transaction("update_field_{$field}");
-        if(count($nodes_to_remove)>0)
+        if(count($removed_nodes)>0)
             {
-            delete_resource_nodes($resource,$nodes_to_remove, false);
+            delete_resource_nodes($removed_nodes,$nodes_to_remove, false);
             }
 
-        if(count($nodes_to_add)>0)
+        if(count($added_nodes)>0)
             {
-            add_resource_nodes($resource,$nodes_to_add, false, false);
+            add_resource_nodes($resource,$added_nodes, false, false);
             }
 
-        log_node_changes($resource,$nodes_to_add,$nodes_to_remove);
+        log_node_changes($resource,$added_nodes,$removed_nodes);
 
         db_end_transaction("update_field_{$field}");
         $value = implode(",",$newvalues);
@@ -2302,7 +2306,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             $is_html=($fieldinfo["type"]==8);	
             # If there's a previous value, remove the index for those keywords
-            $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+            //$existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
             if (strlen($existing)>0)
                 {
                 remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
@@ -5304,7 +5308,6 @@ function get_page_count($resource,$alternative=-1)
 
 function update_disk_usage($resource)
 	{
-
 	# we're also going to record the size of the primary resource here before we do the entire folder
 	$ext = sql_value("SELECT file_extension value FROM resource where ref = '" . escape_check($resource) . "' AND file_path IS NULL",'jpg');
 	$path = get_resource_path($resource,true,'',false,$ext);
