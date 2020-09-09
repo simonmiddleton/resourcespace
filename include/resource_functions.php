@@ -2287,15 +2287,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         db_begin_transaction("update_field_{$field}");
         if(count($removed_nodes)>0)
             {
-            delete_resource_nodes($removed_nodes,$nodes_to_remove, false);
+            delete_resource_nodes($resource,$nodes_to_remove, false);
             }
 
         if(count($added_nodes)>0)
             {
             add_resource_nodes($resource,$added_nodes, false, false);
             }
-
-        log_node_changes($resource,$added_nodes,$removed_nodes);
+        if(count($added_nodes)>0 || count($removed_nodes)>0)
+            {
+            log_node_changes($resource,$added_nodes,$removed_nodes);
+            }
 
         db_end_transaction("update_field_{$field}");
         $value = implode(",",$newvalues);
