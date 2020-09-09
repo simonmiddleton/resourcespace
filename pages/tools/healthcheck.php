@@ -74,6 +74,13 @@ if($debug_log)
         }        
     }
 
+# Check filestore folder browseability
+$output=@file_get_contents($baseurl . "/filestore");
+if (strpos($output,"Index of")!==false)
+	{
+    exit("FAIL - " . $lang["noblockedbrowsingoffilestore"]);
+    }
+    
 // All is well.
 
 // Formulate a version number. Start with the one set in version.php, which is already changed on each release branch, and also when building a new release ZIP.
