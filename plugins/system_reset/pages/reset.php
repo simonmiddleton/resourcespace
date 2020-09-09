@@ -30,7 +30,7 @@ function rrmdir($dir)
             }
         if ($dir != $storagedir . "/system" && $dir != $storagedir . "/system/".$slideshow_dir)
             {
-            debug("remove directory " . $dir);
+            debug("system_reset: remove directory " . $dir);
             }
         }
     }

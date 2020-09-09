@@ -1857,7 +1857,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
                 mkdir($result, 0777,true);
             } 
             catch (Exception $e) {
-                debug("Directory already exists at " . $result . "continuing...");  
+                debug("get_temp_dir: Attempt to create folder '$result' failed. Reason: {$e->getMessage()}");  
             }
         }
     }
