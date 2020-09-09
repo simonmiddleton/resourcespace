@@ -1333,6 +1333,12 @@ if(!$multiple)
             {
             if(!isset($selected_type))
                 {
+                // Display error if no resource type can be found - resource specific metadata cannot be loaded.    
+                if (empty($shown_resource_types))
+                    {
+                    error_alert($lang['resource_type_not_found'], false);
+                    exit();
+                    }
                 $selected_type = $shown_resource_types[0];
                 }
 
