@@ -2169,6 +2169,7 @@ $lang['action-title_create_report_called'] = "Create report called...";
 $lang['page-title_report_management_edit'] = "Edit report";
 $lang['page-subtitle_report_management_edit'] = "Use this section to modify report contents.";
 $lang["fieldtitle-tick_to_delete_report"] = "Tick to delete this report";
+$lang["report_query_required"] = "Report query is required";
 
 # size management
 $lang['page-title_size_management'] = "Manage sizes";
