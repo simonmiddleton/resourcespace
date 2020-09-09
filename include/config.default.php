@@ -182,8 +182,6 @@ and running.
 # Store original files separately from RS previews? If this setting is adjusted with resources in the system you'll need to run ../pages/tools/filestore_separation.php.
 $originals_separate_storage=false;
 
-include "version.php";
-
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
 $applicationdesc=""; # Subtitle (i18n translated) if $header_text_title=true;
 $header_favicon="gfx/interface/favicon.png";
@@ -344,38 +342,6 @@ $dash_tile_colour         = true;
 $dash_tile_colour_options = array();
 /* End Dash Config Options */
 
-/*
- * Legacy Tile options 
- * The home_dash option and functionality has replaced these config options 
- */
-
-	# Options to show/hide the tiles on the home page
-	$home_themeheaders=false;
-	#
-	# Custom panels for the home page.
-	# You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
-	#
-	# The below are examples.
-	#
-	# $custom_home_panels[0]["title"]="Custom Panel A";
-	# $custom_home_panels[0]["text"]="Custom Panel Text A";
-	# $custom_home_panels[0]["link"]="search.php?search=example";
-	#
-	# You can add additional code to a link like this:
-	# $custom_home_panels[0]["additional"]="target='_blank'";
-	#
-	# $custom_home_panels[1]["title"]="Custom Panel B";
-	# $custom_home_panels[1]["text"]="Custom Panel Text B";
-	# $custom_home_panels[1]["link"]="search.php?search=example";
-	#
-	# $custom_home_panels[2]["title"]="Custom Panel C";
-	# $custom_home_panels[2]["text"]="Custom Panel Text C";
-	# $custom_home_panels[2]["link"]="search.php?search=example";
-
-/*
- * End of Legacy Tile Config
- */ 
-
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
@@ -417,7 +383,6 @@ $exif_date=12;
 
 # If exiftool is installed, you can optionally enable the metadata report available on the View page. 
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
-
 $metadata_report=false;
 
 # Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
@@ -754,9 +719,6 @@ $simple_search_date=true;
 $colour_sort=true;
 $popularity_sort=true;
 $random_sort=false;
-$title_sort=false; // deprecated, based on resource table column
-$country_sort=false; // deprecated, based on resource table column
-$original_filename_sort=false; // deprecated, based on resource table column
 
 # What is the default sort order?
 # Options are date, colour, relevance, popularity, country
@@ -994,8 +956,7 @@ $anon_login_modal=false;
 
 $anonymous_user_session_collection=true;
 
-# Enable captioning and ranking of collections (deprecated - use $collection_commenting instead)
-$collection_reorder_caption=false; 
+
 
 # Enable collection commenting and ranking
 $collection_commenting = false;
@@ -2581,7 +2542,7 @@ $allow_smart_collections=false;
 # This may not be appropriate for usergroups that depend on live updates in workflows based on smart collections.
 $smart_collections_async=false;
 
-# Allow a Preview page for entire collections (for more side to side comparison ability, works with collection_reorder_caption)
+# Allow a Preview page for entire collections (for more side to side comparison ability)
 $preview_all=false;
 # Minimize collections frame when visiting preview_all.php
 $preview_all_hide_collections=true;
@@ -3054,9 +3015,6 @@ $force_display_template_orderby=false;
 # $resource_type_request_emails[2]="documentadministrator@my.site";
 #Can be used so that along with the users/emails specified by $resource_type_request_emails, the rest of the users can be notified as well
 $resource_type_request_emails_and_email_notify = false;
-
-# $rating_field. A legacy option that allows for selection of a metadata field that contains administrator ratings (not user ratings) that will be displayed in search list view. Field must be plain text and have numeric only numeric values.
-# $rating_field=121;
 
 # Set this to true to prevent possible issues with IE and download.php. Found an issue with a stray pragma: no-cache header that seemed to be added by SAML SSO solution.
 $download_no_session_cache_limiter=false;
