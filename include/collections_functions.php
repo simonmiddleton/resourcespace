@@ -2521,6 +2521,10 @@ function collection_min_access($collection)
     else
         {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
+        if (!is_array($collection))
+            {
+            $result = array();
+            }
         }
     if(count($result) > 0 && isset($result[0]["access"]))
         {
