@@ -580,21 +580,38 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                             case (FIELD_TYPE_DATE_RANGE):
                                 # date range has format date/date
                                 $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
-                                if(!preg_match($rangeregex,$cell_value_item,$matches))
+
+                                if(strpos($cell_value,",") !== false)
+                                    {
+                                    $rangedates = explode(",",$cell_value_item);
+                                    }
+                                else
+                                    {    
+                                    $rangedates = explode("/",$cell_value_item);
+                                    }
+
+                                # valid date if empty string returned
+                                $valid_start_date = isset($rangedates[0]) ? check_date_format($rangedates[0]) : "";
+                                $valid_end_date = isset($rangedates[1]) ? check_date_format($rangedates[1]) : "";
+
+                                if(!preg_match($rangeregex,$cell_value_item,$matches) || $valid_start_date != "" || $valid_end_date != "")
                                     {
                                     # raise error - invalid date format
                                     $error_count++;
-                                    $logtext = " - Invalid date range format - use EDTF format";
+                                    $logtext = "";
+                                    !preg_match($rangeregex,$cell_value_item,$matches) ? $logtext = $logtext . " - Invalid date range format - use EDTF format" : $logtext;
+                                    $valid_start_date != "" ? $logtext = $logtext . " - [Start Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_start_date) : $logtext;
+                                    $valid_end_date != "" ? $logtext = $logtext . " - [End Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_end_date) : $logtext;
                                     csv_upload_log($logfile,$logtext);
                                     array_push ($messages,$logtext);
-                                    continue 2;
-                                    }    
+                                    continue 3;
+                                    }
                             break;
 
                             default:
                                 # field doesn't allow options to be added so raise error
                                 $error_count++;
-                                $logtext = "Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
+                                $logtext = " Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
                                 csv_upload_log($logfile,$logtext);
                                 array_push ($messages,$logtext);
                                 continue 2;
@@ -658,23 +675,17 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                             {    
                             $rangedates = explode("/",$cell_value);
                             }
-						$rangestart=str_pad($rangedates[0],  10, "-00");
-						$rangeendparts=explode("-",$rangedates[1]);
-                        $rangeendyear=$rangeendparts[0];
-                        $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
-                        $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
-						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
 
                         $daterangenodes     = array();
-                        $daterangestartnode = set_node(null, $fieldid, $rangestart, null, null,true);
-                        $daterangeendnode   = set_node(null, $fieldid, $rangeend, null, null,true);
+                        $daterangestartnode = set_node(null, $fieldid, $rangedates[0], null, null,true);
+                        $daterangeendnode   = set_node(null, $fieldid, $rangedates[1], null, null,true);
 
                         // get latest list of nodes, in case new nodes added with set_node() above
                         $field_nodes   = get_nodes($fieldid);
                         $node_options = array_column($field_nodes, 'name', 'ref');
 
-                        $node_trans_arr[$fieldid][$daterangestartnode]  = $rangestart;
-                        $node_trans_arr[$fieldid][$daterangeendnode]    = $rangeend;
+                        $node_trans_arr[$fieldid][$daterangestartnode]  = $rangedates[0];
+                        $node_trans_arr[$fieldid][$daterangeendnode]    = $rangedates[1];
                         $daterangenodes = array($daterangestartnode,$daterangeendnode);
 
                         $nodes_to_add = array_diff($daterangenodes, $current_field_nodes);
