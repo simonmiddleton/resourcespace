@@ -12,6 +12,12 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
     $resources=get_collection_resources($collection);
     $ref=getvalescaped("ref","");
+    if (!$ref)
+    {
+        error_alert($lang["selectlicence"], false);
+        exit();
+        
+    }
     $url_params = array(
         'ref'        => $ref,
         'search'     => getval('search',''),
