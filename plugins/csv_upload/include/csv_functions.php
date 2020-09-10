@@ -621,8 +621,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             // Set values if processing
             foreach($resourcerefs as $resource_id)
                 {
-                    # if the resource_id is not an integer do not continue with following actions
-                if (!is_int($resource_id))
+                # if the resource_id is not an integer do not continue with following actions
+                if ((string)$resource_id !== (string)(int)$resource_id)
                     {
                     continue; 
                     }
