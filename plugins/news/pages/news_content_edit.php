@@ -17,14 +17,16 @@ $findtext=getvalescaped("findtext","");
 $date=getval("date",date("Y-m-d H:i:s"));
 
 $error = "";
-# if empty string returned, it's a valid date
-$valid_date = check_date_format($date);
-if ($valid_date != "")
+
+$parts = array();
+// Check the format of the date to "yyyy-mm-dd hh:mm:ss"
+preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/", $date, $parts);
+
+if (count($parts) < 6 || !checkdate($parts[2], $parts[3], $parts[1]))
     {
     # raise error - invalid date format
     $error = str_replace("%date%", $date, $lang["invalid_date_error2"]) ;
     }
-
 
 $title=getvalescaped("title",0);
 $body=getvalescaped("body",0);
@@ -51,7 +53,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo $lang["news_edit"]?></h1>
-    <span style="font-size:20px;color:red;padding:14px;"><?php echo $error ?></span>
+    <span class="errorMessage"><?php echo $error ?></span>
     <form method=post id="mainform">
         <?php generateFormToken("mainform"); ?>
 
