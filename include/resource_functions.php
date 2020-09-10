@@ -2566,7 +2566,10 @@ function delete_resource($ref)
 		foreach ($sizes as $size)
 			{
 			if (file_exists($size['path']) && ($staticsync_allow_syncdir_deletion || false !== strpos ($size['path'],$storagedir))) // Only delete if file is in filestore
-				 {unlink($size['path']);}
+				{
+                $pathtofile = realpath($size['path']); // avoid passing relative path to unlink function to prevent error on removal of file.
+                unlink($pathtofile);
+                }
 			}
 		}
 	
