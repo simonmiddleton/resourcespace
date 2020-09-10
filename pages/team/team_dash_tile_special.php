@@ -51,7 +51,7 @@ include "../../include/header.php";
 	</li>
 	<?php 
 	/* Old Configuration tiles */
-	if($enable_themes && !$home_themeheaders)
+	if($enable_themes)
 		{ ?>
 		<li>
 			<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=conf&tlstyle=thmsl&title=themeselector&tile_audience=true&link=pages/themes.php&url=pages/ajax/dash_tile.php%3Ftltype=conf%26tlstyle=thmsl";?>">

@@ -314,7 +314,7 @@ function checkTileConfig($tile,$tile_style)
 	#Returns whether the config is still on for these tiles
 	switch($tile_style)
 		{
-		case "thmsl": 	global $home_themeheaders; return $home_themeheaders;
+		case "thmsl": 	global $enable_themes; return $enable_themes;
 		case "custm":	global $custom_home_panels; return isset($custom_home_panels)? checkConfigCustomHomePanels($tile,$tile_style) : FALSE;
 		}
 	}
