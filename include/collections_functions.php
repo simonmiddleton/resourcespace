@@ -3235,7 +3235,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Show disk usage
-    if(($k=="" || $internal_share_access) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
+    if(($k=="" || $internal_share_access) && (checkperm('a') || checkperm('v')) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/search_disk_usage.php",$urlparams);
         $options[$o]['value']='search_items_disk_usage';
@@ -3261,25 +3261,28 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 260;
         $o++;
 
-		// Hide Collection
-		$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
-		// check that this collection is not hidden. use first in alphabetical order otherwise
-		if(in_array($user_mycollection,$hidden_collections)){
-			$hidden_collections_list=implode(",",array_filter($hidden_collections));
-			$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
-		}
-		$extra_tag_attributes = sprintf('
-                data-mycol="%s"
-            ',
-            urlencode($user_mycollection)
-        );
-		
-		$options[$o]['value'] = 'hide_collection';
-		$options[$o]['label'] = $lang['hide_collection'];
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
-        $options[$o]['category']  = ACTIONGROUP_ADVANCED;
-        $options[$o]['order_by']  = 270;
-		$o++;
+        if(!checkperm('b'))
+            {
+            // Hide Collection
+            $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
+            // check that this collection is not hidden. use first in alphabetical order otherwise
+            if(in_array($user_mycollection,$hidden_collections)){
+                $hidden_collections_list=implode(",",array_filter($hidden_collections));
+                $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
+            }
+            $extra_tag_attributes = sprintf('
+                    data-mycol="%s"
+                ',
+                urlencode($user_mycollection)
+            );
+            
+            $options[$o]['value'] = 'hide_collection';
+            $options[$o]['label'] = $lang['hide_collection'];
+            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
+            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+            $options[$o]['order_by']  = 270;
+            $o++;
+        }
         }
         
     
