@@ -2489,7 +2489,11 @@ function get_collection_log($collection, $fetchrows = -1)
 function collection_max_access($collection)	
 	{
 	$maxaccess=2;
-	$result=do_search("!collection" . $collection);
+    $result=do_search("!collection" . $collection);
+    if (!is_array($result))
+        {
+        $result = array();
+        }
 	for ($n=0;$n<count($result);$n++)
 		{
 		$ref=$result[$n]["ref"];
@@ -2521,7 +2525,7 @@ function collection_min_access($collection)
     else
         {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
-        if (!is_array($collection))
+        if (!is_array($result))
             {
             $result = array();
             }
