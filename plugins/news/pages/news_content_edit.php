@@ -53,7 +53,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo $lang["news_edit"]?></h1>
-    <span class="errorMessage"><?php echo $error ?></span>
+    <span class="FormError"><?php echo $error ?></span>
     <form method=post id="mainform">
         <?php generateFormToken("mainform"); ?>
 
