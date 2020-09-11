@@ -629,17 +629,34 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 		$return_row_count++;
 		}
 
-	// Write to the cache
-	if ($cache_write)
-		{
-		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777,true);}
-		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}
-		$cachedata=array();
-		$cachedata["query"]=$sql;
-		$cachedata["time"]=time();
-		$cachedata["results"]=$return_rows;
-		file_put_contents($cache_file,json_encode($cachedata));
-		}
+    if($cache_write)
+        {
+        if(!file_exists($storagedir . "/tmp"))
+            {
+            mkdir($storagedir . "/tmp", 0777, true);
+            }
+
+        if(!file_exists($cache_location))
+            {
+            mkdir($cache_location, 0777);
+            }
+
+        $cachedata = array();
+        $cachedata["query"] = $sql;
+        $cachedata["time"] = time();
+        $cachedata["results"] = $return_rows;
+
+        try
+            {
+            $GLOBALS["use_error_exception"] = true;
+            file_put_contents($cache_file, json_encode($cachedata));
+            }
+        catch(Exception $e)
+            {
+            unset($GLOBALS["use_error_exception"]);
+            debug("SQL_CACHE: {$e->getMessage()}");
+            }
+        }
 
     if($fetchrows == -1)
         {
