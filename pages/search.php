@@ -237,6 +237,17 @@ if ($order_by=="")
         }
     }
 
+if (substr($order_by,0,5)=="field")
+    {
+    $order_by_field = substr($order_by,5);
+        {
+        if(!metadata_field_view_access($order_by_field))
+            {
+            $order_by = 'relevance';
+            }
+        }
+    }
+
 $per_page=getvalescaped("per_page",$default_perpage, true); 
 $per_page= (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 
