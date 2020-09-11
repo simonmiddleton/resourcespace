@@ -188,13 +188,13 @@ include '../../include/header.php';
             foreach($slideshow_files as $slideshow_index => $slideshow_file_info)
                 {
                 $moveup_disabled = '';
-                if($slideshow_index == 0)
+                if($slideshow_index == 0 || count($slideshow_files) == 1)
                     {
                     $moveup_disabled = ' disabled';
                     }
 
                 $movedown_disabled = '';
-                if(($slideshow_index - 1) == count($slideshow_files))
+                if(($slideshow_index - 1) == count($slideshow_files) || count($slideshow_files) == 1)
                     {
                     $movedown_disabled = ' disabled';
                     }
