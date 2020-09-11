@@ -785,14 +785,18 @@ function clear_query_cache($cache)
  */
 function check_db_structs($verbose=false)
 	{
-    // Don't run if this has very recently been triggered by another process
-    if(time() - get_sysvar('database_update_in_progress',0) < 60)
+    // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
+    if(is_process_lock('database_update_in_progress'))
         {
         show_upgrade_in_progress(true);
         exit();
         }
-    set_sysvar("database_update_in_progress",time());
-	CheckDBStruct("dbstruct",$verbose);
+    set_process_lock('database_update_in_progress');
+
+    // Check the structure of the core tables.
+    CheckDBStruct("dbstruct",$verbose);
+    
+    // Check the structure of all active plugins.
 	global $plugins;
 	for ($n=0;$n<count($plugins);$n++)
 		{
@@ -800,7 +804,7 @@ function check_db_structs($verbose=false)
 		}
     hook("checkdbstruct");
     
-    set_sysvar("database_update_in_progress",NULL);
+    clear_process_lock('database_update_in_progress');
 	}
 
 /**
