@@ -11,8 +11,8 @@ $unlink=(getval("unlink","")!=""); # Unlink mode
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
     $resources=get_collection_resources($collection);
-    $ref=getvalescaped("ref","");
-    if (!$ref)
+    $ref=getvalescaped("ref", 0, true);
+    if (!$ref > 0)
         {
         error_alert($lang["selectlicence"], false);
         exit();
