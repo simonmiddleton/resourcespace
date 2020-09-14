@@ -2918,9 +2918,7 @@ $metadata_download_header_title = 'ResourceSpace';
 #$metadata_download_pdf_logo     = '/path/to/logo/location/logo.png';
 $metadata_download_footer_text  = '';
 
-# settings for commenting on resources - currently not enabled by default
-
-# $comments_collection_enable=false; 			# reserved for future use
+# settings for commenting on resources - currently enabled for new systems only.
 $comments_resource_enable=false;				# allow users to make comments on resources
 $comments_flat_view=false;						# by default, show in a threaded (indented view)
 $comments_responses_max_level=10 ;				# maximum number of nested comments / threads
@@ -2928,7 +2926,7 @@ $comments_max_characters=200;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
-$comments_view_panel_show_marker=true;			# show an astrisk by the comment view panel title if comments exist
+$comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
 
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
