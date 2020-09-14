@@ -88,7 +88,7 @@ function get_research_request($ref)
 	{
     $ref = escape_check($ref);
 	$return=sql_query("select *,email,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref='$ref'");
-	if (!$return)
+	if (count($return) == 0)
 	    {
 	    return false;
 	    }
