@@ -5,7 +5,7 @@ if('cli' != PHP_SAPI)
     }
 
 // Setup test
-$original_user_data = $userdata;
+$original_user_data = get_user(1);
 $user_general = new_user("test_001402_general", 2);
 if($user_general === false)
     {
