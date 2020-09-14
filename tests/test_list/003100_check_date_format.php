@@ -12,6 +12,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #1 - ";
     return false;
     }
 
@@ -21,6 +22,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #2 - ";
     return false;
     }
 
@@ -30,6 +32,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #3 - ";
     return false;
     }
 
@@ -39,6 +42,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #4 - ";
     return false;
     }
 
@@ -48,6 +52,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #5 - ";
     return false;
     }
 
@@ -57,6 +62,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #6 - ";
     return false;
     }
 
@@ -66,6 +72,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #7 - ";
     return false;
     }
 
@@ -75,6 +82,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #8 - ";
     return false;
     }
 
@@ -84,6 +92,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #9 - ";
     return false;
     }
 
@@ -93,6 +102,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #10 - ";
     return false;
     }
 
@@ -102,6 +112,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #11 - ";
     return false;
     }
 
@@ -111,6 +122,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #12 - ";
     return false;
     }
 
@@ -120,6 +132,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #13 - ";
     return false;
     }
 
@@ -129,6 +142,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #14 - ";
     return false;
     }
 
@@ -138,6 +152,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #15 - ";
     return false;
     }
 
@@ -147,6 +162,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #16 - ";
     return false;
     }
 
@@ -156,6 +172,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #17 - ";
     return false;
     }
 
@@ -165,6 +182,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #18 - ";
     return false;
     }
 
@@ -174,6 +192,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #19 - ";
     return false;
     }
 
@@ -183,6 +202,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #20 - ";
     return false;
     }
 
@@ -192,6 +212,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #21 - ";
     return false;
     }
 
@@ -201,6 +222,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")
     {
+    echo "Use case #22 - ";
     return false;
     }
 
@@ -210,6 +232,7 @@ $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output!=="")
     {
+    echo "Use case #23 - ";
     return false;
     }
 
