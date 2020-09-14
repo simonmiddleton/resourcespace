@@ -95,8 +95,6 @@ if (strpos($search,"!")!==false) {$restypes = "";}
 
 $result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, $starsearch);
 
-//echo $result[0];
-
 # Create a title for the feed
 $searchstring = "search=$search&restypes=$restypes&archive=$archive&starsearch=$starsearch";
 if (substr($search,0,11)=="!collection"){$collection=substr($search,11);$collection=explode(" ",$collection);$collection=$collection[0];$collectiondata=get_collection($collection);}
@@ -132,8 +130,18 @@ $n=0;
 
 # loop and display the results
 if (is_array($result)){
+
+    print_r($result);
+    
 for ($n=0;$n<count($result);$n++)			
 	{
+
+    # if result item does not contain resource information continue
+    if ($result[$n] == 0)
+        {
+        continue;
+        }
+
 	$ref=$result[$n]["ref"];
 	$title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
 	$creation_date=$result[$n]["creation_date"];
