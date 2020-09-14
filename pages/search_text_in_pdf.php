@@ -36,7 +36,7 @@ if($findtext && $searchtext != '')
     $hide_real_filepath = $hide_real_filepath_initial;
 
     $pdfjs_viewer_url = generateURL(
-        "{$baseurl_short}lib/pdfjs-1.9.426/web/viewer.php",
+        "{$baseurl_short}lib/pdfjs-2.4.456/web/viewer.php",
         array(
             'ref'  => $ref,
             'file' => $pdfjs_original_file_path
