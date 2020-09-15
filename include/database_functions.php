@@ -73,11 +73,11 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     // Optionally log errors to a cental server.
     if (isset($log_error_messages_url))
         {
-        // Work out the backtrace
-        ob_flush();ob_start();
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $backtrace = ob_get_contents();
-        ob_end_clean();
+        $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
+        // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
+        $backtrace = json_encode(
+            array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
+            JSON_PRETTY_PRINT);
 
         // Prepare the post data.
         $postdata = http_build_query(array(
