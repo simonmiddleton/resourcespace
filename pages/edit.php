@@ -1385,7 +1385,7 @@ else
 } # end hook("replaceedittype")
 
 # For new users check that they have access to the default resource type, setting from the available types if they don't to ensure metadata fields load correctly.
-if (!in_array($uploadparams["resource_type"],$shown_resource_types) && !empty($shown_resource_types) && !empty($selected_type))
+if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && $selected_type != 0)
     {
     $resource_type = $selected_type;
     update_resource_type($ref,intval($resource_type));
