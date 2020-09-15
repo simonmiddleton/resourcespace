@@ -646,16 +646,16 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         $cachedata["time"] = time();
         $cachedata["results"] = $return_rows;
 
+        $GLOBALS["use_error_exception"] = true;
         try
             {
-            $GLOBALS["use_error_exception"] = true;
             file_put_contents($cache_file, json_encode($cachedata));
             }
         catch(Exception $e)
             {
-            unset($GLOBALS["use_error_exception"]);
             debug("SQL_CACHE: {$e->getMessage()}");
             }
+        unset($GLOBALS["use_error_exception"]);
         }
 
     if($fetchrows == -1)

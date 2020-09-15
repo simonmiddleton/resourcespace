@@ -1704,15 +1704,16 @@ function is_process_lock($name)
     # No lock file? return false
     if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
     if (!is_readable(get_temp_dir() . "/process_locks/" . $name)) {return true;} // Lock exists and cannot read it so must assume it's still valid
+    
+    $GLOBALS["use_error_exception"] = true;
     try {
-        $GLOBALS["use_error_exception"] = true;
         $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
         if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
         }
     catch (Exception $e) {
-        unset($GLOBALS["use_error_exception"]);
         debug("is_process_lock: Attempt to get file contents '$result' failed. Reason: {$e->getMessage()}");
         }
+    unset($GLOBALS["use_error_exception"]);
     
     return true; # Lock is valid
     }
