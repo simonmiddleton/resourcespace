@@ -2308,7 +2308,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             $is_html=($fieldinfo["type"]==8);	
             # If there's a previous value, remove the index for those keywords
-            //$existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
             if (strlen($existing)>0)
                 {
                 remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
