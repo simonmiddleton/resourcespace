@@ -3147,7 +3147,6 @@ function render_edit_selected_btn()
             "daylimit"          =>  "",
             "editsearchresults" => "true",
             "modal"             => "true",
-            "ajax"              => "true",
         ));
 
     $attributes  = " id=\"EditSelectedResourcesBtn\"";
