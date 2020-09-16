@@ -185,8 +185,8 @@ else
 		  foreach($properties as $property)
 			  {
 			  $propertycheck=explode(":",$property);
-			  $propertyname=$propertycheck[0];
-			  $propertyval=escape_check($propertycheck[1]);
+			  $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
+			  $propertyval=isset($propertycheck[1])?escape_check($propertycheck[1]):"";
 			  if($propertyval!="")
 				{
 				$fieldname=$propertyfields[$propertyname];
