@@ -3086,7 +3086,7 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
     return $return;
     }
 
-function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url)
+function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
     debug("upload_file_by_url(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, url = $url)");
 

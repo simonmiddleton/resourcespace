@@ -2545,12 +2545,8 @@ function save_filter_rule($filter_rule, $filterid, $rule_data)
         $rule_data = json_decode($rule_data);
         }
         
-    if($filter_rule != "new")
-        {    
-        if(!is_numeric($filter_rule))
-            {
-            return false;    
-            }
+    if($filter_rule != "new" && (string)(int)$filter_rule == (string)$filter_rule && $filter_rule > 0)
+        {
         sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
         }
     else

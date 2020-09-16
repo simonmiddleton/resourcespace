@@ -16,7 +16,7 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
+function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
     {
     node_field_options_override($field);
 	
@@ -2540,7 +2540,7 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
 * 
 * @return void
 */
-function render_share_options($collectionshare=true, $ref, $emailing=false)
+function render_share_options($collectionshare=true, $ref=0, $emailing=false)
     {
     global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     

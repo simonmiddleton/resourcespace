@@ -295,7 +295,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
     $sql = "";
     $find=strtolower($find);
-    if ($group != 0) {$sql = "where usergroup IN ($group)";}
+    if ($group != 0 && (string)(int)$group == (string)$group) {$sql = "where usergroup IN ($group)";}
     if (strlen($find)>1)
       {
       if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}

@@ -1719,7 +1719,7 @@ function get_node_elements(array $node_values, array $nodes, $field_label)
  * 
  */
 
-function get_node_tree($parentId = "", array $nodes)
+function get_node_tree($parentId = "", array $nodes = array())
 	{
 	$tree = array();
 	foreach ($nodes as $node) 
