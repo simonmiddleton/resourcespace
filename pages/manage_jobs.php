@@ -41,7 +41,7 @@ elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true))
     }
 
 $jobs = job_queue_get_jobs($job_type,$job_status,$job_user,'',$job_orderby,$job_sort,$job_find);
-
+$endedjobs = 0;
 $per_page =getvalescaped("per_page",$default_perpage, true); 
 $per_page = (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 $jobcount   = count($jobs);
@@ -83,50 +83,66 @@ $tabledata = array(
     "data"=>array()
     );
 
-for($n=$offset;($n<$jobcount) && ($n < $offset + $per_page);$n++)
-    {        
-    $tablejob =array();
-    $tablejob["ref"] = $jobs[$n]["ref"];
-    $tablejob["type"] = $jobs[$n]["type"];
-    $tablejob["fullname"] = $jobs[$n]["fullname"];
-    $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
-    $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
-    if($jobs[$n]["status"] !== STATUS_COMPLETE && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60))
+if(!checkperm('a'))
+    {
+    unset($tabledata["headers"]["fullname"]);
+    }
+for($n=0;$n<$jobcount;$n++)
+    {
+    if(in_array($jobs[$n]["status"],array(STATUS_ERROR,STATUS_COMPLETE)))
         {
-        $tablejob["alerticon"] = "fas fa-exclamation-triangle";
-        }
-    $tablejob["tools"] = array();
-    if(checkperm('a'))
-        {
-        $tablejob["tools"][] = array(
-            "icon"=>"fa fa-info",
-            "text"=>$lang["job_details"],
-            "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
-            "modal"=>true,
-            );
-        }
+        $endedjobs++;
+        }    
 
-    $tablejob["tools"][] = array(
-        "icon"=>"fa fa-trash",
-        "text"=>$lang["action-delete"],
-        "url"=>"#",
-        "modal"=>false,
-        "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
-        );
-
-    if(checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE)
+    if($n >= $offset && $offset + $per_page)
         {
+        $tablejob =array();
+        $tablejob["ref"] = $jobs[$n]["ref"];
+        $tablejob["type"] = $jobs[$n]["type"];
+        if(checkperm('a'))
+            {
+            // Only required if can see jobs for different users
+            $tablejob["fullname"] = $jobs[$n]["fullname"];
+            }
+        $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
+        $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
+        if($jobs[$n]["status"] == STATUS_ERROR || $jobs[$n]["status"] !== STATUS_COMPLETE && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60))
+            {
+            $tablejob["alerticon"] = "fas fa-exclamation-triangle";
+            }
+        $tablejob["tools"] = array();
+        if(checkperm('a'))
+            {
+            $tablejob["tools"][] = array(
+                "icon"=>"fa fa-info",
+                "text"=>$lang["job_details"],
+                "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+                "modal"=>true,
+                );
+            }
+
         $tablejob["tools"][] = array(
-            "icon"=>"fas fa-undo",
-            "text"=>$lang["job_reset"],
+            "icon"=>"fa fa-trash",
+            "text"=>$lang["action-delete"],
             "url"=>"#",
             "modal"=>false,
-            "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"reset_job\");return false;"
+            "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
             );
+
+        if(checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE)
+            {
+            $tablejob["tools"][] = array(
+                "icon"=>"fas fa-undo",
+                "text"=>$lang["job_reset"],
+                "url"=>"#",
+                "modal"=>false,
+                "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"reset_job\");return false;"
+                );
+            }
+
+
+        $tabledata["data"][] = $tablejob;
         }
-
-
-    $tabledata["data"][] = $tablejob;
     }
 
 
@@ -167,7 +183,7 @@ include '../include/header.php';
 </script>
 
 <div class='BasicsBox'>
-    <h1><?php echo htmlspecialchars($pagetitle);render_help_link(); ?></h1>
+    <h1><?php echo htmlspecialchars($pagetitle);render_help_link('user/manage_jobs'); ?></h1>
     <?php
     $introtext=text("introtext");
     if ($introtext!="")
@@ -175,9 +191,9 @@ include '../include/header.php';
         echo "<p>" . text("introtext") . "</p>";
         }
 
-    if(checkperm('a'))
+    if(checkperm('a') && $endedjobs > 0)
         {
-        echo "<p><a href='#' onclick='update_job(true,\"purge_jobs\")'>" . LINK_CARET . $lang["jobs_action_purge_complete"] . "</a></p>";
+        echo "<p><a href='#' onclick='if(confirm(\"" . $lang["job_confirm_purge"] . "\")){update_job(true,\"purge_jobs\");}'>" . LINK_CARET . $lang["jobs_action_purge_complete"] . "</a></p>";
         }
 
     ?>

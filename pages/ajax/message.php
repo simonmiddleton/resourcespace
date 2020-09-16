@@ -74,25 +74,27 @@
 			message_purge();
 			return;
 			}
-		
+
 		// Delete a specific message from a single user
 		if (0 < $deleteusrmsg)
 			{
 			message_user_remove($deleteusrmsg);
 			return;
-			}	
-		
+			}
 
 		// Check if there are messages
 		$messages = array();
         message_get($messages,$user);	// note: messages are passed by reference
+        
         $extracount = array('ref'=>0);
+        $extramessages = false;
 		if($actions_on)
 			{
 			$actioncount=get_user_actions(true);
 			if($actioncount>0)
 				{
                 $extracount['actioncount'] = $actioncount;
+                $extramessages = true;
 				}
             }
         if($offline_job_queue)
@@ -102,9 +104,13 @@
             if($failedjobcount>0)
 				{
                 $extracount['failedjobcount'] = $failedjobcount;
+                $extramessages = true;
 				}
             }
-        $messages[] = $extracount;
+        if($extramessages)
+            {
+            $messages[] = $extracount;
+            }
 
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
@@ -146,23 +152,17 @@
 					{
 					messagecount = jQuery(messages).length-1; // The last message is a dummy entry with a count of actions and failed jobs
                     totalcount   = messagecount; 
-                    //console.log(messages);
-                    console.log('count = ' + messagecount);
-                    console.log('totalcount = ' + totalcount);
-
 					actioncount=0;
                     failedjobcount=0;
 					if (typeof(messages[messagecount]['actioncount']) !== 'undefined') // There are actions as well as messages
 						{
 						actioncount=parseInt(messages[messagecount]['actioncount']);
 						totalcount=totalcount+actioncount;
-                    console.log('totalcount with actions = ' + totalcount);
                         }
                     if (typeof(messages[messagecount]['failedjobcount']) !== 'undefined') 
 						{
                         failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
 						totalcount=totalcount+failedjobcount;
-                    console.log('totalcount with jobs= ' + totalcount);
 						}
 					jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
 					if (activeSeconds > 0 || message_poll_first_run)
