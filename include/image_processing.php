@@ -3226,7 +3226,7 @@ function getSvgSize($file_path)
         }
 
     $svg_size   = array(0, 0);
-    $xml        = new SimpleXMLElement($file_path, 0, true);
+    $xml        = new SimpleXMLElement($file_path, LIBXML_PARSEHUGE, true);
     $attributes = $xml->attributes();
 
     // This information should be available in either width and height attributes and/ or viewBox
