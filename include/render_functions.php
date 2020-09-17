@@ -4147,7 +4147,8 @@ function render_featured_collection_category_selector(int $parent, array $contex
         <?php
         $next_level_parent = null;
         ?>
-        <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>" onchange="document.getElementById('redirect').value = ''; CentralSpacePost(jQuery('#collectionform')[0]);">
+        <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
+                onchange="document.getElementsByName('update_parent')[0].value = 'true'; document.getElementById('redirect').value = ''; CentralSpacePost(jQuery('#collectionform')[0]);">
             <option value="0"><?php echo $lang["select"]; ?></option>
         <?php
         foreach($featured_collection_categories as $fc_category)

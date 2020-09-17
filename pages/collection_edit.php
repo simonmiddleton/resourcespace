@@ -54,12 +54,15 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     $coldata["keywords"]        = getval("keywords","");
     $coldata["description"]     = getval("description","");
 
-    // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
-    $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
-    $featured_collections_changes = process_posted_featured_collection_categories(0, $current_branch_path);
-    if(!empty($featured_collections_changes))
+    if(getval("update_parent", "") == "true")
         {
-        $coldata["featured_collections_changes"] = $featured_collections_changes;
+        // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
+        $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
+        $featured_collections_changes = process_posted_featured_collection_categories(0, $current_branch_path);
+        if(!empty($featured_collections_changes))
+            {
+            $coldata["featured_collections_changes"] = $featured_collections_changes;
+            }
         }
 
     // User selected a background image
@@ -114,6 +117,7 @@ include "../include/header.php";
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="submitted" value="true">
+    <input type=hidden name="update_parent" value="false">
 	<div class="Question">
 		<label for="name"><?php echo $lang["name"]?></label>
 		<input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
