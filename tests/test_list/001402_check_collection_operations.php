@@ -4,8 +4,7 @@ if('cli' != PHP_SAPI)
     exit('This utility is command line only.');
     }
 
-// Setup test
-$original_user_data = get_user(1);
+// Setup test specific user
 $user_general = new_user("test_001402_general", 2);
 if($user_general === false)
     {
@@ -107,16 +106,10 @@ if ($resource_order != $expected_order)
     return false;
     }
 
-// echo "EXPECTED: ".print_r($expected_order,true);
-// echo "RETURNED: ".print_r($resource_order,true);
-
 // Tear down
-$userdata = $original_user_data;
-setup_user($original_user_data);
-
-unset($original_user_data, $user_general, $user_general_data);
+unset($user_general, $user_general_data);
 unset($resource_list, $resource_entry, $collection_ref, $new_order);
-unset($min_access,$max_access);
-unset($resource_order_sql,$resource_order);
+unset($min_access, $max_access);
+unset($resource_order_sql, $resource_order, $expected_order);
 
 return true;
