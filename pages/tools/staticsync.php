@@ -724,6 +724,7 @@ function ProcessFolder($folder)
                             }
                         if($enable_thumbnail_creation_on_upload)
                             {
+                                exit("HERE");
                             create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
                             }
                         sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref='$rref'");

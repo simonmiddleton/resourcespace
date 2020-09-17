@@ -26,7 +26,26 @@ $collection = getvalescaped('collection', '', true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
-$autorotate = getval("autorotate","");
+
+if($camera_autorotation)
+    {
+    // If enabled and specified in URL then override the default
+    $autorotate = getval("autorotate","");
+
+    if($autorotate == "")
+        {
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        }
+    else
+        {
+        $autorotate = true;
+        }
+    }
+else
+    {
+    $autorotate = false;
+    }
+    
 $collection_add = getvalescaped('collection_add', '');
 $local = getvalescaped("local","");
 if($embedded_data_user_select)

@@ -24,7 +24,7 @@ $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
 $no_exif_raw                            = getval('no_exif', $metadata_read_default ? '' : 'yes');
 $no_exif                                = $no_exif_raw == "yes" || $no_exif_raw =="1" ? true : false;
-$autorotate                             = getval('autorotate','') != '';
+$autorotate                             = getval('autorotate','') == 'true';
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
 
@@ -156,6 +156,26 @@ if($collection_add=='undefined')
     $uploadparams['collection_add']=$usercollection;
     }
 
+if($camera_autorotation)
+    {
+    if(isset($autorotation_preference))
+        {
+        $autorotate = $autorotation_preference;
+        } 
+    elseif($upload_then_edit)
+        {
+        $autorotate = $camera_autorotation_checked;
+        }    
+    else
+        {
+        $autorotate =  getval('autorotate', '') != '';
+        }
+    }
+else
+    {
+    $autorotate = false;
+    }
+
 $uploadparams= array(
     'replace'                                => $replace,
     'batch_replace_min'                      => $batch_replace_min,
@@ -165,7 +185,7 @@ $uploadparams= array(
     'collection_add'                         => $collection_add,
     'resource_type'                          => $resource_type,
     'no_exif'                                => $no_exif,
-    'autorotate'                             => $upload_then_edit ? $camera_autorotation_checked : getval('autorotate', ''),
+    'autorotate'                             => $autorotate,
     'replace_resource'                       => $replace_resource,
     'archive'                                => $archive,
     'relateto'                               => getval('relateto', ''),

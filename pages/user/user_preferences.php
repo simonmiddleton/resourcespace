@@ -262,6 +262,24 @@ include "../../include/header.php";
         }
 
 
+    // Upload options , only for autorotate at present  
+    
+    if($camera_autorotation)
+        {
+        $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang["upload-options"] . '</h2><div id="UserPreferenceUploadOptionsSection" class="CollapsibleSection">');
+        if(!isset($autorotation_preference))
+            {
+            $autorotation_preference = $camera_autorotation_checked;
+            }
+        $page_def[] = config_add_boolean_select('autorotation_preference', $lang['user_pref_autorotate'], $enable_disable_options, 300, '', true);
+
+        $page_def[] = config_add_html('</div>');         
+        }
+    
+
+	
+
+
 
     // Let plugins hook onto page definition and add their own configs if needed
     // or manipulate the list
