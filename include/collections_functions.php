@@ -2044,13 +2044,9 @@ function get_featured_collection_images(array $c, array $ctx)
     {
     /*
     determine if this is a FC categ or normal FC:
-    - if normal FC:
-    -- use the colleciton_resources to find the resources that could be used for thumbnail
     - if FC categ:
     -- if most popular option(s) then we need to find all normal FC for that FC categ and find the most popular using 
        the collection_resources table (access control still in place)
-    -- if manual selection, then we check in the collection table which resource is used as thumbnail (access control 
-       can prevent image from showing)
     */
 
     if(!is_int((int) $c["ref"]))
@@ -2058,6 +2054,7 @@ function get_featured_collection_images(array $c, array $ctx)
         return array();
         }
 
+    $c_ref_escaped = escape_check($c["ref"]);
     $imgs_limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? $ctx["limit"] : 1);
 
     // Smart FCs
@@ -2076,12 +2073,7 @@ function get_featured_collection_images(array $c, array $ctx)
         return (is_array($images) ? array_column($images, "ref") : array());
         }
 
-    $is_featured_collection_category = is_featured_collection_category($c);
-    // TODO: handle category case (idea: recurse a limited number of times until you get at least one image or end of branch)
-
-    /**
-    * @var Array holding a SQL statement data structure. Each property represents a different SQL clause.
-    */
+    // A SQL statement. Each array index represents a different SQL clause.
     $subquery = array(
         "select" => "SELECT r.ref, cr.use_as_theme_thumbnail, r.hit_count",
         "from" => "FROM collection AS c",
@@ -2089,9 +2081,25 @@ function get_featured_collection_images(array $c, array $ctx)
             "JOIN collection_resource AS cr ON cr.collection = c.ref",
             "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0 AND r.has_image = 1"
         ),
-        "where" => "WHERE c.ref = 9 AND c.public = 1",
+        "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.public = 1",
         "order_by" => "", # TODO: figure out the correct order by when selecting for FC category
     );
+
+    $is_featured_collection_category = is_featured_collection_category($c);
+    if($is_featured_collection_category)
+        {
+        // TODO: handle category case. Get all FCs that have parent set, filter down and remove those that are FC categories.
+        //       For the remaining ones, get get_featured_collection_category_branch_by_leaf() and remove any that don't have the
+        //       root node $c["ref"]
+        $collections = array(); # see above todo.
+
+        if(!empty($collections))
+            {
+            $c_refs_csv_escaped = implode("', '", escape_check_array_values($collections));
+            $subquery["where"] = "WHERE c.ref IN ('{$c_refs_csv_escaped}') AND c.public = 1";
+            }
+        }
+
 
     // Access control
     if(!checkperm("v"))
@@ -2117,8 +2125,9 @@ function get_featured_collection_images(array $c, array $ctx)
         implode(" ", $subquery),
         sql_limit(null, $imgs_limit)
     );
-
-    return sql_array($sql); # TODO: use the cache version (ie sql_array($sql, "themeimage"); ) once done testing
+// echo "<pre>";print_r($sql);echo "</pre>";
+    return sql_array($sql);
+    // return sql_array($sql, "themeimage"); # TODO: use this cached version once done testing
     }
 
 
