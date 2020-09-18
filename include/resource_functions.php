@@ -7024,7 +7024,21 @@ function get_field_options($ref,$nodeinfo = false)
         $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
         unset($options[$m]["resource_type_field"]); // Not needed
         }
-        
+
+    if($nodeinfo)
+        {
+        // Add full path for category trees to differentiate nodes with the same name
+        $fieldinfo = get_resource_type_field($ref);
+        if($fieldinfo["type"] == FIELD_TYPE_CATEGORY_TREE)
+            {
+            $node_options = get_tree_strings($options, true);
+            for ($m=0;$m<count($options);$m++)
+                {
+                $options[$m]["path"] = isset($node_options[$options[$m]["ref"]]) ? $node_options[$options[$m]["ref"]] : "";
+                }
+            }
+        }
+
     if(!$nodeinfo)
         {
         $options = array_column($options,"name");
