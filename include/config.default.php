@@ -300,7 +300,7 @@ $homeanim_folder="gfx/homeanim/gfx";
 # $home_slideshow_height=350;
 
 # Small slideshow mode (old slideshow)
-$small_slideshow = true;
+$small_slideshow = true; # This is DEPRECATED and is switched off for new installations (by config_new_installs.php)
 
 # Big slideshow mode (Fullscreen slideshow)
 # ----------------------------------
