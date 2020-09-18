@@ -826,8 +826,6 @@ if ($lockable_fields)
         echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
         }?>
 
-registerCollapsibleSections();
-
 jQuery(document).ready(function()
 {
    <?php
