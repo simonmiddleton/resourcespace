@@ -106,6 +106,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif (isset($_FILES['Filedata'])) 
                 {
                 $processfile=$_FILES['Filedata'];# Java upload (at least) needs this
+                }
+            else
+                {
+                exit($lang["posted-file-not-found"]);
                 } 
 
             # Work out the filename.

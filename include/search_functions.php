@@ -1127,7 +1127,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $lang;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1350,6 +1350,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,4)=="!geo")
         {
         $geo=explode("t",str_replace(array("m","p"),array("-","."),substr($search,4))); # Specially encoded string to avoid keyword splitting
+        if(!isset($geo[0]) || empty($geo[0]) || !isset($geo[1]) || empty($geo[1]))
+        {
+            exit($lang["geographicsearchmissing"]);
+        }
         $bl=explode("b",$geo[0]);
         $tr=explode("b",$geo[1]);
         $sql="SELECT r.hit_count score, $select FROM resource r $sql_join WHERE 

@@ -1797,6 +1797,7 @@ $lang["done"]="Done.";
 
 $lang["latlong"]="Lat / long";
 $lang["geographicsearch"]="Geographic search";
+$lang["geographicsearchmissing"]="Geographic search criteria missing";
 $lang["geographicsearchresults"]="Geographic search results";
 
 $lang["geographicsearch_help"]="Drag to select a search area.";
@@ -2906,3 +2907,4 @@ $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
+$lang["posted-file-not-found"]              = "The file posted has not been found";
