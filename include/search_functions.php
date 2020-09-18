@@ -1519,8 +1519,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Note: in order to combine special searches with normal searches, these are separated by space (" ")
         $searches_array = explode(' ', $search);
         $properties     = explode(';', substr($searches_array[0], 11));
-        $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
-        
+
+        // Use a new variable to ensure nothing changes $sql_filter unless this is a valid property search 
+        $sql_filter_properties = "";        
         foreach ($properties as $property)
             {
             $propertycheck=explode(":",$property);
@@ -1528,48 +1529,48 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 $propertyname=$propertycheck[0];
                 $propertyval=escape_check($propertycheck[1]);
-                if($sql_filter==""){$sql_filter .= " WHERE ";}else{$sql_filter .= " AND ";}
+                $sql_filter_properties_and = $sql_filter_properties != "" ? " AND "  : ""; 
                 switch($propertyname)
                     {
                     case "hmin":
-                        $sql_filter.=" rdim.height>='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.height>='" . intval($propertyval) . "'";
                     break;
                     case "hmax":
-                        $sql_filter.=" rdim.height<='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.height<='" . intval($propertyval) . "'";
                     break;
                     case "wmin":
-                        $sql_filter.=" rdim.width>='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.width>='" . intval($propertyval) . "'";
                     break;
                     case "wmax":
-                        $sql_filter.=" rdim.width<='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.width<='" . intval($propertyval) . "'";
                     break;
                     case "fmin":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size>='" . (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_size>='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size<='" . (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_size<='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
-                        $sql_filter.=" r.file_extension ";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_extension ";
                         if(substr($propertyval,0,1)=="-")
                             {
                             $propertyval = substr($propertyval,1);
-                            $sql_filter.=" NOT ";
+                            $sql_filter_properties.=" NOT ";
                             }
                         if(substr($propertyval,0,1)==".")
                             {
                             $propertyval = substr($propertyval,1);
                             }
-                        $sql_filter.=" LIKE '". escape_check($propertyval) . "'";
+                            $sql_filter_properties.=" LIKE '". escape_check($propertyval) . "'";
                     break;
                     case "pi":
-                        $sql_filter.=" r.has_image='". intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.has_image='". intval($propertyval) . "'";
                     break;
                     case "cu":
-                        $sql_filter.=" r.created_by='". intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.created_by='". intval($propertyval) . "'";
                     break;
 
                     case "orientation":
@@ -1584,8 +1585,21 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                             break;
                             }
 
-                        $sql_filter .= $orientation_filters[$propertyval];
-                        break;
+                        $sql_filter_properties .= $sql_filter_properties_and .  $orientation_filters[$propertyval];
+                    break;
+                    }
+                
+                if($sql_filter_properties != "")
+                    {
+                    $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                    if ($sql_filter == "")
+                        {
+                        $sql_filter .= " WHERE " . $sql_filter_properties;
+                        }
+                    else
+                        {
+                        $sql_filter .= " AND " . $sql_filter_properties;
+                        }
                     }
                 }
             }
