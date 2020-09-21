@@ -1343,6 +1343,8 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-right: 5px;    
 }
 
+.FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; box-shadow: 0 0 25px #000; }
+
 .FeaturedSimpleTile.FullWidth { height: 40px; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleLink { width: 85%; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 { background-color: unset; }

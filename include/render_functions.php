@@ -4194,7 +4194,8 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
+    global $baseurl_short, $lang, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number,
+           $themes_simple_view;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
 
@@ -4212,7 +4213,7 @@ function render_featured_collections(array $ctx, array $items)
 
         // Prepare FC images
         $thumbnail_selection_method = $fc["thumbnail_selection_method"];
-        $show_images = (in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+        $show_images = ($themes_simple_view && in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
         if($themes_simple_images && $show_images)
             {
             $fc_images = get_featured_collection_images(
@@ -4225,12 +4226,8 @@ function render_featured_collections(array $ctx, array $items)
 
             if(!empty($fc_images))
                 {
-                $render_ctx["image_url"] = $fc_images[0];
+                $render_ctx["images"] = $fc_images;
                 }
-
-            // TODO: add the ability to send & display multiple images (like on dash tiles)
-            // $render_ctx["image_url"] = "http://localhost/qa/filestore/2_9e248d5fbfe519d/2pre_68b82ce5468f8c2.jpg?v=1565000325";
-            // $render_ctx["images"] = $fc_images;
             }
 
         // Featured collection default tools
@@ -4354,7 +4351,6 @@ function render_featured_collection(array $ctx, array $fc)
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
-    $theme_image_path = (isset($ctx["image_url"]) && trim($ctx["image_url"]) != "" ? $ctx["image_url"] : "");
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
@@ -4383,12 +4379,19 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
 
-    if($theme_image_path != "" && !$full_width)
+    $theme_images = (isset($ctx["images"]) ? $ctx["images"] : array());
+    if(!empty($theme_images))
         {
         $html_container_class[] = "FeaturedSimpleTileImage";
-        $html_container_style[] = "background: url({$theme_image_path});";
-        $html_container_style[] = "background-size: cover;";
         $html_contents_class[] = "TileContentShadow";
+
+        if(count($theme_images) == 1)
+            {
+            $theme_image_path = $theme_images[0];
+            $html_container_style[] = "background: url({$theme_image_path});";
+            $html_container_style[] = "background-size: cover;";
+            $theme_images = array();
+            }
         }
 
 
@@ -4405,6 +4408,20 @@ function render_featured_collection(array $ctx, array $fc)
     <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+            <?php
+            foreach($theme_images as $i => $theme_image)
+                {
+                $gap = 200 / count($theme_images);
+                $space = $i * $gap;
+                $style = array(
+                    "left: {$space}px;",
+                    "transform: rotate(" . (20 - ($i * 12)) . "deg);"
+                );
+                ?>
+                <img src="<?php echo $theme_image; ?>" class="TileGroupImageBase" style="<?php echo implode(" ", $style); ?>">
+                <?php
+                }
+                ?>
                 <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
             </div>
         </a>
