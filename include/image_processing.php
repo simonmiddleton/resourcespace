@@ -1335,7 +1335,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext;
+    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $syncdir;
 
     if(!is_numeric($ref))
         {
@@ -1788,18 +1789,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 !$ingested
                                 &&
                                 in_array($extension,$camera_autorotation_ext)
+                                &&
+                                strpos($file, $syncdir) === 0
                                 )
                                 {
                                 # first preview created for non-ingested file...auto-rotate
                                 if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr")
                                     {
                                     AutoRotateImage($path,$ref);
-                                    $rotated=true;
                                     }
                                 else
                                     {
                                     AutoRotateImage($path);
-                                    $rotated=true;
                                     }
                                 }
                             }
