@@ -2094,11 +2094,15 @@ function get_featured_collection_images(array $c, array $ctx)
             COLLECTION_TYPE_FEATURED
         ));
 
-        // Filter out any featured collection that has a different root
-        $collections = array_filter($all_fcs, function(int $ref) use ($c)
+        // Filter out any featured collection that has a different root path
+        $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
+        $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
+        $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
+        $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
             {
             $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
-            return (isset($branch_path[0]) && $branch_path[0]["ref"] == $c["ref"]);
+            $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
+            return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
             });
 
         if(!empty($collections))
