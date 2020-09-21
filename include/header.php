@@ -73,7 +73,6 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
 <?php if ($pagename=="login") { ?><script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script><?php } ?>
-<!--[if lte IE 9]><script src="<?php echo $baseurl?>/lib/historyapi/history.min.js"></script><![endif]-->
 <?php if ($image_preview_zoom) { ?><script src="<?php echo $baseurl?>/lib/js/jquery.zoom.js"></script><?php } ?>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
@@ -284,11 +283,6 @@ if(!hook("customloadinggraphic"))
 ?>
 
 <?php hook("bodystart"); ?>
-
-<?php
-# Commented as it was causing IE to 'jump'
-# <body onLoad="if (document.getElementById('searchbox')) {document.getElementById('searchbox').focus();}">
-?>
 
 <!--Global Header-->
 <?php

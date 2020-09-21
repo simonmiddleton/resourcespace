@@ -243,14 +243,6 @@ if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_h
 daily_stat("Resource view",$ref);
 if ($log_resource_views) {resource_log($ref,'v',0);}
 
-if(!$save_as)
-    {
-    // check browser to see if forcing save_as
-    if(!$direct_download_allow_opera && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
-    if(!$direct_download_allow_ie7 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}	
-    if(!$direct_download_allow_ie8 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
-    }
-
 # downloading a file from iOS should open a new window/tab to prevent a download loop
 $iOS_save=false;
 if (isset($_SERVER['HTTP_USER_AGENT']))

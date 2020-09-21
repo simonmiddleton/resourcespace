@@ -627,10 +627,6 @@ else
 	exit;
     }
 
-
-//header("X-UA-Compatible:IE=EmulateIE7"); // hack to make cropperUI work in IE8	
-// update: apparently this now breaks it in both IE 8 and 9. So removing it unless anyone has a better idea. -DD, 8/2011
-
 include "../../../include/header.php";
 
 # slider, sound, controls

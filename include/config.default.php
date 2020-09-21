@@ -1211,7 +1211,6 @@ $default_customaccess=2;
 $config_search_for_number=false;
 
 # Display the download as a 'save as' link instead of redirecting the browser to the download (which sometimes causes a security warning).
-# For the Opera and Internet Explorer 7 browsers this will always be enabled regardless of the below setting as these browsers block automatic downloads by default.
 $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
@@ -2591,12 +2590,8 @@ $collection_purge=false;
 # probably requires the user to clear cookies.
 $global_cookies=false;
 
-# Iframe-based direct download from the view page (to avoid going to download.php)
-# note this is incompatible with $terms_download and the $download_usage features, and is overridden by $save_as
-$debug_direct_download=false; // set to true to see the download iframe for debugging purposes.
-$direct_download_allow_ie7=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_ie8=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_opera=false; // opera can also allow popups, but this is recommended off as well since by default it won't work for most users.
+# Set to true to see the download iframe for debugging purposes.
+$debug_direct_download=false; 
 
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
