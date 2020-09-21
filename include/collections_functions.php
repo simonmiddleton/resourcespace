@@ -2042,13 +2042,6 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 */
 function get_featured_collection_images(array $c, array $ctx)
     {
-    /*
-    determine if this is a FC categ or normal FC:
-    - if FC categ:
-    -- if most popular option(s) then we need to find all normal FC for that FC categ and find the most popular using 
-       the collection_resources table (access control still in place)
-    */
-
     if(!is_int((int) $c["ref"]))
         {
         return array();
@@ -2088,10 +2081,25 @@ function get_featured_collection_images(array $c, array $ctx)
     $is_featured_collection_category = is_featured_collection_category($c);
     if($is_featured_collection_category)
         {
-        // TODO: handle category case. Get all FCs that have parent set, filter down and remove those that are FC categories.
-        //       For the remaining ones, get get_featured_collection_category_branch_by_leaf() and remove any that don't have the
-        //       root node $c["ref"]
-        $collections = array(); # see above todo.
+        $all_fcs = sql_array(sprintf(
+            "SELECT ref AS `value` FROM (
+                    SELECT ref,
+                           (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
+                      FROM collection AS c
+                     WHERE public = 1
+                       AND `type` = %s
+                       AND parent IS NOT NULL
+                ) AS fc
+             WHERE fc.has_resources > 0",
+            COLLECTION_TYPE_FEATURED
+        ));
+
+        // Filter out any featured collection that has a different root
+        $collections = array_filter($all_fcs, function(int $ref) use ($c)
+            {
+            $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
+            return (isset($branch_path[0]) && $branch_path[0]["ref"] == $c["ref"]);
+            });
 
         if(!empty($collections))
             {
@@ -2125,7 +2133,7 @@ function get_featured_collection_images(array $c, array $ctx)
         implode(" ", $subquery),
         sql_limit(null, $imgs_limit)
     );
-// echo "<pre>";print_r($sql);echo "</pre>";
+
     return sql_array($sql);
     // return sql_array($sql, "themeimage"); # TODO: use this cached version once done testing
     }
