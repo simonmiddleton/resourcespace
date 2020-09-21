@@ -347,7 +347,11 @@ if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resourc
     clear_resource_data($ref);
     }
 
-
+// Upload template: always reset to today's date (if configured).
+if(0 > $ref && $reset_date_upload_template && isset($reset_date_field) && '' == getval('submitted', ''))
+    {
+    update_field($ref, $reset_date_field, date('Y-m-d H:i'));
+    }
         
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
