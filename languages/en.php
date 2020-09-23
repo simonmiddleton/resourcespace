@@ -2908,3 +2908,4 @@ $lang["error-edit_locked_resources"]        = "The following resources are locke
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "The file posted has not been found";
+$lang["error-theme-missing"]                = "Featured collection missing or has not been specified.";
