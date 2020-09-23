@@ -65,6 +65,17 @@ if($collection["type"] == COLLECTION_TYPE_SELECTION)
         $collection = get_collection($ref);
         }
     }
+// Special collection being shared. Ensure certain features are enabled/disabled
+else if($collection["type"] == COLLECTION_TYPE_FEATURED)
+    {
+    // FC categories don't have resources but can contain collections (which can be other categories (if empty ) or 
+    // normal featured collections (ie containing resources).
+    $collection_allow_empty_share = true;
+    $home_dash = false;
+    $hide_internal_sharing_url = true;
+
+    // TODO: Check if FC category doesn't contain only FC categories. Apply same check as in render_featured_collections() when rendering the share action
+    }
 	
 #Check if any resources are not active
 $collectionstates=is_collection_approved($ref);
@@ -106,11 +117,10 @@ if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuser
 
 
 # Process deletion of access keys
-if ($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
-        {
-        delete_collection_access_key($ref,getvalescaped("deleteaccess",""));
-        }
-
+if($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
+    {
+    delete_collection_access_key($ref,getvalescaped("deleteaccess",""));
+    }
 
 include "../include/header.php";
 ?>

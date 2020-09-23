@@ -5,9 +5,10 @@ include "../include/authenticate.php";
 if(!$enable_themes)
     {
     http_response_code(403);
-    exit($lang['error-permissiondenied']);
+    exit($lang["error-permissiondenied"]);
     }
 
+$k = getval("k", "");
 $parent = (int) getval("parent", 0, true);
 $smart_rtf = (int) getval("smart_rtf", 0, true);
 $smart_fc_parent = getval("smart_fc_parent", 0, true);

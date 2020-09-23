@@ -2078,8 +2078,7 @@ function get_featured_collection_images(array $c, array $ctx)
         "order_by" => "", # TODO: figure out the correct order by when selecting for FC category
     );
 
-    $is_featured_collection_category = is_featured_collection_category($c);
-    if($is_featured_collection_category)
+    if(is_featured_collection_category($c))
         {
         $all_fcs = sql_array(sprintf(
             "SELECT ref AS `value` FROM (
@@ -2098,6 +2097,7 @@ function get_featured_collection_images(array $c, array $ctx)
         $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
         $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
         $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
+        // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions
         $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
             {
             $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
@@ -4272,6 +4272,7 @@ function get_featured_collections(int $parent)
         return array();
         }
 
+    // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Add the check via ctx
     return sql_query(
         sprintf(
             "SELECT ref,
@@ -4425,6 +4426,7 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         !is_null($selected_fc_category)
         && isset($branch_path[$depth])
         && !in_array($selected_fc_category, $valid_categories))
+        // TODO: validate submitted FC based on permissions (j, J) - see item Migration script for permissions
         {
         return array();
         }

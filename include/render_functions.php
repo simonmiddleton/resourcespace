@@ -4265,7 +4265,7 @@ function render_featured_collections(array $ctx, array $items)
 
         if($is_featured_collection_category && !$is_smart_featured_collection)
             {
-            global $enable_theme_category_edit, $enable_theme_category_sharing;
+            global $enable_theme_category_edit;
 
             $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
 
@@ -4292,11 +4292,13 @@ function render_featured_collections(array $ctx, array $items)
                     "text" => $lang["add_to_dash"]);
                 }
 
-            // TODO: deprecate $enable_theme_category_sharing. See item "Collection sharing"
-            if($enable_theme_category_sharing && checkperm("h"))
-                {
+            if(checkperm("h"))
+                {                
+                // TODO: Implementing item "Collection sharing"
+                // TODO: abstract out the logic from get_featured_collection_images() (line 2081) to quickly determine if a FC categ 
+                // contains any FC or just categories. We need to show the share option only if there's a FC with a resource.
                 $render_ctx["tools"][] = array(
-                    "href" => generateURL("{$baseurl_short}pages/theme_category_share.php", array("ref" => $fc["ref"])),
+                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
                     "text" => $lang["share"]);
                 }
 

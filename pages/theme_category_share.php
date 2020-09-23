@@ -291,4 +291,3 @@ if (isset($show_error)){?>
 
 <?php
 include "../include/footer.php";
-?>
