@@ -130,6 +130,47 @@ jQuery(document).ready(function ()
 if($themes_show_background_image && !$full_width)
     {
     $slideshow_files = get_slideshow_files_data();
+
+    if(!$featured_collection_static_bg && ($parent > 0 || ($smart_rtf > 0 && count($smart_fcs_list) > 0)))
+        {
+        // Overwrite background_image_url with theme specific ones
+        $get_fc_imgs_ctx = array("limit" => 1);
+
+        if($parent > 0)
+            {
+            $collection_data = get_collection($parent);
+            $collection_resources = get_collection_resources($parent);
+            $collection_data["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
+
+            // get_featured_collection_images() is expecting a featured collection structure. $collection_data being a 
+            // collection structure is a superset containing the required information (ref, parent) for the function to work
+            $bg_fc_images = get_featured_collection_images($collection_data, $get_fc_imgs_ctx);
+            $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
+            }
+        else if((count($smart_fcs_list) > 0))
+            {
+            $get_fc_imgs_ctx["smart"] = true;
+            foreach($smart_fcs_list as $smart_fc)
+                {
+                $smart_fc_images = get_featured_collection_images($smart_fc, $get_fc_imgs_ctx);
+                $smart_fc_images = generate_featured_collection_image_urls($smart_fc_images, "scr");
+
+                if(!empty($smart_fc_images))
+                    {
+                    $bg_fc_images = $smart_fc_images;
+                    break;
+                    }
+                }
+            }
+
+        if(isset($bg_fc_images) && is_array($bg_fc_images) && !empty($bg_fc_images))
+            {
+            $background_image_url = $bg_fc_images[0]; # get_fc_imgs_ctx is limiting to 1 so we know we have this
+
+            // Reset slideshow files as we want to use the featured collection image
+            $slideshow_files = array();
+            }
+        }
     ?>
     <script>
     var SlideshowImages = new Array();
