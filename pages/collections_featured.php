@@ -143,9 +143,9 @@ if($themes_show_background_image && !$full_width)
             $collection_resources = get_collection_resources($parent);
             $collection_data["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
 
-            // get_featured_collection_images() is expecting a featured collection structure. $collection_data being a 
+            // get_featured_collection_resources() is expecting a featured collection structure. $collection_data being a 
             // collection structure is a superset containing the required information (ref, parent) for the function to work
-            $bg_fc_images = get_featured_collection_images($collection_data, $get_fc_imgs_ctx);
+            $bg_fc_images = get_featured_collection_resources($collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }
         else if((count($smart_fcs_list) > 0))
@@ -153,7 +153,7 @@ if($themes_show_background_image && !$full_width)
             $get_fc_imgs_ctx["smart"] = true;
             foreach($smart_fcs_list as $smart_fc)
                 {
-                $smart_fc_images = get_featured_collection_images($smart_fc, $get_fc_imgs_ctx);
+                $smart_fc_images = get_featured_collection_resources($smart_fc, $get_fc_imgs_ctx);
                 $smart_fc_images = generate_featured_collection_image_urls($smart_fc_images, "scr");
 
                 if(!empty($smart_fc_images))

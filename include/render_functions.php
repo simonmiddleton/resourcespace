@@ -4214,15 +4214,16 @@ function render_featured_collections(array $ctx, array $items)
         // Prepare FC images
         $thumbnail_selection_method = $fc["thumbnail_selection_method"];
         $show_images = ($themes_simple_view && in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+        unset($fc_resources);
         if($themes_simple_images && $show_images)
             {
-            $fc_images = get_featured_collection_images(
+            $fc_resources = get_featured_collection_resources(
                 $fc,
                 array(
                     "smart" => $is_smart_featured_collection,
                     "limit" => ($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] ? $theme_images_number : 1),
                 ));
-            $fc_images = generate_featured_collection_image_urls($fc_images, "pre");
+            $fc_images = generate_featured_collection_image_urls($fc_resources, "pre");
 
             if(!empty($fc_images))
                 {
@@ -4293,13 +4294,16 @@ function render_featured_collections(array $ctx, array $items)
                 }
 
             if(checkperm("h"))
-                {                
-                // TODO: Implementing item "Collection sharing"
-                // TODO: abstract out the logic from get_featured_collection_images() (line 2081) to quickly determine if a FC categ 
-                // contains any FC or just categories. We need to show the share option only if there's a FC with a resource.
-                $render_ctx["tools"][] = array(
-                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                    "text" => $lang["share"]);
+                {
+                $fc_resources = (isset($fc_resources) ? $fc_resources : get_featured_collection_resources($fc, array("limit" => 1)));
+                
+                // Allow sharing if FC category contains a FC with at least one resource
+                if(!empty($fc_resources))
+                    {
+                    $render_ctx["tools"][] = array(
+                        "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                        "text" => $lang["share"]);
+                    }
                 }
 
             if($enable_theme_category_edit && checkperm("t"))

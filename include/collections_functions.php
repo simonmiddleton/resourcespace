@@ -2032,15 +2032,16 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 
 
 /**
-* Get featured collection images. For normal FCs this is using the collection_resource table. For FC categories, this will
-* check within normal FCs contained by that category.
+* Get featured collection resources (including from child nodes). For normal FCs this is using the collection_resource table.
+* For FC categories, this will check within normal FCs contained by that category. Normally used in combination with 
+* generate_featured_collection_image_urls() but useful to determine if a FC category is full of empty FCs.
 * 
 * @param array $c Collection data structure similar to the one returned by {@see get_featured_collections()}
 * @param array $ctx Extra context used to get FC images (e.g smart FC?, limit on number of images returned)
 * 
 * @return array
 */
-function get_featured_collection_images(array $c, array $ctx)
+function get_featured_collection_resources(array $c, array $ctx)
     {
     if(!is_int((int) $c["ref"]))
         {
@@ -2075,7 +2076,6 @@ function get_featured_collection_images(array $c, array $ctx)
             "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0 AND r.has_image = 1"
         ),
         "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.public = 1",
-        "order_by" => "", # TODO: figure out the correct order by when selecting for FC category
     );
 
     if(is_featured_collection_category($c))
@@ -2097,7 +2097,7 @@ function get_featured_collection_images(array $c, array $ctx)
         $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
         $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
         $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
-        // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions
+        // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Consider filtering the query instead
         $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
             {
             $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
