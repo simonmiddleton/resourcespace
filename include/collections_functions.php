@@ -2080,31 +2080,7 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     if(is_featured_collection_category($c))
         {
-        $all_fcs = sql_array(sprintf(
-            "SELECT ref AS `value` FROM (
-                    SELECT ref,
-                           (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
-                      FROM collection AS c
-                     WHERE public = 1
-                       AND `type` = %s
-                       AND parent IS NOT NULL
-                ) AS fc
-             WHERE fc.has_resources > 0",
-            COLLECTION_TYPE_FEATURED
-        ));
-
-        // Filter out any featured collection that has a different root path
-        $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
-        $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
-        $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
-        // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Consider filtering the query instead
-        $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
-            {
-            $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
-            $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
-            return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
-            });
-
+        $collections = get_featured_collection_categ_sub_fcs($c);
         if(!empty($collections))
             {
             $c_refs_csv_escaped = implode("', '", escape_check_array_values($collections));
@@ -2133,13 +2109,53 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     $subquery["join"] = implode(" ", $subquery["join"]);
 
-    $sql = sprintf("SELECT ti.ref AS `value` FROM (%s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+    $sql = sprintf("SELECT DISTINCT ti.ref AS `value` FROM (%s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
         sql_limit(null, $imgs_limit)
     );
 
     return sql_array($sql);
     // return sql_array($sql, "themeimage"); # TODO: use this cached version once done testing
+    }
+
+
+/**
+* Get a list of featured collections based on a higher level featured collection category. This returns all direct/indirect
+* collections under that category.
+* 
+* @param array $c Collection data structure
+* 
+* @return array 
+*/
+function get_featured_collection_categ_sub_fcs(array $c)
+    {
+    $all_fcs = sql_array(sprintf(
+        "SELECT ref AS `value` FROM (
+                SELECT ref,
+                       (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
+                  FROM collection AS c
+                 WHERE public = 1
+                   AND `type` = %s
+                   AND parent IS NOT NULL
+            ) AS fc
+         WHERE fc.has_resources > 0",
+        COLLECTION_TYPE_FEATURED
+    ));
+
+    // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Consider filtering the query instead
+
+    // Filter out featured collections that have a different root path
+    $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
+    $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
+    $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
+    $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
+        {
+        $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
+        $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
+        return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
+        });
+
+    return $collections;
     }
 
 

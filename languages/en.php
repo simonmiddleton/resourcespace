@@ -459,6 +459,7 @@ $lang["background_image"] = "Background image";
 $lang["background_most_popular_image"] = "Most popular image";
 $lang["background_most_popular_images"] = "Most popular %n images";
 $lang["background_manual_selection"] = "Choose images (collection commenting)";
+$lang["share_fc_warning"] = "Please note that when sharing a featured collection category only featured collections that contain resources will be externally shared.";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";

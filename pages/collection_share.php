@@ -1,9 +1,7 @@
 <?php
 include "../include/db.php";
-
 include "../include/authenticate.php";
 
-// Fetch vars
 
 $collection_url	= getvalescaped('collection', '', true);
 $col_order_by	= getvalescaped('col_order_by', '', true);
@@ -18,22 +16,28 @@ $starsearch		= getvalescaped('starsearch', '', true);
 $user_group		= getvalescaped('usergroup', '', true);
 
 
-$collection=get_collection($ref);
+$collection = get_collection($ref);
 
-# if bypass sharing page option is on, redirect to e-mail
-if ($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION)
+if($collection["type"] == COLLECTION_TYPE_FEATURED)
+    {
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0); 
+    }
+if($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION)
     {
     redirect('pages/collection_email.php?ref='.$ref ) ;
     }
 
-# Check access
-if (!collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
-
-#Check if sharing allowed
-if (checkperm("b") || !$allow_share) {
-        $show_error=true;
-        $error=$lang["error-permissiondenied"];
-        }
+// Check access controls
+if(!collection_readable($ref))
+    {
+    exit($lang["no_access_to_collection"]);
+    }
+if(!$allow_share || checkperm("b"))
+    {
+    $show_error = true;
+    $error = $lang["error-permissiondenied"];
+    }
 
 $internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
 
@@ -66,26 +70,50 @@ if($collection["type"] == COLLECTION_TYPE_SELECTION)
         }
     }
 // Special collection being shared. Ensure certain features are enabled/disabled
-else if($collection["type"] == COLLECTION_TYPE_FEATURED)
+else if(is_featured_collection_category($collection))
     {
-    // FC categories don't have resources but can contain collections (which can be other categories (if empty ) or 
-    // normal featured collections (ie containing resources).
-    $collection_allow_empty_share = true;
-    $home_dash = false;
-    $hide_internal_sharing_url = true;
+    $allow_custom_access_share_orig = $allow_custom_access_share;
 
-    $collection_resources = get_collection_resources($collection["ref"]);
-    $collection["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
     if(empty($fc_resources))
         {
         $show_error = true;
         $error = $lang["cannotshareemptythemecategory"];
         }
+
+    // Check all featured collections contain only active resources
+    $sub_fcs = get_featured_collection_categ_sub_fcs($collection);
+    $col_resources_states = array();
+    foreach($sub_fcs as $sub_fc)
+        {
+        $collectionstates = is_collection_approved($sub_fc);
+        if(!$collection_allow_not_approved_share && $collectionstates === false)
+            {
+            break;
+            }
+        else if(is_array($collectionstates))
+            {
+            $col_resources_states = array_unique(array_merge($col_resources_states, $collectionstates));
+            }
+        }
+    $collectionstates = (!empty($col_resources_states) ? $col_resources_states : $collectionstates);
+
+    // TODO: collection_min_access for categories
+
+
+    // To keep it in line with the legacy theme_category_share.php page, disable these features (home_dash, hide_internal_sharing_url)
+    $home_dash = false;
+    $hide_internal_sharing_url = true;
+
+    // Beyond this point mark accordingly any validations that have been enforced specifically for Featured Collections
+    // (categories or otherwise) type in a different way than for a normal collection
+    // IMPORTANT: make sure there's code above this point (within this block) dealing with these validations.
+    $collection_allow_empty_share = true;
+    // $allow_custom_access_share = true;
     }
 	
 #Check if any resources are not active
-$collectionstates=is_collection_approved($ref);
+$collectionstates = (isset($collectionstates) ? $collectionstates : is_collection_approved($ref));
 if (!$collection_allow_not_approved_share && $collectionstates==false) {
         $show_error=true;
         $error=$lang["notapprovedsharecollection"];
@@ -100,21 +128,22 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
 		}
 	}
 
-# Get min access to this collection
+# Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
 $minaccess=collection_min_access($ref);
-
-if (($minaccess>=1 && !$restricted_share)) # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
+if (($minaccess>=1 && !$restricted_share))
         {
         $show_error=true;
         $error=$lang["restrictedsharecollection"];
         }
-		
-if (!$collection_allow_empty_share && count(get_collection_resources($ref))==0) # Sharing an empty collection?
+
+// Sharing an empty collection?
+if (!$collection_allow_empty_share && count(get_collection_resources($ref))==0)
     {
     $show_error=true;
     $error=$lang["cannotshareemptycollection"];
     }
 
+# Should those that have been granted open access to an otherwise restricted resource be able to share the resource? - as part of a collection
 if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuseraccess)  && ($customgroupaccess || $customuseraccess))
 	{ 
 	$show_error=true;
@@ -156,8 +185,13 @@ include "../include/header.php";
 	if(isset($warningtext))
 		{
 		echo "<div class='PageInformal'>" . $warningtext . "</div>";
-		}?>
-	
+		}
+
+    if($collection["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category($collection))
+        {
+        echo "<p>" . htmlspecialchars($lang["share_fc_warning"]) . "</p>";
+        }
+    ?>
 	<div class="VerticalNav">
 	<ul>
 	<?php
