@@ -144,7 +144,7 @@ if($themes_show_background_image && !$full_width)
             $collection_data["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
 
             // get_featured_collection_resources() is expecting a featured collection structure. $collection_data being a 
-            // collection structure is a superset containing the required information (ref, parent) for the function to work
+            // collection structure is a superset containing the required information (ref, parent, has_resources) for the function to work
             $bg_fc_images = get_featured_collection_resources($collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }

@@ -74,7 +74,14 @@ else if($collection["type"] == COLLECTION_TYPE_FEATURED)
     $home_dash = false;
     $hide_internal_sharing_url = true;
 
-    // TODO: Check if FC category doesn't contain only FC categories. Apply same check as in render_featured_collections() when rendering the share action
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
+    $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
+    if(empty($fc_resources))
+        {
+        $show_error = true;
+        $error = $lang["cannotshareemptythemecategory"];
+        }
     }
 	
 #Check if any resources are not active
