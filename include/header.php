@@ -1,12 +1,11 @@
 <?php 
-
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
 if(!isset($internal_share_access))
 	{
 	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-	$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    $internal_share_access = internal_share_access();
 	}
 
 $logout=getvalescaped("logout","");

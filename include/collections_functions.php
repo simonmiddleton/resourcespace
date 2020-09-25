@@ -2155,6 +2155,7 @@ function get_featured_collection_categ_sub_fcs(array $c)
         return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
         });
 
+    debug("get_featured_collection_categ_sub_fcs: returned collections: " . implode(", ", $collections));
     return $collections;
     }
 
@@ -3215,16 +3216,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Share
-    if(0 < $count_result
-        && ($k=="" || $internal_share_access) 
-        && $manage_collections_share_link
-        && $allow_share
-        && !checkperm("b")
-        && (checkperm('v')
-            || checkperm ('g') 
-            || collection_min_access($collection_data['ref'])<=1 
-            || $restricted_share)
-        ) 
+    if(allow_collection_share($collection_data))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_share.php",$urlparams);
         $options[$o]['value']='share_collection';
@@ -4490,4 +4482,85 @@ function get_featured_collection_ref_by_name(string $name, $parent)
     );
 
     return (is_null($ref) ? null : (int) $ref);
+    }
+
+
+/**
+* Check if user is allowed to share collection
+* 
+* @param array $c Collection data 
+* 
+* @return boolean Return TRUE if user is allowed to share the collection, FALSE otherwise
+*/
+function allow_collection_share(array $c)
+    {
+    global $allow_share, $manage_collections_share_link, $k, $internal_share_access, $restricted_share;
+
+    if(!isset($GLOBALS["count_result"]))
+        {
+        $collection_resources = get_collection_resources($c["ref"]);
+        $collection_resources = (is_array($collection_resources) ? count($collection_resources) : 0);
+        }
+    else
+        {
+        $collection_resources = $GLOBALS["count_result"];
+        }
+    $internal_share_access = (!is_null($internal_share_access) && is_bool($internal_share_access) ? $internal_share_access : internal_share_access());
+
+    if(
+        $allow_share
+        && $manage_collections_share_link
+        && $collection_resources > 0
+        && ($k == "" || $internal_share_access)
+        && !checkperm("b")
+        && (checkperm("v")
+            || checkperm ("g") 
+            || collection_min_access($c["ref"]) <= RESOURCE_ACCESS_RESTRICTED
+            || $restricted_share)
+    )
+        {
+        return true;
+        }
+
+    return false;
+    }
+
+
+/**
+* Check if user is allowed to share featured collection
+* 
+* @param array $c Collection data. You can add "has_resources" and "sub_fcs" keys if you already have this information
+* 
+* @return boolean Return TRUE if user is allowed to share the featured collection, FALSE otherwise
+*/
+function allow_featured_collection_share(array $c)
+    {
+    if($c["type"] != COLLECTION_TYPE_FEATURED)
+        {
+        return allow_collection_share($c);
+        }
+
+    if(!isset($c["has_resources"]))
+        {
+        $collection_resources = get_collection_resources($c["ref"]);
+        $c["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+        }
+
+    // Not a category, can be treated as a simple collection
+    if(!is_featured_collection_category($c))
+        {
+        return allow_collection_share($c);
+        }
+
+    $sub_fcs = (!isset($c["sub_fcs"]) ? get_featured_collection_categ_sub_fcs($c) : $c["sub_fcs"]);
+    
+    return array_reduce($sub_fcs, function($carry, $item)
+        {
+        // Fake a collection data structure. allow_collection_share() only needs the ref
+        $c = array("ref" => $item);
+        $fc_allow_share = allow_collection_share($c);
+
+        // FALSE if at least one collection has no share access (consistent with the check for normal collections when checking resources)
+        return (!is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share);
+        }, null);
     }

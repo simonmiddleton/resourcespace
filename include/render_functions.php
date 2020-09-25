@@ -4293,17 +4293,11 @@ function render_featured_collections(array $ctx, array $items)
                     "text" => $lang["add_to_dash"]);
                 }
 
-            if(checkperm("h"))
+            if(checkperm("h") && allow_featured_collection_share($fc))
                 {
-                $fc_resources = (isset($fc_resources) ? $fc_resources : get_featured_collection_resources($fc, array("limit" => 1)));
-                
-                // Allow sharing if FC category contains a FC with at least one resource
-                if(!empty($fc_resources))
-                    {
-                    $render_ctx["tools"][] = array(
-                        "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
-                        "text" => $lang["share"]);
-                    }
+                $render_ctx["tools"][] = array(
+                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                    "text" => $lang["share"]);
                 }
 
             if($enable_theme_category_edit && checkperm("t"))

@@ -21,7 +21,7 @@ $collection = get_collection($ref);
 if($collection["type"] == COLLECTION_TYPE_FEATURED)
     {
     $collection_resources = get_collection_resources($collection["ref"]);
-    $collection["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0); 
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0); 
     }
 if($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION)
     {
@@ -72,8 +72,7 @@ if($collection["type"] == COLLECTION_TYPE_SELECTION)
 // Special collection being shared. Ensure certain features are enabled/disabled
 else if(is_featured_collection_category($collection))
     {
-    $allow_custom_access_share_orig = $allow_custom_access_share;
-
+    // Check this is not an empty FC category
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
     if(empty($fc_resources))
         {
@@ -81,11 +80,13 @@ else if(is_featured_collection_category($collection))
         $error = $lang["cannotshareemptythemecategory"];
         }
 
-    // Check all featured collections contain only active resources
-    $sub_fcs = get_featured_collection_categ_sub_fcs($collection);
-    $col_resources_states = array();
-    foreach($sub_fcs as $sub_fc)
+    // Further checks at collection-resource level. Recurse through category's sub FCs
+    $collection["sub_fcs"] = get_featured_collection_categ_sub_fcs($collection);
+    $sub_fcs_resources_states = array();
+    $sub_fcs_resources_minaccess = array();
+    foreach($collection["sub_fcs"] as $sub_fc)
         {
+        // Check all featured collections contain only active resources
         $collectionstates = is_collection_approved($sub_fc);
         if(!$collection_allow_not_approved_share && $collectionstates === false)
             {
@@ -93,13 +94,18 @@ else if(is_featured_collection_category($collection))
             }
         else if(is_array($collectionstates))
             {
-            $col_resources_states = array_unique(array_merge($col_resources_states, $collectionstates));
+            $sub_fcs_resources_states = array_unique(array_merge($sub_fcs_resources_states, $collectionstates));
             }
+
+        // Check minimum access is restricted or lower and sharing of restricted resources is not allowed
+        $sub_fcs_resources_minaccess[] = collection_min_access($sub_fc);
         }
-    $collectionstates = (!empty($col_resources_states) ? $col_resources_states : $collectionstates);
+    $collectionstates = (!empty($sub_fcs_resources_states) ? $sub_fcs_resources_states : $collectionstates);
 
-    // TODO: collection_min_access for categories
-
+    if(!empty($sub_fcs_resources_minaccess))
+        {
+        $minaccess = max(array_unique($sub_fcs_resources_minaccess));
+        }
 
     // To keep it in line with the legacy theme_category_share.php page, disable these features (home_dash, hide_internal_sharing_url)
     $home_dash = false;
@@ -109,7 +115,13 @@ else if(is_featured_collection_category($collection))
     // (categories or otherwise) type in a different way than for a normal collection
     // IMPORTANT: make sure there's code above this point (within this block) dealing with these validations.
     $collection_allow_empty_share = true;
-    // $allow_custom_access_share = true;
+    }
+
+// Sharing an empty collection?
+if (!$collection_allow_empty_share && count(get_collection_resources($ref))==0)
+    {
+    $show_error=true;
+    $error=$lang["cannotshareemptycollection"];
     }
 	
 #Check if any resources are not active
@@ -118,7 +130,6 @@ if (!$collection_allow_not_approved_share && $collectionstates==false) {
         $show_error=true;
         $error=$lang["notapprovedsharecollection"];
         }
-	
 if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$collectionstates)))
 	{
 	$warningtext=$lang["collection_share_status_warning"];
@@ -129,18 +140,11 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
 	}
 
 # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
-$minaccess=collection_min_access($ref);
-if (($minaccess>=1 && !$restricted_share))
-        {
-        $show_error=true;
-        $error=$lang["restrictedsharecollection"];
-        }
-
-// Sharing an empty collection?
-if (!$collection_allow_empty_share && count(get_collection_resources($ref))==0)
+$minaccess = (isset($minaccess) ? $minaccess : collection_min_access($ref));
+if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED)
     {
-    $show_error=true;
-    $error=$lang["cannotshareemptycollection"];
+    $show_error = true;
+    $error = $lang["restrictedsharecollection"];
     }
 
 # Should those that have been granted open access to an otherwise restricted resource be able to share the resource? - as part of a collection
@@ -149,7 +153,7 @@ if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuser
 	$show_error=true;
 	$error=$lang["customaccesspreventshare"];
 	}
-		
+
 
 
 # Process deletion of access keys
@@ -169,7 +173,6 @@ include "../include/header.php";
     </script><?php
     exit();}
 ?>
-  
 	<div class="BasicsBox"> 	
 	<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
 	<input type="hidden" name="ref" id="ref" value="<?php echo htmlspecialchars($ref) ?>">

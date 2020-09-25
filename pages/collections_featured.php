@@ -141,7 +141,7 @@ if($themes_show_background_image && !$full_width)
             {
             $collection_data = get_collection($parent);
             $collection_resources = get_collection_resources($parent);
-            $collection_data["has_resources"] = (is_array($collection_resources) ? count($collection_resources) : 0);
+            $collection_data["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
 
             // get_featured_collection_resources() is expecting a featured collection structure. $collection_data being a 
             // collection structure is a superset containing the required information (ref, parent, has_resources) for the function to work

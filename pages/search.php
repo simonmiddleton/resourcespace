@@ -15,7 +15,7 @@ $resetlockedfields = getvalescaped("resetlockedfields","") != "";
 if (($k=="") || (!check_access_key_collection(str_replace("!collection","",$s[0]),$k))) {include "../include/authenticate.php";}
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+$internal_share_access = internal_share_access();
 
 if ($k=="" || $internal_share_access)
     {

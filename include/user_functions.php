@@ -2356,3 +2356,15 @@ function checkperm_user_edit($user)
 	// Return true if the target user we are checking is in one of the valid groups
 	return (in_array($editusergroup, $validgroups));
 	}
+
+
+/**
+* Determine if this is an internal share access request
+* 
+* @return boolean
+*/
+function internal_share_access()
+    {
+    global $k, $external_share_view_as_internal, $is_authenticated;
+    return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    }
