@@ -192,7 +192,6 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-		$message =true;
 
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
