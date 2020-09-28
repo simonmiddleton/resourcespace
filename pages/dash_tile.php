@@ -83,9 +83,9 @@ if($submitdashtile && enforcePostRequest(false))
 	$resource_count=getvalescaped("resource_count",FALSE);
 
 	$link=str_replace("&amp;","&",getvalescaped("link",""));
-	if(strpos($link,$baseurl_short)===0) 
+	if(strpos($link,$baseurl_short."pages/")===0) 
 		{
-		$length = strlen($baseurl_short);
+		$length = strlen($baseurl_short."pages/");
 		$link = substr_replace($link,"",0,$length);
 		}
 	$link= preg_replace("/^\//","",$link);
@@ -192,6 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
+		$message =true;
 
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
@@ -221,7 +222,7 @@ if($submitdashtile && enforcePostRequest(false))
 		<?php
 		}?>
 
-	<a href="<?php echo $baseurl."/".$link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
+	<a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
 	<?php
 	include "../include/footer.php";
 	exit();
