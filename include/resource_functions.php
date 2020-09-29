@@ -3210,7 +3210,50 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             } 
         }
 
+    // check that $usage is valid value for int type db field
+    // https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
+    if ($usage < -2147483648 || $par > 2147483647)
+        {
+        return false;
+        }
+
+    // check that purchase_size is valid for varchar(10) field
+    if (strlen($purchase_size) > 10)
+        {
+        return false;
+        }    
+
+    // check that purchase_price meets field db field constraint  decimal(10,2)
+     if ($purchase_price < -9999999999.99 || $purchase_price > 9999999999.99)
+        {
+        return false;
+        }  
         
+        
+
+    // check that $usage is valid value for int type db field
+        // https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
+        $options_db_int = [ 'options' => [ 'min_range' => -2147483648,   'max_range' => 2147483647] ];
+        if (!filter_var($usage, FILTER_VALIDATE_INT, $options_db_int) && $usage != 0)
+            {
+            return false;
+            }
+ 
+        // check that purchase_price is valid for decimal 10,2 field
+        $options_db_purchase_price = [ 'options' => [  'regexp' => "/^[0-9]{0,10}\.?[0-9]{0,2}$/"   ]  ];
+        if (filter_var($purchase_price, FILTER_VALIDATE_REGEXP, $options_db_purchase_price) == "")
+            {
+            return false;
+            } 
+        
+        // check that purchase_size is valid for varchar(10) field
+        $options_db_purchase_size = [ 'options' => [ 'regexp' => "/^[\w\W]{0,10}$/"]  ];
+        if ($purchase_size != "" && filter_var($purchase_size, FILTER_VALIDATE_REGEXP, $options_db_purchase_size) == "" )
+            {
+            return false;
+            } 
+            
+            
 
     // If it is worthy of logging, update the modified date in the resource table
     update_timestamp($resource);
