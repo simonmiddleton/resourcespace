@@ -119,7 +119,7 @@ function HookAction_datesCronCron()
             # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
             #                     and which are neither in the resource deletion state nor in the action dates new state
             $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource 
-                                       AND r.archive NOT IN '({$resource_deletion_state},{$action_dates_new_state})' 
+                                       AND r.archive NOT IN ({$resource_deletion_state},{$action_dates_new_state}) 
                                        WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
 
             # NOT FULL DELETION - Resolve the target archive state to which candidate resources are to be moved
