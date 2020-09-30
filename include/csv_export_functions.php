@@ -53,6 +53,8 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                     (!$personal || $restypefield["personal_data"])
                 && 
                     ($alldata || $restypefield["include_in_csv_export"])
+                && 
+                    !(checkperm("T" . $restypefield["resource_type"]))
                 )
                 {
                 $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];

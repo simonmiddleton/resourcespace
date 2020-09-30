@@ -2933,7 +2933,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         {
         // This is an array of search results so we already have the resource types
         $restype = array_column($resources,"resource_type","ref");
-        $resourceids = array_filter(array_column($resources,"ref"),function($v){return (string)(int)$v == $v;});
+        $resourceids = array_filter(array_column($resources,"ref"),function($v){return (string)(int)$v == (string)$v;});
         $refsin = implode("','",$resourceids);
         $getresources = $resources;
         }
@@ -3094,7 +3094,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 )
             {
             $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
-            break;
             }
         }
 
