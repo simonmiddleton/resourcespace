@@ -6,7 +6,7 @@
 /**
 * Generates the CSV content of the metadata for resources passed in the array
 *
-* @param array $resources (either an array of resource ids or an rray returned from search results)
+* @param array $resources (either an array of resource ids or an array returned from search results)
 * @return string
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
@@ -22,7 +22,11 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     foreach($resources as $resource)
         {
         $resdata = $resource;
-        debug("BANG resource: " . $resource["ref"]);
+        if(checkperm("T" . $resdata["resource_type"]))
+            {
+            continue;
+            }
+
         // Add resource type
         $restype = get_resource_type_name($resdata["resource_type"]);
         $csv_field_headers["resource_type"] = $lang["resourcetype"];
@@ -43,11 +47,20 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             }       
         foreach($allfields as $restypefield)
             {
-            $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
-            // Check if the resource has a value for this field in the data retrieved
-            $resdataidx =array_search($restypefield["ref"], array_column($allresdata[$resource['ref']], 'ref'));
-            $fieldvalue = ($resdataidx !== false) ? $allresdata[$resource['ref']][$resdataidx]["value"] : "";
-            $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
+            if  (
+                   metadata_field_view_access($restypefield["ref"])  
+                && 
+                    (!$personal || $restypefield["personal_data"])
+                && 
+                    ($alldata || $restypefield["include_in_csv_export"])
+                )
+                {
+                $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
+                // Check if the resource has a value for this field in the data retrieved
+                $resdataidx =array_search($restypefield["ref"], array_column($allresdata[$resource['ref']], 'ref'));
+                $fieldvalue = ($resdataidx !== false) ? $allresdata[$resource['ref']][$resdataidx]["value"] : "";
+                $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
+                }
             }
 
         // Add original size URL column values
