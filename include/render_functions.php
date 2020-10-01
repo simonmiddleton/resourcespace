@@ -4139,3 +4139,42 @@ function show_upgrade_in_progress($dbstructonly=false)
         <?php
         }
     }
+
+
+
+/**
+*  add link to mp3 preview file if resource is a wav file
+* 
+* @param array      $resource               - resource data
+* @param int        $ref                    - resource ref
+* @param string     $k                      - url param key
+* @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
+* @param string     $baseurl                - config base url
+* @param array      $lang                   - array containing language strings         
+* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
+ * 
+ */
+
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+{
+
+// if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
+// resources with extension in $ffmpeg_audio_extensions will always create an mp3 preview file 
+    if (
+        $resource['file_extension']=="wav" && 
+        in_array($resource['file_extension'], $ffmpeg_audio_extensions) &&
+        file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")) && 
+        resource_download_allowed($ref,'',$resource["resource_type"])
+        )	
+        {
+
+        $colspan = $use_larger_layout ? ' colspan="2"' : '';
+        $download_link =  $baseurl  . "/pages/download_progress.php?ref=" . urlencode($ref) . "&ext=mp3&k=" . urlencode($k);
+
+        $html ="<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\"></td>" ; 
+        $html .= "<td><a id=\"downloadlink\" href=\"#\" onclick=\"directDownload('" . $download_link . "')\">" . $lang["action-download"] . "</a></td></tr> ";
+            
+        echo $html;
+        }
+
+}
