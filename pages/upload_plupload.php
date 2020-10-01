@@ -664,7 +664,14 @@ if ($_FILES)
                                 {
                                 $ref = create_resource($resource_type, $setarchivestate);
                                 }
+
+                            # check that $ref is not false - possible return value with create_resource()
+                            if(!$ref)
+                                {
+                                die('{"jsonrpc" : "2.0", "error" : {"code": 125, "message": "Failed to create resource with given resource type: ' . $resource_type . '"}}');    
+                                }
                             
+
                             // Check valid requested state by calling function that checks permissions
                             update_archive_status($ref, $setarchivestate);
                             
