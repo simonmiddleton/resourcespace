@@ -7,11 +7,10 @@ include_once "{$rsroot}/include/ajax_functions.php";
 
 if(checkperm("b") && !(isset($anonymous_login) && $username == $anonymous_login && $anonymous_user_session_collection))
     {
-    ajax_unauthorized();
+    // Only has access to the result selection collection
+    $selection_collection_only = true;
     }
 
-$return = array();
-$action = trim(getval("action", ""));
 $allowed_actions = array(
     "clear_selection_collection_resources",
     "get_selected_resources_counter",
@@ -23,7 +22,11 @@ $allowed_actions = array(
     "remove_resource",
     "add_multiple_resources",
     "remove_multiple_resources"
-);
+    );
+
+
+$return = array();
+$action = trim(getval("action", ""));
 
 if($action == "" || !in_array($action, $allowed_actions))
     {
@@ -65,6 +68,10 @@ if($action == "render_edit_selected_btn")
 
 if($action == "remove_selected_from_collection")
     {
+    if(isset($selection_collection_only))
+        {        
+        ajax_unauthorized();
+        }
     if(!collection_readable($usercollection))
         {
         $fail_msg = str_replace("%ref", $usercollection, $lang["error-collection-unreadable"]);
@@ -87,6 +94,10 @@ if($action == "add_resource")
     {
     $resource = getval("resource", null, true);
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
     $addtype = getval("addtype", "");
@@ -138,6 +149,11 @@ if($action == "add_multiple_resources")
     {
     $resource_list=json_decode(getvalescaped("resource_list",false));
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
+
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
     $addtype = getval("addtype", "");
@@ -189,6 +205,10 @@ if($action == "remove_resource")
     {
     $resource = getval("resource", null, true);
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
 
@@ -205,6 +225,10 @@ if($action == "remove_multiple_resources")
     {
     $resource_list=json_decode(getvalescaped("resource_list",false));
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
 
