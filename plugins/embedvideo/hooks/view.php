@@ -11,7 +11,7 @@ function HookEmbedvideoViewAfterresourceactions()
 
     if ($video_preview_original || !file_exists(get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension)))
         {
-        $flashpath=get_resource_path($ref,false,"",false,$ffmpeg_preview_extension,-1,1,false,"",-1,false);
+        $flashpath=get_resource_path($ref,false,"",false,$resource['file_extension'],-1,1,false,"",-1,false);
         }
     else
         {
