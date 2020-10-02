@@ -12,12 +12,16 @@ function HookAction_datesCronCron()
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
            $action_dates_extra_config, $DATE_FIELD_TYPES;
+
+    global $action_dates_eligible_states;
 	
 	echo "action_dates: running cron tasks" . PHP_EOL;
     
     # Reset any residual userref from earlier cron tasks
     global $userref;
     $userref=0;
+            
+    $eligible_states_list = implode(",",$action_dates_eligible_states);
 
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
     
@@ -26,7 +30,9 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         echo "action_dates: Checking field " . $action_dates_restrictfield . PHP_EOL;
-        $restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
+        $restrict_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource "
+            . ($eligible_states_list == "" ? "" : "AND r.archive IN ({$eligible_states_list})")    
+            . " WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
 		$emailrefs=array();
 		foreach ($restrict_resources as $resource)
 			{
@@ -100,14 +106,17 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_deletefield, $allowable_fields))
         {
         $change_archive_state = false;
-        
+
         $fieldinfo = get_resource_type_field($action_dates_deletefield);
         
         echo "action_dates: Checking dates in field " . $fieldinfo["title"] . PHP_EOL;
         if($action_dates_reallydelete)
             {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
-            $candidate_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource > 0 AND resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
+            $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource " 
+                                    . ($eligible_states_list == "" ? "" : " AND r.archive IN ({$eligible_states_list})")    
+                                    . " WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
+            // $candidate_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource > 0 AND resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
             }
         else
             {
@@ -118,9 +127,10 @@ function HookAction_datesCronCron()
                 }
             # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
             #                     and which are neither in the resource deletion state nor in the action dates new state
-            $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource 
-                                       AND r.archive NOT IN ({$resource_deletion_state},{$action_dates_new_state}) 
-                                       WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
+            $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource " 
+                                    . ($eligible_states_list == "" ? "" : " AND r.archive IN ({$eligible_states_list})")    
+                                    . " AND r.archive NOT IN ({$resource_deletion_state},{$action_dates_new_state}) " 
+                                    . " WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
 
             # NOT FULL DELETION - Resolve the target archive state to which candidate resources are to be moved
             # If the new state differs from the default resource deletion state, it means we only want to move resources to that state

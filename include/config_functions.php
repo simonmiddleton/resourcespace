@@ -1095,6 +1095,9 @@ function config_generate_html(array $page_def)
             case 'single_ftype_select':
                 config_single_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6]);
                 break;
+            case 'multi_archive_select':
+                config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
+                break;
             }
         }
     }
