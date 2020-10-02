@@ -797,3 +797,4 @@ function api_get_resource_collections($ref)
 
     return $ref_collections;
     }
+
