@@ -145,4 +145,5 @@ if (isset($disksize))
 // Add active user count (last 7 day)
 echo ", " . get_recent_users(7) . " recent users";
 
+hook("checkadditional");
 
