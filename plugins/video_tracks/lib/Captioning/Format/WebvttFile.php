@@ -6,7 +6,7 @@ use Captioning\File;
 
 class WebvttFile extends File
 {
-    const TIMECODE_PATTERN = '#^((?:[0-9]{2}:)?[0-9]{2}:[0-9]{2}.[0-9]{3}) --> ((?:[0-9]{2}:)?[0-9]{2}:[0-9]{2}.[0-9]{3})( .*)?$#';
+    const TIMECODE_PATTERN = '#^((?:[0-9]{2,}:)?[0-9]{2}:[0-9]{2}.[0-9]{3}) --> ((?:[0-9]{2,}:)?[0-9]{2}:[0-9]{2}.[0-9]{3})( .*)?$#';
 
     /**
      * @var WebvttRegion[]
@@ -47,7 +47,8 @@ class WebvttFile extends File
         }
 
         // Parse regions.
-        while (($line = $this->getNextValueFromArray($fileContentArray)) !== '') {
+        $line = $this->getNextValueFromArray($fileContentArray);
+        while (($line !== '') && ($line !== false)) {
             if (strpos($line, 'Region:') === 0) {
                 try {
                     $this->addRegion(WebvttRegion::parseFromString($line));
@@ -58,6 +59,7 @@ class WebvttFile extends File
                 $parsing_errors[] = 'Incorrect Region definition at line ' . $i;
             }
             ++$i;
+            $line = $this->getNextValueFromArray($fileContentArray);
         }
 
         // Skip blank lines after signature.
@@ -119,7 +121,7 @@ class WebvttFile extends File
         } while (($line = $this->getNextValueFromArray($fileContentArray)) !== false);
 
         if (count($parsing_errors) > 0) {
-            throw new \Exception('The following errors were found while parsing the file:'."\n".print_r($parsing_errors, true));
+            throw new \Exception('The following errors were found while parsing the file:'."\n".implode("\n", $parsing_errors));
         }
 
         return $this;
