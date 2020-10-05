@@ -374,6 +374,19 @@ if(is_array($plugin_specific_definition) && !empty($plugin_specific_definition))
     $page_def = $plugin_specific_definition;
     }
 
+// Strip out any configs that are blocked from being edited in the UI.
+if (count($system_config_hide)>0)
+    {
+    $new_page_def=array();
+    for($n=0;$n<count($page_def);$n++)
+        {
+        if (!in_array($page_def[$n][1],$system_config_hide)) {$new_page_def[]=$page_def[$n];} // Add if not blocked
+        }
+    $page_def=$new_page_def;
+    }
+
+
+
 
 // Process autosaving requests
 // Note: $page_def must be defined by now in order to make sure we only save options that we've defined

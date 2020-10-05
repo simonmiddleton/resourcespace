@@ -3702,3 +3702,8 @@ $date_validator=false;
 // and care must still be taken to keep secure any exported data.
 $system_download_config = false;
 $system_download_config_force_obfuscation = true;
+
+
+// Block particular config options from shown in the System Config area.
+// E.g. $system_config_hide=array("email_from","email_notify");
+$system_config_hide=array();
