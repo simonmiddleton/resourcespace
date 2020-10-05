@@ -45,6 +45,13 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<?php if ($search_engine_noindex || (getval("k","")!="" && $search_engine_noindex_external_shares))
+    {
+    ?>
+    <meta name="robots" content="noindex,nofollow">
+    <?php
+    }
+?>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook('extra_meta'); ?>
@@ -297,7 +304,7 @@ if ($pagename=="login" || $pagename=="user_request" || $pagename=="user_password
 
 hook("beforeheader");
 
-# Calculate Header Image Display #
+# Calculate Header Image Display
 if(isset($usergroup))
     {
     //Get group logo value

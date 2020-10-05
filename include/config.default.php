@@ -3707,3 +3707,10 @@ $system_download_config_force_obfuscation = true;
 // Block particular config options from shown in the System Config area.
 // E.g. $system_config_hide=array("email_from","email_notify");
 $system_config_hide=array();
+
+// Request that search engines don't index the entire installtion
+$search_engine_noindex=false;
+
+// Request that search engines don't index external shares only
+$search_engine_noindex_external_shares=false;
+

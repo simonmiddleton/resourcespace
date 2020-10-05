@@ -2909,3 +2909,6 @@ $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "The file posted has not been found";
 $lang["error-theme-missing"]                = "Featured collection missing or has not been specified.";
+$lang["system_config_search_engines"]       = "Search engines";
+$lang["search_engine_noindex"] = "Request that search engines don't index this site";
+$lang["search_engine_noindex_external_shares"] = "Request that search engines do not index external shares";
