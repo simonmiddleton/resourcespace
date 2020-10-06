@@ -45,6 +45,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         $logfile = $csv_set_options["log_file"];
         }
    
+    // Get system archive states and access levels for validating uploaded values
+    $archivestates = sql_array("select code value from archive_states","");
+    $accessstates = array('0','1','2');
+    
     csv_upload_log($logfile,"CSV upload started at " . date("Y-m-d H:i",time()));
     csv_upload_log($logfile,"Using CSV file: " . $filename);
 
@@ -313,9 +317,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["status_column"] != "" && in_array($csv_set_options["status_column"],array_keys($line)))
                 {
                 $setstatus = $line[$csv_set_options["status_column"]];
-                if (!is_numeric($setstatus))
+                if (!is_numeric($setstatus) || !in_array($setstatus,$archivestates))
                     {
                     $setstatus = (int)$csv_set_options["status_default"];
+                    $logtext = "Invalid resource workflow state, using default value.";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     }
                 $processed_columns[] = (int)$csv_set_options["status_column"];
                 }
@@ -328,9 +335,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["access_column"] != "" && in_array($csv_set_options["access_column"],array_keys($line)))
                 {
                 $setaccess = $line[$csv_set_options["access_column"]];
-                if (!is_numeric($setaccess))
+                if (!is_numeric($setaccess) || !in_array($setaccess,$accessstates))
                     {
-                $setaccess = (int)$csv_set_options["access_default"];
+                    $setaccess = (int)$csv_set_options["access_default"];
+                    $logtext = "Invalid resource access level, using default value.";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     }
                 $processed_columns[] = $csv_set_options["access_column"];
                 }
