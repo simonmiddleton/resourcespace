@@ -21,7 +21,7 @@ $collection = get_collection($ref);
 if($collection["type"] == COLLECTION_TYPE_FEATURED)
     {
     $collection_resources = get_collection_resources($collection["ref"]);
-    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0); 
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
     }
 if($bypass_share_screen && $collection["type"] != COLLECTION_TYPE_SELECTION)
     {
@@ -42,8 +42,8 @@ if(!$allow_share || checkperm("b"))
 $internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
 
 # Check if editing existing external share
-$editaccess=getvalescaped("editaccess","");
-($editaccess=="")?$editing=false:$editing=true;
+$editaccess = trim(getvalescaped("editaccess", ""));
+$editing = ($editaccess != "");
 
 $editexternalurl = (getval("editexternalurl","")!="");
 $deleteaccess = (getval("deleteaccess", "") != "");
@@ -269,20 +269,20 @@ include "../include/header.php";
 			</div>
 			<?php
 			}
-        else if('' == getvalescaped('editaccess', ''))
+        else if($editaccess == "")
             {
             // Access has been selected. Generate a new URL.
             $generated_access_key = '';
 
             if(empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups)))
                 {
-                $generated_access_key = generate_collection_access_key($ref, 0, 'URL', $access, $expires, $user_group, $sharepwd);
+                $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $user_group, $sharepwd);
                 }
             else if (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
-                        {
-                        // Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
-                        $generated_access_key = generate_collection_access_key($ref, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);
-                        }
+                {
+                // Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
+                $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);
+                }
 
             if('' != $generated_access_key)
                 {

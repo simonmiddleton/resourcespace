@@ -1603,35 +1603,97 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
 
 /**
- * For each resource in the collection, create an access key so an external user can access each resource.
+ * Generate an external access key to allow external people to view the resources in this collection.
  *
- * @param  integer $collection
- * @param  integer $feedback
- * @param  string $email
- * @param  integer $access
- * @param  string $expires
- * @param  string $group
- * @param  string $sharepwd
- * @return string   The generated key
+ * @param  integer  $collection  Collection ref -or- collection data structure
+ * @param  integer  $feedback
+ * @param  string   $email
+ * @param  integer  $access
+ * @param  string   $expires
+ * @param  string   $group
+ * @param  string   $sharepwd
+ * 
+ * @return string   The generated key used for external sharing
  */
 function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="", $sharepwd="")
-	{
-	global $userref,$usergroup,$scramble_key;
-	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
-	$k=substr(md5($collection . "," . time()),0,10);
-	$r=get_collection_resources($collection);
-	for ($m=0;$m<count($r);$m++)
-		{
-		# Add the key to each resource in the collection
-		if(can_share_resource($r[$m]))
-			{
-			sql_query("insert into external_access_keys(resource,access_key,collection,user,usergroup,request_feedback,email,date,access,expires, password_hash) values ('" . $r[$m] . "','$k','$collection','$userref','$group','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . escape_check($expires) . "'"). "," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
-			}
-		}
-	
-	hook("generate_collection_access_key","",array($collection,$k,$userref,$feedback,$email,$access,$expires,$group,$sharepwd));
-	return $k;
-	}
+    {
+    global $userref, $usergroup, $scramble_key;
+
+    // Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
+    if($group == "" || !checkperm("x"))
+        {
+        $group = $usergroup;
+        }
+
+    if(!is_array($collection))
+        {
+        $collection = get_collection($collection);
+        }
+
+    if(!empty($collection) && $collection["type"] == COLLECTION_TYPE_FEATURED && !isset($collection["has_resources"]))
+        {
+        $collection_resources = get_collection_resources($collection["ref"]);
+        $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+        }
+    $is_featured_collection_category = is_featured_collection_category($collection);
+
+    // We build a collection list to allow featured collections children that are externally shared as part of a parent,
+    // to all be shared with the same parameters (e.g key, access, group). When the collection is not COLLECTION_TYPE_FEATURED
+    // this will hold just that collection
+    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection));
+
+    // Generate the key based on the original collection. For featured collection category, all sub featured collections
+    // will share the same key
+    $k = substr(md5($collection["ref"] . "," . time()), 0, 10);
+
+    $main_collection = $collection; // keep record of this info as we need it at the end to record the successful generation of a key for a featured collection category
+    $created_sub_fc_access_key = false;
+    foreach($collections as $collection)
+        {
+        $r = get_collection_resources($collection);
+        $shareable_resources = array_filter($r, function($resource_ref) { return can_share_resource($resource_ref); });
+        // insert for remaining into DB
+        foreach($shareable_resources as $resource_ref)
+            {
+            $sql = sprintf("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW(), '%s', %s, %s)",
+                $resource_ref,
+                $k,
+                escape_check($collection),
+                $userref,
+                escape_check($group),
+                escape_check($feedback),
+                escape_check($email),
+                escape_check($access),
+                sql_null_or_val($expires, $expires == ""),
+                sql_null_or_val(hash("sha256", $k . $sharepwd . $scramble_key), !($sharepwd != "" && $sharepwd != "(unchanged)"))
+            );
+            sql_query($sql);
+            $created_sub_fc_access_key = true;
+            }
+
+        hook("generate_collection_access_key", "", array($collection, $k, $userref, $feedback, $email, $access, $expires, $group, $sharepwd));
+        }
+
+    if($is_featured_collection_category && $created_sub_fc_access_key)
+        {
+        // add for FC category. No resource. This is a dummy record so we can have a way to edit the external share done 
+        // at the featured collection category level
+        $sql = sprintf("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', NOW(), '%s', %s, %s)",
+            $k,
+            escape_check($main_collection["ref"]),
+            $userref,
+            escape_check($group),
+            escape_check($feedback),
+            escape_check($email),
+            escape_check($access),
+            sql_null_or_val($expires, $expires == ""),
+            sql_null_or_val(hash("sha256", $k . $sharepwd . $scramble_key), !($sharepwd != "" && $sharepwd != "(unchanged)"))
+        );
+        sql_query($sql);
+        }
+
+    return $k;
+    }
 	
 /**
  * Returns all saved searches in a collection
