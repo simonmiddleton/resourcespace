@@ -1652,7 +1652,6 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
         {
         $r = get_collection_resources($collection);
         $shareable_resources = array_filter($r, function($resource_ref) { return can_share_resource($resource_ref); });
-        // insert for remaining into DB
         foreach($shareable_resources as $resource_ref)
             {
             $sql = sprintf("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW(), '%s', %s, %s)",
