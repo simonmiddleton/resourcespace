@@ -195,11 +195,11 @@ function generate_session_hash($password_hash)
 * 
 * @return void
 */
-function set_login_cookies($user=0, $session_hash="", $language = "", $user_preferences)
+function set_login_cookies($user, $session_hash, $language = "", $user_preferences = true)
     {
     global $baseurl, $baseurl_short, $allow_keep_logged_in, $default_res_types, $language;
     $expires=0;
-    if((string)(int)$user!=(string)$user || $user < 1 || $session_hash=="")
+    if((string)(int)$user!=(string)$user || $user < 1)
         {
         debug("set_login_cookies() - invalid paramters passed : " . func_get_args());
         return false;
