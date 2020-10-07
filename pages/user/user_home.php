@@ -61,8 +61,21 @@ $introtext=text("introtext");
             <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['mymessages']; ?></a>
             <span style="display: none;" class="MessageCountPill Pill"></span>
         </li>
-		
-		<?php
+
+        <?php
+
+        if($offline_job_queue)
+            {
+            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, $userref);
+            $failedjobcount = count($failedjobs);
+            echo "<li><i aria-hidden='true' class='fas fa-tasks'></i>&nbsp;<a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'>" . $lang['my_jobs'] . "</a>";
+            if ($failedjobcount>0)
+        	    {
+		        echo "&nbsp;<span class='Pill FailedJobCountPill'>" . $failedjobcount  . "</span>";
+                }
+            echo "</li>";
+            }
+
 		if($home_dash && checkPermission_dashmanage())
 			{ ?>
 			<li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["manage_own_dash"];?></a></li>
