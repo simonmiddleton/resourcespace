@@ -63,15 +63,7 @@ $rendering_options = array(
 
 
 $featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent) : array());
-usort($featured_collections, function(array $a, array $b)
-    {
-    if($a["has_resources"] == $b["has_resources"])
-        {
-        return 0;
-        }
-
-    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
-    });
+usort($featured_collections, "order_featured_collections_by_hasresources");
 render_featured_collections($rendering_options, $featured_collections);
 
 

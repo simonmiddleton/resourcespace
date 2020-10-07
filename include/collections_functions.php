@@ -4362,6 +4362,26 @@ function get_featured_collections(int $parent)
 
 
 /**
+* Helper comparison function for ordering featured collections by the "has_resource" property.
+* 
+* @param array $a First featured collection data structure to compare
+* @param array $b Second featured collection data structure to compare
+* 
+* @return Return an integer less than, equal to, or greater than zero if the first argument is considered to be 
+*         respectively less than, equal to, or greater than the second.
+*/
+function order_featured_collections_by_hasresources(array $a, array $b)
+    {
+    if($a["has_resources"] == $b["has_resources"])
+        {
+        return 0;
+        }
+
+    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    }
+
+
+/**
 * Get featured collection categories at the specified depth level
 * 
 * @param integer $parent  The ref of the parent collection.
@@ -4520,7 +4540,7 @@ function process_posted_featured_collection_categories(int $depth, array $branch
 
 
 /**
-* Find existing featured collection ref using its name
+* Find existing featured collection ref using its name and parent
 * 
 * @param string $name Featured collection name to search by
 * @param null|integer $parent The featured collection parent

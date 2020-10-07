@@ -9,6 +9,7 @@ $id = getvalescaped('id', '');
 // Use id to work out search string for link and path to data requested e.g. to get field id for node expansion
 $target_search = array();
 $ftcolcats = array();
+$fc_parent = 0;
 $parent_nodes = array();
 $browse_field = 0;
 
@@ -39,6 +40,7 @@ for($n=0;$n<$bcount;$n++)
             if($browseid != "")
                 {
                 $ftcolcats[] =  base64_decode($browseid);
+                $fc_parent = $browseid;
                 }
         break;
         }
@@ -271,9 +273,43 @@ switch ($returntype)
             }
     break;
     
+    // Featured collection
     case "FC":
-        // Featured collection
-        
+        // TODO: validate parent
+        $featured_collections = get_featured_collections($fc_parent);
+        usort($featured_collections, "order_featured_collections_by_hasresources");
+
+        // echo "<pre>";print_r($fc_parent);echo "</pre>";
+        // echo "<pre>";print_r($browse_elements);echo "</pre>";
+        // echo "<pre>";print_r($ftcolcats);echo "</pre>";
+        // echo "<pre>";print_r($featured_collections);echo "</pre>";
+
+        foreach($featured_collections as $fc)
+            {
+            $is_featured_collection_category = is_featured_collection_category($fc);
+
+            $item = array(
+                "id" => ($is_featured_collection_category ? "{$id}-FC:{$fc["ref"]}" : "{$id}-C:{$fc["ref"]}"),
+                "name" => htmlspecialchars(i18n_get_translated($fc["name"])),
+                "class" => ($is_featured_collection_category ? "Featured" : "Col"),
+                // "expandable" => ($is_featured_collection_category ? "true" : "false"),
+                "expandable" => $is_featured_collection_category, # TODO: if this fails, use the one above. Not sure why modal would allow genuine booleans and expandle not.
+                "link" => "", # TODO: continue here
+                "modal" => false,
+                "drop" => !$is_featured_collection_category,
+            );
+
+            $return_items[$n] = $item;
+            $n++;
+            }
+        echo "<pre>";print_r($return_items);echo "</pre>";
+        die("You died in file " . __FILE__ . " at line " . __LINE__);
+
+
+
+
+
+
         $ftcol_subcats = get_theme_headers($ftcolcats);
         $tgtparams = array();
         for ($x=0;$x<count($ftcolcats);$x++)
