@@ -159,19 +159,8 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
     {
     global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
     
-    # check that $resource param is a positive integer and valid for int type db field
-    $options_resource = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
-    if (!filter_var($resource, FILTER_VALIDATE_INT, $options_resource))
-        {
-        return false;
-        } 
-
     $resourcedata=get_resource_data($resource,true);
-    if (!$resourcedata)
-        {
-        return false;    
-        }
-
+    
     $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
     
     if(!is_numeric($field))
