@@ -1,6 +1,12 @@
 <?php
 include_once "../include/db.php";
-include "../include/authenticate.php";
+
+$k = trim(getval("k", ""));
+$parent = (int) getval("parent", 0, true);
+if($k == "" || !check_access_key_collection($parent, $k))
+    {
+    include "../include/authenticate.php";
+    }
 
 if(!$enable_themes)
     {
@@ -8,8 +14,6 @@ if(!$enable_themes)
     exit($lang["error-permissiondenied"]);
     }
 
-$k = getval("k", "");
-$parent = (int) getval("parent", 0, true);
 $smart_rtf = (int) getval("smart_rtf", 0, true);
 $smart_fc_parent = getval("smart_fc_parent", 0, true);
 $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
