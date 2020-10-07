@@ -33,7 +33,27 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
 <?php
-echo "<p>TODO: render breadcrumbs (@line ".__LINE__.")</p>";
+if($enable_theme_breadcrumbs && $parent > 0)
+    {
+    $links_trail_params = ($k == "" ? array() : array("k" => $k));
+
+    $links_trail = array(
+        array(
+            "title" => $lang["themes"],
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $links_trail_params)
+        )
+    );
+
+    $branch_trail = array_map(function($branch) use ($baseurl_short, $links_trail_params)
+        {
+        return array(
+            "title" => $branch["name"],
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $links_trail_params, array("parent" => $branch["ref"]))
+        );
+        }, get_featured_collection_category_branch_by_leaf($parent, array()));
+
+    renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");
+    }
 
 // Default rendering options (should apply to both FCs and smart FCs)
 $full_width = !$themes_simple_view;
