@@ -4194,7 +4194,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number,
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number,
            $themes_simple_view;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
@@ -4232,7 +4232,7 @@ function render_featured_collections(array $ctx, array $items)
             }
 
         // Featured collection default tools
-        if($is_featured_collection && checkPermission_dashmanage())
+        if($is_featured_collection && $k == "" && checkPermission_dashmanage())
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL(
@@ -4268,7 +4268,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             global $enable_theme_category_edit;
 
-            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
+            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"], "k" => $k));
 
             $render_ctx["href"] = $fc_category_url;
             $render_ctx["icon"] = ICON_FOLDER;
@@ -4347,7 +4347,7 @@ function render_featured_collection(array $ctx, array $fc)
         return;
         }
 
-    global $baseurl_short, $lang, $flag_new_themes, $flag_new_themes_age;
+    global $baseurl_short, $lang, $k, $flag_new_themes, $flag_new_themes_age;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
@@ -4358,7 +4358,7 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
-    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}"));
+    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}", "k" => $k));
     $html_fc_a_href = (isset($ctx["href"]) && trim($ctx["href"]) !== "" ? $ctx["href"] : $html_fc_a_href);
 
 
