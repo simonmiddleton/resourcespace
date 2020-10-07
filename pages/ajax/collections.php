@@ -7,11 +7,10 @@ include_once "{$rsroot}/include/ajax_functions.php";
 
 if(checkperm("b") && !(isset($anonymous_login) && $username == $anonymous_login && $anonymous_user_session_collection))
     {
-    ajax_unauthorized();
+    // Only has access to the result selection collection
+    $selection_collection_only = true;
     }
 
-$return = array();
-$action = trim(getval("action", ""));
 $allowed_actions = array(
     "clear_selection_collection_resources",
     "get_selected_resources_counter",
@@ -21,7 +20,13 @@ $allowed_actions = array(
     "remove_selected_from_collection",
     "add_resource",
     "remove_resource",
-);
+    "add_multiple_resources",
+    "remove_multiple_resources"
+    );
+
+
+$return = array();
+$action = trim(getval("action", ""));
 
 if($action == "" || !in_array($action, $allowed_actions))
     {
@@ -63,6 +68,10 @@ if($action == "render_edit_selected_btn")
 
 if($action == "remove_selected_from_collection")
     {
+    if(isset($selection_collection_only))
+        {        
+        ajax_unauthorized();
+        }
     if(!collection_readable($usercollection))
         {
         $fail_msg = str_replace("%ref", $usercollection, $lang["error-collection-unreadable"]);
@@ -85,6 +94,10 @@ if($action == "add_resource")
     {
     $resource = getval("resource", null, true);
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
     $addtype = getval("addtype", "");
@@ -132,10 +145,70 @@ if($action == "add_resource")
     ajax_send_response(200, ajax_response_ok_no_data());
     }
 
+if($action == "add_multiple_resources")
+    {
+    $resource_list=json_decode(getvalescaped("resource_list",false));
+    $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
+
+    $smartadd = getval("smartadd", false);
+    $size = getval("size", "");
+    $addtype = getval("addtype", "");
+
+    $collection_data = get_collection($collection);
+    if($collection_data["type"] == COLLECTION_TYPE_UPLOAD)
+        {
+        ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+        }
+
+    $allow_add = true;
+    // If collection has been shared externally need to check access and permissions
+    $external_keys = get_collection_external_access($collection);
+    if(is_array($external_keys) && !empty($external_keys))
+        {
+        if(checkperm("noex"))
+            {
+            $allow_add = false;
+            }
+        else
+            {
+            // Not permitted if share is open and access is restricted
+            if(min(array_column($external_keys, "access")) < get_resource_access($add))
+                {
+                $allow_add = false;
+                }
+            }
+
+        if(!$allow_add)
+            {
+            ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["sharedcollectionaddblocked"])));
+            }
+        }
+
+    if($allow_add)
+        {
+        foreach ($resource_list as $resource)
+            {
+            if(!add_resource_to_collection($resource, $collection, $smartadd, $size, $addtype))
+                {
+                ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+                }
+            }
+        }
+    ajax_send_response(200, ajax_response_ok_no_data());
+    }
+
 if($action == "remove_resource")
     {
     $resource = getval("resource", null, true);
     $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
 
@@ -146,4 +219,30 @@ if($action == "remove_resource")
         }
 
     ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+    }
+
+if($action == "remove_multiple_resources")
+    {
+    $resource_list=json_decode(getvalescaped("resource_list",false));
+    $collection = getval("collection", null, true);
+    if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
+        {        
+        ajax_unauthorized();
+        }
+    $smartadd = getval("smartadd", false);
+    $size = getval("size", "");
+
+    foreach ($resource_list as $resource)
+        {
+        if(remove_resource_from_collection($resource, $collection, $smartadd, $size))
+            {
+            daily_stat("Removed resource from collection", $resource);
+            }
+        else
+            {
+            ajax_send_response(200, ajax_response_fail(ajax_build_message($lang["cantmodifycollection"])));
+            }
+        }
+
+    ajax_send_response(200, ajax_response_ok_no_data());
     }

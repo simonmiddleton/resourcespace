@@ -122,6 +122,13 @@ $cropsizes  = @getimagesize($crop_pre_file);
 $origsizes  = @getimagesize($originalpath);
 $cropwidth  = $cropsizes[0];
 $cropheight = $cropsizes[1];
+
+# check that crop width and crop height are > 0
+if ($cropwidth == 0 || $cropheight == 0)
+    {
+    die($lang['error-dimension-zero']);    
+    }
+    
 $origwidth  = $origsizes[0];
 $origheight = $origsizes[1];
 

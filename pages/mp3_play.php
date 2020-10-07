@@ -1,5 +1,5 @@
 <?php
-if($pagename=="search") 
+if($pagename=="search" || $pagename=="view") 
 	{
 	# VideoJS audio player - plays the mp3 preview file created to preview audio resources.
 

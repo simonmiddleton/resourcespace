@@ -4139,3 +4139,220 @@ function show_upgrade_in_progress($dbstructonly=false)
         <?php
         }
     }
+
+
+
+/**
+*  add link to mp3 preview file if resource is a wav file
+* 
+* @param array      $resource               - resource data
+* @param int        $ref                    - resource ref
+* @param string     $k                      - url param key
+* @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
+* @param string     $baseurl                - config base url
+* @param array      $lang                   - array containing language strings         
+* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
+ * 
+ */
+
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+{
+
+// if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
+// resources with extension in $ffmpeg_audio_extensions will always create an mp3 preview file 
+    if (
+        $resource['file_extension']=="wav" && 
+        in_array($resource['file_extension'], $ffmpeg_audio_extensions) &&
+        file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")) && 
+        resource_download_allowed($ref,'',$resource["resource_type"])
+        )	
+        {
+
+        $colspan = $use_larger_layout ? ' colspan="2"' : '';
+        $download_link =  $baseurl  . "/pages/download_progress.php?ref=" . urlencode($ref) . "&ext=mp3&k=" . urlencode($k);
+
+        $html ="<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\"></td>" ; 
+        $html .= "<td><a id=\"downloadlink\" href=\"#\" onclick=\"directDownload('" . $download_link . "')\">" . $lang["action-download"] . "</a></td></tr> ";
+            
+        echo $html;
+        }
+
+}
+
+
+/**
+ * Render a table based on ResourceSpace data to include sorting by various columns
+ *
+ * @param  array $tabledata - This must be constructed as detailed below
+ * 
+ * Required elements:-
+ * 
+ * "class"  Optional class to add to table div
+ * "headers"  - Column headings using the identifier as the index,
+ *  - name - Title to display
+ *  - Sortable - can column be sorted?
+ * 
+ * "orderbyname"    - name of variable used on page to determine orderby (used to differentiate from standard search values)
+ * "orderby"        - Current order by value
+ * "sortbyname"     - name of variable used on page to determine sort
+ * "sort"           - Current sort
+ * "defaulturl"     - Default URL to construct links
+ * "params"         - Current parameters to use in URL
+ * "pager"          - Pager settings 
+ *  - current page
+ *  - total pages
+ * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - An additional 'tools' element can be included to add custom action icons
+ *  - "class" - FontAwesome class to use for icon
+ *  - "text" - title attribute
+ *  - "url" - URl to link to
+ *  - "modal" - (boolean) Open link in modal?
+ *  - "onclick" - OnClick action to add to icon
+ *  
+ *   e.g.
+ * 
+ *   array(
+ *       "class"=>"fa fa-trash",
+ *       "text"=>$lang["action-delete"],
+ *       "url"=>"",
+ *       "modal"=>false,
+ *       "onclick"=>"delete_job(" . $jobs[$n]["ref"] . ");return false;"
+ *       );
+ *
+ *   array(
+ *       "class"=>"fa fa-info",
+ *       "text"=>$lang["job_details"],
+ *       "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+ *       "modal"=>true,
+ *       );
+ * 
+ * @return void
+ */
+function render_table($tabledata)
+    {
+    ?>
+    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
+
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
+    echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
+    foreach($tabledata["headers"] as $header=>$headerdetails)
+        {
+        echo "<th>";
+        if($headerdetails["sortable"])
+            {
+            $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
+            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return CentralSpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
+            if($tabledata["orderby"] == $header)
+                {
+                // Currently sorted by this column
+                echo "<span class='" . $revsort . "'></span>";
+                }
+            echo "</a>";
+            }
+        else
+            {
+            echo htmlspecialchars($headerdetails["name"]);
+            }
+        
+        
+        echo "</th>";
+        }
+    echo "</tr>"; // End of table header row
+
+    if(count($tabledata["data"]) == 0)
+        {
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        }
+    else
+        {
+        foreach($tabledata["data"] as $rowdata)
+            {
+            echo "<tr>";
+
+            if(isset($rowdata['alerticon']))
+                {
+                echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
+                }
+            else
+                {
+                echo "<td></td>"; 
+                }
+            foreach($tabledata["headers"] as $header=>$headerdetails)
+                {
+                if(isset($rowdata[$header]))
+                    {
+                    echo "<td>";
+                    // Data is present
+                    if($header == "tools")
+                        {
+                        echo "<div class='ListTools'>";
+                        foreach($rowdata["tools"] as $toolitem)
+                            {
+                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                            if(isset($toolitem["onclick"]))
+                                {
+                                echo $toolitem["onclick"];
+                                }
+                            else
+                                {
+                                echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
+                                }
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span></a>";
+                            }
+                        echo "</div>";
+                        }
+                    else
+                        {
+                        echo htmlspecialchars($rowdata[$header]);
+                        }
+                    echo "</td>";
+                    }
+                else
+                    {
+                    echo "<td></td>";
+                    }
+                }
+            echo "</tr>";
+            }
+        }
+    echo "</tbody>";
+    echo "</table>";
+    echo "</div>";
+    }
+
+/**
+ * Render multimensional array or object to display within table cells
+ *
+ * @param  array $array
+ * @return void
+ */
+function render_array_in_table_cells($array)
+    {
+    foreach($array as $name => $value)
+        {
+        echo "<table border=1>";
+        echo "<tr><td width='50%'>";
+        echo htmlspecialchars($name);
+        echo "</td><td width='50%'>";
+
+        if(is_array($value) || is_object($value))
+            {
+            render_array_in_table_cells($value);
+            }
+        elseif(is_bool($value))
+            {
+            echo ($value ? "TRUE" : "FALSE");
+            }
+        else
+            {
+            echo htmlspecialchars($value);
+            }
+                
+        echo "</td></tr>";
+        echo "</table>";
+        }
+    }
+
+

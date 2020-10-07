@@ -668,9 +668,16 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             case 'single_group_select':
                 config_single_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
-	    case 'multi_group_select':
+    	    case 'multi_group_select':
                 config_multi_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
+	    	case 'checkbox_select':
+                config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                break;
+            case 'multi_archive_select':
+                config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
+                break;
+    
             }
         }
 ?>
@@ -1100,6 +1107,49 @@ function config_add_multi_rtype_select($config_var, $label, $width=300)
     {
     return array('multi_rtype_select', $config_var, $label, $width);
     }
+
+
+/**
+ * Generate an html multi-select check boxes block for selecting multiple the RS archive states. 
+ * The selections are posted as an array of the archive states
+ * archive state.
+ *
+ * @param string $name the name of the select block. Usually the name of the config variable being set.
+ * @param string $label the user text displayed to label the select block. Usually a $lang string.
+ * @param integer array $current the current value of the config variable being set
+ * @param integer $width the width of the input field in pixels. Default: 300.
+ */
+function config_multi_archive_select($name, $label, $current, $choices, $width=300)
+    {
+    global $lang;
+?>
+  <div class="Question">
+    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
+<?php
+    foreach($choices as $statekey => $statename)
+        {
+        echo '    <input type="checkbox" value="'. $statekey . '" name="' . $name . '[]"' . (in_array($statekey,$current)?' checked="checked"':'') . '>' . $statename . '</option><br />';
+        }
+?>
+    </fieldset>
+    <div class="clearerleft"></div>
+  </div>
+<?php
+    }
+
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a multiple RS archive select configuration variable to the setup page.
+ *
+ * @param string $config_var the name of the configuration variable to be added.
+ * @param string $label the user text displayed to label the select block. Usually a $lang string.
+ * @param integer $width the width of the input field in pixels. Default: 300.
+ */
+function config_add_multi_archive_select($config_var, $label, $choices, $width=300)
+{
+return array('multi_archive_select', $config_var, $label, $choices, $width);
+}
 
 /**
  * Generate an html single-select + options block for selecting from among rows returned by a

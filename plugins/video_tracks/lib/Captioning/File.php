@@ -2,7 +2,7 @@
 
 namespace Captioning;
 
-abstract class File implements FileInterface
+abstract class File implements FileInterface, \Countable
 {
     const DEFAULT_ENCODING = 'UTF-8';
 
@@ -47,9 +47,9 @@ abstract class File implements FileInterface
 
     /**
      * File constructor.
-     * @param null       $_filename
-     * @param null       $_encoding
-     * @param bool|false $_useIconv
+     * @param string|null $_filename
+     * @param string|null $_encoding
+     * @param bool|false  $_useIconv
      */
     public function __construct($_filename = null, $_encoding = null, $_useIconv = false)
     {
@@ -312,9 +312,11 @@ abstract class File implements FileInterface
     /**
      * Add a cue
      *
-     * @param mixed $_mixed An cue instance or a string representing the text
+     * @param mixed  $_mixed An cue instance or a string representing the text
      * @param string $_start A timecode
-     * @param string $_stop A timecode
+     * @param string $_stop  A timecode
+     *
+     * @throws \Exception
      * @return File
      */
     public function addCue($_mixed, $_start = null, $_stop = null)
@@ -322,7 +324,7 @@ abstract class File implements FileInterface
         $fileFormat = self::getFormat($this);
 
         // if $_mixed is a Cue
-        if (is_subclass_of($_mixed, __NAMESPACE__.'\Cue')) {
+        if (is_object($_mixed) && class_exists(get_class($_mixed)) && class_exists(__NAMESPACE__.'\Cue') && is_subclass_of($_mixed, __NAMESPACE__.'\Cue')) {
             $cueFormat = Cue::getFormat($_mixed);
             if ($cueFormat !== $fileFormat) {
                 throw new \Exception("Can't add a $cueFormat cue in a $fileFormat file.");
@@ -359,6 +361,10 @@ abstract class File implements FileInterface
      */
     public function sortCues()
     {
+        if (count($this->cues) === 0) {
+            return $this;
+        }
+
         $tmp = array();
 
         $count = 0; // useful if 2 cues start at the same time code
@@ -689,10 +695,17 @@ abstract class File implements FileInterface
      */
     protected function getNextValueFromArray(array &$array)
     {
-        $element = each($array);
-        if (is_array($element)) {
-            return $element['value'];
-        }
-        return false;
+        $element = current($array);
+        next($array);
+
+        return $element;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return $this->getCuesCount();
     }
 }

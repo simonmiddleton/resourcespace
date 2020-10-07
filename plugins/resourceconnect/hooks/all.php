@@ -255,7 +255,7 @@ function HookResourceConnectAllAftersearchimg($resource, $img_url="")
         // ResourcePanel width - ResourcePanel margin - image width 
         $right = ($height > $width) ?  "right:" . (175 - 14 - intval($width)) . "px" : "";
         
-        echo "<i style=\"margin-top:$margin;$right\" class=\"overlay-link fas fa-link\"></i>";
+        echo "<i style=\"margin-top:$margin;$right\" class=\"resourceconnect-link overlay-link fas fa-link\"></i>";
         }
     }
 function HookResourceconnectAllGetResourcesToCheck($collection)

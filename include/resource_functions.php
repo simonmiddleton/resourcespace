@@ -2692,6 +2692,18 @@ function get_resource_type_field($field)
         }
     }
 
+/**
+ * get_resource_field_data
+ *
+ * @param  int $ref                 Resource ID
+ * @param  bool $multi              Get all fields? False by defautl (only fields that apply to the given resource type)
+ * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
+ * @param  int $originalref    Original resource ID to get data for. NULL by default
+ * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
+ * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
+ * @param  bool $forcsv             Get data for CSV export (uses \ separator for category tree nodes). FALSE by default
+ * @return void
+ */
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
@@ -2805,7 +2817,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         array_multisort($fieldorder_by, SORT_ASC, $fieldrestype, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
-        else
+    else
         {
         array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
@@ -2866,32 +2878,247 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     return $return;
     }
 
-
-function get_resource_field_data_batch($refs)
+/**
+ * get_resource_field_data_batch - Get all resource data for the given resources
+ * Used by CSV metadata export. 
+ * 
+ * Returns a multidimensional array with resource IDs as top level keys, followed by metadata field IDs as keys
+ * 
+ * e.g. 
+ * Array
+ * (
+ *     [119912] => array
+ *         (
+ *          [8] => Array
+ *              (
+ *              [resource] => 119912
+ *              [value] => This is the title of resource 119912
+ *              [resource_type_field] => 8
+ *              [ref] => 8
+ *              [name] => title
+ *              [title] => Title
+ *              [field_constraint] => 0
+ *              [type] => 1))
+ *              ....
+ * 
+ * This differs from get_resource_field_data() in that only fields containing data will be returned.
+ *
+ * @param array $resources (either an array of resource ids or an array returned from search results)
+ * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
+ * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
+ * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
+ * @param  mixed $exportoptions     Array of options as below
+ *                                   "csvexport" (bool) - get data for CSV export (uses \ separator for category tree nodes)
+ *                                   "personal"  (bool) - include data in fields marked as personal
+ *                                   "alldata"   (bool) - include data in all fields, including technical metadata   
+ * 
+ * @return array                    Array of resource data organised by resource then metadata field ID
+ */
+function get_resource_field_data_batch($resources,$use_permissions=true,$external_access=false,$ord_by=false, $exportoptions = array())
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for all the resource references in the array $refs.
     # This will use a single SQL query and is therefore a much more efficient way of gathering
     # resource data for a list of resources (e.g. search result display for a page of resources).
-    if (count($refs)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
-    $refsin=join(",",$refs);
-    $results=sql_query("select d.resource,f.*, f.field_constraint,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
-    $return=array();
-    $res=0;
-    for ($n=0;$n<count($results);$n++)
+    if (count($resources)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
+
+    global $view_title_field, $NODE_FIELDS;
+
+    $csvexport = isset($exportoptions["csvexport"]) ? $exportoptions["csvexport"] : false;
+    $personal = isset($exportoptions["personal"]) ? $exportoptions["personal"] : false;
+    $alldata = isset($exportoptions["alldata"]) ? $exportoptions["alldata"] : false;
+
+    $restype = array();
+    if(isset($resources[0]["resource_type"]))
         {
-        if ($results[$n]["resource"]!=$res)
-            {
-            # moved on to the next resource
-            if ($res!=0) {$return[$res]=$resdata;}
-            $resdata=array();
-            $res=$results[$n]["resource"];
-            }
-        # copy name/value into resdata array
-        $resdata[$results[$n]["ref"]]=$results[$n];
+        // This is an array of search results so we already have the resource types
+        $restype = array_column($resources,"resource_type","ref");
+        $resourceids = array_filter(array_column($resources,"ref"),function($v){return (string)(int)$v == (string)$v;});
+        $refsin = implode("','",$resourceids);
+        $getresources = $resources;
         }
-    $return[$res]=$resdata;
-    return $return;
+    else
+        {
+        $resources = array_filter($resources,function($v){return (string)(int)$v == $v;});
+        $refsin = implode("','",$resources);
+        $allresourcedata = sql_query("SELECT ref, resource_type FROm resource WHERE ref IN ('" . $refsin . "') ");
+        foreach($allresourcedata as $resourcedata)
+            {
+            $restype[$resourcedata["ref"]] = $resourcedata["resource_type"];
+            }
+        $getresources = array();
+        foreach($resources as $resource)
+            {
+            $getresources[]["ref"] = $resource;
+            }
+        }
+
+    $order_by_sql     = ($ord_by ? 'resource, order_by, resource_type, ref' : 'resource, resource_type, order_by, ref');    
+    $node_fields_exclude = implode(',', $NODE_FIELDS);
+    // Remove Category tree fields as these need special handling
+    $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
+    $node_fields_list = implode(',', $node_fields);
+
+    $fieldsSQL = "
+             SELECT d.resource,
+                    d.value,
+                    f1.ref resource_type_field,
+                    f1.*,
+                    f1.required AS frequired,
+                    f1.ref AS fref,
+                    f1.field_constraint,
+                    f1.automatic_nodes_ordering,
+                    f1.personal_data,
+                    f1.include_in_csv_export,
+                    f1.full_width
+               FROM resource_data d
+          LEFT JOIN resource_type_field AS f1
+                 ON d.resource_type_field = f1.ref
+              WHERE d.resource IN ('" . $refsin . "')
+                AND (
+                        f1.active=1 and
+                        f1.type NOT IN ({$node_fields_exclude})
+                    )
+
+              UNION
+
+             SELECT rn.resource,
+                    group_concat(if(n.name IS NOT NULL, n.name, NULL)) AS `value`,
+                    f2.ref resource_type_field,
+                    f2.*,
+                    f2.required AS frequired,
+                    f2.ref AS fref,
+                    f2.field_constraint,
+                    f2.automatic_nodes_ordering,
+                    f2.personal_data,
+                    f2.include_in_csv_export,
+                    f2.full_width
+               FROM resource_node rn
+          LEFT JOIN node n ON n.ref=rn.node
+          LEFT JOIN resource_type_field f2 ON f2.ref=n.resource_type_field
+              WHERE rn.resource IN ('" . $refsin . "')
+                AND (
+                        f2.active=1 and
+                        f2.type IN ({$node_fields_list})
+                    )
+           GROUP BY resource, ref
+    ";
+
+    $fields = sql_query($fieldsSQL);
+
+    // Add category tree values, reflecting tree structure
+    $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    foreach($tree_fields as $tree_field)
+        {
+        $addfield= $tree_field;
+        foreach($getresources as $getresource)
+            {
+            $treenodes = get_resource_nodes($getresource["ref"], $tree_field["ref"], true, SORT_ASC);
+            $treetext_arr = get_tree_strings($treenodes);
+            // Quoting each element is required for csv export
+            $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
+            $addfield["resource"] = $getresource["ref"];
+            $addfield["value"] = count($treetext_arr) > 0 ? $valstring : "";
+            $addfield["resource_type_field"] = $tree_field["ref"];
+            $addfield["fref"] = $tree_field["ref"];
+            $fields[] = $addfield;
+            }
+        }
+
+    if (empty($fields))
+        {
+        return false;
+        }
+    // Convert to array with resource ID as index
+    $res=0;
+    $allresdata=array();
+    $validtypes = array();
+    # Support archive and global.
+    $inherit_global_fields = array();
+    for ($n=0;$n<count($fields);$n++)
+        {
+        $rowadded = false;
+        if (!isset($allresdata[$fields[$n]["resource"]]))
+            {
+            $allresdata[$fields[$n]["resource"]]=array();
+            }
+
+        // Get valid field values for resource type
+        if(!isset($validtypes[$fields[$n]["ref"]]))
+            {
+            $rtype = $restype[$fields[$n]["resource"]];
+            $validtypes[$fields[$n]["ref"]] = array();
+            $validtypes[$fields[$n]["ref"]][] = $rtype;
+            $validtypes[$fields[$n]["ref"]][] = 999;
+
+            // Resource types can be configured to not have global fields in which case we only present the user fields valid for
+            // this resource type
+            if(!isset($inherit_global_fields[$fields[$n]["ref"]]))
+                {
+                $inherit_global_fields[$fields[$n]["ref"]] = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = '{$rtype}'", true, "schema");
+                }
+            if($inherit_global_fields[$fields[$n]["ref"]])
+                {
+                $validtypes[$fields[$n]["ref"]][] = 0;
+                }
+            }
+
+            // Add data to array
+            if  (
+                    (!$use_permissions
+                    || 
+                    ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
+                    ||
+                    (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
+                    )
+                &&
+                    in_array($fields[$n]["resource_type"],$validtypes[$fields[$n]["ref"]])
+                &&
+                    (!($external_access && !$fields[$n]["external_user_access"]))
+                && 
+                   (!$personal || $fields[$n]["personal_data"])
+                && 
+                   ($alldata || $fields[$n]["include_in_csv_export"])
+                )
+                {
+                $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-"); 
+                $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+                $rowadded = true;
+                }
+        # Add title field even if $inherit_global_fields = false
+
+        if  (!$rowadded && 
+                $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
+                && 
+                metadata_field_view_access($fields[$n]["fref"]) #Check permissions to access title field
+                )
+            {
+            $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+            }
+        }
+
+    foreach($allresdata as $resourceid => $resdata)
+        {
+        $fieldorder_by = array();
+        $fieldrestype = array();
+        $fieldref = array();
+        foreach($resdata as $fkey => $field)
+            {
+            $fieldorder_by[$fkey]   = $field["order_by"]; 
+            $fieldrestype[$fkey]    = $field["resource_type"]; 
+            $fieldref[$fkey]        = $field["ref"];
+            }
+        if($ord_by)
+            {
+            array_multisort($fieldorder_by, SORT_ASC, $fieldrestype, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
+            }
+        else
+            {
+            array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
+            }
+        }
+
+    return $allresdata;
     }
     
 function get_resource_types($types = "", $translate = true)
@@ -3210,8 +3437,28 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             } 
         }
 
+    // check that $usage is valid value for int type db field
+    // https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
+    $options_db_int = [ 'options' => [ 'min_range' => -2147483648,   'max_range' => 2147483647] ];
+    if (!filter_var($usage, FILTER_VALIDATE_INT, $options_db_int) && $usage != 0)
+        {
+        return false;
+        }
+ 
+    // check that purchase_price is valid for decimal 10,2 field
+    $options_db_purchase_price = [ 'options' => [  'regexp' => "/^[0-9]{0,10}\.?[0-9]{0,2}$/"   ]  ];
+    if (filter_var($purchase_price, FILTER_VALIDATE_REGEXP, $options_db_purchase_price) == "")
+        {
+        return false;
+        } 
         
-
+    // check that purchase_size is valid for varchar(10) field
+    $options_db_purchase_size = [ 'options' => [ 'regexp' => "/^[\w\W]{0,10}$/"]  ];
+    if ($purchase_size != "" && filter_var($purchase_size, FILTER_VALIDATE_REGEXP, $options_db_purchase_size) == "" )
+        {
+        return false;
+        } 
+            
     // If it is worthy of logging, update the modified date in the resource table
     update_timestamp($resource);
     

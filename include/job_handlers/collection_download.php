@@ -48,7 +48,7 @@ else
     return;
     }
 
-if(!isset($collectiondata))
+if(!isset($collectiondata) && isset($collection))
     {
     $collectiondata = get_collection($collection);
     }

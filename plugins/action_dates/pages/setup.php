@@ -21,11 +21,11 @@ foreach(get_editable_states($userref) as $archive_state)
     }
 
 $allowable_fields = get_resource_type_fields('','order_by','asc','',$DATE_FIELD_TYPES);
-
 if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(false))
     {
     // Save the plugin config
     $action_dates_config["action_dates_deletefield"] = getvalescaped('action_dates_deletefield','',true);
+    $action_dates_config["action_dates_eligible_states"] = getvalescaped('action_dates_eligible_states','');
     $action_dates_config["action_dates_reallydelete"] = getvalescaped('action_dates_reallydelete','');
     $action_dates_config["action_dates_new_state"] = getvalescaped('action_dates_new_state','',true);
     $action_dates_config["action_dates_email_admin_days"] = getvalescaped('action_dates_email_admin_days','',true);
@@ -59,6 +59,9 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 $page_def[] = config_add_section_header($lang['action_dates_deletesettings']);
 $page_def[] = config_add_single_ftype_select('action_dates_deletefield',$lang['action_dates_delete'],420,false,$DATE_FIELD_TYPES);
+
+$page_def[] = config_add_multi_archive_select("action_dates_eligible_states", $lang["action_dates_eligible_states"], $editable_states);
+
 $page_def[] = config_add_boolean_select('action_dates_reallydelete',$lang['action_dates_reallydelete']);
 $page_def[] = config_add_single_select('action_dates_new_state', $lang['action_dates_new_state'], $editable_states);
 $page_def[] = config_add_text_input('action_dates_email_admin_days',$lang['action_dates_email_admin_days']);
@@ -137,10 +140,8 @@ $page_def[] = config_add_html($page_def_extra);
 
 
 // Do the page generation ritual -- don't change this section.
-//$upload_status = config_gen_setup_post($page_def, $plugin_name);
+$upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, true, $plugin_page_heading);
-
-
 
 include '../../../include/footer.php';

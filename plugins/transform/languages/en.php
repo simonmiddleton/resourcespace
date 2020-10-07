@@ -42,6 +42,7 @@ $lang['allow_upscale']="Allow upscale?";
 $lang['batchtransform'] = "Batch transform";
 $lang['batchtransform-introtext']="<strong>WARNING: executing this command will permanently change resources. Use caution!</strong>";
 $lang['error-crop-imagemagick-not-configured']="Error: ImageMagick must be configured for crop functionality. Please contact your system administrator.";
+$lang['error-dimension-zero'] = "Error: transform preview image has a calculated width/height of zero.";
 $lang['no_resources_found']="no resources found";
 $lang['batch_transforming_collection']="Batch transforming collection %col"; # %col will be replaced with the collection id
 $lang['not-transformed']="was not transformed: Access Denied.";
