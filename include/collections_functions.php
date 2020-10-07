@@ -4448,19 +4448,20 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
         return array_reverse($carry);
         }
     $collection = $collection[0];
+    $collection_parent = validate_collection_parent($collection);
 
     $carry[] = array(
         "ref"    => $collection["ref"],
         "name"   => $collection["name"],
-        "parent" => validate_collection_parent($collection),
+        "parent" => $collection_parent,
     );
 
-    if(is_null(validate_collection_parent($collection)))
+    if(is_null($collection_parent))
         {
         return array_reverse($carry);
         }
 
-    return get_featured_collection_category_branch_by_leaf((int) $collection["parent"], $carry);
+    return get_featured_collection_category_branch_by_leaf($collection_parent, $carry);
     }
 
 

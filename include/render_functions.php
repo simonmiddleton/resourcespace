@@ -2286,6 +2286,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
 * 
 * @param array  $links     List of link "objects" that create the trail
 * @param string $pre_links Pre-rendered links in HTML form
+* @param string $class     Extra classes for the main container div
 * 
 * @return void
 */
@@ -2320,7 +2321,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 echo LINK_CARET;
                 }
                 ?>
-            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
+            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);">
                 <span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span>
             </a>
             <?php
