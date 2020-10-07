@@ -100,7 +100,7 @@ render_featured_collections($rendering_options, $smart_fcs_list);
 unset($rendering_options["smart"]);
 
 
-if($smart_rtf == 0 && checkperm("h") && $collection_allow_creation)
+if($k == "" && $smart_rtf == 0 && checkperm("h") && $collection_allow_creation)
     {
     render_new_featured_collection_cta(
         generateURL(

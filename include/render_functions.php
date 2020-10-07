@@ -4232,7 +4232,7 @@ function render_featured_collections(array $ctx, array $items)
             }
 
         // Featured collection default tools
-        if($is_featured_collection && $k == "" && checkPermission_dashmanage())
+        if($is_featured_collection && checkPermission_dashmanage())
             {
             $render_ctx["tools"][] = array(
                 "href" => generateURL(
@@ -4322,6 +4322,12 @@ function render_featured_collections(array $ctx, array $items)
                     ));
                 }
             $render_ctx["icon"] = ICON_FOLDER;
+            $render_ctx["tools"] = array();
+            }
+
+        // Don't show the tools for external shares
+        if((trim($k) != ""))
+            {
             $render_ctx["tools"] = array();
             }
 
