@@ -111,6 +111,11 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
     
+    if (!is_int($ref))
+        {
+        return false;
+        }
+
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
@@ -140,16 +145,22 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     return $ref;
     }
 
+
+/**
+ * 
+ * Provides simple way to update field by passing in simple string values for text fields,
+ * comma separated values for fixed list (node) fields, using double quotes
+ * to enclose strings and backslash as escape character
+ * Uses update_field and add_resource_nodes/delete_resource_nodes
+ * 
+ */
+
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    // Provides simple way to update field by passing in simple string values for text fields,
-    // comma separated values for fixed list (node) fields, using double quotes
-    // to enclose strings and backslash as escape character
-    // Uses update_field and add_resource_nodes/delete_resource_nodes
-    
     global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
     
     $resourcedata=get_resource_data($resource,true);
+    
     $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
     
     if(!is_numeric($field))

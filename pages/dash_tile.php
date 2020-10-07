@@ -83,9 +83,9 @@ if($submitdashtile && enforcePostRequest(false))
 	$resource_count=getvalescaped("resource_count",FALSE);
 
 	$link=str_replace("&amp;","&",getvalescaped("link",""));
-	if(strpos($link,$baseurl_short)===0) 
+	if(strpos($link,$baseurl_short."pages/")===0) 
 		{
-		$length = strlen($baseurl_short);
+		$length = strlen($baseurl_short."pages/");
 		$link = substr_replace($link,"",0,$length);
 		}
 	$link= preg_replace("/^\//","",$link);
@@ -192,7 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-	
+
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
 		{
@@ -402,7 +402,11 @@ else if($edit)
 	
 	#Get field data
 	$buildstring = explode('?',$tile["url"]);
-	parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+    if(isset($buildstring[1])) 
+        {
+        parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+        }
+	
 	if(isset($buildstring["tltype"]))
 		{
 		$tile_type=$buildstring["tltype"];

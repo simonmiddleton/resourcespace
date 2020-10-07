@@ -106,7 +106,6 @@ function do_search(
     if ($order_by === "") {$order_by="relevance";}
 
     $order = array(
-        "collection"      => "c.sortorder $sort,c.date_added $revsort,r.ref $sort",
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
         "popularity"      => "user_rating $sort,total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
         "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",
@@ -122,6 +121,12 @@ function do_search(
         "status"          => "archive $sort",
         "modified"        => "modified $sort"
     );
+
+    // Add collection sort option only if searching a collection
+    if(substr($search, 0, 11) == '!collection')
+        {
+        $order["collection"] = "c.sortorder $sort,c.date_added $revsort,r.ref $sort";
+        }
 
     # Check if date_field is being used as this will be needed in the inner select to be used in ordering
     $include_fieldx=false;
@@ -392,7 +397,7 @@ function do_search(
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
-                                
+                            $c++;    
                             if(!isset($datefieldjoin))
                                 {
                                 // We only want to join once to the date_field 

@@ -22,6 +22,10 @@ if (getval("submitted", "") != "" && enforcePostRequest(false))
 
 # Fetch research request data
 $research=get_research_request($ref);
+if (!$research)
+    {
+    exit("The supplied research request reference is not valid.");
+    }
 	
 include "../../include/header.php";
 ?>

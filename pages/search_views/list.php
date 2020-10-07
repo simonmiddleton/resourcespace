@@ -91,27 +91,6 @@ if (!hook("replacelistitem"))
         
         hook("searchbeforeratingfield");
         
-        if (isset($rating_field))
-            { ?>
-            <td <?php hook("listviewcolumnstyle");?> >
-                <?php 
-                if (isset($result[$n][$rating])&& $result[$n][$rating]>0) 
-                    { 
-                    for ($y=0;$y<$result[$n][$rating];$y++)
-                        { ?> 
-                        <div class="IconStar"></div><?php 
-                        }
-                    } 
-                else 
-                    { ?>
-                    &nbsp;
-                    <?php 
-                    } 
-            ?>
-            </td>
-            <?php 
-            }
-
         if ($id_column)
             { ?>
             <td <?php hook("listviewcolumnstyle");?> >

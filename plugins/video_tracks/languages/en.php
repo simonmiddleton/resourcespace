@@ -33,6 +33,7 @@ $lang["video_tracks_export_file_failed"] = "Creation of the output file failed."
 $lang["video_tracks_export_file_description"] = "Custom video file";
 $lang["video_tracks_download_export"] = "When files are created in the export folder offline, add a link to notification messages allowing for download of exported files through web interface";
 $lang["video_tracks_config_blocked"] = "Configuration of video output formats has been blocked. Please contact your system administrator";
+$lang["video_tracks_command_missing"] = "Available file output options are incomplete. If this error persists please contact your system administrator.";
 
 // Labels:
 $lang['video_tracks_generate_label'] = 'Generate';

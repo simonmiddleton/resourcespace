@@ -106,10 +106,13 @@ if ($external==0)
     $condition.=" and external=0";
     }
 
-    
 if (!$from_dash)
     {
-    $title=get_translated_activity_type($activity_type) . " " . $lang["report-graph-by-" . $type];
+    $title=get_translated_activity_type($activity_type);
+    if (isset($lang["report-graph-by-" . $type]))
+        {
+        $title.=" ".$lang["report-graph-by-" . $type];
+        }
     ?>
     <h2><?php echo $title ?>
     

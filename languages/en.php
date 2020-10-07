@@ -592,6 +592,7 @@ $lang['remove_custom_access_users_groups'] = 'Users and groups with custom acces
 $lang['remove_custom_access_no_users_found'] = 'No users or groups with custom access found.';
 $lang['action-generate_pdf'] = 'Generate PDF';
 $lang['lock-tooltip']='Lock field to be copied to next resource';
+$lang['resource_type_not_found'] = 'Resource type not found.';
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -1470,7 +1471,7 @@ $lang['plugins-disabled-plugin-message'] = 'Disabled in configuration';
 $lang['location-title'] = 'Location data';
 $lang['location-add'] = 'Add location';
 $lang['location-edit'] = 'Edit location';
-$lang['location-details'] = 'Use "Drag mode" to switch between pin positioning and panning. Use zoom controls to zoom in and out. Click Save to save pin position and zoom level.';
+$lang['location-details'] = 'Use "Drag mode" to switch between pin positioning and panning. Use zoom controls to zoom in and out. Click Save to save pin position and zoom level.<br/> If entering coordinates manually, please use the Decimal Degrees format, e.g. 32.30642,-122.61458.';
 $lang['location-missing'] = 'The following resources lack geolocation data and are not displayed:';
 $lang['location-noneselected']="No location selected";
 $lang['location-noneselected']="No location data";
@@ -1796,6 +1797,7 @@ $lang["done"]="Done.";
 
 $lang["latlong"]="Lat / long";
 $lang["geographicsearch"]="Geographic search";
+$lang["geographicsearchmissing"]="Geographic search criteria missing";
 $lang["geographicsearchresults"]="Geographic search results";
 
 $lang["geographicsearch_help"]="Drag to select a search area.";
@@ -2169,6 +2171,7 @@ $lang['action-title_create_report_called'] = "Create report called...";
 $lang['page-title_report_management_edit'] = "Edit report";
 $lang['page-subtitle_report_management_edit'] = "Use this section to modify report contents.";
 $lang["fieldtitle-tick_to_delete_report"] = "Tick to delete this report";
+$lang["report_query_required"] = "Report query is required";
 
 # size management
 $lang['page-title_size_management'] = "Manage sizes";
@@ -2884,6 +2887,7 @@ $lang["unknown_date_format_error"]         = "Error: %row% '%date%' in [%field%]
 $lang["date_format_error"]                 = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
+$lang["invalid_date_error2"]                 = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
@@ -2903,6 +2907,11 @@ $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
+$lang["posted-file-not-found"]              = "The file posted has not been found";
+$lang["error-theme-missing"]                = "Featured collection missing or has not been specified.";
+$lang["system_config_search_engines"]       = "Search engines";
+$lang["search_engine_noindex"] = "Request that search engines don't index this site";
+$lang["search_engine_noindex_external_shares"] = "Request that search engines do not index external shares";
 
 $lang["job_details"]                        = "Job details";
 $lang["job_text"]                           = "Job";

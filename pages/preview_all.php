@@ -89,7 +89,7 @@ if (substr($search,0,11)=="!collection")
 	$collection=explode(",",$collection);
 	$collection=$collection[0];
 	$collectiondata=get_collection($collection);
-	if (!$collectiondata){?>
+	if (!$collectiondata || !is_array($collectiondata)){?>
 		<script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl_short?>pages/home.php'</script>
 	<?php } 
 	if ($allow_reorder)

@@ -23,6 +23,16 @@ update_hitcount($ref);
 # fetch the current search (for finding similar matches)
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
+
+# add order_by check to filter values prefixed by 'field'
+if(preg_match("/^field(.*)/", $order_by, $matches))
+    {
+    if (!in_array($matches[1],$sort_fields)) # check that field ref  is in config $sort_fields array
+        {
+        $order_by="relevance"; # if not, then sort by relevance
+        }
+    }
+
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
@@ -232,14 +242,6 @@ if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_h
 # Log this activity
 daily_stat("Resource view",$ref);
 if ($log_resource_views) {resource_log($ref,'v',0);}
-
-if(!$save_as)
-    {
-    // check browser to see if forcing save_as
-    if(!$direct_download_allow_opera && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
-    if(!$direct_download_allow_ie7 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}	
-    if(!$direct_download_allow_ie8 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
-    }
 
 # downloading a file from iOS should open a new window/tab to prevent a download loop
 $iOS_save=false;
@@ -642,15 +644,12 @@ $video_preview_file = get_resource_path(
 # Default use_watermark if required by related_resources
 $use_watermark = false;
 
-
-$videopreviewfile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension);
-
 if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	{
 	include "../players/type" . $resource["resource_type"] . ".php";
 	}
 elseif (hook("replacevideoplayerlogic","",array($video_preview_file))){ }
-elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($videopreviewfile)))
+elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($video_preview_file)))
 	{
 	# Include the player if a video preview file exists for this resource.
 	$download_multisize=false;
@@ -730,7 +729,7 @@ else if(1 == $resource['has_image'])
         $hide_real_filepath = $hide_real_filepath_initial;
 
         $previewimagelink = generateURL(
-            "{$baseurl}/lib/pdfjs-1.9.426/web/viewer.php",
+            "{$baseurl}/lib/pdfjs-2.4.456/web/viewer.php",
             $urlparams,
             array(
                 'ref'  => $ref,
@@ -1394,6 +1393,9 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 			</td>
 			</tr>
 			<?php
+            // add link to mp3 preview file if resource is a wav file
+            render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout);
+
 			}
         }
 	else
@@ -2197,8 +2199,10 @@ if($annotate_enabled)
 jQuery('document').ready(function()
     {
 	/* Call SelectTab upon page load to select first tab*/
-    SelectMetaTab(0,<?php echo ($modal ? "true" : "false") ?>);
+    SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
     registerCollapsibleSections(false);
     });
 </script>
 <?php include "../include/footer.php";
+
+

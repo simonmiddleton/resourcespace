@@ -45,6 +45,13 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<?php if ($search_engine_noindex || (getval("k","")!="" && $search_engine_noindex_external_shares))
+    {
+    ?>
+    <meta name="robots" content="noindex,nofollow">
+    <?php
+    }
+?>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook('extra_meta'); ?>
@@ -73,7 +80,6 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
 <?php if ($pagename=="login") { ?><script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script><?php } ?>
-<!--[if lte IE 9]><script src="<?php echo $baseurl?>/lib/historyapi/history.min.js"></script><![endif]-->
 <?php if ($image_preview_zoom) { ?><script src="<?php echo $baseurl?>/lib/js/jquery.zoom.js"></script><?php } ?>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
@@ -259,9 +265,6 @@ $extrafooterhtml="";
 <!-- Load specified font CSS -->
 <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
 
-<?php if ($pagename!="preview_all"){?><!--[if lte IE 7]> <link href="<?php echo $baseurl?>/css/globalIE.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]--><?php } ?>
-<!--[if lte IE 5.6]> <link href="<?php echo $baseurl?>/css/globalIE5.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]-->
-
 <?php
 echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
@@ -288,11 +291,6 @@ if(!hook("customloadinggraphic"))
 
 <?php hook("bodystart"); ?>
 
-<?php
-# Commented as it was causing IE to 'jump'
-# <body onLoad="if (document.getElementById('searchbox')) {document.getElementById('searchbox').focus();}">
-?>
-
 <!--Global Header-->
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
@@ -306,7 +304,7 @@ if ($pagename=="login" || $pagename=="user_request" || $pagename=="user_password
 
 hook("beforeheader");
 
-# Calculate Header Image Display #
+# Calculate Header Image Display
 if(isset($usergroup))
     {
     //Get group logo value

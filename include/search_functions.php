@@ -1127,7 +1127,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $lang;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1299,7 +1299,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($return_refs_only)
             {
             // note that we actually include archive and created_by columns too as often used to work out permission to edit collection
-            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive','created_by'));
+            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive','created_by','access'));
             }
         else
             {
@@ -1350,6 +1350,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,4)=="!geo")
         {
         $geo=explode("t",str_replace(array("m","p"),array("-","."),substr($search,4))); # Specially encoded string to avoid keyword splitting
+        if(!isset($geo[0]) || empty($geo[0]) || !isset($geo[1]) || empty($geo[1]))
+        {
+            exit($lang["geographicsearchmissing"]);
+        }
         $bl=explode("b",$geo[0]);
         $tr=explode("b",$geo[1]);
         $sql="SELECT r.hit_count score, $select FROM resource r $sql_join WHERE 
@@ -1519,8 +1523,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Note: in order to combine special searches with normal searches, these are separated by space (" ")
         $searches_array = explode(' ', $search);
         $properties     = explode(';', substr($searches_array[0], 11));
-        $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
-        
+
+        // Use a new variable to ensure nothing changes $sql_filter unless this is a valid property search 
+        $sql_filter_properties = "";        
         foreach ($properties as $property)
             {
             $propertycheck=explode(":",$property);
@@ -1528,48 +1533,48 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 $propertyname=$propertycheck[0];
                 $propertyval=escape_check($propertycheck[1]);
-                if($sql_filter==""){$sql_filter .= " WHERE ";}else{$sql_filter .= " AND ";}
+                $sql_filter_properties_and = $sql_filter_properties != "" ? " AND "  : ""; 
                 switch($propertyname)
                     {
                     case "hmin":
-                        $sql_filter.=" rdim.height>='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.height>='" . intval($propertyval) . "'";
                     break;
                     case "hmax":
-                        $sql_filter.=" rdim.height<='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.height<='" . intval($propertyval) . "'";
                     break;
                     case "wmin":
-                        $sql_filter.=" rdim.width>='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.width>='" . intval($propertyval) . "'";
                     break;
                     case "wmax":
-                        $sql_filter.=" rdim.width<='" . intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " rdim.width<='" . intval($propertyval) . "'";
                     break;
                     case "fmin":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size>='" . (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_size>='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size<='" . (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_size<='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
-                        $sql_filter.=" r.file_extension ";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.file_extension ";
                         if(substr($propertyval,0,1)=="-")
                             {
                             $propertyval = substr($propertyval,1);
-                            $sql_filter.=" NOT ";
+                            $sql_filter_properties.=" NOT ";
                             }
                         if(substr($propertyval,0,1)==".")
                             {
                             $propertyval = substr($propertyval,1);
                             }
-                        $sql_filter.=" LIKE '". escape_check($propertyval) . "'";
+                            $sql_filter_properties.=" LIKE '". escape_check($propertyval) . "'";
                     break;
                     case "pi":
-                        $sql_filter.=" r.has_image='". intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.has_image='". intval($propertyval) . "'";
                     break;
                     case "cu":
-                        $sql_filter.=" r.created_by='". intval($propertyval) . "'";
+                        $sql_filter_properties.= $sql_filter_properties_and . " r.created_by='". intval($propertyval) . "'";
                     break;
 
                     case "orientation":
@@ -1584,8 +1589,21 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                             break;
                             }
 
-                        $sql_filter .= $orientation_filters[$propertyval];
-                        break;
+                        $sql_filter_properties .= $sql_filter_properties_and .  $orientation_filters[$propertyval];
+                    break;
+                    }
+                
+                if($sql_filter_properties != "")
+                    {
+                    $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                    if ($sql_filter == "")
+                        {
+                        $sql_filter .= " WHERE " . $sql_filter_properties;
+                        }
+                    else
+                        {
+                        $sql_filter .= " AND " . $sql_filter_properties;
+                        }
                     }
                 }
             }
@@ -2137,8 +2155,9 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
 
     # Thanks to Aidan Lister <aidan@php.net>
     # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
-    # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
-    # http://aidanlister.com/repos/license/
+    # As of 2020-09-07 code is now at https://github.com/aidanlister/code/blob/master/function.str_highlight.php 
+    # The GitHub code repository README states: "The code resides entirely in the public domain."
+    # https://github.com/aidanlister/code
 
     $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
     $text=str_replace("#zwspace;","♣",$text);
@@ -2169,8 +2188,7 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
 
     foreach ($needle as $needle_s) {
         if (strlen($needle_s) > 0) {
-            $needle_s = preg_quote($needle_s);
-            $needle_s = str_replace("#","\\#",$needle_s);
+            $needle_s = preg_quote($needle_s, "#");
         
             // Escape needle with optional whole word check
             if ($options & STR_HIGHLIGHT_WHOLEWD) {
@@ -2545,12 +2563,8 @@ function save_filter_rule($filter_rule, $filterid, $rule_data)
         $rule_data = json_decode($rule_data);
         }
         
-    if($filter_rule != "new")
-        {    
-        if(!is_numeric($filter_rule))
-            {
-            return false;    
-            }
+    if($filter_rule != "new" && (string)(int)$filter_rule == (string)$filter_rule && $filter_rule > 0)
+        {
         sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
         }
     else
@@ -2667,6 +2681,7 @@ function copy_filter($filter)
 */ 
 function update_search_from_request($search)
     {
+    //global $config_separators;
     reset ($_POST);reset($_GET);
 
     foreach (array_merge($_GET, $_POST) as $key=>$value)

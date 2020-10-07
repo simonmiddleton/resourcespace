@@ -54,10 +54,14 @@
             }
         $rebuilt_search = str_replace('"', '', $rebuilt_search);
 
+        $title = '"' . escape_check($rebuilt_search) . '"';
+        $title .= ($restypes_names == "") ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")";
+        $title = mb_strcut($title,0,500);
+
 		sql_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (
 			NOW(),
-			'{$userref}',
-			'\"" . escape_check($rebuilt_search) . '"' . ($restypes_names == "" ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")") . "',
+			'" . $userref . "',
+			'" . $title . "',
 			'" . escape_check($search) . "',
 			'" . escape_check($restypes) . "',
 			'" . escape_check($archive) . "',

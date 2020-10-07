@@ -458,6 +458,8 @@ else { ?>
 <script>usercollection='<?php echo htmlspecialchars($usercollection) ?>';</script>
 <?php 
 
+$addarray=array();
+
 $add=getvalescaped("add","");
 if ($add!="")
 	{
@@ -972,7 +974,7 @@ if ($count_result>0)
 <?php if (!hook("resourceview")) { ?>
 		<!--Resource Panel-->
 		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if ($add==$ref) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
         
 		<?php if (!hook("rendercollectionthumb")){?>
 		<?php $access=get_resource_access($result[$n]);
@@ -1080,12 +1082,12 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 	<?php
 	}
 
-if ($add!="")
+if (count($addarray)>0 && $addarray[0]!="")
 {
 # Animate the new item
 ?>
 <script type="text/javascript">
-jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").slideDown('fast');
+jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
 </script>
 <?php      
 }

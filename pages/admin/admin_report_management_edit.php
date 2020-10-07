@@ -4,11 +4,10 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-if (!checkperm("a"))
+if ($execution_lockout || !checkperm("a"))
 	{
 	exit ("Permission denied.");
 	}
-
 
 $find=getval("find","");
 $order_by=getval("orderby","");
@@ -53,13 +52,20 @@ if (getval("deleteme",false) && enforcePostRequest(false))
 
 $name=getvalescaped("name","");
 $query=getvalescaped("query","");
-if (getval("save",false) && $query!="" && enforcePostRequest(false))
+if (getval("save",false))
 	{
-	log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
-	log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
-	sql_query("update report set query='" . $query . "',name='{$name}' where ref={$ref}");
-	redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
-	exit;
+	if (strlen(trim($query)) == 0) 
+		{
+		$error = $lang["report_query_required"];
+		}
+	if (!isset($error) && enforcePostRequest(false))
+		{
+		log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
+		log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
+		sql_query("update report set query='" . $query . "',name='{$name}' where ref={$ref}");
+		redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
+		exit;
+		}
 	}
 
 $record = sql_query("select * from report where ref={$ref}");
@@ -68,6 +74,7 @@ $record = $record[0];
 include "../../include/header.php";
 
 ?>
+<?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <form method="post"
       enctype="multipart/form-data"
       action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php?ref=<?php echo $ref . $url_params ?>"

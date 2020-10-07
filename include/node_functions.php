@@ -219,6 +219,12 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     $use_count = false, $order_by_translated_name = false)
     {
     debug_function_call("get_nodes", func_get_args());
+
+    if(!is_numeric( $resource_type_field))
+            {
+            return [];    
+            }   
+            
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
 
@@ -1168,10 +1174,26 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
 
+    # check $nodes array values are positive integers and valid for int type node db field
+    $options_db_int = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
+    foreach($nodes as $node)
+        {
+        if (!filter_var($node, FILTER_VALIDATE_INT, $options_db_int))
+            {
+            return false;
+            }
+        }
+
     if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
         // Need to check user has permissions to add nodes (unless running from any CLI script other than unit tests)
         $resourcedata = get_resource_data($resourceid);
+
+        if (!$resourcedata)
+            {
+            return false;
+            }
+        
         $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
         if(!$access)
             {return false;}
@@ -1194,7 +1216,10 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
             {
             $nodedata = array();
             get_node($node, $nodedata);
-            $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+            if ($nodedata)
+                {
+                $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+                }
             }
         
         foreach ($field_nodes_arr as $key => $value)
@@ -1713,7 +1738,7 @@ function get_node_elements(array $node_values, array $nodes, $field_label)
  * 
  */
 
-function get_node_tree($parentId = "", array $nodes)
+function get_node_tree($parentId = "", array $nodes = array())
 	{
 	$tree = array();
 	foreach ($nodes as $node) 

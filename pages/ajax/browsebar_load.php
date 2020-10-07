@@ -276,13 +276,14 @@ switch ($returntype)
         
         $ftcol_subcats = get_theme_headers($ftcolcats);
         $tgtparams = array();
+        $morelevels =  count($ftcolcats) < $theme_category_levels-1;
         for ($x=0;$x<count($ftcolcats);$x++)
             {
             $fclevel = ($x==0) ? "" : $x+1;
             $tgtparams["theme" . $fclevel] = $ftcolcats[$x];
             }
-            
-         if($collection_allow_creation && checkperm("h"))
+
+         if($collection_allow_creation && checkperm("h") && $morelevels)
             {
             // Add 'create new' option
             $return_items[$n] = array();

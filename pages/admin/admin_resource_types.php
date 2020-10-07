@@ -18,6 +18,7 @@ if(!in_array($restype_order_by,array("rt","name","tab_name","order_by","fieldcou
 $url_params = array("restype_order_by"=>$restype_order_by,"restype_sort"=>$restype_sort);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params);
 
+$sql_restype_order_by=$restype_order_by=="order_by"?"CAST(order_by AS UNSIGNED)":$restype_order_by;
 
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
@@ -68,7 +69,7 @@ $resource_types=sql_query ("
 	
 	restypes
 	
-	order by $restype_order_by
+	order by $sql_restype_order_by
 	$restype_sort
 	"
 );

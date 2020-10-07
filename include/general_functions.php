@@ -1175,14 +1175,16 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
     if (!isset($body)){$body=$message;}
 
-    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log;
+    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log,$smtpautotls, $smtp_debug_lvl;
     $mail = new PHPMailer\PHPMailer\PHPMailer();
     // use an external SMTP server? (e.g. Gmail)
     if ($use_smtp) {
         $mail->IsSMTP(); // enable SMTP
-        $mail->SMTPDebug = $debug_log ? 1 : 0;  // debugging: 1 = errors and messages, 2 = messages only
         $mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
         $mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
+        $mail->SMTPAutoTLS = $smtpautotls;
+        $mail->SMTPDebug = ($debug_log ? $smtp_debug_lvl : 0);
+        $mail->Debugoutput = function(string $msg, int $debug_lvl) { debug("SMTPDebug: {$msg}"); };
         $mail->Host = $smtp_host; // hostname
         $mail->Port = $smtp_port; // port number
         $mail->Username = $smtp_username; // username
@@ -1707,8 +1709,16 @@ function is_process_lock($name)
     # No lock file? return false
     if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
     if (!is_readable(get_temp_dir() . "/process_locks/" . $name)) {return true;} // Lock exists and cannot read it so must assume it's still valid
-    $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
-    if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
+    
+    $GLOBALS["use_error_exception"] = true;
+    try {
+        $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
+        if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
+        }
+    catch (Exception $e) {
+        debug("is_process_lock: Attempt to get file contents '$result' failed. Reason: {$e->getMessage()}");
+        }
+    unset($GLOBALS["use_error_exception"]);
     
     return true; # Lock is valid
     }
@@ -1853,9 +1863,15 @@ function get_temp_dir($asUrl = false,$uniqid="")
     if ($uniqid!=""){
         $uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
         $result.="/$uniqid";
-        if(!is_dir($result)){
+        if(!is_dir($result))
+            {
             // If it does not exist, create it.
-            mkdir($result, 0777,true);
+            try {
+                mkdir($result, 0777,true);
+            } 
+            catch (Exception $e) {
+                debug("get_temp_dir: Attempt to create folder '$result' failed. Reason: {$e->getMessage()}");  
+            }
         }
     }
     
@@ -3463,12 +3479,12 @@ function set_sysvar($name,$value=null)
     {
     global $sysvars;
     $name=escape_check($name);
-    $value=escape_check($value);
-	db_begin_transaction("set_sysvar");
+    db_begin_transaction("set_sysvar");
     sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
-        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        $safevalue=escape_check($value);
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$safevalue}')");
         }
     db_end_transaction("set_sysvar");
 

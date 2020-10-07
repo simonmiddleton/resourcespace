@@ -8,14 +8,7 @@ $dm=$dd=$dh=$di=-1;
 
 if(!$blank_date_upload_template || $ref>0 || '' != getval('submitted', '')) {
 	
-
-if (($ref<0) && $reset_date_upload_template && $reset_date_field==$field["ref"])
-	{
-	# Upload template: always reset to today's date (if configured).
-	$dy=date("Y");$dm=intval(date("m"));$dd=intval(date("d"));
-	$dh=intval(date("H"));$di=intval(date("i"));
-	}
-elseif ($value!="")
+if ($value!="")
 	{
     #fetch the date parts from the value
     $sd=explode(" ",$value);

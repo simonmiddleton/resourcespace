@@ -41,6 +41,11 @@ foreach($selected_nodes as $node)
         continue;
         }
 
+    if(get_node($node, $node_data)===false)
+        {
+        continue;
+        }
+
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
 
     // Show previously searched options on the status box

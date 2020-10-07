@@ -237,6 +237,17 @@ if ($order_by=="")
         }
     }
 
+if (substr($order_by,0,5)=="field")
+    {
+    $order_by_field = substr($order_by,5);
+        {
+        if(!metadata_field_view_access($order_by_field))
+            {
+            $order_by = 'relevance';
+            }
+        }
+    }
+
 $per_page=getvalescaped("per_page",$default_perpage, true); 
 $per_page= (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 
@@ -247,8 +258,24 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 // (e.g when batch editing)
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
+
+// Preserve selection on display layout change.
+$displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
+if (isset($_POST['display']))
+    {
+    $thumbtypechange = in_array($_POST['display'], $displaytypes);
+    }
+else if (!isset($_POST['display']) && isset($_GET['display']))
+    {
+    $thumbtypechange = in_array($_GET['display'], $displaytypes);
+    }
+else
+    {
+    $thumbtypechange = false;
+    }
+
 $view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
-if($use_selection_collection && $clear_selection_collection && !$paging_request && !$view_selected_request)
+if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request)
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
     }
@@ -467,8 +494,14 @@ $rowstoretrieve = $per_page+$offset;
 if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard)
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
-    try {$colcount = count($collections);}
-    catch (Exception $e) {$colcount = 0;}
+    if(is_array($collections))
+        {
+        $colcount = count($collections);
+        } 
+    else
+        {
+        $colcount = 0;
+        }
     $resourcestoretrieve = max(($rowstoretrieve-$colcount),0);
     }
 else
@@ -1348,7 +1381,6 @@ if($responsive_ui)
             <?php }
         
         hook("searchbeforeratingfieldtitlecolumn");
-        if (isset($rating_field)){?><td>&nbsp;</td><!-- contains admin ratings --><?php }
         if ($id_column){?><?php if ($order_by=="resourceid"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a></td><?php } ?><?php } ?>
         <?php if ($resource_type_column){?><?php if ($order_by=="resourcetype"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>"ASC")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a></td><?php } ?><?php } ?>
         <?php if ($list_view_status_column){?><?php if ($order_by=="status"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["status"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["status"]?></a></td><?php } ?><?php } ?>
@@ -1455,12 +1487,6 @@ if($responsive_ui)
         
             if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
  
-            $rating = '';
-            if(isset($rating_field))
-                {
-                $rating = "field{$rating_field}";
-                }
-
             hook('beforesearchviewcalls');
 
             if ($display=="thumbs")
@@ -1578,75 +1604,114 @@ if($use_selection_collection)
     ?>
     jQuery(document).ready(function()
         {
+        var resource_starting=null; // Regular click resource marks the start of a range
+        var resource_ending=null; // Shifted click resource marks the end of a range
+        var primary_action = null;
+
+        // Process the clicked box
         jQuery(".checkselect").click(function(e)
             {
-            if(e.shiftKey == false)
-                {
-                ToggleCollectionResourceSelection(e, <?php echo $USER_SELECTION_COLLECTION; ?>);
-                shift_select_previous_target = e.target;
-                return;
-                }
-
-            if(typeof shift_select_previous_target === "undefined")
-                {
-                shift_select_previous_target = e.target;
-                return;
-                }
-
+            var resource_selections=[];
             var input = e.target;
-            var in_range = false;
-            jQuery(".checkselect").each(function()
-                {
-                var mark = (shift_select_previous_target === this || input === this);
-
-                if(mark && typeof last_mark === "undefined")
-                    {
-                    console.debug("Mark added at element with ID %o", this.id);
-                    in_range = true;
-                    last_mark = this;
-                    }
-                else if(mark && typeof last_mark !== "undefined")
-                    {
-                    console.debug("Mark removed at element with ID %o", this.id);
-                    in_range = false;
-                    last_mark = this;
-
-                    if(jQuery(input).prop("checked"))
-                        {
+            var box_resource = jQuery(input).data("resource");
+            var box_checked = jQuery(input).prop("checked");
+            if (!e.shiftKey) {
+                // Regular click; note the action required if there is a range to be processed
+                primary_action=box_checked;
+                resource_starting=box_resource;
+                resource_ending=null;
+            } else {
+                if (!resource_starting) {
+                    alert('Cannot end range without a start.\nPlease release the shift key.');
+                    if(jQuery(input).prop("checked")) {
+                        this.removeAttribute("checked");
+                        } 
+                    else  {
                         this.setAttribute("checked", "checked");
                         }
-                    else
-                        {
-                        this.removeAttribute("checked");
-                        }
-                    var toggle_event = jQuery.Event("click", { target: this });
-                    ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
-                    }
+                    return false;
+                }
+                resource_ending=box_resource; // Shifted click resource
+            }
 
-                if(!in_range)
-                    {
-                    return;
-                    }
-
-                console.debug("checkselect is in range -- %o", this.id);
-                if(jQuery(input).prop("checked"))
-                    {
-                    this.setAttribute("checked", "checked");
-                    }
-                else
-                    {
-                    this.removeAttribute("checked");
-                    }
+            // Process all clicked boxes
+            jQuery(".checkselect").each(function()
+                {
+                // Fetch the event and store it in the selection array
                 var toggle_event = jQuery.Event("click", { target: this });
-                ToggleCollectionResourceSelection(toggle_event, <?php echo $USER_SELECTION_COLLECTION; ?>);
-
-                return;
+                var toggle_input = toggle_event.target;
+                var box_resource = jQuery(toggle_input).data("resource");
+                var box_checked = jQuery(toggle_input).prop("checked");
+                resource_selections.push({box_resource: box_resource, box_checked: box_checked});
                 });
 
-            delete(shift_select_previous_target);
-            delete(last_mark);
+            // Process resources within a clicked range
+            var res_list=[];
+            if (resource_starting && resource_ending) {
+                console.log("PROCESS " + resource_starting + " TO " + resource_ending);
+                var found_start = false;
+                var found_end = false;
+                for (i = 0; i < resource_selections.length; i++) {
+                    if (resource_selections[i].box_resource == resource_starting) {
+                        // Range starting point is being processed; skip because already processed by single shot; move on
+                        found_start = true;
+                    }
+                    else if (resource_selections[i].box_resource == resource_ending) {
+                        // Range ending point is being processed; process it and move on (because it may be before the startin point)
+                        found_end = true;
+                        res_list.push(resource_selections[i].box_resource); // Resource to process
+                    }
+                    else {
+                        // Element is not at the starting point or ending point; check whether its within the range
+                        if ( !found_start && !found_end ) {
+                            // Range is not yet being processed; skip
+                        }
+                        else if (found_start && found_end) {
+                            // Both starting and ending points have been processed; quit loop
+                            break;
+                        }
+                        else {
+                            // Process the element within the range
+                            res_list.push(resource_selections[i].box_resource); // Resource to process
+                        }
+                    }
+                }
+                
+                // AJAX will be used to send multiple resources and actions
+                var csrf_data = '{<?php echo generateAjaxToken("ProcessCollectionResourceSelection"); ?>}';
+                // Convert token from format {CSRFToken:"data"} to strict JSON format which is {"CSRFToken":"data"} so that it can be parsed 
+                var csrf_data = csrf_data.replace('<?php echo $CSRF_token_identifier; ?>','"<?php echo $CSRF_token_identifier; ?>"');
+                ProcessCollectionResourceSelection(res_list, primary_action, <?php echo $USER_SELECTION_COLLECTION; ?>, csrf_data);
 
-            return;
+                // Reset processing points
+                resource_starting=null;
+                resource_ending=null;
+                primary_action = null;
+                }
+
+            else if (resource_starting) {
+                console.log("PROCESS " + resource_starting + " ONLY");
+                for (i = 0; i < resource_selections.length; i++) {
+                    if (resource_selections[i].box_resource == resource_starting) {
+                        // Range starting point is being processed; skip because already processed by single shot; move on
+                        res_list.push(resource_selections[i].box_resource); // One resource to process
+                        break;
+                    }
+                }
+
+                // AJAX will be used to send single resource and action only
+                var csrf_data = '{<?php echo generateAjaxToken("ProcessCollectionResourceSelection"); ?>}';
+                // Convert token from format {CSRFToken:"data"} to strict JSON format which is {"CSRFToken":"data"} so that it can be parsed 
+                var csrf_data = csrf_data.replace('<?php echo $CSRF_token_identifier; ?>','"<?php echo $CSRF_token_identifier; ?>"');
+                ProcessCollectionResourceSelection(res_list, primary_action, <?php echo $USER_SELECTION_COLLECTION; ?>, csrf_data);
+                }
+
+            else if (resource_ending) {
+                console.log("ERROR - ENDING ONLY");
+                }
+
+            console.log("RESOURCE_LIST\n" + JSON.stringify(res_list));
+
             });
         });
     <?php

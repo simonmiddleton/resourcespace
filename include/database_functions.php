@@ -73,11 +73,11 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     // Optionally log errors to a cental server.
     if (isset($log_error_messages_url))
         {
-        // Work out the backtrace
-        ob_flush();ob_start();
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $backtrace = ob_get_contents();
-        ob_end_clean();
+        $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
+        // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
+        $backtrace = json_encode(
+            array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
+            JSON_PRETTY_PRINT);
 
         // Prepare the post data.
         $postdata = http_build_query(array(
@@ -302,6 +302,7 @@ function db_begin_transaction($name)
 
 	if(function_exists('mysqli_begin_transaction'))
 		{
+        debug("SQL: begin transaction '{$name}'");
 		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
 
@@ -365,6 +366,7 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
+        debug("SQL: commit transaction '{$name}'");
 		return mysqli_commit($db["read_write"], 0, $name);
 		}
 
@@ -389,6 +391,7 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
+        debug("SQL: rollback transaction '{$name}'");
 		return mysqli_rollback($db["read_write"], 0, $name);
 		}
 
@@ -626,17 +629,34 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 		$return_row_count++;
 		}
 
-	// Write to the cache
-	if ($cache_write)
-		{
-		if (!file_exists($storagedir . "/tmp")) {mkdir($storagedir . "/tmp",0777,true);}
-		if (!file_exists($cache_location)) {mkdir($cache_location,0777);}
-		$cachedata=array();
-		$cachedata["query"]=$sql;
-		$cachedata["time"]=time();
-		$cachedata["results"]=$return_rows;
-		file_put_contents($cache_file,json_encode($cachedata));
-		}
+    if($cache_write)
+        {
+        if(!file_exists($storagedir . "/tmp"))
+            {
+            mkdir($storagedir . "/tmp", 0777, true);
+            }
+
+        if(!file_exists($cache_location))
+            {
+            mkdir($cache_location, 0777);
+            }
+
+        $cachedata = array();
+        $cachedata["query"] = $sql;
+        $cachedata["time"] = time();
+        $cachedata["results"] = $return_rows;
+
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            file_put_contents($cache_file, json_encode($cachedata));
+            }
+        catch(Exception $e)
+            {
+            debug("SQL_CACHE: {$e->getMessage()}");
+            }
+        unset($GLOBALS["use_error_exception"]);
+        }
 
     if($fetchrows == -1)
         {
@@ -782,13 +802,26 @@ function clear_query_cache($cache)
  */
 function check_db_structs($verbose=false)
 	{
-	CheckDBStruct("dbstruct",$verbose);
+    // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
+    if(is_process_lock('database_update_in_progress'))
+        {
+        show_upgrade_in_progress(true);
+        exit();
+        }
+    set_process_lock('database_update_in_progress');
+
+    // Check the structure of the core tables.
+    CheckDBStruct("dbstruct",$verbose);
+    
+    // Check the structure of all active plugins.
 	global $plugins;
 	for ($n=0;$n<count($plugins);$n++)
 		{
 		CheckDBStruct("plugins/" . $plugins[$n] . "/dbstruct");
 		}
-	hook("checkdbstruct");
+    hook("checkdbstruct");
+    
+    clear_process_lock('database_update_in_progress');
 	}
 
 /**
@@ -800,112 +833,112 @@ function check_db_structs($verbose=false)
  * @return void
  */
 function CheckDBStruct($path,$verbose=false)
-	{
-	global $mysql_db, $resource_field_column_limit;
+    {
+    global $mysql_db, $resource_field_column_limit;
+    if (!file_exists($path))
+        {
+        # Check for path
+        $path=dirname(__FILE__) . "/../" . $path; # Make sure this works when called from non-root files..
+        if (!file_exists($path)) {return false;}
+        }
 	
-	if (!file_exists($path)){
-		# Check for path
-		$path=dirname(__FILE__) . "/../" . $path; # Make sure this works when called from non-root files..
-		if (!file_exists($path)) {return false;}
-	}
-	
-	# Tables first.
-	# Load existing tables list
-	$ts=sql_query("show tables",false,-1,false);
-	$tables=array();
-	for ($n=0;$n<count($ts);$n++)
-		{
-		$tables[]=$ts[$n]["Tables_in_" . $mysql_db];
-		}
-	$dh=opendir($path);
-	while (($file = readdir($dh)) !== false)
-		{
-		if (substr($file,0,6)=="table_")
-			{
-			$table=str_replace(".txt","",substr($file,6));
-			
-			# Check table exists
-			if (!in_array($table,$tables))
-				{
-				# Create Table
-				$sql="";
-				$f=fopen($path . "/" . $file,"r");
-				$hasPrimaryKey = false;
-				$pk_sql = "PRIMARY KEY (";
-				while (($col = fgetcsv($f,5000)) !== false)
-				{
-					if ($sql.="") {$sql.=", ";}
-					$sql.=$col[0] . " " . str_replace("§",",",$col[1]);
-					if ($col[4]!="") {$sql.=" default " . $col[4];}
-                    if ($col[3]=="PRI")
-					{
-						if($hasPrimaryKey)
-						{
-							$pk_sql .= ",";
-						}
-						$pk_sql.=$col[0];
-						$hasPrimaryKey = true;
-					}
-					if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
-				}
-				$pk_sql .= ")";
-				if($hasPrimaryKey)
-				{
-					$sql.="," . $pk_sql;
-				}
-				debug($sql);
+    # Tables first.
+    # Load existing tables list
+    $ts=sql_query("show tables",false,-1,false);
+    $tables=array();
+    for ($n=0;$n<count($ts);$n++)
+        {
+        $tables[]=$ts[$n]["Tables_in_" . $mysql_db];
+        }
+    $dh=opendir($path);
+    while (($file = readdir($dh)) !== false)
+        {
+        if (substr($file,0,6)=="table_")
+            {
+            $table=str_replace(".txt","",substr($file,6));
 
-				# Verbose mode, used for better output from the test script.
-				if ($verbose) {echo "$table ";ob_flush();}
-				
-				sql_query("create table $table ($sql)",false,-1,false);
-				
-				# Add initial data
-				$data=str_replace("table_","data_",$file);
-				if (file_exists($path . "/" . $data))
-					{
-					$f=fopen($path . "/" . $data,"r");
-					while (($row = fgetcsv($f,5000)) !== false)
-						{
-						# Escape values
-						for ($n=0;$n<count($row);$n++)
-							{
-							$row[$n]=escape_check($row[$n]);
-							$row[$n]="'" . $row[$n] . "'";
-							if ($row[$n]=="''") {$row[$n]="null";}
-							}
-						sql_query("insert into $table values (" . join (",",$row) . ")",false,-1,false);
-						}
-					}
-				}
-			else
-				{
-				# Table already exists, so check all columns exist
-				
-				# Load existing table definition
-				$existing=sql_query("describe $table",false,-1,false);
-
-				##########
-				# Copy needed resource_data into resource for search displays
-				if ($table=="resource")
+            # Check table exists
+            if (!in_array($table,$tables))
+                {
+                # Create Table
+                $sql="";
+                $f=fopen($path . "/" . $file,"r");
+                $hasPrimaryKey = false;
+                $pk_sql = "PRIMARY KEY (";
+                while (($col = fgetcsv($f,5000)) !== false)
                     {
-					$joins=get_resource_table_joins();
-					for ($m=0;$m<count($joins);$m++)
+                    if ($sql.="") {$sql.=", ";}
+                    $sql.=$col[0] . " " . str_replace("§",",",$col[1]);
+                    if ($col[4]!="") {$sql.=" default " . $col[4];}
+                    if ($col[3]=="PRI")
                         {
-						# Look for this column in the existing columns.	
-						$found=false;
+                        if($hasPrimaryKey)
+                            {
+                            $pk_sql .= ",";
+                            }
+                        $pk_sql.=$col[0];
+                        $hasPrimaryKey = true;
+                        }
+                    if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
+                    }
+                $pk_sql .= ")";
+                if($hasPrimaryKey)
+                    {
+                    $sql.="," . $pk_sql;
+                    }
+                debug($sql);
 
-						for ($n=0;$n<count($existing);$n++)
-							{
-							if ("field".$joins[$m]==$existing[$n]["Field"]) {$found=true;}
-							}
+                # Verbose mode, used for better output from the test script.
+                if ($verbose) {echo "$table ";ob_flush();}
 
-						if (!$found)
-							{
-							# Add this column.
-							$sql="alter table $table add column ";
-							$sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
-							sql_query($sql,false,-1,false);
+                sql_query("create table $table ($sql)",false,-1,false);
+
+                # Add initial data
+                $data=str_replace("table_","data_",$file);
+                if (file_exists($path . "/" . $data))
+                    {
+                    $f=fopen($path . "/" . $data,"r");
+                    while (($row = fgetcsv($f,5000)) !== false)
+                        {
+                        # Escape values
+                        for ($n=0;$n<count($row);$n++)
+                            {
+                            $row[$n]=escape_check($row[$n]);
+                            $row[$n]="'" . $row[$n] . "'";
+                            if ($row[$n]=="''") {$row[$n]="null";}
+                            }
+                        sql_query("insert into $table values (" . join (",",$row) . ")",false,-1,false);
+                        }
+                    }
+                }
+            else
+                {
+                # Table already exists, so check all columns exist
+
+                # Load existing table definition
+                $existing=sql_query("describe $table",false,-1,false);
+
+                ##########
+                # Copy needed resource_data into resource for search displays
+                if ($table=="resource")
+                    {
+                    $joins=get_resource_table_joins();
+                    for ($m=0;$m<count($joins);$m++)
+                        {
+                        # Look for this column in the existing columns.	
+                        $found=false;
+
+                        for ($n=0;$n<count($existing);$n++)
+                            {
+                            if ("field".$joins[$m]==$existing[$n]["Field"]) {$found=true;}
+                            }
+
+                        if (!$found)
+                            {
+                            # Add this column.
+                            $sql="alter table $table add column ";
+                            $sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
+                            sql_query($sql,false,-1,false);
 
                             $resources = sql_array("SELECT ref AS `value` FROM resource WHERE ref > 0");
                             foreach($resources as $resource)
@@ -917,7 +950,7 @@ function CheckDBStruct($path,$verbose=false)
                                 if(
                                     $resource_field_data_index !== false
                                     && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                                )
+                                    )
                                     {
                                     $new_joins_field_value = $resource_field_data[$resource_field_data_index]["value"];
                                     $truncated_value = truncate_join_field_value($new_joins_field_value);
@@ -925,147 +958,144 @@ function CheckDBStruct($path,$verbose=false)
 
                                     sql_query("
                                         UPDATE resource
-                                           SET field{$joins[$m]} = '{$truncated_value_escaped}'
-                                         WHERE ref = '{$resource}'");
+                                        SET field{$joins[$m]} = '{$truncated_value_escaped}'
+                                        WHERE ref = '{$resource}'");
                                     }
                                 }
                             }
                         }
                     }
-				##########
-				
-				##########
-				## RS-specific mod:
-				# add theme columns to collection table as needed.
-				global $theme_category_levels;
-				if ($table=="collection"){
-					for ($m=1;$m<=$theme_category_levels;$m++){
-						if ($m==1){$themeindex="";}else{$themeindex=$m;}
-						# Look for this column in the existing columns.	
-						$found=false;
+                ##########
 
-						for ($n=0;$n<count($existing);$n++)
-							{
-							if ("theme".$themeindex==$existing[$n]["Field"]) {$found=true;}
-							}
-						if (!$found)
-							{
-							# Add this column.
-							$sql="alter table $table add column ";
-							$sql.="theme".$themeindex . " VARCHAR(100)";
-							sql_query($sql,false,-1,false);
+                ##########
+                ## RS-specific mod:
+                # add theme columns to collection table as needed.
+                global $theme_category_levels;
+                if ($table=="collection")
+                    {
+                    for ($m=1;$m<=$theme_category_levels;$m++)
+                        {
+                        if ($m==1){$themeindex="";}else{$themeindex=$m;}
+                        # Look for this column in the existing columns.	
+                        $found=false;
 
-						}
-					}	
-				}		
-				
-				##########				
-								
-				if (file_exists($path . "/" . $file))
-					{
-					$f=fopen($path . "/" . $file,"r");
-					while (($col = fgetcsv($f,5000)) !== false)
-						{
-						if (count($col)> 1)
-							{   
-							# Look for this column in the existing columns.
-							$found=false;
-							for ($n=0;$n<count($existing);$n++)
-								{
-								if ($existing[$n]["Field"]==$col[0])
-									{ 
-									$found=true;
-									$existingcoltype=strtoupper($existing[$n]["Type"]);
-									$basecoltype=strtoupper(str_replace("§",",",$col[1]));									
-									# Check the column is of the correct type
-									preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
-									preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
-									// Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
-									// - If column is of same type but smaller number, update
-									// - If target column is of type text, update
-									// - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
-									// - If target column is of type longtext and currently is text
+                        for ($n=0;$n<count($existing);$n++)
+                            {
+                            if ("theme".$themeindex==$existing[$n]["Field"]) {$found=true;}
+                            }
+                        if (!$found)
+                            {
+                            # Add this column.
+                            $sql="alter table $table add column ";
+                            $sql.="theme".$themeindex . " VARCHAR(100)";
+                            sql_query($sql,false,-1,false);
+                            }
+                        }	
+                    }
+
+                ##########
+                if (file_exists($path . "/" . $file))
+                    {
+                    $f=fopen($path . "/" . $file,"r");
+                    while (($col = fgetcsv($f,5000)) !== false)
+                        {
+                        if (count($col)> 1)
+                            {   
+                            # Look for this column in the existing columns.
+                            $found=false;
+                            for ($n=0;$n<count($existing);$n++)
+                                {
+                                if ($existing[$n]["Field"]==$col[0])
+                                    { 
+                                    $found=true;
+                                    $existingcoltype=strtoupper($existing[$n]["Type"]);
+                                    $basecoltype=strtoupper(str_replace("§",",",$col[1]));									
+                                    # Check the column is of the correct type
+                                    preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
+                                    preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
+                                    // Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
+                                    // - If column is of same type but smaller number, update
+                                    // - If target column is of type text, update
+                                    // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
+                                    // - If target column is of type longtext and currently is text
                                     if(
                                         (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
                                         || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)
                                         || (strtoupper(substr($basecoltype, 0, 6)) == "BIGINT" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
                                         || (
-                                                strtoupper(substr($basecoltype, 0, 3)) == "INT"
-                                                && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
-                                           )
+                                        strtoupper(substr($basecoltype, 0, 3)) == "INT"
+                                        && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
+                                        )
                                         || (strtoupper(substr($basecoltype, 0, 7)) == "VARCHAR" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
                                         || (strtoupper(substr($basecoltype, 0, 8)) == "LONGTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
-                                    )
+                                        )
                                         {
                                         debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
                                         // Update the column type
                                         sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
                                         }
-									}
-								}
-							if (!$found)
-									{
-									# Add this column.										
-									$sql="alter table $table add column ";
-									$sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
-									if ($col[4]!="") {$sql.=" default " . $col[4];}
-									if ($col[3]=="PRI") {$sql.=" primary key";}
-									if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
-									sql_query($sql,false,-1,false);
-									}	
-							}
-						}
-					}
-				}
-				
-			# Check all indices exist
-			# Load existing indexes
-			$existing=sql_query("show index from $table",false,-1,false);
-					
-			$file=str_replace("table_","index_",$file);
-			if (file_exists($path . "/" . $file))
-				{
-				$done=array(); # List of indices already processed.
-				$f=fopen($path . "/" . $file,"r");
-				while (($col = fgetcsv($f,5000)) !== false)
-					{
-					# Look for this index in the existing indices.
-					$found=false;
-					for ($n=0;$n<count($existing);$n++)
-						{
-						if ($existing[$n]["Key_name"]==$col[2]) {$found=true;}
-						}
-					if (!$found && !in_array($col[2],$done))
-						{
-						# Add this index.
-						
-						# Fetch list of columns for this index
-						$cols=array();
-						$f2=fopen($path . "/" . $file,"r");
-						while (($col2 = fgetcsv($f2,5000)) !== false)
-							{
-							if ($col2[2]==$col[2]) # Matching column
-								{
-								# Add an index size if present, for indexing text fields
-								$indexsize="";
-                                                            	if (trim($col2[7])!="") {$indexsize="(" . $col2[7] . ")";}
+                                    }
+                                }
+                            if (!$found)
+                                {
+                                # Add this column.
+                                $sql="alter table $table add column ";
+                                $sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
+                                if ($col[4]!="") {$sql.=" default " . $col[4];}
+                                if ($col[3]=="PRI") {$sql.=" primary key";}
+                                if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
+                                sql_query($sql,false,-1,false);
+                                }	
+                            }
+                        }
+                    }
+                }
 
-								$cols[]=$col2[4] . $indexsize;
-								}
-							}
-						
-						$sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
-						sql_query($sql,false,-1,false);
-						$done[]=$col[2];
-						}
-					}
-				}
-			}
-		}
-	}
-	
+            # Check all indices exist
+            # Load existing indexes
+            $existing=sql_query("show index from $table",false,-1,false);
 
+            $file=str_replace("table_","index_",$file);
+            if (file_exists($path . "/" . $file))
+                {
+                $done=array(); # List of indices already processed.
+                $f=fopen($path . "/" . $file,"r");
+                while (($col = fgetcsv($f,5000)) !== false)
+                    {
+                    # Look for this index in the existing indices.
+                    $found=false;
+                    for ($n=0;$n<count($existing);$n++)
+                        {
+                        if ($existing[$n]["Key_name"]==$col[2]) {$found=true;}
+                        }
+                    if (!$found && !in_array($col[2],$done))
+                        {
+                        # Add this index.
 
+                        # Fetch list of columns for this index
+                        $cols=array();
+                        $f2=fopen($path . "/" . $file,"r");
+                        while (($col2 = fgetcsv($f2,5000)) !== false)
+                            {
+                            if ($col2[2]==$col[2]) # Matching column
+                                {
+                                # Add an index size if present, for indexing text fields
+                                $indexsize="";
+                                if (trim($col2[7])!="") {$indexsize="(" . $col2[7] . ")";}
+
+                                $cols[]=$col2[4] . $indexsize;
+                                }
+                            }
+
+                        $sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
+                        sql_query($sql,false,-1,false);
+                        $done[]=$col[2];
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 /**
 * Generate the LIMIT statement for a SQL query

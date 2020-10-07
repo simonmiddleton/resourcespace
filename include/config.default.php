@@ -182,8 +182,6 @@ and running.
 # Store original files separately from RS previews? If this setting is adjusted with resources in the system you'll need to run ../pages/tools/filestore_separation.php.
 $originals_separate_storage=false;
 
-include "version.php";
-
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
 $applicationdesc=""; # Subtitle (i18n translated) if $header_text_title=true;
 $header_favicon="gfx/interface/favicon.png";
@@ -297,12 +295,12 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
+# Can be used as config override in conjunction with $homeanim_folder as above.
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
 # Small slideshow mode (old slideshow)
-$small_slideshow = true;
+$small_slideshow = true; # This is DEPRECATED and is switched off for new installations (by config_new_installs.php)
 
 # Big slideshow mode (Fullscreen slideshow)
 # ----------------------------------
@@ -343,38 +341,6 @@ $unmanaged_home_dash_admins = false;
 $dash_tile_colour         = true;
 $dash_tile_colour_options = array();
 /* End Dash Config Options */
-
-/*
- * Legacy Tile options 
- * The home_dash option and functionality has replaced these config options 
- */
-
-	# Options to show/hide the tiles on the home page
-	$home_themeheaders=false;
-	#
-	# Custom panels for the home page.
-	# You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
-	#
-	# The below are examples.
-	#
-	# $custom_home_panels[0]["title"]="Custom Panel A";
-	# $custom_home_panels[0]["text"]="Custom Panel Text A";
-	# $custom_home_panels[0]["link"]="search.php?search=example";
-	#
-	# You can add additional code to a link like this:
-	# $custom_home_panels[0]["additional"]="target='_blank'";
-	#
-	# $custom_home_panels[1]["title"]="Custom Panel B";
-	# $custom_home_panels[1]["text"]="Custom Panel Text B";
-	# $custom_home_panels[1]["link"]="search.php?search=example";
-	#
-	# $custom_home_panels[2]["title"]="Custom Panel C";
-	# $custom_home_panels[2]["text"]="Custom Panel Text C";
-	# $custom_home_panels[2]["link"]="search.php?search=example";
-
-/*
- * End of Legacy Tile Config
- */ 
 
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
@@ -417,7 +383,6 @@ $exif_date=12;
 
 # If exiftool is installed, you can optionally enable the metadata report available on the View page. 
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
-
 $metadata_report=false;
 
 # Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
@@ -754,9 +719,6 @@ $simple_search_date=true;
 $colour_sort=true;
 $popularity_sort=true;
 $random_sort=false;
-$title_sort=false; // deprecated, based on resource table column
-$country_sort=false; // deprecated, based on resource table column
-$original_filename_sort=false; // deprecated, based on resource table column
 
 # What is the default sort order?
 # Options are date, colour, relevance, popularity, country
@@ -994,8 +956,7 @@ $anon_login_modal=false;
 
 $anonymous_user_session_collection=true;
 
-# Enable captioning and ranking of collections (deprecated - use $collection_commenting instead)
-$collection_reorder_caption=false; 
+
 
 # Enable collection commenting and ranking
 $collection_commenting = false;
@@ -1250,7 +1211,6 @@ $default_customaccess=2;
 $config_search_for_number=false;
 
 # Display the download as a 'save as' link instead of redirecting the browser to the download (which sometimes causes a security warning).
-# For the Opera and Internet Explorer 7 browsers this will always be enabled regardless of the below setting as these browsers block automatic downloads by default.
 $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
@@ -2581,7 +2541,7 @@ $allow_smart_collections=false;
 # This may not be appropriate for usergroups that depend on live updates in workflows based on smart collections.
 $smart_collections_async=false;
 
-# Allow a Preview page for entire collections (for more side to side comparison ability, works with collection_reorder_caption)
+# Allow a Preview page for entire collections (for more side to side comparison ability)
 $preview_all=false;
 # Minimize collections frame when visiting preview_all.php
 $preview_all_hide_collections=true;
@@ -2630,12 +2590,8 @@ $collection_purge=false;
 # probably requires the user to clear cookies.
 $global_cookies=false;
 
-# Iframe-based direct download from the view page (to avoid going to download.php)
-# note this is incompatible with $terms_download and the $download_usage features, and is overridden by $save_as
-$debug_direct_download=false; // set to true to see the download iframe for debugging purposes.
-$direct_download_allow_ie7=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_ie8=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_opera=false; // opera can also allow popups, but this is recommended off as well since by default it won't work for most users.
+# Set to true to see the download iframe for debugging purposes.
+$debug_direct_download=false; 
 
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
@@ -2761,6 +2717,16 @@ $smtp_port=25; # Port number, e.g. 465 for Gmail using SSL.
 $smtp_auth=true; # Send credentials to SMTP server (false to use anonymous access)
 $smtp_username=''; # Username (full email address).
 $smtp_password=''; # Password.
+$smtpautotls = false; # If using PHPMailer, whether to enable TLS encryption automatically if a server supports it, even if `SMTPSecure` is not set to 'tls'.
+/* Enable STMP debug for PHPMailer. Available options are (from none to very verbose):
+ - 0 - no debug output. If $debug_log is false, this is off as well
+ - 1 - output messages sent by the client
+ - 2 - responses received from the server
+ - 3 - connection information, can help diagnose STARTTLS failures
+ - 4 - low-level information, very verbose, don't use for debugging SMTP, only low-level problems
+Note: selecting level 3, will also show debug info for level 1 and 2.
+*/
+$smtp_debug_lvl = 2;
 
 $sharing_userlists=false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
@@ -2947,9 +2913,7 @@ $metadata_download_header_title = 'ResourceSpace';
 #$metadata_download_pdf_logo     = '/path/to/logo/location/logo.png';
 $metadata_download_footer_text  = '';
 
-# settings for commenting on resources - currently not enabled by default
-
-# $comments_collection_enable=false; 			# reserved for future use
+# settings for commenting on resources - currently enabled for new systems only.
 $comments_resource_enable=false;				# allow users to make comments on resources
 $comments_flat_view=false;						# by default, show in a threaded (indented view)
 $comments_responses_max_level=10 ;				# maximum number of nested comments / threads
@@ -2957,7 +2921,7 @@ $comments_max_characters=200;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
-$comments_view_panel_show_marker=true;			# show an astrisk by the comment view panel title if comments exist
+$comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
 
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
@@ -3044,9 +3008,6 @@ $force_display_template_orderby=false;
 # $resource_type_request_emails[2]="documentadministrator@my.site";
 #Can be used so that along with the users/emails specified by $resource_type_request_emails, the rest of the users can be notified as well
 $resource_type_request_emails_and_email_notify = false;
-
-# $rating_field. A legacy option that allows for selection of a metadata field that contains administrator ratings (not user ratings) that will be displayed in search list view. Field must be plain text and have numeric only numeric values.
-# $rating_field=121;
 
 # Set this to true to prevent possible issues with IE and download.php. Found an issue with a stray pragma: no-cache header that seemed to be added by SAML SSO solution.
 $download_no_session_cache_limiter=false;
@@ -3741,3 +3702,15 @@ $date_validator=false;
 // and care must still be taken to keep secure any exported data.
 $system_download_config = false;
 $system_download_config_force_obfuscation = true;
+
+
+// Block particular config options from shown in the System Config area.
+// E.g. $system_config_hide=array("email_from","email_notify");
+$system_config_hide=array();
+
+// Request that search engines don't index the entire installtion
+$search_engine_noindex=false;
+
+// Request that search engines don't index external shares only
+$search_engine_noindex_external_shares=false;
+

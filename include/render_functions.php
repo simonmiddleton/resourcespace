@@ -16,7 +16,7 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
+function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
     {
     node_field_options_override($field);
 	
@@ -608,7 +608,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             foreach($searched_nodes as $node)
                 {
                 $n_details = array();
-                if(get_node($node, $n_details) && $n_details["resource_type_field"] != $field["ref"])
+
+                if(get_node($node, $n_details)===false)
+                    {
+                    continue;
+                    }
+
+                if($n_details["resource_type_field"] != $field["ref"])
                     {
                     continue;
                     }
@@ -2534,7 +2540,7 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
 * 
 * @return void
 */
-function render_share_options($collectionshare=true, $ref, $emailing=false)
+function render_share_options($collectionshare=true, $ref=0, $emailing=false)
     {
     global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
@@ -4097,6 +4103,81 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 			}
 		}
 	}
+
+/**
+ * show_upgrade_in_progress message
+ *
+ * @param  bool $dbstructonly - Indicates whether this is a full upgrade with migration scripts or just a check_db_structs()
+ * @return void
+ */
+function show_upgrade_in_progress($dbstructonly=false)
+    {
+    global $lang;
+    $message="This system is currently being upgraded by another process." . PHP_EOL;
+    if(!$dbstructonly)
+        {
+        $upgrade_progress_overall=get_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL);
+        $upgrade_progress_script=get_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT);
+        $message.=($upgrade_progress_overall===false ? '' : $upgrade_progress_overall . PHP_EOL);
+        $message.=($upgrade_progress_script===false ? '' : 'Script status: ' . $upgrade_progress_script . PHP_EOL);
+        }
+    if(PHP_SAPI == 'cli')
+        {
+        echo $message;
+        }
+    else
+        {
+        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo nl2br($message);
+        ?>
+        <script>
+        setTimeout(function()
+            {
+            window.location.reload(true);
+            }, 5000);
+        </script>
+        <?php
+        }
+    }
+
+
+
+/**
+*  add link to mp3 preview file if resource is a wav file
+* 
+* @param array      $resource               - resource data
+* @param int        $ref                    - resource ref
+* @param string     $k                      - url param key
+* @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
+* @param string     $baseurl                - config base url
+* @param array      $lang                   - array containing language strings         
+* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
+ * 
+ */
+
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+{
+
+// if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
+// resources with extension in $ffmpeg_audio_extensions will always create an mp3 preview file 
+    if (
+        $resource['file_extension']=="wav" && 
+        in_array($resource['file_extension'], $ffmpeg_audio_extensions) &&
+        file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")) && 
+        resource_download_allowed($ref,'',$resource["resource_type"])
+        )	
+        {
+
+        $colspan = $use_larger_layout ? ' colspan="2"' : '';
+        $download_link =  $baseurl  . "/pages/download_progress.php?ref=" . urlencode($ref) . "&ext=mp3&k=" . urlencode($k);
+
+        $html ="<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\"></td>" ; 
+        $html .= "<td><a id=\"downloadlink\" href=\"#\" onclick=\"directDownload('" . $download_link . "')\">" . $lang["action-download"] . "</a></td></tr> ";
+            
+        echo $html;
+        }
+
+}
 
 
 /**

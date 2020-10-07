@@ -7,6 +7,7 @@
 
 # Include the most commonly used functions
 include_once dirname(__FILE__) . '/definitions.php';
+include_once dirname(__FILE__) . '/version.php';
 include_once dirname(__FILE__) . '/config.security.php';
 include_once dirname(__FILE__) . '/general_functions.php';
 include_once dirname(__FILE__) . '/database_functions.php';

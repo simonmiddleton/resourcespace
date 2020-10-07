@@ -468,7 +468,7 @@ function collection_readable($collection)
 		#	- They have the 'access and edit all collections' admin permission
 		# 	- They are attached to this collection
 		#   - Option to ignore collection access is enabled and k is empty
-		if($userref==$collectiondata["user"] || $collectiondata["public"]==1 || checkperm("h") || in_array($userref,$attached)  || in_array($usergroup,$attached_groups)|| /*(checkperm("R") && $request) ||*/ getval("k","")!="" || (getval("k","")=="" && $ignore_collection_access))
+		if($userref==$collectiondata["user"] || $collectiondata["public"]==1 || checkperm("h") || in_array($userref,$attached)  || in_array($usergroup,$attached_groups) || checkperm("R") || getval("k","")!="" || (getval("k","")=="" && $ignore_collection_access))
 			{
 			return true;
 			}
@@ -1130,11 +1130,17 @@ function get_max_theme_levels(){
  */
 function get_theme_headers($themes=array())
 	{
+    global $theme_category_levels;
 	# Work out which theme category level we are selecting 
 	$selecting="theme";
 
 	$theme_path = "";	
-	$sql="";	
+    $sql="";	
+    if(count($themes) > $theme_category_levels-1)
+        {
+        return array();
+        }
+
 	for ($x=0;$x<count($themes);$x++){		
 		if ($x>0) $theme_path .= "|";		
 		$theme_path .= $themes[$x];		
@@ -2483,7 +2489,11 @@ function get_collection_log($collection, $fetchrows = -1)
 function collection_max_access($collection)	
 	{
 	$maxaccess=2;
-	$result=do_search("!collection" . $collection);
+    $result=do_search("!collection" . $collection);
+    if (!is_array($result))
+        {
+        $result = array();
+        }
 	for ($n=0;$n<count($result);$n++)
 		{
 		$ref=$result[$n]["ref"];
@@ -2507,7 +2517,7 @@ function collection_max_access($collection)
 
 function collection_min_access($collection)
     {
-    $minaccess = 0;
+    global $k, $internal_share_access;
     if(is_array($collection))
         {
         $result = $collection;
@@ -2515,7 +2525,28 @@ function collection_min_access($collection)
     else
         {
         $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
+        if (!is_array($result))
+            {
+            $result = array();
+            }
         }
+    if(count($result) > 0 && isset($result[0]["access"]))
+        {
+        $minaccess = max(array_column($result,"access"));
+        }
+    else
+        {
+        $minaccess = 0;
+        }
+    if($k != "")
+		{
+		# External access - check how this was shared. If internal share access and share is more open than the user's access return that
+		$minextaccess = sql_value("SELECT max(access) value FROM external_access_keys WHERE resource IN ('" . implode("','",array_column($result,"ref")) . "') AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+        if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
+            {
+            return ($minextaccess);
+            }
+		}
 
     for($n = 0; $n < count($result); $n++)
         {
@@ -3208,7 +3239,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Show disk usage
-    if(($k=="" || $internal_share_access) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
+    if(($k=="" || $internal_share_access) && (checkperm('a') || checkperm('v')) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/search_disk_usage.php",$urlparams);
         $options[$o]['value']='search_items_disk_usage';
@@ -3234,25 +3265,28 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 260;
         $o++;
 
-		// Hide Collection
-		$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
-		// check that this collection is not hidden. use first in alphabetical order otherwise
-		if(in_array($user_mycollection,$hidden_collections)){
-			$hidden_collections_list=implode(",",array_filter($hidden_collections));
-			$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
-		}
-		$extra_tag_attributes = sprintf('
-                data-mycol="%s"
-            ',
-            urlencode($user_mycollection)
-        );
-		
-		$options[$o]['value'] = 'hide_collection';
-		$options[$o]['label'] = $lang['hide_collection'];
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
-        $options[$o]['category']  = ACTIONGROUP_ADVANCED;
-        $options[$o]['order_by']  = 270;
-		$o++;
+        if(!checkperm('b'))
+            {
+            // Hide Collection
+            $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
+            // check that this collection is not hidden. use first in alphabetical order otherwise
+            if(in_array($user_mycollection,$hidden_collections)){
+                $hidden_collections_list=implode(",",array_filter($hidden_collections));
+                $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
+            }
+            $extra_tag_attributes = sprintf('
+                    data-mycol="%s"
+                ',
+                urlencode($user_mycollection)
+            );
+            
+            $options[$o]['value'] = 'hide_collection';
+            $options[$o]['label'] = $lang['hide_collection'];
+            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
+            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+            $options[$o]['order_by']  = 270;
+            $o++;
+        }
         }
         
     
@@ -3313,7 +3347,7 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 */
 function new_featured_collection_form(array $themearray = array())
     {
-    global $lang;
+    global $lang, $theme_category_levels;
 
     if(!checkperm('h'))
         {
@@ -3339,7 +3373,7 @@ function new_featured_collection_form(array $themearray = array())
             </div>
 
         <?php
-        if(0 < $themes_count)
+        if(0 < $themes_count && $themes_count < $theme_category_levels-1)
             {
             ?>
             <div class="Question">

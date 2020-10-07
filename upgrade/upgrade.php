@@ -49,28 +49,7 @@ set_time_limit(60 * 60 * 4);
 $process_locks_max_seconds=60 * 60;     // allow 1 hour for the upgrade of a single script
 if (is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
     {
-    $upgrade_progress_overall=get_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL);
-    $upgrade_progress_script=get_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT);
-    $message="This system is currently being upgraded by another process." . PHP_EOL;
-    $message.=($upgrade_progress_overall===false ? '' : $upgrade_progress_overall . PHP_EOL);
-    $message.=($upgrade_progress_script===false ? '' : 'Script status: ' . $upgrade_progress_script . PHP_EOL);
-    if($cli)
-        {
-        echo $message;
-        }
-    else
-        {
-        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
-        echo nl2br($message);
-        ?>
-        <script>
-        setTimeout(function()
-            {
-            window.location.reload(true);
-            }, 5000);
-        </script>
-        <?php
-        }
+    show_upgrade_in_progress(false);
     exit;
     }
 

@@ -347,7 +347,11 @@ if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resourc
     clear_resource_data($ref);
     }
 
-
+// Upload template: always reset to today's date (if configured).
+if(0 > $ref && $reset_date_upload_template && isset($reset_date_field) && '' == getval('submitted', ''))
+    {
+    update_field($ref, $reset_date_field, date('Y-m-d H:i'));
+    }
         
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
@@ -726,8 +730,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         }
                         ?>
 
-                    document.body.appendChild(temp_form);
-                    temp_form.submit();
+                    CentralSpacePost(temp_form, true, false, false);
                     </script>
                     <?php
                     exit();
@@ -826,8 +829,6 @@ if ($lockable_fields)
         {
         echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
         }?>
-
-registerCollapsibleSections();
 
 jQuery(document).ready(function()
 {
@@ -1334,6 +1335,12 @@ if(!$multiple)
             {
             if(!isset($selected_type))
                 {
+                // Display error if no resource type can be found - resource specific metadata cannot be loaded.    
+                if (empty($shown_resource_types))
+                    {
+                    error_alert($lang['resource_type_not_found'], false);
+                    exit();
+                    }
                 $selected_type = $shown_resource_types[0];
                 }
 
@@ -1378,6 +1385,15 @@ else
     <?php
     }
 } # end hook("replaceedittype")
+
+# For new users check that they have access to the default resource type, setting from the available types if they don't to ensure metadata fields load correctly.
+if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && $selected_type != 0)
+    {
+    $resource_type = $selected_type;
+    update_resource_type($ref,intval($resource_type));
+    $resource["resource_type"] = $resource_type;
+    $uploadparams["resource_type"] = $resource_type;
+    }
 
 $lastrt=-1;
 
@@ -1627,7 +1643,7 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
-$tabModalityClass = ($modal ? " MetaTabIsModal" : " MetaTabIsNotModal");
+$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
@@ -1687,9 +1703,9 @@ if($tabs_on_edit)
                     $newtabname = "";
                     }
                 if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
-                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "\" class=\"Tab";
+                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
                 if($tabcount==0){$tabtophtml.=" TabSelected ";}
-                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
+                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$ref.",".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
                 $tabcount++;
                 $tabname=$fields[$n]["tab_name"];
                 }
@@ -1731,7 +1747,7 @@ if($tabs_on_edit)
                 ?><div class="clearerleft"> </div>
                 <?php if(isset($extra)){echo $extra;} ?>
                 </div><!-- end of TabPanelInner --></div>
-                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
+                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div class="TabPanelInner"><?php  
                 $tabcount++;
                 $extra="";
                 $newtab=true;
@@ -2218,7 +2234,7 @@ hook("autolivejs");
 jQuery('document').ready(function()
     {
 	/* Call SelectTab upon page load to select first tab*/
-    SelectMetaTab(0,<?php echo $modalTrueFalse?>);
+    SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
     registerCollapsibleSections(false);
     });
 </script>
