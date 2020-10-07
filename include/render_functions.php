@@ -4198,6 +4198,7 @@ function render_featured_collections(array $ctx, array $items)
            $themes_simple_view;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
+    $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
 
     foreach($items as $fc)
         {
@@ -4268,7 +4269,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             global $enable_theme_category_edit;
 
-            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"], "k" => $k));
+            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
 
             $render_ctx["href"] = $fc_category_url;
             $render_ctx["icon"] = ICON_FOLDER;
@@ -4357,6 +4358,7 @@ function render_featured_collection(array $ctx, array $fc)
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
@@ -4364,7 +4366,7 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
-    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}", "k" => $k));
+    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", $general_url_params, array("search" => "!collection{$fc["ref"]}"));
     $html_fc_a_href = (isset($ctx["href"]) && trim($ctx["href"]) !== "" ? $ctx["href"] : $html_fc_a_href);
 
 

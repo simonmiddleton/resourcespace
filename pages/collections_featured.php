@@ -18,6 +18,7 @@ $smart_rtf = (int) getval("smart_rtf", 0, true);
 $smart_fc_parent = getval("smart_fc_parent", 0, true);
 $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
 
+$general_url_params = ($k == "" ? array() : array("k" => $k));
 
 if(getval("new", "") == "true" && getval("cta", "") == "true")
     {
@@ -35,20 +36,18 @@ include "../include/header.php";
 <?php
 if($enable_theme_breadcrumbs && $parent > 0)
     {
-    $links_trail_params = ($k == "" ? array() : array("k" => $k));
-
     $links_trail = array(
         array(
             "title" => $lang["themes"],
-            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $links_trail_params)
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params)
         )
     );
 
-    $branch_trail = array_map(function($branch) use ($baseurl_short, $links_trail_params)
+    $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
         {
         return array(
             "title" => $branch["name"],
-            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $links_trail_params, array("parent" => $branch["ref"]))
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
         }, get_featured_collection_category_branch_by_leaf($parent, array()));
 
@@ -59,6 +58,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
 $full_width = !$themes_simple_view;
 $rendering_options = array(
     "full_width" => $full_width,
+    "general_url_params" => $general_url_params,
 );
 
 
