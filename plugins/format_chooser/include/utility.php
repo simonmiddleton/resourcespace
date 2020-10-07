@@ -60,8 +60,16 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	$originalPath = get_resource_path($resource['ref'], true, '', false,
 			$resource['file_extension'], -1, $page, false, '', $alternative);
 
-	$command .= " \"$originalPath\"[0] -auto-orient";
-
+	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
+	if ($resource['file_extension'] == "eps")		
+        {
+		$command .= " \"$originalPath\"[0] -transparent -auto-orient";
+		}
+	else
+	    {
+	    $command .= " \"$originalPath\"[0] -auto-orient";
+	    }
+	
     // Handle alpha/ matte channels
     $extensions_no_alpha_off = array('png', 'gif', 'tif');
     $target_extension        = pathinfo($target, PATHINFO_EXTENSION);
