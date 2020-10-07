@@ -4,7 +4,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
     global $baseurl_short, $ajax, $ref, $ffmpeg_preview_extension, $resource, $k,
            $search, $offset, $order_by, $sort, $archive, $lang, $download_multisize,
            $baseurl, $annotate_ext_exclude, $annotate_rt_exclude, $annotate_public_view,
-           $annotate_pdf_output;
+           $annotate_pdf_output, $ffmpeg_audio_extensions;
 
     if(in_array($resource['file_extension'], $annotate_ext_exclude))
         {
@@ -26,6 +26,11 @@ function HookAnnotateViewRenderinnerresourcepreview()
     $video_preview_file = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension);
 
     if(file_exists($video_preview_file))
+        {
+        return false;
+        }
+    
+    if(in_array($resource['file_extension'], $ffmpeg_audio_extensions) || $resource['file_extension'] == "mp3") 
         {
         return false;
         }
