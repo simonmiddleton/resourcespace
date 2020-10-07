@@ -116,7 +116,6 @@ function HookAction_datesCronCron()
             $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource " 
                                     . ($eligible_states_list == "" ? "" : " AND r.archive IN ({$eligible_states_list})")    
                                     . " WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
-            // $candidate_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource > 0 AND resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
             }
         else
             {
