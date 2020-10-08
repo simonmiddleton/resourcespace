@@ -4492,3 +4492,76 @@ function render_featured_collection(array $ctx, array $fc)
     <?php
     return;
     }
+
+
+/**
+* Renders an option in the Permission Manager (admin_group_permissions.php page) 
+* 
+* @param string  $permission   Permission identifier
+* @param string  $description  User friendly description of the permission
+* @param boolean $reverse      Reverse the permission
+* @param boolean $reload       Autosave changes done on this permission
+* 
+* @return void
+*/
+function DrawOption($permission,$description,$reverse=false,$reload=false)
+    {
+    global $permissions,$permissions_done;
+    $checked=(in_array($permission,$permissions));
+    if ($reverse) {$checked=!$checked;}
+    ?>
+    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <tr>
+        <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
+        <td><?php echo $description?></td>
+        <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
+            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+    </tr>
+    <?php
+    $permissions_done[]=$permission;
+    }
+
+
+/**
+* Render featured collections options in the Permission Manager (admin_group_permissions.php page)
+* 
+* This function will generate and render the following permissions that target featured collection categories
+*   # j[numeric ID of new collection]  - valid for FC categories at root level. These are normal permissions.
+*   # -j[numeric ID of new collection] - valid for the rest of FC sub-categories. These permissions are reversed, {@see DrawOption()}!
+* 
+* @param array $ctx Context data to allow caller code to start from different tree levels. Supports the following
+*                   properties: parent and depth
+* 
+* @return void
+*/
+function render_featured_collections_category_permissions(array $ctx)
+    {
+    global $lang;
+
+    $parent = (isset($carry["parent"]) ? validate_collection_parent(array("parent" => $carry["parent"])) : 0);
+    $path_depth = (isset($carry["depth"]) ? $carry["depth"] : 0);
+    $current_depth = $path_depth;
+    $reverse_permission = ($parent > 0);
+
+    foreach(get_featured_collection_categories($parent) as $fc)
+        {
+        $fc_perm_id = (!$reverse_permission ? "" : "-") . "j{$fc["ref"]}";
+        $description = sprintf("%s%s '%s'",
+            ($path_depth == 0 ? "" : str_pad("", $path_depth * 7, "&mdash;") . " "),
+            (!$reverse_permission ? $lang["can_see_theme_category"] : $lang["can_see_theme_sub_category"]),
+            i18n_get_translated($fc["name"])
+        );
+        DrawOption($fc_perm_id, $description, $reverse_permission, true);
+
+        // Root categories (ie that don't have a parent) get rendered as normal permissions. Sub-categories, get rendered
+        // as reverse permissions
+        $render_subcategories = (!$reverse_permission ? checkperm($fc_perm_id) : !checkperm($fc_perm_id));
+        if($render_subcategories)
+            {
+            render_featured_collections_category_permissions(array("parent" => $fc["ref"], "depth" => ++$path_depth));
+            $path_depth = $current_depth;
+            }
+        }
+
+    return;
+    }

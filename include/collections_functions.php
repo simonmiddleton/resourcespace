@@ -4390,7 +4390,7 @@ function order_featured_collections_by_hasresources(array $a, array $b)
 */
 function get_featured_collection_categories(int $parent)
     {
-    return array_filter(get_featured_collections($parent), "is_featured_collection_category");
+    return array_values(array_filter(get_featured_collections($parent), "is_featured_collection_category"));
     }
 
 
@@ -4609,7 +4609,9 @@ function allow_collection_share(array $c)
 
 
 /**
-* Check if user is allowed to share featured collection
+* Check if user is allowed to share featured collection. If the featured collection provided is a category, then this
+* function will return FALSE if at least one sub featured collection has no share access (this is kept consistent with 
+* the check for normal collections when checking resources).
 * 
 * @param array $c Collection data. You can add "has_resources" and "sub_fcs" keys if you already have this information
 * 
