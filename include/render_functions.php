@@ -4538,8 +4538,8 @@ function render_featured_collections_category_permissions(array $ctx)
     {
     global $lang;
 
-    $parent = (isset($carry["parent"]) ? validate_collection_parent(array("parent" => $carry["parent"])) : 0);
-    $path_depth = (isset($carry["depth"]) ? $carry["depth"] : 0);
+    $parent = (isset($ctx["parent"]) ? validate_collection_parent(array("parent" => $ctx["parent"])) : 0);
+    $path_depth = (isset($ctx["depth"]) ? $ctx["depth"] : 0);
     $current_depth = $path_depth;
     $reverse_permission = ($parent > 0);
 
