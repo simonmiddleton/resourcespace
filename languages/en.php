@@ -295,7 +295,7 @@ $lang["copyresource"]="Copy Resource";
 $lang["resourceidnotfound"]="The resource ID was not found";
 $lang["inclusive"]="(inclusive)";
 $lang["pluginssetup"]="Plugins";
-$lang["pluginmanager"]="Plugin manager";
+$lang["pluginmanager"]="Plugins";
 $lang["users"]="Users";
 
 # Admin - Bulk E-mails

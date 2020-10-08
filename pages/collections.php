@@ -319,7 +319,7 @@ else { ?>
 							jQuery(this)
 								.closest(".ui-dialog")
 								.find(".ui-dialog-title")
-								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name'));
+								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
 						},
 						buttons: {
 							// Confirm removal of this resource from the resolved collection
