@@ -8,7 +8,6 @@ $id = getvalescaped('id', '');
 
 // Use id to work out search string for link and path to data requested e.g. to get field id for node expansion
 $target_search = array();
-$ftcolcats = array();
 $fc_parent = 0;
 $parent_nodes = array();
 $browse_field = 0;
@@ -39,7 +38,6 @@ for($n=0;$n<$bcount;$n++)
         case "FC":
             if($browseid != "")
                 {
-                $ftcolcats[] =  base64_decode($browseid);
                 $fc_parent = $browseid;
                 }
         break;
@@ -275,26 +273,49 @@ switch ($returntype)
     
     // Featured collection
     case "FC":
-        // TODO: validate parent
+        $fc_parent = validate_collection_parent(array("parent" => $fc_parent));
+
+        // Add 'create new' option
+        if($collection_allow_creation && checkperm("h"))
+            {
+            $item = array(
+                "id" => "{$id}-FC:new",
+                "name" => htmlspecialchars($lang["create"]),
+                "class" => "New",
+                "expandable" => "false",
+                "link" => generateURL(
+                    "{$baseurl_short}pages/collections_featured.php",
+                    array(
+                        "new" => "true",
+                        "cta" => "true",
+                        "parent" => $fc_parent,
+                    )
+                ),
+                "modal" => true,
+            );
+
+            $return_items[$n] = $item;
+            $n++;
+            }
+
         $featured_collections = get_featured_collections($fc_parent);
         usort($featured_collections, "order_featured_collections_by_hasresources");
-
-        // echo "<pre>";print_r($fc_parent);echo "</pre>";
-        // echo "<pre>";print_r($browse_elements);echo "</pre>";
-        // echo "<pre>";print_r($ftcolcats);echo "</pre>";
-        // echo "<pre>";print_r($featured_collections);echo "</pre>";
-
         foreach($featured_collections as $fc)
             {
             $is_featured_collection_category = is_featured_collection_category($fc);
+            $id_part = ($is_featured_collection_category ? "FC" : "C");
+            $link = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}"));
+            if($is_featured_collection_category)
+                {
+                $link = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
+                }
 
             $item = array(
-                "id" => ($is_featured_collection_category ? "{$id}-FC:{$fc["ref"]}" : "{$id}-C:{$fc["ref"]}"),
+                "id" => "{$id}-{$id_part}:{$fc["ref"]}",
                 "name" => htmlspecialchars(i18n_get_translated($fc["name"])),
                 "class" => ($is_featured_collection_category ? "Featured" : "Col"),
-                // "expandable" => ($is_featured_collection_category ? "true" : "false"),
-                "expandable" => $is_featured_collection_category, # TODO: if this fails, use the one above. Not sure why modal would allow genuine booleans and expandle not.
-                "link" => "", # TODO: continue here
+                "expandable" => ($is_featured_collection_category ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
+                "link" => $link,
                 "modal" => false,
                 "drop" => !$is_featured_collection_category,
             );
@@ -302,77 +323,10 @@ switch ($returntype)
             $return_items[$n] = $item;
             $n++;
             }
-        echo "<pre>";print_r($return_items);echo "</pre>";
-        die("You died in file " . __FILE__ . " at line " . __LINE__);
 
-
-
-
-
-
-        $ftcol_subcats = get_theme_headers($ftcolcats);
-        $tgtparams = array();
-        for ($x=0;$x<count($ftcolcats);$x++)
-            {
-            $fclevel = ($x==0) ? "" : $x+1;
-            $tgtparams["theme" . $fclevel] = $ftcolcats[$x];
-            }
-            
-         if($collection_allow_creation && checkperm("h"))
-            {
-            // Add 'create new' option
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-FC:new";
-            $return_items[$n]["name"] = $lang["create"];
-            $return_items[$n]["class"] = "New";
-            $return_items[$n]["expandable"] = "false";
-            $newtgtparams = $tgtparams;
-            $newtgtparams["new"]  = "true";            
-            
-            $tgturl = generateURL($baseurl_short . "pages/themes.php", $newtgtparams);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = true;
-            $n++;
-            }
-                
-        foreach($ftcol_subcats as $subcat)
-            {
-            // Create link based on parent 
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-FC:" . base64_encode($subcat);
-            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($subcat));
-            $return_items[$n]["class"] = "Featured";
-            $return_items[$n]["expandable"] = "true";                            
-            $tgturl = generateURL($baseurl_short . "pages/themes.php", $tgtparams, array("theme" . ($x+1) => $subcat));
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = false;
-            $n++;
-            }
-        
-        if(count($ftcolcats) > 0)
-            {
-            $fcols = get_themes($ftcolcats);
-            foreach($fcols as $fcol)
-                {
-                // Create link based on parent 
-                $return_items[$n] = array();
-                $return_items[$n]["id"] = $id . "-C:" . $fcol["ref"];
-                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($fcol["name"]));
-                $return_items[$n]["class"] = "Col";
-                $return_items[$n]["expandable"] = "false";                
-                $tgtparams = array();
-                $tgtparams["search"] = "!collection" . $fcol["ref"];                            
-                $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
-                $return_items[$n]["link"] = $tgturl;
-                $return_items[$n]["modal"] = false;
-                $return_items[$n]["drop"] = true;
-                $n++;
-                }
-            }        
-
-        $return_data["success"] = TRUE;
+        $return_data["success"] = true;
         $return_data["items"] = $return_items;
-    break;
+        break;
     
     case "C":
         // My collections
