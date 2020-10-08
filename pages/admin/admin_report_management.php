@@ -14,13 +14,27 @@ include "../../include/header.php";
 $find=getval("find","");
 $order_by=getval("orderby","name");
 
+$url_params = array("find" => $find, "orderby" => $order_by);
+$url=generateURL($baseurl . "/pages/admin/admin_report_management.php", $url_params);
+
 $reports=sql_query("select ref, name from report" . ($find=="" ? "" : " where ref like '%{$find}%' or name like '%{$find}%'") . " order by {$order_by}");
 
 ?><div class="BasicsBox"> 
 	
-	<p><a href="<?php echo $baseurl . "/pages/admin/admin_home.php" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["systemsetup"]?></a></p>
+	<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["page-title_report_management"],
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+	?>
 	
-	<h1><?php echo $lang['page-title_report_management']; ?></h1>
 	<p><?php echo $lang['page-subtitle_report_management_edit'];render_help_link("resourceadmin/reports-and-statistics"); ?></p>
 
 	<!--code for copy report link -->
@@ -80,7 +94,7 @@ function addColumnHeader($orderName, $labelKey)
             $edit_url_extra = ($find == "" ? $edit_url_extra : array_merge($edit_url_extra, array("find" => $find)));
             $edit_url_extra = ($order_by == "name" ? $edit_url_extra : array_merge($edit_url_extra, array("orderby" => $order_by)));
             $edit_url = generateURL("{$baseurl_short}pages/admin/admin_report_management_edit.php", array("ref" => $report["ref"]), $edit_url_extra);
-			$view_url="{$baseurl_short}pages/team/team_report.php?report={$report['ref']}";
+			$view_url="{$baseurl_short}pages/team/team_report.php?report={$report['ref']}&backurl=" . urlencode($url);
             $a_href = ($execution_lockout ? $view_url : $edit_url);
             ?>
             <tr>

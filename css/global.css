@@ -654,6 +654,14 @@ behavior: url('../css/iepngfix.htc');
 
 .URLDisplay {width: 100%;font-size: 1em;}
 
+.PageIntrotext{
+    padding-top: 15px;
+}
+
+.BreadcrumbsBox .HelpLink {
+    vertical-align: unset;
+}
+
 /* Autocomplete dropdown CSS */
 div.autocomplete {
     position:absolute;
@@ -1571,15 +1579,19 @@ a.Enabled, a:visited.Enabled {
 /* Breadcrumbs */
 .BreadcrumbsBox {
     display: table;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    margin: 1em 1em 0em 0em;;
-    padding: 0.66em;
-    background: rgba(0, 0, 0, 0.33);
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    margin: 1em 1em 0.8em 0em;;
+    padding: 8px 10px;
+    background: gray;
 }
 .BreadcrumbsBox > .SearchBreadcrumbs{
     margin: 0;
+}
+.BreadcrumbsBox .fa {
+    padding-left: 10px;
+    padding-right: 3px;
 }
 
 /* Colour picker */

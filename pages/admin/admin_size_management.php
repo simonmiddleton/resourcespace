@@ -20,8 +20,19 @@ $sizes=sql_query("select ref, id, internal, width, height, name from preview_siz
 
 ?><div class="BasicsBox"> 
 	
-	
-	<h1><?php echo $lang['page-title_size_management']; ?></h1>
+	<?php
+    $links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["page-title_size_management"]
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+	?>
 	<p><?php echo $lang['page-subtitle_size_management'];render_help_link('systemadmin/manage_sizes'); ?></p>
 
 <?php

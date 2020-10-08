@@ -105,15 +105,28 @@ include "../../include/header.php";
 
 ?>
 <div class="BasicsBox">
-    
-<p>
-    <a href="<?php echo $baseurl; ?>/pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['systemsetup']; ?></a><br />
-    <a href="<?php echo $baseurl; ?>/pages/admin/admin_resource_type_fields.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['admin_resource_type_fields']; ?></a><br />
-    <a href="<?php echo "{$baseurl}/pages/admin/admin_resource_type_field_edit.php?ref={$ref}"; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['admin_resource_type_field'] . ': ' . i18n_get_translated($title); ?></a>
-</p>
-
-<h1><?php echo $lang['copy-field'] . ":&nbsp;" . i18n_get_translated($title); render_help_link("managing-metadata");?></h1>
 <?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["admin_resource_type_fields"],
+        'href'  => $baseurl_short . "pages/admin/admin_resource_type_fields.php"
+    ),
+    array(
+        'title' => $lang["admin_resource_type_field"] . ": " . i18n_get_translated($title),
+        'href'  => $baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $ref
+    ),
+    array(
+        'title' => $lang['copy-field'] . ": " . i18n_get_translated($title),
+        'help'  => "managing-metadata"
+    )
+);
+
+renderBreadcrumbs($links_trail);
+
 if(isset($saved_text))
     {
     ?>

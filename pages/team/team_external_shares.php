@@ -10,7 +10,6 @@ if(!checkperm('ex'))
 $ajax              = ('true' == getval('ajax', '') ? true : false);
 $delete_access_key = getvalescaped('delete_access_key', '');
 
-
 // Process access key deletion
 if($ajax && '' != $delete_access_key && enforcePostRequest($ajax))
     {
@@ -35,9 +34,6 @@ if($ajax && '' != $delete_access_key && enforcePostRequest($ajax))
     exit(json_encode($response));
     }
 
-
-
-
 $external_access_keys_query = 
 "     SELECT access_key,
              resource,
@@ -55,15 +51,23 @@ $external_access_keys_query =
 ";
 $external_shares = sql_query($external_access_keys_query);
 
-
-// TODO in a few days: add a filter at the top of the page and pager with lazy load
-
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['manage_external_shares']; render_help_link('user/sharing-resources');?></h1>
-
-
+    <?php
+        $links_trail = array(
+            array(
+                'title' => $lang["teamcentre"],
+                'href'  => $baseurl_short . "pages/team/team_home.php"
+            ),
+            array(
+                'title' => $lang["manage_external_shares"],
+                'help'  => "user/sharing-resources"
+            )
+        );
+     
+        renderBreadcrumbs($links_trail);
+    ?>
         <div class="Listview">
             <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
                 <tbody>

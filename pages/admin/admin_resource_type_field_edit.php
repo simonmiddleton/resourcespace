@@ -567,16 +567,24 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
 ?>
 </script>
 <div class="BasicsBox">
-    
-    <p>
-	
-	<a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
-    </p>
-    
-    <h1><?php echo $lang["admin_resource_type_field"] . ": " . i18n_get_translated($fielddata["title"]);render_help_link('resourceadmin/configure-metadata-field');?></h1>
-	
+<?php
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["admin_resource_type_fields"],
+            'href'  => $backurl
+        ),
+        array(
+            'title' => $lang["admin_resource_type_field"] . ": " . i18n_get_translated($fielddata["title"]),
+            'help'  => "resourceadmin/configure-metadata-field"
+        )
+    );
 
- 
+    renderBreadcrumbs($links_trail);
+?>
 
 <form method="post" class="FormWide" action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo (int)$fielddata["ref"] . "&restypefilter=" . (int)$restypefilter . "&field_order_by=" . urlencode($field_order_by) . "&field_sort=" . $field_sort ."&find=" . urlencode($find); ?>" onSubmit="return CentralSpacePost(this,true);">
     <?php generateFormToken("admin_resource_type_field_edit"); ?>

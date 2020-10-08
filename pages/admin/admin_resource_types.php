@@ -98,8 +98,20 @@ function addColumnHeader($orderName, $labelKey)
 ?>	
 
 <div class="BasicsBox">
-   
-  <h1><?php echo $lang["resource_types_manage"];render_help_link("resourceadmin/resource-types");?></h1>
+<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["resource_types_manage"],
+			'help'  => "resourceadmin/resource-types"
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+?>
   
   <?php
   $introtext=text("introtext");

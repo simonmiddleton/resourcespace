@@ -17,7 +17,21 @@ $offset=getvalescaped("offset",0);
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["managerequestsorders"];render_help_link('resourceadmin/user-resource-requests');?></h1>
+
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["managerequestsorders"],
+        'help'  => "resourceadmin/user-resource-requests"
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
 
 <?php 
 $requests=get_requests();

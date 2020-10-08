@@ -140,10 +140,24 @@ include "../../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<p>    
-<a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
-</p>
-<h1><?php echo htmlspecialchars(i18n_get_translated($restypedata["name"]));render_help_link("resourceadmin/resource-types");?></h1>
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["resource_types_manage"],
+        'href'  => $backurl
+    ),
+    array(
+        'title' => htmlspecialchars(i18n_get_translated($restypedata["name"])),
+        'help'  => "resourceadmin/resource-types"
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
 <?php if (isset($error_text)) { ?><div class="FormError"><?php echo $error_text?></div><?php } ?>
 <?php if (isset($saved_text)) { ?><div class="PageInfoMessage"><?php echo $saved_text?></div><?php } ?>
 

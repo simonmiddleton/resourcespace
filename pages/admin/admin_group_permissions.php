@@ -75,12 +75,28 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
 	$permissions_done[]=$permission;
 	}	
 ?>
-<div class="BasicsBox"> 	
-	<p>
-		<a href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php<?php echo $url_params; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php
-		echo $lang['page-title_user_group_management_edit']; ?></a>
-	</p>	
-	<h1><?php echo $lang['page-title_user_group_permissions_edit'] . " - " . htmlspecialchars($group["name"]); ?></h1>
+<div class="BasicsBox">
+<?php
+    $links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["page-title_user_group_management"],
+        'href'  => $baseurl_short . "pages/admin/admin_group_management.php"
+    ),
+    array(
+        'title' => $lang["page-title_user_group_management_edit"],
+		'href'  => $baseurl_short . "pages/admin/admin_group_management_edit.php" . $url_params
+    ),
+	array(
+		'title' => $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"])
+	)
+);
+
+renderBreadcrumbs($links_trail);
+?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
 	<form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	

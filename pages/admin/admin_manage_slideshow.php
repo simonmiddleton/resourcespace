@@ -169,10 +169,20 @@ include '../../include/header.php';
 
 ?>
 <div class="BasicsBox">
-    <p>
-        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
-    </p>
-    <h1><?php echo $lang['manage_slideshow']; ?></h1>
+    <?php
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["manage_slideshow"]
+        )
+    );
+
+    renderBreadcrumbs($links_trail);
+    ?>
+
     <p><?php echo $lang['manage-slideshow-instructions']; render_help_link("resourceadmin/homepage-slideshow");?></p>
     <div class="Listview">
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">

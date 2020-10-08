@@ -1413,13 +1413,14 @@ function render_access_key_tr(array $record)
         // For resource
         $link      = $baseurl . '?r=' . urlencode($record['resource']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['share-resource'];
-        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
+        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s&backurl=%s',
             $baseurl_short,
             urlencode($record['resource']),
             urlencode($record['access_key']),
             urlencode($record['expires']),
             urlencode($record['access']),
-            urlencode($record['usergroup'])
+            urlencode($record['usergroup']),
+            urlencode("/pages/team/team_external_shares.php")
         );
         }
     else
@@ -1427,13 +1428,14 @@ function render_access_key_tr(array $record)
         // For collection
         $link      = $baseurl . '?c=' . urlencode($record['collection']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['sharecollection'];
-        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
+        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s&backurl=%s',
             $baseurl_short,
             urlencode($record['collection']),
             urlencode($record['access_key']),
             urlencode($record['expires']),
             urlencode($record['access']),
-            urlencode($record['usergroup'])
+            urlencode($record['usergroup']),
+            urlencode("/pages/team/team_external_shares.php")
         );
         }
         ?>
@@ -2306,20 +2308,23 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
         <?php
         if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
             {
-            echo $pre_links . '&nbsp;' . LINK_CARET;
+            echo $pre_links . '&nbsp;' . LINK_CHEVRON_RIGHT;
             }
 
         for($i = 0; $i < count($links); $i++)
             {
+            $anchor = isset($links[$i]['href']);
             if(0 < $i)
                 {
-                echo LINK_CARET;
+                echo LINK_CHEVRON_RIGHT;
                 }
-                ?>
-            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
-                <span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span>
-            </a>
-            <?php
+                
+            if ($anchor)
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);"><?php } ?><span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span><?php if ($anchor) { ?></a><?php }
+            if (isset($links[$i]['help']))
+                {
+                render_help_link($links[$i]['help']);
+                }
             }
             ?>
         </div>

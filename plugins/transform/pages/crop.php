@@ -637,9 +637,27 @@ else
 include "../../../include/header.php";
 
 # slider, sound, controls
-?>
 
-<h1><?php echo ($original ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']); ?></h1>
+if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
+    {
+    // Arrived from Manage slideshow page
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["manage_slideshow"],
+            'href'  => $baseurl_short . "pages/admin/admin_manage_slideshow.php"
+        )
+    );
+    }
+
+$links_trail[] = array('title' => $original ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']);
+
+renderBreadcrumbs($links_trail);
+
+?>
 <p><?php
   if($cropperestricted)
       {

@@ -96,9 +96,19 @@ function addColumnHeader($orderName, $labelKey)
 }
 
 ?><div class="BasicsBox"> 
+<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["page-title_user_group_management"],
+	    )
+	);
 
-	
-	<h1><?php echo $lang['page-title_user_group_management']; ?></h1>	
+	renderBreadcrumbs($links_trail);
+?>
 	<p><?php echo $lang['page-subtitle_user_group_management']; render_help_link("systemadmin/creating-user-groups");?></p>
 	
 	<div class="TopInpageNav">

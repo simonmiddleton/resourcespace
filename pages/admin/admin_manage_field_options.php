@@ -440,10 +440,27 @@ if($ajax)
     }
     ?>
 <div class="BasicsBox">
-    <p>
-        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $field; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang['back']; ?></a>
-    </p>
-    <h1><?php echo $lang['manage_metadata_field_options'] . (isset($field_data['title']) ? ' - ' . $field_data['title'] : ''); ?></h1>
+<?php
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["admin_resource_type_fields"],
+            'href'  => $baseurl_short . "pages/admin/admin_resource_type_fields.php"
+        ),
+        array(
+            'title' => $lang["admin_resource_type_field"] . ": " . i18n_get_translated($field_data["title"]),
+            'href'  => $baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $field
+        ),
+        array(
+            'title' => $lang['manage_metadata_field_options'] . (isset($field_data['title']) ? ': ' . i18n_get_translated($field_data['title']) : '')
+        )
+    );
+
+    renderBreadcrumbs($links_trail);
+?>
 
     <p><?php echo $lang['manage_metadata_text']; render_help_link("resourceadmin/modifying-field-options");?></p>
     <?php

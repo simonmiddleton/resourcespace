@@ -588,8 +588,22 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     global $lang,$baseurl_short;
 ?>
     <div class="BasicsBox">
-      <h1><?php echo $plugin_page_heading ?></h1>
 <?php
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["pluginmanager"],
+            'href'  => $baseurl_short . "pages/team/team_plugins.php"
+        ),
+        array(
+            'title' => $plugin_page_heading
+        )
+    );
+    renderBreadcrumbs($links_trail);
+
     if ($plugin_page_frontm!='')
         {
         echo $plugin_page_frontm;
