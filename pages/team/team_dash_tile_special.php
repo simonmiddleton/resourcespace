@@ -11,11 +11,6 @@ include "../../include/header.php";
 <h1><?php echo $lang["specialdashtiles"];render_help_link('user/manage-dash-tile');?></h1>
 <p></p>
 <p>
-	<a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);">
-		<?php echo LINK_CARET_BACK ?><?php echo $lang["backtoteamhome"]?>
-	</a>
-</p>
-<p>
     <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang['view_tiles']; ?></a>
 </p>
 <p>

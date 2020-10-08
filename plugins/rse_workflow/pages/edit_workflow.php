@@ -21,7 +21,6 @@ include '../../../include/header.php';
 	</ul>
 	</div>
 
-	<p><a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang["backtoteamhome"]?></a></p>
   </div>
 
 <?php

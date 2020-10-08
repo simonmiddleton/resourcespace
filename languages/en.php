@@ -266,13 +266,13 @@ $lang["viewnewmaterial"]="View new material";
 $lang["researchrequestservice"]="Research request service";
 
 # Admin
-$lang["manageresources"]="Manage resources";
+$lang["manageresources"]="Resources";
 $lang["overquota"]="Over disk space quota; cannot add resources";
-$lang["managearchiveresources"]="Manage archive resources";
+$lang["managearchiveresources"]="Archive resources";
 $lang["managethemes"]="Manage featured collections";
-$lang["manageresearchrequests"]="Manage research requests";
-$lang["manageusers"]="Manage users";
-$lang["managecontent"]="Manage content";
+$lang["manageresearchrequests"]="Research requests";
+$lang["manageusers"]="Users";
+$lang["managecontent"]="Site content";
 $lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
@@ -294,7 +294,7 @@ $lang["searchcontenteg"]="(page, name, text)";
 $lang["copyresource"]="Copy Resource";
 $lang["resourceidnotfound"]="The resource ID was not found";
 $lang["inclusive"]="(inclusive)";
-$lang["pluginssetup"]="Manage plugins";
+$lang["pluginssetup"]="Plugins";
 $lang["pluginmanager"]="Plugin manager";
 $lang["users"]="Users";
 
@@ -765,7 +765,6 @@ $lang["groupsmart"]="Group (Smart)";
 $lang["confirmaddgroup"]="Are you sure you want to add all the current members in this group?";
 $lang["confirmaddgroupsmart"]="Are you sure you want to dynamically include members in this group?";
 $lang["back_to"] = "Back to %area";
-$lang["backtoteamhome"]="Back to admin home";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Resource ID";
 $lang["id"]="ID";
 $lang["todate"]="To date";
@@ -1118,7 +1117,7 @@ $lang["showtranslations"]="+ Show translations";
 $lang["hidetranslations"]="- Hide translations";
 $lang["archivedresource"]="Archived resource";
 
-$lang["managerelatedkeywords"]="Manage related keywords";
+$lang["managerelatedkeywords"]="Related keywords";
 $lang["keyword"]="Keyword";
 $lang["relatedkeywords"]="Related Keywords";
 $lang["matchingrelatedkeywords"]="Matching related keywords";
@@ -1135,8 +1134,8 @@ $lang['exportcollection'] = "Include resources and associated metadata from this
 $lang["exportcomplete"]="Your system configuration export is ready";
 $lang["exportfailed"]="Your system configuration export failed. Please contact your system administrator";
 
-$lang["managealternativefiles"]="Manage alternative files";
-$lang["managealternativefilestitle"]="Manage alternative files";
+$lang["managealternativefiles"]="Alternative files";
+$lang["managealternativefilestitle"]="Alternative files";
 $lang["alternativefiles"]="Alternative files";
 $lang["filetype"]="File type";
 $lang["filedeleteconfirm"]="Are you sure you wish to delete this file?";
@@ -1176,7 +1175,7 @@ $lang["viewalluserpending"]="View all user contributed resources pending review:
 
 # New for 1.7
 $lang["installationcheck"]="Installation check";
-$lang["managefieldoptions"]="Manage field options";
+$lang["managefieldoptions"]="Field options";
 $lang["matchingresourcesheading"]="Matching resources";
 $lang["backtofieldlist"]="Back to field list";
 $lang["rename"]="Rename";
@@ -1355,7 +1354,7 @@ $lang["userrequestnotification3"]="If this is a valid request, click the link to
 
 $lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
-$lang["managerequestsorders"]="Manage requests / orders";
+$lang["managerequestsorders"]="Requests / orders";
 $lang["editrequestorder"]="Edit request / order";
 $lang["requestorderid"]="Request / order ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
@@ -2134,7 +2133,7 @@ $lang['send_collection_to_admin_collectionname'] = 'Collection name: ';
 $lang['send_collection_to_admin_numberofresources'] = 'Number of resources: ';
 
 # User group management
-$lang['page-title_user_group_management'] = "Manage user groups";
+$lang['page-title_user_group_management'] = "User groups";
 $lang['page-subtitle_user_group_management'] = "Use this section to add, remove and modify user groups.";
 $lang['action-title_create_user_group_called'] = "Create user group called...";
 $lang['action-title_filter_by_parent_group'] = "Parent user group filter";
@@ -2163,7 +2162,7 @@ $lang['page-title_user_group_permissions_edit'] = "Edit user group permissions";
 $lang['page-subtitle_user_group_permissions_edit'] = "Use this section to modify user group permissions.";
 
 # Report management
-$lang['page-title_report_management'] = "Manage reports";
+$lang['page-title_report_management'] = "Reports";
 $lang['page-subtitle_report_management'] = "Use this section to modify system reports.";
 $lang['action-title_create_report_called'] = "Create report called...";
 
@@ -2174,7 +2173,7 @@ $lang["fieldtitle-tick_to_delete_report"] = "Tick to delete this report";
 $lang["report_query_required"] = "Report query is required";
 
 # size management
-$lang['page-title_size_management'] = "Manage sizes";
+$lang['page-title_size_management'] = "Image sizes";
 $lang['page-subtitle_size_management'] = "Use this section to modify sizes for downloads and previews.";
 $lang['action-title_create_size_with_id'] = "Create size with " . $lang['property-id'] . "...";
 
@@ -2184,7 +2183,7 @@ $lang['page-subtitle_size_management_edit'] = "Use this section to modify size d
 $lang["fieldtitle-tick_to_delete_size"] = "Tick to delete this size";
 
 # Resource type management
-$lang["resource_types_manage"]      = "Manage resource types";
+$lang["resource_types_manage"]      = "Resource types";
 $lang["resource_type_new"]          = "New resource type";
 $lang["resource_type_field_new"]    = "New metadata field";
 
@@ -2196,7 +2195,7 @@ $lang["admin_advanced_field_properties"]="Advanced field properties";
 $lang["admin_delete_field_confirm"]="There are %%AFFECTEDRESOURCES%% resource(s) with data in this field. Some of the affected resource IDs are listed below. The metadata associated with this field will be lost if you continue. Are you sure you want to proceed with deletion?";
 $lang["admin_delete_field_error"]="Unable to delete field. Please contact your system administrator. This field is used for the following configuration options:-";
 $lang["admin_resource_type_create"]="Create resource type called...";
-$lang["admin_resource_type_field"]="Manage metadata field";
+$lang["admin_resource_type_field"]="Metadata field";
 $lang["admin_resource_type_field_count"]="Metadata fields";
 $lang["admin_resource_type_field_create"]="Create metadata field called...";
 $lang["admin_resource_type_field_reorder_information"]="To amend the display order, rearrange the rows in the table by dragging and dropping.";
@@ -2205,7 +2204,7 @@ $lang["admin_resource_type_field_reorder_information_tab_order"]="Reordering is 
 $lang["admin_resource_type_field_reorder_mode"]="Show in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_mode_all"]="Show all fields in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_select_restype"]="Select 'All' for Resource Type in order to enable reordering ";
-$lang["admin_resource_type_fields"]="Manage metadata fields";
+$lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_migrate_data"]="Migrate existing data to fixed list options";
 $lang["admin_resource_type_field_migrate_delete_data"]="Delete redundant data after migration?";
@@ -2381,11 +2380,11 @@ $lang["returntopreviouspage"]="Return to previous page";
 $lang["showresourcecount"]="Show resource count?";
 $lang["tilebin"]="Remove";
 $lang["last"]="Last";
-$lang["managedefaultdash"]="Manage all user tiles";
+$lang["managedefaultdash"]="All user tiles";
 $lang["dashtile"]="Dash tile";
 $lang["manage_own_dash"]="My dash";
-$lang["manage_all_dash_h"]="Manage default dash / all user tiles (Requires h permission)";
-$lang["manage_all_dash"]="Manage default dash / all user tiles";
+$lang["manage_all_dash_h"]="Default dash / all user tiles (Requires h permission)";
+$lang["manage_all_dash"]="Default dash / all user tiles";
 $lang["dashtiledeleteaction"]="What delete action would you like to take?";
 $lang["confirmdashtiledelete"]="Delete tile from my dash";
 $lang["dashtiledeleteusertile"]="This is a tile that you have created and will be permanently deleted if you continue with this action";
@@ -2403,7 +2402,7 @@ $lang["dashtilevisitlink"]="Visit target link";
 $lang["alluserprebuiltdashtiles"]="Create pre-constructed dash tiles (added for all users)";
 $lang["manageowndashinto"]="Manage dash tiles available for your dash. You can add / remove or edit tiles on your dash if you have the permissions to do so.";
 $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border are hidden to the users. Admins see them as there are other tiles available but hidden from these users';
-$lang['manage_dash_tiles'] = 'Manage dash tiles';
+$lang['manage_dash_tiles'] = 'Dash tiles';
 $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'Click for more information about the new version';
@@ -2588,7 +2587,7 @@ $lang["confirm_remove_custom_usergroup_access"]="This will revoke all custom use
 $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 
 /* Edit field options */
-$lang["manage_metadata_field_options"] = "Manage metadata field options";
+$lang["manage_metadata_field_options"] = "Metadata field options";
 $lang['manage_metadata_field_options_import_options'] = 'Import options';
 $lang["system_performance"]="System performance";
 $lang["mysql_throughput"]="MySQL throughput";
@@ -2599,7 +2598,7 @@ $lang['metadata_first_option_is_default']='The first option will be used as the 
 $lang['metadata_populate_default_node_for_empty_values']='Populate default option';
 
 /* Manage slideshows */
-$lang["manage_slideshow"] = "Manage slideshow";
+$lang["manage_slideshow"] = "Slideshow";
 $lang["action-add-new"] = "Add new";
 $lang["action-submit-button-label"] = "Submit";
 $lang["slideshow_use_static_image"] = "Use a single random image from the set (image will not change unless page is reloaded)";
@@ -2626,8 +2625,8 @@ $lang["signin_required"]="You must be signed in to perform this action";
 $lang["signin_required_request_account"]="You must be signed in to perform this action. If you do not have an account you can request one by clicking on the above link";
 $lang["error_batch_edit_resources"] = "The following resources have not been updated";
 # Job queue message strings
-$lang["job_queue_manage"] = "Manage job queue";
-$lang["job_queue_manage_job"] = "Manage job";
+$lang["job_queue_manage"] = "Job queue";
+$lang["job_queue_manage_job"] = "Job";
 $lang["job_queue_type"] = "Job type";
 $lang["job_queue_duplicate_message"] = "Job creation failed. There is already a matching job in the queue.";
 $lang["alternative_file_created"] = "Alternative file successfully created.";
@@ -2643,7 +2642,7 @@ $lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection do
 
 /* Manage external shares */
 $lang['permission_manage_external_shares'] = 'Can manage external shares with expiry set to "Never"';
-$lang['manage_external_shares'] = 'Manage external shares';
+$lang['manage_external_shares'] = 'External shares';
 $lang['filter_label'] = 'Filter';
 /* end of Manage external shares */
 
@@ -2813,7 +2812,7 @@ $lang["filter_migration"]           = "Filter migration";
 $lang["filter_migrate_success"]     = "Filter has been successfully migrated.";
 $lang["filter_migrate_error"]       = "An error was encountered migrating a filter. Please check the filter.";
 $lang["filter_delete_error"]        = "Filter is in use by the following users or groups";
-$lang["filter_manage"]              = "Manage filters";
+$lang["filter_manage"]              = "Filters";
 $lang["filter_edit"]                = "Edit filter";
 $lang["filter_new"]                 = "New filter";
 $lang["filter_none"]                = "No filter";
@@ -2915,8 +2914,8 @@ $lang["search_engine_noindex_external_shares"] = "Request that search engines do
 
 $lang["job_details"]                        = "Job details";
 $lang["job_text"]                           = "Job";
-$lang['manage_jobs']                        = "Manage system jobs";
-$lang["manage_jobs_title"]                  = "Manage jobs";
+$lang['manage_jobs']                        = "System jobs";
+$lang["manage_jobs_title"]                  = "Jobs";
 $lang["my_jobs"]                            = "My jobs";
 $lang["job_reset"]                          = "Reset";
 $lang["job_status_0"]                       = "Disabled";

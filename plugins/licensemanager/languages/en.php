@@ -12,7 +12,7 @@ $lang["edit_license"]="Edit license";
 $lang["delete_license"]="Delete license";
 $lang["license_id"]="License ID";
 $lang["licensemanager_new"]="New license";
-$lang["managelicenses"]="Manage licenses";
+$lang["managelicenses"]="Licenses";
 
 $lang["outbound"]="Outbound";
 $lang["outbound_license_description"]="(we are the copyright holders)";

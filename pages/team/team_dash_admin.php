@@ -84,9 +84,6 @@ include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
     <h1><?php echo $lang['manage_dash_tiles'];render_help_link('user/manage-dash-tile');?></h1>
-    <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoteamhome']; ?></a>
-    </p>
 <?php
 $href = "{$baseurl_short}pages/team/team_dash_tile.php";
 if($show_usergroups_dash)
