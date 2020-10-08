@@ -46,7 +46,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
     $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
         {
         return array(
-            "title" => $branch["name"],
+            "title" => i18n_get_translated($branch["name"]),
             "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
         }, get_featured_collection_category_branch_by_leaf($parent, array()));
