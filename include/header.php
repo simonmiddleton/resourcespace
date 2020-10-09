@@ -528,7 +528,10 @@ if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["H
         $collections_footer = false;
     }
  
-if (!$header_search)
+# if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    
+if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login)) ) )
+    { }
+    else 
     {
     # Include simple search sidebar?
    
