@@ -458,6 +458,7 @@ function display_rsc_upload($upload_status)
   <?php if ($upload_status!='') echo '<p>' . $upload_status . '</p>'?>
   <form id="form2" enctype="multipart/form-data" name="form2" method="post" action="">
     <div class="Question">
+      <?php generateFormToken("form2"); ?>
       <input type="hidden" name="MAX_FILE_SIZE" value="32768" />
       <label for="rsc_file"><?php echo $lang['plugins-getrsc'] ?></label>
       <input type="file" name="rsc_file" id="rsc_file" size=80 />
