@@ -1263,7 +1263,8 @@ else
 
 # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
 
-SaveAndClearButtons("NoPaddingSaveClear");
+if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
+
   } ?>
 
 <?php hook("editbefresmetadata"); ?>
