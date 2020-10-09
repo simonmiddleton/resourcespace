@@ -2206,15 +2206,7 @@ function get_featured_collection_categ_sub_fcs(array $c)
     // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Consider filtering the query instead
 
     // Filter out featured collections that have a different root path
-    $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
-    $category_branch_path = get_featured_collection_category_branch_by_leaf($c["ref"], array());
-    $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
-    $collections = array_filter($all_fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
-        {
-        $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
-        $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
-        return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
-        });
+    $collections = filter_featured_collections_by_root($all_fcs, $c["ref"]);
 
     debug("get_featured_collection_categ_sub_fcs: returned collections: " . implode(", ", $collections));
     return $collections;
@@ -4334,12 +4326,14 @@ function save_themename()
 * 
 * @return array List of featured collections (with data) 
 */
-function get_featured_collections(int $parent)
+function get_featured_collections(int $parent, array $ctx = array()) #TODO: make ctx mandatory. optional now to not break permission manager
     {
     if($parent < 0)
         {
         return array();
         }
+
+    $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : false);
 
     // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Add the check via ctx
     return sql_query(
@@ -4354,10 +4348,70 @@ function get_featured_collections(int $parent)
                FROM collection AS c
               WHERE public = 1
                 AND `type` = %s
-                AND parent %s",
+                AND parent %s
+                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
             COLLECTION_TYPE_FEATURED,
-            sql_is_null_or_eq_val((string) $parent, $parent == 0)
+            sql_is_null_or_eq_val((string) $parent, $parent == 0),
+            ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
         ));
+    }
+
+
+/**
+* Build appropriate SQL (where clause) to filter out featured collection categories user has no access to
+* 
+*/
+function featured_collections_permissions_filter_sql(string $prefix, string $column)
+    {
+    global $userpermissions;
+
+    // - Users can by default see all featured collections
+    // -  j[name of theme ] permissions will be converted to j[numeric ID of new collection]
+    // - -j[name of theme ] permissions will be converted to -j[numeric ID of new collection]
+
+    // - If the j* permission exists the negative j permissions still take effect
+    // - If the j* permission does not exists the only the positive j permissions are used to check access
+    // *** If the capital 'J' permission is in place then all the j permissions must be checked in do_search()
+
+    // TODO: decide if we need the prefix in the end.
+    $prefix = trim($prefix);
+    $column = trim($column);
+    if($prefix == "" || $column == "")
+        {
+        trigger_error("featured_collections_permissions_filter_sql() can't work with empty string passed as arguments!");
+        }
+
+    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE public = 1 AND `type` = %s", COLLECTION_TYPE_FEATURED));
+    $allowed_fcs = array();
+
+    if(!checkperm("j*"))
+        {
+        // figure out from set j perms what paths are allowed (ie jsut the ones starting with those IDs)
+        $j_permissions = array_values(array_filter($userpermissions, function(string $v) { return preg_match("/^(j\d+){1}$/", $v) === 1; }));
+        $fc_root_allowed_refs = extract_values_from_array_by_regex($j_permissions, "/\d+/");
+
+        // Filter out featured collections that have a different root paths
+        foreach($fc_root_allowed_refs as $fc_root_ref)
+            {
+            $filterd_fcs_by_root = filter_featured_collections_by_root($all_fcs, $fc_root_ref);
+            if(!empty($filterd_fcs_by_root))
+                {
+                $allowed_fcs = array_merge($allowed_fcs, $filterd_fcs_by_root);
+                }
+            }
+        $allowed_fcs = array_values(array_unique($allowed_fcs));
+        }
+
+    // Filter out featured collections explicitly forbidden
+    $allowed_fcs = array_filter($allowed_fcs, function($ref) { return !checkperm("-j{$ref}"); });
+
+    if(!empty($allowed_fcs))
+        {
+        $fcs_allowed = "'" . join("', '", escape_check_array_values($allowed_fcs)) . "'";
+        return "{$prefix} {$column} IN ({$fcs_allowed})";
+        }
+
+    return ""; # No access control needed! User should see all featured collections
     }
 
 
@@ -4647,4 +4701,35 @@ function allow_featured_collection_share(array $c)
         // FALSE if at least one collection has no share access (consistent with the check for normal collections when checking resources)
         return (!is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share);
         }, null);
+    }
+
+
+/**
+* Filter out featured collections that have a different root path.
+* 
+* @param array $fcs   List of featured collections refs to filter out
+* @param int   $c_ref A root featured collection ref
+* 
+* @return array
+*/
+function filter_featured_collections_by_root(array $fcs, int $c_ref)
+    {
+    if(empty($fcs))
+        {
+        return array();
+        }
+
+    $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
+
+    $category_branch_path = get_featured_collection_category_branch_by_leaf($c_ref, array());
+    $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
+
+    $collections = array_filter($fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
+        {
+        $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
+        $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
+        return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
+        });
+    
+    return array_values($collections);
     }

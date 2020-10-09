@@ -4084,3 +4084,33 @@ function trim_filename(string $s)
 
     return $s;
     };
+
+
+/**
+* Extract information based on a regex pattern from each individual element of an array. The extracted information is the
+* full pattern match string {@see https://www.php.net/manual/en/function.preg-match}
+* IMPORTANT: array values must be strings
+* 
+* @param array $a        Array from which we are extracting data
+* @param string $pattern Regex pattern (e.g "/\d+/")
+* 
+* @return array Returns list of extracted values. For elements where the pattern failed to match will contain NULL.
+*/
+function extract_values_from_array_by_regex(array $a, string $pattern)
+    {
+    return array_map(
+        function(string $value) use ($pattern)
+            {
+            $matches = array();
+            $pregmatch = preg_match($pattern, $value, $matches);
+
+            if($pregmatch === 1)
+                {
+                // Return the full match
+                return $matches[0];
+                }
+
+            return;
+            },
+        $a);
+    }

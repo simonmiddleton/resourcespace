@@ -62,7 +62,7 @@ $rendering_options = array(
 );
 
 
-$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent) : array());
+$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array("access_control" => true)) : array());
 usort($featured_collections, "order_featured_collections_by_hasresources");
 render_featured_collections($rendering_options, $featured_collections);
 
