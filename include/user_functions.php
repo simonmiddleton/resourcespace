@@ -1720,8 +1720,8 @@ function check_access_key_collection($collection, $key)
         }
 
     // From this point all collections should have resources. For FC categories, its sub FCs will have resources because
-    // get_featured_collection_categ_sub_fcs does the check internally
-    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection));
+    // get_featured_collection_categ_sub_fcs() does the check internally
+    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
 
     $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '%s' AND access_key = '{$key}'";
 

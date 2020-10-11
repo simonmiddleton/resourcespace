@@ -2166,6 +2166,7 @@ function get_featured_collection_resources(array $c, array $ctx)
 
         # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
         $subquery["where"] .= " AND (r.access <> 2 OR (r.access = 2 AND ((rca.access IS NOT NULL AND rca.access <> 2) OR (rca2.access IS NOT NULL AND rca2.access <> 2))))";
+        $subquery["where"] .= featured_collections_permissions_filter_sql("AND", "c.ref");
         }
 
     $subquery["join"] = implode(" ", $subquery["join"]);
@@ -2175,8 +2176,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         sql_limit(null, $imgs_limit)
     );
 
-    return sql_array($sql);
-    // return sql_array($sql, "themeimage"); # TODO: use this cached version once done testing
+    return sql_array($sql, "themeimage");
     }
 
 
@@ -2184,12 +2184,15 @@ function get_featured_collection_resources(array $c, array $ctx)
 * Get a list of featured collections based on a higher level featured collection category. This returns all direct/indirect
 * collections under that category.
 * 
-* @param array $c Collection data structure
+* @param array $c   Collection data structure
+* @param array $ctx Contextual data (e.g disable access control). This param MUST NOT get exposed over the API
 * 
 * @return array 
 */
-function get_featured_collection_categ_sub_fcs(array $c)
+function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
     {
+    $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : true);
+
     $all_fcs = sql_array(sprintf(
         "SELECT ref AS `value` FROM (
                 SELECT ref,
@@ -2198,12 +2201,12 @@ function get_featured_collection_categ_sub_fcs(array $c)
                  WHERE public = 1
                    AND `type` = %s
                    AND parent IS NOT NULL
+                  %s # access control filter
             ) AS fc
          WHERE fc.has_resources > 0",
-        COLLECTION_TYPE_FEATURED
+        COLLECTION_TYPE_FEATURED,
+        ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
     ));
-
-    // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Consider filtering the query instead
 
     // Filter out featured collections that have a different root path
     $collections = filter_featured_collections_by_root($all_fcs, $c["ref"]);
@@ -4417,13 +4420,20 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $not_allowed = array_unique($not_allowed);
     $allowed_fcs = array_diff($allowed_fcs, $not_allowed);
 
+    // If we've reached this far, and we have the same number of FCs allowed as we have in total, then there's no need to add the filter
+    if(count($all_fcs) == count($allowed_fcs))
+        {
+        return ""; # No access control needed! User should see all featured collections
+        }
+
     if(!empty($allowed_fcs))
         {
         $fcs_allowed = "'" . join("', '", escape_check_array_values($allowed_fcs)) . "'";
         return "{$prefix} {$column} IN ({$fcs_allowed})";
         }
 
-    return ""; # No access control needed! User should see all featured collections
+    // User is not allowed to see any of the available FCs
+    return "{$prefix} 1 = 0";
     }
 
 
@@ -4707,6 +4717,11 @@ function allow_featured_collection_share(array $c)
     if($c["type"] != COLLECTION_TYPE_FEATURED)
         {
         return allow_collection_share($c);
+        }
+
+    if(!featured_collection_check_access_control($c["ref"]))
+        {
+        return false;
         }
 
     if(!isset($c["has_resources"]))
