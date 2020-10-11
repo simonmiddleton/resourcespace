@@ -33,6 +33,10 @@ if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYP
     {
     exit(error_alert($lang["error-permissiondenied"], true, 401));
     }
+else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
 
 $resources=do_search("!collection".$ref);
 $colcount=count($resources);

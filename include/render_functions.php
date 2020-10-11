@@ -4133,7 +4133,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"]; # as returned by get_featured_collection_category_branch_by_leaf()
 
-    $featured_collection_categories = get_featured_collection_categories($parent);
+    $featured_collection_categories = get_featured_collection_categories($parent, array());
     if(empty($featured_collection_categories))
         {
         return;
@@ -4543,7 +4543,7 @@ function render_featured_collections_category_permissions(array $ctx)
     $current_depth = $path_depth;
     $reverse_permission = ($parent > 0);
 
-    foreach(get_featured_collection_categories($parent) as $fc)
+    foreach(get_featured_collection_categories($parent, array("access_control" => false)) as $fc)
         {
         $fc_perm_id = (!$reverse_permission ? "" : "-") . "j{$fc["ref"]}";
         $description = sprintf("%s%s '%s'",

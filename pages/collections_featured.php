@@ -14,6 +14,12 @@ if(!$enable_themes)
     exit($lang["error-permissiondenied"]);
     }
 
+// Access control
+if($parent > 0 && !featured_collection_check_access_control($parent))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
+
 $smart_rtf = (int) getval("smart_rtf", 0, true);
 $smart_fc_parent = getval("smart_fc_parent", 0, true);
 $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
@@ -62,7 +68,7 @@ $rendering_options = array(
 );
 
 
-$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array("access_control" => true)) : array());
+$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array()) : array());
 usort($featured_collections, "order_featured_collections_by_hasresources");
 render_featured_collections($rendering_options, $featured_collections);
 

@@ -4323,6 +4323,7 @@ function save_themename()
 * 
 * @param integer $parent  The ref of the parent collection. When a featured collection contains another collection, it is
 *                         then considered a featured collection category and won't have any resources associated with it.
+* @param array   $ctx     Contextual data (e.g disable access control). This param MUST NOT get exposed over the API
 * 
 * @return array List of featured collections (with data) 
 */
@@ -4333,8 +4334,7 @@ function get_featured_collections(int $parent, array $ctx = array()) #TODO: make
         return array();
         }
 
-    // TODO: consider defaulting to true
-    $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : false);
+    $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : true);
 
     return sql_query(
         sprintf(
@@ -4349,7 +4349,7 @@ function get_featured_collections(int $parent, array $ctx = array()) #TODO: make
               WHERE public = 1
                 AND `type` = %s
                 AND parent %s
-                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+               %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, $parent == 0),
             ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
@@ -4372,7 +4372,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
-    $prefix = trim($prefix);
+    $prefix = " " . trim($prefix);
     $column = trim($column);
 
     $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE public = 1 AND `type` = %s", COLLECTION_TYPE_FEATURED));
@@ -4393,18 +4393,29 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         // Filter out featured collections that have a different root paths
         foreach($fc_root_allowed_refs as $fc_root_ref)
             {
-            $filterd_fcs_by_root = filter_featured_collections_by_root($all_fcs, $fc_root_ref);
-            if(!empty($filterd_fcs_by_root))
+            $filtered_fcs_by_root = filter_featured_collections_by_root($all_fcs, $fc_root_ref);
+            if(!empty($filtered_fcs_by_root))
                 {
-                $allowed_fcs = array_merge($allowed_fcs, $filterd_fcs_by_root);
+                $allowed_fcs = array_merge($allowed_fcs, $filtered_fcs_by_root);
                 }
             }
 
         $allowed_fcs = array_unique($allowed_fcs);
         }
 
-    // Filter out featured collections explicitly forbidden
-    $allowed_fcs = array_filter($allowed_fcs, function($ref) { return !checkperm("-j{$ref}"); });
+    // Filter out featured collections explicitly forbidden. Prevent access to any sub-featured collections as well
+    $fc_not_allowed_refs = array_filter($allowed_fcs, function($ref) { return checkperm("-j{$ref}"); });
+    $not_allowed = array();
+    foreach($fc_not_allowed_refs as $fc_not_allowed_ref)
+        {
+        $filtered_fcs_by_root = filter_featured_collections_by_root($allowed_fcs, $fc_not_allowed_ref);
+        if(!empty($filtered_fcs_by_root))
+            {
+            $not_allowed = array_merge($not_allowed, $filtered_fcs_by_root);
+            }
+        }
+    $not_allowed = array_unique($not_allowed);
+    $allowed_fcs = array_diff($allowed_fcs, $not_allowed);
 
     if(!empty($allowed_fcs))
         {
@@ -4413,6 +4424,24 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         }
 
     return ""; # No access control needed! User should see all featured collections
+    }
+
+
+/**
+* Access control function used to determine if a featured collection should be accessed by the user
+* 
+* @param integer $c_ref Collection ref to be tested
+* 
+* @return boolean Returns TRUE if user should have access to the featured collection (no parent category prevents this), FALSE otherwise
+*/
+function featured_collection_check_access_control(int $c_ref)
+    {
+    $sql = sprintf("SELECT EXISTS(SELECT ref FROM collection WHERE public = 1 AND `type` = %s AND ref = '%s' %s) AS `value`",
+        COLLECTION_TYPE_FEATURED,
+        escape_check($c_ref),
+        featured_collections_permissions_filter_sql("AND", "ref")
+    );
+    return (bool) sql_value($sql, false);
     }
 
 
@@ -4437,15 +4466,17 @@ function order_featured_collections_by_hasresources(array $a, array $b)
 
 
 /**
-* Get featured collection categories at the specified depth level
+* Get featured collection categories
 * 
 * @param integer $parent  The ref of the parent collection.
+* @param array   $ctx     Extra context for get_featured_collections(). Mostly used for overriding access control (e.g 
+*                         on the admin_group_permissions.php where we want to see all available featured collection categories).
 * 
 * @return array
 */
-function get_featured_collection_categories(int $parent)
+function get_featured_collection_categories(int $parent, array $ctx)
     {
-    return array_values(array_filter(get_featured_collections($parent), "is_featured_collection_category"));
+    return array_values(array_filter(get_featured_collections($parent, $ctx), "is_featured_collection_category"));
     }
 
 
@@ -4566,12 +4597,11 @@ function process_posted_featured_collection_categories(int $depth, array $branch
     $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
 
     // Validate the POSTed featured collection category for this depth level
-    $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"]), "ref"));
+    $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"], array()), "ref"));
     if(
         !is_null($selected_fc_category)
         && isset($branch_path[$depth])
         && !in_array($selected_fc_category, $valid_categories))
-        // TODO: validate submitted FC based on permissions (j, J) - see item Migration script for permissions
         {
         return array();
         }
@@ -4706,7 +4736,8 @@ function allow_featured_collection_share(array $c)
 
 
 /**
-* Filter out featured collections that have a different root path.
+* Filter out featured collections that have a different root path. The function builds internally the path to the root from
+* the provided featured collection ref and then filters out any featured collections that have a different root path.
 * 
 * @param array $fcs   List of featured collections refs to filter out
 * @param int   $c_ref A root featured collection ref

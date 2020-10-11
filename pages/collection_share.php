@@ -33,6 +33,10 @@ if(!collection_readable($ref))
     {
     exit($lang["no_access_to_collection"]);
     }
+else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
 if(!$allow_share || checkperm("b"))
     {
     $show_error = true;
