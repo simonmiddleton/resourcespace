@@ -298,7 +298,7 @@ switch ($returntype)
             $n++;
             }
 
-        $featured_collections = get_featured_collections($fc_parent);
+        $featured_collections = get_featured_collections($fc_parent, array());
         usort($featured_collections, "order_featured_collections_by_hasresources");
         foreach($featured_collections as $fc)
             {

@@ -4327,7 +4327,7 @@ function save_themename()
 * 
 * @return array List of featured collections (with data) 
 */
-function get_featured_collections(int $parent, array $ctx = array()) #TODO: make ctx mandatory. optional now to not break permission manager
+function get_featured_collections(int $parent, array $ctx)
     {
     if($parent < 0)
         {
