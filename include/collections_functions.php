@@ -4333,9 +4333,9 @@ function get_featured_collections(int $parent, array $ctx = array()) #TODO: make
         return array();
         }
 
+    // TODO: consider defaulting to true
     $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : false);
 
-    // TODO: filter FCs based on permissions (j, J) - see item Migration script for permissions. Add the check via ctx
     return sql_query(
         sprintf(
             "SELECT ref,
@@ -4358,37 +4358,37 @@ function get_featured_collections(int $parent, array $ctx = array()) #TODO: make
 
 
 /**
-* Build appropriate SQL (where clause) to filter out featured collection categories user has no access to
+* Build appropriate SQL (for WHERE clause) to filter out featured collections the user has NO ACCESS to.
 * 
+* 
+* @param string $prefix SQL WHERE clause element. Mostly should be either WHERE, AND -or- OR depending on the SQL statement 
+*                       this is part of.
+* @param string $column SQL column on which to apply the filter for
+* 
+* @return string Returns "" if user should see all featured collections or a SQL filter (e.g AND ref IN("32", "34") )
 */
 function featured_collections_permissions_filter_sql(string $prefix, string $column)
     {
-    global $userpermissions;
-
-    // - Users can by default see all featured collections
-    // -  j[name of theme ] permissions will be converted to j[numeric ID of new collection]
-    // - -j[name of theme ] permissions will be converted to -j[numeric ID of new collection]
-
-    // - If the j* permission exists the negative j permissions still take effect
-    // - If the j* permission does not exists the only the positive j permissions are used to check access
-    // *** If the capital 'J' permission is in place then all the j permissions must be checked in do_search()
-
-    // TODO: decide if we need the prefix in the end.
+    // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
+    // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
+    // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
     $prefix = trim($prefix);
     $column = trim($column);
-    if($prefix == "" || $column == "")
-        {
-        trigger_error("featured_collections_permissions_filter_sql() can't work with empty string passed as arguments!");
-        }
 
     $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE public = 1 AND `type` = %s", COLLECTION_TYPE_FEATURED));
-    $allowed_fcs = array();
+    $allowed_fcs = $all_fcs;
 
     if(!checkperm("j*"))
         {
-        // figure out from set j perms what paths are allowed (ie jsut the ones starting with those IDs)
-        $j_permissions = array_values(array_filter($userpermissions, function(string $v) { return preg_match("/^(j\d+){1}$/", $v) === 1; }));
-        $fc_root_allowed_refs = extract_values_from_array_by_regex($j_permissions, "/\d+/");
+        $allowed_fcs = array();
+
+        // Find allowed featured collection categories roots (based on permission j[ID])
+        $fc_root_allowed_refs = array_filter($all_fcs, function(string $ref) { return checkperm("j{$ref}"); });
+        if(empty($fc_root_allowed_refs))
+            {
+            // Misconfiguration - user can only see specific FCs but none have been selected
+            return "{$prefix} 1 = 0";
+            }
 
         // Filter out featured collections that have a different root paths
         foreach($fc_root_allowed_refs as $fc_root_ref)
@@ -4399,7 +4399,8 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
                 $allowed_fcs = array_merge($allowed_fcs, $filterd_fcs_by_root);
                 }
             }
-        $allowed_fcs = array_values(array_unique($allowed_fcs));
+
+        $allowed_fcs = array_unique($allowed_fcs);
         }
 
     // Filter out featured collections explicitly forbidden
