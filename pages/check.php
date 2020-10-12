@@ -124,7 +124,15 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $lang["nowriteacces
 <?php } 
 
 # Check filestore folder browseability
-$output=@file_get_contents($baseurl . "/filestore");
+$filestoreurl=$baseurl . "/filestore";
+$ch=curl_init();
+$checktimeout=5;
+curl_setopt($ch, CURLOPT_URL, $filestoreurl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+$output=curl_exec($ch);
+curl_close($ch);
 if (strpos($output,"Index of")===false)
 	{
 	$result=$lang["status-ok"];
