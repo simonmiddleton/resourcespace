@@ -1398,7 +1398,7 @@ if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$s
 
 $lastrt=-1;
 
-if(isset($metadata_template_resource_type) && !$multiple && ($ref < 0 || $upload_review_mode))
+if(isset($metadata_template_resource_type) && isset($metadata_template_title_field) && $metadata_template_title_field !== false && !$multiple && ($ref < 0 || $upload_review_mode))
     {
     // Show metadata templates here
     $templates = get_metadata_templates();
