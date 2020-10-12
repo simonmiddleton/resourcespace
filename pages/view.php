@@ -236,7 +236,7 @@ if (getval("refreshcollectionframe","")!="")
 
 # Update the hitcounts for the search keywords (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
-$usearch=@$_GET["search"];
+$usearch= isset($_GET["search"]) ? $_GET["search"] : "";
 if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_hitcount($ref,$usearch);}
 
 # Log this activity
