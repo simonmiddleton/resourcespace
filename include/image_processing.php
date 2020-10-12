@@ -215,7 +215,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             { 
             # Remove existing file, if present
 
-            hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
+            hook("beforeremoveexistingfile", "", array( "ref" => $ref ) );
 
             $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             if ($old_extension!="") 
