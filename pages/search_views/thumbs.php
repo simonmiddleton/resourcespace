@@ -42,7 +42,7 @@ if (!hook("renderresultthumb"))
         }
     hook('thumbs_resourceshell_height');
     
-    if($display_resource_id_in_thumbnail) #[t20844]
+    if($display_resource_id_in_thumbnail)
         { 
         $thumbs_displayed_fields_height += 29;
         $br = '<br />';

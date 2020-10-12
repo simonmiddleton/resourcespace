@@ -22,7 +22,10 @@ else
         {
         $restypes = $_COOKIE['restypes'];
         }
-
+    else
+        {
+        $restypes = "";
+        }
     if(!isset($search) || false !== strpos($search, '!'))
         {
         $quicksearch = (isset($_COOKIE['search']) ? $_COOKIE['search'] : '');
