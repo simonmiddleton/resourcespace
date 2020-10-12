@@ -7199,11 +7199,18 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
                 $returnline["path"]=$path;
                 $returnline["url"] = get_resource_path($ref, false, $sizes[$n]["id"], false, "jpg");
                 $returnline["id"]=$sizes[$n]["id"];
-                if ((list($sw,$sh) = @getimagesize($path))===false) {$sw=0;$sh=0;}
                 if ($file_exists)
-                    $filesize=@filesize_unlimited($path);
+                    {
+                    $filesize = filesize_unlimited($path);
+                    list($sw,$sh) = getimagesize($path);  
+                    }
                 else
+                    {
                     $filesize=0;
+                    $sw=0;
+                    $sh=0;
+                    }
+
                 if ($filesize===false) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
                 else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$filesize=formatfilesize($filesize);}
                 $returnline["filesize"]=$filesize;          
