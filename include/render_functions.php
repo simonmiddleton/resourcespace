@@ -3689,7 +3689,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
-
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
     if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -3812,7 +3811,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		    }
 
 		if (!$valueonly && trim($field["display_template"])!="")
-			{		
+			{
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 			
@@ -3856,19 +3855,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
-                # Draw this field normally.
-                # Sanitize value before rendering.
-                # Note: we cannot use htmlspecialchars where we actually render it as that might break highlighting
-                if($value != strip_tags(htmlspecialchars_decode($value)))
-                    {
-                    // Strip tags moved before highlighting as was being corrupted
-                    $value = strip_tags_and_attributes(htmlspecialchars_decode($value));
-                    }
-                else
-                    {
-                    $value = htmlspecialchars($value);
-                    }
-
+                # Draw this field normally. - value has already been sanitized by htmlspecialchars
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 				

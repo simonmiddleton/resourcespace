@@ -2139,16 +2139,24 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
     }
  
 
+/**
+ * Highlight the relevant text in a string
+ *
+ * @param  string $text         Text to search
+ * @param  string $needle       Text to highlight
+ * @param  int  $options        String highlight options - See include/definitions.php
+ * @param  string $highlight    Optional custom highlight code
+ * @return void
+ */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
     /*
-    Sometimes the text can contain HTML entities and can break the hilghlighting feature
+    Sometimes the text can contain HTML entities and can break the highlighting feature
     Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
     */
-    $text = htmlspecialchars_decode($text);
-
+    $htmltext = htmlspecialchars_decode($text);
     // If text contains HTML tags then ignore them
-    if ($text != strip_tags($text))
+    if ($htmltext != strip_tags($htmltext))
         {
         $options = $options & STR_HIGHLIGHT_STRIPLINKS;
         }
@@ -2162,9 +2170,9 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
     $text=str_replace("#zwspace;","♣",$text);
     
-    // Default highlighting
+    // Default highlighting. This used to use '<' and '>' characters as placeholders but now changed as they were being removed by strip_tags
     if ($highlight === null) {
-        $highlight = '||<||\1||>||';
+        $highlight = '||RS_HIGHLIGHT_OPEN||\1||RS_HIGHLIGHT_CLOSE||';
     }
     
     // Select pattern to use
@@ -2206,12 +2214,11 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
         }
     }
     $text=str_replace("♠","_",$text);
-    $text=str_replace("♣","#zwspace;",$text);
+    $text=str_replace("♣","#zwspace;",$text);    
 
     # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-    $text=str_replace("||<||",'<span class="highlight">',$text);
-    $text=str_replace("||>||",'</span>',$text);
-
+    $text=str_replace("||RS_HIGHLIGHT_OPEN||",'<span class="highlight">',$text);
+    $text=str_replace("||RS_HIGHLIGHT_CLOSE||",'</span>',$text);
     return $text;
     }
         

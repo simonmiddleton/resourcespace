@@ -124,7 +124,7 @@ if (!hook("renderresultthumb"))
                     class="<?php echo ($display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper') ?>"
                     href="<?php echo $url?>"  
                     onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
                 >
                         <?php 
                         if(1 == $result[$n]['has_image'])
@@ -246,7 +246,7 @@ if (!hook("renderresultthumb"))
                 if (!hook("replaceresourcepanelinfo"))
                     { ?>
                     <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']?>"
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
                     >
                         <div class="extended">
                         <?php 
@@ -281,7 +281,7 @@ if (!hook("renderresultthumb"))
                 if (!hook("replaceresourcepanelinfonormal"))
                     { ?>
                     <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']?>"
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value))); ?>"
                     >
                         <?php 
                         if ($x==0)
@@ -292,7 +292,7 @@ if (!hook("renderresultthumb"))
                             >
                             <?php 
                             } //end link
-                        echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$resolved_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+                        echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$resolved_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>

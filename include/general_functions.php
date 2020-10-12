@@ -2026,15 +2026,18 @@ function format_display_field($value)
 
     $value = strip_tags_and_attributes($value);
 
-    if(isset($df[$x]['type']) && 8 == $df[$x]['type'])
-        {
-        $value = strip_tags($value);
-        }
-
     $string=i18n_get_translated($value);
     $string=TidyList($string);
-    //$string=tidy_trim($string,$results_title_trim);
-    $string=htmlspecialchars($string);
+    
+    if(isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
+        {
+        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
+        }
+    else
+        {
+        $string=htmlspecialchars($string);
+        }
+
     $string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
     
     return $string;

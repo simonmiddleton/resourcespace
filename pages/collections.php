@@ -988,7 +988,7 @@ if ($count_result>0)
                     {
                     $colimgpath = get_resource_path($ref, false, ($retina_mode ? 'thm':'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                     ?>
-                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>" alt="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"
+                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                     <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
                     }
 				else
@@ -1015,12 +1015,11 @@ if ($count_result>0)
 			}	
 		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
 		if($field_type==8){
-			$title=strip_tags($title);
 			$title=str_replace("&nbsp;"," ",$title);
 		}
 		?>	
 		<?php if (!hook("replacecolresourcetitle")){?>
-		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated(strip_tags(strip_tags_and_attributes($title))),14));?></a>&nbsp;</div>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
 		<?php } ?>
 		
 		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users
