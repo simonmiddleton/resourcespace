@@ -18,13 +18,9 @@ if ($simple_search_reset_after_search)
 else 
     {
     # pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
-    if(!isset($restypes) && isset($_COOKIE['restypes']))
+    if(!isset($restypes))        
         {
-        $restypes = $_COOKIE['restypes'];
-        }
-    else
-        {
-        $restypes = "";
+        $restypes = isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "";
         }
     if(!isset($search) || false !== strpos($search, '!'))
         {
