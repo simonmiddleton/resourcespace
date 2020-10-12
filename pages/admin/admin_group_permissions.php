@@ -256,7 +256,7 @@ DrawOption("dtu",$lang["manage_own_dash"],true,false);
 DrawOption("j*", $lang["can_see_all_theme_categories"], false, true);
 if(!in_array("j*", $permissions))
     {
-    render_featured_collections_category_permissions(array());
+    render_featured_collections_category_permissions(array("permissions" => $permissions));
     }
 DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 # ---------- end of featured collection categories

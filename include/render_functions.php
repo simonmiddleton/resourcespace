@@ -4538,13 +4538,24 @@ function render_featured_collections_category_permissions(array $ctx)
     {
     global $lang;
 
+    $permissions = (isset($ctx["permissions"]) && is_array($ctx["permissions"]) ? $ctx["permissions"] : array());
     $parent = (isset($ctx["parent"]) ? validate_collection_parent(array("parent" => $ctx["parent"])) : 0);
     $path_depth = (isset($ctx["depth"]) ? $ctx["depth"] : 0);
+    $branch_path = (isset($ctx["branch_path"]) && is_array($ctx["branch_path"]) ? $ctx["branch_path"] : array());
+
     $current_depth = $path_depth;
+    $current_branch_path = $branch_path;
     $reverse_permission = ($parent > 0);
 
     foreach(get_featured_collection_categories($parent, array("access_control" => false)) as $fc)
         {
+        $branch_path = $current_branch_path;
+        $branch_path[] = array(
+            "ref"    => $fc["ref"],
+            "name"   => $fc["name"],
+            "parent" => validate_collection_parent($fc),
+        );
+
         $fc_perm_id = (!$reverse_permission ? "" : "-") . "j{$fc["ref"]}";
         $description = sprintf("%s%s '%s'",
             ($path_depth == 0 ? "" : str_pad("", $path_depth * 7, "&mdash;") . " "),
@@ -4555,10 +4566,31 @@ function render_featured_collections_category_permissions(array $ctx)
 
         // Root categories (ie that don't have a parent) get rendered as normal permissions. Sub-categories, get rendered
         // as reverse permissions
-        $render_subcategories = (!$reverse_permission ? checkperm($fc_perm_id) : !checkperm($fc_perm_id));
+        debug(sprintf("render_featured_collections_category_permissions: Check if allowed to render sub-categories for FC category '%s'", $fc['ref']));
+        $render_subcategories = array_reduce($branch_path, function($carry, $item) use ($permissions)
+            {
+            $root_node = is_null($item["parent"]);
+            $perm_id = ($root_node ? "" : "-") . "j{$item["ref"]}";
+            $allow_render = ($root_node ? in_array($perm_id, $permissions) : !in_array($perm_id, $permissions));
+            debug(sprintf("render_featured_collections_category_permissions: For perm ID '%s': carry = %s; root_node = %s; allow_render = %s", $perm_id, json_encode($carry), json_encode($root_node), json_encode($allow_render)));
+
+            // FALSE if at least one featured collection category parent is forbidden
+            return (!is_bool($carry) ? $allow_render : $carry && $allow_render);
+            }, null);
+        debug("render_featured_collections_category_permissions: render_subcategories = " . json_encode($render_subcategories));
+        debug("render_featured_collections_category_permissions: ");
+
         if($render_subcategories)
             {
-            render_featured_collections_category_permissions(array("parent" => $fc["ref"], "depth" => ++$path_depth));
+            render_featured_collections_category_permissions(
+                array(
+                    "permissions" => $permissions,
+                    "parent" => $fc["ref"],
+                    "depth" => ++$path_depth,
+                    "branch_path" => $branch_path,
+                ));
+
+            // Step back to initial depth level
             $path_depth = $current_depth;
             }
         }
