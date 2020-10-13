@@ -68,7 +68,12 @@ $rendering_options = array(
 );
 
 
-$featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array()) : array());
+$featured_collections = array();
+if($smart_rtf == 0)
+    {
+    // If we're getting the root, look only for categories, otherwise you will get other public collections as they're all public collections
+    $featured_collections = ($parent == 0 ? get_featured_collection_categories($parent, array()) : get_featured_collections($parent, array()));
+    }
 usort($featured_collections, "order_featured_collections_by_hasresources");
 render_featured_collections($rendering_options, $featured_collections);
 
