@@ -606,8 +606,7 @@ function refresh_collection_frame($collection="")
     }
 
 /**
- * Performs a search for themes / public collections.
- * Returns a comma separated list of resource refs in each collection, used for thumbnail previews.
+ * Performs a search for featured collections / public collections.
  *
  * @param  string $search
  * @param  string $order_by
@@ -621,13 +620,15 @@ function refresh_collection_frame($collection="")
  * @return array
  */
 function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows=-1)
-	{
-	global $userref;
-	$sql="";
-	$keysql="";
+    {
+    global $userref;
+
+    $keysql = "";
+    $sql = "";
 
     // Check for valid values of 'sort' only
     if (!in_array($sort,array("ASC","DESC"))) {$sort="ASC";}
+    // TODO: validate order_by against expected values
 
 	# Keywords searching?
 	$keywords=split_keywords($search);  
@@ -677,7 +678,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 		    if (strpos($keywords[$n],":")!==false) {$keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);}
                     $keyref=resolve_keyword($keywords[$n],false);
                     if ($keyref!==false) {$keyrefs[]=$keyref;}
-                    $keysql.="join collection_keyword k" . $n . " on k" . $n . ".collection=c.ref and (k" . $n . ".keyword='$keyref')";
+                    $keysql .= " JOIN collection_keyword AS k" . $n . " ON k" . $n . ".collection = c.ref AND (k" . $n . ".keyword = '$keyref')";
                     }
 			    //$keysql="or keyword in (" . join (",",$keyrefs) . ")";
 			    }
@@ -686,16 +687,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         global $search_public_collections_ref;
         if ($search_public_collections_ref && is_numeric($search)){$spcr="or c.ref='" . escape_check($search) . "'";} else {$spcr="";}    
 		//$sql.="and (c.name rlike '%$search%' or u.username rlike '%$search%' or u.fullname rlike '%$search%' $spcr )";
-		}
-
-	if ($exclude_themes) # Include only public collections.
-		{
-		$sql.=" and (length(c.theme)=0 or c.theme is null)";
-		}
-	
-	if (($exclude_public) && !$search_user_collections) # Exclude public only collections (return only themes)
-		{
-		$sql.=" and length(c.theme)>0";
 		}
 	
 	# Restrict to parent, child and sibling groups?
@@ -710,20 +701,56 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 		
 		$sql.=" and u.usergroup in ('" . join ("','",$groups) . "')";
 		}
-	
-	if ($search_user_collections) $sql_public="(c.public=1 or c.user=$userref)";
-	else $sql_public="c.public=1";
 
-	# Run the query
-	if ($include_resources)
-		{    
-        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort),'',$fetchrows);
-		}
-	else
-		{
-		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort),'',$fetchrows);
-		}
-	}
+    $filter_by_user = ($search_user_collections ? "AND c.user = '" . escape_check($userref) . "'" : "");
+
+    // Add extra elements to the SELECT statement if needed
+    $select_extra = "";
+    if($include_resources)
+        {
+        $select_extra .= ", count(DISTINCT cr.resource) AS count";
+        }
+
+    // Build the HAVING clause if needed
+    $having_clause = "";
+    if($exclude_themes)
+        {
+        // Exclude featured collection categories. These collections don't have any resources and may have other featured collections as child nodes
+        $having_clause = "HAVING count(DISTINCT cr.resource) > 0";
+        }
+    else if($exclude_public && !$search_user_collections)
+        {
+        // Show only featured collection categories
+        $having_clause = "HAVING count(DISTINCT cr.resource) = 0";
+        }
+
+    $main_sql = sprintf(
+                "SELECT DISTINCT c.*,
+                        u.username,
+                        u.fullname,
+                        if(count(DISTINCT cr.resource) = 0, true, false) AS is_featured_collection_category
+                        %s
+                   FROM collection AS c
+              LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+        LEFT OUTER JOIN user AS u ON c.user = u.ref
+        LEFT OUTER JOIN collection_keyword AS k ON c.ref = k.collection
+                  %s # keysql
+                  WHERE c.public = 1
+                    AND c.`type` = %s # COLLECTION_TYPE_FEATURED
+                    %s
+               GROUP BY c.ref
+               %s
+               ORDER BY %s",
+        $select_extra,
+        $keysql,
+        COLLECTION_TYPE_FEATURED,
+        $filter_by_user . $sql, # extra filters
+        $having_clause,
+        "{$order_by} {$sort}"
+    );
+
+    return sql_query($main_sql, '', $fetchrows);
+    }
 
 
 
