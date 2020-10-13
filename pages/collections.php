@@ -714,7 +714,7 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	foreach ($results_all as $resource)
 		{
 		# For each resource in the collection, fetch the price (set in config.php, or config override for group specific pricing)
-		$id=$resource["purchase_size"];
+		$id=(isset($resource["purchase_size"])) ? $resource["purchase_size"] : "";
 		if ($id=="") {$id="hpr";} # Treat original size as "hpr".
 		if (array_key_exists($id,$pricing))
 			{
