@@ -626,9 +626,10 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $keysql = "";
     $sql = "";
 
-    // Check for valid values of 'sort' only
-    if (!in_array($sort,array("ASC","DESC"))) {$sort="ASC";}
-    // TODO: validate order_by against expected values
+    // Validate sort & order_by
+    $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
+    $valid_order_bys = array("fullname", "name", "ref", "count", "public", "created");
+    $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
 	# Keywords searching?
 	$keywords=split_keywords($search);  
@@ -737,6 +738,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                   %s # keysql
                   WHERE c.public = 1
                     AND c.`type` = %s # COLLECTION_TYPE_FEATURED
+                    %s # access control filter
                     %s
                GROUP BY c.ref
                %s
@@ -744,6 +746,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $select_extra,
         $keysql,
         COLLECTION_TYPE_FEATURED,
+        trim(featured_collections_permissions_filter_sql("AND", "c.ref")),
         $filter_by_user . $sql, # extra filters
         $having_clause,
         "{$order_by} {$sort}"
