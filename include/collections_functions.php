@@ -1158,63 +1158,6 @@ function get_max_theme_levels(){
 }
 
 
-
-/**
- * Return a list of theme headers, i.e. theme categories based on the higher selected levels provided.
- *
- * @param  array $themes
- * @return array
- */
-function get_theme_headers($themes=array())
-	{
-	# Work out which theme category level we are selecting 
-	$selecting="theme";
-
-	$theme_path = "";	
-	$sql="";	
-	for ($x=0;$x<count($themes);$x++){		
-		if ($x>0) $theme_path .= "|";		
-		$theme_path .= $themes[$x];		
-		if (isset($themes[$x])){
-			$selecting="theme".($x+2);
-		}	
-		if (isset($themes[$x]) && $themes[$x]!="" && $x==0) {
-			$sql.=" and theme LIKE '%" . escape_check($themes[$x]) . "'";
-		}
-		else if (isset($themes[$x])&& $themes[$x]!=""&& $x!=0) {
-			$sql.=" and theme".($x+1)." LIKE '%" . escape_check($themes[$x]) . "'";
-		}
-	}	
-	$return=array();
-	
-	$themes=sql_query("select * from collection where public=1 and $selecting is not null and length($selecting)>0 $sql");
-	for ($n=0;$n<count($themes);$n++)
-		{		
-		if (
-				(!in_array($themes[$n][$selecting],$return)) &&					# de-duplicate as there are multiple collections per theme category				
-				(checkperm("j*") || checkperm("j" . $themes[$n]["theme"])) &&	# and we have permission to access then add to array							
-				(!checkperm ("j-${theme_path}|" . $themes[$n][$selecting]))		# path must not be in j-<path> exclusion				
-			) 
-			{											
-				$return[]=$themes[$n][$selecting];
-			}
-		}
-	usort($return,"themes_comparator");	
-	return $return;
-	}
-	
-/**
- * Comparator function for sorting featured collections
- *
- * @param  string $a
- * @param  string $b
- * @return void
- */
-function themes_comparator($a, $b)
-	{
-	return strnatcasecmp(i18n_get_collection_name($a), i18n_get_collection_name($b));
-	}
-
 /**
 * Case insensitive string comparisons using a "natural order" algorithm for collection names
 * 

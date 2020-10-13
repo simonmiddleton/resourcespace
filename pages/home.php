@@ -269,7 +269,9 @@ if (!hook("replaceslideshow"))
 				}
 			}
 		else
-			{ ?>
+			{
+            $url = "{$baseurl_short}pages/collections_featured.php";
+            ?>
 			<div class="HomePanel">
 				<div class="HomePanelIN HomePanelThemes <?php if (count($home_collections)>0) { ?> HomePanelMatchPromotedHeight<?php } ?>">
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php">
@@ -278,15 +280,14 @@ if (!hook("replaceslideshow"))
 					<select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
 					<option value=""><?php echo $lang["select"] ?></option>
 					<?php
-					$headers=get_theme_headers();
-					for ($n=0;$n<count($headers);$n++)
+                    foreach(get_featured_collection_categories(0, array()) as $header)
 						{
 						?>
-						<option value="<?php echo $baseurl_short?>pages/themes.php?header=<?php echo urlencode($headers[$n])?>"><?php echo i18n_get_translated(str_replace("*","",$headers[$n]))?></option>
+						<option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo htmlspecialchars(i18n_get_translated($header["name"])); ?></option>
 						<?php
 						} ?>
 					</select>
-					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
+					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
 				</p>
 				</div>
 				
