@@ -364,7 +364,8 @@ SELECT
   date, 
   mail_to 'TO', 
   IFNULL(u.username, 'SYSTEM') 'FROM', 
-  subject 
+  subject,
+  sender_email
 FROM mail_log ml
 LEFT JOIN user u ON u.ref=ml.mail_from 
 WHERE

@@ -977,7 +977,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
         }
     $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
-    log_mail($email,$subject);
+    log_mail($email,$subject,$reply_to);
     mail ($email,$subject,$message,$headers);
     }
 
@@ -1310,7 +1310,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         $mail->AltBody = $mail->html2text($body); 
         }
         
-    log_mail($email,$subject);
+    log_mail($email,$subject,$reply_to);
 
     try
         {
@@ -1343,9 +1343,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
  *
  * @param  string $email
  * @param  string $subject
+ * @param  string $sender    The email address of the sender
  * @return void
  */
-function log_mail($email,$subject)
+function log_mail($email,$subject,$sender)
     {
     global $userref;
     $to = escape_check($email);
@@ -1366,13 +1367,15 @@ function log_mail($email,$subject)
                 date,
                 mail_to,
                 mail_from,
-                subject
+                subject,
+                sender_email
                 )
             VALUES (
                 NOW(),
                 '" . $to . "',
                 '" . $from . "',
-                '" . $sub . "'
+                '" . $sub . "',
+                '" . $sender . "'
         );
         ");
     }
