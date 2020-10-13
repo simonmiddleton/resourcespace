@@ -605,19 +605,9 @@ if('' != $tile_type && $tile_type !== "conf")
             $link_parts = explode('?', $link);
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
-            $featured_collection_categories = array();
+            $parent = (isset($link_parts["parent"]) ? validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
 
-            foreach($link_parts as $link_part_key => $link_part_value)
-                {
-                if(false === strpos($link_part_key, 'theme'))
-                    {
-                    continue;
-                    }
-
-                $featured_collection_categories[] = $link_part_value;
-                }
-
-            foreach(get_themes($featured_collection_categories, true) as $theme)
+            foreach(get_featured_collection_categories($parent, array()) as $theme)
                 {
                 $resources = array_merge(
                     $resources,

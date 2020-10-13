@@ -85,6 +85,8 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	{
 	global $lang,$pagename,$baseurl_short,$dash_tile_shadows, $theme_category_levels, $theme_direct_jump;
+    
+    $url = "{$baseurl_short}pages/collections_featured.php";
 	?>
 	<div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" tile="<?php echo $tile["ref"]?>" id="<?php echo str_replace("contents_","",$tile_id);?>" >
 		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN <?php echo ($dash_tile_shadows)? "TileContentShadow":""; ?>" >
@@ -94,20 +96,19 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 					<select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
 					<option value=""><?php echo $lang["select"] ?></option>
 					<?php
-					$headers=get_theme_headers();
-					for ($n=0;$n<count($headers);$n++)
-						{
-						?>
-						<option value="<?php echo $baseurl_short?>pages/themes.php?theme1=<?php echo urlencode($headers[$n])?>"><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n]))); ?></option>
-						<?php
-						}
+                    foreach(get_featured_collection_categories(0, array()) as $header)
+                        {
+                        ?>
+                        <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo htmlspecialchars(i18n_get_translated($header["name"])); ?></option>
+                        <?php
+                        }
 					?>
 					</select>
 					<?php
-				if($theme_category_levels == 1 || !$theme_direct_jump)
+				if(!$theme_direct_jump)
 					{
 					?>
-					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
+					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET; ?><?php echo $lang["viewall"]; ?></a>
 					<?php
 					}
 					?>
@@ -119,6 +120,7 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	</script>
 	<?php
 	}
+
 function tile_config_custom($tile,$tile_id,$tile_width,$tile_height) 
 	{
 	global $lang;
@@ -678,20 +680,9 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
     $link_parts = explode('?', $tile['link']);
     parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
-    $resources                      = array();
-    $featured_collection_categories = array();
-
-    foreach($link_parts as $link_part_key => $link_part_value)
-        {
-        if(false === strpos($link_part_key, 'theme'))
-            {
-            continue;
-            }
-
-        $featured_collection_categories[] = $link_part_value;
-        }
-
-    foreach(get_themes($featured_collection_categories, true) as $theme)
+    $parent = (isset($link_parts["parent"]) ? validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
+    $resources = array();
+    foreach(get_featured_collection_categories($parent, array()) as $theme)
         {
         $resources = array_merge(
             $resources,
