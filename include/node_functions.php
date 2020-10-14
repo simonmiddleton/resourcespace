@@ -184,7 +184,7 @@ function get_node($ref, array &$returned_node)
         }
 
     $query = "SELECT * FROM node WHERE ref = '" . escape_check($ref) . "';";
-    $node  = sql_query($query);
+    $node  = sql_query($query,"schema");
 
     if(count($node)==0)
         {
@@ -310,7 +310,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         ORDER BY " . $order_by . " ASC
         " . $limit;
 
-    $nodes = sql_query($query);
+    $nodes = sql_query($query,"schema");
 
     foreach($nodes as $node)
         {
@@ -1531,7 +1531,7 @@ function get_parent_nodes($noderef)
     $topnode=false;
     do
         {
-        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ");
+        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ", "schema");
         if(empty($node[0]["parent"]))
             {
             $topnode=true;
@@ -1660,7 +1660,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'");
+    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'","schema");
     if (count($node)>0)
         {
         return $node[0]["ref"];
