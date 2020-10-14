@@ -2950,6 +2950,8 @@ function job_queue_run_job($job, $clear_process_lock)
 
     $job_data=json_decode($job["job_data"], true);
     $jobuser = $job["user"];
+    $jobuserdata = get_user($jobuser);
+    setup_user($jobuserdata);
     $job_success_text=$job["success_text"];
     $job_failure_text=$job["failure_text"];
 
@@ -2996,7 +2998,19 @@ function job_queue_run_job($job, $clear_process_lock)
     else
         {
         // Check for handler in plugin
-        foreach($plugins as $plugin)
+        $offline_plugins = $plugins;
+
+        // Include plugins for this job user's group
+        $group_plugins = sql_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 AND disable_group_select=0 AND find_in_set('" . $jobuserdata["usergroup"] . "',enabled_groups) ORDER BY priority","plugins");
+        foreach($group_plugins as $group_plugin)
+            {
+            include_plugin_config($group_plugin['name'],$group_plugin['config'],$group_plugin['config_json']);
+            register_plugin($group_plugin['name']);
+            register_plugin_language($group_plugin['name']);
+            $offline_plugins[]=$group_plugin['name'];
+            }	
+
+        foreach($offline_plugins as $plugin)
             {
             if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php"))
                 {
