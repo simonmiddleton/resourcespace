@@ -921,7 +921,7 @@ function index_collection($ref,$index_string='')
  */
 function save_collection($ref, $coldata=array())
 	{
-	global $theme_category_levels,$attach_user_smart_groups;
+	global $attach_user_smart_groups;
 	
 	if (!is_numeric($ref) || !collection_writeable($ref))
         {
@@ -954,22 +954,47 @@ function save_collection($ref, $coldata=array())
         $sqlset = array();
         foreach($coldata as $colopt => $colset)
             {
-            // "featured_collections_changes" value is data as returned by process_posted_featured_collection_categories()
+            // Public collection
+            if($colopt == "public" && $colset == 1)
+                {
+                $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
+                }
+
+            // "featured_collections_changes" is determined by collection_edit.php page
+            // This is meant to override the type if collection has a parent. The order of $coldata elements matters!
             if($colopt == "featured_collections_changes" && !empty($colset))
                 {
-                $sqlset["type"]   = COLLECTION_TYPE_STANDARD;
+                $sqlset["type"] = COLLECTION_TYPE_FEATURED;
                 $sqlset["parent"] = null;
 
                 if(isset($colset["update_parent"]))
                     {
-                    $sqlset["type"] = COLLECTION_TYPE_FEATURED;
-                    $sqlset["parent"] = (int) $colset["update_parent"];
+                    // A FC root category is created directly from the collections_featured.php page so not having a parent, means it's just public
+                    if($colset["update_parent"] == 0)
+                        {
+                        $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
+                        }
+                    else
+                        {
+                        $sqlset["parent"] = (int) $colset["update_parent"];
+                        }
+                    }
+
+                if(isset($colset["thumbnail_selection_method"]))
+                    {
+                    $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
+
+                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method
+                    $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
                     }
 
                 // Prevent unnecessary changes
-                if($oldcoldata["type"] == $sqlset["type"])
+                foreach(array("type", "parent", "thumbnail_selection_method") as $puc_to_prop)
                     {
-                    unset($sqlset["type"]);
+                    if(isset($sqlset[$puc_to_prop]) && $oldcoldata[$puc_to_prop] == $sqlset[$puc_to_prop])
+                        {
+                        unset($sqlset[$puc_to_prop]);
+                        }
                     }
 
                 continue;
@@ -979,6 +1004,14 @@ function save_collection($ref, $coldata=array())
                 {
                 $sqlset[$colopt] = $colset;
                 }
+            }
+
+        // If collection is set as private by caller code, disable incompatible properties used for COLLECTION_TYPE_FEATURED (set by the user or exsting)
+        if(isset($sqlset["public"]) && $sqlset["public"] == 0)
+            {
+            $sqlset["type"] = COLLECTION_TYPE_STANDARD;
+            $sqlset["parent"] = null;
+            $sqlset["thumbnail_selection_method"] = null;
             }
 
         if(count($sqlset) > 0)
@@ -1022,7 +1055,7 @@ function save_collection($ref, $coldata=array())
                 }
             }
         } # end replace hook - modifysavecollection
-	
+
 	index_collection($ref);
   
 	$old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
@@ -4407,10 +4440,17 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         return array();
         }
 
+    debug("process_posted_featured_collection_categories: Processing at \$depth = {$depth}");
+
+    // For public collections, the branch path doesn't exist (why would it?) in which case only root categories are valid
+    $current_lvl_parent = (!empty($branch_path) ? (int) $branch_path[$depth]["parent"] : 0);
+    debug("process_posted_featured_collection_categories: \$current_lvl_parent: " . gettype($current_lvl_parent) . " = " . json_encode($current_lvl_parent));
+
     $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
+    debug("process_posted_featured_collection_categories: \$selected_fc_category: " . gettype($selected_fc_category) . " = " . json_encode($selected_fc_category));
 
     // Validate the POSTed featured collection category for this depth level
-    $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories((int) $branch_path[$depth]["parent"], array()), "ref"));
+    $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories($current_lvl_parent, array()), "ref"));
     if(
         !is_null($selected_fc_category)
         && isset($branch_path[$depth])
@@ -4420,10 +4460,12 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         }
 
     $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
+    debug("process_posted_featured_collection_categories: \$fc_category_at_level: " . gettype($fc_category_at_level) . " = " . json_encode($fc_category_at_level));
 
     if($selected_fc_category != $fc_category_at_level)
         {
-        $new_parent = (is_null($selected_fc_category) ? $branch_path[$depth]["parent"] : $selected_fc_category);
+        $new_parent = ($selected_fc_category == 0 ? $current_lvl_parent : $selected_fc_category);
+        debug("process_posted_featured_collection_categories: \$new_parent: " . gettype($new_parent) . " = " . json_encode($new_parent));
 
         return array("update_parent" => $new_parent);
         }

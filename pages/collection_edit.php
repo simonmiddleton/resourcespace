@@ -29,7 +29,7 @@ if ($collection===false)
 	exit();
 	}
 
-if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_FEATURED)))
+if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
     {
     exit(error_alert($lang["error-permissiondenied"], true, 401));
     }
@@ -52,13 +52,13 @@ if ($copy!="")
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save collection data
-    $coldata["name"]            = getval("name","");
-    $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
-    $coldata["public"]          = getval('public', 0, true);
-    $coldata["keywords"]        = getval("keywords","");
-    $coldata["description"]     = getval("description","");
+    $coldata["name"] = getval("name","");
+    $coldata["allow_changes"] = getval("allow_changes","") != "" ? 1 : 0;
+    $coldata["public"] = getval('public', 0, true);
+    $coldata["keywords"] = getval("keywords","");
+    $coldata["description"] = getval("description","");
 
-    if(getval("update_parent", "") == "true")
+    if($collection["public"] == 1 && getval("update_parent", "") == "true")
         {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
         $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
@@ -70,12 +70,12 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 
     // User selected a background image
-    if($collection['public'] == 1 && $enable_themes && $themes_simple_images && checkperm("h"))
+    if($enable_themes && $themes_simple_images && $collection["public"] == 1 && checkperm("h"))
         {
         $thumbnail_selection_method = getval("thumbnail_selection_method", $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"], true);
         if(in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
             {
-            $coldata["thumbnail_selection_method"] = $thumbnail_selection_method;
+            $coldata["featured_collections_changes"]["thumbnail_selection_method"] = $thumbnail_selection_method;
             }
         }
 
@@ -213,7 +213,7 @@ include "../include/header.php";
 			} /* end hook replaceuserselect */
 		} 
 	
-    if($collection['public'] == 1 && $enable_themes && checkperm("h"))
+    if($enable_themes && $collection['public'] == 1 && checkperm("h"))
         {
         render_featured_collection_category_selector(
             0,
@@ -223,7 +223,7 @@ include "../include/header.php";
                 "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
             ));
 
-        if($themes_simple_images)
+        if($themes_simple_images && $collection["parent"] > 0)
             {
             $configurable_options = array(
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
