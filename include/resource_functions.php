@@ -5982,6 +5982,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
                 {
                 notify_user_contributed_submitted($resource, $collection);
                 }
+            break;
     
         case '-2':
             if (isset($existingstates[0]) && $existingstates[0] == -1)
