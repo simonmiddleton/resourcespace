@@ -1475,7 +1475,8 @@ function is_field_displayed($field)
     global $ref, $resource, $upload_review_mode;
 
     # Field is an archive only field
-    return !(($resource["archive"]==0 && $field["resource_type"]==999)
+    return !(
+        (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
         # Field has write access denied
         || (checkperm("F*") && !checkperm("F-" . $field["ref"])
         && !($ref < 0 && checkperm("P" . $field["ref"])))
