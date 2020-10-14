@@ -2081,12 +2081,21 @@ if (count($result)>0)
 	<div class="Title"><?php echo $lang["collectionsthemes"]?></div>
 
 	<?php
-		# loop and display the results
 		for ($n=0;$n<count($result);$n++)			
 			{
+            $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
+
+            $path = $result[$n]["path"];
+            if(!$collection_public_hide_owner)
+                {
+                $col_name = i18n_get_translated($result[$n]["name"]);
+                // legacy thing: we add the fullname right before the collection name in the path.
+                $path = str_replace($col_name, htmlspecialchars($result[$n]["fullname"]) . " / {$col_name}", $path);
+                }
+            $path = sprintf("%s %s", LINK_CARET, htmlspecialchars($path));
 			?>
-			<a href="<?php echo $baseurl?>/pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
-			<?php		
+            <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>
+			<?php
 			}
 		?>
 	

@@ -738,7 +738,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                   %s # keysql
                   WHERE c.public = 1
                     AND c.`type` = %s # COLLECTION_TYPE_FEATURED
-                    %s # access control filter
+                    %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
                     %s
                GROUP BY c.ref
                %s
@@ -2004,7 +2004,7 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
                  WHERE public = 1
                    AND `type` = %s
                    AND parent IS NOT NULL
-                  %s # access control filter
+                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
             ) AS fc
          WHERE fc.has_resources > 0",
         COLLECTION_TYPE_FEATURED,
@@ -4155,9 +4155,9 @@ function get_featured_collections(int $parent, array $ctx)
               WHERE public = 1
                 AND `type` = %s
                 AND parent %s
-               %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
             COLLECTION_TYPE_FEATURED,
-            sql_is_null_or_eq_val((string) $parent, $parent == 0),
+            trim(sql_is_null_or_eq_val((string) $parent, $parent == 0)),
             ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
         ));
     }
