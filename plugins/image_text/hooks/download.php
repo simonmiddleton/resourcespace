@@ -50,7 +50,7 @@ function HookImage_textDownloadModifydownloadfile()
         $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($path);
         $identoutput=run_command($identcommand);
         preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
-        if ((@list(,$width,$height) == $smatches)===false) { return false; }
+        if ((@list(,$width,$height) = $smatches)===false) { return false; }
         
         $olheight=floor($height * $image_text_height_proportion);
         if($olheight<$image_text_min_height && intval($image_text_min_height)!=0){$olheight=$image_text_min_height;}
