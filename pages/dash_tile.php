@@ -83,9 +83,9 @@ if($submitdashtile && enforcePostRequest(false))
 	$resource_count=getvalescaped("resource_count",FALSE);
 
 	$link=str_replace("&amp;","&",getvalescaped("link",""));
-	if(strpos($link,$baseurl_short."pages/")===0) 
+	if(strpos($link,$baseurl_short)===0) 
 		{
-		$length = strlen($baseurl_short."pages/");
+		$length = strlen($baseurl_short);
 		$link = substr_replace($link,"",0,$length);
 		}
 	$link= preg_replace("/^\//","",$link);
@@ -192,7 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-
+		
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
 		{
@@ -219,6 +219,11 @@ if($submitdashtile && enforcePostRequest(false))
 		<?php echo $message;?>
 		</p>
 		<?php
+		if(strpos($link,"pages/")===0)
+		    {
+			$length = strlen("pages/");
+			$link = substr_replace($link,"",0,$length);
+		    }
 		}?>
 
 	<a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
