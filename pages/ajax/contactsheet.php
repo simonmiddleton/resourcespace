@@ -220,7 +220,7 @@ foreach($results as $result_data)
                     {
                     $field_name.=$contact_sheet_field['title'] . ': ';
                     }
-                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist($contact_sheet_value);
+                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist(i18n_get_translated($contact_sheet_value, false));
                 }
             }
         }
