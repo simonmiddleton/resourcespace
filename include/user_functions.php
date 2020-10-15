@@ -1926,8 +1926,7 @@ function resolve_user_emails($user_list)
         {
         $escaped_username = escape_check($user);
         $email_details    = sql_query("SELECT email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
-
-        if(isset($email_details) && (time() < strtotime($email_details[0]['account_expires']))) 
+        if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']))) 
           {
           continue;
           }
