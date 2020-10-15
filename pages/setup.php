@@ -586,11 +586,15 @@ h2#dbaseconfig{  min-height: 32px;}
 
 		//Check MySQL bin path (not required)
 		$mysql_bin_path = sslash(get_post('mysql_bin_path'));
-		if ((isset($mysql_bin_path)) && ($mysql_bin_path!='')){
-			if (!file_exists($mysql_bin_path.'/mysqldump'.$exe_ext))
-				$errors['mysqlbinpath'] = true;
-			else $config_output .="\$mysql_bin_path = '$mysql_bin_path';\r\n\r\n";
-		}
+        if ((isset($mysql_bin_path)) && ($mysql_bin_path!=''))
+            {
+            if (stripos($mysql_bin_path . '/mysqldump' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($mysql_bin_path.'/mysqldump'.$exe_ext))
+                $errors['mysqlbinpath'] = true;
+            else
+                $config_output .="\$mysql_bin_path = '$mysql_bin_path';\r\n\r\n";
+            }
 
 		//Check baseurl (required)
 		$baseurl = sslash(get_post('baseurl'));
@@ -695,31 +699,61 @@ h2#dbaseconfig{  min-height: 32px;}
 		$exiftool_path = sslash(get_post('exiftool_path'));
 		$antiword_path = sslash(get_post('antiword_path'));
 		$pdftotext_path = sslash(get_post('pdftotext_path'));
-		if ($imagemagick_path!='')
-			if (!file_exists($imagemagick_path.'/convert'.$exe_ext))
-				$errors['imagemagick_path'] = true;
-			else $config_output .= "\$imagemagick_path = '$imagemagick_path';\r\n";
-		if ($ghostscript_path!='')
-			if (!file_exists($ghostscript_path.'/gs'.$exe_ext))
-				$errors['ghostscript_path'] = true;
-			else $config_output .= "\$ghostscript_path = '$ghostscript_path';\r\n";
-		if ($ffmpeg_path!='')
-			if (!file_exists($ffmpeg_path.'/ffmpeg'.$exe_ext) && !file_exists($ffmpeg_path.'/avconv'.$exe_ext))
-				$errors['ffmpeg_path'] = true;
-			else $config_output .= "\$ffmpeg_path = '$ffmpeg_path';\r\n";
-		if ($exiftool_path!='')
-			if (!file_exists($exiftool_path.'/exiftool'.$exe_ext))
-				$errors['exiftool_path'] = true;
-			else $config_output .= "\$exiftool_path = '$exiftool_path';\r\n";
-		if ($antiword_path!='')
-			if (!file_exists($antiword_path.'/antiword'.$exe_ext))
-				$errors['antiword_path'] = true;
-			else $config_output .= "\$antiword_path = '$antiword_path';\r\n";
-		if ($pdftotext_path!='')
-			if (!file_exists($pdftotext_path.'/pdftotext'.$exe_ext))
-				$errors['pdftotext_path'] = true;
-			else $config_output .= "\$pdftotext_path = '$pdftotext_path';\r\n\r\n";
-		
+        if ($imagemagick_path!='')
+            {
+            if (stripos($imagemagick_path . '/convert' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($imagemagick_path.'/convert'.$exe_ext))
+                $errors['imagemagick_path'] = true;
+            else
+                $config_output .= "\$imagemagick_path = '$imagemagick_path';\r\n";
+            }
+        if ($ghostscript_path!='')
+            {
+            if (stripos($ghostscript_path . '/gs' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($ghostscript_path.'/gs'.$exe_ext))
+                $errors['ghostscript_path'] = true;
+            else
+                $config_output .= "\$ghostscript_path = '$ghostscript_path';\r\n";
+            }
+        if ($ffmpeg_path!='')
+            {
+            if (stripos($ffmpeg_path . '/ffmpeg' . $exe_ext, 'phar://') !== false || 
+                stripos($ffmpeg_path . '/avconv' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($ffmpeg_path.'/ffmpeg'.$exe_ext) && !file_exists($ffmpeg_path.'/avconv'.$exe_ext))
+                $errors['ffmpeg_path'] = true;
+            else
+                $config_output .= "\$ffmpeg_path = '$ffmpeg_path';\r\n";
+            }
+        if ($exiftool_path!='')
+            {
+            if (stripos($exiftool_path . '/exiftool' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($exiftool_path.'/exiftool'.$exe_ext))
+                $errors['exiftool_path'] = true;
+            else
+                $config_output .= "\$exiftool_path = '$exiftool_path';\r\n";
+            }
+        if ($antiword_path!='')
+            {
+            if (stripos($exiftool_path . '/antiword' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($antiword_path.'/antiword'.$exe_ext))
+                $errors['antiword_path'] = true;
+            else
+                $config_output .= "\$antiword_path = '$antiword_path';\r\n";
+            }
+        if ($pdftotext_path!='')
+            {
+            if (stripos($exiftool_path . '/pdftotext' . $exe_ext, 'phar://') !== false)
+                exit($lang["setup-err_phar_injection"]);
+            if (!file_exists($pdftotext_path.'/pdftotext'.$exe_ext))
+                $errors['pdftotext_path'] = true;
+            else
+                $config_output .= "\$pdftotext_path = '$pdftotext_path';\r\n\r\n";
+            }
 	
 		if ($config_windows)
 			$config_output .= "\$config_windows = true;\r\n";

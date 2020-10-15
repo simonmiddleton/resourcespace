@@ -1255,6 +1255,7 @@ $lang["setup-err_spiderpassword"]="The password required for spider.php.  IMPORT
 $lang["setup-err_scramblekey"]="If this is a public installation, setting the scramble key is recommended.";
 $lang["setup-err_apiscramblekey"]="If this is a public installation, setting the api scramble key is recommended.";
 $lang["setup-err_path"]="Unable to verify location of";
+$lang["setup-err_phar_injection"]="Potential Phar PHP Object Injection detected.";
 $lang["setup-emailerr"]="Not a valid email address.";
 $lang["setup-admin_fullname_error"] = "You must complete the full name field";
 $lang["setup-rs_initial_configuration"]="ResourceSpace: Initial Configuration";
