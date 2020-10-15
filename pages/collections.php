@@ -735,11 +735,9 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 			}
 		}
 	}
-?><div><?php
+?><div>
 
-if (true) { // draw both
-
-?><div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
+<div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
 
 hook('before_collectionmenu');
  
@@ -912,8 +910,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 	</ul>
 </div>
 <?php
-}
-} ?>
+}?>
 
 <!--Resource panels-->
 <?php if ($collection_dropdown_user_access_mode){?>
@@ -1098,13 +1095,11 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0])
 }
 
 
-	?><div id="CollectionMinDiv" style="display:<?php if ($thumbs=="hide") { ?>block<?php } else { ?>none<?php } ?>"><?php 
-	if (true)
-	{
-	# ------------------------- Minimised view
-	?>
+	?><div id="CollectionMinDiv" style="display:<?php if ($thumbs=="hide") { ?>block<?php } else { ?>none<?php } ?>">
 	<!--Title-->	
-	<?php if (!hook("nothumbs")) {
+	<?php 
+	# ------------------------- Minimised view
+	if (!hook("nothumbs")) {
 
 	if (hook("replacecollectionsmin", "", array($k!="")))
 		{
@@ -1216,7 +1211,6 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0])
 	<div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];}?></div>
 	<?php } # end hook replace_collectionminitems ?>
 	</div>
-	<?php } ?>
 
 <?php
 draw_performance_footer();
