@@ -816,19 +816,20 @@ function get_mime_type($path, $ext = null)
  * send_mail_phpmailer allows for the use of text and html (multipart) emails,
  * and the use of email templates in Manage Content.
  * 
- * @param  string $email
- * @param  string $subject
- * @param  string $message
- * @param  string $from
- * @param  string $reply_to
- * @param  string $html_template
- * @param  string $templatevars
- * @param  string $from_name
- * @param  string $cc
- * @param  string $bcc
+ * @param  string $email            Email address to send to 
+ * @param  string $subject          Email subject
+ * @param  string $message          Message text
+ * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
+ * @param  string $templatevars     Used to populate email template placeholders
+ * @param  string $from_name        Email from name
+ * @param  string $cc               Optional CC addresses
+ * @param  string $bcc              Optional BCC addresses
+ * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  * @return void
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
     global $always_email_from_user;
     if($always_email_from_user)
@@ -877,7 +878,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     global $use_phpmailer;
     if ($use_phpmailer){
-        send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc); 
+        send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$files); 
         return true;
         }
     
@@ -887,6 +888,37 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     
     # Work out correct EOL to use for mails (should use the system EOL).
     if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
+
+    
+    if (count($files)>0)
+        {
+        //add boundary string and mime type specification
+        $random_hash = md5(date('r', time()));
+        $headers .= "Content-Type: multipart/mixed; boundary=\"PHP-mixed-".$random_hash."\"" . $eol;
+        
+        $body="This is a multi-part message in MIME format." . $eol . "--PHP-mixed-" . $random_hash . $eol;
+        $body.="Content-Type: text/plain; charset=\"utf-8\"" . $eol . "Content-Transfer-Encoding: 8bit" . $eol . $eol;
+        $body.=$message. $eol . $eol . $eol;
+        # Attach all the files
+        foreach ($files as $filename=>$file)
+            {
+            if (substr($file,0,4)=="http")
+                {
+                $file=file_get_contents($file); # File is a URL, not a binary object. Go and fetch the file.
+                }
+            
+            $attachment = chunk_split(base64_encode($file));
+            $body.="--PHP-mixed-" . $random_hash . $eol;
+            $body.="Content-Type: application/octet-stream; name=\"" . $filename . "\"" . $eol; 
+            $body.="Content-Transfer-Encoding: base64" . $eol;
+            $body.="Content-Disposition: attachment; filename=\"" . $filename . "\"" . $eol . $eol;
+            $body.=$attachment;
+            }
+        $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
+
+        $message = $body;
+        }
+
     
     $message.=$eol.$eol.$eol . $email_footer;
     
@@ -894,7 +926,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $message=rs_quoted_printable_encode($message);
     $subject=rs_quoted_printable_encode_subject($subject);
     }
-    
+   
     global $email_from;
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}
@@ -993,19 +1025,21 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * available templatevars need to be well-documented, and sample templates
  * need to be available.
  *
- * @param  string $email
- * @param  string $subject
- * @param  string $message
- * @param  string $from
- * @param  string $reply_to
- * @param  string $html_template
- * @param  string $templatevars
- * @param  string $from_name
- * @param  string $cc
- * @param  string $bcc
+ * @param  string $email           Email address to send to 
+ * @param  string $subject          Email subject
+ * @param  string $message          Message text
+ * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
+ * @param  string $templatevars     Used to populate email template placeholders
+ * @param  string $from_name        Email from name
+ * @param  string $cc               Optional CC addresses
+ * @param  string $bcc              Optional BCC addresses
+ * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  * @return void
  */
-function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
+
+function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
     global $email_footer, $storagedir, $mime_type_by_extension;
@@ -1171,7 +1205,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 }
             $body=$template;    
             } 
-        }       
+        }
 
     if (!isset($body)){$body=$message;}
 
@@ -1300,10 +1334,25 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             }
         }
 
-    if (isset($attachments)){
+    if (isset($attachments))
+        {
         foreach ($attachments as $attachment){
         $mail->AddAttachment($attachment,basename($attachment));}
-    }
+        }
+        
+    if (count($files)>0)
+        {
+        # Attach all the files
+        foreach ($files as $filename=>$file)
+            {
+            if (substr($file,0,4)=="http")
+                {
+                $file=file_get_contents($file); # File is a URL, not a binary object. Go and fetch the file.
+                }
+            
+            $mail->AddAttachment($file,$filename);
+            }
+        }
 
     if (is_html($body))
         {

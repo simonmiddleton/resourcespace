@@ -1636,7 +1636,7 @@ $lang['report_periodic_email_option_all_users'] = 'all users';
 $lang['report_periodic_email_option_selected_user_groups'] = 'selected user group(s)';
 $lang['report_periodic_email_unsubscribe_title'] = 'Unsubscribe from periodic emails';
 $lang['report_periodic_email_unsubscribe_confirmation'] = 'Please confirm you would like to unsubscribe';
-
+$lang['report_periodic_email_report_attached'] = 'The report \'%%REPORTTITLE%%\' is attached.';
 
 #Column headers (for the default reports)
 $lang["columnheader-keyword"]="Keyword";
