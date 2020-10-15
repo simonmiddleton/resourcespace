@@ -187,24 +187,28 @@ if ($on_upload || $ref<0)
                     }
                 
                 if ($collection_dropdown_user_access_mode)
-                    {    
-                        $colusername=$list[$n]['fullname'];
-                        
-                        # Work out the correct access mode to display
-                        if (!hook('collectionaccessmode')) {
-                            if ($list[$n]["public"]==0){
-                                $accessmode= $lang["private"];
-                            }
-                            else{
-                                if (strlen($list[$n]["theme"])>0){
-                                    $accessmode= $lang["theme"];
-                                }
-                            else{
-                                    $accessmode= $lang["public"];
-                                }
+                    {
+                    $colusername = $list[$n]['fullname'];
+
+                    if(!hook('collectionaccessmode'))
+                        {
+                        switch($list[$n]["type"])
+                            {
+                            case COLLECTION_TYPE_PUBLIC:
+                                $accessmode = $lang["public"];
+                                break;
+
+                            case COLLECTION_TYPE_FEATURED:
+                                $accessmode = $lang["theme"];
+                                break;
+
+                            case COLLECTION_TYPE_STANDARD:
+                            default:
+                                $accessmode = $lang["private"];
+                                break;
                             }
                         }
-                    }	
+                    }
                     
                 
                 #remove smart collections as they cannot be uploaded to.

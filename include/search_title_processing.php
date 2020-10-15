@@ -146,24 +146,23 @@ if ($search_titles)
             # Work out the correct access mode to display
             if (!hook('collectionaccessmode'))
                 {
-                if ($collectiondata["public"]==0)
+                switch($collectiondata["type"])
                     {
-                    $colaccessmode = $lang["private"];
-                    $display_user_and_access = true;
-                    if ($colusername!="")
-                        {
-                        $colaccessmode="/".$colaccessmode;
-                        }
-                    }
-                else if (strlen($collectiondata["theme"])==0)
-                    {
-                    $colaccessmode = $lang["public"];
-                    $display_user_and_access = true;
+                    case COLLECTION_TYPE_PUBLIC:
+                        $display_user_and_access = true;
+                        $colaccessmode = $lang["public"];
+                        break;
 
-                    if ($colusername!="")
-                        {
-                        $colaccessmode="/".$colaccessmode;
-                        }
+                    case COLLECTION_TYPE_STANDARD:
+                    default:
+                        $display_user_and_access = true;
+                        $colaccessmode = $lang["private"];
+                        break;
+                    }
+
+                if($colusername != "")
+                    {
+                    $colaccessmode = "/" . $colaccessmode;
                     }
                 }
             }
