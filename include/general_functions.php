@@ -1312,6 +1312,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         
     log_mail($email,$subject,$reply_to);
 
+    $GLOBALS["use_error_exception"] = true;
     try
         {
         $mail->Send();
@@ -1328,6 +1329,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
         exit;
         }
+    unset($GLOBALS["use_error_exception"]);
     hook("aftersendmailphpmailer","",$email);   
 }
 
