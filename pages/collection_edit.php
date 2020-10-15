@@ -113,7 +113,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	}
 
 // Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
-$collection["public"] = (in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)));
+$collection["public"] = (int) in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
 
 include "../include/header.php";
 ?>
