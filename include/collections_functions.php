@@ -16,14 +16,15 @@
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
 	{
 	global $usergroup;
-	# Returns a list of user collections.
-	$sql="";
-	$keysql="";
-	$extrasql="";
+
+    $sql = "";
+    $keysql = "";
+    $extrasql = "";
+
 	if ($find=="!shared")
 		{
 		# only return shared collections
-		$sql=" where (public='1' or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
+		$sql=" where (c.`type` = " . COLLECTION_TYPE_PUBLIC . " or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
 		}
 	elseif (strlen($find)==1 && !is_numeric($find))
 		{
@@ -48,23 +49,25 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
 		}
 
-    if($sql == "")
+    // Type filter
+    global $themes_in_my_collections;
+    $sql .= sprintf(
+        "%s c.`type` IN (%s, %s%s)",
+        ($sql == "" ? "WHERE" : " AND"),
+        COLLECTION_TYPE_STANDARD,
+        COLLECTION_TYPE_PUBLIC,
+        ($themes_in_my_collections ? ", " . COLLECTION_TYPE_FEATURED : ""));
+
+    if($themes_in_my_collections)
         {
-        $sql = "WHERE c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
-        }
-    else
-        {
-        $sql .= "AND c.`type` = '" . COLLECTION_TYPE_STANDARD . "'";
+        // If we show featured collections, remove the categories
+        $keysql .= sprintf(
+            " WHERE (clist.`type` IN (%s, %s) OR (clist.`type` = %s AND clist.`count` > 0))",
+            COLLECTION_TYPE_STANDARD,
+            COLLECTION_TYPE_PUBLIC,
+            COLLECTION_TYPE_FEATURED);
         }
 
-    # Include themes in my collecions? 
-    # Only filter out themes if $themes_in_my_collections is set to false in config.php
-   	global $themes_in_my_collections;
-   	if (!$themes_in_my_collections)
-   		{
-		if ($sql==""){$sql=" where ";} else {$sql.=" and ";}	
-   		$sql.=" (length(c.theme)=0 or c.theme is null) ";
-   		}
 	global $anonymous_login,$username,$anonymous_user_session_collection;
 
     if(isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
@@ -88,14 +91,44 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
    
 	$order_sort="";
 	if ($order_by!="name"){$order_sort=" order by $order_by $sort";}
-   
-	$return="select * from (select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user='" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection $sql $extrasql group by c.ref
-	union
-	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user='" . escape_check($user) . "' and c.user<>'" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref
-	union
-	select c.*,u.username,u.fullname,count(r.resource) count from usergroup_collection gc join collection c on gc.collection=c.ref and gc.usergroup='$usergroup' and c.user<>'" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref) clist $keysql group by ref $order_sort";
 
-	$return=sql_query($return);
+    $return = sprintf(
+        'SELECT * FROM (
+                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                           FROM user AS u
+                           JOIN collection AS c ON u.ref = c.user AND c.user = \'%1$s\'
+                LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
+                          %2$s %3$s
+                       GROUP BY c.ref
+        
+                          UNION
+                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                           FROM user_collection AS uc
+                           JOIN collection AS c ON uc.collection = c.ref AND uc.user = \'%1$s\' AND c.user <> \'%1$s\'
+                LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
+                      LEFT JOIN user AS u ON c.user = u.ref
+                          %2$s
+                       GROUP BY c.ref
+        
+                          UNION
+                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                           FROM usergroup_collection AS gc
+                           JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = \'%4$s\' AND c.user <> \'%1$s\'
+                LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
+                      LEFT JOIN user AS u ON c.user = u.ref
+                          %2$s
+                        GROUP BY c.ref
+        ) AS clist
+        %5$s
+        GROUP BY ref %6$s',
+        escape_check($user), # %1$s
+        $sql, # %2$s
+        $extrasql, # %3$s
+        escape_check($usergroup), # %4$s
+        $keysql, # %5$s
+        $order_sort # %6$s
+    );
+    $return = sql_query($return);
 	
 	if ($order_by=="name"){
 		if ($sort=="ASC"){usort($return, 'collections_comparator');}

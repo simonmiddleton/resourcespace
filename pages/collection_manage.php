@@ -327,26 +327,30 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     $count_result = $collections[$n]["count"];
 	?><tr <?php hook("collectionlistrowstyle");?>>
 	<td class="name"><div class="ListTitle">
-		<a <?php if ($collections[$n]["public"]==1 && (strlen($collections[$n]["theme"])>0)) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
+		<a <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
 	<td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
 	<td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collection_prefix . $collections[$n]["ref"], $find)); ?></td>
 	<td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
 	<td class="count"><?php echo $collections[$n]["count"] ?></td>
 <?php if (! $hide_access_column){ ?>	<td class="access"><?php
-# Work out the correct access mode to display
-if (!hook('collectionaccessmode')) {
-	if ($collections[$n]["public"]==0){
-		echo $lang["private"];
-	}
-	else{
-		if (strlen($collections[$n]["theme"])>0){
-			echo $lang["theme"];
-		}
-	else{
-		echo $lang["public"];
-		}
-	}
-}
+if(!hook('collectionaccessmode'))
+    {
+    switch($collections[$n]["type"])
+        {
+        case COLLECTION_TYPE_PUBLIC:
+            echo $lang["public"];
+            break;
+
+        case COLLECTION_TYPE_FEATURED:
+            echo $lang["theme"];
+            break;
+
+        case COLLECTION_TYPE_STANDARD:
+        default:
+            echo $lang["private"];
+            break;
+        }
+    }
 ?></td><?php
 }?>
 
