@@ -2013,7 +2013,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             "JOIN collection_resource AS cr ON cr.collection = c.ref",
             "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0 AND r.has_image = 1"
         ),
-        "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.public = 1",
+        "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
     );
 
     if(is_featured_collection_category($c))
@@ -2022,7 +2022,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         if(!empty($collections))
             {
             $c_refs_csv_escaped = implode("', '", escape_check_array_values($collections));
-            $subquery["where"] = "WHERE c.ref IN ('{$c_refs_csv_escaped}') AND c.public = 1";
+            $subquery["where"] = "WHERE c.ref IN ('{$c_refs_csv_escaped}') AND c.`type` = " . COLLECTION_TYPE_FEATURED;
             }
         }
 
@@ -2075,8 +2075,7 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
                 SELECT ref,
                        (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
                   FROM collection AS c
-                 WHERE public = 1
-                   AND `type` = %s
+                 WHERE `type` = %s
                    AND parent IS NOT NULL
                   %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
             ) AS fc
@@ -4226,8 +4225,7 @@ function get_featured_collections(int $parent, array $ctx)
                     created,
                     (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
                FROM collection AS c
-              WHERE public = 1
-                AND `type` = %s
+              WHERE `type` = %s
                 AND parent %s
                 %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
             COLLECTION_TYPE_FEATURED,
@@ -4255,7 +4253,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $prefix = " " . trim($prefix);
     $column = trim($column);
 
-    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE public = 1 AND `type` = %s", COLLECTION_TYPE_FEATURED));
+    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED));
     $allowed_fcs = $all_fcs;
 
     if(!checkperm("j*"))
@@ -4323,7 +4321,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
 */
 function featured_collection_check_access_control(int $c_ref)
     {
-    $sql = sprintf("SELECT EXISTS(SELECT ref FROM collection WHERE public = 1 AND `type` = %s AND ref = '%s' %s) AS `value`",
+    $sql = sprintf("SELECT EXISTS(SELECT ref FROM collection WHERE `type` = %s AND ref = '%s' %s) AS `value`",
         COLLECTION_TYPE_FEATURED,
         escape_check($c_ref),
         featured_collections_permissions_filter_sql("AND", "ref")
