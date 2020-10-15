@@ -19,9 +19,10 @@ $multi_edit=allow_multi_edit($ref);
 if (!collection_writeable($ref)) 
 	{exit($lang["no_access_to_collection"]);}
 
-
-# Fetch collection data
 $collection=get_collection($ref);
+// Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
+$collection["public"] = (int) in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
+
 if ($collection===false) 
 	{
 	$error=$lang['error-collectionnotfound'];
@@ -110,7 +111,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         $collection = get_collection($ref);
         }
 	}
-	
+
+// Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
+$collection["public"] = (in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)));
+
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
