@@ -745,43 +745,51 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $select_extra .= ", count(DISTINCT cr.resource) AS count";
         }
 
-    // Build the HAVING clause if needed
-    $having_clause = "";
+    // Filter by type (public/featured collections)
+    $public_type_filter_sql = "c.`type` = " . COLLECTION_TYPE_PUBLIC;
+    $featured_type_filter_sql = sprintf(
+        "(c.`type` = %s %s)",
+        COLLECTION_TYPE_FEATURED,
+        trim(featured_collections_permissions_filter_sql("AND", "c.ref"))
+    );
     if($exclude_themes)
         {
-        // Exclude featured collection categories. These collections don't have any resources and may have other featured collections as child nodes
-        $having_clause = "HAVING count(DISTINCT cr.resource) > 0";
+        $featured_type_filter_sql = "";
         }
     else if($exclude_public && !$search_user_collections)
         {
-        // Show only featured collection categories
-        $having_clause = "HAVING count(DISTINCT cr.resource) = 0";
+        $public_type_filter_sql = "";
         }
+    $type_filter_sql = sprintf(
+        ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? "(%s%s)" : "%s%s"),
+        $public_type_filter_sql,
+        ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? " OR {$featured_type_filter_sql}" : $featured_type_filter_sql)
+    );
 
     $main_sql = sprintf(
-                "SELECT DISTINCT c.*,
-                        u.username,
-                        u.fullname,
-                        if(count(DISTINCT cr.resource) = 0, true, false) AS is_featured_collection_category
-                        %s
-                   FROM collection AS c
-              LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-        LEFT OUTER JOIN user AS u ON c.user = u.ref
-        LEFT OUTER JOIN collection_keyword AS k ON c.ref = k.collection
-                  %s # keysql
-                  WHERE c.public = 1
-                    AND c.`type` = %s # COLLECTION_TYPE_FEATURED
-                    %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
-                    %s
-               GROUP BY c.ref
-               %s
-               ORDER BY %s",
+        "SELECT *
+           FROM (
+                         SELECT DISTINCT c.*,
+                                u.username,
+                                u.fullname,
+                                if(c.`type` = %s AND count(DISTINCT cr.resource) = 0, true, false) AS is_featured_collection_category
+                                %s
+                           FROM collection AS c
+                      LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                LEFT OUTER JOIN user AS u ON c.user = u.ref
+                LEFT OUTER JOIN collection_keyword AS k ON c.ref = k.collection
+                          %s # keysql
+                          WHERE %s # type_filter_sql
+                            %s
+                       GROUP BY c.ref
+                       ORDER BY %s
+           ) AS pfcs
+          WHERE (pfcs.`type` = 4 OR (pfcs.`type` = 3 AND pfcs.is_featured_collection_category = false))",
+        COLLECTION_TYPE_FEATURED,
         $select_extra,
         $keysql,
-        COLLECTION_TYPE_FEATURED,
-        trim(featured_collections_permissions_filter_sql("AND", "c.ref")),
+        $type_filter_sql,
         $filter_by_user . $sql, # extra filters
-        $having_clause,
         "{$order_by} {$sort}"
     );
 
