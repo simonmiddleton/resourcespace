@@ -26,7 +26,7 @@ if(!in_array("resource",$rnkeys) || !in_array("node",$rnkeys))
     sql_query("RENAME TABLE resource_node TO resource_node_with_dupes");
     sql_query("RENAME TABLE resource_node_deduped TO resource_node");
     sql_query("DROP TABLE resource_node_with_dupes");
-    db_end_transaction(("check_resource_node");
+    db_end_transaction("check_resource_node");
     }
     
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,"Checking for any missing resource_data fields that have not moved to resource_node table");
