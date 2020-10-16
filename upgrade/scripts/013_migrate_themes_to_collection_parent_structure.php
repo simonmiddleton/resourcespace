@@ -28,10 +28,11 @@ foreach($featured_collections as $collection)
 
         if(is_null($fc_ref))
             {
-            $sql = sprintf("INSERT INTO collection(name, public, type, parent) VALUES ('%s', 1, '%s', %s)",
+            $sql = sprintf("INSERT INTO collection(name, public, type, parent, thumbnail_selection_method) VALUES ('%s', 1, '%s', %s, %s)",
                 $new_fc_name,
                 COLLECTION_TYPE_FEATURED,
-                sql_null_or_val((string) $parent, is_null($parent))
+                sql_null_or_val((string) $parent, is_null($parent)),
+                (!$collection_commenting ? $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
             );
             logScript($sql);
             sql_query($sql);

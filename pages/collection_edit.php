@@ -227,7 +227,7 @@ include "../include/header.php";
                 "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
             ));
 
-        if($themes_simple_images && $collection["parent"] > 0)
+        if($themes_simple_images && $collection["type"] == COLLECTION_TYPE_FEATURED)
             {
             $configurable_options = array(
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
