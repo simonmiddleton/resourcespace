@@ -93,9 +93,9 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 				echo "</tr>";
 				}
 				
-			if ($collections[$n]["public"]==1)
+            if(in_array($collections[$n]["type"], $COLLECTION_PUBLIC_TYPES))
 				{
-				if (strlen($collections[$n]["theme"])>0)
+				if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED)
 					{
 					echo "<tr>";
 					echo "<td>" . $lang["theme"] . "</td>";

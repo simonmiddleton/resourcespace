@@ -1014,8 +1014,10 @@ function save_collection($ref, $coldata=array())
 
                 if(isset($colset["update_parent"]))
                     {
+                    $force_featured_collection_type = isset($colset["force_featured_collection_type"]);
+
                     // A FC root category is created directly from the collections_featured.php page so not having a parent, means it's just public
-                    if($colset["update_parent"] == 0)
+                    if($colset["update_parent"] == 0 && !$force_featured_collection_type)
                         {
                         $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
                         }

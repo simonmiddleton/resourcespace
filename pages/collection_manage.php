@@ -14,7 +14,7 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
-$collection_valid_order_bys=array("fullname","name","ref","count","public");
+$collection_valid_order_bys=array("fullname","name","ref","count","type");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
 if ($modified_collection_valid_order_bys){$collection_valid_order_bys=$modified_collection_valid_order_bys;}
 if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="created";} # Check the value is one of the valid values (SQL injection filter)
@@ -34,8 +34,7 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
         $parent = (int) getval("parent", 0, true);
         $coldata = array(
             "name" => $name,
-            "public" => 1,
-            "featured_collections_changes" => array("update_parent" => $parent),
+            "featured_collections_changes" => array("update_parent" => $parent, "force_featured_collection_type" => true),
         );
         $redirect_params = ($parent == 0 ? array() : array("parent" => $parent));
         $redirect_url = generateURL("{$baseurl_short}pages/collections_featured.php", $redirect_params);
@@ -311,7 +310,7 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
 
 <td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["itemstitle"]?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$hide_access_column){ ?><td class="access"><?php if ($col_order_by=="public") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=public&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php }?>
+<?php if (!$hide_access_column){ ?><td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php }?>
 
 <td class="collectionin"><?php echo $lang["showcollectionindropdown"] ?></td>
 
