@@ -1,6 +1,6 @@
 <?php
 include "../include/db.php";
-include "../include/authenticate.php"; #if (!checkperm("s")) {exit ("Permission denied.");}
+include "../include/authenticate.php";
 
 
 $collection_url	= getvalescaped("collection","");
@@ -10,16 +10,52 @@ $order_by 		= getvalescaped("order_by","");
 $sort 			= getvalescaped("sort","");
 $search 		= getvalescaped("search","");
 $starsearch		= getvalescaped('starsearch', '', true);
-$themeshare		= getvalescaped("catshare","false");
-$themecount		= 0;
-if(getvalescaped("subthemes","false")!="false"){$subthemes=true;}else{$subthemes=false;}
+// $themeshare		= getvalescaped("catshare","false");
+// $themecount		= 0;
+// if(getvalescaped("subthemes","false")!="false"){$subthemes=true;}else{$subthemes=false;}
 $linksuffix		= "?";
 $ref			= getvalescaped("ref","");
 $refArray[]		= $ref;
 
+$collection = get_collection($ref);
 
-# Check access
-if (!$themeshare && !collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
+if($collection["type"] == COLLECTION_TYPE_FEATURED)
+    {
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+    }
+
+// Check access controls
+if(!collection_readable($ref))
+    {
+    exit($lang["no_access_to_collection"]);
+    }
+else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
+if(!$allow_share || checkperm("b"))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
+
+$internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
+
+if(is_featured_collection_category($collection))
+    {
+    // Check this is not an empty FC category
+    if(empty(get_featured_collection_resources($collection, array("limit" => 1))))
+        {
+        exit(error_alert($lang["cannotshareemptythemecategory"], true, 403));
+        }
+
+    // TODO: more checks for is_collection_approved & collection_min_access
+    }
+
+
+
+die("You died in file " . __FILE__ . " at line " . __LINE__);
+
 
 
 if ($themeshare!="false")
@@ -64,17 +100,8 @@ else
 	else {
 	$collection=get_collection($ref);if ($collection===false) {exit("Collection not found.");}
 		}
-	}
-	
-#Check if sharing allowed
-if (!$allow_share) {
-        $show_error=true;
-        $error=$lang["error-permissiondenied"];
-        }
-		
+    }
 
-$user_select_internal=checkperm("noex") || intval($user_dl_limit) > 0;
-	
 #Check if any resources are not in the active state
 foreach ($refArray as $colref){
 if (!$collection_allow_not_approved_share && !is_collection_approved(trim($colref)))
@@ -122,7 +149,8 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
-	$errors=email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename,$linksuffix,$list_recipients,$add_internal_access,$group, $sharepwd);
+
+    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename,$linksuffix,$list_recipients,$add_internal_access,$group, $sharepwd);
 
 	if ($errors=="")
 		{
@@ -280,7 +308,7 @@ else
 <div class="Question">
 
 <label for="users">
-<?php echo ($user_select_internal)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
+<?php echo ($internal_share_only)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
 </label><?php $userstring=getval("users","");include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
 <?php if ($errors!="") { ?><div class="FormError">!! <?php echo $errors?> !!</div><?php } ?>
@@ -305,10 +333,10 @@ if($allow_edit)
 	</div>	
 	<?php } ?>
 <?php
-if(!$user_select_internal)
+if(!$internal_share_only)
 	{
 	render_share_options(true, $ref, true);  
-	} // End of section checking $user_select_internal
+	} // End of section checking $internal_share_only
 	
 	hook("collectionemailafterexternal");
 	?>
