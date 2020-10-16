@@ -4396,8 +4396,8 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 
     $collection = sql_query(
         sprintf("SELECT ref, `name`, parent FROM collection WHERE `type` = %s AND ref = '%s'",
-            $ref,
-            COLLECTION_TYPE_FEATURED
+            COLLECTION_TYPE_FEATURED,
+            $ref
         )
     );
 
