@@ -3669,7 +3669,7 @@ $non_image_types_generate_preview_only = true;
 // NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
 // To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
 // To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
-$search_filter_nodes = false;
+$search_filter_nodes = true;
 
 // Browse bar 
 // Enable/Disable browse bar - in system config
