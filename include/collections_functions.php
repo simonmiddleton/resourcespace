@@ -204,7 +204,8 @@ function get_collection($ref)
 		$return["request_feedback"]=$request_feedback;
 		
         // Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
-        $return["public"] = (int) in_array($return["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
+        global $COLLECTION_PUBLIC_TYPES;
+        $return["public"] = (int) in_array($return["type"], $COLLECTION_PUBLIC_TYPES);
 
         return $return;
         }
@@ -2649,7 +2650,9 @@ function remove_all_resources_from_collection($ref){
 
 function get_home_page_promoted_collections()
 	{
-	return sql_query("select collection.ref,collection.name,collection.home_page_publish,collection.home_page_text,collection.home_page_image,resource.thumb_height,resource.thumb_width, resource.resource_type, resource.file_extension from collection left outer join resource on collection.home_page_image=resource.ref where collection.public=1 and collection.home_page_publish=1 order by collection.ref desc");
+    global $COLLECTION_PUBLIC_TYPES;
+    $public_types = join(", ", $COLLECTION_PUBLIC_TYPES);
+	return sql_query("select collection.ref, collection.`type`,collection.name,collection.home_page_publish,collection.home_page_text,collection.home_page_image,resource.thumb_height,resource.thumb_width, resource.resource_type, resource.file_extension from collection left outer join resource on collection.home_page_image=resource.ref where collection.`type` IN ({$public_types}) and collection.home_page_publish=1 order by collection.ref desc");
 	}
 
 
@@ -4127,8 +4130,12 @@ function delete_old_collections($userref=0, $days=30)
         {
         return 0;
         }
+
+    $userref = escape_check($userref);
+    $days = escape_check($days);
+
     $deletioncount = 0;
-    $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='" . $userref . "' AND created < DATE_SUB(NOW(), INTERVAL '" . $days . "' DAY) AND public=0",0);
+    $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='{$userref}' AND created < DATE_SUB(NOW(), INTERVAL '{$days}' DAY) AND `type` = " . COLLECTION_TYPE_STANDARD, 0);
     foreach($old_collections as $old_collection)
         {
         sql_query("DELETE FROM collection_resource WHERE collection='" . $old_collection . "'");
@@ -4386,7 +4393,7 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
         }
 
     $collection = sql_query(
-        sprintf("SELECT ref, `name`, parent FROM collection WHERE ref = '%s' AND public = 1 AND `type` = '%s'",
+        sprintf("SELECT ref, `name`, parent FROM collection WHERE `type` = %s AND ref = '%s'",
             $ref,
             COLLECTION_TYPE_FEATURED
         )
@@ -4492,7 +4499,7 @@ function get_featured_collection_ref_by_name(string $name, $parent)
         }
 
     $ref = sql_value(
-        sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND public = 1 AND `type` = '%s' AND parent %s",
+        sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND `type` = '%s' AND parent %s",
             escape_check(trim($name)),
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, is_null($parent))
