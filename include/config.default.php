@@ -2100,6 +2100,7 @@ $dynamic_keyword_suggest_contains=false;
 # Uncomment if you wish to limit the suggestions to display after a certain number of characters have been entered.
 # Useful if your dynamic keyword fields have a large number options.
 # Be sure to set this to a value equal to your shortest dynamic keyword option.
+# Requires $dynamic_keyword_suggest_contains=true;
 # $dynamic_keyword_suggest_contains_characters=2;
 
 # Option to show resource ID in the thumbnail, next to the action icons.
