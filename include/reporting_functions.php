@@ -443,15 +443,20 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
         # Mark as done.
         sql_query('UPDATE report_periodic_emails set last_sent = now() where ref = "' . $report['ref'] . '";');
         }
+
+    $GLOBALS["use_error_exception"] = true;
     foreach($deletefiles as $deletefile)
         {
-        if(file_exists($deletefile))
+        try
             {
-            
             unlink($deletefile);
-            
+            }
+        catch(Exception $e)
+            {
+            debug("BANG Unable to delete - file not found: " . $deletefile);
             }
         }
+    unset($GLOBALS["use_error_exception"]);
     }
 
 function delete_periodic_report($ref)
