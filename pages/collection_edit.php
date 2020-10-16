@@ -20,8 +20,6 @@ if (!collection_writeable($ref))
 	{exit($lang["no_access_to_collection"]);}
 
 $collection=get_collection($ref);
-// Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
-$collection["public"] = (int) in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
 
 if ($collection===false) 
 	{
@@ -112,9 +110,6 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 	}
 
-// Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
-$collection["public"] = (int) in_array($collection["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
-
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -191,9 +186,14 @@ include "../include/header.php";
 			} ?>
 		<div class="clearerleft"> </div>
 	</div>
-
-	<?php 
-	if ($collection["public"]==0 || (($collection['public']==1 && !$themes_in_my_collections && $collection['theme']=='') || ($collection['public']==1 && $themes_in_my_collections) )) 
+	<?php
+    if(
+        $collection["public"] == 0
+        || (
+            ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
+            || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
+        )
+    )
 		{
 		if (!hook("replaceuserselect"))
 			{?>

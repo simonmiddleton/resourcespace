@@ -202,7 +202,12 @@ function get_collection($ref)
 			}
 		
 		$return["request_feedback"]=$request_feedback;
-		return $return;}
+		
+        // Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
+        $return["public"] = (int) in_array($return["type"], array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED));
+
+        return $return;
+        }
 	
 	return false;
 	}
@@ -416,9 +421,9 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
  */
 function collection_writeable($collection)
 	{
-	$collectiondata=get_collection($collection);
-	global $userref,$usergroup;
-	global $allow_smart_collections;
+    $collectiondata = get_collection($collection);
+
+	global $userref,$usergroup, $allow_smart_collections;
 	if ($allow_smart_collections && !isset($userref))
 		{ 
 		if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null)
@@ -437,8 +442,8 @@ function collection_writeable($collection)
 	// - Collection changes are allowed and :-
 	//    a) User is attached to the collection or
 	//    b) Collection is public or a theme and the user either has the 'h' permission or the collection is editable
-        
-		
+
+
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
 	debug("collection session : " . $collectiondata["session_id"]);
 	debug("collection user : " . $collectiondata["user"]);
@@ -446,7 +451,7 @@ function collection_writeable($collection)
 	debug("userref : " . $userref);
 	debug("username : " . $username);
 	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
-		
+
 	$writable=
 	    // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
 		($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
@@ -538,10 +543,9 @@ function set_user_collection($user,$collection)
  * @param  boolean $cant_delete
  * @param  integer $ref
  * @param  boolean $public
- * @param  array $categories
  * @return integer
  */
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false)
 	{
     debug_function_call("create_collection", func_get_args());
 
@@ -555,28 +559,27 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 		{	
 		$rs_session="";
 		}
-	
-	$categorysql = "";
-	$themecolumns = "";
-	$themecount = 1;
-	if(count($categories) > 0)
-		{
-		foreach($categories as $category)
-			{
-			$themecolumns .= ",theme" . 	($themecount == 1 ? "" : $themecount);
-			$categorysql .= ",'" . escape_check($category) . "'";
-			$themecount++;
-			}
-		}
 
-	# Creates a new collection and returns the reference
-	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . escape_check($ref) . "',":"") . "'" . escape_check($name) . "','$userid',now(),'" . escape_check($allowchanges) . "','" . escape_check($cant_delete) . "'," . (($rs_session=="")?"NULL":"'" . (int)$rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
+    $sql = sprintf(
+        "INSERT INTO collection (%sname, user, created, allow_changes, cant_delete, session_id, type)
+              VALUES (%s'%s', '%s', NOW(), '%s', '%s', %s, %s)",
+        ($ref != 0 ? "ref, " : ""),
+        // Values start here
+        ($ref != 0 ? "'" . escape_check($ref) . "', " : ""),
+        escape_check($name),
+        escape_check($userid),
+        escape_check($allowchanges),
+        escape_check($cant_delete),
+        sql_null_or_val((string)(int) $rs_session, $rs_session == ""),
+        ($public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD)
+    );
+    sql_query($sql);
 
-	$ref=sql_insert_id();
+    $ref = sql_insert_id();
+    index_collection($ref);
 
-	index_collection($ref);	
-	return $ref;
-	}	
+    return $ref;
+    }
     
     
 /**
@@ -661,7 +664,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
-    $valid_order_bys = array("fullname", "name", "ref", "count", "public", "created");
+    $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
     $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
 	# Keywords searching?
@@ -1073,7 +1076,7 @@ function save_collection($ref, $coldata=array())
 
                 $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
-                
+
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
             
@@ -2637,7 +2640,7 @@ function collection_min_access($collection)
 function collection_set_public($collection)
 	{
 		if (is_numeric($collection)){
-			$sql = "update collection set public = '1' where ref = '$collection'";
+			$sql = "UPDATE collection SET `type` = " . COLLECTION_TYPE_PUBLIC . " WHERE ref = '$collection'";
 			sql_query($sql);
 			return true;
 		} else {
