@@ -1214,28 +1214,6 @@ function save_collection($ref, $coldata=array())
 
 
 /**
- * Return the maximum number of theme category levels (columns) present in the collection table
- *
- * @return integer
- */
-function get_max_theme_levels(){
-	$sql = "show columns from collection like 'theme%'";
-	$results = sql_query($sql);
-	foreach($results as $result) {
-		if ($result['Field'] == 'theme'){
-			$level = 1;
-		} else {
-			$thislevel = substr($result['Field'],5);
-			if (is_numeric($thislevel) && $thislevel > $level){
-				$level = $thislevel;
-			}
-		}
-	}
-	return $level;
-}
-
-
-/**
 * Case insensitive string comparisons using a "natural order" algorithm for collection names
 * 
 * @param string $a
@@ -2648,29 +2626,6 @@ function collection_set_public($collection)
 		}
 	}
 
-/**
-* Set a collection as a featured collection.
-*
-* @param integer $collection - reference of collection
-* @param array  $categories - array of categories
-*
-* @return boolean
-*/
-function collection_set_themes ($collection, $categories = array())
-	{
-	global $theme_category_levels;
-	if(!is_numeric($collection) || !is_array($categories) || count($categories) > $theme_category_levels){return false;}
-	$sql="update collection set public = 1";
-	for($n=0;$n<count($categories);$n++)
-		{	
-		if ($n==0){$categoryindex="";} else {$categoryindex=$n+1;}
-		$sql .= ",theme" . $categoryindex . "='" . escape_check($categories[$n]) . "'";
-		}
-	
-	$sql .= " where ref = '" . $collection . "'";
-	sql_query($sql);
-	return true;
-	}
 	
 /**
  * Remove all resources from a collection

@@ -312,39 +312,7 @@ if ($on_upload || $ref<0)
             <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
             <label for="entercolname"><?php echo $lang["collectionname"]?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
             <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
-            
-            </div>		
-            
-            <?php if ($enable_public_collection_on_upload && ($enable_public_collections || checkperm('h')) && !checkperm('b'))
-                { ?>
-                <label for="public"><?php echo $lang["access"]?></label>
-                <select id="public" name="public" class="shrtwidth"  <?php
-                    if (checkperm('h')){ // if the user can add to a theme, include the code to toggle the theme selector
-                    ?>onchange="if(jQuery(this).val()==1){jQuery('#themeselect').fadeIn();resetThemeLevels();} else {jQuery('#themeselect').fadeOut(); clearThemeLevels();}"<?php 
-                    }
-                ?>>
-                <option value="0" selected><?php echo $lang["private"]?></option>
-                <option value="1"><?php echo $lang["public"]?></option>
-                </select>
-            
-                
-                <?php 
-                if (checkperm('h')){ 
-                // if the user can add to a theme, include the theme selector
-                ?>
-                    <!-- select theme if collection is public -->
-                    <script type="text/javascript" src="<?php echo $baseurl_short ?>lib/js/update_theme_levels.js"></script>
-                    <input type="hidden" name="themestring" id="themestring" value="" />
-                    <div id='themeselect' class='themeselect' style="display:none">
-                        <?php 
-                            include_once("ajax/themelevel_add.php"); 
-                        ?>
-                    </div>
-                    <!-- end select theme -->
-                    <?php 	
-                    } // end if checkperm h 
-                } // end if public collections enabled
-                ?>
+            </div>
             </div> <!-- end collectioninfo -->
             </div> <!-- end question_collectionadd -->
             <?php
