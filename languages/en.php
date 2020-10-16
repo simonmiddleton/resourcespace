@@ -2153,7 +2153,7 @@ $lang['download_limit_request_text'] = "Download limit reached: %%DOWNLOADED%%/%
 $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";
 $lang["action-title_remove_user_group_logo"]="Tick to remove user group logo";
-$lang["action-title_see_wiki_for_advanced_options"]="Please refer to the <a href='https://www.resourcespace.com/knowledge-base/'>Knowledge Base</a> for further help with Advanced options.";
+$lang["action-title_see_wiki_for_user_group_advanced_options"]="Please refer to the <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Knowledge Base</a> for further help with Advanced options.";
 
 # admin web edit
 $lang['page-title_web_edit'] = "Edit file";

@@ -295,7 +295,7 @@ include "../../include/header.php";
 
     <div class="CollapsibleSection" style="display:none;">
 
-        <p><?php echo $lang["action-title_see_wiki_for_advanced_options"]; ?></p>
+        <p><?php echo $lang["action-title_see_wiki_for_user_group_advanced_options"]; ?></p>
 
         <?php
         $filters = get_filters("name","ASC");
