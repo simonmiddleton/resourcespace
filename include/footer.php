@@ -194,15 +194,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
       // place page titles
     else if (in_array($pagename,$general_title_pages)){ 
 		
-		if ($pagename=="themes"){
-			$pagetitle=$lang['themes'];
-			for ($n=0;$n<$theme_category_levels;$n++){
-				if (getval("theme".$n,"")!=""){
-					$pagetitle.=" / ".getval("theme".$n,"");
-				}
-			}
-		}
-		else if (isset($lang[$pagename])){
+		if (isset($lang[$pagename])){
 			$pagetitle=$lang[$pagename];
 		} 
 		else if (isset($lang['action-'.$pagename])){

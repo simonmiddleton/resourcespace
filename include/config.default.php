@@ -783,13 +783,8 @@ $theme_images_number = 6; # How many to auto-select (if none chosen manually). S
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
 $show_theme_collection_stats=false; # Show count of themes and resources in theme category
 
-# How many levels of theme category to show.
-# If this is set to more than one, a dropdown box will appear to allow browsing of theme sub-levels
-$theme_category_levels=1;
-
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
-# $theme_category_levels must be greater than 1.
 $theme_direct_jump=false;
 
 #Force Collections lists on the Themes page to be in Descending order.
@@ -2211,9 +2206,7 @@ $staticsync_whitelist_folders = array();
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
 $staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
-# Allow unlimited theme levels to be created based on the folder structure. 
-# Script will output a new $theme_category_levels number which must then be updated in config.php
-$staticsync_folder_structure=false;
+
 # Mapping extensions to resource types for sync'd files
 # Format: staticsync_extension_mapping[resource_type]=array("extension 1","extension 2");
 $staticsync_extension_mapping_default=1;

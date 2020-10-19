@@ -192,15 +192,15 @@ function touch_category_tree_level($path_parts)
 function ProcessFolder($folder)
     {
     global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $ffmpeg_preview_extension, 
-           $staticsync_autotheme, $staticsync_folder_structure, $staticsync_extension_mapping_default, 
+           $staticsync_autotheme, $staticsync_extension_mapping_default, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS,
            $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
-           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels,
+           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
            $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
-           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age;
+           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref;
     
     $collection = 0;
     $treeprocessed=false;
@@ -340,50 +340,102 @@ function ProcessFolder($folder)
                         }
                     }
                 $count++;
+
                 echo "Processing file: $fullpath" . PHP_EOL;
+
                 if ($collection == 0 && $staticsync_autotheme)
                     {
                     # Make a new collection for this folder.
                     $e = explode("/", $shortpath);
-                    $theme        = ucwords($e[0]);
-                    $themesql     = "theme='" . ucwords(escape_check($e[0])) . "'";
-                    $themecolumns = "theme";
-                    $themevalues  = "'" . ucwords(escape_check($e[0])) . "'";
-                    
-                    if ($staticsync_folder_structure)
-                        {
-                        for ($x=0;$x<count($e)-2;$x++)
-                            {
-                            if ($x != 0)
-                                {
-                                $themeindex = $x+1;
-                                if ($themeindex >$theme_category_levels)
-                                    {
-                                    $theme_category_levels = $themeindex;
-                                    if ($x == count($e)-2)
-                                        {
-                                        echo PHP_EOL . PHP_EOL . 
-                                             "UPDATE THEME_CATEGORY_LEVELS TO $themeindex IN CONFIG!!!!" . 
-                                             PHP_EOL . PHP_EOL;
-                                        }
-                                    }
-                                $th_name       = ucwords(escape_check($e[$x]));
-                                $themesql     .= " AND theme{$themeindex} = '$th_name'";
-                                $themevalues  .= ",'$th_name'";
-                                $themecolumns .= ",theme{$themeindex}";
-                                }
-                            }
-                        }
-
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
                     echo "Collection $name, theme=$theme" . PHP_EOL;
-                    $escaped_name = escape_check($name);
-                    $collection = sql_value("SELECT ref value FROM collection WHERE name='$escaped_name' AND $themesql", 0);
-                    if ($collection == 0)
+
+                    // The real featured collection will always be the last directory in the path
+                    $proposed_fc_categories = array_diff($e, array_slice($e, -2));
+                    echo "Proposed Featured Collection Categories: " . PHP_EOL . join(PHP_EOL . " - ", $proposed_fc_categories) . PHP_EOL;
+
+                    // Build the tree first, if needed
+                    $proposed_branch_path = array();
+                    for($b = 0; $b < count($proposed_fc_categories); $b++)
                         {
-                        sql_query("INSERT INTO collection (name,created,public,$themecolumns,allow_changes) 
-                                                   VALUES ('$escaped_name', NOW(), 1, $themevalues, 0)");
-                        $collection = sql_insert_id();
+                        $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
+                        $fc_categ_name = ucwords($proposed_fc_categories[$b]);
+
+                        $fc_categ_ref_sql = sprintf(
+                              "SELECT DISTINCT ref AS `value`
+                                 FROM collection AS c
+                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                WHERE `type` = %s
+                                  AND parent %s
+                                  AND `name` = '%s'
+                             GROUP BY c.ref
+                               HAVING count(DISTINCT cr.resource) = 0",
+                            COLLECTION_TYPE_FEATURED,
+                            sql_is_null_or_eq_val($parent, $parent == 0),
+                            escape_check($fc_categ_name)
+                        );
+                        $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
+
+                        if($fc_categ_ref == 0)
+                            {
+                            echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
+                            $fc_categ_ref = create_collection($userref, $fc_categ_name);
+                            echo "Created '{$fc_categ_name}' with ref #{$fc_categ_ref}" . PHP_EOL;
+
+                            $updated_fc_category = save_collection(
+                                $fc_categ_ref,
+                                array(
+                                    "featured_collections_changes" => array(
+                                        "update_parent" => $parent,
+                                        "force_featured_collection_type" => true,
+                                        "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                    )   
+                                ));
+                            if($updated_fc_category === false)
+                                {
+                                echo "Unable to update '{$fc_categ_name}' with ref #{$fc_categ_ref} to a Featured Collection Category" . PHP_EOL;
+                                }
+                            }
+
+                        $proposed_branch_path[] = $fc_categ_ref;
+                        }
+                    $collection_parent = array_pop($proposed_branch_path);
+                    echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
+
+                    $collection = sql_value(
+                        sprintf(
+                              "SELECT DISTINCT ref AS `value`
+                                 FROM collection AS c
+                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                WHERE `type` = %s
+                                  AND parent %s
+                                  AND `name` = '%s'
+                             GROUP BY c.ref
+                               HAVING count(DISTINCT cr.resource) > 0",
+                            COLLECTION_TYPE_FEATURED,
+                            sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
+                            escape_check($name)
+                        ),
+                        0);
+
+                    if($collection == 0)
+                        {
+                        $collection = create_collection($userref, $name);
+                        echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
+
+                        $updated_fc_category = save_collection(
+                            $collection,
+                            array(
+                                "featured_collections_changes" => array(
+                                    "update_parent" => $collection_parent,
+                                    "force_featured_collection_type" => true,
+                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                )   
+                            ));
+                        if($updated_fc_category === false)
+                            {
+                            echo "Unable to update '{$name}' with ref #{$collection} to be a Featured Collection under parent ref #{$collection_parent}" . PHP_EOL;
+                            }
                         }
                     }
 
@@ -613,7 +665,7 @@ function ProcessFolder($folder)
                     # Add to collection
                     if ($staticsync_autotheme)
                         {
-                        $test = ''; 
+                        // todo: ensure we do this right
                         $test = sql_query("SELECT * FROM collection_resource WHERE collection='$collection' AND resource='$r'");
                         if (count($test) == 0)
                             {

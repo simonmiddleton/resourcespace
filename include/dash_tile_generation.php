@@ -84,7 +84,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 
 function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	{
-	global $lang,$pagename,$baseurl_short,$dash_tile_shadows, $theme_category_levels, $theme_direct_jump;
+	global $lang,$pagename,$baseurl_short,$dash_tile_shadows, $theme_direct_jump;
     
     $url = "{$baseurl_short}pages/collections_featured.php";
 	?>
