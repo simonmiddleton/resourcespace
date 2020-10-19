@@ -137,10 +137,8 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
-// echo "<pre>";print_r($collection);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
-    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "",$list_recipients,$add_internal_access,$group, $sharepwd);
-    echo "<pre>";print_r($errors);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
 
+    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "",$list_recipients,$add_internal_access,$group, $sharepwd);
 	if ($errors=="")
 		{
 		# Log this	
