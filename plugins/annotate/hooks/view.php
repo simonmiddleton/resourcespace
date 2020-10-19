@@ -51,7 +51,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
         jQuery.noConflict();
         </script>
         <?php
-        $use_watermark = check_use_watermark($resource['ref']);
+        $use_watermark = check_use_watermark();
         $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
 
         if(!file_exists($imagepath))
