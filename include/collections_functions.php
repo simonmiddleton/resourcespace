@@ -1384,9 +1384,13 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	$emails=array();
 	$key_required=array();
 	if ($feedback) {$feedback=1;} else {$feedback=0;}
-	$reflist=trim_array(explode(",",$colrefs));
-	$emails_keys=resolve_user_emails($ulist);
 
+    $reflist = trim_array(explode(",", $colrefs));
+    // Take out the FC category from the list as this is more of a dummy record rather than a collection we'll be giving
+    // access to users. See generate_collection_access_key() when collection is a featured collection category.
+    $fc_category_ref = ($themeshare ? array_shift($reflist) : null);
+
+	$emails_keys=resolve_user_emails($ulist);
     if(0 === count($emails_keys))
         {
         return $lang['email_error_user_list_not_valid'];
@@ -1470,7 +1474,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			{
 			$url="";
 			$subject=$applicationname.": " . $themename;
-			$url=$baseurl . "/pages/themes.php" . $themeurlsuffix;			
+			$url=$baseurl . "/pages/collections_featured.php" . $themeurlsuffix;			
 			$viewlinktext=$lang["clicklinkviewthemes"];
 			$emailcollectionmessageexternal=false;
 			if ($use_phpmailer){
@@ -1494,18 +1498,33 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			}
 		else
 			{
+            // E-mail external share, generate the access key based on the FC category. Each sub-collection will have the same key.
+            if($key_required[$nx1] && $themeshare && !is_null($fc_category_ref))
+                {
+                $k = generate_collection_access_key($fc_category_ref, $feedback, $emails[$nx1], $access, $expires, $group, $sharepwd, $reflist);
+                $fc_key = "&k={$k}";
+                }
+
 			for ($nx2=0;$nx2<count($reflist);$nx2++)
 				{
 				$url="";
 				$key="";
 				$emailcollectionmessageexternal=false;
-				# Do we need to add an external access key for this user (e-mail specified rather than username)?
-				if ($key_required[$nx1])
+
+                # Do we need to add an external access key for this user (e-mail specified rather than username)?
+				if ($key_required[$nx1] && !$themeshare)
 					{
 					$k=generate_collection_access_key($reflist[$nx2],$feedback,$emails[$nx1],$access,$expires,$group,$sharepwd);
 					$key="&k=". $k;
 					$emailcollectionmessageexternal=true;
 					}
+                // If FC category, the key is valid across all sub-featured collections. See generate_collection_access_key()
+                else if($key_required[$nx1] && $themeshare && !is_null($fc_category_ref))
+                    {
+                    $key = $fc_key;
+                    $emailcollectionmessageexternal = true;
+                    }
+
 				$url=$baseurl . 	"/?c=" . $reflist[$nx2] . $key;		
 				$collection = array();
 				$collection = sql_query("select name,savedsearch from collection where ref='$reflist[$nx2]'");
@@ -1566,7 +1585,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			$body = "";
 		}
 		$body.=$templatevars['fromusername']." " . (($emailcollectionmessageexternal)?$externalmessage:$internalmessage) . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
-		send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+        send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
 		$viewlinktext=$origviewlinktext;
 		}
 	hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
@@ -1586,10 +1605,12 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
  * @param  string   $expires
  * @param  string   $group
  * @param  string   $sharepwd
+ * @param  array    $sub_fcs     List of sub-featured collections IDs (collection_email.php page has logic to determine 
+ *                               this which is carried forward to email_collection())
  * 
  * @return string   The generated key used for external sharing
  */
-function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="", $sharepwd="")
+function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="", $sharepwd="", array $sub_fcs = array())
     {
     global $userref, $usergroup, $scramble_key;
 
@@ -1614,7 +1635,8 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
     // We build a collection list to allow featured collections children that are externally shared as part of a parent,
     // to all be shared with the same parameters (e.g key, access, group). When the collection is not COLLECTION_TYPE_FEATURED
     // this will hold just that collection
-    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection));
+    $sub_fcs = (!empty($sub_fcs) ? $sub_fcs : get_featured_collection_categ_sub_fcs($collection));
+    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : $sub_fcs);
 
     // Generate the key based on the original collection. For featured collection category, all sub featured collections
     // will share the same key
