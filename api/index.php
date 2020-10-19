@@ -18,6 +18,12 @@ $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
 $authmode=getvalescaped("authmode","userkey");
 $query=$_SERVER["QUERY_STRING"];
+print_r($_POST);
+debug("api BANG " . $authmode);
+if(trim($query) == "")
+    {
+    $query = $_POST;
+    }
 $validauthmodes = array("userkey", "native", "sessionkey");
 $function = getval("function","");
 if(!in_array($authmode,$validauthmodes))
@@ -32,7 +38,7 @@ if($function != "login")
     {
     if($authmode == "native")
         {
-        include(__DIR__ . "../include/authenticate.php");
+        include(__DIR__ . "/../include/authenticate.php");
         }
     else
         {
@@ -42,20 +48,21 @@ if($function != "login")
             debug("API: Invalid signature");
             exit("Invalid signature");
             }
-        }
     
-    # Log user in (if permitted)
-    $validuser = setup_user(get_user(get_user_by_username($user)));
-    if(!$validuser)
-        {
-        ajax_permission_denied();
+        # Log user in (if permitted)
+        
+        $validuser = setup_user(get_user(get_user_by_username($user)));
+        if(!$validuser)
+            {
+            ajax_permission_denied();
+            }
+        debug("API: set up user '{$user}' signed with '{$sign}'");
         }
-    debug("API: set up user '{$user}' signed with '{$sign}'");
     }
-
 # Run the requested query
 echo execute_api_call($query);
 debug("API: finished execute_api_call({$query});");
+
 
 /*
  * API v2 - To Do
