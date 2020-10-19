@@ -258,7 +258,7 @@ $extrafooterhtml="";
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Override stylesheet -->
-<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo $k; ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo htmlspecialchars($k); ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
