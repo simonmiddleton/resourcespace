@@ -47,27 +47,30 @@ if(
         next($slideshow_files);
         }
 
-    // Based on current pointer and direction of movement we can find the "to" element
-    switch ($action)
+    if (count($slideshow_files) > '1')
         {
-        case 'moveup':
-            prev($slideshow_files);
-            $to = key($slideshow_files);
+        // Based on current pointer and direction of movement we can find the "to" element
+        switch ($action)
+            {
+            case 'moveup':
+                prev($slideshow_files);
+                $to = key($slideshow_files);
 
-            reset($slideshow_files);
-            $response['is_first_sibling'] = ($slideshow_files[$to] == current($slideshow_files));
+                reset($slideshow_files);
+                $response['is_first_sibling'] = ($slideshow_files[$to] == current($slideshow_files));
 
-            $allow_reorder = true;   
-            break;
+                $allow_reorder = true;   
+                break;
 
-        case 'movedown':
-            next($slideshow_files);
-            $to = key($slideshow_files);
+            case 'movedown':
+                next($slideshow_files);
+                $to = key($slideshow_files);
 
-            $response['is_last_sibling'] = ($slideshow_files[$to] === end($slideshow_files));
+                $response['is_last_sibling'] = ($slideshow_files[$to] === end($slideshow_files));
 
-            $allow_reorder = true;
-            break;
+                $allow_reorder = true;
+                break;
+            }
         }
 
     if($allow_reorder && reorder_slideshow_images($slideshow_files[$slideshow_id_index], $slideshow_files[$to]))
