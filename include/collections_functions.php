@@ -4373,6 +4373,36 @@ function is_featured_collection_category(array $fc)
 
 
 /**
+* Check if a collection is a featured collection category by checking if the collection has been used as a parent. This 
+* function will make a DB query to find this out, it does not use existing structures.
+* 
+* Normally a featured collection is a category if it has no resources. In some circumstances, when it's impossible to 
+* determine whether it should be or not, relying on children is another approach.
+* 
+* @param integer $c_ref Collection ID
+* 
+* @return boolean
+*/
+function is_featured_collection_category_by_children(int $c_ref)
+    {
+    $sql = sprintf(
+          "SELECT DISTINCT c.ref AS `value`
+             FROM collection AS c
+        LEFT JOIN collection AS cc ON c.ref = cc.parent
+            WHERE c.`type` = %s
+              AND c.ref = '%s'
+         GROUP BY c.ref
+           HAVING count(DISTINCT cc.ref) = 0",
+        COLLECTION_TYPE_FEATURED,
+        escape_check($c_ref)
+    );
+    $found_ref = sql_value($sql, 0);
+
+    return ($found_ref > 0);
+    }
+
+
+/**
 * Validate a collection parent value
 * 
 * @param int|array $c  Collection ref -or- collection data as returned by {@see get_collection()}

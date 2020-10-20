@@ -348,7 +348,7 @@ function ProcessFolder($folder)
                     # Make a new collection for this folder.
                     $e = explode("/", $shortpath);
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
-                    echo "Collection $name, theme=$theme" . PHP_EOL;
+                    echo "Collection '{$name}'" . PHP_EOL;
 
                     // The real featured collection will always be the last directory in the path
                     $proposed_fc_categories = array_diff($e, array_slice($e, -2));
@@ -665,14 +665,23 @@ function ProcessFolder($folder)
                     # Add to collection
                     if ($staticsync_autotheme)
                         {
-                        // todo: ensure we do this right
-                        $test = sql_query("SELECT * FROM collection_resource WHERE collection='$collection' AND resource='$r'");
-                        if (count($test) == 0)
+                        // Featured collection categories cannot contain resources. At this stage we need to distinguish
+                        // between categories and collections by checking for children collections.
+                        if(!is_featured_collection_category_by_children($collection))
                             {
-                            sql_query("INSERT INTO collection_resource (collection, resource, date_added) 
-                                            VALUES ('$collection', '$r', NOW())");
+                            $test = sql_query("SELECT * FROM collection_resource WHERE collection='$collection' AND resource='$r'");
+                            if(count($test) == 0)
+                                {
+                                sql_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES ('$collection', '$r', NOW())");
+                                }
                             }
-                        }                        
+                        else
+                            {
+                            echo "Error: Unable to add a resource to a featured collection category!" . PHP_EOL;
+                            exit(1);
+                            }
+                        }
+
                     $done[$shortpath]["ref"]=$r;
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
@@ -1045,7 +1054,7 @@ if (!$staticsync_ingest)
 				}
             }
         }
-        
+
     # Remove any themes that are now empty as a result of deleted files.
     sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
                 (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
