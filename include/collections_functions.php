@@ -167,7 +167,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
  */
 function get_collection($ref)
 	{
-    $return=sql_query("select c.*, c.theme2, c .theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+    $return=sql_query("select c.*, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
         return false;
