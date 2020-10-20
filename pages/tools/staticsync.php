@@ -1010,7 +1010,10 @@ if (!$staticsync_ingest)
     # ***for modified syncdir directories:
     $syncdonemodified = hook("modifysyncdonerf");
     if (!empty($syncdonemodified)) { $resources_to_archive = $syncdonemodified; }
-    
+
+    // Get all the featured collections (including categories) that hold these resources
+    $fc_branches = get_featured_collections_by_resources(array_column($resources_to_archive, "ref"));
+
     foreach ($resources_to_archive as $rf)
         {
         $fp = $syncdir . '/' . $rf["file_path"];
@@ -1056,8 +1059,28 @@ if (!$staticsync_ingest)
         }
 
     # Remove any themes that are now empty as a result of deleted files.
-    sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
-                (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
+    foreach($fc_branches as $fc_branch)
+        {
+        // Reverse the branch path to start from the leaf node. This way, when you reach the category you won't have any
+        // children nodes (ie a normal FC) left (if it will be the case) and we'll be able to delete the FC category.
+        $reversed_branch_path = array_reverse($fc_branch);
+        foreach($reversed_branch_path as $fc)
+            {
+            if(!can_delete_featured_collection($fc["ref"]))
+                {
+                continue;
+                }
+
+            if(delete_collection($fc["ref"]) === false)
+                {
+                echo "Unable to delete featured collection #{$fc["ref"]}" . PHP_EOL;
+                }
+            else
+                {
+                echo "Deleted featured collection #{$fc["ref"]}" . PHP_EOL;
+                }
+            }
+        }
     }
 
 if(count($errors) > 0)

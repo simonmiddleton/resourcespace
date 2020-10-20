@@ -4683,3 +4683,67 @@ function filter_featured_collections_by_root(array $fcs, int $c_ref)
     
     return array_values($collections);
     }
+
+
+/**
+* Get all featured collections branches where the specified resources can be found.
+* 
+* @param array $r_refs List of resource IDs
+* 
+* @return array Returns list of featured collections (categories included) that contain the specified resource(s).
+*/
+function get_featured_collections_by_resources(array $r_refs)
+    {
+    $resources = array_filter($r_refs, "is_numeric");
+    if(empty($resources))
+        {
+        return array();
+        }
+
+    $sql = sprintf(
+        "SELECT c.ref, c.`name`, c.`parent`
+           FROM collection_resource AS cr
+           JOIN collection AS c ON cr.collection = c.ref AND c.`type` = %s
+          WHERE cr.resource IN (%s)
+            %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+        COLLECTION_TYPE_FEATURED,
+        "'" . join("', '", $resources) . "'",
+        trim(featured_collections_permissions_filter_sql("AND", "c.ref"))
+    );
+    $fcs = sql_query($sql);
+
+    $results = array();
+    foreach($fcs as $fc)
+        {
+        $results[] = get_featured_collection_category_branch_by_leaf($fc["ref"], array());
+        }
+
+    return $results;
+    }
+
+
+/**
+* Verify if a featured collection can be deleted. To be deleted, it MUST not have any resources or children (if category).
+* 
+* @param integer $ref Collection ID
+* 
+* @return boolean Returns TRUE if the featured collection can be deleted, FALSE otherwise
+*/
+function can_delete_featured_collection(int $ref)
+    {
+    $sql = sprintf(
+          "SELECT DISTINCT c.ref AS `value`
+             FROM collection AS c
+        LEFT JOIN collection AS cc ON c.ref = cc.parent
+        LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            WHERE c.`type` = %s
+              AND c.ref = '%s'
+         GROUP BY c.ref
+           HAVING count(DISTINCT cr.resource) = 0
+              AND count(DISTINCT cc.ref) = 0",
+        COLLECTION_TYPE_FEATURED,
+        escape_check($ref)
+    );
+
+    return (sql_value($sql, 0) > 0);
+    }
