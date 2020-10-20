@@ -36,7 +36,7 @@ if (getval("c","")!="")
 		{
 		# External access user... set top URL to first resource
 		$r=get_collection_resources($c);
-		if (count($r)>0)
+		if (is_array($r) && count($r)>0)
 			{
 			# Fetch collection data
 			$cinfo=get_collection($c);if ($cinfo===false) {exit("Collection not found.");}
