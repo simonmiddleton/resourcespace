@@ -738,7 +738,7 @@ h2#dbaseconfig{  min-height: 32px;}
             }
         if ($antiword_path!='')
             {
-            if (stripos($exiftool_path . '/antiword' . $exe_ext, 'phar://') !== false)
+            if (stripos($antiword_path . '/antiword' . $exe_ext, 'phar://') !== false)
                 exit($lang["setup-err_phar_injection"]);
             if (!file_exists($antiword_path.'/antiword'.$exe_ext))
                 $errors['antiword_path'] = true;
@@ -747,7 +747,7 @@ h2#dbaseconfig{  min-height: 32px;}
             }
         if ($pdftotext_path!='')
             {
-            if (stripos($exiftool_path . '/pdftotext' . $exe_ext, 'phar://') !== false)
+            if (stripos($pdftotext_path . '/pdftotext' . $exe_ext, 'phar://') !== false)
                 exit($lang["setup-err_phar_injection"]);
             if (!file_exists($pdftotext_path.'/pdftotext'.$exe_ext))
                 $errors['pdftotext_path'] = true;
