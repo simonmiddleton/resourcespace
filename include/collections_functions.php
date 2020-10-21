@@ -297,8 +297,13 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         return false;
         }
 
-	global $collection_allow_not_approved_share, $collection_block_restypes;	
-	$addpermitted=collection_writeable($collection) || $smartadd;
+    global $collection_allow_not_approved_share, $collection_block_restypes;
+
+    $addpermitted = (
+        (collection_writeable($collection) && !is_featured_collection_category_by_children($collection))
+        || $smartadd
+    );
+
 	if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
 		{
 		if($addtype=="")
@@ -310,7 +315,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 			$addpermitted=false;
 			}
 		}
-		
+
     if ($addpermitted)	
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
