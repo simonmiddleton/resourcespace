@@ -47,7 +47,7 @@ if(
         next($slideshow_files);
         }
 
-    if (count($slideshow_files) > '1')
+    if (count($slideshow_files) > 1)
         {
         // Based on current pointer and direction of movement we can find the "to" element
         switch ($action)
