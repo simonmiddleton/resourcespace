@@ -46,27 +46,40 @@ foreach($all_ugs as $ug)
             continue;
             }
 
-        $fc_categ_ref = sql_value(
+        $found_fc_categ_refs = sql_array(
             sprintf(
-                "SELECT ref AS `value` FROM collection WHERE public = 1 AND `type`= %s AND `name` = '%s'",
+                  "SELECT DISTINCT c.ref AS `value`
+                     FROM collection AS c
+                LEFT JOIN collection AS cc ON c.ref = cc.parent
+                    WHERE c.public = 1
+                      AND c.`type`= %s
+                      AND c.`name` = '%s'
+                 GROUP BY c.ref
+                   HAVING count(DISTINCT cc.ref) > 0",
                 COLLECTION_TYPE_FEATURED,
                 escape_check($find_fc_by_name)
-            ),
-            null);
+            )
+        );
+
+        $fc_categ_ref = null;
+        foreach($found_fc_categ_refs as $found_fc_categ_ref)
+            {
+            // Ensure there were no issues finding the correct featured collection by double checking that the branch paths match
+            $found_branch_path = get_featured_collection_category_branch_by_leaf($found_fc_categ_ref, array());
+            $branch_path_str = array_reduce($found_branch_path, function($carry, $item) { return "{$carry}|{$item["name"]}"; }, "");
+            $branch_path_str = mb_substr($branch_path_str, 1, mb_strlen($branch_path_str));
+            if($j_perm[2] != $branch_path_str)
+                {
+                logScript("Found a featured collection category but computed branch path is different! For the old permission this is '{$j_perm[2]}' and for the new one it is '{$branch_path_str}'. ResourceSpace might have found a similar named collection incorrectly! Skipping...");
+                continue;
+                }
+
+            $fc_categ_ref = $found_fc_categ_ref;
+            }
 
         if(is_null($fc_categ_ref))
             {
             logScript("Unable to find Featured Collection Category named '{$j_perm}'");
-            continue;
-            }
-
-        // Ensure there were no issues finding the correct featured collection by double checking that the branch paths match
-        $found_branch_path = get_featured_collection_category_branch_by_leaf($fc_categ_ref, array());
-        $branch_path_str = array_reduce($found_branch_path, function($carry, $item) { return "{$carry}|{$item["name"]}"; }, "");
-        $branch_path_str = mb_substr($branch_path_str, 1, mb_strlen($branch_path_str));
-        if($j_perm[2] != $branch_path_str)
-            {
-            logScript("Found a featured collection category but computed branch path is different! For old permission is '{$j_perm[2]}' and for the new one it is '{$branch_path_str}'. ResourceSpace might have found a similar named collection incorrectly!");
             continue;
             }
 
