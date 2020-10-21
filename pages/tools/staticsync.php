@@ -347,12 +347,13 @@ function ProcessFolder($folder)
                     {
                     # Make a new collection for this folder.
                     $e = explode("/", $shortpath);
+                    $fallback_fc_categ_name = ucwords($e[0]);
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
                     echo "Collection '{$name}'" . PHP_EOL;
 
                     // The real featured collection will always be the last directory in the path
                     $proposed_fc_categories = array_diff($e, array_slice($e, -2));
-                    echo "Proposed Featured Collection Categories: " . PHP_EOL . join(PHP_EOL . " - ", $proposed_fc_categories) . PHP_EOL;
+                    echo "Proposed Featured Collection Categories: " . join(" / ", $proposed_fc_categories) . PHP_EOL;
 
                     // Build the tree first, if needed
                     $proposed_branch_path = array();
@@ -399,7 +400,22 @@ function ProcessFolder($folder)
 
                         $proposed_branch_path[] = $fc_categ_ref;
                         }
+
                     $collection_parent = array_pop($proposed_branch_path);
+                    if(is_null($collection_parent))
+                        {
+                        // We don't have enough folders to create categories so the first one will do (legacy logic)
+                        $collection_parent = create_collection($userref, $fallback_fc_categ_name);
+                        save_collection(
+                            $collection_parent,
+                            array(
+                                "featured_collections_changes" => array(
+                                    "update_parent" => 0,
+                                    "force_featured_collection_type" => true,
+                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                )   
+                            ));
+                        }
                     echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
 
                     $collection = sql_value(
@@ -677,7 +693,7 @@ function ProcessFolder($folder)
                             }
                         else
                             {
-                            echo "Error: Unable to add a resource to a featured collection category!" . PHP_EOL;
+                            echo "Error: Unable to add resource to a featured collection category!" . PHP_EOL;
                             exit(1);
                             }
                         }

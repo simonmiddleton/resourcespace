@@ -4392,7 +4392,7 @@ function is_featured_collection_category_by_children(int $c_ref)
             WHERE c.`type` = %s
               AND c.ref = '%s'
          GROUP BY c.ref
-           HAVING count(DISTINCT cc.ref) = 0",
+           HAVING count(DISTINCT cc.ref) > 0",
         COLLECTION_TYPE_FEATURED,
         escape_check($c_ref)
     );
