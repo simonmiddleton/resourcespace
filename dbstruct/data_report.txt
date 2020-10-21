@@ -192,7 +192,7 @@ select ref 'Resource ID',
              WHERE rd.resource = ref 
                AND rd.resource_type_field = [title_field]
              LIMIT 1
-         ) 'Title' from resource where ref not in 
+         ) 'Title' from resource where ref > 0 and ref not in 
 
 (
 select object_ref from daily_stat
