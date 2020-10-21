@@ -4680,7 +4680,7 @@ function filter_featured_collections_by_root(array $fcs, int $c_ref)
         $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
         return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
         });
-    
+
     return array_values($collections);
     }
 

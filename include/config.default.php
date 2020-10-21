@@ -2012,20 +2012,20 @@ $enable_theme_breadcrumbs = true;
 $show_collection_name = false;
 
 # Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
-# Can be tested or used for custom link by adding querystring parameter simpleview=true to themes.php e.g. pages/themes.php?simpleview=true
+# Can be tested or used for custom link by adding querystring parameter simpleview=true to collections_featured.php e.g. pages/collections_featured.php?simpleview=true
 # NOTE: only works with $themes_category_split_pages=true;
 $themes_simple_view=false;
 # Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images=true;
 
-# Option to show single home slideshow image on featured collection page (themes.php) if $themes_simple_view is enabled
+# Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
 # Display theme categories as links, and themes on separate pages?
 $themes_category_split_pages=false;
 # Display breadcrumb-style theme parent links instead of "Subcategories"
 $themes_category_split_pages_parents=false;
-# Include "Themes" root node before theme level crumbs to add context and link to themes.php
+# Include "Themes" root node before theme level crumbs to add context and link to collections_featured.php
 $themes_category_split_pages_parents_root_node=true;
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;

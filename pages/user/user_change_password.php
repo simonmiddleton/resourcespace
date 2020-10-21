@@ -79,7 +79,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 					redirect($baseurl_short."pages/done.php?text=password_changed&notloggedin=true");
 					exit();
 					}
-		    	redirect($baseurl_short."pages/" . ($use_theme_as_home?'themes.php':$default_home_page));
+		    	redirect($baseurl_short."pages/" . ($use_theme_as_home?'collections_featured.php':$default_home_page));
 			    exit();
 				}
     		else

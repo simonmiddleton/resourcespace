@@ -258,7 +258,7 @@ if (!hook("replaceslideshow"))
 			$title="themeselector";
 			$all_users=1;
 			$url="pages/ajax/dash_tile.php?tltype=conf&tlstyle=thmsl";
-			$link="pages/themes.php";
+			$link="pages/collections_featured.php";
 			$reload_interval=0;
 			$resource_count=0;
 			$default_order_by=0;
@@ -274,7 +274,7 @@ if (!hook("replaceslideshow"))
             ?>
 			<div class="HomePanel">
 				<div class="HomePanelIN HomePanelThemes <?php if (count($home_collections)>0) { ?> HomePanelMatchPromotedHeight<?php } ?>">
-				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php">
+				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php">
 				<h2 style="padding: 0px 15px 0 44px;margin-top: 26px;margin-left: 15px;"><?php echo $lang["themes"]?></h2></a>
 				<p style="text-shadow: none;">
 					<select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
