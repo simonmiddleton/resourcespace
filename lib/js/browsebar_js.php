@@ -40,6 +40,7 @@ function ToggleBrowseBar(forcestate, noresize)
 
 function renderBrowseItem(node, parent)
     {
+    console.debug("Calling renderBrowseItem(node = %o, parent = %o)", node, parent);
     var parentid = parent.attr('data-browse-id');
     var newlevel = parent.attr("data-browse-level");
     newlevel++;

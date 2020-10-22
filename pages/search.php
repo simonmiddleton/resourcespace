@@ -15,7 +15,7 @@ $resetlockedfields = getvalescaped("resetlockedfields","") != "";
 if (($k=="") || (!check_access_key_collection(str_replace("!collection","",$s[0]),$k))) {include "../include/authenticate.php";}
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+$internal_share_access = internal_share_access();
 
 if ($k=="" || $internal_share_access)
     {
@@ -878,19 +878,44 @@ if (isset($result_title_height))
 
 hook('searchresultsheader');
 
-#if (is_array($result)||(isset($collections)&&(count($collections)>0)))
-
-if((isset($collectiondata) && array_key_exists("name",$collectiondata)) && $enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
+if(
+    $enable_themes && $enable_theme_breadcrumbs
+    && isset($collectiondata) && $collectiondata !== false
+    && !$search_titles
+    && !is_null(validate_collection_parent($collectiondata)) && $collectiondata["parent"] > 0
+)
     {
-    // Show the themes breadcrumbs if they exist, but not if we are using the search_titles
-    renderBreadcrumbs(
+    $general_url_params = ($k == "" ? array() : array("k" => $k));
+    $links_trail = array(
         array(
+            "title" => $lang["themes"],
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params)
+        )
+    );
+
+    // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
+    // If we were use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
+    // collections_featured.php which we don't want
+    $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
+        {
+        return array(
+            "title" => i18n_get_translated($branch["name"]),
+            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
+        );
+        }, get_featured_collection_category_branch_by_leaf($collectiondata["parent"], array()));
+
+    renderBreadcrumbs(
+        array_merge(
+            $links_trail,
+            $branch_trail,
             array(
-                'title' => i18n_get_collection_name($collectiondata),
-                'href'  => generateURL("{$baseurl_short}pages/search.php", array('search' => "!collection{$collection}"))
+                array(
+                    'title' => i18n_get_collection_name($collectiondata),
+                    'href'  => generateURL("{$baseurl_short}pages/search.php", $general_url_params, array('search' => "!collection{$collectiondata["ref"]}"))
+                )
             )
         ),
-        $theme_link);
+        "");
     }
 
 if ($search_titles)

@@ -1177,7 +1177,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                 submitted: true,
                                 ref: '<?php echo $collection_data["ref"]; ?>',
                                 name: <?php echo json_encode($collection_data["name"]); ?>,
-                                public: '<?php echo $collection_data["public"]; ?>',
+                                public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
                                 deleteall: 'on',
                                 <?php echo generateAjaxToken("delete_all_in_collection"); ?>
                             };
@@ -1371,14 +1371,24 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 /**
 * render_dropdown_question - Used to display a question with a dropdown selector
 * 
-* @param string $label	Label of question
-* @param string $input  name of input field
-* @param array  $options  Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
+* @param string $label	   Label of question
+* @param string $inputname Name of input field
+* @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
+* @param string $current   The current selected value
+* @param string $extra     Extra attributes used on the selector element
+* @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select)
+* 
+* @return void
 */
-function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="")
+function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
     {
+    $div_class = array("Question");
+    if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
+        {
+        $div_class = array_merge($div_class, $ctx["div_class"]);
+        }
 	?>
-	<div class="Question" id = "pixelwidth">
+	<div class="<?php echo implode(" ", $div_class); ?>">
 		<label><?php echo $label; ?></label>
 		<select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
 		<?php
@@ -1390,10 +1400,10 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 			}
 		?>
 		</select>
-
+        <div class="clearerleft"></div>
 	</div>
-	<div class="clearerleft"> </div>
 	<?php
+    return;
 	}
 
 /**
@@ -2288,6 +2298,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
 * 
 * @param array  $links     List of link "objects" that create the trail
 * @param string $pre_links Pre-rendered links in HTML form
+* @param string $class     Extra classes for the main container div
 * 
 * @return void
 */
@@ -2324,7 +2335,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);"><?php } ?><span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span><?php if ($anchor) { ?></a><?php }
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"><?php } ?><span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span><?php if ($anchor) { ?></a><?php }
             if (isset($links[$i]['help']))
                 {
                 render_help_link($links[$i]['help']);
@@ -2342,29 +2353,35 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
 /**
 * Render a blank tile used for call to actions (e.g: on featured collections, a tile for creating new collections)
 * 
-* @param string $link URL
+* @param string $url URL
+* @param array  $ctx Rendering options determined by the outside context
 * 
 * @return void
 */
-function renderCallToActionTile($link)
+function render_new_featured_collection_cta(string $url, array $ctx)
     {
-    global $themes_simple_view;
+    global $collection_allow_creation;
 
-    if(!$themes_simple_view || checkperm('b'))
+    if('' === $url)
         {
         return;
         }
 
-    if('' === $link)
+    $html_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile", "FeaturedCallToActionTile");
+    $html_contents_h2_class = array();
+
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    if($full_width)
         {
-        return;
+        $html_tile_class[] = "FullWidth";
+        $html_contents_h2_class[] = "MarginZeroAuto";
         }
         ?>
-    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile FeaturedCallToActionTile">
-        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
+    <div id="FeaturedSimpleTile" class="<?php echo implode(" ", $html_tile_class); ?>">
+        <a href="<?php echo $url; ?>" onclick="return ModalLoad(this, true, true);">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2><span class='fas fa-plus-circle'></span></h2>
+                    <h2 class="<?php echo implode(" ", $html_contents_h2_class); ?>"><span class='fas fa-plus-circle'></span></h2>
                 </div>
             </div>
         </a>
@@ -4100,6 +4117,489 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 		}
 	}
 
+
+/**
+* Render the featured collection category selector
+* 
+* @param integer $parent   Parent collection ref
+* @param array   $context  Contextual data (e.g depth level to render or the current branch path)
+* 
+* @return void
+*/
+function render_featured_collection_category_selector(int $parent, array $context)
+    {
+    global $lang;
+
+    // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
+    $collection = $context["collection"]; # as returned by get_collection()
+    $depth = (int) $context["depth"];
+    $current_branch_path = $context["current_branch_path"]; # as returned by get_featured_collection_category_branch_by_leaf()
+
+    $featured_collection_categories = get_featured_collection_categories($parent, array());
+    if(empty($featured_collection_categories))
+        {
+        return;
+        }
+
+
+    $html_selector_name = "selected_featured_collection_category_{$depth}";
+    $html_question_label_txt = $lang["themecategory"] . ($depth == 0 ? "" : " {$depth}");
+    ?>
+    <div class="Question">
+        <label for="<?php echo $html_selector_name; ?>"><?php echo $html_question_label_txt; ?></label>
+        <?php
+        $next_level_parent = null;
+        ?>
+        <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
+                onchange="document.getElementsByName('update_parent')[0].value = 'true'; document.getElementById('redirect').value = ''; CentralSpacePost(jQuery('#collectionform')[0]);">
+            <option value="0"><?php echo $lang["select"]; ?></option>
+        <?php
+        foreach($featured_collection_categories as $fc_category)
+            {
+            // Never show as an option the FC you're editing
+            if($fc_category["ref"] == $collection["ref"])
+                {
+                continue;
+                }
+
+            $html_attr_selected = "";
+            if(isset($current_branch_path[$depth]) && $fc_category["ref"] == $current_branch_path[$depth]["ref"])
+                {
+                $html_attr_selected = "selected";
+                $next_level_parent = $fc_category["ref"];
+                }
+            ?>
+            <option value="<?php echo $fc_category["ref"]; ?>" <?php echo $html_attr_selected; ?>><?php echo htmlspecialchars(i18n_get_translated($fc_category["name"])); ?></option>
+            <?php
+            }
+            ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    if(is_null($next_level_parent))
+        {
+        return;
+        }
+
+    $context["depth"] = ++$depth;
+    return render_featured_collection_category_selector($next_level_parent, $context);
+    }
+
+
+/**
+* Render featured collections (as tiles on the collections_featured.php page)
+* 
+* @param array $ctx    Context data to allow caller code to decide rendering requirements
+* @param array $items  List of items to render (featured collection category, actual collection or smart collection)
+* 
+* @return void
+*/
+function render_featured_collections(array $ctx, array $items)
+    {
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number,
+           $themes_simple_view;
+
+    $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
+    $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+
+    foreach($items as $fc)
+        {
+        $render_ctx = $ctx;
+        $is_featured_collection_category = is_featured_collection_category($fc);
+        $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
+
+        $tool_edit = array(
+            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"])),
+            "text" => $lang['action-edit'],
+            "modal_load" => true,
+        );
+
+        // Prepare FC images
+        $thumbnail_selection_method = $fc["thumbnail_selection_method"];
+        $show_images = ($themes_simple_view && in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+        unset($fc_resources);
+        if($themes_simple_images && $show_images)
+            {
+            $fc_resources = get_featured_collection_resources(
+                $fc,
+                array(
+                    "smart" => $is_smart_featured_collection,
+                    "limit" => ($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] ? $theme_images_number : 1),
+                ));
+            $fc_images = generate_featured_collection_image_urls($fc_resources, "pre");
+
+            if(!empty($fc_images))
+                {
+                $render_ctx["images"] = $fc_images;
+                }
+            }
+
+        // Featured collection default tools
+        if($is_featured_collection && checkPermission_dashmanage())
+            {
+            $render_ctx["tools"][] = array(
+                "href" => generateURL(
+                    "{$baseurl_short}pages/dash_tile.php",
+                    array(
+                        'create'            => 'true',
+                        'tltype'            => 'srch',
+                        'title'             => "{$fc['name']}",
+                        'freetext'          => 'true',
+                        'tile_audience'     => 'false',
+                        'all_users'         => 1,
+                        'promoted_resource' => 'true',
+                        'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
+                    )
+                ),
+                "text" => $lang['add_to_dash']);
+            }
+
+        if($is_featured_collection && collection_readable($fc['ref']))
+            {
+            $render_ctx["tools"][] = array(
+                "text" => $lang['action-select'],
+                "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');");
+            }
+
+        if($is_featured_collection && collection_writeable($fc['ref']))
+            {
+            $render_ctx["tools"][] = $tool_edit;
+            }
+
+
+        if($is_featured_collection_category && !$is_smart_featured_collection)
+            {
+            global $enable_theme_category_edit;
+
+            $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
+
+            $render_ctx["href"] = $fc_category_url;
+            $render_ctx["icon"] = ICON_FOLDER;
+            $render_ctx["tools"] = array();
+
+            if(checkPermission_dashmanage())
+                {
+                $render_ctx["tools"][] = array(
+                    "href" => generateURL(
+                        "{$baseurl_short}pages/dash_tile.php",
+                        array(
+                            'create'            => 'true',
+                            'tltype'            => 'fcthm',
+                            'tlstyle'           => 'thmbs',
+                            'title'             => "{$fc['name']}",
+                            'freetext'          => 'true',
+                            'tile_audience'     => 'false',
+                            'promoted_resource' => 'true',
+                            'link'              => $fc_category_url
+                        )
+                    ),
+                    "text" => $lang["add_to_dash"]);
+                }
+
+            if(checkperm("h") && allow_featured_collection_share($fc))
+                {
+                $render_ctx["tools"][] = array(
+                    "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                    "text" => $lang["share"]);
+                }
+
+            if($enable_theme_category_edit && checkperm("t"))
+                {
+                $render_ctx["tools"][] = $tool_edit;
+                }
+            }
+
+        if($is_smart_featured_collection)
+            {
+            $search = NODE_TOKEN_PREFIX . $fc["ref"];
+            $render_ctx["href"] = generateURL("{$baseurl_short}pages/search.php", array("search" => $search, "resetrestypes" => "true"));
+
+            $node_is_parent = (isset($fc["node_is_parent"]) ? $fc["node_is_parent"] : true);
+            if($node_is_parent)
+                {
+                $render_ctx["href"] = generateURL(
+                    "{$baseurl_short}pages/collections_featured.php",
+                    array(
+                        "smart_rtf" => $fc["resource_type_field"],
+                        "smart_fc_parent" => $fc["parent"],
+                    ));
+                }
+            $render_ctx["icon"] = ICON_FOLDER;
+            $render_ctx["tools"] = array();
+            }
+
+        // Don't show the tools for external shares
+        if((trim($k) != ""))
+            {
+            $render_ctx["tools"] = array();
+            }
+
+        render_featured_collection($render_ctx, $fc);
+        }
+
+    return;
+    }
+
+
+/**
+* Render a featured collection (as tiles on the collections_featured.php page)
+* 
+* @param array $ctx Context data to allow caller code to decide rendering requirements
+* @param array $fc  Featured collection data structure
+* 
+* @return void
+*/
+function render_featured_collection(array $ctx, array $fc)
+    {
+    if(empty($fc))
+        {
+        return;
+        }
+
+    global $baseurl_short, $lang, $k, $flag_new_themes, $flag_new_themes_age;
+
+    $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+
+
+    $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
+    $html_container_style = array();
+
+
+    // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
+    $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", $general_url_params, array("search" => "!collection{$fc["ref"]}"));
+    $html_fc_a_href = (isset($ctx["href"]) && trim($ctx["href"]) !== "" ? $ctx["href"] : $html_fc_a_href);
+
+
+    $html_contents_class = array("FeaturedSimpleTileContents");
+    $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
+    $html_contents_h2 = $html_contents_icon . i18n_get_collection_name($fc);
+    $html_contents_h2_style = array();
+    if($full_width)
+        {
+        $html_container_class[] = "FullWidth";
+        $html_contents_h2_style[] = "max-width: unset;";
+
+        $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
+        }
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+        {
+        $html_contents_h2 .= " <div class=\"NewFlag\">{$lang['newflag']}</div>";
+        }
+
+
+    $theme_images = (isset($ctx["images"]) ? $ctx["images"] : array());
+    if(!empty($theme_images))
+        {
+        $html_container_class[] = "FeaturedSimpleTileImage";
+        $html_contents_class[] = "TileContentShadow";
+
+        if(count($theme_images) == 1)
+            {
+            $theme_image_path = $theme_images[0];
+            $html_container_style[] = "background: url({$theme_image_path});";
+            $html_container_style[] = "background-size: cover;";
+            $theme_images = array();
+            }
+        }
+
+
+    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
+    $html_actions_style = array();
+    if(count($tools) > 3)
+        {
+        $html_actions_style[] = "height: 43px;";
+        }
+
+
+    // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
+    ?>
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
+        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
+            <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
+            <?php
+            foreach($theme_images as $i => $theme_image)
+                {
+                $gap = 200 / count($theme_images);
+                $space = $i * $gap;
+                $style = array(
+                    "left: {$space}px;",
+                    "transform: rotate(" . (20 - ($i * 12)) . "deg);"
+                );
+                ?>
+                <img src="<?php echo $theme_image; ?>" class="TileGroupImageBase" style="<?php echo implode(" ", $style); ?>">
+                <?php
+                }
+                ?>
+                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
+            </div>
+        </a>
+    <?php
+    if(!empty($tools))
+        {
+        ?>
+        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone" style="<?php echo implode(" ", $html_actions_style); ?>">
+        <?php
+        foreach($tools as $tool)
+            {
+            if(empty($tool))
+                {
+                continue;
+                }
+
+            $href = (isset($tool["href"]) && trim($tool["href"]) != "" ? $tool["href"] : "#");
+            $text = $tool["text"]; // if this is missing, code is wrong somewhere else
+
+            $tool_onclick = (isset($tool["modal_load"]) && $tool["modal_load"] ? 'return ModalLoad(this, true);' : 'return CentralSpaceLoad(this, true);');
+            if(isset($tool["custom_onclick"]) && trim($tool["custom_onclick"]) != "")
+                {
+                $tool_onclick = $tool["custom_onclick"];
+                }
+            ?>
+            <div class="tool">
+                <a href="<?php echo $href; ?>" onclick="<?php echo $tool_onclick; ?>">
+                    <span><?php echo LINK_CARET; ?><?php echo htmlspecialchars($text); ?></span>
+                </a>
+            </div>
+            <?php
+            }
+            ?>
+        </div><!-- End of FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?> -->
+        <?php
+        }
+    else if($full_width && !$is_smart_featured_collection)
+        {
+        ?>
+        <div class="ListTools">
+            <div class="ActionsContainer">
+                <select id="<?php echo $action_selection_id; ?>" onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);">
+                    <option><?php echo $lang["actions-select"]; ?></option>
+                </select>
+            </div>
+            <script>
+            jQuery('#<?php echo $action_selection_id; ?>').bind({
+                mouseenter: function(e)
+                    {
+                    LoadActions('themes', '<?php echo $action_selection_id; ?>', 'collection', '<?php echo $fc["ref"]; ?>');
+                    }
+            });
+            </script>
+        </div><!-- End of ListTools -->
+        <?php
+        }
+        ?>
+    </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
+    <?php
+    return;
+    }
+
+
+/**
+* Renders an option in the Permission Manager (admin_group_permissions.php page) 
+* 
+* @param string  $permission   Permission identifier
+* @param string  $description  User friendly description of the permission
+* @param boolean $reverse      Reverse the permission
+* @param boolean $reload       Autosave changes done on this permission
+* 
+* @return void
+*/
+function DrawOption($permission,$description,$reverse=false,$reload=false)
+    {
+    global $permissions,$permissions_done;
+    $checked=(in_array($permission,$permissions));
+    if ($reverse) {$checked=!$checked;}
+    ?>
+    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <tr>
+        <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
+        <td><?php echo $description?></td>
+        <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
+            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+    </tr>
+    <?php
+    $permissions_done[]=$permission;
+    }
+
+
+/**
+* Render featured collections options in the Permission Manager (admin_group_permissions.php page)
+* 
+* This function will generate and render the following permissions that target featured collection categories
+*   # j[numeric ID of new collection]  - valid for FC categories at root level. These are normal permissions.
+*   # -j[numeric ID of new collection] - valid for the rest of FC sub-categories. These permissions are reversed, {@see DrawOption()}!
+* 
+* @param array $ctx Context data to allow caller code to start from different tree levels. Supports the following
+*                   properties: parent and depth
+* 
+* @return void
+*/
+function render_featured_collections_category_permissions(array $ctx)
+    {
+    global $lang;
+
+    $permissions = (isset($ctx["permissions"]) && is_array($ctx["permissions"]) ? $ctx["permissions"] : array());
+    $parent = (isset($ctx["parent"]) ? validate_collection_parent(array("parent" => $ctx["parent"])) : 0);
+    $path_depth = (isset($ctx["depth"]) ? $ctx["depth"] : 0);
+    $branch_path = (isset($ctx["branch_path"]) && is_array($ctx["branch_path"]) ? $ctx["branch_path"] : array());
+
+    $current_depth = $path_depth;
+    $current_branch_path = $branch_path;
+    $reverse_permission = ($parent > 0);
+
+    foreach(get_featured_collection_categories($parent, array("access_control" => false)) as $fc)
+        {
+        $branch_path = $current_branch_path;
+        $branch_path[] = array(
+            "ref"    => $fc["ref"],
+            "name"   => $fc["name"],
+            "parent" => validate_collection_parent($fc),
+        );
+
+        $fc_perm_id = (!$reverse_permission ? "" : "-") . "j{$fc["ref"]}";
+        $description = sprintf("%s%s '%s'",
+            ($path_depth == 0 ? "" : str_pad("", $path_depth * 7, "&mdash;") . " "),
+            (!$reverse_permission ? $lang["can_see_theme_category"] : $lang["can_see_theme_sub_category"]),
+            i18n_get_translated($fc["name"])
+        );
+        DrawOption($fc_perm_id, $description, $reverse_permission, true);
+
+        // Root categories (ie that don't have a parent) get rendered as normal permissions. Sub-categories, get rendered
+        // as reverse permissions
+        debug(sprintf("render_featured_collections_category_permissions: Check if allowed to render sub-categories for FC category '%s'", $fc['ref']));
+        $render_subcategories = array_reduce($branch_path, function($carry, $item) use ($permissions)
+            {
+            $root_node = is_null($item["parent"]);
+            $perm_id = ($root_node ? "" : "-") . "j{$item["ref"]}";
+            $allow_render = ($root_node ? in_array($perm_id, $permissions) : !in_array($perm_id, $permissions));
+            debug(sprintf("render_featured_collections_category_permissions: For perm ID '%s': carry = %s; root_node = %s; allow_render = %s", $perm_id, json_encode($carry), json_encode($root_node), json_encode($allow_render)));
+
+            // FALSE if at least one featured collection category parent is forbidden
+            return (!is_bool($carry) ? $allow_render : $carry && $allow_render);
+            }, null);
+        debug("render_featured_collections_category_permissions: render_subcategories = " . json_encode($render_subcategories));
+        debug("render_featured_collections_category_permissions: ");
+
+        if($render_subcategories)
+            {
+            render_featured_collections_category_permissions(
+                array(
+                    "permissions" => $permissions,
+                    "parent" => $fc["ref"],
+                    "depth" => ++$path_depth,
+                    "branch_path" => $branch_path,
+                ));
+
+            // Step back to initial depth level
+            $path_depth = $current_depth;
+            }
+        }
+
+    return;
+    }
+
 /**
  * show_upgrade_in_progress message
  *
@@ -4350,5 +4850,3 @@ function render_array_in_table_cells($array)
         echo "</table>";
         }
     }
-
-

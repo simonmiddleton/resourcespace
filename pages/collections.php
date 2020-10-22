@@ -43,7 +43,7 @@ if('!collection' === substr($search, 0, 11) && "!collection{$collection}" == $se
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+$internal_share_access = internal_share_access();
 
 // copied from collection_manage to support compact style collection adds (without redirecting to collection_manage)
 $addcollection=getvalescaped("addcollection","");

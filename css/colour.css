@@ -204,7 +204,7 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
 .ListviewBoxedTitleStyle td {background-color:#fff;}
-.NewFlag {background-color:#737373;color:#fff;}
+.NewFlag { background-color: #fff; color: #737373; }
 
 /* Mouseover effect on list views */
 .ListviewStyle tr:hover td {background-color: #EEE;} 

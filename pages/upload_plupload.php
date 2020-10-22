@@ -96,11 +96,6 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		{
 		collection_set_public($collection_add);
 		}
-	if (strlen(getval("themestring",'')) > 0)
-		{
-		$themearr = explode('||',getval("themestring",''));
-		collection_set_themes($collection_add,$themearr);
-		}
 	}
 if ($upload_then_edit && $replace == "" && $replace_resource == "")
     {

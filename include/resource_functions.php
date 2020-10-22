@@ -3695,42 +3695,52 @@ function get_custom_access($resource,$usergroup,$return_default=true)
 		}
 	return $result;
 	}
-	
+
+
+/**
+* Determine the featured collections and public collections a resource is associated with.
+* 
+* @param integer $ref Resource ref
+* 
+* @return array
+*/
 function get_themes_by_resource($ref)
-	{
-	global $theme_category_levels;
+    {
+    global $lang;
 
-	$themestring="";
-	for($n=1;$n<=$theme_category_levels;$n++){
-		if ($n==1){$themeindex="";}else{$themeindex=$n;}
-		$themestring.=",c.theme".$themeindex;
-	}
+    $sql = sprintf(
+                "SELECT c.ref, c.`name`, c.`type`, u.fullname
+                   FROM collection_resource AS cr
+                   JOIN collection AS c ON cr.collection = c.ref AND cr.resource = '%s' AND c.`type` IN (%s)
+        LEFT OUTER JOIN user AS u ON c.user = u.ref
+                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+        escape_check($ref),
+        COLLECTION_TYPE_FEATURED . ", " . COLLECTION_TYPE_PUBLIC,
+        trim(featured_collections_permissions_filter_sql("WHERE", "c.ref"))
+    );
 
-	$themes=sql_query("select c.ref $themestring ,c.name,u.fullname from collection_resource cr join collection c on cr.collection=c.ref and cr.resource='$ref' and c.public=1 left outer join user u on c.user=u.ref order by length(theme) desc");
-	# Combine the theme categories into one string so multiple category levels display correctly.
-	$return=array();
+    $results = sql_query($sql);
+    $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, i18n_get_translated($item["name"])); };
 
-	for ($n=0;$n<count($themes);$n++)
-		{
-		if (checkperm("j*") || checkperm("j" . $themes[$n]["theme"]))
-			{
-			$theme="";
-			for ($x=1;$x<=$theme_category_levels;$x++){
-				if ($x==1){$themeindex="";}else{$themeindex=$x;}
-				if ($themes[$n]["theme".$themeindex]==""){break;}
-				if ($themeindex!=""){$theme.=" / ";}
+    foreach($results as $i => $col)
+        {
+        $path = sprintf("%s: %s", $lang["public"], i18n_get_translated($col["name"]));
 
-				if ($themes[$n]["theme".$themeindex]!="") {
-					$theme.=$themes[$n]["theme".$themeindex];
-				}
-			}
-			$themes[$n]["theme"]=$theme;
-			$return[]=$themes[$n];
-			}
-		}
-      
-	return $return;
-	}
+        if($col["type"] == COLLECTION_TYPE_FEATURED)
+            {
+            $branch_path = get_featured_collection_category_branch_by_leaf($col["ref"], array());
+            $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
+            $path = mb_substr($branch_path_str, 2, mb_strlen($branch_path_str));
+            }
+        
+        $results[$i]["path"] = trim($path);
+        }
+
+    // Order by resulting path
+    usort($results, function($a, $b) { return strnatcasecmp($a["path"], $b["path"]); });
+
+    return $results;
+    }
 
 function update_resource_type($ref,$type)
 	{

@@ -1170,20 +1170,20 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if (strpos($flags,"T")!==false) # Include themes
             {
             if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter.=" (c.public=1 AND (length(c.theme)>0))";
+            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_FEATURED);
             }
     
      if (strpos($flags,"P")!==false) # Include public collections
             {
             if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter.=" (c.public=1 AND (length(c.theme)=0 OR c.theme IS null))";
+            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_PUBLIC);
             }
         
         if (strpos($flags,"U")!==false) # Include the user's own collections
             {
             if ($collection_filter!="(") {$collection_filter.=" OR ";}
             global $userref;
-            $collection_filter.=" (c.public=0 AND c.user='$userref')";
+            $collection_filter .= sprintf(" (c.`type` = %s AND c.user = '%s')", COLLECTION_TYPE_STANDARD, escape_check($userref));
             }
         $collection_filter.=")";
         

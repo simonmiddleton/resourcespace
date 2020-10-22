@@ -1689,7 +1689,7 @@ function check_access_key($resources,$key)
 
 
 /**
-* Check access key for a collection
+* Check access key for a collection. For a featured collection category, the check will be done on all sub featured collections.
 * 
 * @param integer $collection        Collection ID
 * @param string  $key               Access key
@@ -1704,7 +1704,6 @@ function check_access_key_collection($collection, $key)
         }
 
     hook("external_share_view_as_internal_override");
-
     global $external_share_view_as_internal;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
@@ -1712,28 +1711,46 @@ function check_access_key_collection($collection, $key)
         return false;
         }
 
-    $resources = get_collection_resources($collection);
-   
-    if(!is_array($resources) || 0 == count($resources))
+    $collection = get_collection($collection);
+    if($collection === false)
         {
-        // No resources; treat as failure
         return false;
         }
 
-    # hook to retrieve alternative list of resources for access key check    
-    $resources_alt = hook("GetResourcesToCheck","",array($collection));
-    $resources = ($resources_alt !== false ) ? $resources_alt : $resources;
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+    $is_featured_collection_category = is_featured_collection_category($collection);
 
-    // only check access key when there are resources to check
-    if (count($resources) > 0)
+    if(!$is_featured_collection_category && !$collection["has_resources"])
         {
+        return false;
+        }
+
+    // From this point all collections should have resources. For FC categories, its sub FCs will have resources because
+    // get_featured_collection_categ_sub_fcs() does the check internally
+    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
+
+    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '%s' AND access_key = '{$key}'";
+
+    foreach($collections as $collection_ref)
+        {
+        $resources_alt = hook("GetResourcesToCheck","",array($collection));
+        $resources = ($resources_alt !== false ? $resources_alt : get_collection_resources($collection_ref));
+
         if(!check_access_key($resources, $key))
             {
             return false;
             }
+
+        sql_query(sprintf($sql, escape_check($collection_ref)));
         }
-    // Set the 'last used' date for this key
-    sql_query("UPDATE external_access_keys SET lastused = now() WHERE collection = '{$collection}' AND access_key = '{$key}'");
+
+    if($is_featured_collection_category)
+        {
+        // Update the last used for the dummy record we have for the featured collection category (ie. no resources since
+        // a category contains only collections)
+        sql_query(sprintf($sql, escape_check($collection["ref"])));
+        }
 
     return true;
     }
@@ -2357,3 +2374,15 @@ function checkperm_user_edit($user)
 	// Return true if the target user we are checking is in one of the valid groups
 	return (in_array($editusergroup, $validgroups));
 	}
+
+
+/**
+* Determine if this is an internal share access request
+* 
+* @return boolean
+*/
+function internal_share_access()
+    {
+    global $k, $external_share_view_as_internal, $is_authenticated;
+    return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    }

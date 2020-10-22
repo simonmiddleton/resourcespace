@@ -2741,7 +2741,7 @@ function get_slideshow_files_data()
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
     $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
-    $slideshow_records = sql_query($query,"slideshow");
+    $slideshow_records = sql_query($query, "slideshow");
 
     $slideshow_files = array();
 
@@ -4167,4 +4167,4 @@ function trim_filename(string $s)
     $s .= ".{$extension}";
 
     return $s;
-    };
+    }

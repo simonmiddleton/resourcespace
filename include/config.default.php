@@ -741,17 +741,12 @@ $use_recent_as_home=false;
 
 # Show images along with theme category headers (image selected is the most popular within the theme category)
 $theme_images=true;
-$theme_images_number=1; # How many to auto-select (if none chosen manually)
+$theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
 $show_theme_collection_stats=false; # Show count of themes and resources in theme category
 
-# How many levels of theme category to show.
-# If this is set to more than one, a dropdown box will appear to allow browsing of theme sub-levels
-$theme_category_levels=1;
-
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
-# $theme_category_levels must be greater than 1.
 $theme_direct_jump=false;
 
 #Force Collections lists on the Themes page to be in Descending order.
@@ -1215,7 +1210,6 @@ $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
 $allow_share=true;
-$enable_theme_category_sharing=false;
 
 # Always create a collection when sharing an individual resource via email
 $share_resource_as_collection=false;
@@ -1266,10 +1260,6 @@ $checkbox_ordered_vertically=true;
 
 # When batch uploading, show the 'add resources to collection' selection box
 $enable_add_collection_on_upload=true;
-
-# When batch uploading, allow users to set collection public as part of upload process
-# also allows assignment to themes for users who have appropriate privileges
-$enable_public_collection_on_upload=false;
 
 # Batch Uploads, default is "Add to New Collection". Turn off to default to "Do not Add to Collection"
 $upload_add_to_new_collection=true;
@@ -1982,20 +1972,20 @@ $enable_theme_breadcrumbs = true;
 $show_collection_name = false;
 
 # Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
-# Can be tested or used for custom link by adding querystring parameter simpleview=true to themes.php e.g. pages/themes.php?simpleview=true
+# Can be tested or used for custom link by adding querystring parameter simpleview=true to collections_featured.php e.g. pages/collections_featured.php?simpleview=true
 # NOTE: only works with $themes_category_split_pages=true;
 $themes_simple_view=false;
 # Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images=true;
 
-# Option to show single home slideshow image on featured collection page (themes.php) if $themes_simple_view is enabled
+# Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
 # Display theme categories as links, and themes on separate pages?
 $themes_category_split_pages=false;
 # Display breadcrumb-style theme parent links instead of "Subcategories"
 $themes_category_split_pages_parents=false;
-# Include "Themes" root node before theme level crumbs to add context and link to themes.php
+# Include "Themes" root node before theme level crumbs to add context and link to collections_featured.php
 $themes_category_split_pages_parents_root_node=true;
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
@@ -2177,9 +2167,7 @@ $staticsync_whitelist_folders = array();
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
 $staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
-# Allow unlimited theme levels to be created based on the folder structure. 
-# Script will output a new $theme_category_levels number which must then be updated in config.php
-$staticsync_folder_structure=false;
+
 # Mapping extensions to resource types for sync'd files
 # Format: staticsync_extension_mapping[resource_type]=array("extension 1","extension 2");
 $staticsync_extension_mapping_default=1;

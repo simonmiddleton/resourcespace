@@ -41,7 +41,7 @@ if($basic_simple_search)
 if(!isset($internal_share_access))
     {
     // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-    $internal_share_access = (isset($k) && $k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    $internal_share_access = internal_share_access();
     }
 
 # Load the basic search fields, so we know which to strip from the search string

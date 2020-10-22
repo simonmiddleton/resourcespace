@@ -11,7 +11,7 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
-$collection_valid_order_bys=array("fullname","name","ref","count","public","created");
+$collection_valid_order_bys=array("fullname","name","ref","count","type","created");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
 if ($modified_collection_valid_order_bys){$collection_valid_order_bys=$modified_collection_valid_order_bys;}
 if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="created";} # Check the value is one of the valid values (SQL injection filter)
@@ -174,7 +174,7 @@ echo "<br />";
 
 <td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["itemstitle"]?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$hide_access_column_public){ ?><td class="access"><?php if ($col_order_by=="public") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=public&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php } ?>
+<?php if (!$hide_access_column_public){ ?><td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php } ?>
 <?php hook("beforecollectiontoolscolumnheader");?>
 
 <td class="tools"><div class="ListTools"><?php echo $lang['actions']?></div></td>
@@ -200,9 +200,24 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
         <td class="created"><?php echo nicedate($collections[$n]["created"],true)?></td>
         <td class="count"><?php echo $collections[$n]["count"]?></td>
         <?php 
-        if (!$hide_access_column_public)
-            { ?>
-            <td class="access"><?php echo ($collections[$n]["public"]==0)?$lang["private"]:$lang["public"]?></td>
+        if(!$hide_access_column_public)
+            {
+            switch($collections[$n]["type"])
+                {
+                case COLLECTION_TYPE_PUBLIC:
+                    $access_str = $lang["public"];
+                    break;
+
+                case COLLECTION_TYPE_FEATURED:
+                    $access_str = $lang["theme"];
+                    break;
+
+                default:
+                    $access_str = $lang["private"];
+                    break;
+                }
+            ?>
+            <td class="access"><?php echo htmlspecialchars($access_str); ?></td>
             <?php 
             }
         hook("beforecollectiontoolscolumn");

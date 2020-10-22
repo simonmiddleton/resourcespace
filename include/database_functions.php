@@ -967,33 +967,6 @@ function CheckDBStruct($path,$verbose=false)
                     }
                 ##########
 
-                ##########
-                ## RS-specific mod:
-                # add theme columns to collection table as needed.
-                global $theme_category_levels;
-                if ($table=="collection")
-                    {
-                    for ($m=1;$m<=$theme_category_levels;$m++)
-                        {
-                        if ($m==1){$themeindex="";}else{$themeindex=$m;}
-                        # Look for this column in the existing columns.	
-                        $found=false;
-
-                        for ($n=0;$n<count($existing);$n++)
-                            {
-                            if ("theme".$themeindex==$existing[$n]["Field"]) {$found=true;}
-                            }
-                        if (!$found)
-                            {
-                            # Add this column.
-                            $sql="alter table $table add column ";
-                            $sql.="theme".$themeindex . " VARCHAR(100)";
-                            sql_query($sql,false,-1,false);
-                            }
-                        }	
-                    }
-
-                ##########
                 if (file_exists($path . "/" . $file))
                     {
                     $f=fopen($path . "/" . $file,"r");
@@ -1018,6 +991,7 @@ function CheckDBStruct($path,$verbose=false)
                                     // - If target column is of type text, update
                                     // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
                                     // - If target column is of type longtext and currently is text
+
                                     if(
                                         (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
                                         || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)
@@ -1129,4 +1103,33 @@ function sql_limit($offset, $rows)
         }
 
     return $limit;
+    }
+
+
+/**
+* Query helper function for the WHERE clause to avoid repetitive checks when value might be NULL or an actual value
+* 
+* @param string  $v     Non-null value
+* @param boolean $cond  Condition to use IS NULL or to use the escaped value
+* 
+* @return string
+*/
+function sql_is_null_or_eq_val(string $v, bool $cond)
+    {
+    return ($cond ? "IS NULL" : "= '" . escape_check($v) . "'");
+    }
+
+
+/**
+* Query helper function for insert/update statements to avoid repetitive checks when value might be NULL or an actual value.
+* Helps keeping database level data as expected (ie. uses an actual NULL value when there's no data as opposed to empty strings)
+* 
+* @param string  $v     Non-null value
+* @param boolean $cond  Condition to set it to NULL or to use the escaped value
+* 
+* @return string
+*/
+function sql_null_or_val(string $v, bool $cond)
+    {
+    return ($cond ? "NULL" : "'" . escape_check($v) . "'");
     }

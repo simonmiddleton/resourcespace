@@ -1,26 +1,18 @@
 <?php
-
-
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // Test to ensure that J permission blocks access to resources that are outside public collections that the user has access to.
 
 $saved_userref = $userref;
 $userref = 999; 
 $savedpermissions = $userpermissions;
-// create 5 new resources 
 
 
+// Create 5 new resources
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 $resourcec=create_resource(1,0);
 $resourced=create_resource(1,0);
 $resourcee=create_resource(1,0);
-
-debug("BANG Resource A: " . $resourcea);
-debug("BANG Resource B: " . $resourceb);
-debug("BANG Resource C: " . $resourcec);
-debug("BANG Resource D: " . $resourced);
-debug("BANG Resource E: " . $resourcee);
 
 // Add text to free text to fields
 update_field($resourcea,'title','test_000985_A');
@@ -37,11 +29,27 @@ add_resource_nodes($resourcec,array($dummynode));
 add_resource_nodes($resourced,array($dummynode));
 add_resource_nodes($resourcee,array($dummynode));
 
+// Create the Featured collections tree
+$fc_cat_mountains = create_collection(1, "Mountains");
+save_collection($fc_cat_mountains, array("featured_collections_changes" => array("update_parent" => 0, "force_featured_collection_type" => true)));
+$fc_cat_cuillin = create_collection(1, "Cuillin");
+save_collection($fc_cat_cuillin, array("featured_collections_changes" => array("update_parent" => $fc_cat_mountains,"force_featured_collection_type" => true)));
+$fc_cat_seasons = create_collection(1, "Seasons");
+save_collection( $fc_cat_seasons,array("featured_collections_changes" => array("update_parent" => 0,"force_featured_collection_type" => true)));
+$fc_cat_winter = create_collection(1, "Winter");
+save_collection( $fc_cat_winter,array("featured_collections_changes" => array("update_parent" => $fc_cat_seasons,"force_featured_collection_type" => true)));
+$fc_cat_spring = create_collection(1, "Spring");
+save_collection( $fc_cat_spring,array("featured_collections_changes" => array("update_parent" => $fc_cat_seasons,"force_featured_collection_type" => true)));
+
 // Create public collections
-$mountains = create_collection(1,'Mountains',0,0,0,true,array('Mountains'));
-$cuillin   = create_collection(1,'Cuillin',0,0,0,true,array('Mountains','Cuillin'));
-$winter    = create_collection(1,'Winter',0,0,0,true,array('Seasons','Winter'));
-$spring = create_collection(1,'Spring',0,0,0,true,array('Seasons','Spring'));
+$mountains = create_collection(1,'Mountains',0,0,0,true/*,array('Mountains')*/);
+save_collection($mountains, array("featured_collections_changes" => array("update_parent" => $fc_cat_mountains,"force_featured_collection_type" => true)));
+$cuillin   = create_collection(1,'Cuillin',0,0,0,true/*,array('Mountains','Cuillin')*/);
+save_collection($cuillin, array("featured_collections_changes" => array("update_parent" => $fc_cat_cuillin,"force_featured_collection_type" => true)));
+$winter    = create_collection(1,'Winter',0,0,0,true/*,array('Seasons','Winter')*/);
+save_collection($winter, array("featured_collections_changes" => array("update_parent" => $fc_cat_winter,"force_featured_collection_type" => true)));
+$spring    = create_collection(1,'Spring',0,0,0,true/*,array('Seasons','Spring')*/);
+save_collection($spring, array("featured_collections_changes" => array("update_parent" => $fc_cat_spring,"force_featured_collection_type" => true)));
 
 // Add resources to public collections
 // Resource A in Mountains
@@ -93,7 +101,7 @@ if (!is_array($results)
 // SUBTEST C
 // ----- Access to Mountains themes and no access to resources not in themes -----
 // Resource a,b should be shown
-$userpermissions = array('s','jMountains','J');
+$userpermissions = array('s', "j{$fc_cat_mountains}",'J');
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -111,7 +119,7 @@ if (!is_array($results)
 // SUBTEST D
 // ----- Access to Mountains but not Cuillin subtheme and no access to resources not in themes -----
 // Resource a should be shown
-$userpermissions = array('s','jMountains','j-Mountains|Cuillin','J');
+$userpermissions = array('s', "j{$fc_cat_mountains}", "-j{$fc_cat_cuillin}"/*,'jMountains','j-Mountains|Cuillin'*/,'J');
 $results = do_search('test000985');
 
 if (!is_array($results) 

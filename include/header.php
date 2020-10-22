@@ -1,12 +1,11 @@
 <?php 
-
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
 if(!isset($internal_share_access))
 	{
 	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-	$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    $internal_share_access = internal_share_access();
 	}
 
 $logout=getvalescaped("logout","");
@@ -298,7 +297,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
 
 <?php
 $homepage_url=$baseurl."/pages/".$default_home_page;
-if ($use_theme_as_home){$homepage_url=$baseurl."/pages/themes.php";}
+if($use_theme_as_home) { $homepage_url = $baseurl."/pages/collections_featured.php"; }
 if ($use_recent_as_home){$homepage_url=$baseurl."/pages/search.php?search=".urlencode('!last'.$recent_search_quantity);}
 if ($pagename=="login" || $pagename=="user_request" || $pagename=="user_password"){$homepage_url=$baseurl."/index.php";}
 

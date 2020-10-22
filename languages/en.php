@@ -455,6 +455,11 @@ $lang["emailthemecollectionmessageexternal"]="has e-mailed you collections of re
 $lang["emailthememessage"]="has e-mailed you a selection of featured collections from $applicationname which have been added to your 'My collections' page.";
 $lang["clicklinkviewthemes"]="Click the link below to view the featured collections.";
 $lang["clicklinkviewcollections"]="Click the links below to view the collections.";
+$lang["background_image"] = "Background image";
+$lang["background_most_popular_image"] = "Most popular image";
+$lang["background_most_popular_images"] = "Most popular %n images";
+$lang["background_manual_selection"] = "Choose images (collection commenting)";
+$lang["share_fc_warning"] = "Please note that when sharing a featured collection category only featured collections that contain resources will be externally shared.";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";

@@ -46,8 +46,6 @@ $uploadparams["collection_add"] =  $collection_add;
 $uploadparams["local"] =  $local;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
-$uploadparams["themestring"] = getval("themestring","");
-$uploadparams["public"] = getval("public","");
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
 

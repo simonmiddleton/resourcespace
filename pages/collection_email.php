@@ -1,6 +1,6 @@
 <?php
 include "../include/db.php";
-include "../include/authenticate.php"; #if (!checkperm("s")) {exit ("Permission denied.");}
+include "../include/authenticate.php";
 
 
 $collection_url	= getvalescaped("collection","");
@@ -10,98 +10,113 @@ $order_by 		= getvalescaped("order_by","");
 $sort 			= getvalescaped("sort","");
 $search 		= getvalescaped("search","");
 $starsearch		= getvalescaped('starsearch', '', true);
-$themeshare		= getvalescaped("catshare","false");
-$themecount		= 0;
-if(getvalescaped("subthemes","false")!="false"){$subthemes=true;}else{$subthemes=false;}
-$linksuffix		= "?";
-$ref			= getvalescaped("ref","");
-$refArray[]		= $ref;
+$ref			= getvalescaped("ref", 0, true);
 
+$collection = get_collection($ref);
+if($collection === false)
+    {
+    exit(error_alert($lang["error-collectionnotfound"], true, 403));
+    }
 
-# Check access
-if (!$themeshare && !collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
+if($collection["type"] == COLLECTION_TYPE_FEATURED)
+    {
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+    }
 
+// Check access controls
+if(!collection_readable($ref))
+    {
+    exit($lang["no_access_to_collection"]);
+    }
+else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
+if(!$allow_share || checkperm("b"))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    }
 
-if ($themeshare!="false")
-	{
-	$themeshare=true;
-	# came here from theme category share page
-	$themes=array("");
-	reset($_POST);reset($_GET);
-	foreach (array_merge($_GET, $_POST) as $key=>$value) 
-		{
-		// only set necessary vars
-		if (substr($key,0,5)=="theme" && $value!=""){
-			$themes[$themecount]=rawurldecode($value);
-			$themecount++;
-			}
-		}
-	for ($x=0;$x<count($themes);$x++){
-		if ($x!=0){ $linksuffix.="&"; }
-		$linksuffix.="theme" . ($x+1);
-		$linksuffix.="=". urlencode($themes[$x]);
-		$themename=$themes[$x];
-	}
-	$collectionstoshare=get_themes($themes,$subthemes);
-	foreach($collectionstoshare as $collection)
-		{
-		if ($ref!=""){$ref.=", ";}
-		$ref.=$collection["ref"];
-		}		
-	$ref=explode(", ",$ref);$ref=array_unique($ref);$ref=implode(",",$ref);
-	$refArray = explode(',',$ref);
-	}
-else
-	{
-	$themeshare=false;
-	$themename="";
-	# Fetch collection data
-	if (!is_numeric($ref)) ##  multiple collections may be referenced
-		{
-		$refArray = explode(',',$ref);
-		$collection=get_collection($refArray[0]);if ($collection===false) {exit("Collection not found.");}
-		}
-	else {
-	$collection=get_collection($ref);if ($collection===false) {exit("Collection not found.");}
-		}
-	}
-	
-#Check if sharing allowed
-if (!$allow_share) {
-        $show_error=true;
-        $error=$lang["error-permissiondenied"];
+$themeshare = false;
+$themename = "";
+$subthemes = (getval("subthemes", "false") != "false");
+if(is_featured_collection_category($collection))
+    {
+    $themeshare = true;
+    $themename = i18n_get_translated($collection["name"]);
+
+    // Check this is not an empty FC category
+    if(empty(get_featured_collection_resources($collection, array("limit" => 1))))
+        {
+        exit(error_alert($lang["cannotshareemptythemecategory"], true, 403));
         }
-		
 
-$user_select_internal=checkperm("noex") || intval($user_dl_limit) > 0;
-	
-#Check if any resources are not in the active state
-foreach ($refArray as $colref){
-if (!$collection_allow_not_approved_share && !is_collection_approved(trim($colref)))
-	{	
-	$show_error=true;
+    // Further checks at collection-resource level. Recurse through category's sub FCs
+    if($subthemes)
+        {
+        $sub_fcs = get_featured_collection_categ_sub_fcs($collection);
+        }
+    else
+        {
+        $sub_fcs = get_featured_collections($collection["ref"], array());
+        $sub_fcs = array_filter($sub_fcs, function($fc) { return !is_featured_collection_category($fc, array()); });
+        $sub_fcs = array_values(array_column($sub_fcs, "ref"));
+        }
+    $collection["sub_fcs"] = $sub_fcs;
+    $sub_fcs_resources_states = array();
+    $sub_fcs_resources_minaccess = array();
+    foreach($collection["sub_fcs"] as $sub_fc)
+        {
+        // Check all featured collections contain only active resources
+        $collectionstates = is_collection_approved($sub_fc);
+        if(!$collection_allow_not_approved_share && $collectionstates === false)
+            {
+            break;
+            }
+        else if(is_array($collectionstates))
+            {
+            $sub_fcs_resources_states = array_unique(array_merge($sub_fcs_resources_states, $collectionstates));
+            }
+
+        // Check minimum access is restricted or lower and sharing of restricted resources is not allowed
+        $sub_fcs_resources_minaccess[] = collection_min_access($sub_fc);
+        }
+    $collectionstates = (!empty($sub_fcs_resources_states) ? $sub_fcs_resources_states : $collectionstates);
+
+    if(!empty($sub_fcs_resources_minaccess))
+        {
+        $minaccess = max(array_unique($sub_fcs_resources_minaccess));
+        }
+    }
+
+$collectionstates = (isset($collectionstates) ? $collectionstates : is_collection_approved($ref));
+if(!$collection_allow_not_approved_share && $collectionstates == false)
+    {
+    $show_error=true;
     $error=$lang["notapprovedsharecollection"];
-	}
-}
-	
-# Get min access to this collection
-foreach ($refArray as $colref){
-$minaccess=collection_min_access(trim($colref));
-}
+    }
 
-if ($minaccess>=1 && !$restricted_share) # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
-	{
-	$show_error=true;
-    $error=$lang["restrictedsharecollection"];
-	}
-	
+# Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
+$minaccess = (isset($minaccess) ? $minaccess : collection_min_access($ref));
+if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED)
+    {
+    $show_error = true;
+    $error = $lang["restrictedsharecollection"];
+    }
+
 if (isset($show_error)){?>
     <script type="text/javascript">
     alert('<?php echo $error;?>');
         history.go(-1);
     </script><?php
     exit();}
-	
+
+$internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
+
+// Legacy way of working when sharing a FC category. It relies on a list of collections
+$ref = ($themeshare ? join(",", array_merge(array($collection["ref"]), $collection["sub_fcs"])) : $ref);
+
 $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
@@ -122,8 +137,8 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
-	$errors=email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename,$linksuffix,$list_recipients,$add_internal_access,$group, $sharepwd);
 
+    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "",$list_recipients,$add_internal_access,$group, $sharepwd);
 	if ($errors=="")
 		{
 		# Log this	
@@ -151,7 +166,7 @@ include "../include/header.php";
 <?php
 
 	$link_array = array(
-		"ref"			=>	$ref,
+		"ref"			=>	$collection["ref"],
 		"search"		=>	$search,
 		"offset"		=>	$offset,
 		"order_by"		=>	$order_by,
@@ -176,9 +191,9 @@ else
 render_help_link("user/sharing-resources");?>
 </p>
 
-<form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php<?php echo $linksuffix ?>&catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">
+<form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php?catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">
 <input type=hidden name=redirect id=redirect value=yes>
-<input type=hidden name=ref id="ref" value="<?php echo htmlspecialchars(trim($refArray[0])) ?>">
+<input type=hidden name=ref id="ref" value="<?php echo htmlspecialchars($collection["ref"]); ?>">
 <?php
 generateFormToken("collectionform");
 
@@ -200,16 +215,16 @@ if ($email_multi_collections && !$themeshare) { ?>
 </script>
 <?php } 
 
-
-if ($themeshare)
-	{?>
-	<div class="Question">
-		<label for="subthemes"><?php echo $lang["share_theme_category_subcategories"]?></label>
-		<input type="checkbox" id="subthemes" name="subthemes" value="true" <?php if ($subthemes){echo "checked";} ?>>
-		<div class="clearerleft"> </div>
-	</div>
-	<?php
-	}
+if($themeshare)
+    {
+    ?>
+    <div class="Question">
+        <label for="subthemes"><?php echo $lang["share_theme_category_subcategories"]; ?></label>
+        <input type="checkbox" id="subthemes" name="subthemes" value="true" <?php echo ($subthemes ? "checked" : ""); ?>>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    }
 else
 	{?>	
 	<div class="Question">
@@ -280,7 +295,7 @@ else
 <div class="Question">
 
 <label for="users">
-<?php echo ($user_select_internal)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
+<?php echo ($internal_share_only)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
 </label><?php $userstring=getval("users","");include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
 <?php if ($errors!="") { ?><div class="FormError">!! <?php echo $errors?> !!</div><?php } ?>
@@ -305,10 +320,10 @@ if($allow_edit)
 	</div>	
 	<?php } ?>
 <?php
-if(!$user_select_internal)
+if(!$internal_share_only)
 	{
 	render_share_options(true, $ref, true);  
-	} // End of section checking $user_select_internal
+	} // End of section checking $internal_share_only
 	
 	hook("collectionemailafterexternal");
 	?>

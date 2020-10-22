@@ -1,7 +1,5 @@
 <?php
-
 include "../../include/db.php";
-
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -56,24 +54,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",$group["permissions"]));
-$permissions_done=array();
-
-function DrawOption($permission,$description,$reverse=false,$reload=false)
-	{
-	global $permissions,$permissions_done;
-	$checked=(in_array($permission,$permissions));
-	if ($reverse) {$checked=!$checked;}
-	?>
-	<input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
-	<tr>
-		<td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
-		<td><?php echo $description?></td>
-		<td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
-			if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
-	</tr>
-	<?php
-	$permissions_done[]=$permission;
-	}	
+$permissions_done=array();	
 ?>
 <div class="BasicsBox">
 <?php
@@ -287,40 +268,14 @@ else
 	}
 DrawOption("dtu",$lang["manage_own_dash"],true,false);
 
-# ------------ Access to theme categories
-
+# ------------ Access to featured collection categories
 DrawOption("j*", $lang["can_see_all_theme_categories"], false, true);
-if (!in_array("j*",$permissions))	// by default is checked	
-	{
-	include_once "../../include/theme_permission_functions.php";
-	$theme_paths = getThemePathPerms();	
-	foreach ($theme_paths as $path=>$bPerm)
-		{	
-		$level = substr_count ($path,"|");				
-		if ($level == 0)
-			{
-			DrawOption("j${path}",  "${lang['can_see_theme_category']} '${path}'", false, true);	// always show the top level theme
-			}
-		else
-			{
-			$parent = substr ($path, 0, strrpos($path,"|"));
-			$skip =(!isset($theme_paths[$parent]) || !$theme_paths[$parent]);		// check if parent theme permission has been set
-			$permission = "j-" . $path;
-			if ($skip)
-				{
-				$permissions_done[] = $permission;		// stop any hidden perms appearing in the "custom permissions" if not showing (because parent is not set)
-				}
-			else
-				{
-				$nicename = substr ($path, strrpos ($path,"|") + 1);
-				DrawOption($permission, str_pad("", $level*7, "&mdash;") . " " . $lang["can_see_theme_sub_category"] . " '" . i18n_get_translated($nicename) . "'", true, true);
-				}
-			}
-		}
-	}	
+if(!in_array("j*", $permissions))
+    {
+    render_featured_collections_category_permissions(array("permissions" => $permissions));
+    }
 DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
-
-# ---------- end of theme categories
+# ---------- end of featured collection categories
 
 
 # ---------- End of Dash Tiles

@@ -19,9 +19,8 @@ $multi_edit=allow_multi_edit($ref);
 if (!collection_writeable($ref)) 
 	{exit($lang["no_access_to_collection"]);}
 
-
-# Fetch collection data
 $collection=get_collection($ref);
+
 if ($collection===false) 
 	{
 	$error=$lang['error-collectionnotfound'];
@@ -29,9 +28,13 @@ if ($collection===false)
 	exit();
 	}
 
-if($collection["type"] != COLLECTION_TYPE_STANDARD)
+if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
     {
     exit(error_alert($lang["error-permissiondenied"], true, 401));
+    }
+else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+    {
+    exit(error_alert($lang["error-permissiondenied"], true, 403));
     }
 
 $resources=do_search("!collection".$ref);
@@ -48,33 +51,33 @@ if ($copy!="")
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save collection data
-    $coldata["name"]            = getval("name","");
-    $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
-    //$public = getvalescaped('public', 0, true);
-    $coldata["public"]          = getval('public', 0, true);
-    $coldata["keywords"]        = getval("keywords","");
-    $coldata["description"]     = getval("description","");
-    hook('saveadditionalfields');
+    $coldata["name"] = getval("name","");
+    $coldata["allow_changes"] = getval("allow_changes","") != "" ? 1 : 0;
+    $coldata["public"] = getval('public', 0, true);
+    $coldata["keywords"] = getval("keywords","");
+    $coldata["description"] = getval("description","");
 
-    for($n=1;$n<=$theme_category_levels;$n++)
+    if($collection["public"] == 1 && getval("update_parent", "") == "true")
         {
-        if ($n==1)
+        // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
+        $current_branch_path = get_featured_collection_category_branch_by_leaf((int) $ref, array());
+        $featured_collections_changes = process_posted_featured_collection_categories(0, $current_branch_path);
+        if(!empty($featured_collections_changes))
             {
-            $themeindex = "";
+            $coldata["featured_collections_changes"] = $featured_collections_changes;
             }
-        else
-            {
-            $themeindex = $n;
-            }
-        $themename = getval("theme$themeindex","");
-        $coldata["theme" . $themeindex] = $themename;
-        
-        if (getval("newtheme$themeindex","")!="")
-            {
-            $coldata["theme". $themeindex] = trim(getval("newtheme$themeindex",""));
-            }    
         }
-        
+
+    // User selected a background image
+    if($enable_themes && $themes_simple_images && $collection["public"] == 1 && checkperm("h"))
+        {
+        $thumbnail_selection_method = getval("thumbnail_selection_method", $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"], true);
+        if(in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
+            {
+            $coldata["featured_collections_changes"]["thumbnail_selection_method"] = $thumbnail_selection_method;
+            }
+        }
+
     if (checkperm("h"))
         {
         $coldata["home_page_publish"]   = (getval("home_page_publish","") != "") ? "1" : "0";
@@ -84,28 +87,29 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             $coldata["home_page_image"] = getval("home_page_image","");
             }
         }
+
+    hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
 	save_collection($ref, $coldata);
-	if (getval("redirect","")!="")
-		{
-		if (getval("addlevel","")=="yes"){
-			redirect ($baseurl_short."pages/collection_edit.php?ref=".$ref."&addlevel=yes");
-			}		
-		else if ((getval("theme","")!="") || (getval("newtheme","")!=""))
-			{
-			redirect ($baseurl_short."pages/themes.php?manage=true");
-			}
-		else
-			{
-			redirect($baseurl_short . 'pages/collection_manage.php?offset=' . $offset . '&col_order_by=' . $col_order_by . '&sort=' . $sort . '&find=' . urlencode($find) . '&reload=true');
-			}
-		}
-	else
-		{
-		# No redirect, we stay on this page. Reload the collection info.
-		$collection=get_collection($ref);
+
+    if(getval("redirect", "") != "")
+        {
+        redirect(generateURL(
+            "{$baseurl_short}pages/collection_manage.php",
+            array(
+                "offset" => $offset,
+                "col_order_by" => $col_order_by,
+                "sort" => $sort,
+                "find" => $find,
+                "reload" => "true",
+            )));
+        }
+    else
+        {
+        # No redirect, we stay on this page. Reload the collection info.
+        $collection = get_collection($ref);
         }
 	}
-	
+
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -116,6 +120,7 @@ include "../include/header.php";
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="submitted" value="true">
+    <input type=hidden name="update_parent" value="false">
 	<div class="Question">
 		<label for="name"><?php echo $lang["name"]?></label>
 		<input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
@@ -181,9 +186,14 @@ include "../include/header.php";
 			} ?>
 		<div class="clearerleft"> </div>
 	</div>
-
-	<?php 
-	if ($collection["public"]==0 || (($collection['public']==1 && !$themes_in_my_collections && $collection['theme']=='') || ($collection['public']==1 && $themes_in_my_collections) )) 
+	<?php
+    if(
+        $collection["public"] == 0
+        || (
+            ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
+            || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
+        )
+    )
 		{
 		if (!hook("replaceuserselect"))
 			{?>
@@ -207,10 +217,38 @@ include "../include/header.php";
 			} /* end hook replaceuserselect */
 		} 
 	
-	if ($collection['public']==1)
-		{
-		include __DIR__ . '/../include/collection_theme_select.php';
-		}
+    if($enable_themes && $collection['public'] == 1 && checkperm("h"))
+        {
+        render_featured_collection_category_selector(
+            0,
+            array(
+                "collection" => $collection,
+                "depth" => 0,
+                "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
+            ));
+
+        if($themes_simple_images && $collection["type"] == COLLECTION_TYPE_FEATURED)
+            {
+            $configurable_options = array(
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] => $lang["background_most_popular_image"],
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => str_replace("%n", $theme_images_number, $lang["background_most_popular_images"]),
+            );
+
+            if($collection_commenting)
+                {
+                $configurable_options[$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]] = $lang["background_manual_selection"];
+                }
+
+            render_dropdown_question(
+                $lang["background_image"],
+                "thumbnail_selection_method",
+                $configurable_options,
+                $collection["thumbnail_selection_method"],
+                'class="stdwidth"'
+            );
+            }
+        }
 		
 	if (checkperm("h") && $collection['public']==1 && !$home_dash)
 		{
@@ -282,13 +320,10 @@ include "../include/header.php";
 	</div>
 </form>
 </div>
-
 <?php
-
 if(getval("reload","") == "true" && getval("ajax","") != "")
     {
     refresh_collection_frame();
     }    
     
 include "../include/footer.php";
-?>
