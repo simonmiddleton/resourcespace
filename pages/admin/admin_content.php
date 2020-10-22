@@ -37,11 +37,22 @@ include "../../include/header.php";
 ?>
 
 
-<div class="BasicsBox" style="position:relative;"> 
-  <h1><?php echo $lang["managecontent"]?></h1>
-  <?php 
-  $int_text=text("introtext");
-  echo empty($int_text)?"":"<p>".$int_text."</p>";
+<div class="BasicsBox" style="position:relative;">
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["managecontent"],
+    )
+);
+
+renderBreadcrumbs($links_trail);
+
+$int_text=text("introtext");
+echo empty($int_text)?"":"<p>".$int_text."</p>";
 $text=get_all_site_text($findpage, $findname,$findtext);
 
 # pager

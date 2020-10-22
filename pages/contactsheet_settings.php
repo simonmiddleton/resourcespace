@@ -376,7 +376,7 @@ if($contactsheet_use_field_templates)
 						$selected = 'selected';
 						}
 					?>
-					<option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>><?php echo $contact_sheet_field['title']; ?></option>
+					<option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>><?php echo i18n_get_translated($contact_sheet_field['title'], false); ?></option>
 					<?php
 					}
 				?>

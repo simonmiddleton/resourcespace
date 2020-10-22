@@ -10,7 +10,7 @@
 */
 function antivirus_scan($file_path)
     {
-    global $antivirus_path, $antivirus_silent_options;
+    global $lang, $antivirus_path, $antivirus_silent_options;
 
     if(!isset($antivirus_path) || trim($antivirus_path) == '')
         {

@@ -21,10 +21,8 @@ if($py['disable_group_select'])
     exit();
     }
 
-
 # Fetch current access level
 $access=sql_value("select enabled_groups value from plugins where name='$plugin'","");
-
 
 # Fetch user groups
 $groups=get_usergroups();
@@ -43,7 +41,6 @@ if (getval("save", "") != "" && enforcePostRequest(false))
 				$access.=$group["ref"];
 				}
 			}
-		
 		}
 	# Update database
 	log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
@@ -55,10 +52,24 @@ if (getval("save", "") != "" && enforcePostRequest(false))
 include "../../include/header.php";
 $s=explode(",",$access);
 ?>
-<div class="BasicsBox"> 
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/team/team_plugins.php">&lt; <?php echo $lang["pluginssetup"] ?></a></p>
-  <h2>&nbsp;</h2>
-  <h1><?php echo $lang["groupaccess"] . ': ' . $plugin ;render_help_link('systemadmin/managing_plugins');?></h1>
+<div class="BasicsBox">
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["pluginmanager"],
+        'href'  => $baseurl_short . "pages/team/team_plugins.php"
+    ),
+    array(
+        'title' => $lang["groupaccess"] . ': ' . $plugin,
+        'help'  => "systemadmin/managing_plugins"
+    )
+);
+renderBreadcrumbs($links_trail);
+?>
 
 <form onSubmit="return CentralSpacePost(this,true);" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins_groups.php?save=true">
     <?php generateFormToken("team_plugins_groups"); ?>
@@ -73,12 +84,8 @@ $s=explode(",",$access);
 
 <input type=hidden name="plugin" value="<?php echo getvalescaped('plugin','')?>"/>
   
-  
 <input name="save" type="submit" value="<?php echo $lang["save"] ?>">
 </form>
 </div>
-
-
-        
 
 <?php include "../../include/footer.php"; ?>

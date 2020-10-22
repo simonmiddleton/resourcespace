@@ -94,9 +94,6 @@ function SaveWorkflowAction(){
 	}
 
 </script>
-<div class="BasicsBox">
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_actions"] ?></a>
-</div>
 
 <?php
 
@@ -119,7 +116,27 @@ if (isset($saveerror))
 ?>
 		
 <div class="BasicsBox">
-<h1><?php echo $lang['rse_workflow_action_edit_action']; ?></h1>
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_workflow"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_states"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_states.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_action_edit_action"]
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
 
 <form id="form_workflow_action" name="form_workflow_action" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $ref ?>">
     <?php generateFormToken("form_workflow_action"); ?>

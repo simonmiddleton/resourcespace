@@ -288,7 +288,13 @@ function HookSimplesamlAllProvideusercredentials()
                 }
             }
 
-		debug ("simplesaml - got user details username=" . $username . ", email: " . (isset($email)?$email:""));
+		debug ("simplesaml - got user details username=" . $username . ", email: " . (isset($email)?$email:"(not received)"));
+
+        if(!isset($email))
+            {
+            // No email - may be a test account?
+            $email = "";
+            }
 
 		// figure out group
 		$group = $simplesaml_fallback_group;
@@ -334,7 +340,7 @@ function HookSimplesamlAllProvideusercredentials()
             // First see if there is a matching account
             $email_matches=sql_query("SELECT ref, username, fullname, origin FROM user WHERE email='" . escape_check($email) . "'");				
 
-            if(count($email_matches)>0)
+            if(count($email_matches)>0 && trim($email) != "")
 				{
 				if(count($email_matches)==1 && $simplesaml_create_new_match_email)
 					{

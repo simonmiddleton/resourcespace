@@ -48,7 +48,7 @@ if($c != "")
             {
             $topurl = "pages/collections_featured.php?parent={$c}&k={$k}";
             }
-        else if(count($collection_resources) > 0 && $feedback_resource_select && $collection["request_feedback"])
+        else if(is_array($collection_resources) && count($collection_resources) > 0 && $feedback_resource_select && $collection["request_feedback"])
             {
             $topurl = "pages/collection_feedback.php?collection={$c}&k={$k}";      
             }

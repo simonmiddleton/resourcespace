@@ -2,8 +2,13 @@
 
 function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
     {
-    global $use_watermark;
-    
+    global $use_watermark, $ffmpeg_preview_extension;
+
+    if(file_exists(get_resource_path($resource['ref'], true, "", false, $ffmpeg_preview_extension, -1, $page, $use_watermark, '', $alternative)))
+        {
+        return false;
+        }
+
     $path = get_resource_path(
         $resource['ref'],
         true,

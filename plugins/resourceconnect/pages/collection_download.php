@@ -68,7 +68,7 @@ if ($submitted != "")
 		$use_watermark=check_use_watermark();
 
 		# Only download resources with proper access level
-		if ($access==0 || $access=1)
+		if ($access==0 || $access==1)
 			{
 			$usesize=$size;
 			$pextension = ($size == 'original') ? $result[$n]["file_extension"] : 'jpg';

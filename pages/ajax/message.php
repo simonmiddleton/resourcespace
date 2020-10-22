@@ -74,26 +74,44 @@
 			message_purge();
 			return;
 			}
-		
+
 		// Delete a specific message from a single user
 		if (0 < $deleteusrmsg)
 			{
 			message_user_remove($deleteusrmsg);
 			return;
-			}	
-		
+			}
 
 		// Check if there are messages
 		$messages = array();
-		message_get($messages,$user);	// note: messages are passed by reference
+        message_get($messages,$user);	// note: messages are passed by reference
+        
+        $extramessage = array('ref'=>0);
+        $extramessages = false;
 		if($actions_on)
 			{
 			$actioncount=get_user_actions(true);
 			if($actioncount>0)
 				{
-				$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+                $extramessage['actioncount'] = $actioncount;
+                $extramessages = true;
 				}
-			}
+            }
+        if($offline_job_queue)
+			{
+            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref));
+            $failedjobcount = count($failedjobs);
+            if($failedjobcount>0)
+				{
+                $extramessage['failedjobcount'] = $failedjobcount;
+                $extramessages = true;
+				}
+            }
+        if($extramessages)
+            {
+            $messages[] = $extramessage;
+            }
+
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
 		return;
@@ -126,87 +144,106 @@
 			<?php
 			}
 		?>
-		jQuery.ajax({
-			url: '<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true',
-			type: 'GET',
-			success: function(messages, textStatus, xhr) {
-				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
-					{
-					messagecount=totalcount=jQuery(messages).length;
-					actioncount=0;
-					if (typeof(messages[messagecount-1]['actioncount']) !== 'undefined') // There are actions as well as messages
-						{
-						actioncount=parseInt(messages[messagecount-1]['actioncount']);
-						messagecount=messagecount-1;
-						totalcount=actioncount+messagecount;
-						}
-					jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
-					if (activeSeconds > 0 || message_poll_first_run)
-						{
-						for(var i=0; i < messagecount; i++)
-							{
-							var ref = messages[i]['ref'];
-							if (message_poll_first_run)
-							{
-								message_refs.push(ref);
-								continue;
-							}
-							if (message_refs.indexOf(ref)!=-1)
-							{
-								continue;
-							}
-							message_refs.push(ref);
-							var message = nl2br(messages[i]['message']);
-							var url = messages[i]['url'];
-							<?php
-							if($user_pref_show_notifications)
-								{
-								?>
-								message_display(message, url, ref, function (ref) {
-									jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-								});
-								<?php
-								}
-								?>
-								message_poll();
-							}
-						}
-					if (actioncount>0)
-							{
-							jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
-							}
-						else
-							{
-							jQuery('span.ActionCountPill').hide();	
-							}
-						if (messagecount>0)
-							{
-							jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
-							}
-						else
-							{
-							jQuery('span.MessageCountPill').hide();	
-							}
-					}
-				else
-					{
-					jQuery('span.MessageTotalCountPill').hide();
-					jQuery('span.MessageCountPill').hide();
-					jQuery('span.ActionCountPill').hide();
-					}
-			}
-		}).done(function() {
-			<?php if ($message_polling_interval_seconds > 0)
-			{
-				?>message_timer = window.setTimeout(message_poll,<?php echo $message_polling_interval_seconds; ?> * 1000);
-				<?php
-			}
-			?>
-			message_poll_first_run = false;
-		});
+        jQuery.ajax({
+            url: '<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true',
+            type: 'GET',
+            success: function(messages, textStatus, xhr) {
+                if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
+                    {
+                    messagecount = messages.length;
+                    if(messages[messages.length - 1]['ref'] == 0)
+                        {
+                        // The last message is a dummy entry with a count of actions and failed jobs
+                        messagecount = messagecount-1;
+                        }
+                    totalcount   = messagecount; 
+                    actioncount=0;
+                    failedjobcount=0;
+                    if (typeof(messages[messages.length - 1]['actioncount']) !== 'undefined') // There are actions as well as messages
+                        {
+                        actioncount=parseInt(messages[messagecount]['actioncount']);
+                        totalcount=totalcount+actioncount;
+                        }
+                    if (typeof(messages[messages.length - 1]['failedjobcount']) !== 'undefined') 
+                        {
+                        failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
+                        totalcount=totalcount+failedjobcount;
+                        }
+                    jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
+                    if (activeSeconds > 0 || message_poll_first_run)
+                        {
+                        for(var i=0; i < messagecount; i++)
+                            {
+                            var ref = messages[i]['ref'];
+                            if (message_poll_first_run)
+                                {
+                                message_refs.push(ref);
+                                continue;
+                                }
+                            if (message_refs.indexOf(ref)!=-1)
+                                {
+                                continue;
+                                }
+                            message_refs.push(ref);
+                            var message = nl2br(messages[i]['message']);
+                            var url = messages[i]['url'];
+                            <?php
+                            if($user_pref_show_notifications)
+                                {
+                                ?>
+                                message_display(message, url, ref, function (ref) {
+                                jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
+                                });
+                                <?php
+                                }
+                            ?>
+                            message_poll();
+                            }
+                        }
+                    if (actioncount>0)
+                        {
+                        jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.ActionCountPill').hide();	
+                        }
+                    if (messagecount>0)
+                        {
+                        jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.MessageCountPill').hide();	
+                        }
+                    if (failedjobcount>0)
+                        {
+                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();;
+                        }
+                    else
+                        {
+                        jQuery('span.FailedJobCountPill').hide();	
+                        }
+                    }
+                else
+                    {
+                    jQuery('span.MessageTotalCountPill').hide();
+                    jQuery('span.MessageCountPill').hide();
+                    jQuery('span.ActionCountPill').hide();
+                    }
+            }
+        }).done(function() {
+            <?php if ($message_polling_interval_seconds > 0)
+            {
+                ?>message_timer = window.setTimeout(message_poll,<?php echo $message_polling_interval_seconds; ?> * 1000);
+                <?php
+            }
+            ?>
+            message_poll_first_run = false;
+        });
 
-        check_upgrade_in_progress();
-	}
+    check_upgrade_in_progress();
+    }
 
 	jQuery(document).bind("blur focus focusin focusout load resize scroll unload click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup error",
 		function() {

@@ -14,6 +14,7 @@ set_time_limit(0);
 $report=getvalescaped("report","");
 $period=getvalescaped("period",$reporting_periods_default[0]);
 $period_init=$period;
+$backurl=getvalescaped("backurl","");
 
 if ($period==0)
 	{
@@ -165,8 +166,38 @@ else
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["viewreports"]?></h1>
-  <p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
+	<?php
+	if (strpos($backurl, "pages/admin/admin_report_management.php") !== false)
+	    {
+	    // Arrived from Manage reports page
+	    $links_trail = array(
+	        array(
+	            'title' => $lang["systemsetup"],
+	        	'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        ),
+	        array(
+	            'title' => $lang["page-title_report_management"],
+	            'href'  => $baseurl_short . "pages/admin/admin_report_management.php"
+	        )
+	    );
+	    }
+	else
+		{
+		$links_trail = array(
+	        array(
+	            'title' => $lang["teamcentre"],
+                'href'  => $baseurl_short . "pages/team/team_home.php"
+	        )
+		);
+		}
+
+	$links_trail[] = array(
+	    'title' => $lang["viewreports"]
+	);
+
+	renderBreadcrumbs($links_trail);
+	?>
+ 	<p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
   
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>

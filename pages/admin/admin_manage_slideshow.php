@@ -47,27 +47,30 @@ if(
         next($slideshow_files);
         }
 
-    // Based on current pointer and direction of movement we can find the "to" element
-    switch ($action)
+    if (count($slideshow_files) > 1)
         {
-        case 'moveup':
-            prev($slideshow_files);
-            $to = key($slideshow_files);
+        // Based on current pointer and direction of movement we can find the "to" element
+        switch ($action)
+            {
+            case 'moveup':
+                prev($slideshow_files);
+                $to = key($slideshow_files);
 
-            reset($slideshow_files);
-            $response['is_first_sibling'] = ($slideshow_files[$to] == current($slideshow_files));
+                reset($slideshow_files);
+                $response['is_first_sibling'] = ($slideshow_files[$to] == current($slideshow_files));
 
-            $allow_reorder = true;   
-            break;
+                $allow_reorder = true;   
+                break;
 
-        case 'movedown':
-            next($slideshow_files);
-            $to = key($slideshow_files);
+            case 'movedown':
+                next($slideshow_files);
+                $to = key($slideshow_files);
 
-            $response['is_last_sibling'] = ($slideshow_files[$to] === end($slideshow_files));
+                $response['is_last_sibling'] = ($slideshow_files[$to] === end($slideshow_files));
 
-            $allow_reorder = true;
-            break;
+                $allow_reorder = true;
+                break;
+            }
         }
 
     if($allow_reorder && reorder_slideshow_images($slideshow_files[$slideshow_id_index], $slideshow_files[$to]))
@@ -169,10 +172,20 @@ include '../../include/header.php';
 
 ?>
 <div class="BasicsBox">
-    <p>
-        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
-    </p>
-    <h1><?php echo $lang['manage_slideshow']; ?></h1>
+    <?php
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["manage_slideshow"]
+        )
+    );
+
+    renderBreadcrumbs($links_trail);
+    ?>
+
     <p><?php echo $lang['manage-slideshow-instructions']; render_help_link("resourceadmin/homepage-slideshow");?></p>
     <div class="Listview">
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
@@ -188,13 +201,13 @@ include '../../include/header.php';
             foreach($slideshow_files as $slideshow_index => $slideshow_file_info)
                 {
                 $moveup_disabled = '';
-                if($slideshow_index == 0)
+                if($slideshow_index == 0 || count($slideshow_files) == 1)
                     {
                     $moveup_disabled = ' disabled';
                     }
 
                 $movedown_disabled = '';
-                if(($slideshow_index - 1) == count($slideshow_files))
+                if(($slideshow_index - 1) == count($slideshow_files) || count($slideshow_files) == 1)
                     {
                     $movedown_disabled = ' disabled';
                     }

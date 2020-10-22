@@ -86,12 +86,24 @@ if($text == $defaulttext && ($editlanguage != $defaultlanguage || $editgroup != 
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-	<p>
-		<a href="<?php echo $baseurl_short; ?>pages/admin/admin_content.php?nc=<?php echo time()?>&findpage=<?php echo urlencode($findpage)?>&findname=<?php echo urlencode($findname)?>&findtext=<?php echo urlencode($findtext)?>&offset=<?php echo urlencode($offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagecontent"]?></a>
-	</p>
-	<h1><?php echo $lang["editcontent"]; ?></h1>
 
 <?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["managecontent"],
+		'href'  => $baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset)
+    ),
+	array(
+        'title' => $lang["editcontent"]
+	)
+);
+
+renderBreadcrumbs($links_trail);
+
 if($html_validation !== true && $html_validation !== '')
 	{
 	?>

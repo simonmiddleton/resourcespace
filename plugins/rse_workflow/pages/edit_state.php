@@ -118,7 +118,27 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox">
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_states"] ?>&nbsp;</a>
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_workflow"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_states"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_states.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_edit_state"]
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
 </div>
 
 <?php
@@ -140,7 +160,6 @@ else if ($saved)
 ?>
         
 <div class="BasicsBox">
-<h1><?php echo $lang['rse_workflow_edit_state']; ?></h1>
 
 <form id="form_workflow_state" name="form_workflow_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=<?php echo $code ?>">
     <?php generateFormToken("form_workflow_state"); ?>

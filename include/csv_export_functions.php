@@ -6,19 +6,26 @@
 /**
 * Generates the CSV content of the metadata for resources passed in the array
 *
-* @param array $resources
+* @param array $resources (either an array of resource ids or an array returned from search results)
 * @return string
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
     {
-    global $lang, $csv_export_add_original_size_url_column, $file_checksums;
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k;
     $return                 = '';
     $csv_field_headers      = array();
     $resources_fields_data  = array();
+    $csvoptions = array("csvexport"=>true,"personal"=>$personal,"alldata"=>$alldata);
+    $allresdata = get_resource_field_data_batch($resources,true,$k != '',true,$csvoptions);
+    $allfields = get_resource_type_fields("","order_by","asc");
 
     foreach($resources as $resource)
         {
-        $resdata = get_resource_data($resource['ref']);
+        $resdata = $resource;
+        if(checkperm("T" . $resdata["resource_type"]))
+            {
+            continue;
+            }
 
         // Add resource type
         $restype = get_resource_type_name($resdata["resource_type"]);
@@ -37,16 +44,24 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             {
             $csv_field_headers["file_checksum"] = $lang["filechecksum"];
             $resources_fields_data[$resource['ref']]["file_checksum"] = $resdata["file_checksum"];
-            }
-
-        foreach(get_resource_field_data($resource['ref'], false, true, NULL, '' != getval('k', ''), true,true) as $field_data)
+            }       
+        foreach($allfields as $restypefield)
             {
-            // If $personal=true, return personal_data fields only.
-            // If $alldata=false, return only fields marked as 'Include in CSV export'
-            if ((!$personal || $field_data["personal_data"]) && ($alldata || $field_data["include_in_csv_export"]))
+            if  (
+                   metadata_field_view_access($restypefield["ref"])  
+                && 
+                    (!$personal || $restypefield["personal_data"])
+                && 
+                    ($alldata || $restypefield["include_in_csv_export"])
+                && 
+                    !(checkperm("T" . $restypefield["resource_type"]))
+                )
                 {
-                $csv_field_headers[$field_data['ref']] = $field_data['title'];
-                $resources_fields_data[$resource['ref']][$field_data['resource_type_field']] = $field_data['value'];
+                $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
+                // Check if the resource has a value for this field in the data retrieved
+                $resdataidx =array_search($restypefield["ref"], array_column($allresdata[$resource['ref']], 'ref'));
+                $fieldvalue = ($resdataidx !== false) ? $allresdata[$resource['ref']][$resdataidx]["value"] : "";
+                $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
                 }
             }
 

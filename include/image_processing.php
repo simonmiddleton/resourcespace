@@ -106,7 +106,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif (isset($_FILES['Filedata'])) 
                 {
                 $processfile=$_FILES['Filedata'];# Java upload (at least) needs this
-                } 
+                }
 
             # Work out the filename.
             if (isset($_REQUEST['name']))
@@ -119,7 +119,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
             else
                 {
-                $filename=$processfile['name']; # Standard uploads
+                if(isset($processfile['name']))
+                    {
+                    $filename=$processfile['name']; # Standard uploads
+                    }
+                else
+                    {
+                    exit($lang["posted-file-not-found"]);
+                    } 
                 }
 
             global $filename_field;
@@ -199,13 +206,16 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         global $banned_extensions;
         if (in_array($extension,$banned_extensions)) {return false;}
 
+        # ensure extension is no longer than 10 characters due to resource.file_extension field def: varchar(10)
+        if (strlen($extension) > 10) {return false;}
+
         $filepath=get_resource_path($ref,true,"",true,$extension);
 
         if (!$revert)
             { 
             # Remove existing file, if present
 
-            hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
+            hook("beforeremoveexistingfile", "", array( "ref" => $ref ) );
 
             $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             if ($old_extension!="") 
@@ -1976,7 +1986,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet +matte' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -3083,7 +3093,7 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
     return $return;
     }
 
-function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url)
+function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
     debug("upload_file_by_url(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, url = $url)");
 
@@ -3223,7 +3233,7 @@ function getSvgSize($file_path)
         }
 
     $svg_size   = array(0, 0);
-    $xml        = new SimpleXMLElement($file_path, 0, true);
+    $xml        = new SimpleXMLElement($file_path, LIBXML_PARSEHUGE, true);
     $attributes = $xml->attributes();
 
     // This information should be available in either width and height attributes and/ or viewBox

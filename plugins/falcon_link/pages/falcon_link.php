@@ -44,8 +44,7 @@ if ($access != 0 || !in_array($usergroup, $falcon_link_usergroups))
 
 if (trim($falcon_link_api_key) == "" || count($falcon_link_restypes) < 1)
 	{
-    $linkadd = checkperm('a') ? array("<a href='$baseurl/plugins/falcon_link/pages/setup.php'>","</a>") : array("","");
-    echo sprintf($lang["falcon_link_notconfigured"] . "%s$baseurl/plugins/falcon_link/pages/setup.php%s",$linkadd);
+    $errormessages[] = sprintf("<p>%s </p>", $lang["falcon_link_notconfigured"]);
     }
 
 foreach($resources as $resource)

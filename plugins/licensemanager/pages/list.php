@@ -33,13 +33,23 @@ $url_params = array(
     'archive'    => getval('archive','')
 );
 ?>
+<div class="BasicsBox"> 
+<?php
+    $links_trail = array(
+        array(
+            'title' => $lang["teamcentre"],
+            'href'  => $baseurl_short . "pages/team/team_home.php"
+        ),
+        array(
+            'title' => $lang["managelicenses"]
+        )
+    );
+
+    renderBreadcrumbs($links_trail); ?>
+    
 <form method=post id="licenselist" action="<?php echo $baseurl_short ?>plugins/licensemanager/pages/list.php" onSubmit="CentralSpacePost(this);return false;">
 <?php generateFormToken("licenselist"); ?>
 <input type=hidden name="delete" id="licensedelete" value="">
-
-
-<div class="BasicsBox"> 
-  <h1><?php echo $lang["managelicenses"]?></h1>
  
 <?php 
 $sql="";

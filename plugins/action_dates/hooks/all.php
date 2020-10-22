@@ -12,20 +12,27 @@ function HookAction_datesCronCron()
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
            $action_dates_extra_config, $DATE_FIELD_TYPES;
+
+    global $action_dates_eligible_states;
 	
 	echo "action_dates: running cron tasks" . PHP_EOL;
     
     # Reset any residual userref from earlier cron tasks
     global $userref;
     $userref=0;
+            
+    $eligible_states_list = implode(",",$action_dates_eligible_states);
 
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
-	
-	# Check that this is a valid date field to use
+    
+    # Process resource access restriction if a restriction date has been configured
+    # The restriction date will be processed if it is a valid date field
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         echo "action_dates: Checking field " . $action_dates_restrictfield . PHP_EOL;
-        $restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
+        $restrict_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource "
+            . ($eligible_states_list == "" ? "" : "AND r.archive IN ({$eligible_states_list})")    
+            . " WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
 		$emailrefs=array();
 		foreach ($restrict_resources as $resource)
 			{
@@ -94,41 +101,52 @@ function HookAction_datesCronCron()
 			}
         }
     
-    # Process resources whose deletion date has been reached
+    # Process resource deletion or statechange if designated date has been configured
+    # The designated date will be processed if it is a valid date field
 	if(in_array($action_dates_deletefield, $allowable_fields))
         {
         $change_archive_state = false;
-        
+
         $fieldinfo = get_resource_type_field($action_dates_deletefield);
         
         echo "action_dates: Checking dates in field " . $fieldinfo["title"] . PHP_EOL;
         if($action_dates_reallydelete)
             {
-            $delete_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource > 0 AND resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
+            # FULL DELETION - Build candidate list of resources which have the deletion date field populated
+            $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource " 
+                                    . ($eligible_states_list == "" ? "" : " AND r.archive IN ({$eligible_states_list})")    
+                                    . " WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
             }
         else
             {
+            # NOT FULL DELETION - If not already configured, establish the default resource deletion state
             if(!isset($resource_deletion_state))
                 {
                 $resource_deletion_state = 3;
                 }
+            # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
+            #                     and which are neither in the resource deletion state nor in the action dates new state
+            $candidate_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource " 
+                                    . ($eligible_states_list == "" ? "" : " AND r.archive IN ({$eligible_states_list})")    
+                                    . " AND r.archive NOT IN ({$resource_deletion_state},{$action_dates_new_state}) " 
+                                    . " WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
 
-            // The new state should be by default 3 - Deleted state
-            // If this is different, it means we only want to move 
-            // resources to that state
+            # NOT FULL DELETION - Resolve the target archive state to which candidate resources are to be moved
+            # If the new state differs from the default resource deletion state, it means we only want to move resources to that state
             if($action_dates_new_state != $resource_deletion_state)
                 {
                 $resource_deletion_state = $action_dates_new_state;
                 $change_archive_state    = true;
                 }
-
-            $delete_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource AND r.archive != '{$resource_deletion_state}' WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
+            # The resource deletion state now represents the target archive state
             }
 
-        foreach($delete_resources as $resource)
+        # Process the list of candidates    
+        foreach($candidate_resources as $resource)
             {
             $ref = $resource['resource'];
-
+            
+            # Candidate deletion date reached or passed 
             if (time() >= strtotime($resource['value']))
                 {
                 if(!$change_archive_state)
@@ -143,10 +161,12 @@ function HookAction_datesCronCron()
                 
                 if ($action_dates_reallydelete)
                     {
+                    # FULL DELETION
                     delete_resource($ref);
                     }
                 else
                     {
+                    # NOT FULL DELETION - Update resources to the target archive state
                     sql_query("UPDATE resource SET archive = '{$resource_deletion_state}' WHERE ref = '{$ref}'");
                     
                     if($action_dates_remove_from_collection)
@@ -156,7 +176,6 @@ function HookAction_datesCronCron()
                         }
                 
                     }
-
 
                 resource_log($ref,'x','',$lang['action_dates_delete_logtext']);
                 }

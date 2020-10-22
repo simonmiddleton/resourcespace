@@ -428,7 +428,8 @@ function email_collection_request($ref,$details,$external_email)
  * @param  mixed $ref   
  * @param  mixed $details
  * @param  mixed $ref_is_resource
- * @return void
+ * 
+ * @return boolean
  */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
     {   
@@ -613,7 +614,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $all_r_types = get_resource_types();
 
         $resources = get_collection_resources($collectiondata['ref']);
-
+        $resources = ($resources === false ? array() : $resources);
+    
         // Get distinct resource types found in this collection:
         $collection_resources_by_type = array();
         foreach ($resources as $resource_id) 
@@ -777,7 +779,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         else
             {
-            $ref = implode('', $collections);
+            return false;
             }
 
         } // End of default manager (regular processing)

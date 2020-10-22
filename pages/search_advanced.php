@@ -121,7 +121,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 
 
 # Reconstruct a values array based on the search keyword, so we can pre-populate the form from the current search
-$search=@$_COOKIE["search"];
+$search= isset($_COOKIE["search"]) ? $_COOKIE["search"] : "";
 $keywords=split_keywords($search,false,false,false,false,true);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
 $searched_nodes = array();
@@ -185,8 +185,8 @@ else
 		  foreach($properties as $property)
 			  {
 			  $propertycheck=explode(":",$property);
-			  $propertyname=$propertycheck[0];
-			  $propertyval=escape_check($propertycheck[1]);
+			  $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
+			  $propertyval=isset($propertycheck[1])?escape_check($propertycheck[1]):"";
 			  if($propertyval!="")
 				{
 				$fieldname=$propertyfields[$propertyname];

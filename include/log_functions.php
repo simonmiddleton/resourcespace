@@ -20,7 +20,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 	if (is_null($log_code))
 		{
-		$log_code == LOG_CODE_UNSPECIFIED;
+		$log_code = LOG_CODE_UNSPECIFIED;
 		}
 
 	if(!function_exists('log_diff'))

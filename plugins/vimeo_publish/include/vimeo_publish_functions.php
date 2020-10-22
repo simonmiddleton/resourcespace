@@ -75,7 +75,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
 
 function delete_vimeo_token($user_ref)
     {
-    sql_query("UPDATE user SET vimeo_username = NULL, vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = '{$user_ref}'");
+    sql_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = '{$user_ref}'");
 
     return;
     }

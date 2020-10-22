@@ -75,14 +75,14 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 		foreach ($fields_tab_names as $tabname) { 
             if ($modal) 
                 {
-                $tabOnClick="SelectMetaTab(".$tabcount.",true);";
+                $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",true);";
                 }
             else
                 {
-                $tabOnClick="SelectMetaTab(".$tabcount.",false);";
+                $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",false);";
                 }
             ?>
-			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
+			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
             <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo i18n_get_translated($tabname)?></a>
 			</div>
 		
@@ -94,8 +94,8 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 
 <?php
 } ?>
-<?php $tabModalityClass = ($modal ? " MetaTabIsModal" : " MetaTabIsNotModal");?>
-<div id="<?php echo ($modal ? "Modal" : "")?>tab0" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
+<?php $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;?>
+<div id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
 <div class="clearerleft"> </div>
 <div>
 <?php 
@@ -158,7 +158,7 @@ foreach($fields_tab_names as $tabname)
         <div class="clearerleft"></div>
         </div>
         </div>
-        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div>
+        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div>
         <?php
         }
     }

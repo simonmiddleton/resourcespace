@@ -18,6 +18,7 @@ if(!in_array($restype_order_by,array("rt","name","tab_name","order_by","fieldcou
 $url_params = array("restype_order_by"=>$restype_order_by,"restype_sort"=>$restype_sort);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params);
 
+$sql_restype_order_by=$restype_order_by=="order_by"?"CAST(order_by AS UNSIGNED)":$restype_order_by;
 
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
@@ -68,7 +69,7 @@ $resource_types=sql_query ("
 	
 	restypes
 	
-	order by $restype_order_by
+	order by $sql_restype_order_by
 	$restype_sort
 	"
 );
@@ -97,8 +98,20 @@ function addColumnHeader($orderName, $labelKey)
 ?>	
 
 <div class="BasicsBox">
-   
-  <h1><?php echo $lang["resource_types_manage"];render_help_link("resourceadmin/resource-types");?></h1>
+<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["resource_types_manage"],
+			'help'  => "resourceadmin/resource-types"
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+?>
   
   <?php
   $introtext=text("introtext");

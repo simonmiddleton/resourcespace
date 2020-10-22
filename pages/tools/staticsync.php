@@ -701,12 +701,13 @@ function ProcessFolder($folder)
                     $done[$shortpath]["ref"]=$r;
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
+                    update_disk_usage($r);
                     }
                 else
                     {
                     # Import failed - file still being uploaded?
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
-                    }                
+                    }
                 }
             elseif($staticsync_ingest_force)
                 {

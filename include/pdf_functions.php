@@ -11,16 +11,19 @@ function get_pdf_template_path($resource_type, $template_name = '')
     {
     global $storagedir, $pdf_resource_type_templates;
 
-    $templates     = $pdf_resource_type_templates[$resource_type];
     $template      = '';
 
-    if(
-        !array_key_exists($resource_type, $pdf_resource_type_templates) ||
-        (array_key_exists($resource_type, $pdf_resource_type_templates) && empty($templates))
-    )
+    if(!array_key_exists($resource_type, $pdf_resource_type_templates))
         {
         trigger_error('There are no PDF templates set for resource type "' . $resource_type . '"');
         }
+    
+    $templates     = $pdf_resource_type_templates[$resource_type];
+
+    if(array_key_exists($resource_type, $pdf_resource_type_templates) && empty($templates))
+        {
+        trigger_error('There are no PDF templates set for resource type "' . $resource_type . '"');
+        }      
 
     // Client code wants a specific template name but there isn't one
     if('' !== $template_name && !in_array($template_name, $templates))

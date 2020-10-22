@@ -977,7 +977,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
         }
     $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
-    log_mail($email,$subject);
+    log_mail($email,$subject,$reply_to);
     mail ($email,$subject,$message,$headers);
     }
 
@@ -1175,14 +1175,16 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
     if (!isset($body)){$body=$message;}
 
-    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log;
+    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log,$smtpautotls, $smtp_debug_lvl;
     $mail = new PHPMailer\PHPMailer\PHPMailer();
     // use an external SMTP server? (e.g. Gmail)
     if ($use_smtp) {
         $mail->IsSMTP(); // enable SMTP
-        $mail->SMTPDebug = $debug_log ? 1 : 0;  // debugging: 1 = errors and messages, 2 = messages only
         $mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
         $mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
+        $mail->SMTPAutoTLS = $smtpautotls;
+        $mail->SMTPDebug = ($debug_log ? $smtp_debug_lvl : 0);
+        $mail->Debugoutput = function(string $msg, int $debug_lvl) { debug("SMTPDebug: {$msg}"); };
         $mail->Host = $smtp_host; // hostname
         $mail->Port = $smtp_port; // port number
         $mail->Username = $smtp_username; // username
@@ -1308,8 +1310,9 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         $mail->AltBody = $mail->html2text($body); 
         }
         
-    log_mail($email,$subject);
+    log_mail($email,$subject,$reply_to);
 
+    $GLOBALS["use_error_exception"] = true;
     try
         {
         $mail->Send();
@@ -1326,6 +1329,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
         exit;
         }
+    unset($GLOBALS["use_error_exception"]);
     hook("aftersendmailphpmailer","",$email);   
 }
 
@@ -1341,9 +1345,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
  *
  * @param  string $email
  * @param  string $subject
+ * @param  string $sender    The email address of the sender
  * @return void
  */
-function log_mail($email,$subject)
+function log_mail($email,$subject,$sender)
     {
     global $userref;
     $to = escape_check($email);
@@ -1364,13 +1369,15 @@ function log_mail($email,$subject)
                 date,
                 mail_to,
                 mail_from,
-                subject
+                subject,
+                sender_email
                 )
             VALUES (
                 NOW(),
                 '" . $to . "',
                 '" . $from . "',
-                '" . $sub . "'
+                '" . $sub . "',
+                '" . $sender . "'
         );
         ");
     }
@@ -1450,6 +1457,11 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
 
 /**
  * A generic pager function used by many display lists in ResourceSpace.
+ * 
+ * Requires the following globals to be set
+ * $url         - Current page url
+ * $curpage     - Current page
+ * $totalpages  - Total number of pages
  *
  * @param  boolean $break
  * @param  boolean $scrolltotop
@@ -1702,8 +1714,16 @@ function is_process_lock($name)
     # No lock file? return false
     if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
     if (!is_readable(get_temp_dir() . "/process_locks/" . $name)) {return true;} // Lock exists and cannot read it so must assume it's still valid
-    $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
-    if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
+    
+    $GLOBALS["use_error_exception"] = true;
+    try {
+        $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
+        if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
+        }
+    catch (Exception $e) {
+        debug("is_process_lock: Attempt to get file contents '$result' failed. Reason: {$e->getMessage()}");
+        }
+    unset($GLOBALS["use_error_exception"]);
     
     return true; # Lock is valid
     }
@@ -1848,9 +1868,15 @@ function get_temp_dir($asUrl = false,$uniqid="")
     if ($uniqid!=""){
         $uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
         $result.="/$uniqid";
-        if(!is_dir($result)){
+        if(!is_dir($result))
+            {
             // If it does not exist, create it.
-            mkdir($result, 0777,true);
+            try {
+                mkdir($result, 0777,true);
+            } 
+            catch (Exception $e) {
+                debug("get_temp_dir: Attempt to create folder '$result' failed. Reason: {$e->getMessage()}");  
+            }
         }
     }
     
@@ -2005,15 +2031,18 @@ function format_display_field($value)
 
     $value = strip_tags_and_attributes($value);
 
-    if(isset($df[$x]['type']) && 8 == $df[$x]['type'])
-        {
-        $value = strip_tags($value);
-        }
-
     $string=i18n_get_translated($value);
     $string=TidyList($string);
-    //$string=tidy_trim($string,$results_title_trim);
-    $string=htmlspecialchars($string);
+    
+    if(isset($df[$x]['type']) && $df[$x]['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
+        {
+        $string = strip_tags_and_attributes($string); // This will allow permitted tags and attributes
+        }
+    else
+        {
+        $string=htmlspecialchars($string);
+        }
+
     $string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
     
     return $string;
@@ -2746,9 +2775,6 @@ function get_slideshow_files_data()
 
     return $slideshow_files;
     }
-
-    
-    
         
 /**
  * Returns a sanitised row from the table in a safe form for use in a form value, 
@@ -2765,8 +2791,6 @@ function form_value_display($row,$name,$default="")
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }
-
-
 
 /**
  * Adds a job to the job_queue table.
@@ -2800,7 +2824,7 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
             {
             return $lang["job_queue_duplicate_message"];
             }
-    sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "')");
+    sql_query("INSERT INTO job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) VALUES('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "')");
     return sql_insert_id();
     }
     
@@ -2815,56 +2839,100 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
  */
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     {
-    $sql="update  job_queue set job_data='" . escape_check(json_encode($job_data)) . "'";
+    $sql="UPDATE job_queue SET job_data='" . escape_check(json_encode($job_data)) . "'";
     if($newtime!=""){$sql.=",start_date='" . $newtime . "'";}
     if($newstatus!=""){$sql.=",status='" . $newstatus . "'";}
-    $sql.=" where ref='" . $ref . "'";
+    $sql.=" WHERE ref='" . $ref . "'";
     sql_query($sql);
     }
 
 /**
- * Delete a job queue entry
+ * Delete a job queue entry if user owns job or user is admin
  *
  * @param  mixed $ref
  * @return void
  */
 function job_queue_delete($ref)
     {
-    sql_query("delete from job_queue where ref='" . $ref . "'");
+    global $userref;
+    $limitsql = (checkperm('a') || php_sapi_name() == "cli") ? "" : " AND user='" . $userref . "'";
+    sql_query("DELETE FROM job_queue WHERE ref='" . $ref . "' " .  $limitsql);
     }
 
 /**
  * Gets a list of offline jobs
  *
- * @param  string $type
- * @param  string $status
- * @param  string $user
- * @param  string $job_code
- * @param  string $job_order_by
+ * @param  string $type         Job type
+ * @param  string $status       Job status - see definitions.php
+ * @param  int    $user         Job user
+ * @param  string $job_code     Unique job code
+ * @param  string $job_order_by 
  * @param  string $job_sort
  * @param  string $find
  * @return array
  */
 function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_order_by="ref", $job_sort="desc", $find="")
     {
+    global $userref;
     $condition=array();
-    if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
-    if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
-    if($user!=""){$condition[] =" user ='" . escape_check($user) . "'";}
+    if($type!="")
+        {
+        $condition[] = " type ='" . escape_check($type) . "'";
+        }
+    if(!checkperm('a'))
+        {
+        // Don't show certain jobs for normal users
+        $hiddentypes = array();
+        $hiddentypes[] = "delete_file";
+        $condition[] = " type NOT IN ('" . implode("','",$hiddentypes) . "')";  
+        }
+    if($status != "" && (int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
+    if($user!="" && (int)$user > 0 && ($user == $userref || checkperm_user_edit($user)))
+        {
+        $condition[] = " user ='" . escape_check($user) . "'";
+        }
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
         {
         $find=escape_check($find);
-        $condition[] = " (j.ref like '%" . $find . "%'  or j.job_data like '%" . $find . "%' or j.success_text like '%" . $find . "%' or j.failure_text like '%" . $find . "%' or j.user like '%" . $find . "%' or u.username like '%" . $find . "%' or u.fullname like '%" . $find . "%')";
+        $condition[] = " (j.ref LIKE '%" . $find . "%'  OR j.job_data LIKE '%" . $find . "%' OR j.success_text LIKE '%" . $find . "%' OR j.failure_text LIKE '%" . $find . "%' OR j.user LIKE '%" . $find . "%' OR u.username LIKE '%" . $find . "%' or u.fullname LIKE '%" . $find . "%')";
         }
     $conditional_sql="";
     if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
         
-    $sql = "select j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname from job_queue j left join user u on u.ref=j.user " . $conditional_sql . " order by " . escape_check($job_order_by) . " " . escape_check($job_sort);
+    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user " . $conditional_sql . " ORDER BY " . escape_check($job_order_by) . " " . escape_check($job_sort);
     $jobs=sql_query($sql);
     return $jobs;
     }
-    
+
+/**
+ * Get details of specified offline job
+ *
+ * @param  int $job identifier
+ * @return array
+ */
+function job_queue_get_job($ref)
+    {
+    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user WHERE j.ref='" . (int)$ref . "'";
+    $job_data=sql_query($sql);
+
+    return (is_array($job_data) && count($job_data)>0) ? $job_data[0] : array();
+    }    
+
+/**
+ * Delete all jobs in the specified state
+ *
+ * @param  int $status to purge, whole queue will be purged if not set
+ * @return void
+ */
+function job_queue_purge($status=0)
+    {
+    $deletejobs = job_queue_get_jobs('',$status == 0 ? '' : $status);
+    if(count($deletejobs) > 0)
+        {
+        sql_query("DELETE FROM job_queue WHERE ref IN ('" . implode("','",array_column($deletejobs,"ref")) . "')");
+        }
+    }
 
 /**
 * Run offline job
@@ -2880,10 +2948,12 @@ function job_queue_run_job($job, $clear_process_lock)
     $jobref = $job["ref"];
     
     // Control characters in job_data can cause decoding issues
-    $job["job_data"] = escape_check($job["job_data"]);
+    //$job["job_data"] = escape_check($job["job_data"]);
 
     $job_data=json_decode($job["job_data"], true);
     $jobuser = $job["user"];
+    $jobuserdata = get_user($jobuser);
+    setup_user($jobuserdata);
     $job_success_text=$job["success_text"];
     $job_failure_text=$job["failure_text"];
 
@@ -2906,7 +2976,7 @@ function job_queue_run_job($job, $clear_process_lock)
         debug($logmessage);
         clear_process_lock("job_{$jobref}");
         }
-
+    
     set_process_lock('job_' . $jobref);
     
     $logmessage =  "Running job #" . $jobref . PHP_EOL;
@@ -2922,23 +2992,37 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-
+        job_queue_update($jobref, $job_data,STATUS_INPROGRESS);
         $offline_job_in_progress = true;
-
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
+        job_queue_update($jobref, $job_data,STATUS_COMPLETE);
         }
     else
         {
         // Check for handler in plugin
-        foreach($plugins as $plugin)
+        $offline_plugins = $plugins;
+
+        // Include plugins for this job user's group
+        $group_plugins = sql_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 AND disable_group_select=0 AND find_in_set('" . $jobuserdata["usergroup"] . "',enabled_groups) ORDER BY priority","plugins");
+        foreach($group_plugins as $group_plugin)
+            {
+            include_plugin_config($group_plugin['name'],$group_plugin['config'],$group_plugin['config_json']);
+            register_plugin($group_plugin['name']);
+            register_plugin_language($group_plugin['name']);
+            $offline_plugins[]=$group_plugin['name'];
+            }	
+
+        foreach($offline_plugins as $plugin)
             {
             if (file_exists(__DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php"))
                 {
                 $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
                 echo $logmessage;
                 debug($logmessage);
+                job_queue_update($jobref, $job_data,STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
+                job_queue_update($jobref, $job_data,STATUS_COMPLETE);
                 break;
                 }
             }
@@ -3417,12 +3501,12 @@ function set_sysvar($name,$value=null)
     {
     global $sysvars;
     $name=escape_check($name);
-    $value=escape_check($value);
-	db_begin_transaction("set_sysvar");
+    db_begin_transaction("set_sysvar");
     sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
-        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        $safevalue=escape_check($value);
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$safevalue}')");
         }
     db_end_transaction("set_sysvar");
 
@@ -4083,5 +4167,4 @@ function trim_filename(string $s)
     $s .= ".{$extension}";
 
     return $s;
-    };
-
+    }

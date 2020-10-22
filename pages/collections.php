@@ -319,7 +319,7 @@ else { ?>
 							jQuery(this)
 								.closest(".ui-dialog")
 								.find(".ui-dialog-title")
-								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name'));
+								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
 						},
 						buttons: {
 							// Confirm removal of this resource from the resolved collection
@@ -457,6 +457,8 @@ else { ?>
 
 <script>usercollection='<?php echo htmlspecialchars($usercollection) ?>';</script>
 <?php 
+
+$addarray=array();
 
 $add=getvalescaped("add","");
 if ($add!="")
@@ -712,7 +714,7 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	foreach ($results_all as $resource)
 		{
 		# For each resource in the collection, fetch the price (set in config.php, or config override for group specific pricing)
-		$id=$resource["purchase_size"];
+		$id=(isset($resource["purchase_size"])) ? $resource["purchase_size"] : "";
 		if ($id=="") {$id="hpr";} # Treat original size as "hpr".
 		if (array_key_exists($id,$pricing))
 			{
@@ -733,11 +735,9 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 			}
 		}
 	}
-?><div><?php
+?><div>
 
-if (true) { // draw both
-
-?><div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
+<div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
 
 hook('before_collectionmenu');
  
@@ -910,8 +910,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 	</ul>
 </div>
 <?php
-}
-} ?>
+}?>
 
 <!--Resource panels-->
 <?php if ($collection_dropdown_user_access_mode){?>
@@ -972,7 +971,7 @@ if ($count_result>0)
 <?php if (!hook("resourceview")) { ?>
 		<!--Resource Panel-->
 		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if ($add==$ref) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
         
 		<?php if (!hook("rendercollectionthumb")){?>
 		<?php $access=get_resource_access($result[$n]);
@@ -986,7 +985,7 @@ if ($count_result>0)
                     {
                     $colimgpath = get_resource_path($ref, false, ($retina_mode ? 'thm':'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                     ?>
-                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>" alt="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"
+                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                     <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
                     }
 				else
@@ -1013,12 +1012,11 @@ if ($count_result>0)
 			}	
 		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
 		if($field_type==8){
-			$title=strip_tags($title);
 			$title=str_replace("&nbsp;"," ",$title);
 		}
 		?>	
 		<?php if (!hook("replacecolresourcetitle")){?>
-		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated(strip_tags(strip_tags_and_attributes($title))),14));?></a>&nbsp;</div>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
 		<?php } ?>
 		
 		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users
@@ -1080,12 +1078,12 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 	<?php
 	}
 
-if ($add!="")
+if (count($addarray)>0 && $addarray[0]!="")
 {
 # Animate the new item
 ?>
 <script type="text/javascript">
-jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").slideDown('fast');
+jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
 </script>
 <?php      
 }
@@ -1097,13 +1095,11 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 }
 
 
-	?><div id="CollectionMinDiv" style="display:<?php if ($thumbs=="hide") { ?>block<?php } else { ?>none<?php } ?>"><?php 
-	if (true)
-	{
-	# ------------------------- Minimised view
-	?>
+	?><div id="CollectionMinDiv" style="display:<?php if ($thumbs=="hide") { ?>block<?php } else { ?>none<?php } ?>">
 	<!--Title-->	
-	<?php if (!hook("nothumbs")) {
+	<?php 
+	# ------------------------- Minimised view
+	if (!hook("nothumbs")) {
 
 	if (hook("replacecollectionsmin", "", array($k!="")))
 		{
@@ -1215,7 +1211,6 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").sl
 	<div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];}?></div>
 	<?php } # end hook replace_collectionminitems ?>
 	</div>
-	<?php } ?>
 
 <?php
 draw_performance_footer();

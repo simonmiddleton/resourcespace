@@ -32,10 +32,12 @@ switch ($newtype)
     break;
     
     case "collection":
-        $targeturl = $baseurl_short . "pages/collection_manage.php";
-        $newparam = "name";
+        $targeturl = $baseurl_short . "pages/collections.php";
+        $newparam = "newcolname";
         $newtext = $lang["createnewcollection"];
+        $extraparams["collection"] = "new";
         $csrf_code = "newcollection";
+        $customformaction= "var newcolname=encodeURIComponent(jQuery('#newcolname').val());CollectionDivLoad('" . $baseurl_short . "pages/collections.php?collection=new&entername='+newcolname);ModalClose();ReloadBrowseBar();";
     break;
     
     case "node":
@@ -62,7 +64,7 @@ switch ($newtype)
 ?>
 
 <div class="BasicsBox" id="create_new">
-    <form action="<?php echo $targeturl; ?>" onsubmit="return CentralSpacePost(this,true);">
+    <form action="<?php echo $targeturl; ?>" onsubmit="<?php echo (isset($customformaction) ? $customformaction : "return CentralSpacePost(this,true);"); ?>" >
 	<div class="Question">
 		<label><?php echo $newtext; ?></label>
         <?php generateFormToken($csrf_code); 

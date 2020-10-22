@@ -14,7 +14,7 @@ $search			= getvalescaped('search', '', true);
 $sort			= getvalescaped('sort', '', true);
 $starsearch		= getvalescaped('starsearch', '', true);
 $user_group		= getvalescaped('usergroup', '', true);
-
+$backurl        = getvalescaped('backurl', '');
 
 $collection = get_collection($ref);
 
@@ -186,9 +186,38 @@ include "../include/header.php";
 	<input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
 	<input type="hidden" name="editgroup" id="editgroup" value="">
 	<input type="hidden" name="generateurl" id="generateurl" value="">
-    <?php generateFormToken("collectionform"); ?>
-	<h1><?php echo $lang["sharecollection"]; if($editing && !$editexternalurl){echo " - ".$lang["editingexternalshare"]." ".$editaccess;};render_help_link("user/sharing-resources");?></h1>
-	<?php
+    <?php generateFormToken("collectionform");
+
+    $page_header = $lang["sharecollection"];
+    if ($editing && !$editexternalurl)
+        {
+        $page_header .= " - {$lang["editingexternalshare"]} $editaccess";
+        }
+
+    if (strpos($backurl, "/pages/team/team_external_shares.php") !== false)
+        {
+        $links_trail = array(
+            array(
+                'title' => $lang["teamcentre"],
+                'href'  => $baseurl_short . "pages/team/team_home.php"
+            ),
+            array(
+                'title' => $lang["manage_external_shares"],
+                'href'  => $baseurl . $backurl
+            ),
+            array(
+                'title' => $page_header,
+                'help'  => "user/sharing-resources"
+            )
+        );
+
+        renderBreadcrumbs($links_trail);
+        }
+    else
+        {
+        ?><h1><?php echo $page_header; render_help_link("user/sharing-resources");?></h1><?php
+        }
+
 	if(isset($warningtext))
 		{
 		echo "<div class='PageInformal'>" . $warningtext . "</div>";

@@ -4,11 +4,10 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-if (!checkperm("a"))
+if ($execution_lockout || !checkperm("a"))
 	{
 	exit ("Permission denied.");
 	}
-
 
 $find=getval("find","");
 $order_by=getval("orderby","");
@@ -53,13 +52,20 @@ if (getval("deleteme",false) && enforcePostRequest(false))
 
 $name=getvalescaped("name","");
 $query=getvalescaped("query","");
-if (getval("save",false) && $query!="" && enforcePostRequest(false))
+if (getval("save",false))
 	{
-	log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
-	log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
-	sql_query("update report set query='" . $query . "',name='{$name}' where ref={$ref}");
-	redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
-	exit;
+	if (strlen(trim($query)) == 0) 
+		{
+		$error = $lang["report_query_required"];
+		}
+	if (!isset($error) && enforcePostRequest(false))
+		{
+		log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
+		log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
+		sql_query("update report set query='" . $query . "',name='{$name}' where ref={$ref}");
+		redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
+		exit;
+		}
 	}
 
 $record = sql_query("select * from report where ref={$ref}");
@@ -68,6 +74,7 @@ $record = $record[0];
 include "../../include/header.php";
 
 ?>
+<?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <form method="post"
       enctype="multipart/form-data"
       action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php?ref=<?php echo $ref . $url_params ?>"
@@ -75,12 +82,24 @@ include "../../include/header.php";
       onSubmit="return CentralSpacePost(this,true);" class="FormWide">
     <?php generateFormToken("mainform"); ?>
 	<div class="BasicsBox">
+	<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["page-title_report_management"],
+			'href'  => $baseurl_short . "pages/admin/admin_report_management_edit.php?" . $url_params
+	    ),
+	    array(
+	        'title' => $lang["page-title_report_management_edit"]
+	    )
+	);
 
-	<p>
-		<a href="" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_report_management.php?<?php echo $url_params; ?>',true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['page-title_report_management']; ?></a>
-	</p>
+	renderBreadcrumbs($links_trail);
+	?>
 
-	<h1><?php echo $lang['page-title_report_management_edit']; ?></h1>
 	<p><?php echo $lang['page-subtitle_report_management_edit'];render_help_link("resourceadmin/custom_reports"); ?></p>
 
 		<input type="hidden" name="save" value="1">

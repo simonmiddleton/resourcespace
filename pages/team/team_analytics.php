@@ -22,12 +22,22 @@ include dirname(__FILE__)."/../../include/header.php";
 
 ?>
 
-<div class="BasicsBox"> 
-  <h1><?php echo $lang["rse_analytics"];render_help_link('resourceadmin/analytics');?></h1>
- 
-
-
+<div class="BasicsBox">
 <?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["rse_analytics"],
+        'href'  => $baseurl_short . "pages/team/team_analytics.php",
+		'help'  => 'resourceadmin/analytics'
+    )
+);
+
+renderBreadcrumbs($links_trail);
+
 $search_sql="";
 if ($findtext!="") {$search_sql="and name like '%" . $findtext . "%'";}
 $reports=sql_query("select * from user_report where user='$userref' $search_sql order by ref");

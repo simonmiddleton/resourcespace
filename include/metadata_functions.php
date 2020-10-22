@@ -233,7 +233,7 @@ function check_date_format($date)
         } 
 
     // If it matches nothing return unknown format error
-    return str_replace("%date%", $date, $lang["unknown_date_format_error"]);;
+    return str_replace("%date%", $date, $lang["unknown_date_format_error"]);
     }
 
 /**

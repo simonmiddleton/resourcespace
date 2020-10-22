@@ -4,7 +4,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
     global $baseurl_short, $ajax, $ref, $ffmpeg_preview_extension, $resource, $k,
            $search, $offset, $order_by, $sort, $archive, $lang, $download_multisize,
            $baseurl, $annotate_ext_exclude, $annotate_rt_exclude, $annotate_public_view,
-           $annotate_pdf_output;
+           $annotate_pdf_output, $ffmpeg_audio_extensions;
 
     if(in_array($resource['file_extension'], $annotate_ext_exclude))
         {
@@ -29,6 +29,11 @@ function HookAnnotateViewRenderinnerresourcepreview()
         {
         return false;
         }
+    
+    if(in_array($resource['file_extension'], $ffmpeg_audio_extensions) || $resource['file_extension'] == "mp3") 
+        {
+        return false;
+        }
 
     if(1 == $resource['has_image'])
         {
@@ -46,7 +51,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
         jQuery.noConflict();
         </script>
         <?php
-        $use_watermark = check_use_watermark($resource['ref']);
+        $use_watermark = check_use_watermark();
         $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
 
         if(!file_exists($imagepath))

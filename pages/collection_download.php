@@ -318,7 +318,7 @@ if ($submitted != "")
         $use_watermark=check_use_watermark();
 
         # Only download resources with proper access level
-        if ($access==0 || $access=1)
+        if ($access==0 || $access==1)
             {			
             if($size=="largest")
                 {
@@ -536,8 +536,14 @@ if ($submitted != "")
 	//unlink($progress_file);
 	if ($use_zip_extension)
 		{
-		rmdir(get_temp_dir(false,$id));
-		collection_log($collection,"Z","","-".$size);
+        try {
+            rmdir(get_temp_dir(false,$id));
+            }
+        catch(Exception $e)
+            {
+            debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
+            }
+        collection_log($collection,"Z","","-".$size);
 		}
 	hook('beforedownloadcollectionexit');
 	exit();

@@ -113,10 +113,27 @@ else
 
 
 
-<div class="BasicsBox"><p><a href="<?php echo $baseurl_short ?>pages/team/team_analytics.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK . $lang["rse_analytics"]?></a><br />
-<a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
+<div class="BasicsBox">
+    <?php
+    $links_trail = array(
+        array(
+            'title' => $lang["teamcentre"],
+            'href'  => $baseurl_short . "pages/team/team_home.php"
+        ),
+        array(
+            'title' => $lang["rse_analytics"],
+            'href'  => $baseurl_short . "pages/team/team_analytics.php?offset=" . $offset . "&findtext=" . $findtext
+        ),
+        array(
+            'title' => $ref != "" ? $lang["edit_report"] : $lang["new_report"]
+        )
+    );
 
-</p>
+    renderBreadcrumbs($links_trail);
+    ?>
+    <p>
+        <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
+    </p>
 
 <h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
 

@@ -15,6 +15,12 @@ $first      = true;
 $exactmatch = false;
 $results    = array();
 
+if(!is_array($fielddata))
+    {
+    echo json_encode($results);
+    exit();
+    }
+
 foreach($fielddata['nodes'] as $node)
     {
     $trans = i18n_get_translated($node['name']);

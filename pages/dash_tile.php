@@ -192,7 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-	
+		
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
 		{
@@ -219,6 +219,11 @@ if($submitdashtile && enforcePostRequest(false))
 		<?php echo $message;?>
 		</p>
 		<?php
+		if(strpos($link,"pages/")===0)
+		    {
+			$length = strlen("pages/");
+			$link = substr_replace($link,"",0,$length);
+		    }
 		}?>
 
 	<a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
@@ -402,7 +407,11 @@ else if($edit)
 	
 	#Get field data
 	$buildstring = explode('?',$tile["url"]);
-	parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+    if(isset($buildstring[1])) 
+        {
+        parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+        }
+	
 	if(isset($buildstring["tltype"]))
 		{
 		$tile_type=$buildstring["tltype"];

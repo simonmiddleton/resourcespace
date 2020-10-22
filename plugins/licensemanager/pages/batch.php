@@ -11,7 +11,12 @@ $unlink=(getval("unlink","")!=""); # Unlink mode
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
     $resources=get_collection_resources($collection);
-    $ref=getvalescaped("ref","");
+    $ref=getvalescaped("ref", 0, true);
+    if($ref <= 0)
+        {
+        error_alert($lang["selectlicence"], false);
+        exit();
+        }
     $url_params = array(
         'ref'        => $ref,
         'search'     => getval('search',''),

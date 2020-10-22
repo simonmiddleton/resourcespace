@@ -118,7 +118,7 @@ if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=f
 
 # Load access level
 $access=get_resource_access($ref);
-$use_watermark=check_use_watermark($ref);
+$use_watermark=check_use_watermark();
 
 # check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 if ($access==2) 

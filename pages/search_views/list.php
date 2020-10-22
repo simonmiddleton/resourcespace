@@ -77,7 +77,7 @@ if (!hook("replacelistitem"))
                                 >
                             <?php 
                             } //end link conditional
-                        echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+                        echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$results_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link to first item only ?>
                             </a>
@@ -91,27 +91,6 @@ if (!hook("replacelistitem"))
         
         hook("searchbeforeratingfield");
         
-        if (isset($rating_field))
-            { ?>
-            <td <?php hook("listviewcolumnstyle");?> >
-                <?php 
-                if (isset($result[$n][$rating])&& $result[$n][$rating]>0) 
-                    { 
-                    for ($y=0;$y<$result[$n][$rating];$y++)
-                        { ?> 
-                        <div class="IconStar"></div><?php 
-                        }
-                    } 
-                else 
-                    { ?>
-                    &nbsp;
-                    <?php 
-                    } 
-            ?>
-            </td>
-            <?php 
-            }
-
         if ($id_column)
             { ?>
             <td <?php hook("listviewcolumnstyle");?> >

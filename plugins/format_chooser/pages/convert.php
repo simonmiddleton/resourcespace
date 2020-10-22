@@ -54,6 +54,10 @@ resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['format_chooser'], '',  $size);
 if(file_exists($target))
     {
     sendFile($target);
+    }
+# Additional check added to ensure the file is still in place at the time of unlink().
+if(file_exists($target))
+    {
     unlink($target);
     }
 ?>

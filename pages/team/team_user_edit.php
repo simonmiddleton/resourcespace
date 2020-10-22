@@ -120,26 +120,29 @@ if(getval('loginas', '') != '')
 <div class="BasicsBox">
 
 <div class="RecordHeader">
-<div class="backtoresults">	
-<?php if($modal)
-	{
-	?>
-	<a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);"></a>
-	&nbsp;
-	<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
-	<?php
-	}
-	?>
-</div>
 
 <?php
-if(!$modal)
-	{?>
-	<p><a href="<?php echo ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php");?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["manageusers"]; ?></a></p>
-	<?php
-	}
-	?>
-<h1><?php echo $lang["edituser"];render_help_link('systemadmin/creating-users');?> <?php global $display_useredit_ref; echo $display_useredit_ref ? $ref : ""; ?></h1>
+// Breadcrumbs links
+global $display_useredit_ref;
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["manageusers"],
+        'href'  => $baseurl_short . "pages/team/team_user.php"
+    ),
+    array(
+        'title' => $lang["edituser"] . ($display_useredit_ref ? " " . $ref : ""),
+        'href'  => $url,
+        'help' => 'systemadmin/creating-users'
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
+
 </div>
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>

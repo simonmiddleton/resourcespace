@@ -16,7 +16,7 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
+function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
     {
     node_field_options_override($field);
 	
@@ -298,14 +298,17 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
-        if ($field['field_constraint']==0){ 
+        if ((int)$field['field_constraint']==0)
+            { 
 			
 			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
-		}
+		    }
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
-        else if ($field['field_constraint']==1){ // parse value for to/from simple search
+        else if ((int)$field['field_constraint']==1)
+            {
+             // parse value for to/from simple search
 			$minmax=explode('|',str_replace("numrange","",$value));
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
@@ -313,12 +316,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 			<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
 			<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
 			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
-		<?php 
+		    <?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			 $clear_function.="document.getElementById('".$name."_max').value='';";
 			 $clear_function.="document.getElementById('".$name."_min').value='';";
 			 $clear_function.="document.getElementById('".$name."').value='';";
-		}
+		    }
 		
 
         
@@ -608,7 +611,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             foreach($searched_nodes as $node)
                 {
                 $n_details = array();
-                if(get_node($node, $n_details) && $n_details["resource_type_field"] != $field["ref"])
+
+                if(get_node($node, $n_details)===false)
+                    {
+                    continue;
+                    }
+
+                if($n_details["resource_type_field"] != $field["ref"])
                     {
                     continue;
                     }
@@ -1417,13 +1426,14 @@ function render_access_key_tr(array $record)
         // For resource
         $link      = $baseurl . '?r=' . urlencode($record['resource']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['share-resource'];
-        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
+        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s&backurl=%s',
             $baseurl_short,
             urlencode($record['resource']),
             urlencode($record['access_key']),
             urlencode($record['expires']),
             urlencode($record['access']),
-            urlencode($record['usergroup'])
+            urlencode($record['usergroup']),
+            urlencode("/pages/team/team_external_shares.php")
         );
         }
     else
@@ -1431,13 +1441,14 @@ function render_access_key_tr(array $record)
         // For collection
         $link      = $baseurl . '?c=' . urlencode($record['collection']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['sharecollection'];
-        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
+        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s&backurl=%s',
             $baseurl_short,
             urlencode($record['collection']),
             urlencode($record['access_key']),
             urlencode($record['expires']),
             urlencode($record['access']),
-            urlencode($record['usergroup'])
+            urlencode($record['usergroup']),
+            urlencode("/pages/team/team_external_shares.php")
         );
         }
         ?>
@@ -1474,7 +1485,8 @@ function is_field_displayed($field)
     global $ref, $resource, $upload_review_mode;
 
     # Field is an archive only field
-    return !(($resource["archive"]==0 && $field["resource_type"]==999)
+    return !(
+        (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
         # Field has write access denied
         || (checkperm("F*") && !checkperm("F-" . $field["ref"])
         && !($ref < 0 && checkperm("P" . $field["ref"])))
@@ -2311,20 +2323,23 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
         <?php
         if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
             {
-            echo $pre_links . '&nbsp;' . LINK_CARET;
+            echo $pre_links . '&nbsp;' . LINK_CHEVRON_RIGHT;
             }
 
         for($i = 0; $i < count($links); $i++)
             {
+            $anchor = isset($links[$i]['href']);
             if(0 < $i)
                 {
-                echo LINK_CARET;
+                echo LINK_CHEVRON_RIGHT;
                 }
-                ?>
-            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);">
-                <span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span>
-            </a>
-            <?php
+                
+            if ($anchor)
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"><?php } ?><span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span><?php if ($anchor) { ?></a><?php }
+            if (isset($links[$i]['help']))
+                {
+                render_help_link($links[$i]['help']);
+                }
             }
             ?>
         </div>
@@ -2551,7 +2566,7 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
 * 
 * @return void
 */
-function render_share_options($collectionshare=true, $ref, $emailing=false)
+function render_share_options($collectionshare=true, $ref=0, $emailing=false)
     {
     global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
@@ -3695,7 +3710,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
-
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
     if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -3818,7 +3832,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		    }
 
 		if (!$valueonly && trim($field["display_template"])!="")
-			{		
+			{
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 			
@@ -3862,19 +3876,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
-                # Draw this field normally.
-                # Sanitize value before rendering.
-                # Note: we cannot use htmlspecialchars where we actually render it as that might break highlighting
-                if($value != strip_tags(htmlspecialchars_decode($value)))
-                    {
-                    // Strip tags moved before highlighting as was being corrupted
-                    $value = strip_tags_and_attributes(htmlspecialchars_decode($value));
-                    }
-                else
-                    {
-                    $value = htmlspecialchars($value);
-                    }
-
+                # Draw this field normally. - value has already been sanitized by htmlspecialchars
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 				
@@ -4596,4 +4598,255 @@ function render_featured_collections_category_permissions(array $ctx)
         }
 
     return;
+    }
+
+/**
+ * show_upgrade_in_progress message
+ *
+ * @param  bool $dbstructonly - Indicates whether this is a full upgrade with migration scripts or just a check_db_structs()
+ * @return void
+ */
+function show_upgrade_in_progress($dbstructonly=false)
+    {
+    global $lang;
+    $message="This system is currently being upgraded by another process." . PHP_EOL;
+    if(!$dbstructonly)
+        {
+        $upgrade_progress_overall=get_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL);
+        $upgrade_progress_script=get_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT);
+        $message.=($upgrade_progress_overall===false ? '' : $upgrade_progress_overall . PHP_EOL);
+        $message.=($upgrade_progress_script===false ? '' : 'Script status: ' . $upgrade_progress_script . PHP_EOL);
+        }
+    if(PHP_SAPI == 'cli')
+        {
+        echo $message;
+        }
+    else
+        {
+        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo nl2br($message);
+        ?>
+        <script>
+        setTimeout(function()
+            {
+            window.location.reload(true);
+            }, 5000);
+        </script>
+        <?php
+        }
+    }
+
+
+
+/**
+*  add link to mp3 preview file if resource is a wav file
+* 
+* @param array      $resource               - resource data
+* @param int        $ref                    - resource ref
+* @param string     $k                      - url param key
+* @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
+* @param string     $baseurl                - config base url
+* @param array      $lang                   - array containing language strings         
+* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
+ * 
+ */
+
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+{
+
+// if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
+// resources with extension in $ffmpeg_audio_extensions will always create an mp3 preview file 
+    if (
+        $resource['file_extension']=="wav" && 
+        in_array($resource['file_extension'], $ffmpeg_audio_extensions) &&
+        file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")) && 
+        resource_download_allowed($ref,'',$resource["resource_type"])
+        )	
+        {
+
+        $colspan = $use_larger_layout ? ' colspan="2"' : '';
+        $download_link =  $baseurl  . "/pages/download_progress.php?ref=" . urlencode($ref) . "&ext=mp3&k=" . urlencode($k);
+
+        $html ="<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\"></td>" ; 
+        $html .= "<td><a id=\"downloadlink\" href=\"#\" onclick=\"directDownload('" . $download_link . "')\">" . $lang["action-download"] . "</a></td></tr> ";
+            
+        echo $html;
+        }
+
+}
+
+
+/**
+ * Render a table based on ResourceSpace data to include sorting by various columns
+ *
+ * @param  array $tabledata - This must be constructed as detailed below
+ * 
+ * Required elements:-
+ * 
+ * "class"  Optional class to add to table div
+ * "headers"  - Column headings using the identifier as the index,
+ *  - name - Title to display
+ *  - Sortable - can column be sorted?
+ * 
+ * "orderbyname"    - name of variable used on page to determine orderby (used to differentiate from standard search values)
+ * "orderby"        - Current order by value
+ * "sortbyname"     - name of variable used on page to determine sort
+ * "sort"           - Current sort
+ * "defaulturl"     - Default URL to construct links
+ * "params"         - Current parameters to use in URL
+ * "pager"          - Pager settings 
+ *  - current page
+ *  - total pages
+ * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - An additional 'tools' element can be included to add custom action icons
+ *  - "class" - FontAwesome class to use for icon
+ *  - "text" - title attribute
+ *  - "url" - URl to link to
+ *  - "modal" - (boolean) Open link in modal?
+ *  - "onclick" - OnClick action to add to icon
+ *  
+ *   e.g.
+ * 
+ *   array(
+ *       "class"=>"fa fa-trash",
+ *       "text"=>$lang["action-delete"],
+ *       "url"=>"",
+ *       "modal"=>false,
+ *       "onclick"=>"delete_job(" . $jobs[$n]["ref"] . ");return false;"
+ *       );
+ *
+ *   array(
+ *       "class"=>"fa fa-info",
+ *       "text"=>$lang["job_details"],
+ *       "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+ *       "modal"=>true,
+ *       );
+ * 
+ * @return void
+ */
+function render_table($tabledata)
+    {
+    ?>
+    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
+
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
+    echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
+    foreach($tabledata["headers"] as $header=>$headerdetails)
+        {
+        echo "<th>";
+        if($headerdetails["sortable"])
+            {
+            $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
+            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return CentralSpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
+            if($tabledata["orderby"] == $header)
+                {
+                // Currently sorted by this column
+                echo "<span class='" . $revsort . "'></span>";
+                }
+            echo "</a>";
+            }
+        else
+            {
+            echo htmlspecialchars($headerdetails["name"]);
+            }
+        
+        
+        echo "</th>";
+        }
+    echo "</tr>"; // End of table header row
+
+    if(count($tabledata["data"]) == 0)
+        {
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        }
+    else
+        {
+        foreach($tabledata["data"] as $rowdata)
+            {
+            echo "<tr>";
+
+            if(isset($rowdata['alerticon']))
+                {
+                echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
+                }
+            else
+                {
+                echo "<td></td>"; 
+                }
+            foreach($tabledata["headers"] as $header=>$headerdetails)
+                {
+                if(isset($rowdata[$header]))
+                    {
+                    echo "<td>";
+                    // Data is present
+                    if($header == "tools")
+                        {
+                        echo "<div class='ListTools'>";
+                        foreach($rowdata["tools"] as $toolitem)
+                            {
+                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                            if(isset($toolitem["onclick"]))
+                                {
+                                echo $toolitem["onclick"];
+                                }
+                            else
+                                {
+                                echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
+                                }
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span></a>";
+                            }
+                        echo "</div>";
+                        }
+                    else
+                        {
+                        echo htmlspecialchars($rowdata[$header]);
+                        }
+                    echo "</td>";
+                    }
+                else
+                    {
+                    echo "<td></td>";
+                    }
+                }
+            echo "</tr>";
+            }
+        }
+    echo "</tbody>";
+    echo "</table>";
+    echo "</div>";
+    }
+
+/**
+ * Render multimensional array or object to display within table cells
+ *
+ * @param  array $array
+ * @return void
+ */
+function render_array_in_table_cells($array)
+    {
+    foreach($array as $name => $value)
+        {
+        echo "<table border=1>";
+        echo "<tr><td width='50%'>";
+        echo htmlspecialchars($name);
+        echo "</td><td width='50%'>";
+
+        if(is_array($value) || is_object($value))
+            {
+            render_array_in_table_cells($value);
+            }
+        elseif(is_bool($value))
+            {
+            echo ($value ? "TRUE" : "FALSE");
+            }
+        else
+            {
+            echo htmlspecialchars($value);
+            }
+                
+        echo "</td></tr>";
+        echo "</table>";
+        }
     }

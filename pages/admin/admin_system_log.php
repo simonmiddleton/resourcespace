@@ -126,15 +126,6 @@ jQuery(document).ready(function()
 </script>
 <div class="BasicsBox">
 <?php
-if($backurl != "")
-    {
-    $backurl_text = (strpos($backurl, "team_user_edit") !== false ? $lang["edituser"] : $lang["manageusers"]);
-    ?>
-    <p>
-        <a href="<?php echo $backurl; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $backurl_text; ?></a>
-    </p>
-    <?php
-    }
 
 $title = $lang["systemlog"];
 if($table != '' && $table_reference > 0 && array_key_exists($table, $tables_data))
@@ -147,8 +138,48 @@ if($table != '' && $table_reference > 0 && array_key_exists($table, $tables_data
         $title .= " - {$table_data['display_title']}: {$table_reference_data[$table_data['title_column']]}";
         }
     }
+
+if (strpos($backurl, "pages/team/team_user.php") !== false)
+    {
+    // Arrived from Manage users page
+    $links_trail = array(
+        array(
+            'title' => $lang["teamcentre"],
+            'href'  => $baseurl_short . "pages/team/team_home.php"
+        ),
+        array(
+            'title' => $lang["manageusers"],
+            'href'  => $backurl
+        )
+    );
+    }
+elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
+    {
+    // Arrived from Edit user page
+    $links_trail = array(
+        array(
+            'title' => $lang["teamcentre"],
+            'href'  => $baseurl_short . "pages/team/team_home.php"
+        ),
+        array(
+            'title' => $lang["manageusers"],
+            'href'  => $baseurl_short . "pages/team/team_user.php"
+        ),
+        array(
+            'title' => $lang["edituser"],
+            'href'  => $backurl
+        )
+    );
+    }
+
+$links_trail[] = array(
+    'title' => htmlspecialchars($title),
+    'href'  => $baseurl_short . "pages/admin/admin_system_log.php"
+);
+
+renderBreadcrumbs($links_trail);
 ?>
-    <h1><?php echo htmlspecialchars($title); ?>
+    <h1>
         <form class="ResultsFilterTopRight" method="get">
             <input type="hidden" name="actasuser" value="<?php echo $actasuser; ?>">
             <input type="hidden" name="backurl" value="<?php echo $backurl; ?>">
