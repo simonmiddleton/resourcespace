@@ -167,6 +167,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 
     // place collection titles
     else if (in_array($pagename,$search_title_pages)){
+        $collection=getval("ref","");
         if (isset($search_title)){
             $title=str_replace('"',"''",$lang["searchresults"]." - ".html_entity_decode(strip_tags($search_title)));
         }
@@ -175,7 +176,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
             $title = strip_tags(str_replace('"',"''",i18n_get_collection_name($collectiondata)));
             }  
         else {
-            $collection=getval("ref","");
             $collectiondata=get_collection($collection);
             $title = strip_tags(str_replace('"',"''",i18n_get_collection_name($collectiondata)));
             }
