@@ -1253,7 +1253,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 
     if(count($noeditaccess) > 0)
         {
-        $errors[] = $lang["error-edit_noaccess"] . implode(",",$noeditaccess);
+        $errors[] = $lang["error-edit_noaccess_resources"] . implode(",",$noeditaccess);
         }
     if (count($lockedresources) > 0)
         {
