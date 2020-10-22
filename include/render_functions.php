@@ -3716,7 +3716,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         {
         $treenodes = get_resource_nodes($ref, $field["ref"], true);
         $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(",<br/>",$treetext_arr);        
+        $value = implode(", ",$treetext_arr);        
         }
     elseif(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
 		{
