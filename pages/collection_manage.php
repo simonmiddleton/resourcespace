@@ -34,7 +34,11 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
         $parent = (int) getval("parent", 0, true);
         $coldata = array(
             "name" => $name,
-            "featured_collections_changes" => array("update_parent" => $parent, "force_featured_collection_type" => true),
+            "featured_collections_changes" => array(
+                "update_parent" => $parent,
+                "force_featured_collection_type" => true,
+                "thumbnail_selection_method" => (!$collection_commenting ? $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]),
+            ),
         );
         $redirect_params = ($parent == 0 ? array() : array("parent" => $parent));
         $redirect_url = generateURL("{$baseurl_short}pages/collections_featured.php", $redirect_params);
