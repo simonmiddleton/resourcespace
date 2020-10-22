@@ -598,7 +598,8 @@ function delete_collection($collection)
 	{
 	global $home_dash, $lang;
 	if(!is_array($collection)){$collection=get_collection($collection);}
-	$ref=$collection["ref"];
+    $ref=$collection["ref"];
+    $type=$collection["type"];
 	
 	# Permissions check
 	if (!collection_writeable($ref)) {return false;}
@@ -619,7 +620,11 @@ function delete_collection($collection)
 			}
 		}
 	// log this
-	collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
+    collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
+    if($type==COLLECTION_TYPE_FEATURED)
+        {
+        clear_query_cache("featured_collections");
+        }
 	}
 	
 /**
@@ -1087,6 +1092,11 @@ function save_collection($ref, $coldata=array())
 
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
+
+            if($sqlset["type"] == COLLECTION_TYPE_FEATURED)
+                {
+                clear_query_cache("featured_collections");
+                }
             
             // Log the changes
             foreach($sqlset as $colopt => $colset)
@@ -1129,96 +1139,94 @@ function save_collection($ref, $coldata=array())
     # If 'users' is specified (i.e. access is private) then rebuild users list
     $users=getvalescaped("users",false);
 	if (($users)!="")
-		{
-		# Build a new list and insert
-		$users=resolve_userlist_groups($users);
-		$ulist=array_unique(trim_array(explode(",",$users)));
-		$urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
-		if (count($urefs)>0)
-			{
-			sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
-			$new_attached_users=array_diff($urefs, $old_attached_users);
-			}
-		#log this
-		collection_log($ref,"S",0, join(", ",$ulist));
+        {
+        # Build a new list and insert
+        $users=resolve_userlist_groups($users);
+        $ulist=array_unique(trim_array(explode(",",$users)));
+        $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
+        if (count($urefs)>0)
+            {
+            sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
+            $new_attached_users=array_diff($urefs, $old_attached_users);
+            }
+        #log this
+        collection_log($ref,"S",0, join(", ",$ulist));
 		
-		if($attach_user_smart_groups)
-			{
-			$groups=resolve_userlist_groups_smart($users);
-			$groupnames='';
-			if($groups!='')
-				{
-				$groups=explode(",",$groups);
-				
-				if (count($groups)>0)
-					{ 
-					foreach ($groups as $group)
-						{
-						sql_query("insert into usergroup_collection(collection,usergroup) values ('$ref','$group')");
-						// get the group name
-						if($groupnames!='')
-							{
-							$groupnames.=", ";
-							}
-						$groupnames.=sql_value("select name value from usergroup where ref='{$group}'","");
-						}
+        if($attach_user_smart_groups)
+            {
+            $groups=resolve_userlist_groups_smart($users);
+            $groupnames='';
+            if($groups!='')
+                {
+                $groups=explode(",",$groups);
+                if (count($groups)>0)
+                    { 
+                    foreach ($groups as $group)
+                        {
+                        sql_query("insert into usergroup_collection(collection,usergroup) values ('$ref','$group')");
+                        // get the group name
+                        if($groupnames!='')
+                            {
+                            $groupnames.=", ";
+                            }
+                        $groupnames.=sql_value("select name value from usergroup where ref='{$group}'","");
+                        }
 
-					$new_attached_groups=array_diff($groups, $old_attached_groups);
-					if(!empty($new_attached_groups))
-						{
-						foreach($new_attached_groups as $newg)
-							{
-							$group_users=sql_array("SELECT ref value FROM user WHERE usergroup=$newg");
-							$new_attached_users=array_merge($new_attached_users, $group_users);
-							}
-						}
-					}
-				#log this
-				collection_log($ref,"S",0, $groupnames);
-				}
-			}
-		# Send a message to any new attached user
-		if(!empty($new_attached_users))
-			{
-			global $baseurl, $lang;
-			
-			$new_attached_users=array_unique($new_attached_users);
-			message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getvalescaped("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
-			}
-		}
-		
-	# Relate all resources?
-	if (getval("relateall","")!="")
-		{
+                    $new_attached_groups=array_diff($groups, $old_attached_groups);
+                    if(!empty($new_attached_groups))
+                        {
+                        foreach($new_attached_groups as $newg)
+                            {
+                            $group_users=sql_array("SELECT ref value FROM user WHERE usergroup=$newg");
+                            $new_attached_users=array_merge($new_attached_users, $group_users);
+                            }
+                        }
+                    }
+                #log this
+                collection_log($ref,"S",0, $groupnames);
+                }
+            }
+        # Send a message to any new attached user
+        if(!empty($new_attached_users))
+            {
+            global $baseurl, $lang;
+
+            $new_attached_users=array_unique($new_attached_users);
+            message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getvalescaped("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
+            }
+        }
+
+    # Relate all resources?
+    if (getval("relateall","")!="")
+        {
         relate_all_collection($ref);
-		}
-		
-	# Remove all resources?
-	if (getval("removeall","")!="")
-		{
-		remove_all_resources_from_collection($ref);
-		}
+        }
+
+    # Remove all resources?
+    if (getval("removeall","")!="")
+        {
+        remove_all_resources_from_collection($ref);
+        }
 		
 	# Delete all resources?
 	if (getval("deleteall","")!="" && !checkperm("D"))
-		{
-		
-		if(allow_multi_edit($ref)) {
-			delete_resources_in_collection($ref);
-		}
+        {
+        if(allow_multi_edit($ref))
+            {
+            delete_resources_in_collection($ref);
+            }
+        }
 
-		}
-		
-	$result_limit = getvalescaped("result_limit", 0, true);
+    $result_limit = getvalescaped("result_limit", 0, true);
 
-	# Update limit count for saved search
+    # Update limit count for saved search
 	if ($result_limit > 0)
-		{
-		sql_query("update collection_savedsearch set result_limit='" . $result_limit . "' where collection='$ref'");
-		}
-	
-	refresh_collection_frame();
-	}
+        {
+        sql_query("update collection_savedsearch set result_limit='" . $result_limit . "' where collection='$ref'");
+        }
+
+    refresh_collection_frame();
+    }
 
 
 /**
@@ -1255,7 +1263,7 @@ function collections_comparator_desc($a, $b)
  */
 function get_smart_theme_headers()
 	{
-	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "schema");
+	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "featured_collections");
 	}
 
 /**
@@ -2093,7 +2101,7 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
          WHERE fc.has_resources > 0",
         COLLECTION_TYPE_FEATURED,
         ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
-    ));
+    ),"featured_collections");
 
     // Filter out featured collections that have a different root path
     $collections = filter_featured_collections_by_root($all_fcs, $c["ref"]);
@@ -4275,7 +4283,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $prefix = " " . trim($prefix);
     $column = trim($column);
 
-    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED));
+    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED),"featured_collections");
     $allowed_fcs = $all_fcs;
 
     if(!checkperm("j*"))
@@ -4346,7 +4354,8 @@ function featured_collection_check_access_control(int $c_ref)
     $sql = sprintf("SELECT EXISTS(SELECT ref FROM collection WHERE `type` = %s AND ref = '%s' %s) AS `value`",
         COLLECTION_TYPE_FEATURED,
         escape_check($c_ref),
-        featured_collections_permissions_filter_sql("AND", "ref")
+        featured_collections_permissions_filter_sql("AND", "ref"),
+        "featured_collections"
     );
     return (bool) sql_value($sql, false);
     }
@@ -4591,7 +4600,8 @@ function get_featured_collection_ref_by_name(string $name, $parent)
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, is_null($parent))
         ), 
-        null
+        null,
+        "featured_collections"
     );
 
     return (is_null($ref) ? null : (int) $ref);
