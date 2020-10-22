@@ -1734,13 +1734,10 @@ function check_access_key_collection($collection, $key)
 
     foreach($collections as $collection_ref)
         {
-        // hook to retrieve alternative list of resources for access key check
         $resources_alt = hook("GetResourcesToCheck","",array($collection));
         $resources = ($resources_alt !== false ? $resources_alt : get_collection_resources($collection_ref));
 
-        $invalid_resources = array_filter($resources, function($ref) use ($key) { return !check_access_key($ref, $key); });
-
-        if(count($resources) === count($invalid_resources))
+        if(!check_access_key($resources, $key))
             {
             return false;
             }
