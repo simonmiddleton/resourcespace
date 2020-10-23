@@ -538,7 +538,7 @@ function save_user($ref)
         // Get submitted values
         $username               = trim(getvalescaped('username', ''));
         $password               = trim(getvalescaped('password', ''));
-        $fullname               = trim(getvalescaped('fullname', ''));
+        $fullname               = str_replace("\t", ' ', trim(getvalescaped('fullname', '')));
         $email                  = trim(getval('email', '')); //To be escaped on usage in DB
         $usergroup              = trim(getvalescaped('usergroup', ''));
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
