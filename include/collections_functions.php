@@ -572,7 +572,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         ($ref != 0 ? "ref, " : ""),
         // Values start here
         ($ref != 0 ? "'" . escape_check($ref) . "', " : ""),
-        escape_check($name),
+        escape_check(mb_strcut($name, 0, 100)),
         escape_check($userid),
         escape_check($allowchanges),
         escape_check($cant_delete),
