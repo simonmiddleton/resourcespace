@@ -63,7 +63,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 		"'" . (!is_null($value_old) && !is_null($value_new) && $generate_diff ? escape_check(log_diff($value_old,$value_new)) : '') . "'," .
 		"'" . (is_null($remote_table) ? '' : escape_check($remote_table)) . "'," .
 		"'" . (is_null($remote_column) ? '' : escape_check($remote_column)) . "'," .
-		"'" . (is_null($remote_ref) ? '' : escape_check($remote_ref)) . "'" .
+		"'" . (is_null($remote_ref) ? '' : escape_check(mb_strcut($remote_ref, 0, 100))) . "'" .
 		")");
 	}
 
