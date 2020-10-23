@@ -599,7 +599,7 @@ function delete_collection($collection)
 	global $home_dash, $lang;
 	if(!is_array($collection)){$collection=get_collection($collection);}
     $ref=$collection["ref"];
-    $type=$collection["type"];
+    $type = $collection["type"];
 	
 	# Permissions check
 	if (!collection_writeable($ref)) {return false;}
@@ -619,9 +619,10 @@ function delete_collection($collection)
 			sql_query("delete from user_dash_tile WHERE dash_tile in (" .  implode(",",$collection_dash_tiles) . ")");
 			}
 		}
-	// log this
+
     collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
-    if($type==COLLECTION_TYPE_FEATURED)
+
+    if($type == COLLECTION_TYPE_FEATURED)
         {
         clear_query_cache("featured_collections");
         }
@@ -1093,11 +1094,11 @@ function save_collection($ref, $coldata=array())
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
 
-            if($sqlset["type"] == COLLECTION_TYPE_FEATURED)
+            if(isset($sqlset["type"]))
                 {
                 clear_query_cache("featured_collections");
                 }
-            
+
             // Log the changes
             foreach($sqlset as $colopt => $colset)
                 {
@@ -2101,7 +2102,7 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
          WHERE fc.has_resources > 0",
         COLLECTION_TYPE_FEATURED,
         ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
-    ),"featured_collections");
+    ), "featured_collections");
 
     // Filter out featured collections that have a different root path
     $collections = filter_featured_collections_by_root($all_fcs, $c["ref"]);
@@ -4283,7 +4284,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $prefix = " " . trim($prefix);
     $column = trim($column);
 
-    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED),"featured_collections");
+    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED), "featured_collections");
     $allowed_fcs = $all_fcs;
 
     if(!checkperm("j*"))
