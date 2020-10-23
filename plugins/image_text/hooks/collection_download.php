@@ -99,7 +99,10 @@ function HookImage_textCollection_downloadModifydownloadfile()
 		$p=$newdlfile;
 		}
 		
-	unlink($tmpolfile);
+    if(file_exists($tmpolfile))
+        {
+        unlink($tmpolfile);
+        }  
 	
 	return true;
 	}
