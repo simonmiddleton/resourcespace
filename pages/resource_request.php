@@ -186,13 +186,18 @@ if (isset($custom_request_fields))
 			<?php if ($type==3) { # Drop down box
 			?>
 			<select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
-			<?php foreach ($custom_request_options[$custom[$n]] as $option)
-				{
-				$val=i18n_get_translated($option);
-				?>
-				<option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo htmlspecialchars($val);?></option>
-				<?php
-				}
+            <?php 
+            $index = $custom[$n];
+           if (isset($custom_request_options[$index]))
+              {
+                foreach ($custom_request_options[$index] as $option)
+                    {
+                    $val=i18n_get_translated($option);
+                    ?>
+                    <option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo htmlspecialchars($val);?></option>
+                    <?php
+                    }
+               }
 			?>
 			</select>
 			<?php } ?>
