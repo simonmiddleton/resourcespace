@@ -4248,7 +4248,7 @@ function render_featured_collections(array $ctx, array $items)
                         'freetext'          => 'true',
                         'tile_audience'     => 'false',
                         'all_users'         => 1,
-                        'promoted_resource' => 'true',
+                        'promoted_resource' => (isset($render_ctx["images"]) ? 'true' : ""),
                         'link'              => "{$baseurl_short}pages/search.php?search=!collection{$fc['ref']}",
                     )
                 ),
@@ -4290,7 +4290,7 @@ function render_featured_collections(array $ctx, array $items)
                             'title'             => "{$fc['name']}",
                             'freetext'          => 'true',
                             'tile_audience'     => 'false',
-                            'promoted_resource' => 'true',
+                            'promoted_resource' => (isset($render_ctx["images"]) ? 'true' : ""),
                             'link'              => $fc_category_url
                         )
                     ),

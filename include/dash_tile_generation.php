@@ -680,15 +680,8 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
     $link_parts = explode('?', $tile['link']);
     parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
-    $parent = (isset($link_parts["parent"]) ? validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
-    $resources = array();
-    foreach(get_featured_collection_categories($parent, array()) as $theme)
-        {
-        $resources = array_merge(
-            $resources,
-            do_search("!collection{$theme['ref']}", '', 'relevance', 0, -1, 'desc', false, 0, false, false, '', false, false)
-            );
-        }
+    $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
+    $resources = dash_tile_featured_collection_get_resources($parent);
 
     if(count($resources)>0)
         {

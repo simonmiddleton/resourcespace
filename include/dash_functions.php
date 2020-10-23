@@ -1783,4 +1783,34 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
     <?php  
     }
 
-	
+
+/**
+* Build list of resources that can be shown on a dash tile as a background image. Helper function.
+* 
+* @param integer $c_ref Collection ref
+* 
+* @return array
+*/
+function dash_tile_featured_collection_get_resources(int $c_ref)
+    {
+    $collection = get_collection($c_ref);
+    if($collection === false)
+        {
+        return array();
+        }
+
+    global $view_title_field;
+
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+
+    $resources = array();
+    foreach(get_featured_collection_resources($collection, array()) as $resource_ref)
+        {
+        $resources[] = array(
+            "ref" => $resource_ref,
+            "field{$view_title_field}" => get_data_by_field($resource_ref, $view_title_field));
+        }
+
+    return $resources;
+    }

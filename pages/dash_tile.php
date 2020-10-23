@@ -338,7 +338,7 @@ if($create)
     $tlsize                       = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 
     // Promoted resources can be available for search tiles (srch) and feature collection tiles (fcthm)
-    $promoted_resource = getvalescaped('promoted_resource', FALSE);
+    $promoted_resource = (getval('promoted_resource', "") == "true");
 
     if(!allow_tile_colour_change($tile_type, $tile_style))
         {
@@ -614,15 +614,8 @@ if('' != $tile_type && $tile_type !== "conf")
             $link_parts = explode('?', $link);
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
-            $parent = (isset($link_parts["parent"]) ? validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
-
-            foreach(get_featured_collection_categories($parent, array()) as $theme)
-                {
-                $resources = array_merge(
-                    $resources,
-                    do_search("!collection{$theme['ref']}", '', 'relevance', 0, -1, 'desc', false, 0, false, false, '', false, false)
-                    );
-                }
+            $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
+            $resources = dash_tile_featured_collection_get_resources($parent);
             }
             ?>
         <div class="Question" id="promotedresource">
@@ -632,7 +625,7 @@ if('' != $tile_type && $tile_type !== "conf")
             foreach($resources as $resource)
                 {
                 ?>
-                <option value="<?php echo htmlspecialchars($resource["ref"]) ?>"
+                <option value="<?php echo htmlspecialchars($resource["ref"]); ?>"
                     <?php echo $promoted_resource === $resource['ref'] ? 'selected="selected"' : ''; ?>
                 ><?php
                     echo str_replace(
