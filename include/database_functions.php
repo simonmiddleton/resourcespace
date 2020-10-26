@@ -939,29 +939,6 @@ function CheckDBStruct($path,$verbose=false)
                             $sql="alter table $table add column ";
                             $sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
                             sql_query($sql,false,-1,false);
-
-                            $resources = sql_array("SELECT ref AS `value` FROM resource WHERE ref > 0");
-                            foreach($resources as $resource)
-                                {
-                                // Do not use permissions here as we want to sync all fields
-                                $resource_field_data       = get_resource_field_data($resource, false, false);
-                                $resource_field_data_index = array_search($joins[$m], array_column($resource_field_data, 'ref'));
-
-                                if(
-                                    $resource_field_data_index !== false
-                                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                                    )
-                                    {
-                                    $new_joins_field_value = $resource_field_data[$resource_field_data_index]["value"];
-                                    $truncated_value = truncate_join_field_value($new_joins_field_value);
-                                    $truncated_value_escaped = escape_check($truncated_value);
-
-                                    sql_query("
-                                        UPDATE resource
-                                        SET field{$joins[$m]} = '{$truncated_value_escaped}'
-                                        WHERE ref = '{$resource}'");
-                                    }
-                                }
                             }
                         }
                     }

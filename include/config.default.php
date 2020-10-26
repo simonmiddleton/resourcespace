@@ -13,7 +13,27 @@
  * 
  * @package ResourceSpace
  * @subpackage Configuration
- */
+ * 
+ * 
+ * NOTE (1)
+ * 
+ * IMPORTANT! If any new fields are added to any of the the field arrays marked with '** SEE NOTE (1)' you should do the following:-
+ * 
+ * 1)  If adding as an override for e.g a resource type or usergroup, ensure you add the field to 
+ *     the $data_joins array in config.php so that the columns are updated when resource data is changed
+ *     by other users or scripts
+ * 
+ *     e.g.
+ * 
+ *     $data_joins[] = 8;
+ * 
+ *  2) Once you have made the change, ensure that you run pages/tools/fix_resource_field_column.php, passing in the relevant field
+ *    identifier to populate the columns
+ * 
+ *    e.g.
+ * 
+ *    https://yoururl.com/pages/tools/fix_resource_field_column.php?field=8");
+*/
 
 
 /* ---------------------------------------------------
@@ -987,13 +1007,13 @@ $contact_sheet_unicode_filenames=true;
 $titlefontsize     = 20; // Contact Sheet Title
 $refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
-$config_sheetlist_fields = array(8);
+$config_sheetlist_fields = array(8); # ** SEE NOTE (1)
 $config_sheetlist_include_ref=true;
 # If making a contact sheet with thumbnail sheet style, use these fields in contact sheet:
-$config_sheetthumb_fields = array();
+$config_sheetthumb_fields = array(); # ** SEE NOTE (1)
 $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
-$config_sheetsingle_fields = array(8);
+$config_sheetsingle_fields = array(8); # ** SEE NOTE (1)
 $config_sheetsingle_include_ref=true;
 
 # Use templates rather than setting contactsheet fields by display style?
@@ -1740,9 +1760,8 @@ $partial_index_min_word_length=3;
 
 # ---------------------
 # Search Display 
-
 # Thumbs Display Fields: array of fields to display on the large thumbnail view.
-$thumbs_display_fields=array(8);
+$thumbs_display_fields=array(8); # ** SEE NOTE (1)
 # array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
 $thumbs_display_extended_fields=array();
 	# $search_result_title_height=26;
@@ -1753,19 +1772,20 @@ $thumbs_display_extended_fields=array();
 $xlthumbs=false;
 
 # Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
-$xl_thumbs_display_fields=array(8);
+$xl_thumbs_display_fields=array(8); # ** SEE NOTE (1)
 # array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
 $xl_thumbs_display_extended_fields=array();
-	# $xl_search_result_title_height=26;
-	$xl_search_results_title_trim=60;
-	$xl_search_results_title_wordwrap=100;
+# $xl_search_result_title_height=26;
+$xl_search_results_title_trim=60;
+$xl_search_results_title_wordwrap=100;
 
-
+# SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
+$sort_fields=array(12); # ** SEE NOTE (1)
 
 # Enable list view option for search screen
 $searchlist=true;
 # List Display Fields: array of fields to display on the list view
-$list_display_fields=array(8,3,12);
+$list_display_fields=array(8,3,12); # ** SEE NOTE (1)
 $list_search_results_title_trim=25;
 
 # When returning to search results from the view page via "all" link, bring user to result location of viewed resource?
@@ -1776,17 +1796,15 @@ $search_anchors_highlight=false;
 
 # Related Resource title trim: set to 0 to disable
 $related_resources_title_trim=15;
-	
-# SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
-$sort_fields=array(12);
+
 
 # TITLE field: Default title for all resources 
 # Should be used as title on the View and Collections pages.
 # This field will be inherited even if Inherit Global fields is set to false.
-$view_title_field=8; 
+$view_title_field=8; # ** SEE NOTE (1)
 
 # Searchable Date Field:
-$date_field=12; 
+$date_field=12; # ** SEE NOTE (1)
 
 # Search for dates into the future. Allows the specified number of years ahead of this year to be added to the year drop down used by simple and advanced search.
 $maxyear_extends_current=0;
@@ -2497,7 +2515,7 @@ $suppress_sql_log = false;
 # $metadata_template_resource_type=5;
 #
 # The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
-# $metadata_template_title_field=10;
+# $metadata_template_title_field=10; # ** SEE NOTE (1)
 
 // Ability to default metadata templates to a particular resource ID
 $metadata_template_default_option = 0;
