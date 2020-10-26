@@ -111,8 +111,6 @@ else
     }
 ?>
 
-
-
 <div class="BasicsBox">
     <?php
     $links_trail = array(
@@ -129,7 +127,10 @@ else
         )
     );
 
-    renderBreadcrumbs($links_trail);
+    if (!$print)
+        {
+        renderBreadcrumbs($links_trail);
+        }
     ?>
     <p>
         <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
