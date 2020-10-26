@@ -79,7 +79,7 @@ foreach($all_ugs as $ug)
 
         if(is_null($fc_categ_ref))
             {
-            logScript("Unable to find Featured Collection Category named '{$j_perm}'");
+            logScript("Unable to find Featured Collection Category named '{$j_perm[2]}'");
             continue;
             }
 
