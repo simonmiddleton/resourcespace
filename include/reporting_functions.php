@@ -55,7 +55,7 @@ function get_reports()
 function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false)
     {
     # Run report with id $ref for the date range specified. Returns a result array.
-    global $lang, $baseurl;
+    global $lang, $baseurl, $report_rows_attachment_limit;
 
     $report=sql_query("select * from report where ref='$ref'");$report=$report[0];
     $report['name'] = get_report_name($report);
@@ -70,7 +70,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         }
     else
         {
-        // Geneerate report results normally
+        // Generate report results normally
         $sql=$report["query"];
         $sql=str_replace("[from-y]",$from_y,$sql);
         $sql=str_replace("[from-m]",$from_m,$sql);
@@ -96,7 +96,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         header("Content-disposition: attachment; filename=" . $filename . "");
         }
 
-    if ($download || ($foremail && $resultcount > 100))
+    if ($download || ($foremail && $resultcount > $report_rows_attachment_limit))
         {
         if($foremail)
             {
@@ -296,7 +296,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
 function send_periodic_report_emails($echo_out = true, $toemail=true)
     {
     # For all configured periodic reports, send a mail if necessary.
-    global $lang,$baseurl;
+    global $lang,$baseurl, $report_rows_zip_limit;
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
@@ -341,9 +341,9 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             {
             $deletefiles[] = $output["file"];
             //Include the file as an attachment
-            if($output["rows"] > 10000)
+            if($output["rows"] > $report_rows_zip_limit)
                 {
-                // Convert to  zip file$unique_id=uniqid();
+                // Convert to  zip file
                 $unique_id=uniqid();
                 $zipfile = get_temp_dir(false, "Reports") . "/Report_" . $unique_id . ".zip";
                 $zip = new ZipArchive();

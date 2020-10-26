@@ -3714,3 +3714,9 @@ $search_engine_noindex=false;
 // Request that search engines don't index external shares only
 $search_engine_noindex_external_shares=false;
 
+// Optional periodic report size parameters
+// Maximum number of rows in an emailed report before it will be added as an attachment. 
+// Reports with fewer rows than this will be displayed as a table in the message body
+$report_rows_attachment_limit = 100;
+// Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
+$report_rows_zip_limit = 10000;
