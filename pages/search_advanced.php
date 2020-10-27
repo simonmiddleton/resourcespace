@@ -408,13 +408,6 @@ jQuery(document).ready(function(){
     	    
     	    	
 	    });
-		jQuery('.Question').easyTooltip({
-			xOffset: -50,
-			yOffset: 70,
-			charwidth: 70,
-			tooltipId: "advancedTooltip",
-			cssclass: "ListviewStyle"
-			});
 		});
 
 </script>

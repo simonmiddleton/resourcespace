@@ -4381,13 +4381,8 @@ function render_featured_collection(array $ctx, array $fc)
 
     $html_contents_class = array("FeaturedSimpleTileContents");
     $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
-    $fc_display_name = i18n_get_collection_name($fc);
-    while(strpos($fc_display_name,"*")===0)
-        {
-        // Remove any asterisks used as a prefix. These are used to move featured collections to the top
-        $fc_display_name = preg_replace('/\*/','',$fc_display_name,1);
-        }
-        
+    $fc_display_name = strip_prefix_chars(i18n_get_collection_name($fc),"*");
+            
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
     if($full_width)

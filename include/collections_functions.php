@@ -4803,3 +4803,21 @@ function can_delete_featured_collection(int $ref)
 
     return (sql_value($sql, 0) > 0);
     }
+
+
+/**
+ * Remove all instances of the specified character from start of string
+ *
+ * @param  string $string   String to update
+ * @param  string $char     Character to remove
+ * @return string
+ */
+function strip_prefix_chars($string,$char)
+    {
+    while(strpos($string,$char)===0)
+        {
+        $regmatch = preg_quote($char);
+        $string = preg_replace("/" . $regmatch . '/','',$string,1);
+        }
+    return $string;
+    }

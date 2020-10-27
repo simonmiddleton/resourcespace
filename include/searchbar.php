@@ -747,16 +747,6 @@ elseif($restypes=='')
     </div>
 
     <script type="text/javascript">
-    
-    jQuery(document).ready(function(){
-        jQuery('.SearchItem').easyTooltip({
-            xOffset: -50,
-            yOffset: 40,
-            charwidth: 25,
-            cssclass: "ListviewStyle",
-            clickRemove: true
-            });
-        });
 
     function ResetTicks()
         {
