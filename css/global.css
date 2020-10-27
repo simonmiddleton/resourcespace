@@ -734,17 +734,6 @@ div.autocomplete ul li {
 .dynamickeywords {float:left;}
 .keywordsselected {margin-top:10px;}
 
-#easyTooltip{
-    width: 156px;
-    padding:5px;
-    }
-
-#advancedTooltip{
-    padding:5px;
-    width: auto;
-    max-width: 420px;
-    }
-
 #LoadingBox
     {
     position: absolute;
