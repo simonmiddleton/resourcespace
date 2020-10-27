@@ -1,0 +1,41 @@
+<?php
+include_once "../include/db.php";
+include "../include/authenticate.php";
+
+$themes = GetThemesFromRequest($theme_category_levels);
+$last_theme_found = array_slice($themes, -1);
+$find_by_last_theme_name = array_pop($last_theme_found);
+
+if(is_null($find_by_last_theme_name))
+    {
+    redirect("{$baseurl}/pages/collections_featured.php");
+    }
+
+$found_fc_categ_refs = sql_array(
+    sprintf(
+          "SELECT DISTINCT c.ref AS `value`
+             FROM collection AS c
+        LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            WHERE c.`type`= %s
+              AND c.`name` = '%s'
+         GROUP BY c.ref
+           HAVING count(DISTINCT cr.resource) = 0",
+        COLLECTION_TYPE_FEATURED,
+        escape_check($find_by_last_theme_name)
+    )
+);
+
+$redirect_params = array();
+foreach($found_fc_categ_refs as $found_fc_categ_ref)
+    {
+    $found_branch_path = get_featured_collection_category_branch_by_leaf($found_fc_categ_ref, array());
+    $found_branch_path = array_column($found_branch_path, "name");
+
+    if($themes === $found_branch_path)
+        {
+        $redirect_params["parent"] = $found_fc_categ_ref;
+        break;
+        }
+    }
+
+redirect(generateURL("{$baseurl}/pages/collections_featured.php", $redirect_params));
