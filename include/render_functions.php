@@ -4210,7 +4210,7 @@ function render_featured_collections(array $ctx, array $items)
         $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
 
         $tool_edit = array(
-            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"])),
+            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"],"reloadpage" => "true")),
             "text" => $lang['action-edit'],
             "modal_load" => true,
         );
@@ -4375,7 +4375,14 @@ function render_featured_collection(array $ctx, array $fc)
 
     $html_contents_class = array("FeaturedSimpleTileContents");
     $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
-    $html_contents_h2 = $html_contents_icon . i18n_get_collection_name($fc);
+    $fc_display_name = i18n_get_collection_name($fc);
+    while(strpos($fc_display_name,"*")===0)
+        {
+        // Remove any asterisks used as a prefix. These are used to move featured collections to the top
+        $fc_display_name = preg_replace('/\*/','',$fc_display_name,1);
+        }
+        
+    $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
     if($full_width)
         {
