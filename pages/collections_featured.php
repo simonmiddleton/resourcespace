@@ -33,9 +33,6 @@ if(getval("new", "") == "true" && getval("cta", "") == "true")
     }
 
 
-
-
-
 include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">

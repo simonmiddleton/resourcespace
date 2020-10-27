@@ -4257,20 +4257,24 @@ function get_featured_collections(int $parent, array $ctx)
 
     return sql_query(
         sprintf(
-            "SELECT ref,
-                    `name`,
-                    `type`,
-                    parent,
-                    thumbnail_selection_method,
-                    created,
-                    (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
-               FROM collection AS c
-              WHERE `type` = %s
-                AND parent %s
-                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+              "SELECT DISTINCT c.ref,
+                      c.`name`,
+                      c.`type`,
+                      c.parent,
+                      c.thumbnail_selection_method,
+                      c.created,
+                      count(DISTINCT cr.resource) > 0 AS has_resources,
+                      count(DISTINCT cc.ref) > 0 AS has_children
+                 FROM collection AS c
+            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            LEFT JOIN collection AS cc ON c.ref = cc.parent
+                WHERE c.`type` = %s
+                  AND c.parent %s
+                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
+             GROUP BY c.ref",
             COLLECTION_TYPE_FEATURED,
-            trim(sql_is_null_or_eq_val((string) $parent, $parent == 0)),
-            ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
+            sql_is_null_or_eq_val((string) $parent, $parent == 0),
+            ($access_control ? featured_collections_permissions_filter_sql("AND", "c.ref") : "")
         ));
     }
 

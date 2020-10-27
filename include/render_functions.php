@@ -4210,9 +4210,13 @@ function render_featured_collections(array $ctx, array $items)
         $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
 
         $tool_edit = array(
-            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"],"reloadpage" => "true")),
+            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"], "reloadpage" => "true")),
             "text" => $lang['action-edit'],
             "modal_load" => true,
+        );
+        $tool_select = array(
+            "text" => $lang['action-select'],
+            "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');"
         );
 
         // Prepare FC images
@@ -4254,14 +4258,10 @@ function render_featured_collections(array $ctx, array $items)
                 ),
                 "text" => $lang['add_to_dash']);
             }
-
         if($is_featured_collection && collection_readable($fc['ref']))
             {
-            $render_ctx["tools"][] = array(
-                "text" => $lang['action-select'],
-                "custom_onclick" => "return ChangeCollection({$fc['ref']}, '');");
+            $render_ctx["tools"][] = $tool_select;
             }
-
         if($is_featured_collection && collection_writeable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_edit;
@@ -4273,6 +4273,7 @@ function render_featured_collections(array $ctx, array $items)
             global $enable_theme_category_edit;
 
             $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
+            $fc_category_has_children = (isset($fc["has_children"]) ? (bool) $fc["has_children"] : false);
 
             $render_ctx["href"] = $fc_category_url;
             $render_ctx["icon"] = ICON_FOLDER;
@@ -4302,6 +4303,11 @@ function render_featured_collections(array $ctx, array $items)
                 $render_ctx["tools"][] = array(
                     "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
                     "text" => $lang["share"]);
+                }
+
+            if(!$fc_category_has_children && collection_readable($fc['ref']))
+                {
+                $render_ctx["tools"][] = $tool_select;
                 }
 
             if($enable_theme_category_edit && checkperm("t"))
