@@ -11,6 +11,9 @@ $offset=getval("offset",0);
 $find=getvalescaped("find","");
 $col_order_by=getvalescaped("col_order_by","name");
 $sort=getval("sort","ASC");
+$modal=getval("modal","")=="true";
+$reloadpage=getval("reloadpage","")=="true";
+
 
 # Does this user have edit access to collections? Variable will be found in functions below.  
 $multi_edit=allow_multi_edit($ref);
@@ -91,7 +94,13 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
 	save_collection($ref, $coldata);
 
-    if(getval("redirect", "") != "")
+    if($modal && $reloadpage)
+        {
+        // Just reload the parent page
+        echo "<script>CentralSpaceLoad(location);</script>";
+        exit();
+        }
+    elseif(getval("redirect", "") != "")
         {
         redirect(generateURL(
             "{$baseurl_short}pages/collection_manage.php",
@@ -115,8 +124,10 @@ include "../include/header.php";
 <div class="BasicsBox">
 <h1><?php echo $lang["editcollection"]?></h1>
 <p><?php echo text("introtext");render_help_link("user/edit-collection");?></p>
-<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php">
+<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php" onSubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this,false);">
     <?php generateFormToken("collectionform"); ?>
+    <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
+    <input type="hidden" name="reloadpage" value="<?php echo $reloadpage ? "true" : "false" ?>">
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="submitted" value="true">

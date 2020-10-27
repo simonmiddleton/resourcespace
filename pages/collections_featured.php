@@ -52,7 +52,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
     $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
         {
         return array(
-            "title" => i18n_get_translated($branch["name"]),
+            "title" => strip_prefix_chars(i18n_get_translated($branch["name"]),"*"),
             "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
         }, get_featured_collection_category_branch_by_leaf($parent, array()));
@@ -74,7 +74,7 @@ if($smart_rtf == 0)
     // If we're getting the root, look only for categories, otherwise you will get other public collections as they're all public collections
     $featured_collections = ($parent == 0 ? get_featured_collection_categories($parent, array()) : get_featured_collections($parent, array()));
     }
-usort($featured_collections, "order_featured_collections_by_hasresources");
+usort($featured_collections, "order_featured_collections");
 render_featured_collections($rendering_options, $featured_collections);
 
 

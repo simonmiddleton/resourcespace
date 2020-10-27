@@ -4366,7 +4366,8 @@ function featured_collection_check_access_control(int $c_ref)
 
 
 /**
-* Helper comparison function for ordering featured collections by the "has_resource" property.
+* Helper comparison function for ordering featured collections by the "has_resource" property,  then by name, this takes into account the legacy
+* use of '*' as a prefix to move to the start.
 * 
 * @param array $a First featured collection data structure to compare
 * @param array $b Second featured collection data structure to compare
@@ -4374,16 +4375,15 @@ function featured_collection_check_access_control(int $c_ref)
 * @return Return an integer less than, equal to, or greater than zero if the first argument is considered to be 
 *         respectively less than, equal to, or greater than the second.
 */
-function order_featured_collections_by_hasresources(array $a, array $b)
+function order_featured_collections(array $a, array $b)
     {
     if($a["has_resources"] == $b["has_resources"])
         {
-        return 0;
+        return strnatcasecmp($a["name"],$b["name"]);
         }
 
     return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
     }
-
 
 /**
 * Get featured collection categories
@@ -4398,7 +4398,6 @@ function get_featured_collection_categories(int $parent, array $ctx)
     {
     return array_values(array_filter(get_featured_collections($parent, $ctx), "is_featured_collection_category"));
     }
-
 
 /**
 * Check if a collection is a featured collection category
@@ -4793,4 +4792,22 @@ function can_delete_featured_collection(int $ref)
     );
 
     return (sql_value($sql, 0) > 0);
+    }
+
+
+/**
+ * Remove all instances of the specified character from start of string
+ *
+ * @param  string $string   String to update
+ * @param  string $char     Character to remove
+ * @return string
+ */
+function strip_prefix_chars($string,$char)
+    {
+    while(strpos($string,$char)===0)
+        {
+        $regmatch = preg_quote($char);
+        $string = preg_replace("/" . $regmatch . '/','',$string,1);
+        }
+    return $string;
     }
