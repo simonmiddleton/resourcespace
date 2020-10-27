@@ -2367,21 +2367,26 @@ function render_new_featured_collection_cta(string $url, array $ctx)
         return;
         }
 
+    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
+    $centralspaceload = (isset($ctx["centralspaceload"]) && $ctx["centralspaceload"]);
+    $html_h2_span_class = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "fas fa-plus-circle");
+
     $html_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile", "FeaturedCallToActionTile");
     $html_contents_h2_class = array();
 
-    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     if($full_width)
         {
         $html_tile_class[] = "FullWidth";
         $html_contents_h2_class[] = "MarginZeroAuto";
         }
-        ?>
+
+    $onclick_fn = ($centralspaceload ? "CentralSpaceLoad(this, true);" : "ModalLoad(this, true, true);");
+    ?>
     <div id="FeaturedSimpleTile" class="<?php echo implode(" ", $html_tile_class); ?>">
-        <a href="<?php echo $url; ?>" onclick="return ModalLoad(this, true, true);">
+        <a href="<?php echo $url; ?>" onclick="return <?php echo $onclick_fn; ?>">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2 class="<?php echo implode(" ", $html_contents_h2_class); ?>"><span class='fas fa-plus-circle'></span></h2>
+                    <h2 class="<?php echo implode(" ", $html_contents_h2_class); ?>"><span class="<?php echo $html_h2_span_class; ?>"></span></h2>
                 </div>
             </div>
         </a>

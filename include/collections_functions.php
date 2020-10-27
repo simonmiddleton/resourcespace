@@ -2987,17 +2987,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Upload to collection
-    if(
-        (
-            (checkperm('c') || checkperm('d'))
-            && $collection_data['savedsearch'] == 0
-            && (
-                    $userref == $collection_data['user']
-                    || $collection_data['allow_changes'] == 1
-                    || checkperm('h')
-                )
-        )
-        && ($k == '' || $internal_share_access))
+    if(allow_upload_to_collection($collection_data))
         {
         if($upload_then_edit)
             {
@@ -4821,3 +4811,45 @@ function strip_prefix_chars($string,$char)
         }
     return $string;
     }
+
+
+/**
+* Check access control if user is allowed to upload to a collection.
+* 
+* @param array $c Collection data structure
+* 
+* @return boolean
+*/
+function allow_upload_to_collection(array $c)
+    {
+    if(empty($c))
+        {
+        return false;
+        }
+
+    if(
+        $c["type"] == COLLECTION_TYPE_SELECTION
+        // Featured Collection Categories can't contain resources, only other featured collections (categories or normal)
+        || ($c["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category_by_children($c["ref"]))
+    )
+        {
+        return false;
+        }
+
+    global $userref, $k, $internal_share_access;
+
+    $internal_share_access = (!is_null($internal_share_access) && is_bool($internal_share_access) ? $internal_share_access : internal_share_access());
+
+    if(
+        ($k == "" || $internal_share_access)
+        && $c["savedsearch"] == 0
+        && ($userref == $c["user"] || $c["allow_changes"] == 1 || checkperm("h"))
+        && (checkperm("c") || checkperm("d"))
+    )
+        {
+        return true;
+        }
+
+    return false;
+    }
+
