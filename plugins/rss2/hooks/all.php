@@ -24,7 +24,7 @@ function HookRss2AllSearchbarbeforebottomlinks()
 	// Sign the query using the private key
 	$sign=hash("sha256",$private_key . $query);
 	?>
-	<p><i aria-hidden="true" class="fa fa-fw fa-rss"></i>&nbsp;<a href="<?php echo $baseurl?>/plugins/rss2/pages/rssfilter.php?<?php echo $query; ?>&sign=<?php echo urlencode($sign); ?>"><?php echo $lang["new_content_rss_feed"]; ?></a></p>
+	<p><a href="<?php echo $baseurl?>/plugins/rss2/pages/rssfilter.php?<?php echo $query; ?>&sign=<?php echo urlencode($sign); ?>"><i aria-hidden="true" class="fa fa-fw fa-rss"></i><br /><?php echo $lang["new_content_rss_feed"]; ?></a></p>
 	<?php
 	}
 

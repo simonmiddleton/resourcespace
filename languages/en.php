@@ -1360,8 +1360,8 @@ $lang["userrequestnotification3"]="If this is a valid request, click the link to
 
 $lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
-$lang["managerequestsorders"]="Requests / orders";
-$lang["editrequestorder"]="Edit request / order";
+$lang["managerequestsorders"]="Requests";
+$lang["editrequestorder"]="Edit request / e-commerce order";
 $lang["requestorderid"]="Request / order ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
 $lang["requestreason"]="Reason for request";
