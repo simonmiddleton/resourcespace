@@ -87,15 +87,15 @@ function save_proposed_changes($ref)
 						
 						foreach($date_parts as $date_part)
 							{	
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "year","");
+							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
 							if (intval($val)<=0) 
 								{
 								$val="";
 								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "month",""))!="") 
+							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
 								{
 								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "day",""))!="") 
+								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
 									{
 									$val.="-" . $field;
 									}
