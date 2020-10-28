@@ -276,7 +276,7 @@ $lang["managecontent"]="Site content";
 $lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
-$lang["sendbulkmail"]="Send bulk mail";
+$lang["sendbulkmail"]="Bulk mail";
 $lang["systemsetup"]="System";
 $lang["systemlog"]="Log";
 $lang["usersonline"]="Users currently online (idle time minutes)";
