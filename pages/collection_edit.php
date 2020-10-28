@@ -100,7 +100,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         echo "<script>CentralSpaceLoad(location);</script>";
         exit();
         }
-    elseif(getval("redirect", "") != "")
+    else if(getval("redirect", "") != "")
         {
         redirect(generateURL(
             "{$baseurl_short}pages/collection_manage.php",

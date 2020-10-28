@@ -2861,7 +2861,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list;
+           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3194,6 +3194,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['data_attr']=$data_attribute;
         $options[$o]['category'] = ACTIONGROUP_SHARE;
         $options[$o]['order_by']  = 150;
+        $o++;
+        }
+
+    // Add option to publish as featured collection
+    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h"))
+        {
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php", $urlparams);
+        $options[$o]['value'] = 'collection_set_category';
+        $options[$o]['label'] = $lang['collection_set_theme_category'];
+        $options[$o]['data_attr'] = $data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_SHARE;
+        $options[$o]['order_by'] = 160;
         $o++;
         }
 
