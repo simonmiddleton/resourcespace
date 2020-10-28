@@ -2169,7 +2169,7 @@ $lang['page-title_user_group_permissions_edit'] = "Edit user group permissions";
 $lang['page-subtitle_user_group_permissions_edit'] = "Use this section to modify user group permissions.";
 
 # Report management
-$lang['page-title_report_management'] = "Reports";
+$lang['page-title_report_management'] = "Report editor";
 $lang['page-subtitle_report_management'] = "Use this section to modify system reports.";
 $lang['action-title_create_report_called'] = "Create report called...";
 
