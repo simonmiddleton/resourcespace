@@ -247,17 +247,17 @@ function findPluginFromSearch(array $plugin, $search)
         return true;
         }
 
-    if(isset($plugin["name"]) && strpos($plugin["name"], $search) !== false)
+    if(isset($plugin["name"]) && stripos($plugin["name"], $search) !== false)
         {
         return true;
         }
 
-    if(isset($plugin["descrip"]) && strpos($plugin["descrip"], $search) !== false)
+    if(isset($plugin["descrip"]) && stripos($plugin["descrip"], $search) !== false)
         {
         return true;
         }
 
-    if(isset($plugin["desc"]) && strpos($plugin["desc"], $search) !== false)
+    if(isset($plugin["desc"]) && stripos($plugin["desc"], $search) !== false)
         {
         return true;
         }
