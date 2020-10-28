@@ -2974,8 +2974,6 @@ $ctrls_to_save=false;
 # Option to separate some resource types in searchbar selection boxes
 $separate_resource_types_in_searchbar=Array();
 
-$team_centre_bug_report=false;
-
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;
 

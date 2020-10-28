@@ -56,13 +56,6 @@ include ("../../include/header.php");
             <?php
             }
 
-        if($team_centre_bug_report && !hook("custom_bug_report"))
-            {
-            ?>
-            <li><a href="https://www.resourcespace.com/bug_report"><i aria-hidden="true" class="fa fa-fw fa-bug"></i><br /><?php echo $lang["reportbug"]?></a></li>
-            <?php
-            }
-
         if('' != $mysql_bin_path && $system_download_config)
             {
             ?>
