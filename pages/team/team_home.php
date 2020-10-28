@@ -89,19 +89,12 @@ include "../../include/header.php";
     <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?></a><br>
     <?php
         $unassigned = sql_value("select count(*) value from research_request where status = 0",0);
-        switch ($unassigned)
+        if ($unassigned > 0)
             {
-            case 0:
-                echo $lang["researches-with-requeststatus0-0"];
-                break;
-            case 1:
-                echo $lang["researches-with-requeststatus0-1"];
-                break;
-            default:
-                echo str_replace("%number", $unassigned,$lang["researches-with-requeststatus0-2"]);
-                break;
-            } ?> 
-        </li><?php }
+            ?>&nbsp;<span class="Pill"><?php echo $unassigned ?></span><?php
+            }
+        ?> 
+    </li><?php }
 
     if(checkperm('u'))
         {
