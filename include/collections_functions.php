@@ -3470,13 +3470,19 @@ function new_featured_collection_form(int $parent)
 function GetThemesFromRequest($levels)
     {
     $themes = array();
-    for($n=1;$n <= $levels;$n++)
+    for($n = 0; $n <= $levels; $n++)
         {
-        $themeindex = ($n == 1 ? "" : $n);
+        $themeindex = ($n == 0 ? "" : $n);
         $themename = getval("theme$themeindex","");
         if($themename != "")
             {
             $themes[] = $themename;
+            }
+        // Legacy inconsistency when naming themes params. Sometimes the root theme was also named theme1. We check if theme 
+        // is found, but if not, we just go to theme1 rather than break.
+        else if($themeindex == 0 && $themename == "")
+            {
+            continue;
             }
         else
             {
