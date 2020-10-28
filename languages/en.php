@@ -215,10 +215,10 @@ $lang["home"]="Home";
 $lang["searchresults"]="Search results";
 $lang["themes"]="Featured collections";
 $lang["themeselector"]=&$lang["themes"];
-$lang["mycollections"]="My collections";
+$lang["mycollections"]="Collections";
 $lang["myrequests"]="My requests";
 $lang["collections"]="Collections";
-$lang["mycontributions"]="My contributions";
+$lang["mycontributions"]="Contributions";
 $lang["researchrequest"]="Research request";
 $lang["helpandadvice"]="Knowledge Base";
 $lang["teamcentre"]="Admin";
@@ -799,9 +799,9 @@ $lang["yes"]="Yes";
 $lang["no"]="No";
 $lang["key"]="Key:"; # e.g. explanation of icons on search page
 $lang["default"]="Default";
-$lang["languageselection"]="Language selection";
+$lang["languageselection"]="Language";
 $lang["language"]="Language";
-$lang["changeyourpassword"]="Change my password";
+$lang["changeyourpassword"]="Password";
 $lang["yourpassword"]="Your password";
 $lang["currentpassword"]="Current password";
 $lang["newpassword"]="New password";
@@ -2018,7 +2018,7 @@ $lang["caps-lock-on"]="Warning! Caps Lock is on";
 $lang["collectionnames"]="Collection names";
 $lang["findcollectionthemes"]="Featured collections";
 $lang["upload-options"]="Upload options";
-$lang["user-preferences"]="My preferences";
+$lang["user-preferences"]="Preferences";
 $lang["allresources"]="All Resources";
 
 $lang["smart_collection_result_limit"]="Smart collection: result count limit";
@@ -2389,7 +2389,7 @@ $lang["tilebin"]="Remove";
 $lang["last"]="Last";
 $lang["managedefaultdash"]="All user tiles";
 $lang["dashtile"]="Dash tile";
-$lang["manage_own_dash"]="My dash";
+$lang["manage_own_dash"]="Dash";
 $lang["manage_all_dash_h"]="Default dash / all user tiles (Requires h permission)";
 $lang["manage_all_dash"]="Default dash / all user tiles";
 $lang["dashtiledeleteaction"]="What delete action would you like to take?";
@@ -2477,7 +2477,7 @@ $lang['trash_bin_delete_dialog_title'] = 'Remove resource?';
 /* My Account Strings */
 $lang["managecontent_defaulttextused"]="!! The text for the default language (?) is currently being used. Edit the text below to create an alternative version for this language / user group selection !!";
 $lang["myaccount"]="My account";
-$lang["userpreferences"]="My preferences";
+$lang["userpreferences"]="Preferences";
 $lang["modifyuserpreferencesintro"]="Options on this page allow you to make changes to some of the functionality  and interface that are available to you.";
 
 /* User preferences*/
@@ -2576,7 +2576,7 @@ $lang["action-addrow"]="Add row";
 /* Messaging */
 $lang["seen"]="Seen";
 $lang["from"]="From";
-$lang["mymessages"]="My messages";
+$lang["mymessages"]="Messages";
 $lang["mymessages_markread"]="Mark read";
 $lang["mymessages_markunread"]="Mark unread";
 $lang["mymessages_markallread"]="Mark all read";
@@ -2720,7 +2720,7 @@ $lang['responsive_view_full_site'] = 'View full site';
 // end of Responsive
 
 /* Actions */
-$lang["actions_myactions"] = "My actions";
+$lang["actions_myactions"] = "Actions";
 $lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
 $lang["actions_noactions"] = "You have no outstanding actions";
 $lang["actions_resource_review"] = "Show me editable resources in my actions list";
@@ -2923,7 +2923,7 @@ $lang["job_details"]                        = "Job details";
 $lang["job_text"]                           = "Job";
 $lang['manage_jobs']                        = "Jobs";
 $lang["manage_jobs_title"]                  = "Jobs";
-$lang["my_jobs"]                            = "My jobs";
+$lang["my_jobs"]                            = "Jobs";
 $lang["job_reset"]                          = "Reset";
 $lang["job_status_0"]                       = "Disabled";
 $lang["job_status_1"]                       = "Active";
