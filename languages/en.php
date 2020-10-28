@@ -278,7 +278,7 @@ $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
 $lang["sendbulkmail"]="Send bulk mail";
 $lang["systemsetup"]="System";
-$lang["systemlog"]="System log";
+$lang["systemlog"]="Log";
 $lang["usersonline"]="Users currently online (idle time minutes)";
 $lang["diskusage"]="Disk usage";
 $lang["available"]="available";
@@ -1360,8 +1360,8 @@ $lang["userrequestnotification3"]="If this is a valid request, click the link to
 
 $lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
-$lang["managerequestsorders"]="Requests / orders";
-$lang["editrequestorder"]="Edit request / order";
+$lang["managerequestsorders"]="Requests";
+$lang["editrequestorder"]="Edit request / e-commerce order";
 $lang["requestorderid"]="Request / order ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
 $lang["requestreason"]="Reason for request";
@@ -2455,7 +2455,7 @@ $lang['system_down_message'] = 'System is down for maintenance. Thank you for yo
 /* End of System Down page strings */
 
 /* System Console */
-$lang["systemconsole"]="System console";
+$lang["systemconsole"]="Console";
 $lang["systemconsoledebuglog"]="Debug log";
 $lang["systemconsolememorycpu"]="Memory &amp; CPU";
 $lang["systemconsoledatabase"]="Database";
@@ -2505,7 +2505,7 @@ $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
 
 /* System Config */
-$lang['systemconfig'] = 'System configuration';
+$lang['systemconfig'] = 'Configuration';
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
@@ -2596,7 +2596,7 @@ $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Metadata field options";
 $lang['manage_metadata_field_options_import_options'] = 'Import options';
-$lang["system_performance"]="System performance";
+$lang["system_performance"]="Performance";
 $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";
 $lang["disk_write_speed"]="Disk write speed";
@@ -2921,7 +2921,7 @@ $lang["search_engine_noindex_external_shares"] = "Request that search engines do
 
 $lang["job_details"]                        = "Job details";
 $lang["job_text"]                           = "Job";
-$lang['manage_jobs']                        = "System jobs";
+$lang['manage_jobs']                        = "Jobs";
 $lang["manage_jobs_title"]                  = "Jobs";
 $lang["my_jobs"]                            = "My jobs";
 $lang["job_reset"]                          = "Reset";
