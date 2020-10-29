@@ -4853,7 +4853,7 @@ function render_array_in_table_cells($array)
     {
     foreach($array as $name => $value)
         {
-        echo "<table border=1>";
+        echo '<table class="TableArray">';
         echo "<tr><td width='50%'>";
         echo htmlspecialchars($name);
         echo "</td><td width='50%'>";

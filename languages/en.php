@@ -2939,3 +2939,5 @@ $lang["job_filter_type"]                    = "Filter by type";
 $lang["job_filter_status"]                  = "Filter by status";
 $lang["job_filter_user"]                    = "Filter by user";
 $lang["job_confirm_purge"]                  = "Are you sure you want to delete all completed or failed jobs?";
+$lang["job_data"]                           = "Job data";
+$lang["job_value"]                          = "Value";

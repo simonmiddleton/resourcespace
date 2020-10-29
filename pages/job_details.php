@@ -30,24 +30,28 @@ if(!is_array($job_details) || count($job_details) == 0)
 
 
     <div class="BasicsBox">
-        <div class="Listview infotable">
-            <table>
-            <?php foreach($job_details as $name => $value)
-                {
-                echo "<tr><td width='50%'>";
-                echo htmlspecialchars($name);
-                echo "</td><td width='50%'>";
-                if($name =="job_data")
+        <div class="Listview">
+            <table border="0" cellspacing="0" cellpadding="0" class="Listview" style="margin:0;">
+                <tr class="ListviewTitleStyle">
+                    <th><?php echo $lang["job_data"]?></th>
+                    <th><?php echo $lang["job_value"]?></th>
+                </tr>
+                <?php foreach($job_details as $name => $value)
                     {
-                    $job_data= json_decode($value);
-                    render_array_in_table_cells($job_data);
+                    echo "<tr><td width='50%'>";
+                    echo htmlspecialchars($name);
+                    echo "</td><td width='50%'>";
+                    if($name =="job_data")
+                        {
+                        $job_data= json_decode($value);
+                        render_array_in_table_cells($job_data);
+                        }
+                    else
+                        {
+                        echo htmlspecialchars($value);
+                        }
+                    echo "</td></tr>";
                     }
-                else
-                    {
-                    echo htmlspecialchars($value);
-                    }
-                echo "</td></tr>";
-                }
                 ?>
             </table>
         </div>
