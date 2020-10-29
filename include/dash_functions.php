@@ -1788,10 +1788,11 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
 * Build list of resources that can be shown on a dash tile as a background image. Helper function.
 * 
 * @param integer $c_ref Collection ref
+* @param array   $ctx   Contextual data
 * 
 * @return array
 */
-function dash_tile_featured_collection_get_resources(int $c_ref)
+function dash_tile_featured_collection_get_resources(int $c_ref, array $ctx)
     {
     $collection = get_collection($c_ref);
     if($collection === false)
@@ -1805,7 +1806,7 @@ function dash_tile_featured_collection_get_resources(int $c_ref)
     $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
 
     $resources = array();
-    foreach(get_featured_collection_resources($collection, array()) as $resource_ref)
+    foreach(get_featured_collection_resources($collection, $ctx) as $resource_ref)
         {
         $resources[] = array(
             "ref" => $resource_ref,

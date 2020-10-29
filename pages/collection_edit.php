@@ -72,12 +72,26 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 
     // User selected a background image
-    if($enable_themes && $themes_simple_images && $collection["public"] == 1 && checkperm("h"))
+    if($enable_themes && $themes_simple_images && $collection["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
         {
         $thumbnail_selection_method = getval("thumbnail_selection_method", $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"], true);
         if(in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS))
             {
             $coldata["featured_collections_changes"]["thumbnail_selection_method"] = $thumbnail_selection_method;
+
+            $collection_resources = get_collection_resources($collection["ref"]);
+            $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+            $fc_resources = (is_featured_collection_category($collection) ? get_featured_collection_resources($collection, array()) : $collection_resources);
+            $bg_img_resource_ref = getval("bg_img_resource_ref", 0, true);
+
+            if(
+                $thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]
+                && in_array($bg_img_resource_ref, $fc_resources)
+                && get_resource_access($bg_img_resource_ref) == 0
+            )
+                {
+                $coldata["bg_img_resource_ref"] = $bg_img_resource_ref;
+                }
             }
         }
 
@@ -228,7 +242,7 @@ include "../include/header.php";
 			} /* end hook replaceuserselect */
 		} 
 	
-    if($enable_themes && $collection['public'] == 1 && checkperm("h"))
+    if($enable_themes && $collection["public"] == 1 && checkperm("h"))
         {
         render_featured_collection_category_selector(
             0,
@@ -244,20 +258,31 @@ include "../include/header.php";
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"] => $lang["select"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] => $lang["background_most_popular_image"],
                 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] => str_replace("%n", $theme_images_number, $lang["background_most_popular_images"]),
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] => $lang["background_manual_selection"],
             );
-
-            if($collection_commenting)
-                {
-                $configurable_options[$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]] = $lang["background_manual_selection"];
-                }
 
             render_dropdown_question(
                 $lang["background_image"],
                 "thumbnail_selection_method",
                 $configurable_options,
                 $collection["thumbnail_selection_method"],
-                'class="stdwidth"'
-            );
+                'class="stdwidth"',
+                array(
+                    "onchange" => "toggle_fc_bg_image_txt_input(this, " . $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] . ");",
+                ));
+
+            $display_bg_img_ref = ($collection["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] && $collection["bg_img_resource_ref"] > 0);
+            $current_bg_img_ref = ($display_bg_img_ref ? $collection["bg_img_resource_ref"] : "");
+            render_text_question(
+                $lang["background_manual_selection_resource_label"],
+                "bg_img_resource_ref",
+                "",
+                true,
+                "",
+                $current_bg_img_ref,
+                array(
+                    "div_class" => ($display_bg_img_ref ? array() : array("DisplayNone")),
+                ));
             }
         }
 		
