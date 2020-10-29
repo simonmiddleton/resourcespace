@@ -250,7 +250,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 {
                 // Matching on field value
                 $match_field = $allfields[$csv_set_options["id_column_match"]];
-                $match_val = $line[$csv_set_options["id_column"]];
+                $id_column = isset($csv_set_options["id_column"]) ? $csv_set_options["id_column"] : "";
+                $match_val = isset($line[$id_column]) ? $line[$id_column]: "";
                 if(trim($match_val) == "")
                     {
                     $logtext = "Error: Invalid resource identifier specified in line " . count($line);
