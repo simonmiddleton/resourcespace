@@ -136,8 +136,8 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["editcollection"]?></h1>
-<p><?php echo text("introtext");render_help_link("user/edit-collection");?></p>
+<h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
+<p><?php echo text("introtext"); ?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php" onSubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this,false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
@@ -278,7 +278,7 @@ include "../include/header.php";
                 "bg_img_resource_ref",
                 "",
                 true,
-                "",
+                'class="shrtwidth"',
                 $current_bg_img_ref,
                 array(
                     "div_class" => ($display_bg_img_ref ? array() : array("DisplayNone")),
