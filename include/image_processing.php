@@ -11,9 +11,28 @@
 
 include_once 'metadata_functions.php';
 
+/**
+ * Upload a file from the provided path to the given resource 
+ *
+ * @param  int $ref                         Resource ID
+ * @param  bool $no_exif                    Do not extact embedded metadate. False by default so data will be extracted
+ * @param  bool $revert                     Delete all data and re-extract embedded data
+ * @param  bool $autorotate                 Autorotate images - alters embedded orientation data in uploaded file
+ * @param  string $file_path                Path to file
+ * @param  bool $after_upload_processing    Set to true will create an offline job to process the file
+ * @param  bool $deletesource               Delete resource after upload
+ * @return void
+ */
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true)
     {
     debug("upload_file(ref = $ref, no_exif = " . ($no_exif ? "TRUE" : "FALSE")  . ",revert = " . ($revert ? "TRUE" : "FALSE")  . ", autorotate = " . ($autorotate ? "TRUE" : "FALSE")  . ", file_path = $file_path, after_upload_processing = " . ($after_upload_processing ? "TRUE" : "FALSE")  . ")");
+
+    global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;    
+    global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
+    global $enable_thumbnail_creation_on_upload, $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
+    global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
+    global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
+    global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -26,8 +45,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         return false;
         }
-
-    global $lang, $upload_then_process, $offline_job_queue, $userref;
 
     $resource_data=get_resource_data($ref);    
     if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -49,7 +66,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Process file upload for resource $ref
         if ($revert==true)
             {
-            global $filename_field;
             $original_filename=get_data_by_field($ref,$filename_field);
     
             # Field 8 is used in a special way for staticsync, don't overwrite.
@@ -63,9 +79,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("delete from resource_data where resource='" . escape_check($ref) . "' $staticsync_mod");
-            sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' $staticsync_mod");
-            #clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
+            sql_query("DELETE FROM resource_data WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
+            sql_query("DELETE FROM resource_node WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
+            sql_query("DELETE FROM resource_keyword WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
+            # clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
             $display_fields=get_resource_table_joins();
             if ($staticsync_mod!="")
                 {
@@ -88,10 +105,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     $clear_fields.=",";
                     }
                 }   
-            sql_query("update resource set ".$clear_fields." where ref=$ref");
+            sql_query("UPDATE resource SET " . $clear_fields . " WHERE ref='" . escape_check($ref) . "'");
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
-            $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
+            $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
             }
@@ -129,7 +146,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     } 
                 }
 
-            global $filename_field;
             if($no_exif && isset($filename_field)) 
                 {
                 $user_set_filename            = get_data_by_field($ref, $filename_field);
@@ -203,7 +219,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             }
 
         # Banned extension?
-        global $banned_extensions;
         if (in_array($extension,$banned_extensions)) {return false;}
 
         # ensure extension is no longer than 10 characters due to resource.file_extension field def: varchar(10)
@@ -231,7 +246,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 unlink($icc_path);
                 }
     
-            global $pdf_pages;
             $iccx=0; // if there is a -0.icc page, run through and delete as many as necessary.
             $finished=false;
             $badicc_path=str_replace(".icc","-$iccx.icc",$icc_path);
@@ -254,14 +268,11 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         }
     else
         {
-        global $filename_field;
         $resource=get_resource_data($ref);
         $extension=$resource['file_extension'];
         $filepath=get_resource_path($ref,true,"",true,$extension);
         $filename=get_data_by_field($ref,$filename_field);
-        }
-        
-        
+        }   
 
     if (!$revert)
         {
@@ -269,7 +280,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             {
             if(!$after_upload_processing)
                 {
-                global $replace_batch_existing;
                 if ($file_path!="" && ($replace_batch_existing || !$deletesource))
                     {
                     $result=copy($file_path, $filepath);    
@@ -285,8 +295,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         {
                         return false;
                         }
-                    }
-               
+                    }               
                 else
                     {
                     # Standard upload.
@@ -308,22 +317,19 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         
             if(!$upload_then_process || $after_upload_processing)
                 {
-                global $camera_autorotation, $ffmpeg_audio_extensions;
                 if ($camera_autorotation)
                     {
-                    if ($autorotate && (!in_array($extension,$ffmpeg_audio_extensions)))
+                    if ($autorotate && (in_array($extension,$camera_autorotation_ext)))
                         {
                         AutoRotateImage($filepath);
                         }
                     }
                 chmod($filepath,0777);
 
-                global $icc_extraction, $ffmpeg_supported_extensions;
                 if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
                     {
                     extract_icc_profile($ref,$extension);
                     }
-
                 }
             }
         }   
@@ -350,9 +356,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             extract_exif_comment($ref,$extension);
             }
         else
-            {
-        
-            global $merge_filename_with_title, $merge_filename_with_title_default, $lang;
+            {        
             if($merge_filename_with_title && isset($processfile))
                 {
                 $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
@@ -430,12 +434,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             }
     
         # Extract text from documents (e.g. PDF, DOC)
-        global $extracted_text_field;
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
             // We need to make sure we don't spin off a new offline job for this when upload_file() is being used in 
             // upload_processing job handler
-            global $offline_job_queue, $offline_job_in_progress;
             if($offline_job_queue && !$offline_job_in_progress)
                 {
                 $extract_text_job_data = array(
@@ -455,7 +457,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     
 
     # Store original filename in field, if set
-    global $filename_field,$amended_filename;
     if (isset($filename_field))
         if(isset($amended_filename)){$filename=$amended_filename;}
         {
@@ -471,7 +472,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         if (!$revert)
             {
             # Clear any existing video preview file or multi-page previews.
-            global $pdf_pages;
             for ($n=2;$n<=$pdf_pages;$n++)
                 {
                 # Remove preview page.
@@ -483,7 +483,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
         
             # Remove any video preview (except if the actual resource is in the preview format).
-            global $ffmpeg_preview_extension;
             if ($extension!=$ffmpeg_preview_extension)
                 {
                 $path=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);
@@ -501,7 +500,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 if (file_exists($path)) {unlink($path);}
                 }   
 
-            global $enable_thumbnail_creation_on_upload, $file_upload_block_duplicates, $checksum, $file_checksums_offline;
             $checksum_required = true;
             if($file_upload_block_duplicates && !$file_checksums_offline && generate_file_checksum($ref, $extension, false))
                 {
@@ -538,7 +536,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
-        global $userref;
         
         $job_data=array();
         $job_data["resource"]=$ref;
@@ -546,7 +543,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $job_data["revert"]=$revert;
         $job_data["autorotate"]=$autorotate;
         
-        global $upload_then_process_holding_state;
         if(isset($upload_then_process_holding_state))
             {
             $job_data["archive"]=sql_value("SELECT archive value from resource where ref='" . escape_check($ref) . "'", "");
@@ -1092,7 +1088,8 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
-    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
+    global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
+    global $previews_allow_enlarge;
 
     # Used to preemptively create folder
     get_resource_path($ref,true,"pre",true);
@@ -1101,7 +1098,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         trigger_error("Parameter 'ref' must be numeric!");
         }
-
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
 
@@ -1272,7 +1268,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 $wpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
                 if (file_exists($wpath)) {unlink($wpath);}
 
-          # only create previews where the target size IS LESS THAN OR EQUAL TO the source size.
+                # only create previews where the target size IS LESS THAN OR EQUAL TO the source size.
                 # or when producing a small thumbnail (to make sure we have that as a minimum)
                 if ($previews_allow_enlarge || $sw>$tw || $sh>$th || $id=="thm" || $id=="col")
                     {
@@ -1346,7 +1342,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tiles_create_auto, $preview_tile_size, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $syncdir;
 
     if(!is_numeric($ref))
         {
@@ -1414,20 +1411,20 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         $sizes="";
         if ($thumbonly)
             {
-            $sizes=" where id='thm' or id='col'";
+            $sizes=" WHERE id='thm' or id='col'";
             }
         elseif ($previewonly)
             {
-            $sizes=" where id='thm' or id='col' or id='pre' or id='scr'";
+            $sizes=" WHERE id='thm' or id='col' or id='pre' or id='scr'";
             }
         elseif (is_array($onlysizes) && count($onlysizes) > 0 )
             {
             $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            $sizes=" where id in ('" . implode("','", $sizefilter) . "')";
+            $sizes=" WHERE id IN ('" . implode("','", $sizefilter) . "')";
             $all_sizes= false;
             }
         
-        $ps=sql_query("select * from preview_size $sizes order by width desc, height desc");
+        $ps = sql_query("SELECT * FROM preview_size $sizes ORDER BY width DESC, height DESC");
         if($lean_preview_generation && $all_sizes)
             {
             $force_make=array("pre","thm","col");
@@ -1580,7 +1577,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 list($checkw,$checkh) = @getimagesize($file);
                 if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
                     {
-                    $file=file_exists($hpr_path)?$hpr_path:$origfile;
+                    // Get the larger size again, but with previewbased set if not ingested
+                    $file = get_preview_source_file($ref, $extension, $previewonly, !$ingested, $alternative, $ingested);
+                    debug("Preview source too small for target size, using larger source " . $file);
                     }
                 }
 
@@ -1785,11 +1784,22 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         
                         $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
-                            {$command_list.=$runcommand."\n";
+                            {
+                            $command_list.=$runcommand."\n";
                             $output=run_command($runcommand);
                             $created_count++;
                             # if this is the first file generated for non-ingested resources check rotation
-                            if($autorotate_no_ingest && $created_count==1 && !$ingested){
+                            if($autorotate_no_ingest 
+                                &&
+                                $created_count==1
+                                &&
+                                !$ingested
+                                &&
+                                in_array($extension,$camera_autorotation_ext)
+                                &&
+                                strpos($file, $syncdir) === 0
+                                )
+                                {
                                 # first preview created for non-ingested file...auto-rotate
                                 if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr")
                                     {
@@ -1799,8 +1809,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                     {
                                     AutoRotateImage($path);
                                     }
+                                }
                             }
-                        }
                     
                     // checkerboard - this will have to be integrated into mpr
                     if ($extension=="png" || $extension=="gif")
@@ -3307,28 +3317,32 @@ function get_preview_source_file($ref, $extension, $previewonly, $previewbased, 
     {
     global $autorotate_no_ingest;
 
+    $foundpreviewsource = false;
     if($previewbased || ($autorotate_no_ingest && !$ingested))
         {
         $sourcesizes =  get_all_image_sizes(true);
         $sourcesizes =  array_reverse($sourcesizes,true);
-
         foreach($sourcesizes as $sourcesize)
             {
             $file=get_resource_path($ref,true,$sourcesize["id"],false,"jpg",-1,1,false,"",$alternative);
             if(file_exists($file))
                 {
+                $foundpreviewsource = true;
                 break;
                 }
             }
         }
-    else if (!$previewonly)
-        {
-        $file = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-        }
-    else
+
+    if($previewonly)
         {
         # We're generating based on a new preview (scr) image.
         $file = get_resource_path($ref,true,"tmp",false,"jpg");   
         }
+    elseif(!$foundpreviewsource)
+        {
+        //  Use original file
+        $file = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+        }
+
     return $file;
     }

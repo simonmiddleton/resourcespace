@@ -98,17 +98,8 @@ if ($on_upload || $ref<0)
         <div class="clearerleft"> </div>
         </div><?php
         }
-	if($camera_autorotation)
-        { ?>
-        <div class="Question" id="question_autorotate">
-        <label for="autorotate"><?php echo $lang["autorotate"]?></label><input type=checkbox id="autorotate" name="autorotate" value="yes" <?php
-        if ($camera_autorotation_checked) {echo ' checked';}?>>
-        <div class="clearerleft"> </div>
-        </div>
-        <?php
-        }?>
 
-	<?php if (getval("single","")=="" || $on_upload)
+	if (getval("single","")=="" || $on_upload)
         { 
         $non_col_options=0;
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
@@ -369,23 +360,7 @@ if($on_upload)
                 {
                 relate_on_upload = false;
                 }
-            });
-        
-        jQuery('#autorotate').on('change', function ()
-            {
-            cururl = plup.object.getOption('url');
-            if(jQuery(this).is(':checked'))
-                {
-                newurl = ReplaceUrlParameter(cururl, 'autorotate', 'yes');
-                }
-            else
-                {
-                newurl = ReplaceUrlParameter(cururl, 'autorotate', '');
-                }
-            plup.object.setOption('url',newurl);
-            //console.log('url changed ' + newurl);
-            });
-        
+            });               
         });
     </script>
     <?php
