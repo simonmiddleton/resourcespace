@@ -2887,7 +2887,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list;
+           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3013,17 +3013,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Upload to collection
-    if(
-        (
-            (checkperm('c') || checkperm('d'))
-            && $collection_data['savedsearch'] == 0
-            && (
-                    $userref == $collection_data['user']
-                    || $collection_data['allow_changes'] == 1
-                    || checkperm('h')
-                )
-        )
-        && ($k == '' || $internal_share_access))
+    if(allow_upload_to_collection($collection_data))
         {
         if($upload_then_edit)
             {
@@ -3230,6 +3220,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['data_attr']=$data_attribute;
         $options[$o]['category'] = ACTIONGROUP_SHARE;
         $options[$o]['order_by']  = 150;
+        $o++;
+        }
+
+    // Add option to publish as featured collection
+    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h"))
+        {
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php", $urlparams);
+        $options[$o]['value'] = 'collection_set_category';
+        $options[$o]['label'] = $lang['collection_set_theme_category'];
+        $options[$o]['data_attr'] = $data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_SHARE;
+        $options[$o]['order_by'] = 160;
         $o++;
         }
 
@@ -4283,21 +4285,25 @@ function get_featured_collections(int $parent, array $ctx)
 
     return sql_query(
         sprintf(
-            "SELECT ref,
-                    `name`,
-                    `type`,
-                    parent,
-                    thumbnail_selection_method,
-                    bg_img_resource_ref,
-                    created,
-                    (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
-               FROM collection AS c
-              WHERE `type` = %s
-                AND parent %s
-                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+              "SELECT DISTINCT c.ref,
+                      c.`name`,
+                      c.`type`,
+                      c.parent,
+                      c.thumbnail_selection_method,
+                      c.bg_img_resource_ref,
+                      c.created,
+                      count(DISTINCT cr.resource) > 0 AS has_resources,
+                      count(DISTINCT cc.ref) > 0 AS has_children
+                 FROM collection AS c
+            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            LEFT JOIN collection AS cc ON c.ref = cc.parent
+                WHERE c.`type` = %s
+                  AND c.parent %s
+                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
+             GROUP BY c.ref",
             COLLECTION_TYPE_FEATURED,
-            trim(sql_is_null_or_eq_val((string) $parent, $parent == 0)),
-            ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
+            sql_is_null_or_eq_val((string) $parent, $parent == 0),
+            ($access_control ? featured_collections_permissions_filter_sql("AND", "c.ref") : "")
         ));
     }
 
@@ -4844,3 +4850,45 @@ function strip_prefix_chars($string,$char)
         }
     return $string;
     }
+
+
+/**
+* Check access control if user is allowed to upload to a collection.
+* 
+* @param array $c Collection data structure
+* 
+* @return boolean
+*/
+function allow_upload_to_collection(array $c)
+    {
+    if(empty($c))
+        {
+        return false;
+        }
+
+    if(
+        $c["type"] == COLLECTION_TYPE_SELECTION
+        // Featured Collection Categories can't contain resources, only other featured collections (categories or normal)
+        || ($c["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category_by_children($c["ref"]))
+    )
+        {
+        return false;
+        }
+
+    global $userref, $k, $internal_share_access;
+
+    $internal_share_access = (!is_null($internal_share_access) && is_bool($internal_share_access) ? $internal_share_access : internal_share_access());
+
+    if(
+        ($k == "" || $internal_share_access)
+        && $c["savedsearch"] == 0
+        && ($userref == $c["user"] || $c["allow_changes"] == 1 || checkperm("h"))
+        && (checkperm("c") || checkperm("d"))
+    )
+        {
+        return true;
+        }
+
+    return false;
+    }
+
