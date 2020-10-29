@@ -37,7 +37,7 @@ if(isset($propose_changes_always_allow))
 else
     {
     $error=$lang["error-plugin-not-activated"];
-    error_alert($error);
+    header("Location:" . $baseurl . "/pages/user/user_messages.php");
     exit();
     }
 	
@@ -45,7 +45,7 @@ if(!$propose_changes_always_allow && $proposeallowed=="" && !$editaccess)
     {
     # The user is not allowed to edit this resource or the resource doesn't exist.
     $error=$lang['error-permissiondenied'];
-    error_alert($error);
+    header("Location:" . $baseurl . "/pages/user/user_messages.php");
     exit();
     }
 
