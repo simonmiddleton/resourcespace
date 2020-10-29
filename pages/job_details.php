@@ -31,7 +31,7 @@ if(!is_array($job_details) || count($job_details) == 0)
 
     <div class="BasicsBox">
         <div class="Listview">
-            <table border="0" cellspacing="0" cellpadding="0" class="Listview" style="margin:0;">
+            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle" style="margin:0;">
                 <tr class="ListviewTitleStyle">
                     <th><?php echo $lang["job_data"]?></th>
                     <th><?php echo $lang["job_value"]?></th>
