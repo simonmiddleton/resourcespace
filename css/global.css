@@ -1904,3 +1904,7 @@ a.BrowseRefresh{
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:50px;padding-bottom:15px;}
 .TileNav .Pill {position:absolute; top:10px; right:25px;border-radius:10px;font-size:115%;}
+/* Additional CSS to show list views correctly on top menus. */
+.TileReflow br {display:none;}
+.TileReflow .fa {display:inline-block; min-width:26px;}
+.TileReflow a:hover {text-decoration:none;}

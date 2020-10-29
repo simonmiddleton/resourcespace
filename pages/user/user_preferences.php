@@ -162,6 +162,8 @@ include "../../include/header.php";
     $page_def[] = config_add_single_select('upload_then_edit', $lang['upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 300, '', true);
     $page_def[] = config_add_boolean_select('modal_default', $lang['userpreference_modal_default'], $enable_disable_options, 300, '', true);        
     $page_def[] = config_add_boolean_select('keyboard_navigation', $lang['userpreference_keyboard_navigation'], $enable_disable_options, 300, '', true);
+    $page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenav'], $enable_disable_options, 300, '', true,'TileNav=(value==1);');
+
 	$page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_single_select(
         'user_local_timezone',

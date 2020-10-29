@@ -10,7 +10,7 @@ include ("../../include/header.php");
   <?php if (getval("modal","")=="") { ?><p><?php echo text("introtext")?></p><?php } ?>
   
 
-  <div class="TileNav">
+  <div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
 	<ul>
 		<?php if (!hook('replacegroupadmin')) { ?>
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_group_management.php" onclick="return CentralSpaceLoad(this,true);" ><i aria-hidden="true" class="fa fa-fw fa-users"></i><br /><?php echo $lang['page-title_user_group_management']; ?></a></li>
