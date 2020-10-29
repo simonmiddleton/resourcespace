@@ -110,7 +110,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 .ASC::before	{content: " \25BC";font-size:80%;}
 .DESC::before	{content: " \25B2";font-size:80%;}
 
-.NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #e2e2e2;}
+.NavUnderline,.Question {border-bottom: 1px solid #e2e2e2;}
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
