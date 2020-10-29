@@ -14,7 +14,7 @@ $introtext=text("introtext");
   <p><?php echo $introtext ?></p>
   <?php } ?>
   
-	<div class="TileNav">
+	<div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
 	<ul>
 	
 	<?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
@@ -46,8 +46,7 @@ $introtext=text("introtext");
             {
             ?>
             <li>
-                <a href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i><br />
-                <?php echo $lang['actions_myactions']; ?></a>
+                <a href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i><br /><?php echo $lang['actions_myactions']; ?></a>
                 <span style="display: none;" class="ActionCountPill Pill"></span>
             </li>
             <?php
@@ -56,8 +55,7 @@ $introtext=text("introtext");
 
         <script>message_poll();</script>
         <li id="MyMessagesUserMenuItem">
-            <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br />
-            <?php echo $lang['mymessages']; ?></a>
+            <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br /><?php echo $lang['mymessages']; ?></a>
             <span style="display: none;" class="MessageCountPill Pill"></span>
         </li>
 

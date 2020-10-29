@@ -3719,3 +3719,5 @@ $search_engine_noindex=false;
 // Request that search engines don't index external shares only
 $search_engine_noindex_external_shares=false;
 
+// Use a tile layout for the user/admin/system menus. If false, use a list layout for menus.
+$tilenav=true;

@@ -2503,6 +2503,8 @@ $lang['userpreference_resource_access_notifications'] = "Send me messages about 
 $lang['userpreference_resource_notifications'] = "Send me resource messages about resource management e.g. resource state changes, metadata changes";
 $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata on download (provides option to choose this only on collection download)';
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
+$lang['userpreference_tilenav']='Use a tile layout for the navigation menus';
+$lang['userpreference_tilenavdefault']='Use a tile layout for the navigation menus (default setting; users may change this)';
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';

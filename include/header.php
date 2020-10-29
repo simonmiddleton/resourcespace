@@ -197,6 +197,7 @@ var branch_limit="<?php echo $cat_tree_singlebranch?>";
 var branch_limit_field = new Array();
 var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
+var TileNav = <?php echo ($tilenav?"true":"false") ?>;
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
     {
