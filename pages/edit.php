@@ -722,7 +722,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     ?>
                     <script>
                     // Create a temp form to prevent clear_selection_collection being a query string param and use CentralSpacePost
-                    // to reload the search underneath batch edit modal.
+                    // to reload the search underneath batch edit modal. The search must reload with ajax on to ensure header not loaded again.
                     var temp_form = document.createElement("form");
                     temp_form.setAttribute("method", "post");
                     temp_form.setAttribute("action", window.location.href);
@@ -733,6 +733,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     i.setAttribute("name", "clear_selection_collection");
                     i.setAttribute("value", "no");
                     temp_form.appendChild(i);
+                    // Instruct search page not to load header
+                    var ajx = document.createElement("input");
+                    ajx.setAttribute("type", "hidden");
+                    ajx.setAttribute("name", "ajax");
+                    ajx.setAttribute("value", "true");
+                    temp_form.appendChild(ajx);
 
                     <?php
                     if($CSRF_enabled)
@@ -1062,7 +1068,6 @@ else
     <?php generateFormToken("mainform"); ?>
     <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
-    
       <input type="hidden" name="submitted" value="true">
    <?php 
    if ($multiple) 
