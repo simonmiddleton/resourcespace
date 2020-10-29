@@ -1617,6 +1617,7 @@ $lang["back"]="Back";
 $lang["pleasewait"]="Please wait...";
 
 $lang["autorotate"]="Autorotate images?";
+$lang["user_pref_autorotate"]="Automatically rotate images at upload?";
 
 # Reports
 # Report names (for the default reports)

@@ -4175,6 +4175,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             {
             # Attempt autorotation
             if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
+
             # Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
             if($enable_thumbnail_creation_on_upload)
                 {
