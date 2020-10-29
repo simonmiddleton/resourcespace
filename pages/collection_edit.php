@@ -278,7 +278,7 @@ include "../include/header.php";
                 "bg_img_resource_ref",
                 "",
                 true,
-                "",
+                'class="shrtwidth"',
                 $current_bg_img_ref,
                 array(
                     "div_class" => ($display_bg_img_ref ? array() : array("DisplayNone")),
