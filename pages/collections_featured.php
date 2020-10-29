@@ -26,6 +26,10 @@ $smart_fc_parent = ($smart_fc_parent > 0 ? $smart_fc_parent : null);
 
 $general_url_params = ($k == "" ? array() : array("k" => $k));
 
+$parent_collection_data = get_collection($parent);
+$parent_collection_data = (is_array($parent_collection_data) ? $parent_collection_data : array());
+
+
 if(getval("new", "") == "true" && getval("cta", "") == "true")
     {
     new_featured_collection_form($parent);
@@ -119,18 +123,42 @@ render_featured_collections($rendering_options, $smart_fcs_list);
 unset($rendering_options["smart"]);
 
 
-if($k == "" && $smart_rtf == 0 && $collection_allow_creation && checkperm("h"))
+if($k == "" && $smart_rtf == 0)
     {
-    render_new_featured_collection_cta(
-        generateURL(
-            "{$baseurl_short}pages/collections_featured.php",
+    if($collection_allow_creation && checkperm("h"))
+        {
+        render_new_featured_collection_cta(
+            generateURL(
+                "{$baseurl_short}pages/collections_featured.php",
+                array(
+                    "new" => "true",
+                    "cta" => "true",
+                    "parent" => $parent,
+                )
+            ),
+            $rendering_options);
+        }
+
+    if(allow_upload_to_collection($parent_collection_data))
+        {
+        $upload_url = generateURL(
+            "{$baseurl_short}pages/edit.php",
             array(
-                "new" => "true",
-                "cta" => "true",
-                "parent" => $parent,
+                "uploader" => $top_nav_upload_type,
+                "ref" => -$userref,
+                "collection_add" => $parent
             )
-        ),
-        $rendering_options);
+        );
+        if($upload_then_edit)
+            {
+            $upload_url = generateURL("{$baseurl_short}pages/upload_plupload.php", array("collection_add" => $parent));
+            }
+
+        $rendering_options["html_h2_span_class"] = "fa fa-fw fa-upload";
+        $rendering_options["centralspaceload"] = true;
+
+        render_new_featured_collection_cta($upload_url, $rendering_options);
+        }
     }
 ?>
 </div> <!-- End of BasicsBox FeaturedSimpleLinks -->
@@ -162,14 +190,13 @@ if($themes_show_background_image && !$full_width)
 
         if($parent > 0)
             {
-            $collection_data = get_collection($parent);
             $collection_resources = get_collection_resources($parent);
-            $collection_data["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+            $parent_collection_data["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
 
-            // get_featured_collection_resources() is expecting a featured collection structure. $collection_data being a 
+            // get_featured_collection_resources() is expecting a featured collection structure. $parent_collection_data being a 
             // collection structure is a superset containing the required information (ref, parent, has_resources) for the function to work
             $get_fc_imgs_ctx["use_thumbnail_selection_method"] = true;
-            $bg_fc_images = get_featured_collection_resources($collection_data, $get_fc_imgs_ctx);
+            $bg_fc_images = get_featured_collection_resources($parent_collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }
         else if((count($smart_fcs_list) > 0))
