@@ -255,7 +255,7 @@ if($video_preview_hls_support!=1)
             $shell_exec_cmd = str_replace($ffmpeg_preview_options,$ffmpeg_preview_options . " -strict experimental ",$ffmpeg_command);
             if ($config_windows)
                 {
-                file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
+                file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd . '" > NUL"');
                 $shell_exec_cmd = $tmp_ffmpeg_file;
                 $deletefiles[] = $tmp_ffmpeg_file;
                 }

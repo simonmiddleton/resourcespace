@@ -145,16 +145,33 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     return $ref;
     }
 
+
+/**
+ * 
+ * Provides simple way to update field by passing in simple string values for text fields,
+ * comma separated values for fixed list (node) fields, using double quotes
+ * to enclose strings and backslash as escape character
+ * Uses update_field and add_resource_nodes/delete_resource_nodes
+ * 
+ */
+
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    // Provides simple way to update field by passing in simple string values for text fields,
-    // comma separated values for fixed list (node) fields, using double quotes
-    // to enclose strings and backslash as escape character
-    // Uses update_field and add_resource_nodes/delete_resource_nodes
-    
     global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
     
+    # check that $resource param is a positive integer and valid for int type db field
+    $options_resource = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
+    if (!filter_var($resource, FILTER_VALIDATE_INT, $options_resource))
+        {
+        return false;
+        }
+
     $resourcedata=get_resource_data($resource,true);
+    if (!$resourcedata)
+        {
+        return false;    
+        }
+    
     $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
     
     if(!is_numeric($field))

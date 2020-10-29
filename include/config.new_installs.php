@@ -20,7 +20,6 @@ $home_slideshow_height=1080;
 
 $themes_simple_view=true;
 $themes_category_split_pages=true;
-$theme_category_levels=8;
 
 $stemming=true;
 $case_insensitive_username=true;
@@ -36,7 +35,6 @@ $ffmpeg_preview_options = '-f mp4 -b:v 1200k -b:a 64k -ac 1 -c:v h264 -c:a aac -
 
 $daterange_search = true;
 $upload_then_edit = true;
-$search_filter_nodes = true;
 
 $purge_temp_folder_age=90;
 $filestore_evenspread=true;

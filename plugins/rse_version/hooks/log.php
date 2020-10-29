@@ -51,7 +51,7 @@ function HookRse_versionLogLog_diff_td_extra($ref)
             else{
                 $res = get_resource_data($ref);
                 $res_ext = $res['file_extension'];
-                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $res_ext, '');
+                $image = $baseurl . 'gfx/' . get_nopreview_icon('', $res_ext, '');
                 }
             }
         else

@@ -76,11 +76,19 @@ function addColumnHeader($orderName, $labelKey)
     <?php
     }
       
-?>
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        ),
+        array(
+            'title' => $lang["admin_resource_type_fields"],
+            'help'  => "resourceadmin/configure-metadata-field"
+        )
+    );
 
-  
-  <h1><?php echo $lang["admin_resource_type_fields"];render_help_link('resourceadmin/configure-metadata-field');?></h1>
-  <?php
+  renderBreadcrumbs($links_trail);
+
   $introtext=text("introtext");
   if ($introtext!="")
     {

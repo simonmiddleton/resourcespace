@@ -124,16 +124,31 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $lang["nowriteacces
 <?php } 
 
 # Check filestore folder browseability
-$output=@file_get_contents($baseurl . "/filestore");
-if (strpos($output,"Index of")===false)
-	{
-	$result=$lang["status-ok"];
-	}
+$filestoreurl = isset($storageurl) ? $storageurl : $baseurl . "/filestore";
+if(function_exists('curl_init'))
+    {
+    $ch=curl_init();
+    $checktimeout=5;
+    curl_setopt($ch, CURLOPT_URL, $filestoreurl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+    $output=curl_exec($ch);
+    curl_close($ch);
+    if (strpos($output,"Index of")===false)
+        {
+        $result=$lang["status-ok"];
+        }
+    else
+        {
+        $result=$lang["status-fail"] . ": " . $lang["noblockedbrowsingoffilestore"];
+        }
+    }
 else
-	{
-	$result=$lang["status-fail"] . ": " . $lang["noblockedbrowsingoffilestore"];
-	}
-?><tr><td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"] ?></td><td><b><?php echo $result?></b></td></tr><?php
+    {
+    $result=$lang["unknown"] . ": " . str_replace("%%EXTENSION%%","curl",$lang["php_extension_not_enabled"]);
+    }
+?><tr><td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"] ?> (<a href="<?php echo $filestoreurl ?>" target="_blank"><?php echo $filestoreurl ?></a>)</td><td><b><?php echo $result?></b></td></tr><?php
 
 
 # Check if we are running 32 bit PHP. If so, no large file support.

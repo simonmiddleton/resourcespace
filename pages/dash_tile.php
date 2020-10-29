@@ -192,7 +192,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
 		}
-
+		
 	/* SAVE SUCCESSFUL? */
 	if(!$error && !$message)
 		{
@@ -219,9 +219,14 @@ if($submitdashtile && enforcePostRequest(false))
 		<?php echo $message;?>
 		</p>
 		<?php
+		if(strpos($link,"pages/")===0)
+		    {
+			$length = strlen("pages/");
+			$link = substr_replace($link,"",0,$length);
+		    }
 		}?>
 
-	<a href="<?php echo $baseurl."/".$link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
+	<a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
 	<?php
 	include "../include/footer.php";
 	exit();
@@ -333,7 +338,7 @@ if($create)
     $tlsize                       = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 
     // Promoted resources can be available for search tiles (srch) and feature collection tiles (fcthm)
-    $promoted_resource = getvalescaped('promoted_resource', FALSE);
+    $promoted_resource = (getval('promoted_resource', "") == "true");
 
     if(!allow_tile_colour_change($tile_type, $tile_style))
         {
@@ -609,24 +614,12 @@ if('' != $tile_type && $tile_type !== "conf")
             $link_parts = explode('?', $link);
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
-            $featured_collection_categories = array();
-
-            foreach($link_parts as $link_part_key => $link_part_value)
+            $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
+            $resources = dash_tile_featured_collection_get_resources($parent, array());
+            if(!is_numeric($promoted_resource))
                 {
-                if(false === strpos($link_part_key, 'theme'))
-                    {
-                    continue;
-                    }
-
-                $featured_collection_categories[] = $link_part_value;
-                }
-
-            foreach(get_themes($featured_collection_categories, true) as $theme)
-                {
-                $resources = array_merge(
-                    $resources,
-                    do_search("!collection{$theme['ref']}", '', 'relevance', 0, -1, 'desc', false, 0, false, false, '', false, false)
-                    );
+                $promoted_resource = dash_tile_featured_collection_get_resources($parent, array("limit" => 1, "use_thumbnail_selection_method" => true));
+                $promoted_resource = (!empty($promoted_resource) ? $promoted_resource[0]["ref"] : 0);
                 }
             }
             ?>
@@ -637,7 +630,7 @@ if('' != $tile_type && $tile_type !== "conf")
             foreach($resources as $resource)
                 {
                 ?>
-                <option value="<?php echo htmlspecialchars($resource["ref"]) ?>"
+                <option value="<?php echo htmlspecialchars($resource["ref"]); ?>"
                     <?php echo $promoted_resource === $resource['ref'] ? 'selected="selected"' : ''; ?>
                 ><?php
                     echo str_replace(
@@ -823,4 +816,3 @@ if('' != $tile_type && $tile_type !== "conf")
 </div><!-- End of BasicsBox -->
 <?php
 include "../include/footer.php";
-

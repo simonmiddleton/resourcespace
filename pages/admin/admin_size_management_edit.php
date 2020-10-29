@@ -102,12 +102,23 @@ include "../../include/header.php";
       onSubmit="return CentralSpacePost(this, true);">
     <?php generateFormToken("mainform"); ?>
 	<div class="BasicsBox">
+	<?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	    ),
+	    array(
+	        'title' => $lang["page-title_size_management"],
+			'href'  => $baseurl_short . "pages/admin/admin_size_management.php?" . $url_params
+	    ),
+		array(
+	        'title' => $lang["page-title_size_management_edit"]
+	    )
+	);
 
-	<p>
-		<a href="" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_size_management.php?<?php echo $url_params; ?>',true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['page-title_size_management']; ?></a>
-	</p>
-
-	<h1><?php echo $lang['page-title_size_management_edit']; ?></h1>
+	renderBreadcrumbs($links_trail);
+	?>
 	<p><?php echo $lang['page-subtitle_size_management_edit'];render_help_link('systemadmin/manage_sizes');?></p>
 
 		<input type="hidden" name="save" value="1">

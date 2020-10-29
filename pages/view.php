@@ -15,7 +15,7 @@ include_once "../include/image_processing.php";
 
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+$internal_share_access = internal_share_access();
 
 # Update hit count
 update_hitcount($ref);
@@ -236,20 +236,12 @@ if (getval("refreshcollectionframe","")!="")
 
 # Update the hitcounts for the search keywords (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
-$usearch=@$_GET["search"];
+$usearch= isset($_GET["search"]) ? $_GET["search"] : "";
 if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_hitcount($ref,$usearch);}
 
 # Log this activity
 daily_stat("Resource view",$ref);
 if ($log_resource_views) {resource_log($ref,'v',0);}
-
-if(!$save_as)
-    {
-    // check browser to see if forcing save_as
-    if(!$direct_download_allow_opera && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
-    if(!$direct_download_allow_ie7 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}	
-    if(!$direct_download_allow_ie8 && isset($_SERVER["HTTP_USER_AGENT"]) && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
-    }
 
 # downloading a file from iOS should open a new window/tab to prevent a download loop
 $iOS_save=false;
@@ -613,7 +605,7 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 
 if(!hook('replaceviewtitle'))
     {
-		echo highlightkeywords(htmlspecialchars(i18n_get_translated(strip_tags_and_attributes(get_data_by_field($resource['ref'], $title_field)), false)), $search);
+		echo highlightkeywords(htmlspecialchars(i18n_get_translated(get_data_by_field($resource['ref'], $title_field), false)), $search);
     } /* end hook replaceviewtitle */
     ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
@@ -1401,6 +1393,9 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 			</td>
 			</tr>
 			<?php
+            // add link to mp3 preview file if resource is a wav file
+            render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout);
+
 			}
         }
 	else
@@ -2088,12 +2083,21 @@ if (count($result)>0)
 	<div class="Title"><?php echo $lang["collectionsthemes"]?></div>
 
 	<?php
-		# loop and display the results
 		for ($n=0;$n<count($result);$n++)			
 			{
+            $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
+
+            $path = $result[$n]["path"];
+            if(!$collection_public_hide_owner)
+                {
+                $col_name = i18n_get_translated($result[$n]["name"]);
+                // legacy thing: we add the fullname right before the collection name in the path.
+                $path = str_replace($col_name, htmlspecialchars($result[$n]["fullname"]) . " / {$col_name}", $path);
+                }
+            $path = sprintf("%s %s", LINK_CARET, htmlspecialchars($path));
 			?>
-			<a href="<?php echo $baseurl?>/pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
-			<?php		
+            <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>
+			<?php
 			}
 		?>
 	
@@ -2209,3 +2213,5 @@ jQuery('document').ready(function()
     });
 </script>
 <?php include "../include/footer.php";
+
+

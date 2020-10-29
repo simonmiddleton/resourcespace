@@ -53,8 +53,7 @@ switch ($type)
             true, 
             false, 
             $editable_only);
-        $resources_count = count($result);
-
+        $resources_count = is_array($result) ? count($result) : 0;
         // Is this a collection search?
         $collectiondata = array();
         $collection_search_strpos = strpos($search, "!collection");

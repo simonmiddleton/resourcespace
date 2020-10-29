@@ -428,7 +428,8 @@ function email_collection_request($ref,$details,$external_email)
  * @param  mixed $ref   
  * @param  mixed $details
  * @param  mixed $ref_is_resource
- * @return void
+ * 
+ * @return boolean
  */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
     {   

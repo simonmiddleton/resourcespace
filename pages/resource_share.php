@@ -29,6 +29,7 @@ $editexternalurl = (getval("editexternalurl","") != "");
 $access       = getvalescaped("access","");
 $expires      = getvalescaped("expires","");
 $sharepwd     = getvalescaped('sharepassword', '');
+$backurl      = getvalescaped('backurl', '');
 
 $minaccess=get_resource_access($ref);
 
@@ -80,14 +81,6 @@ if($editing && !$editexternalurl)
     }
     ?>
 <div class="BasicsBox">
-    <?php
-    if(!$modal)
-        {
-        ?>
-        <p><a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-        <?php
-        }
-        ?>
     <div class="RecordHeader">
         <div class="BackToResultsContainer">
             <div class="backtoresults">
@@ -101,7 +94,36 @@ if($editing && !$editexternalurl)
                 ?>
             </div>
         </div>
-        <h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
+        <?php
+        if (strpos($backurl, "/pages/team/team_external_shares.php") !== false)
+            {
+            $links_trail = array(
+                array(
+                    'title' => $lang["teamcentre"],
+                    'href'  => $baseurl_short . "pages/team/team_home.php"
+                ),
+                array(
+                    'title' => $lang["manage_external_shares"],
+                    'href'  => $baseurl . $backurl
+                ),
+                array(
+                    'title' => $page_header,
+                    'help'  => "user/resource-sharing"
+                )
+            );
+
+            renderBreadcrumbs($links_trail);
+            }
+        else
+            {
+            ?><h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
+            <p>
+                <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);">
+                    <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+                </a>
+            </p><?php
+            }
+        ?>
     </div>
         <form method="post" id="resourceshareform" action="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>">
             <input type="hidden" name="ref" id="ref" value="<?php echo htmlspecialchars($ref) ?>">

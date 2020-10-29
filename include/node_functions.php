@@ -184,7 +184,7 @@ function get_node($ref, array &$returned_node)
         }
 
     $query = "SELECT * FROM node WHERE ref = '" . escape_check($ref) . "';";
-    $node  = sql_query($query);
+    $node  = sql_query($query,"schema");
 
     if(count($node)==0)
         {
@@ -310,7 +310,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         ORDER BY " . $order_by . " ASC
         " . $limit;
 
-    $nodes = sql_query($query);
+    $nodes = sql_query($query,"schema");
 
     foreach($nodes as $node)
         {
@@ -356,8 +356,7 @@ function is_parent_node($ref)
 
 
 /**
-* Determine how many level deep a node is. Useful for knowing how much
-* indent a node
+* Determine how many level deep a node is. Useful for knowing how much to indent a node
 *
 * @param  integer    $ref    Node ref
 *
@@ -1174,10 +1173,26 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
 
+    # check $nodes array values are positive integers and valid for int type node db field
+    $options_db_int = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
+    foreach($nodes as $node)
+        {
+        if (!filter_var($node, FILTER_VALIDATE_INT, $options_db_int))
+            {
+            return false;
+            }
+        }
+
     if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
         // Need to check user has permissions to add nodes (unless running from any CLI script other than unit tests)
         $resourcedata = get_resource_data($resourceid);
+
+        if (!$resourcedata)
+            {
+            return false;
+            }
+        
         $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
         if(!$access)
             {return false;}
@@ -1200,7 +1215,10 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
             {
             $nodedata = array();
             get_node($node, $nodedata);
-            $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+            if ($nodedata)
+                {
+                $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+                }
             }
         
         foreach ($field_nodes_arr as $key => $value)
@@ -1512,7 +1530,7 @@ function get_parent_nodes($noderef)
     $topnode=false;
     do
         {
-        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ");
+        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ", "schema");
         if(empty($node[0]["parent"]))
             {
             $topnode=true;
@@ -1641,7 +1659,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'");
+    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'","schema");
     if (count($node)>0)
         {
         return $node[0]["ref"];

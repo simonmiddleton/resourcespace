@@ -38,7 +38,27 @@ include "../../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["purgeusers"]?></h1>
+
+<?php
+// Breadcrumbs links
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["manageusers"],
+        'href'  => $baseurl_short . "pages/team/team_user.php"
+    ),
+    array(
+        'title' => $lang["purgeusers"],
+        'href'  => $baseurl_short . "pages/team/team_user_purge.php"
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
+
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_user_purge.php">

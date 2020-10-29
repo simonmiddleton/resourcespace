@@ -255,7 +255,7 @@ function HookResourceConnectAllAftersearchimg($resource, $img_url="")
         // ResourcePanel width - ResourcePanel margin - image width 
         $right = ($height > $width) ?  "right:" . (175 - 14 - intval($width)) . "px" : "";
         
-        echo "<i style=\"margin-top:$margin;$right\" class=\"overlay-link fas fa-link\"></i>";
+        echo "<i style=\"margin-top:$margin;$right\" class=\"resourceconnect-link overlay-link fas fa-link\"></i>";
         }
     }
 function HookResourceconnectAllGetResourcesToCheck($collection)
@@ -266,6 +266,10 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
         access key check only relevant for local resources therefore retrieve local resources only
     */   
     global $userrequestmode;
+    if(is_array($collection) && isset($collection["ref"]))
+        {
+        $collection = $collection["ref"];
+        }
     # retrieve only local resources from collection for access key validation
     $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
     

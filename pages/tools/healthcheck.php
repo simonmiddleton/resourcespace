@@ -139,10 +139,12 @@ if (isset($disksize))
 	$used=get_total_disk_usage();      # Total usage in bytes
     $percent=ceil(((int)$used/$avail)*100);
     echo " " . $percent . "% used";
-	if ($percent>=95) {echo " WARNING nearly full";}
+	if ($percent>=95 && $percent<=100) {echo " WARNING nearly full";}
+	if ($percent>100) {echo " WARNING over quota";}
 	}
 
 // Add active user count (last 7 day)
 echo ", " . get_recent_users(7) . " recent users";
 
+hook("checkadditional");
 

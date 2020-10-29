@@ -247,17 +247,17 @@ function findPluginFromSearch(array $plugin, $search)
         return true;
         }
 
-    if(isset($plugin["name"]) && strpos($plugin["name"], $search) !== false)
+    if(isset($plugin["name"]) && stripos($plugin["name"], $search) !== false)
         {
         return true;
         }
 
-    if(isset($plugin["descrip"]) && strpos($plugin["descrip"], $search) !== false)
+    if(isset($plugin["descrip"]) && stripos($plugin["descrip"], $search) !== false)
         {
         return true;
         }
 
-    if(isset($plugin["desc"]) && strpos($plugin["desc"], $search) !== false)
+    if(isset($plugin["desc"]) && stripos($plugin["desc"], $search) !== false)
         {
         return true;
         }
@@ -300,22 +300,34 @@ include "../../include/header.php"; ?>
    });
 })(jQuery);
 </script>
-<div class="BasicsBox"> 
-<h1><?php echo $lang["pluginmanager"]; ?>
-    <form id="SearchPlugins" method="post" onSubmit="return CentralSpacePost(this);">
-        <?php generateFormToken("plugin_search"); ?>
-        <input type="text" name="find" id="pluginsearch" value="<?php echo htmlspecialchars($find); ?>">
-        <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+<div class="BasicsBox">
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["pluginmanager"]
+    )
+);
+renderBreadcrumbs($links_trail);
+?>
+
+<form id="SearchPlugins" method="post" onSubmit="return CentralSpacePost(this);">
+    <?php generateFormToken("plugin_search"); ?>
+    <input type="text" name="find" id="pluginsearch" value="<?php echo htmlspecialchars($find); ?>">
+    <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+<?php
+if($searching)
+    {
+    ?>
+    <input type="button" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>" onClick="jQuery('#pluginsearch').val('');CentralSpacePost(document.getElementById('SearchPlugins'));">
     <?php
-    if($searching)
-        {
-        ?>
-        <input type="button" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>" onClick="jQuery('#pluginsearch').val('');CentralSpacePost(document.getElementById('SearchPlugins'));">
-        <?php
-        }
-        ?>
-    </form>
-</h1>
+    }
+    ?>
+</form>
+
 <p><?php echo $lang["plugins-headertext"]; render_help_link('systemadmin/managing_plugins');?></p>
 <h2 class="pageline"><?php echo (!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");

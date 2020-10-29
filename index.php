@@ -19,39 +19,40 @@ if('' == $k || (!check_access_key_collection(getvalescaped('c', ''), $k) && !che
 if (!hook("replacetopurl"))
 	{ 
 	$topurl="pages/" . $default_home_page . "?login=true";
-	if ($use_theme_as_home) {$topurl="pages/themes.php";}
+	if($use_theme_as_home) { $topurl = "pages/collections_featured.php"; }
 	if ($use_recent_as_home) {$topurl="pages/search.php?search=" . urlencode("!last".$recent_search_quantity);}
 	} /* end hook replacetopurl */ 
 
 
-if (getval("c","")!="")
+$c = trim(getval("c", ""));
+if($c != "")
 	{
-	# quick redirect to a collection (from e-mails, keep the URL nice and short)
-	$c=getvalescaped("c","");
+    $collection = get_collection($c);
+    if($collection === false)
+        {
+        exit($lang["error-collectionnotfound"]);
+        }
 
-	// Now redirect to the terms page with appropriate parameters
-	$topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
+    $topurl = "pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
 
-	if ($k!="")
-		{
-		# External access user... set top URL to first resource
-		$r=get_collection_resources($c);
-		if (count($r)>0)
-			{
-			# Fetch collection data
-			$cinfo=get_collection($c);if ($cinfo===false) {exit("Collection not found.");}
-		
-			if ($feedback_resource_select && $cinfo["request_feedback"])
-				{
-				$topurl="pages/collection_feedback.php?collection=" . $c . "&k=" . $k;		
-				}
-			else
-				{
-            	// Now redirect to the terms page with appropriate parameters
-   	            $topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
-				}
-			}
-		}
+    if(trim($k) != "")
+        {
+        $collection_resources = get_collection_resources($c);
+
+        if($collection["type"] == COLLECTION_TYPE_FEATURED)
+            {
+            $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+            }
+
+        if(is_featured_collection_category($collection))
+            {
+            $topurl = "pages/collections_featured.php?parent={$c}&k={$k}";
+            }
+        else if(is_array($collection_resources) && count($collection_resources) > 0 && $feedback_resource_select && $collection["request_feedback"])
+            {
+            $topurl = "pages/collection_feedback.php?collection={$c}&k={$k}";      
+            }
+        }
 	}
 
 if (getval("r","")!="")

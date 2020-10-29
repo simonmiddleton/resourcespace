@@ -36,7 +36,7 @@ if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","
         
 # process log in
 $error=getval("error","");
-if ($error!="") $error=$lang[$error];
+$error=isset($lang[$error]) ? $lang[$error] : "";
 
 # Auto logged out? Set error message.
 if (getval("auto","")!="") {$error=str_replace("30",$session_length,$lang["sessionexpired"]);}

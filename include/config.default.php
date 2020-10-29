@@ -13,7 +13,27 @@
  * 
  * @package ResourceSpace
  * @subpackage Configuration
- */
+ * 
+ * 
+ * NOTE (1)
+ * 
+ * IMPORTANT! If any new fields are added to any of the the field arrays marked with '** SEE NOTE (1)' you should do the following:-
+ * 
+ * 1)  If adding as an override for e.g a resource type or usergroup, ensure you add the field to 
+ *     the $data_joins array in config.php so that the columns are updated when resource data is changed
+ *     by other users or scripts
+ * 
+ *     e.g.
+ * 
+ *     $data_joins[] = 8;
+ * 
+ *  2) Once you have made the change, ensure that you run pages/tools/fix_resource_field_column.php, passing in the relevant field
+ *    identifier to populate the columns
+ * 
+ *    e.g.
+ * 
+ *    https://yoururl.com/pages/tools/fix_resource_field_column.php?field=8");
+*/
 
 
 /* ---------------------------------------------------
@@ -300,7 +320,7 @@ $homeanim_folder="gfx/homeanim/gfx";
 # $home_slideshow_height=350;
 
 # Small slideshow mode (old slideshow)
-$small_slideshow = true;
+$small_slideshow = true; # This is DEPRECATED and is switched off for new installations (by config_new_installs.php)
 
 # Big slideshow mode (Fullscreen slideshow)
 # ----------------------------------
@@ -741,17 +761,12 @@ $use_recent_as_home=false;
 
 # Show images along with theme category headers (image selected is the most popular within the theme category)
 $theme_images=true;
-$theme_images_number=1; # How many to auto-select (if none chosen manually)
+$theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
 $show_theme_collection_stats=false; # Show count of themes and resources in theme category
 
-# How many levels of theme category to show.
-# If this is set to more than one, a dropdown box will appear to allow browsing of theme sub-levels
-$theme_category_levels=1;
-
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
-# $theme_category_levels must be greater than 1.
 $theme_direct_jump=false;
 
 #Force Collections lists on the Themes page to be in Descending order.
@@ -992,13 +1007,13 @@ $contact_sheet_unicode_filenames=true;
 $titlefontsize     = 20; // Contact Sheet Title
 $refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
-$config_sheetlist_fields = array(8);
+$config_sheetlist_fields = array(8); # ** SEE NOTE (1)
 $config_sheetlist_include_ref=true;
 # If making a contact sheet with thumbnail sheet style, use these fields in contact sheet:
-$config_sheetthumb_fields = array();
+$config_sheetthumb_fields = array(); # ** SEE NOTE (1)
 $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
-$config_sheetsingle_fields = array(8);
+$config_sheetsingle_fields = array(8); # ** SEE NOTE (1)
 $config_sheetsingle_include_ref=true;
 
 # Use templates rather than setting contactsheet fields by display style?
@@ -1211,12 +1226,10 @@ $default_customaccess=2;
 $config_search_for_number=false;
 
 # Display the download as a 'save as' link instead of redirecting the browser to the download (which sometimes causes a security warning).
-# For the Opera and Internet Explorer 7 browsers this will always be enabled regardless of the below setting as these browsers block automatic downloads by default.
 $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
 $allow_share=true;
-$enable_theme_category_sharing=false;
 
 # Always create a collection when sharing an individual resource via email
 $share_resource_as_collection=false;
@@ -1267,10 +1280,6 @@ $checkbox_ordered_vertically=true;
 
 # When batch uploading, show the 'add resources to collection' selection box
 $enable_add_collection_on_upload=true;
-
-# When batch uploading, allow users to set collection public as part of upload process
-# also allows assignment to themes for users who have appropriate privileges
-$enable_public_collection_on_upload=false;
 
 # Batch Uploads, default is "Add to New Collection". Turn off to default to "Do not Add to Collection"
 $upload_add_to_new_collection=true;
@@ -1751,9 +1760,8 @@ $partial_index_min_word_length=3;
 
 # ---------------------
 # Search Display 
-
 # Thumbs Display Fields: array of fields to display on the large thumbnail view.
-$thumbs_display_fields=array(8);
+$thumbs_display_fields=array(8); # ** SEE NOTE (1)
 # array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
 $thumbs_display_extended_fields=array();
 	# $search_result_title_height=26;
@@ -1764,19 +1772,20 @@ $thumbs_display_extended_fields=array();
 $xlthumbs=false;
 
 # Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
-$xl_thumbs_display_fields=array(8);
+$xl_thumbs_display_fields=array(8); # ** SEE NOTE (1)
 # array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
 $xl_thumbs_display_extended_fields=array();
-	# $xl_search_result_title_height=26;
-	$xl_search_results_title_trim=60;
-	$xl_search_results_title_wordwrap=100;
+# $xl_search_result_title_height=26;
+$xl_search_results_title_trim=60;
+$xl_search_results_title_wordwrap=100;
 
-
+# SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
+$sort_fields=array(12); # ** SEE NOTE (1)
 
 # Enable list view option for search screen
 $searchlist=true;
 # List Display Fields: array of fields to display on the list view
-$list_display_fields=array(8,3,12);
+$list_display_fields=array(8,3,12); # ** SEE NOTE (1)
 $list_search_results_title_trim=25;
 
 # When returning to search results from the view page via "all" link, bring user to result location of viewed resource?
@@ -1787,17 +1796,15 @@ $search_anchors_highlight=false;
 
 # Related Resource title trim: set to 0 to disable
 $related_resources_title_trim=15;
-	
-# SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
-$sort_fields=array(12);
+
 
 # TITLE field: Default title for all resources 
 # Should be used as title on the View and Collections pages.
 # This field will be inherited even if Inherit Global fields is set to false.
-$view_title_field=8; 
+$view_title_field=8; # ** SEE NOTE (1)
 
 # Searchable Date Field:
-$date_field=12; 
+$date_field=12; # ** SEE NOTE (1)
 
 # Search for dates into the future. Allows the specified number of years ahead of this year to be added to the year drop down used by simple and advanced search.
 $maxyear_extends_current=0;
@@ -1983,20 +1990,20 @@ $enable_theme_breadcrumbs = true;
 $show_collection_name = false;
 
 # Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
-# Can be tested or used for custom link by adding querystring parameter simpleview=true to themes.php e.g. pages/themes.php?simpleview=true
+# Can be tested or used for custom link by adding querystring parameter simpleview=true to collections_featured.php e.g. pages/collections_featured.php?simpleview=true
 # NOTE: only works with $themes_category_split_pages=true;
 $themes_simple_view=false;
 # Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images=true;
 
-# Option to show single home slideshow image on featured collection page (themes.php) if $themes_simple_view is enabled
+# Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
 # Display theme categories as links, and themes on separate pages?
 $themes_category_split_pages=false;
 # Display breadcrumb-style theme parent links instead of "Subcategories"
 $themes_category_split_pages_parents=false;
-# Include "Themes" root node before theme level crumbs to add context and link to themes.php
+# Include "Themes" root node before theme level crumbs to add context and link to collections_featured.php
 $themes_category_split_pages_parents_root_node=true;
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
@@ -2101,6 +2108,7 @@ $dynamic_keyword_suggest_contains=false;
 # Uncomment if you wish to limit the suggestions to display after a certain number of characters have been entered.
 # Useful if your dynamic keyword fields have a large number options.
 # Be sure to set this to a value equal to your shortest dynamic keyword option.
+# Requires $dynamic_keyword_suggest_contains=true;
 # $dynamic_keyword_suggest_contains_characters=2;
 
 # Option to show resource ID in the thumbnail, next to the action icons.
@@ -2177,9 +2185,7 @@ $staticsync_whitelist_folders = array();
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
 $staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
-# Allow unlimited theme levels to be created based on the folder structure. 
-# Script will output a new $theme_category_levels number which must then be updated in config.php
-$staticsync_folder_structure=false;
+
 # Mapping extensions to resource types for sync'd files
 # Format: staticsync_extension_mapping[resource_type]=array("extension 1","extension 2");
 $staticsync_extension_mapping_default=1;
@@ -2509,7 +2515,7 @@ $suppress_sql_log = false;
 # $metadata_template_resource_type=5;
 #
 # The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
-# $metadata_template_title_field=10;
+# $metadata_template_title_field=10; # ** SEE NOTE (1)
 
 // Ability to default metadata templates to a particular resource ID
 $metadata_template_default_option = 0;
@@ -2591,12 +2597,8 @@ $collection_purge=false;
 # probably requires the user to clear cookies.
 $global_cookies=false;
 
-# Iframe-based direct download from the view page (to avoid going to download.php)
-# note this is incompatible with $terms_download and the $download_usage features, and is overridden by $save_as
-$debug_direct_download=false; // set to true to see the download iframe for debugging purposes.
-$direct_download_allow_ie7=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_ie8=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
-$direct_download_allow_opera=false; // opera can also allow popups, but this is recommended off as well since by default it won't work for most users.
+# Set to true to see the download iframe for debugging purposes.
+$debug_direct_download=false; 
 
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
@@ -2971,8 +2973,6 @@ $ctrls_to_save=false;
 
 # Option to separate some resource types in searchbar selection boxes
 $separate_resource_types_in_searchbar=Array();
-
-$team_centre_bug_report=false;
 
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;
@@ -3673,7 +3673,7 @@ $non_image_types_generate_preview_only = true;
 // NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
 // To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
 // To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
-$search_filter_nodes = false;
+$search_filter_nodes = true;
 
 // Browse bar 
 // Enable/Disable browse bar - in system config
@@ -3707,3 +3707,17 @@ $date_validator=false;
 // and care must still be taken to keep secure any exported data.
 $system_download_config = false;
 $system_download_config_force_obfuscation = true;
+
+
+// Block particular config options from shown in the System Config area.
+// E.g. $system_config_hide=array("email_from","email_notify");
+$system_config_hide=array();
+
+// Request that search engines don't index the entire installtion
+$search_engine_noindex=false;
+
+// Request that search engines don't index external shares only
+$search_engine_noindex_external_shares=false;
+
+// Use a tile layout for the user/admin/system menus. If false, use a list layout for menus.
+$tilenav=true;

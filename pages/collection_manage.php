@@ -14,7 +14,7 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
-$collection_valid_order_bys=array("fullname","name","ref","count","public");
+$collection_valid_order_bys=array("fullname","name","ref","count","type");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
 if ($modified_collection_valid_order_bys){$collection_valid_order_bys=$modified_collection_valid_order_bys;}
 if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="created";} # Check the value is one of the valid values (SQL injection filter)
@@ -26,20 +26,31 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     {
     // Create new collection
     $new = create_collection($userref, $name);
+    $redirect_url = "pages/collection_edit.php?ref={$new}&reload=true";
 
-    // This is used to create collections directly from featured collections page when in simpleview mode
-    if($themes_simple_view && filter_var(getvalescaped('call_to_action_tile', false), FILTER_VALIDATE_BOOLEAN))
+    // This is used to create featured collections directly from the featured collections page
+    if($enable_themes && getval("call_to_action_tile", "") === "true" && checkperm("h"))
         {
-        $coldata = array("name" => $name);
+        $parent = (int) getval("parent", 0, true);
+        $coldata = array(
+            "name" => $name,
+            "featured_collections_changes" => array(
+                "update_parent" => $parent,
+                "force_featured_collection_type" => true,
+                "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+            ),
+        );
+        $redirect_params = ($parent == 0 ? array() : array("parent" => $parent));
+        $redirect_url = generateURL("{$baseurl_short}pages/collections_featured.php", $redirect_params);
+
         save_collection($new,$coldata);
         }
 
     set_user_collection($userref, $new);
 
-    // Log this
     daily_stat('New collection', $userref);
 
-    redirect("pages/collection_edit.php?ref={$new}&reload=true");
+    redirect($redirect_url);
     }
 
 $delete=getvalescaped("delete","");
@@ -303,7 +314,7 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
 
 <td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["itemstitle"]?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$hide_access_column){ ?><td class="access"><?php if ($col_order_by=="public") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=public&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php }?>
+<?php if (!$hide_access_column){ ?><td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php }?>
 
 <td class="collectionin"><?php echo $lang["showcollectionindropdown"] ?></td>
 
@@ -319,26 +330,30 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     $count_result = $collections[$n]["count"];
 	?><tr <?php hook("collectionlistrowstyle");?>>
 	<td class="name"><div class="ListTitle">
-		<a <?php if ($collections[$n]["public"]==1 && (strlen($collections[$n]["theme"])>0)) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
+		<a <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
 	<td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
 	<td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collection_prefix . $collections[$n]["ref"], $find)); ?></td>
 	<td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
 	<td class="count"><?php echo $collections[$n]["count"] ?></td>
 <?php if (! $hide_access_column){ ?>	<td class="access"><?php
-# Work out the correct access mode to display
-if (!hook('collectionaccessmode')) {
-	if ($collections[$n]["public"]==0){
-		echo $lang["private"];
-	}
-	else{
-		if (strlen($collections[$n]["theme"])>0){
-			echo $lang["theme"];
-		}
-	else{
-		echo $lang["public"];
-		}
-	}
-}
+if(!hook('collectionaccessmode'))
+    {
+    switch($collections[$n]["type"])
+        {
+        case COLLECTION_TYPE_PUBLIC:
+            echo $lang["public"];
+            break;
+
+        case COLLECTION_TYPE_FEATURED:
+            echo $lang["theme"];
+            break;
+
+        case COLLECTION_TYPE_STANDARD:
+        default:
+            echo $lang["private"];
+            break;
+        }
+    }
 ?></td><?php
 }?>
 

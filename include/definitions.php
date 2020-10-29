@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 12);
+define('SYSTEM_UPGRADE_LEVEL', 15);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -176,6 +176,7 @@ define('LINK_CARET','<i aria-hidden="true" class="fa fa-caret-right"></i>&nbsp;'
 define('LINK_CARET_BACK','<i aria-hidden="true" class="fa fa-caret-left"></i>&nbsp;');
 define('LINK_CARET_PLUS','<i aria-hidden="true" class="fa fa-plus"></i>&nbsp;');
 define('LINK_CARET_PLUS_CIRCLE','<i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;');
+define('LINK_CHEVRON_RIGHT','<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON','<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
 define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON','<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
@@ -185,6 +186,8 @@ define('HOME_ICON','<i aria-hidden="true" class="fa fa-fw fa-home"></i>&nbsp;');
 define('SEARCH_ICON', '<i class="fa fa-search" aria-hidden="true"></i>&nbsp;');
 define('ICON_EDIT', '<i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;');
 define('ICON_REMOVE', '<i class="fa fa-minus-circle" aria-hidden="true"></i>&nbsp;');
+define('ICON_FOLDER', '<i class="fas fa-folder" aria-hidden="true"></i>&nbsp;');
+define('ICON_CUBE', '<i class="fas fa-cube" aria-hidden="true"></i>&nbsp;');
 
 define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
@@ -308,10 +311,22 @@ $corefields = array(
         )
     );
 
+
+// ----------------------------------------------
+// COLLECTIONS
+// ----------------------------------------------
 define("COLLECTION_TYPE_STANDARD",  0);
 define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then edit mode
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
-
+define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
+define("COLLECTION_TYPE_PUBLIC",    4); # public collections
+$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
+    "no_image" => 0,
+    "most_popular_image" => 1,
+    "most_popular_images" => 10,
+    "manual" => 100,
+);
+$COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED);
 
 
 // ----------------------------------------------

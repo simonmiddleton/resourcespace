@@ -31,8 +31,8 @@
         <?php if (!hook("replacethemelink")) { ?>
             <?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?>
                 <li class="HeaderLink">
-                    <a href="<?php echo $baseurl?>/pages/themes.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo FEATURED_COLLECTION_ICON . $lang["themes"]?>
+                    <a href="<?php echo $baseurl?>/pages/collections_featured.php" onClick="return CentralSpaceLoad(this,true);">
+                        <?php echo FEATURED_COLLECTION_ICON . $lang["themes"]; ?>
                     </a>
                 </li>
             <?php } ?>

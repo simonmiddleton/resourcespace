@@ -493,7 +493,7 @@ if($tile>0)
     # Update $tile and $usertile for generate_dash_tile_toolbar purposes
     $usertile=get_user_tile($user_tile,$userref);
     $tile=get_tile($tile);
-    $tile_id        = (isset($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
+    $tile_id        = (is_array($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
     generate_dash_tile_toolbar($tile, $tile_id);
 }
 ?>

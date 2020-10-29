@@ -21,7 +21,7 @@ if (isset($_GET["logout"]))
         }
 
 
-#$wordpress_user="";
+$wordpress_user="";
 $wordpress=getval("wordpress_user","");
  exit ("TEST" . $wordpress);
  if ($wordpress!="")

@@ -96,11 +96,6 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		{
 		collection_set_public($collection_add);
 		}
-	if (strlen(getval("themestring",'')) > 0)
-		{
-		$themearr = explode('||',getval("themestring",''));
-		collection_set_themes($collection_add,$themearr);
-		}
 	}
 if ($upload_then_edit && $replace == "" && $replace_resource == "")
     {
@@ -684,7 +679,14 @@ if ($_FILES)
                                 {
                                 $ref = create_resource($resource_type, $setarchivestate);
                                 }
+
+                            # check that $ref is not false - possible return value with create_resource()
+                            if(!$ref)
+                                {
+                                die('{"jsonrpc" : "2.0", "error" : {"code": 125, "message": "Failed to create resource with given resource type: ' . $resource_type . '"}}');    
+                                }
                             
+
                             // Check valid requested state by calling function that checks permissions
                             update_archive_status($ref, $setarchivestate);
                             

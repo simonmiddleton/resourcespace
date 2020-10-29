@@ -73,15 +73,18 @@ if (file_exists($imagepath)){?>
 </select>
 <div class="clearerleft"> </div>
 </div>
-
-<?php if (checkperm("h") && $cinfo["theme"]!="") { ?>
-<div class="Question">
-<label for="use_as_theme_thumbnail"><?php echo $lang["useasthemethumbnail"]?></label>
-<input name="use_as_theme_thumbnail" id="use_as_theme_thumbnail" type="checkbox" value="yes" <?php if ($commentdata["use_as_theme_thumbnail"]==1) { ?>checked<?php } ?>>
-<div class="clearerleft"> </div>
-</div>
-<?php } ?>
-
+<?php
+if($cinfo["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
+    {
+    ?>
+    <div class="Question">
+    <label for="use_as_theme_thumbnail"><?php echo $lang["useasthemethumbnail"]?></label>
+    <input name="use_as_theme_thumbnail" id="use_as_theme_thumbnail" type="checkbox" value="yes" <?php if ($commentdata["use_as_theme_thumbnail"]==1) { ?>checked<?php } ?>>
+    <div class="clearerleft"> </div>
+    </div>
+    <?php
+    }
+    ?>
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />

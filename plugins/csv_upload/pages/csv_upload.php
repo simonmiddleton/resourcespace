@@ -542,6 +542,9 @@ switch($csvstep)
                     <?php
                     foreach($csv_info as $csv_column => $csv_field_data)
                         {
+                        // Used to stop selection process if a mapping found for particular resource type version of field
+                        $csv_set_options_found=false;
+
                         if(in_array($csv_column,$selected_columns))
                             {
                             continue;
@@ -553,16 +556,15 @@ switch($csvstep)
                         foreach($allfields as $field)
                             {
                             echo "<option value=\"" . $field["ref"] . "\" ";
-                            if(
-                                (isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == $field["ref"])
-                                || 
-                                    (in_array(mb_strtolower($csv_field_data["header"]), array(mb_strtolower($field["name"]),mb_strtolower($field["title"])))
-                                    &&
-                                    !(isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1)
-                                    )
-                                )
+                            if(isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == $field["ref"])
                                 {
                                 echo " selected ";
+                                $csv_set_options_found=true;
+                                }
+                            else if(!$csv_set_options_found && (in_array(mb_strtolower($csv_field_data["header"]), array(mb_strtolower($field["name"]),mb_strtolower($field["title"]))) &&
+                                    !(isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1)))
+                                {
+                                    echo " selected ";
                                 }
                             echo  ">" . htmlspecialchars($field["title"]) . ($field["resource_type"] != 0 && isset($resource_types[$field["resource_type"]]) ? (" (" . $resource_types[$field["resource_type"]]["name"]  . ")"): "") . "</option>\n";
                             }

@@ -4,6 +4,7 @@ $view_title_field = $title_field;
 
 if ($enable_related_resources)
 	{
+    $use_watermark = check_use_watermark();
 	$relatedresources = do_search('!related' . $ref);
 	$related_restypes = array();
 

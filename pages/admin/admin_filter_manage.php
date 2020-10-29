@@ -8,7 +8,6 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-
 $filterorder    = getval("filterorder","ref");
 $filtersort     = getval("filtersort", "ASC");
 $revsort        = ($filtersort == "ASC") ? "DESC" : "ASC";
@@ -27,17 +26,28 @@ $params = array(
 
 include "../../include/header.php";
 
-
 ?>
-
 
 <div id="CentralSpaceContainer">
     <div id="CentralSpace">
 
         <div class="BasicsBox">
 
+            <?php
+            $links_trail = array(
+                array(
+                    'title' => $lang["systemsetup"],
+                    'href'  => $baseurl_short . "pages/admin/admin_home.php"
+                ),
+                array(
+                    'title' => $lang["filter_manage"],
+                    'href'  => $baseurl_short . "pages/admin/admin_filter_manage.php",
+                    'help'  => 'systemadmin/search-filters'
+                )
+            );
 
-            <h1><?php echo $lang["filter_manage"];render_help_link("systemadmin/search-filters");?></h1>
+            renderBreadcrumbs($links_trail);
+            ?>
             	
             <div class="Listview">
             <table id="filter_list_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">

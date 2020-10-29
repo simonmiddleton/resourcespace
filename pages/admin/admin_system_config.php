@@ -114,7 +114,7 @@ $page_def[] = config_add_boolean_select('basic_simple_search', $lang['userprefer
 $page_def[] = config_add_boolean_select('comments_resource_enable', $lang['systemconfig_comments'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
-
+$page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenavdefault'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 
@@ -222,15 +222,6 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_boolean_select('themes_category_split_pages', $lang['systemconfig_themes_category_split_pages'], $yes_no_options, 420, '', true);
-$page_def[] = config_add_single_select(
-    'theme_category_levels',
-    $lang['systemconfig_theme_category_levels'],
-    range(1, 8),
-    false,
-    420,
-    '',
-    true
-);
 $page_def[] = config_add_html('</div>');
 
 // Workflow section
@@ -361,9 +352,21 @@ $page_def[] = config_add_single_select(
 $page_def[] = config_add_html('</div>');
 
 // API section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_api'] . '</h3><div id="SystemConfigWorkflowSection" class="CollapsibleSection">');
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_api'] . '</h3><div id="SystemConfigAPISection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('iiif_enabled', $lang['iiif_enable_option'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
+
+// Search engines section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['system_config_search_engines'] . '</h3><div id="SystemConfigSearchEngineSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('search_engine_noindex', $lang['search_engine_noindex'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('search_engine_noindex_external_shares', $lang['search_engine_noindex_external_shares'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_html('</div>');
+
+
+
+
+
+
 
 
 // Let plugins hook onto page definition and add their own configs if needed
@@ -373,6 +376,19 @@ if(is_array($plugin_specific_definition) && !empty($plugin_specific_definition))
     {
     $page_def = $plugin_specific_definition;
     }
+
+// Strip out any configs that are blocked from being edited in the UI.
+if (count($system_config_hide)>0)
+    {
+    $new_page_def=array();
+    for($n=0;$n<count($page_def);$n++)
+        {
+        if (!in_array($page_def[$n][1],$system_config_hide)) {$new_page_def[]=$page_def[$n];} // Add if not blocked
+        }
+    $page_def=$new_page_def;
+    }
+
+
 
 
 // Process autosaving requests

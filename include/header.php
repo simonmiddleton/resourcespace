@@ -1,12 +1,11 @@
 <?php 
-
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
 if(!isset($internal_share_access))
 	{
 	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-	$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    $internal_share_access = internal_share_access();
 	}
 
 $logout=getvalescaped("logout","");
@@ -45,6 +44,13 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<?php if ($search_engine_noindex || (getval("k","")!="" && $search_engine_noindex_external_shares))
+    {
+    ?>
+    <meta name="robots" content="noindex,nofollow">
+    <?php
+    }
+?>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook('extra_meta'); ?>
@@ -69,11 +75,9 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 <script src="<?php echo $baseurl . $jquery_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 <script src="<?php echo $baseurl. $jquery_ui_path?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
 <script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key?>"></script>
-<script src="<?php echo $baseurl?>/lib/js/easyTooltip.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
 <?php if ($pagename=="login") { ?><script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script><?php } ?>
-<!--[if lte IE 9]><script src="<?php echo $baseurl?>/lib/historyapi/history.min.js"></script><![endif]-->
 <?php if ($image_preview_zoom) { ?><script src="<?php echo $baseurl?>/lib/js/jquery.zoom.js"></script><?php } ?>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
@@ -193,6 +197,7 @@ var branch_limit="<?php echo $cat_tree_singlebranch?>";
 var branch_limit_field = new Array();
 var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
+var TileNav = <?php echo ($tilenav?"true":"false") ?>;
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
     {
@@ -252,15 +257,12 @@ $extrafooterhtml="";
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Override stylesheet -->
-<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo $k; ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo htmlspecialchars($k); ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <!-- Load specified font CSS -->
 <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
-
-<?php if ($pagename!="preview_all"){?><!--[if lte IE 7]> <link href="<?php echo $baseurl?>/css/globalIE.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]--><?php } ?>
-<!--[if lte IE 5.6]> <link href="<?php echo $baseurl?>/css/globalIE5.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]-->
 
 <?php
 echo get_plugin_css();
@@ -288,11 +290,6 @@ if(!hook("customloadinggraphic"))
 
 <?php hook("bodystart"); ?>
 
-<?php
-# Commented as it was causing IE to 'jump'
-# <body onLoad="if (document.getElementById('searchbox')) {document.getElementById('searchbox').focus();}">
-?>
-
 <!--Global Header-->
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
@@ -300,13 +297,13 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
 
 <?php
 $homepage_url=$baseurl."/pages/".$default_home_page;
-if ($use_theme_as_home){$homepage_url=$baseurl."/pages/themes.php";}
+if($use_theme_as_home) { $homepage_url = $baseurl."/pages/collections_featured.php"; }
 if ($use_recent_as_home){$homepage_url=$baseurl."/pages/search.php?search=".urlencode('!last'.$recent_search_quantity);}
 if ($pagename=="login" || $pagename=="user_request" || $pagename=="user_password"){$homepage_url=$baseurl."/index.php";}
 
 hook("beforeheader");
 
-# Calculate Header Image Display #
+# Calculate Header Image Display
 if(isset($usergroup))
     {
     //Get group logo value
@@ -530,7 +527,10 @@ if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["H
         $collections_footer = false;
     }
  
-if (!$header_search)
+# if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    
+if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login)) ) )
+    { }
+    else 
     {
     # Include simple search sidebar?
    

@@ -258,6 +258,18 @@ function get_config_options($user_id, array &$returned_options)
         return false;
         }
 
+    // Strip out any system configs that are blocked from being edited in the UI that might have been set previously.
+    global $system_config_hide;
+    if (is_null($user_id) && count($system_config_hide)>0)
+        {
+        $new_config_options=array();
+        for($n=0;$n<count($config_options);$n++)
+            {
+            if (!in_array($config_options[$n]["parameter"],$system_config_hide)) {$new_config_options[]=$config_options[$n];} // Add if not blocked
+            }
+        $config_options=$new_config_options;
+        }
+
     $returned_options = $config_options;
 
     return true;
@@ -1094,6 +1106,9 @@ function config_generate_html(array $page_def)
                 break;
             case 'single_ftype_select':
                 config_single_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6]);
+                break;
+            case 'multi_archive_select':
+                config_multi_archive_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
                 break;
             }
         }

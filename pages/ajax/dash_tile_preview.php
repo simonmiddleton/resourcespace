@@ -6,10 +6,8 @@
  */
 
 include "../../include/db.php";
-
 include "../../include/authenticate.php";
 include "../../include/dash_functions.php";
-
 
 global $userref,$baseurl_short;
 

@@ -29,12 +29,6 @@ if ($delete!="" &&  !$saveerror)
 
 include '../../../include/header.php';
 
-?>
-<div class="BasicsBox">
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_workflow"] ?></a>
-</div>
-<?php
-
 if (isset($noticetext))
 	{
 	echo "<div class=\"PageInformal\">" . $noticetext . "</div>";	
@@ -80,7 +74,7 @@ function deletestate(code)
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang['rse_workflow_configuration']; ?></h1>
+
 <div class="clearerleft" ></div>
 
 <form style="display:none" id="form_delete_state" name="form_delete_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php">
@@ -106,7 +100,23 @@ function deletestate(code)
 </form>
 
 <div>
-<h2><?php echo $lang['rse_workflow_manage_states']; ?></h2>
+<?php
+$links_trail = array(
+    array(
+	    'title' => $lang["teamcentre"],
+	    'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_workflow"],
+		'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
+    ),
+	array(
+		'title' => $lang["rse_workflow_manage_states"]
+	)
+);
+
+renderBreadcrumbs($links_trail);
+?>
 <div class="Listview">
 		<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
 			<tr class="ListviewTitleStyle">

@@ -45,6 +45,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         $logfile = $csv_set_options["log_file"];
         }
    
+    // Get system archive states and access levels for validating uploaded values
+    $archivestates = sql_array("select code value from archive_states","");
+    $accessstates = array('0','1','2');
+    
     csv_upload_log($logfile,"CSV upload started at " . date("Y-m-d H:i",time()));
     csv_upload_log($logfile,"Using CSV file: " . $filename);
 
@@ -126,7 +130,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         // Get the required resource type - needed before processing data so resources can be created
         if($csv_set_options["resource_type_column"] != "")
             {
-            $resource_type_set = $line[$csv_set_options["resource_type_column"]];
+            $resource_type_column = $csv_set_options["resource_type_column"];
+            $resource_type_set = isset($line[$resource_type_column]) ? $line[$resource_type_column] : "";
             if(trim($resource_type_set) == "")
                 {
                 if($csv_set_options["update_existing"])
@@ -246,7 +251,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 {
                 // Matching on field value
                 $match_field = $allfields[$csv_set_options["id_column_match"]];
-                $match_val = $line[$csv_set_options["id_column"]];
+                $id_column = isset($csv_set_options["id_column"]) ? $csv_set_options["id_column"] : "";
+                $match_val = isset($line[$id_column]) ? $line[$id_column]: "";
                 if(trim($match_val) == "")
                     {
                     $logtext = "Error: Invalid resource identifier specified in line " . count($line);
@@ -313,9 +319,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["status_column"] != "" && in_array($csv_set_options["status_column"],array_keys($line)))
                 {
                 $setstatus = $line[$csv_set_options["status_column"]];
-                if (!is_numeric($setstatus))
+                if (!is_numeric($setstatus) || !in_array($setstatus,$archivestates))
                     {
                     $setstatus = (int)$csv_set_options["status_default"];
+                    $logtext = "Invalid resource workflow state, using default value.";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     }
                 $processed_columns[] = (int)$csv_set_options["status_column"];
                 }
@@ -328,9 +337,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
             if($csv_set_options["access_column"] != "" && in_array($csv_set_options["access_column"],array_keys($line)))
                 {
                 $setaccess = $line[$csv_set_options["access_column"]];
-                if (!is_numeric($setaccess))
+                if (!is_numeric($setaccess) || !in_array($setaccess,$accessstates))
                     {
-                $setaccess = (int)$csv_set_options["access_default"];
+                    $setaccess = (int)$csv_set_options["access_default"];
+                    $logtext = "Invalid resource access level, using default value.";
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
                     }
                 $processed_columns[] = $csv_set_options["access_column"];
                 }
@@ -577,8 +589,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                             break;
 
                             case (FIELD_TYPE_DATE_RANGE):
-                                # date range has format date/date
-                                $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
 
                                 if(strpos($cell_value,",") !== false)
                                     {
@@ -593,12 +603,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                                 $valid_start_date = isset($rangedates[0]) ? check_date_format($rangedates[0]) : "";
                                 $valid_end_date = isset($rangedates[1]) ? check_date_format($rangedates[1]) : "";
 
-                                if(!preg_match($rangeregex,$cell_value_item,$matches) || $valid_start_date != "" || $valid_end_date != "")
+                                if($valid_start_date != "" || $valid_end_date != "")
                                     {
                                     # raise error - invalid date format
                                     $error_count++;
                                     $logtext = "";
-                                    !preg_match($rangeregex,$cell_value_item,$matches) ? $logtext = $logtext . " - Invalid date range format - use EDTF format" : $logtext;
                                     $valid_start_date != "" ? $logtext = $logtext . " - [Start Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_start_date) : $logtext;
                                     $valid_end_date != "" ? $logtext = $logtext . " - [End Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_end_date) : $logtext;
                                     csv_upload_log($logfile,$logtext);
@@ -677,15 +686,23 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
                         $daterangenodes     = array();
                         $daterangestartnode = set_node(null, $fieldid, $rangedates[0], null, null,true);
-                        $daterangeendnode   = set_node(null, $fieldid, $rangedates[1], null, null,true);
+                        $daterangeendnode   = set_node(null, $fieldid, isset($rangedates[1])? $rangedates[1] : "", null, null,true);
 
                         // get latest list of nodes, in case new nodes added with set_node() above
                         $field_nodes   = get_nodes($fieldid);
                         $node_options = array_column($field_nodes, 'name', 'ref');
 
                         $node_trans_arr[$fieldid][$daterangestartnode]  = $rangedates[0];
-                        $node_trans_arr[$fieldid][$daterangeendnode]    = $rangedates[1];
-                        $daterangenodes = array($daterangestartnode,$daterangeendnode);
+                        $node_trans_arr[$fieldid][$daterangeendnode]    = isset($rangedates[1])? $rangedates[1] : "";
+                        
+                        if($daterangeendnode!="")
+                            {
+                            $daterangenodes = array($daterangestartnode,$daterangeendnode);
+                            }
+                        else
+                            {
+                            $daterangenodes = array($daterangestartnode);
+                            }
 
                         $nodes_to_add = array_diff($daterangenodes, $current_field_nodes);
                         $nodes_to_remove = array_diff($current_field_nodes,$daterangenodes);

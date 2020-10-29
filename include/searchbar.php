@@ -18,11 +18,10 @@ if ($simple_search_reset_after_search)
 else 
     {
     # pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
-    if(!isset($restypes))
+    if(!isset($restypes))        
         {
-        $restypes = @$_COOKIE['restypes'];
+        $restypes = isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "";
         }
-
     if(!isset($search) || false !== strpos($search, '!'))
         {
         $quicksearch = (isset($_COOKIE['search']) ? $_COOKIE['search'] : '');
@@ -42,7 +41,7 @@ if($basic_simple_search)
 if(!isset($internal_share_access))
     {
     // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-    $internal_share_access = (isset($k) && $k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    $internal_share_access = internal_share_access();
     }
 
 # Load the basic search fields, so we know which to strip from the search string
@@ -748,16 +747,6 @@ elseif($restypes=='')
     </div>
 
     <script type="text/javascript">
-    
-    jQuery(document).ready(function(){
-        jQuery('.SearchItem').easyTooltip({
-            xOffset: -50,
-            yOffset: 40,
-            charwidth: 25,
-            cssclass: "ListviewStyle",
-            clickRemove: true
-            });
-        });
 
     function ResetTicks()
         {

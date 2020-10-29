@@ -2102,7 +2102,7 @@ $lang["fieldhelp-permissions_filter"]="Môžete zadať jedno povolenie alebo via
 $lang['page-title_user_group_management_edit'] = "Upraviť skupinu používateľov";
 $lang['page-subtitle_user_group_management_edit'] = "Táto časť sa používa na úpravu vlastností skupiny používateľov.";
 $lang["action-title_remove_user_group_logo"]="Zaškrtnite, ak chcete odstrániť logo skupiny používateľov";
-$lang["action-title_see_wiki_for_advanced_options"]="Prosím pozrite si <a href='https://www.resourcespace.com/knowledge-base/'>Znalostná základňa</a> pre ďalšiu pomoc s pokročilými možnosťami.";
+$lang["action-title_see_wiki_for_user_group_advanced_options"]="Prosím pozrite si <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Znalostná základňa</a> pre ďalšiu pomoc s pokročilými možnosťami.";
 
 # admin web edit
 $lang['page-title_web_edit'] = "Upraviť súbor";

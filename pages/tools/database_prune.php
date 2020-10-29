@@ -15,7 +15,8 @@ if('cli' != php_sapi_name())
 
 $newline = PHP_EOL;
 
-sql_query("DELETE FROM collection WHERE public<>1 AND user NOT IN (SELECT ref FROM user)");
+$public_types = join(", ", $COLLECTION_PUBLIC_TYPES);
+sql_query("DELETE FROM collection WHERE `type` NOT IN ({$public_types}) AND user NOT IN (SELECT ref FROM user)");
 echo number_format(sql_affected_rows()) . " orphaned collections deleted." . $newline;
 
 sql_query("DELETE FROM collection_keyword WHERE collection NOT IN (SELECT ref FROM collection) OR keyword NOT IN (SELECT ref FROM keyword)");

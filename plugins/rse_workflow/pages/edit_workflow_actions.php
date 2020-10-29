@@ -36,12 +36,6 @@ if ($delete!="")
 	
 include '../../../include/header.php';
 
-?>
-<div class="BasicsBox">
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_workflow"] ?></a>
-</div>
-<?php
-
 if (isset($noticetext))
 	{
 	echo "<div class=\"PageInformal\">" . $noticetext . "</div>";	
@@ -67,7 +61,23 @@ function deleteaction(ref)
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang['rse_workflow_manage_actions']; ?></h1>
+<?php
+$links_trail = array(
+    array(
+	    'title' => $lang["teamcentre"],
+	    'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["rse_workflow_manage_workflow"],
+		'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
+    ),
+	array(
+		'title' => $lang["rse_workflow_manage_actions"]
+	)
+);
+
+renderBreadcrumbs($links_trail);
+?>
 <div class="clearerleft" ></div>
 
 <div class="BasicsBox">

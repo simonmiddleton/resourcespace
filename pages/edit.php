@@ -65,8 +65,6 @@ $uploadparams["collection_add"] =  $collection_add;
 $uploadparams["local"] =  $local;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
-$uploadparams["themestring"] = getval("themestring","");
-$uploadparams["public"] = getval("public","");
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
 
@@ -366,7 +364,11 @@ if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resourc
     clear_resource_data($ref);
     }
 
-
+// Upload template: always reset to today's date (if configured).
+if(0 > $ref && $reset_date_upload_template && isset($reset_date_field) && '' == getval('submitted', ''))
+    {
+    update_field($ref, $reset_date_field, date('Y-m-d H:i'));
+    }
         
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
@@ -845,8 +847,6 @@ if ($lockable_fields)
         echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
         }?>
 
-registerCollapsibleSections();
-
 jQuery(document).ready(function()
 {
    <?php
@@ -1280,7 +1280,8 @@ else
 
 # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
 
-SaveAndClearButtons("NoPaddingSaveClear");
+if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
+
   } ?>
 
 <?php hook("editbefresmetadata"); ?>
@@ -1414,7 +1415,7 @@ if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$s
 
 $lastrt=-1;
 
-if(isset($metadata_template_resource_type) && !$multiple && ($ref < 0 || $upload_review_mode))
+if(isset($metadata_template_resource_type) && isset($metadata_template_title_field) && $metadata_template_title_field !== false && !$multiple && ($ref < 0 || $upload_review_mode))
     {
     // Show metadata templates here
     $templates = get_metadata_templates();

@@ -27,15 +27,6 @@ if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative))
 	$url=$baseurl."/pages/download.php" . $download_url_suffix;
 	}
 
-# For Opera and Internet Explorer 7 - redirected downloads are always blocked, so use the '$save_as' config option
-# to present a link instead.
-if (isset($_SERVER["HTTP_USER_AGENT"]))
-	{
-	if (!$direct_download_allow_opera &&  strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"opera")!==false) {$save_as=true;}
-	if (!$direct_download_allow_ie7 &&  strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 7.")!==false) {$save_as=true;}
-	if (!$direct_download_allow_ie8 &&  strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}
-	}
-
 include "../include/header.php";
 
 if (!$save_as)

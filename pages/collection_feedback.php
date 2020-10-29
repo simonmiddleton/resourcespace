@@ -79,7 +79,7 @@ if ($errors!="")
 		{
 		$ref=$result[$n]["ref"];
 		$access=get_resource_access($ref);
-		$use_watermark=check_use_watermark($ref);
+		$use_watermark=check_use_watermark();
 		
 		$title=$ref . " : " . htmlspecialchars(tidy_trim (i18n_get_translated ($result[$n]["field".$view_title_field]),60));
 		if (isset($collection_feedback_display_field)) {

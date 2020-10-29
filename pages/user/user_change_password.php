@@ -57,6 +57,11 @@ hook("preuserpreferencesform");
 
 if(getval("save", "") != "" && enforcePostRequest(false))
 	{
+    if($case_insensitive_username)
+        {
+        $username=sql_value("select username value from user where lower(username)=lower('" . escape_check($username) ."')",$username);       
+        $username=escape_check($username);
+        }
 	if (hook('saveadditionaluserpreferences'))
 		{
 		# The above hook may return true in order to prevent the password from being updated
@@ -79,7 +84,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 					redirect($baseurl_short."pages/done.php?text=password_changed&notloggedin=true");
 					exit();
 					}
-		    	redirect($baseurl_short."pages/" . ($use_theme_as_home?'themes.php':$default_home_page));
+		    	redirect($baseurl_short."pages/" . ($use_theme_as_home?'collections_featured.php':$default_home_page));
 			    exit();
 				}
     		else
