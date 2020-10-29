@@ -1318,15 +1318,23 @@ function render_user_group_checkbox_select($name, array $current = array(), $sty
 /**
 * render_text_input_question - Used to display a question with simple text input
 * 
-* @param string $label						Label of question
-* @param string $input  					Name of input field
-* @param string $additionaltext (optional) 	Text to to display after input
-* @param boolean $numeric 					Set to true to force numeric input
+* @param string $label			Label of question
+* @param string $input  		Name of input field
+* @param string $additionaltext Text to to display after input
+* @param boolean $numeric 		Set to true to force numeric input
+* @param array  $ctx            Rendering context. Should be used to inject different elements (e.g set the div class)
+* 
+* @return void
 */
-function render_text_question($label, $input, $additionaltext="", $numeric=false, $extra="", $current="")
+function render_text_question($label, $input, $additionaltext="", $numeric=false, $extra="", $current="", array $ctx = array())
     {
+    $div_class = array("Question");
+    if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
+        {
+        $div_class = array_merge($div_class, $ctx["div_class"]);
+        }
 	?>
-	<div class="Question" id = "pixelwidth">
+	<div id="pixelwidth" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
 		<div>
 		<?php
@@ -1387,6 +1395,11 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
+
+    $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
+    $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
+
+    $extra .= " {$onchange}";
 	?>
 	<div class="<?php echo implode(" ", $div_class); ?>">
 		<label><?php echo $label; ?></label>
@@ -4197,8 +4210,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number,
-           $themes_simple_view;
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
@@ -4225,7 +4237,7 @@ function render_featured_collections(array $ctx, array $items)
                 $fc,
                 array(
                     "smart" => $is_smart_featured_collection,
-                    "limit" => ($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] ? $theme_images_number : 1),
+                    "use_thumbnail_selection_method" => !$is_smart_featured_collection,
                 ));
             $fc_images = generate_featured_collection_image_urls($fc_resources, "pre");
 

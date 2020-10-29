@@ -32,7 +32,7 @@ foreach($featured_collections as $collection)
                 $new_fc_name,
                 COLLECTION_TYPE_FEATURED,
                 sql_null_or_val((string) $parent, is_null($parent)),
-                (!$collection_commenting ? $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"]
             );
             logScript($sql);
             sql_query($sql);
@@ -49,7 +49,7 @@ foreach($featured_collections as $collection)
     sql_query(sprintf("UPDATE collection SET `type` = '%s', parent = %s, thumbnail_selection_method = '%s' WHERE ref = '%s'",
         COLLECTION_TYPE_FEATURED,
         sql_null_or_val((string) $parent, is_null($parent)),
-        (!$collection_commenting ? $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]),
+        $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
         $collection["ref"]        
     ));
     }

@@ -681,7 +681,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
     parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
     $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
-    $resources = dash_tile_featured_collection_get_resources($parent);
+    $resources = dash_tile_featured_collection_get_resources($parent, array("limit" => 4));
 
     if(count($resources)>0)
         {

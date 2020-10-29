@@ -615,7 +615,12 @@ if('' != $tile_type && $tile_type !== "conf")
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
             $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
-            $resources = dash_tile_featured_collection_get_resources($parent);
+            $resources = dash_tile_featured_collection_get_resources($parent, array());
+            if(!is_numeric($promoted_resource))
+                {
+                $promoted_resource = dash_tile_featured_collection_get_resources($parent, array("limit" => 1, "use_thumbnail_selection_method" => true));
+                $promoted_resource = (!empty($promoted_resource) ? $promoted_resource[0]["ref"] : 0);
+                }
             }
             ?>
         <div class="Question" id="promotedresource">
@@ -811,4 +816,3 @@ if('' != $tile_type && $tile_type !== "conf")
 </div><!-- End of BasicsBox -->
 <?php
 include "../include/footer.php";
-

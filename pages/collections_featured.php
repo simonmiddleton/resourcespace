@@ -32,10 +32,6 @@ if(getval("new", "") == "true" && getval("cta", "") == "true")
     exit();
     }
 
-
-
-
-
 include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
@@ -172,6 +168,7 @@ if($themes_show_background_image && !$full_width)
 
             // get_featured_collection_resources() is expecting a featured collection structure. $collection_data being a 
             // collection structure is a superset containing the required information (ref, parent, has_resources) for the function to work
+            $get_fc_imgs_ctx["use_thumbnail_selection_method"] = true;
             $bg_fc_images = get_featured_collection_resources($collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }
