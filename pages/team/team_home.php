@@ -42,17 +42,17 @@ include "../../include/header.php";
     ?><p><?php echo text("introtext");render_help_link('resourceadmin/quick-start-guide');?></p><?php 
     }?>
   
-	<div class="VerticalNav">
+	<div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
 	<ul>
 	
 	<?php if (checkperm("c")) { 
 		if ($overquota)
 			{
-			?><li><i aria-hidden="true" class="fa fa-fw fa-files-o"></i>&nbsp;<?php echo $lang["manageresources"]?> : <strong><?php echo $lang["manageresources-overquota"]?></strong></li><?php
+			?><li><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?> : <strong><?php echo $lang["manageresources-overquota"]?></strong></li><?php
 			}
 		else
 			{
-			?><li><i aria-hidden="true" class="fa fa-fw fa-files-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
+			?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
 				<?php if (getval("modal","")!="")
 				  {
 				  # If a modal, open in the same modal
@@ -67,12 +67,12 @@ include "../../include/header.php";
 				  }
 				?>
 			
-			><?php echo $lang["manageresources"]?></a></li><?php
+			><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?></a></li><?php
 			}
  		}
  	?>
 				
-	<?php if (checkperm("R")) { ?><li><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i>&nbsp;<a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["managerequestsorders"]?></a>
+	<?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?></a>
         <?php
         $condition = "";
         if (checkperm("Rb")) {$condition = "and assigned_to='" . $userref . "'";} # Only show pending for this user?
@@ -86,27 +86,20 @@ include "../../include/header.php";
 		?>
     </li><?php } ?>
 
-    <?php if (checkperm("r") && $research_request) { ?><li><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["manageresearchrequests"]?></a>
-        &nbsp;&nbsp;<?php
+    <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?></a><br>
+    <?php
         $unassigned = sql_value("select count(*) value from research_request where status = 0",0);
-        switch ($unassigned)
+        if ($unassigned > 0)
             {
-            case 0:
-                echo $lang["researches-with-requeststatus0-0"];
-                break;
-            case 1:
-                echo $lang["researches-with-requeststatus0-1"];
-                break;
-            default:
-                echo str_replace("%number", $unassigned,$lang["researches-with-requeststatus0-2"]);
-                break;
-            } ?> 
-        </li><?php }
+            ?>&nbsp;<span class="Pill"><?php echo $unassigned ?></span><?php
+            }
+        ?> 
+    </li><?php }
 
     if(checkperm('u'))
         {
         ?>
-        <li><i aria-hidden="true" class="fa fa-fw fa-users"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_user.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manageusers']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_user.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-users"></i><br /><?php echo $lang['manageusers']; ?></a></li>
         <?php
         }
 
@@ -122,7 +115,7 @@ include "../../include/header.php";
     )
         {
         ?>
-        <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_dash_tiles']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-th"></i><br /><?php echo $lang['manage_dash_tiles']; ?></a></li>
         <?php
         }
 
@@ -130,16 +123,16 @@ include "../../include/header.php";
     if(checkperm('ex'))
         {
         ?>
-        <li><i aria-hidden="true" class="fa fa-fw fa-share-alt"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_external_shares.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_external_shares']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_external_shares.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-share-alt"></i><br /><?php echo $lang['manage_external_shares']; ?></a></li>
         <?php
         }
         ?>
 
-    <li><i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["rse_analytics"]?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i><br /><?php echo $lang["rse_analytics"]?></a></li>
     
-    <li><i aria-hidden="true" class="fa fa-fw fa-table"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewreports"]?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
 
-    <?php if (checkperm("m")) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/team/team_mail.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["sendbulkmail"]?></a></li><?php } ?>
+    <?php if (checkperm("m")) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_mail.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br /><?php echo $lang["sendbulkmail"]?></a></li><?php } ?>
 
     	<?php hook("customteamfunction")?>
 
@@ -147,7 +140,7 @@ include "../../include/header.php";
 	# Include a link to the System Setup area for those with the appropriate permissions.
 	if (checkperm("a")) { ?>
 
-	<li><i aria-hidden="true" class="fa fa-fw fa-cog"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_home.php"
+	<li><a href="<?php echo $baseurl_short?>pages/admin/admin_home.php"
 	<?php if (getval("modal","")!="")
 	  {
 	  # If a modal, open in the same modal
@@ -161,15 +154,14 @@ include "../../include/header.php";
 	  <?php
 	  }
 	?>
-	><?php echo $lang["systemsetup"]?></a></li>
+	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a></li>
 	<?php hook("customteamfunctionadmin")?>
 	<?php } ?>
 
-		
 	</ul>
 	</div>
 	
-<p><i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i>&nbsp;<?php echo $lang["diskusage"]?>: <b><?php echo round(($avail?$used/$avail:0)*100,0)?>%</b>
+<p class="clearerleft"><i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i> <?php echo $lang["diskusage"]?>: <b><?php echo round(($avail?$used/$avail:0)*100,0)?>%</b>
 &nbsp;&nbsp;&nbsp;<span class="sub"><?php echo formatfilesize($used)?> / <?php echo formatfilesize($avail)?></span>
 </p>
 

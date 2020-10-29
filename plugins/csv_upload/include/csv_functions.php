@@ -130,7 +130,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
         // Get the required resource type - needed before processing data so resources can be created
         if($csv_set_options["resource_type_column"] != "")
             {
-            $resource_type_set = $line[$csv_set_options["resource_type_column"]];
+            $resource_type_column = $csv_set_options["resource_type_column"];
+            $resource_type_set = isset($line[$resource_type_column]) ? $line[$resource_type_column] : "";
             if(trim($resource_type_set) == "")
                 {
                 if($csv_set_options["update_existing"])
@@ -250,7 +251,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 {
                 // Matching on field value
                 $match_field = $allfields[$csv_set_options["id_column_match"]];
-                $match_val = $line[$csv_set_options["id_column"]];
+                $id_column = isset($csv_set_options["id_column"]) ? $csv_set_options["id_column"] : "";
+                $match_val = isset($line[$id_column]) ? $line[$id_column]: "";
                 if(trim($match_val) == "")
                     {
                     $logtext = "Error: Invalid resource identifier specified in line " . count($line);

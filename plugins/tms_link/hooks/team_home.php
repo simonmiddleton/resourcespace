@@ -8,7 +8,7 @@ function HookTms_linkTeam_homeCustomteamfunctionadmin()
 
 	if($scriptlastran=="" || time()>=(strtotime($scriptlastran)+$tms_link_script_failure_notify_seconds))
 		{
-		$tmsalerthtml="<div class=\"PageInformal \">" . str_replace("%days%",$tms_link_script_failure_notify_days,$lang["tms_link_script_problem"]) . " "  . (($scriptlastran!="")?date("l F jS Y @ H:m:s",strtotime($scriptlastran)):$lang["status-never"]) . "</div>";
+		$tmsalerthtml="<p>" . str_replace("%days%",$tms_link_script_failure_notify_days,$lang["tms_link_script_problem"]) . " "  . (($scriptlastran!="")?date("l F jS Y @ H:m:s",strtotime($scriptlastran)):$lang["status-never"]) . "</p>";
 		echo $tmsalerthtml;
 		}
 	

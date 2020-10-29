@@ -167,7 +167,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
  */
 function get_collection($ref)
 	{
-    $return=sql_query("select c.*, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+    $return=sql_query("select c.*, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method, c.bg_img_resource_ref from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
         return false;
@@ -1070,6 +1070,7 @@ function save_collection($ref, $coldata=array())
             $sqlset["type"] = COLLECTION_TYPE_STANDARD;
             $sqlset["parent"] = null;
             $sqlset["thumbnail_selection_method"] = null;
+            $sqlset["bg_img_resource_ref"] = null;
             }
 
         if(count($sqlset) > 0)
@@ -1082,7 +1083,7 @@ function save_collection($ref, $coldata=array())
                     $sqlupdate .= ", ";    
                     }
 
-                if(in_array($colopt, array("parent", "thumbnail_selection_method")))
+                if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
                     {
                     $sqlupdate .= $colopt . " = " . sql_null_or_val((string) $colset, $colset == 0);
                     continue;
@@ -1994,8 +1995,9 @@ function allow_multi_edit($collection,$collectionid = 0)
 * For FC categories, this will check within normal FCs contained by that category. Normally used in combination with 
 * generate_featured_collection_image_urls() but useful to determine if a FC category is full of empty FCs.
 * 
-* @param array $c Collection data structure similar to the one returned by {@see get_featured_collections()}
-* @param array $ctx Extra context used to get FC images (e.g smart FC?, limit on number of images returned)
+* @param array $c   Collection data structure similar to the one returned by {@see get_featured_collections()}
+* @param array $ctx Extra context used to get FC images (e.g smart FC?, limit on number of images returned). Context 
+*                   information should take precedence over internal logic (e.g determining the result limit)
 * 
 * @return array
 */
@@ -2007,7 +2009,8 @@ function get_featured_collection_resources(array $c, array $ctx)
         }
 
     $c_ref_escaped = escape_check($c["ref"]);
-    $imgs_limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? $ctx["limit"] : null);
+    $imgs_limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
+    $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
 
     // Smart FCs
     if(isset($ctx["smart"]) && $ctx["smart"] === true)
@@ -2026,6 +2029,29 @@ function get_featured_collection_resources(array $c, array $ctx)
         // Access control is still in place (ie permissions are honoured)
         $images = do_search($node_search, '', 'hit_count', 0, $imgs_limit, 'desc', false, 0, false, false, '', true, false, true);
         return (is_array($images) ? array_column($images, "ref") : array());
+        }
+
+    if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
+        {
+        global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
+
+        if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"])
+            {
+            return array();
+            }
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+            {
+            return ($c["bg_img_resource_ref"] > 0 ? array($c["bg_img_resource_ref"]) : array());
+            }
+        // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($imgs_limit))
+            {
+            $imgs_limit = 1;
+            }
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] && is_null($imgs_limit))
+            {
+            $imgs_limit = $theme_images_number;
+            }
         }
 
     // A SQL statement. Each array index represents a different SQL clause.
@@ -4264,6 +4290,7 @@ function get_featured_collections(int $parent, array $ctx)
                       c.`type`,
                       c.parent,
                       c.thumbnail_selection_method,
+                      c.bg_img_resource_ref,
                       c.created,
                       count(DISTINCT cr.resource) > 0 AS has_resources,
                       count(DISTINCT cc.ref) > 0 AS has_children

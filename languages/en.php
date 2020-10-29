@@ -215,10 +215,10 @@ $lang["home"]="Home";
 $lang["searchresults"]="Search results";
 $lang["themes"]="Featured collections";
 $lang["themeselector"]=&$lang["themes"];
-$lang["mycollections"]="My collections";
+$lang["mycollections"]="Collections";
 $lang["myrequests"]="My requests";
 $lang["collections"]="Collections";
-$lang["mycontributions"]="My contributions";
+$lang["mycontributions"]="Contributions";
 $lang["researchrequest"]="Research request";
 $lang["helpandadvice"]="Knowledge Base";
 $lang["teamcentre"]="Admin";
@@ -276,9 +276,9 @@ $lang["managecontent"]="Site content";
 $lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
-$lang["sendbulkmail"]="Send bulk mail";
+$lang["sendbulkmail"]="Bulk mail";
 $lang["systemsetup"]="System";
-$lang["systemlog"]="System log";
+$lang["systemlog"]="Log";
 $lang["usersonline"]="Users currently online (idle time minutes)";
 $lang["diskusage"]="Disk usage";
 $lang["available"]="available";
@@ -458,7 +458,8 @@ $lang["clicklinkviewcollections"]="Click the links below to view the collections
 $lang["background_image"] = "Background image";
 $lang["background_most_popular_image"] = "Most popular image";
 $lang["background_most_popular_images"] = "Most popular %n images";
-$lang["background_manual_selection"] = "Choose images (collection commenting)";
+$lang["background_manual_selection"] = "Choose an image";
+$lang["background_manual_selection_resource_label"] = "Background image - resource ID";
 $lang["share_fc_warning"] = "Please note that when sharing a featured collection category only featured collections that contain resources will be externally shared.";
 
 # Lightbox
@@ -799,9 +800,9 @@ $lang["yes"]="Yes";
 $lang["no"]="No";
 $lang["key"]="Key:"; # e.g. explanation of icons on search page
 $lang["default"]="Default";
-$lang["languageselection"]="Language selection";
+$lang["languageselection"]="Language";
 $lang["language"]="Language";
-$lang["changeyourpassword"]="Change my password";
+$lang["changeyourpassword"]="Password";
 $lang["yourpassword"]="Your password";
 $lang["currentpassword"]="Current password";
 $lang["newpassword"]="New password";
@@ -1360,8 +1361,8 @@ $lang["userrequestnotification3"]="If this is a valid request, click the link to
 
 $lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
-$lang["managerequestsorders"]="Requests / orders";
-$lang["editrequestorder"]="Edit request / order";
+$lang["managerequestsorders"]="Requests";
+$lang["editrequestorder"]="Edit request / e-commerce order";
 $lang["requestorderid"]="Request / order ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
 $lang["requestreason"]="Reason for request";
@@ -2018,7 +2019,7 @@ $lang["caps-lock-on"]="Warning! Caps Lock is on";
 $lang["collectionnames"]="Collection names";
 $lang["findcollectionthemes"]="Featured collections";
 $lang["upload-options"]="Upload options";
-$lang["user-preferences"]="My preferences";
+$lang["user-preferences"]="Preferences";
 $lang["allresources"]="All Resources";
 
 $lang["smart_collection_result_limit"]="Smart collection: result count limit";
@@ -2169,7 +2170,7 @@ $lang['page-title_user_group_permissions_edit'] = "Edit user group permissions";
 $lang['page-subtitle_user_group_permissions_edit'] = "Use this section to modify user group permissions.";
 
 # Report management
-$lang['page-title_report_management'] = "Reports";
+$lang['page-title_report_management'] = "Report editor";
 $lang['page-subtitle_report_management'] = "Use this section to modify system reports.";
 $lang['action-title_create_report_called'] = "Create report called...";
 
@@ -2282,7 +2283,7 @@ $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourc
 $lang["all__researchrequest"]="Let our resources team find the resources you need.";
 $lang["change_language__introtext"]="Please select your language below.";
 $lang['collection_download__write_metadata_on_download_label'] = 'Embed resource metadata in the downloaded file(s)? Enabling this will slow down your download.';
-$lang["collection_edit__introtext"]="Organise and manage your work by grouping resources together. Create 'Collections' to suit your way of working.\n\n<br />\n\nAll the collections in your list appear in the 'My Collections' panel at the bottom of the screen\n\n<br /><br />\n\n<strong>Private Access</strong> allows only you and and selected users to see the collection. Ideal for grouping resources under projects that you are working on independently and share resources amongst a project team.\n\n<br /><br />\n\n<strong>Public Access</strong> allows all users of the system to search and see the collection. Useful if you wish to share collections of resources that you think others would benefit from using.\n\n<br /><br />\n\nYou can choose whether you allow other users (public or users you have added to your private collection) to add and remove resources or simply view them for reference.";
+$lang["collection_edit__introtext"] = "Organise and manage your work by grouping resources together. Create collections to suit your way of working.\n\n<br />\n\nAll the collections in your list appear in the 'My Collections' panel at the bottom of the screen\n\n<br /><br />";
 $lang["collection_email__introtext"]="Please complete the form below. The recipients will receive an email containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
 $lang["collection_email__introtextthemeshare"]="Complete the form below to e-mail the featured collections in this featured collection category. The recipients will receive an email containing links to each of the featured collections.";
 $lang["collection_manage__findpublic"]="Public collections are groups of resources made widely available by users of the system. Enter a collection ID, or all or part of a collection name or username to find public collections. Add them to your list of collections to access the resources.";
@@ -2389,7 +2390,7 @@ $lang["tilebin"]="Remove";
 $lang["last"]="Last";
 $lang["managedefaultdash"]="All user tiles";
 $lang["dashtile"]="Dash tile";
-$lang["manage_own_dash"]="My dash";
+$lang["manage_own_dash"]="Dash";
 $lang["manage_all_dash_h"]="Default dash / all user tiles (Requires h permission)";
 $lang["manage_all_dash"]="Default dash / all user tiles";
 $lang["dashtiledeleteaction"]="What delete action would you like to take?";
@@ -2455,7 +2456,7 @@ $lang['system_down_message'] = 'System is down for maintenance. Thank you for yo
 /* End of System Down page strings */
 
 /* System Console */
-$lang["systemconsole"]="System console";
+$lang["systemconsole"]="Console";
 $lang["systemconsoledebuglog"]="Debug log";
 $lang["systemconsolememorycpu"]="Memory &amp; CPU";
 $lang["systemconsoledatabase"]="Database";
@@ -2477,7 +2478,7 @@ $lang['trash_bin_delete_dialog_title'] = 'Remove resource?';
 /* My Account Strings */
 $lang["managecontent_defaulttextused"]="!! The text for the default language (?) is currently being used. Edit the text below to create an alternative version for this language / user group selection !!";
 $lang["myaccount"]="My account";
-$lang["userpreferences"]="My preferences";
+$lang["userpreferences"]="Preferences";
 $lang["modifyuserpreferencesintro"]="Options on this page allow you to make changes to some of the functionality  and interface that are available to you.";
 
 /* User preferences*/
@@ -2503,9 +2504,11 @@ $lang['userpreference_resource_access_notifications'] = "Send me messages about 
 $lang['userpreference_resource_notifications'] = "Send me resource messages about resource management e.g. resource state changes, metadata changes";
 $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata on download (provides option to choose this only on collection download)';
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
+$lang['userpreference_tilenav']='Use a tile layout for the navigation menus';
+$lang['userpreference_tilenavdefault']='Use a tile layout for the navigation menus (default setting; users may change this)';
 
 /* System Config */
-$lang['systemconfig'] = 'System configuration';
+$lang['systemconfig'] = 'Configuration';
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
@@ -2576,7 +2579,7 @@ $lang["action-addrow"]="Add row";
 /* Messaging */
 $lang["seen"]="Seen";
 $lang["from"]="From";
-$lang["mymessages"]="My messages";
+$lang["mymessages"]="Messages";
 $lang["mymessages_markread"]="Mark read";
 $lang["mymessages_markunread"]="Mark unread";
 $lang["mymessages_markallread"]="Mark all read";
@@ -2596,7 +2599,7 @@ $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Metadata field options";
 $lang['manage_metadata_field_options_import_options'] = 'Import options';
-$lang["system_performance"]="System performance";
+$lang["system_performance"]="Performance";
 $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";
 $lang["disk_write_speed"]="Disk write speed";
@@ -2720,7 +2723,7 @@ $lang['responsive_view_full_site'] = 'View full site';
 // end of Responsive
 
 /* Actions */
-$lang["actions_myactions"] = "My actions";
+$lang["actions_myactions"] = "Actions";
 $lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
 $lang["actions_noactions"] = "You have no outstanding actions";
 $lang["actions_resource_review"] = "Show me editable resources in my actions list";
@@ -2921,9 +2924,9 @@ $lang["search_engine_noindex_external_shares"] = "Request that search engines do
 
 $lang["job_details"]                        = "Job details";
 $lang["job_text"]                           = "Job";
-$lang['manage_jobs']                        = "System jobs";
+$lang['manage_jobs']                        = "Jobs";
 $lang["manage_jobs_title"]                  = "Jobs";
-$lang["my_jobs"]                            = "My jobs";
+$lang["my_jobs"]                            = "Jobs";
 $lang["job_reset"]                          = "Reset";
 $lang["job_status_0"]                       = "Disabled";
 $lang["job_status_1"]                       = "Active";
