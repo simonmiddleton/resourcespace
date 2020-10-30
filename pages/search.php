@@ -878,46 +878,6 @@ if (isset($result_title_height))
 
 hook('searchresultsheader');
 
-if(
-    $enable_themes && $enable_theme_breadcrumbs
-    && isset($collectiondata) && $collectiondata !== false
-    && !$search_titles
-    && !is_null(validate_collection_parent($collectiondata)) && $collectiondata["parent"] > 0
-)
-    {
-    $general_url_params = ($k == "" ? array() : array("k" => $k));
-    $links_trail = array(
-        array(
-            "title" => $lang["themes"],
-            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params)
-        )
-    );
-
-    // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
-    // If we were use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
-    // collections_featured.php which we don't want
-    $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
-        {
-        return array(
-            "title" => i18n_get_translated($branch["name"]),
-            "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
-        );
-        }, get_featured_collection_category_branch_by_leaf($collectiondata["parent"], array()));
-
-    renderBreadcrumbs(
-        array_merge(
-            $links_trail,
-            $branch_trail,
-            array(
-                array(
-                    'title' => i18n_get_collection_name($collectiondata),
-                    'href'  => generateURL("{$baseurl_short}pages/search.php", $general_url_params, array('search' => "!collection{$collectiondata["ref"]}"))
-                )
-            )
-        ),
-        "");
-    }
-
 if ($search_titles)
     {
     hook("beforesearchtitle");
