@@ -301,8 +301,7 @@ switch ($returntype)
             $n++;
             }
 
-        // If we're getting the root, look only for categories, otherwise you will get other public collections as they're all public collections
-        $featured_collections = ($fc_parent == 0 ? get_featured_collection_categories($fc_parent, array()) : get_featured_collections($fc_parent, array()));
+        $featured_collections = get_featured_collections($fc_parent, array());
         usort($featured_collections, "order_featured_collections");
         foreach($featured_collections as $fc)
             {
