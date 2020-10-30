@@ -126,7 +126,6 @@ switch ($returntype)
         $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = '{$returnid}'", true, "schema");
         $gettypes = ($inherit_global_fields == true) ? array(0) : array(); // determine whether to display global fields
         $gettypes[] = (int)$returnid; // add selected resource type fields
-        $gettypes = array("0",(int)$returnid);
         $allfields = get_resource_type_fields($gettypes,"order_by",'asc','',$FIXED_LIST_FIELD_TYPES);
         
         foreach($allfields as $field)
