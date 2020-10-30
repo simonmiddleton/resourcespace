@@ -2204,20 +2204,20 @@ $lang["all__comments_flag_notification_email_body"]="";
 $lang["all__comments_flag_notification_email_subject"]="";
 $lang["all__comments_policy"]="";
 $lang["all__comments_removal_message"]="";
-$lang["all__emailbulk"]="[img_gfx/titles/title.gif]<br /><br />\n[text]<br /><br />\n[text_footer]\n";
-$lang["all__emailcollection"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcollectionexternal"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcontactadmin"]="[img_../gfx/titles/title.gif]<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
-$lang["all__emaillogindetails"]="[img_gfx/titles/title.gif]<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnewresearchrequestwaiting"]="[img_gfx/titles/title.gif]<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesapproved"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcessubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesunsubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailreminder"]="[img_gfx/titles/title.gif]<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestassigned"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestcomplete"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresource"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresourcerequest"]="[img_gfx/titles/title.gif]<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
+$lang["all__emailbulk"]="<br /><br />\n[text]<br /><br />\n[text_footer]\n";
+$lang["all__emailcollection"]="<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
+$lang["all__emailcollectionexternal"]="<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
+$lang["all__emailcontactadmin"]="<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
+$lang["all__emaillogindetails"]="<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnewresearchrequestwaiting"]="<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcesapproved"]="<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcessubmitted"]="<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcesunsubmitted"]="<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailreminder"]="<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresearchrequestassigned"]="<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
+$lang["all__emailresearchrequestcomplete"]="<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresource"]="<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresourcerequest"]="<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
 $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace Open Source Digital Asset Management</a>";
 $lang["all__researchrequest"]="Nechajte náš tím nájsť pre Vás potrebné zdroje.";
 $lang["all__searchpanel"]="Vyhľadávajte pomocou popisov, kľúčových slov a čísel zdrojov";
@@ -2301,7 +2301,7 @@ $lang["externalshare_using_permissions_from_user_group"]="Ak posielate e-mail ex
 $lang["delete__nopassword"]="Potvrďte, že chcete tento zdroj skutočne odstrániť.";
 
 $lang["collection_download_too_large"]="Ľutujeme, táto zbierka je príliš veľká na stiahnutie vo forme jedného súboru. Skúste zmenšiť veľkosť zbierky alebo vyberte menšiu veľkosť obrázka.";
-$lang["all__passwordnewemailhtml"]="[img_gfx/titles/title.gif]<br /><br /> Kliknutím na odkaz nižšie nastavíte nové heslo pre svoj účet. <br /><br /> URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br /> používateľské meno: [username]<br />[text_footer]" ;
+$lang["all__passwordnewemailhtml"]="<br /><br /> Kliknutím na odkaz nižšie nastavíte nové heslo pre svoj účet. <br /><br /> URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br /> používateľské meno: [username]<br />[text_footer]" ;
 
 $lang['disk_size_no_upload_heading']="Nahrávanie je dočasne nedostupné";
 $lang['disk_size_no_upload_explain']="Z dôvodu kapacitných obmedzení bolo nahrávanie dočasne zakázané. Ospravedlňujeme sa za vzniknuté nepríjemnosti.";
@@ -2551,8 +2551,8 @@ $lang["slideshow_use_static_image"] = "Použite jeden náhodný obrázok zo sady
 $lang["slideshow-image"] = "obrázok prezentácie";
 $lang["manage-slideshow-instructions"] = "Obrázok prezentácie môže byť zobrazený vo viacerých oblastiach systému. Ak chcete vybrať ďalšie miesta, začiarknite políčka nižšie. Môžete tiež kliknúť na ukážku obrázka a zobraziť podrobnosti o prostriedku, s ktorým je prepojený (ak taký existuje).";
 
-$lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif] <br /> Nasledujúci používateľ predložil požiadavku: <br /> Požívateľské meno: [username]<br /> E-mail používateľa: [useremail]<br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požiadavku. <br /><a href='[requesturl]'>[requesturl]</a>";
-$lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br /> Vaša požiadavka na zdroje bola odoslaná na schválenie a čoskoro bude vyhodnotená: <br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požadované zdroje. <br /><a href='[url]'>[url]</a>";
+$lang["emailcollectionrequest"] = " <br /> Nasledujúci používateľ predložil požiadavku: <br /> Požívateľské meno: [username]<br /> E-mail používateľa: [useremail]<br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požiadavku. <br /><a href='[requesturl]'>[requesturl]</a>";
+$lang["emailusercollectionrequest"] = "<br /> Vaša požiadavka na zdroje bola odoslaná na schválenie a čoskoro bude vyhodnotená: <br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požadované zdroje. <br /><a href='[url]'>[url]</a>";
 $lang['user_pref_show_notifications'] = "Zobraziť systémové notifikácie na obrazovke. Ak je vypnutá, počítadlo správ sa bude stále aktualizovať, aby indikovalo prítomnosť nových správ";
 $lang['user_pref_daily_digest'] = "Pošlite mi denný e-mail so všetkými neprečítanými upozorneniami z posledných 24 hodín";
 $lang['email_daily_digest_subject'] = "Zhrnutie oznámení";
