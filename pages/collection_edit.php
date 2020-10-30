@@ -198,7 +198,7 @@ include "../include/header.php";
 			} 
 		else 
 			{ ?>
-			<select id="public" name="public" class="shrtwidth" onchange="document.getElementById('redirect').value='';document.getElementById('collectionform').submit();">
+			<select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';document.getElementById('collectionform').submit();">
 				<option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
 				<?php 
 				if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
@@ -278,7 +278,7 @@ include "../include/header.php";
                 "bg_img_resource_ref",
                 "",
                 true,
-                'class="shrtwidth"',
+                'class="stdwidth"',
                 $current_bg_img_ref,
                 array(
                     "div_class" => ($display_bg_img_ref ? array() : array("DisplayNone")),
