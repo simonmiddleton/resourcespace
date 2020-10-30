@@ -4681,23 +4681,19 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 
 // if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
 // resources with extension in $ffmpeg_audio_extensions will always create an mp3 preview file 
+    
+    $path                       = get_resource_path($resource['ref'],true,"",false,"mp3");
+    $resource_download_allowed  = resource_download_allowed($ref,'',$resource["resource_type"]);
+    $size_info                  = array('id' => '', 'extension' => 'mp3');
+
     if (
-        $resource['file_extension']=="wav" && 
-        in_array($resource['file_extension'], $ffmpeg_audio_extensions) &&
-        file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")) && 
-        resource_download_allowed($ref,'',$resource["resource_type"])
-        )	
+        $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
-
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
-        $download_link =  $baseurl  . "/pages/download_progress.php?ref=" . urlencode($ref) . "&ext=mp3&k=" . urlencode($k);
-
-        $html ="<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\"></td>" ; 
-        $html .= "<td><a id=\"downloadlink\" href=\"#\" onclick=\"directDownload('" . $download_link . "')\">" . $lang["action-download"] . "</a></td></tr> ";
-            
-        echo $html;
-        }
-
+        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
+        add_download_column($ref,$size_info, true);
+        echo "</tr>";
+        }   
 }
 
 
