@@ -41,8 +41,7 @@ include ("../../include/header.php");
             ?>
             <li><a href="<?php echo $baseurl_short; ?>pages/admin/admin_manage_slideshow.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-picture-o"></i><br /><?php echo $lang['manage_slideshow']; ?></a></li>
             <li>
-                <a href="<?php echo $baseurl_short; ?>pages/manage_jobs.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-tasks"></i><br />
-                <?php echo $lang['manage_jobs']; ?></a>
+                <a href="<?php echo $baseurl_short; ?>pages/manage_jobs.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-tasks"></i><br /><?php echo $lang['manage_jobs'];?></a>
                 
                 <?php
                 if ($failedjobcount>0)
