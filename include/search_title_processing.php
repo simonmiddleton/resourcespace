@@ -3,8 +3,6 @@
 # display collection title if option set.
 $search_title = "";
 $search_title_links = "";
-$display_user_and_access=false;
-$is_theme=false;
 
 global $baseurl_short, $filename_field, $archive_standard;
 
@@ -135,35 +133,44 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
 
 if ($search_titles)
     {
-    $parameters_string = '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;offset=' . urlencode($offset) . '&amp;archive=' . urlencode($archive) . '&amp;sort=' . urlencode($sort) . '&amp;k=' . urlencode($k);
+    $extra_search_parameters = array(
+        "order_by" => $order_by,
+        "sort" => $sort,
+        "offset" => $offset,
+        "archive" => $archive,
+        "k" => $k,
+    );
+    $parameters_string = join("&amp;", array_map("urlencode", $extra_search_parameters));
 
-    if (substr($search,0,11)=="!collection")
+    if(substr($search, 0, 11) == "!collection")
         {
-        if ($collection_dropdown_user_access_mode)
-            {    
+        $col_title_ua = "";
+        if($collection_dropdown_user_access_mode)
+            {
             $colusername = $collectiondata['fullname'];
-                
+
             # Work out the correct access mode to display
             if (!hook('collectionaccessmode'))
                 {
                 switch($collectiondata["type"])
                     {
                     case COLLECTION_TYPE_PUBLIC:
-                        $display_user_and_access = true;
                         $colaccessmode = $lang["public"];
+                        break;
+
+                    case COLLECTION_TYPE_FEATURED:
+                        $colaccessmode = $lang["theme"];
                         break;
 
                     case COLLECTION_TYPE_STANDARD:
                     default:
-                        $display_user_and_access = true;
                         $colaccessmode = $lang["private"];
                         break;
                     }
 
-                if($colusername != "")
-                    {
-                    $colaccessmode = "/" . $colaccessmode;
-                    }
+                $col_title_ua = sprintf(" <span class=\"CollectionUser\">(%s%s)</span>",
+                    $colusername,
+                    ($colusername != "" ? "/{$colaccessmode}" : $colaccessmode));
                 }
             }
 
@@ -177,8 +184,50 @@ if ($search_titles)
                 $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "&starsearch=" . $smartsearch[0]['starsearch'] . "'";
                 }
             } 
+
         hook("collectionsearchtitlemod");
-        $search_title.= '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs">'.($is_theme?$theme_link."&nbsp;" . LINK_CARET:"").'<span id="coltitle'.$collection.'"><a '.$alt_text.' href="'.$baseurl_short.'pages/search.php?search=!collection'.$collection.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata).($display_user_and_access?" <span class='CollectionUser'>(".$colusername.$colaccessmode.")</span>":"").'</a></span>'.$searchcrumbs.'</div></div>';
+
+        $collection_trail = array();
+        $branch_trail = array();
+        if(
+            $enable_themes && $enable_theme_breadcrumbs
+            && isset($collectiondata) && $collectiondata !== false
+            && !is_null(validate_collection_parent($collectiondata)) && $collectiondata["parent"] > 0
+        )
+            {
+            $general_url_params = ($k == "" ? array() : array("k" => $k));
+
+            $collection_trail[] = array(
+                "title" => $lang["themes"],
+                "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params)
+            );
+
+            // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
+            // If we were use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
+            // collections_featured.php which we don't want
+            $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
+                {
+                return array(
+                    "title" => i18n_get_translated($branch["name"]),
+                    "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"])));
+                }, get_featured_collection_category_branch_by_leaf($collectiondata["parent"], array()));
+            }
+
+        $full_collection_trail = array_merge($collection_trail, $branch_trail);
+        $full_collection_trail[] = array(
+            "title" => i18n_get_collection_name($collectiondata) . $col_title_ua,
+            "href"  => generateURL("{$baseurl_short}pages/search.php", $extra_search_parameters, array('search' => "!collection{$collectiondata["ref"]}")),
+            "attrs" => array($alt_text),
+        );
+
+        ob_start();
+        renderBreadcrumbs($full_collection_trail, "");
+        $renderBreadcrumbs = ob_get_contents();
+        ob_end_clean();
+
+        $renderBreadcrumbs = str_replace("</div></div>", "{$searchcrumbs}</div></div>", $renderBreadcrumbs);
+
+        $search_title .= $renderBreadcrumbs;
         }
     elseif ($search=="" && $archive_standard)
         {

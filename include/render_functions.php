@@ -2342,13 +2342,19 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
         for($i = 0; $i < count($links); $i++)
             {
             $anchor = isset($links[$i]['href']);
+            $anchor_attrs = (isset($links[$i]["attrs"]) && is_array($links[$i]["attrs"]) && !empty($links[$i]["attrs"]) ? $links[$i]["attrs"] : array());
+            $anchor_attrs = join(" ", $anchor_attrs);
+
+            // search_title_processing.php is building spans with different class names. We need to allow HTML in link titles.
+            $title = get_inner_html_from_tag(strip_tags_and_attributes($links[$i]['title']), "p");
+
             if(0 < $i)
                 {
                 echo LINK_CHEVRON_RIGHT;
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"><?php } ?><span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span><?php if ($anchor) { ?></a><?php }
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"<?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
             if (isset($links[$i]['help']))
                 {
                 render_help_link($links[$i]['help']);

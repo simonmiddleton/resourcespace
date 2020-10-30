@@ -3762,6 +3762,58 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
 
 /**
+* Helper function to quickly return the inner HTML of a specific tag element from a DOM document.
+* Example usage:
+* get_inner_html_from_tag(strip_tags_and_attributes($unsafe_html), "p");
+* 
+* @param string $txt HTML string
+* @param string $tag DOM document tag element (e.g a, div, p)
+* 
+* @return string Returns the inner HTML of the first tag requested and found. Returns empty string if caller code 
+*                requested the wrong tag.
+*/
+function get_inner_html_from_tag(string $txt, string $tag)
+    {
+    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+    $html = mb_convert_encoding($txt, "HTML-ENTITIES", "UTF-8");
+
+    if($html == strip_tags($txt))
+        {
+        return $txt;
+        }
+
+    $inner_html = "";
+
+    libxml_use_internal_errors(true);
+    $doc = new DOMDocument();
+    $doc->encoding = "UTF-8";
+    $process_html = $doc->loadHTML($html);
+    $found_tag_elements = $doc->getElementsByTagName($tag);
+
+    if($process_html && $found_tag_elements->length > 0)
+        {
+        $found_first_tag_el = $found_tag_elements->item(0);
+
+        foreach($found_first_tag_el->childNodes as $child_node)
+            {
+            $tmp_doc = new DOMDocument();
+            $tmp_doc->encoding = "UTF-8";
+
+            // Import the node, and all its children, to the temp document and then append it to the doc
+            $tmp_doc->appendChild($tmp_doc->importNode($child_node, true));
+
+            $inner_html .= $tmp_doc->saveHTML();
+            }
+        }
+
+    // Revert back to UTF-8
+    $inner_html = mb_convert_encoding($inner_html, "UTF-8","HTML-ENTITIES");
+
+    return $inner_html;
+    }
+
+
+/**
  * Returns the page load time until this point.
  *
  * @return string
