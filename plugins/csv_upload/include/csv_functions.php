@@ -262,13 +262,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     continue;
                     }
                 $matchsearch = "\"" . $match_field["name"] . ":" . $match_val . "\"";
-                $logtext = $matchsearch;
-                csv_upload_log($logfile,$logtext);
-                array_push ($messages,$logtext);
                 $allmatches = do_search($matchsearch,'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
-                $logtext = print_r($allmatches,true);
-                csv_upload_log($logfile,$logtext);
-                array_push ($messages,$logtext);
+                
                 if(!is_array($allmatches))
                     {
                     // May be trying to match on file path in which case see if we can match with forward slashes rather than backslashes
@@ -278,7 +273,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 
                 if(!is_array($allmatches))
                     {
-                    $logtext = "Error: BANG1No matching resources found matching the identifier " . $match_val . " specified in line " . $line_count;
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
@@ -288,7 +283,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                 $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
                 if(count($validmatches) == 0)
                     {
-                    $logtext = "Error: BANG2No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
