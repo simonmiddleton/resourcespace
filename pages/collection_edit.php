@@ -13,6 +13,7 @@ $col_order_by=getvalescaped("col_order_by","name");
 $sort=getval("sort","ASC");
 $modal=getval("modal","")=="true";
 $redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
+$redirect = getval("redirect", "") != "";
 
 
 # Does this user have edit access to collections? Variable will be found in functions below.  
@@ -106,23 +107,36 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 
     hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
-	save_collection($ref, $coldata);
+    save_collection($ref, $coldata);
 
-    if($modal && $redirection_endpoint != "")
+    if($redirect)
         {
-        redirect($redirection_endpoint);
-        }
-    else if(getval("redirect", "") != "")
-        {
-        redirect(generateURL(
-            "{$baseurl_short}pages/collection_manage.php",
-            array(
-                "offset" => $offset,
-                "col_order_by" => $col_order_by,
-                "sort" => $sort,
-                "find" => $find,
-                "reload" => "true",
-            )));
+        if($redirection_endpoint == "")
+            {
+            $redirection_endpoint = generateURL(
+                "{$baseurl_short}pages/collection_manage.php",
+                array(
+                    "offset" => $offset,
+                    "col_order_by" => $col_order_by,
+                    "sort" => $sort,
+                    "find" => $find,
+                    "reload" => "true",
+                ));
+            }
+        if($modal)
+            {
+            ?>
+            <script>
+            ModalClose();
+            CentralSpaceLoad('<?php echo htmlspecialchars($redirection_endpoint); ?>');
+            </script>
+            <?php
+            }
+        else
+            {
+            redirect($redirection_endpoint);
+            }
+        exit();
         }
     else
         {
@@ -140,7 +154,7 @@ include "../include/header.php";
 <form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
-    <input type="hidden" name="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
+    <input type="hidden" name="redirection_endpoint" id="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name="submitted" value="true">
     <input type=hidden name="update_parent" value="false">
@@ -196,7 +210,7 @@ include "../include/header.php";
 			} 
 		else 
 			{ ?>
-			<select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';document.getElementById('collectionform').submit();">
+			<select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
 				<option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
 				<?php 
 				if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
@@ -290,7 +304,7 @@ include "../include/header.php";
 		?>
 		<div class="Question">
 		<label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
-		<input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';document.getElementById('collectionform').submit();">
+		<input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
 		<div class="clearerleft"> </div>
 		</div>
 		<?php

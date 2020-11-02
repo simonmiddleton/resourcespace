@@ -315,7 +315,7 @@ switch ($returntype)
 
             $item = array(
                 "id" => "{$id}-{$id_part}:{$fc["ref"]}",
-                "name" => htmlspecialchars(i18n_get_translated($fc["name"])),
+                "name" => htmlspecialchars(strip_prefix_chars(i18n_get_translated($fc["name"]),"*")),
                 "class" => ($is_featured_collection_category ? "Featured" : "Col"),
                 "expandable" => ($is_featured_collection_category ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
                 "link" => $link,
