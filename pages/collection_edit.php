@@ -12,7 +12,7 @@ $find=getvalescaped("find","");
 $col_order_by=getvalescaped("col_order_by","name");
 $sort=getval("sort","ASC");
 $modal=getval("modal","")=="true";
-$reloadpage=getval("reloadpage","")=="true";
+$redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
 
 
 # Does this user have edit access to collections? Variable will be found in functions below.  
@@ -108,11 +108,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
 	save_collection($ref, $coldata);
 
-    if($modal && $reloadpage)
+    if($modal && $redirection_endpoint != "")
         {
-        // Just reload the parent page
-        echo "<script>CentralSpaceLoad(location);</script>";
-        exit();
+        redirect($redirection_endpoint);
         }
     else if(getval("redirect", "") != "")
         {
@@ -133,17 +131,17 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 	}
 
+$form_action = generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $collection["ref"]));
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
 <p><?php echo text("introtext"); ?></p>
-<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php" onSubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this,false);">
+<form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
-    <input type="hidden" name="reloadpage" value="<?php echo $reloadpage ? "true" : "false" ?>">
+    <input type="hidden" name="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
-	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="submitted" value="true">
     <input type=hidden name="update_parent" value="false">
 	<div class="Question">

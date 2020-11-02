@@ -4175,7 +4175,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
         $next_level_parent = null;
         ?>
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
-                onchange="document.getElementsByName('update_parent')[0].value = 'true'; document.getElementById('redirect').value = ''; CentralSpacePost(jQuery('#collectionform')[0]);">
+                onchange="document.getElementsByName('update_parent')[0].value = 'true'; document.getElementById('redirect').value = ''; document.getElementById('collectionform').submit();">
             <option value="0"><?php echo $lang["select"]; ?></option>
         <?php
         foreach($featured_collection_categories as $fc_category)
@@ -4233,7 +4233,18 @@ function render_featured_collections(array $ctx, array $items)
         $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
 
         $tool_edit = array(
-            "href" => generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $fc["ref"], "reloadpage" => "true")),
+            "href" => generateURL("{$baseurl_short}pages/collection_edit.php",
+                array(
+                    "ref" => $fc["ref"],
+                    "redirection_endpoint" => urlencode(
+                        generateURL(
+                            "{$baseurl_short}pages/collections_featured.php",
+                            $general_url_params,
+                            array("parent" => $fc["parent"])
+                        )
+                    ),
+                )
+            ),
             "text" => $lang['action-edit'],
             "modal_load" => true,
         );
