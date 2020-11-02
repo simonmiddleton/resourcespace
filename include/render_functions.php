@@ -4152,7 +4152,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 */
 function render_featured_collection_category_selector(int $parent, array $context)
     {
-    global $lang;
+    global $lang, $modal;
 
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
     $collection = $context["collection"]; # as returned by get_collection()
@@ -4164,7 +4164,10 @@ function render_featured_collection_category_selector(int $parent, array $contex
         {
         return;
         }
-
+    if(!isset($modal))
+        {
+        $modal = false;
+        }
 
     $html_selector_name = "selected_featured_collection_category_{$depth}";
     $html_question_label_txt = $lang["themecategory"] . ($depth == 0 ? "" : " {$depth}");
@@ -4175,7 +4178,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
         $next_level_parent = null;
         ?>
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
-                onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));">
+                onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));document.getElementById('redirect').value = '';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">                
             <option value="0"><?php echo $lang["select"]; ?></option>
         <?php
         // Allow user to move FC category to the root. Because we don't expose the collection type to the user, this will
@@ -4251,12 +4254,13 @@ function render_featured_collections(array $ctx, array $items)
                             "{$baseurl_short}pages/collections_featured.php",
                             $general_url_params,
                             array("parent" => $fc["parent"])
-                        )
+                        ),
                     ),
                 )
             ),
             "text" => $lang['action-edit'],
             "modal_load" => true,
+            "redirect" => true,
         );
         $tool_select = array(
             "text" => $lang['action-select'],
