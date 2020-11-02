@@ -262,6 +262,7 @@ include "../include/header.php";
                 "collection" => $collection,
                 "depth" => 0,
                 "current_branch_path" => get_featured_collection_category_branch_by_leaf((int) $collection["ref"], array()),
+                "modal" => $modal,
             ));
 
         if($themes_simple_images && $collection["type"] == COLLECTION_TYPE_FEATURED)

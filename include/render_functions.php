@@ -4152,21 +4152,18 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 */
 function render_featured_collection_category_selector(int $parent, array $context)
     {
-    global $lang, $modal;
+    global $lang;
 
     // If this information is missing, that's an unrecoverable error, the developer should really make sure this information is provided
     $collection = $context["collection"]; # as returned by get_collection()
     $depth = (int) $context["depth"];
     $current_branch_path = $context["current_branch_path"]; # as returned by get_featured_collection_category_branch_by_leaf()
+    $modal = (isset($context["modal"]) && is_bool($context["modal"]) ? $context["modal"] : false);
 
     $featured_collection_categories = get_featured_collection_categories($parent, array());
     if(empty($featured_collection_categories))
         {
         return;
-        }
-    if(!isset($modal))
-        {
-        $modal = false;
         }
 
     $html_selector_name = "selected_featured_collection_category_{$depth}";
@@ -4178,7 +4175,8 @@ function render_featured_collection_category_selector(int $parent, array $contex
         $next_level_parent = null;
         ?>
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
-                onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));document.getElementById('redirect').value = '';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">                
+                onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));
+                <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('collectionform'));">                
             <option value="0"><?php echo $lang["select"]; ?></option>
         <?php
         // Allow user to move FC category to the root. Because we don't expose the collection type to the user, this will
