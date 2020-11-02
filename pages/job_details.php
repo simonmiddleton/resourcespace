@@ -43,7 +43,7 @@ if(!is_array($job_details) || count($job_details) == 0)
                     echo "</td><td width='50%'>";
                     if($name =="job_data")
                         {
-                        $job_data= json_decode($value);
+                        $job_data= json_decode($value, true);
                         render_array_in_table_cells($job_data);
                         }
                     else

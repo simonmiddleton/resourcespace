@@ -4860,7 +4860,7 @@ function render_array_in_table_cells($array)
         echo htmlspecialchars($name);
         echo "</td><td width='50%'>";
 
-        if(is_iterable($value))
+        if(is_array($value))
             {
             render_array_in_table_cells($value);
             }
