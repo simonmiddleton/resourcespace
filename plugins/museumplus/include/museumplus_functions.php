@@ -199,7 +199,7 @@ function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $m
 
     if($result['status_code'] != 200)
         {
-        trigger_error(str_replace('%code', $result['status_code'], $lang['museumplus_error_unexpected_response']));
+        return array();
         }
 
     if($result['headers']['content-type'][0] == 'application/xml')
