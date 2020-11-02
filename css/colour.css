@@ -12,7 +12,7 @@ body,html {color:#474747;background: #f2f2f2;}
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
 a:visited {color:#666666;}
-a:hover {color:#000000;}
+a:hover {color:#2E99E6;}
 a:active {opacity:0.6;}
 
 input[readonly] {
@@ -428,3 +428,4 @@ a.ui-button.plupload_button.ui-button-disabled {
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited { color: #474747; }
 .ClearSelectedButton { background-color: #ff2b2b; }
 .ClearSelectedButton:hover { background-color: #b71c1c; }
+
