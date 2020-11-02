@@ -16,4 +16,7 @@ home_page_text,text,
 home_page_image,int(11),
 session_id,int(11),Used for anonymous access with collections enabled - the session ID cookie used by the anonymous user, as a single user is used for all accesses.
 description,text,Textual description.
-type,int(11),
+type,int(11),Collection type such as Featured / Upload / Select
+parent,int(11),The parent collection for collections existing within a tree structure such as Featured Collections.
+thumbnail_selection_method,int(11),How do we select the thumbnails to show on the tile for this collection?
+bg_img_resource_ref,int(11),The resource ID of the preview image.
