@@ -565,6 +565,7 @@ $lang["cell-fileoftype"]="%EXTENSION File"; # Use %EXTENSION, %extension or %Ext
 $lang["field-fileextension"]="%EXTENSION"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION" -> "JPG"
 $lang["fileextension-inside-brackets"]="[%EXTENSION]"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "[%EXTENSION]" -> "[JPG]"
 $lang["fileextension"]="%EXTENSION"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION" -> "JPG"
+$lang["mp3_preview_file"]="MP3 Preview File";
 $lang["log"]="Log";
 $lang["resourcedetails"]="Resource details";
 $lang["offlineresource"]="Offline resource";

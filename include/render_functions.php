@@ -4696,7 +4696,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
         $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
-        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>MP3 preview file</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
+        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
         add_download_column($ref,$size_info, true);
         echo "</tr>";
         }   
