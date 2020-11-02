@@ -4175,9 +4175,19 @@ function render_featured_collection_category_selector(int $parent, array $contex
         $next_level_parent = null;
         ?>
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
-                onchange="document.getElementsByName('update_parent')[0].value = 'true'; document.getElementById('redirect').value = ''; document.getElementById('collectionform').submit();">
+                onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));">
             <option value="0"><?php echo $lang["select"]; ?></option>
         <?php
+        // Allow user to move FC category to the root. Because we don't expose the collection type to the user, this will
+        // give users the ability to convert between public collection and featured category at root level without access
+        // to the collection type.
+        if($depth == 0)
+            {
+            $dummy_root_lvl_selected = ($collection["type"] == COLLECTION_TYPE_FEATURED && $parent == 0 ? "selected" : "");
+            ?>
+            <option value="root" <?php echo $dummy_root_lvl_selected; ?>><?php echo $lang["featured_collection_root_category"]; ?></option>
+            <?php
+            }
         foreach($featured_collection_categories as $fc_category)
             {
             // Never show as an option the FC you're editing

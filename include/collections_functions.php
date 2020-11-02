@@ -4592,6 +4592,9 @@ function process_posted_featured_collection_categories(int $depth, array $branch
     $selected_fc_category = getval("selected_featured_collection_category_{$depth}", null, true);
     debug("process_posted_featured_collection_categories: \$selected_fc_category: " . gettype($selected_fc_category) . " = " . json_encode($selected_fc_category));
 
+    $force_featured_collection_type = (getval("force_featured_collection_type", "") == "true");
+    debug("process_posted_featured_collection_categories: \$force_featured_collection_type: " . gettype($force_featured_collection_type) . " = " . json_encode($force_featured_collection_type));
+
     // Validate the POSTed featured collection category for this depth level
     $valid_categories = array_merge(array(0), array_column(get_featured_collection_categories($current_lvl_parent, array()), "ref"));
     if(
@@ -4605,12 +4608,19 @@ function process_posted_featured_collection_categories(int $depth, array $branch
     $fc_category_at_level = (empty($branch_path) ? null : $branch_path[$depth]["ref"]);
     debug("process_posted_featured_collection_categories: \$fc_category_at_level: " . gettype($fc_category_at_level) . " = " . json_encode($fc_category_at_level));
 
-    if($selected_fc_category != $fc_category_at_level)
+    if($selected_fc_category != $fc_category_at_level || $force_featured_collection_type)
         {
         $new_parent = ($selected_fc_category == 0 ? $current_lvl_parent : $selected_fc_category);
         debug("process_posted_featured_collection_categories: \$new_parent: " . gettype($new_parent) . " = " . json_encode($new_parent));
 
-        return array("update_parent" => $new_parent);
+        $fc_update = array("update_parent" => $new_parent);
+
+        if($force_featured_collection_type)
+            {
+            $fc_update["force_featured_collection_type"] = true;
+            }
+
+        return $fc_update;
         }
 
     if(is_null($selected_fc_category))
