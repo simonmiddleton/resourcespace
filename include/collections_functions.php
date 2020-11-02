@@ -2880,7 +2880,7 @@ function update_collection_user($collection,$newuser)
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
-           $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share,
+           $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
@@ -3130,6 +3130,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         && ($k == '' || $internal_share_access)
         && collection_readable($collection_data['ref'])
         && ($top_actions || (is_array($list) && count($list) > 1))
+        && $enable_collection_copy
     )
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_copy_resources.php",array("ref"=>$collection_data['ref']));
