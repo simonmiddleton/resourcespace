@@ -3959,7 +3959,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         ||
         $userref == $lockuser
         ||
-        (!$resource_locked && !checkperm("noex") && $editaccess)
+        (!$resource_locked && !checkperm("nolock") && $editaccess)
         )
         {
         $edit_lock_option = true;
