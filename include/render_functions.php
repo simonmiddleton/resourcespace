@@ -4254,13 +4254,13 @@ function render_featured_collections(array $ctx, array $items)
                             "{$baseurl_short}pages/collections_featured.php",
                             $general_url_params,
                             array("parent" => $fc["parent"])
-                        ),
-                    ),
+                        )
+                    )
                 )
             ),
             "text" => $lang['action-edit'],
             "modal_load" => true,
-            "redirect" => true,
+            "redirect" => true
         );
         $tool_select = array(
             "text" => $lang['action-select'],
