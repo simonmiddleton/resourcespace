@@ -130,7 +130,7 @@ function do_search(
 
     # Check if date_field is being used as this will be needed in the inner select to be used in ordering
     $include_fieldx=false;
-    if (isset($order_by_date_sql)&&in_array($order_by,$order)&&strpos($order[$order_by],$order_by_date_sql)!==false) 
+    if (isset($order_by_date_sql) && array_key_exists($order_by,$order) && strpos($order[$order_by],$order_by_date_sql)!==false) 
         {
         $include_fieldx=true;
         }
