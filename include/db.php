@@ -175,26 +175,27 @@ $querylog=array();
 # -----------LANGUAGES AND PLUGINS-------------------------------
 
 if ($use_plugins_manager)
-	{
-	$legacy_plugins = $plugins; # Make a copy of plugins activated via config.php
-	# Check that manually (via config.php) activated plugins are included in the plugins table.
-	foreach($plugins as $plugin_name)
-		{
-		if ($plugin_name!='')
-			{
-			if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'',"plugins")=='')
-				{
-				# Installed plugin isn't marked as installed in the DB.  Update it now.
-				# Check if there's a plugin.yaml file to get version and author info.
-				$plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
-				$p_y = get_plugin_yaml($plugin_yaml_path, false);
-				# Write what information we have to the plugin DB.
-				sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) ".
-						  "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
-						  "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}','{$p_y['title']}','{$p_y['icon']}')");
-				}
-			}
-		}
+    {
+    $legacy_plugins = $plugins; # Make a copy of plugins activated via config.php
+    # Check that manually (via config.php) activated plugins are included in the plugins table.
+    foreach($plugins as $plugin_name)
+        {
+        if ($plugin_name!='')
+            {
+            if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'',"plugins")=='')
+                {
+                # Installed plugin isn't marked as installed in the DB.  Update it now.
+                # Check if there's a plugin.yaml file to get version and author info.
+                $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
+                $p_y = get_plugin_yaml($plugin_yaml_path, false);
+                # Write what information we have to the plugin DB.
+                sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) ".
+                        "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
+                        "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}','{$p_y['title']}','{$p_y['icon']}')");
+                clear_query_cache("plugins");
+                }
+            }
+        }
     # Need verbatim queries for this query
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
