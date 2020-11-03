@@ -365,9 +365,9 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 /*Resource Panel layout*/
 .ResourcePanel {padding:0;margin:0 14px 14px 0;width: 175px;float:left;position:relative; overflow: hidden;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
-.ResourcePanelInfo {margin: 5px;overflow:hidden;white-space:nowrap;padding:0;text-align:justify;text-overflow: ellipsis;}   
+.ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px;text-align:justify;text-overflow: ellipsis;}   
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}   
-.ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;width:166px;} 
+.ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}   
 .ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
@@ -375,7 +375,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ImageColourWrapper {display: inline-block;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
-.ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
+.ResourceTypeIcon.fa-fw {height: 16px;width:16px;float:right;margin: 3px; }
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}

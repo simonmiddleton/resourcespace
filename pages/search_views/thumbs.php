@@ -9,25 +9,26 @@ if (!hook("renderresultthumb"))
     if ($display == "xlthumbs") 
         {
         $resolved_title_trim=$xl_search_results_title_trim;
-        $resolved_title_height = 350 + (28 * count($xl_thumbs_display_fields));
+        $resolved_title_height = 350 + (31 * count($xl_thumbs_display_fields));
         $resolved_title_wordwrap = $xl_search_results_title_wordwrap;
         } 
     else 
         {
         $resolved_title_trim=$search_results_title_trim;
-        $resolved_title_height = 202 + (28 * count($thumbs_display_fields));
+        $resolved_title_height = 206 + (31 * count($thumbs_display_fields));
         $resolved_title_wordwrap = $search_results_title_wordwrap;
         }
 
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 202) + (28 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 206) + (31 * count($thumbs_display_fields));
 
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
         $thumbs_displayed_fields_height += 28;
         }
+
     if($resource_type_icons)
         {
-        $thumbs_displayed_fields_height += 16;
+        $thumbs_displayed_fields_height += 22;
         }
     # Increase height of search panel for each extended field
     if(isset($search_result_title_height))
@@ -44,7 +45,7 @@ if (!hook("renderresultthumb"))
     
     if($display_resource_id_in_thumbnail)
         { 
-        $thumbs_displayed_fields_height += 29;
+        $thumbs_displayed_fields_height += 21;
         $br = '<br />';
         }; 
 
