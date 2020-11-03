@@ -603,9 +603,11 @@ function delete_collection($collection)
     $ref=$collection["ref"];
     $type = $collection["type"];
 	
-	# Permissions check
-	if (!collection_writeable($ref)) {return false;}
-	
+    if(!collection_writeable($ref) || is_featured_collection_category_by_children($ref))
+        {
+        return false;
+        }
+
 	hook("beforedeletecollection","",array($ref));
 	sql_query("delete from collection where ref='$ref'");
 	sql_query("delete from collection_resource where collection='$ref'");
