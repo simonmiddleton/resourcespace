@@ -192,7 +192,7 @@ if ($search_titles)
         if(
             $enable_themes && $enable_theme_breadcrumbs
             && isset($collectiondata) && $collectiondata !== false
-            && !is_null(validate_collection_parent($collectiondata)) && $collectiondata["parent"] > 0
+            && $collectiondata["type"] == COLLECTION_TYPE_FEATURED
         )
             {
             $general_url_params = ($k == "" ? array() : array("k" => $k));
@@ -210,7 +210,7 @@ if ($search_titles)
                 return array(
                     "title" => i18n_get_translated($branch["name"]),
                     "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"])));
-                }, get_featured_collection_category_branch_by_leaf($collectiondata["parent"], array()));
+                }, get_featured_collection_category_branch_by_leaf((int) $collectiondata["parent"], array()));
             }
 
         $full_collection_trail = array_merge($collection_trail, $branch_trail);
