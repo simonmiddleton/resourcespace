@@ -44,7 +44,18 @@ if(getval("submitted", "") != "" && enforcePostRequest(false))
             }
         }
 
-    if(!empty($coldata))
+     if(
+        !empty($coldata)
+        && isset($coldata["featured_collections_changes"]["update_parent"])
+        && $coldata["featured_collections_changes"]["update_parent"] == 0
+        && getval("force_featured_collection_type", "") != "true"
+        && is_featured_collection_category_by_children($collection["ref"])
+    )
+        {
+        $error = $lang["error_save_not_allowed_fc_has_children"];
+        }
+
+    if(!empty($coldata) && !isset($error))
         {
         save_collection($collection["ref"], $coldata);
         $collection = get_collection($collection["ref"]);
@@ -55,6 +66,12 @@ $action_url = generateURL("{$baseurl_short}pages/collection_set_category.php", a
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
+<?php
+if(isset($error))
+    {
+    render_top_page_error_style($error);
+    }
+    ?>
     <h1><?php echo $lang["collection_set_theme_category_title"]; render_help_link("user/themes-public-collections"); ?></h1>
     <p><?php echo text("introtext"); ?></p>
     <form method=post id="collectionform" action="<?php echo $action_url; ?>">

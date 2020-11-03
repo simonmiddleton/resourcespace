@@ -221,7 +221,7 @@ if ($search_titles)
         );
 
         ob_start();
-        renderBreadcrumbs($full_collection_trail, "");
+        renderBreadcrumbs($full_collection_trail);
         $renderBreadcrumbs = ob_get_contents();
         ob_end_clean();
 

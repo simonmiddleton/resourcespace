@@ -107,48 +107,70 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
 
     hook('saveadditionalfields'); # keep it close to save_collection(). Plugins should access any $coldata at this point
-    save_collection($ref, $coldata);
 
-    if($redirect)
+    if(
+        (
+            $coldata["public"] == 0
+            || (
+                isset($coldata["featured_collections_changes"]["update_parent"])
+                && $coldata["featured_collections_changes"]["update_parent"] == 0
+                && getval("force_featured_collection_type", "") != "true"
+            )
+        )
+        && is_featured_collection_category_by_children($collection["ref"]))
         {
-        if($redirection_endpoint == "")
-            {
-            $redirection_endpoint = generateURL(
-                "{$baseurl_short}pages/collection_manage.php",
-                array(
-                    "offset" => $offset,
-                    "col_order_by" => $col_order_by,
-                    "sort" => $sort,
-                    "find" => $find,
-                    "reload" => "true",
-                ));
-            }
-        if($modal)
-            {
-            ?>
-            <script>
-            ModalClose();
-            CentralSpaceLoad('<?php echo htmlspecialchars($redirection_endpoint); ?>');
-            </script>
-            <?php
-            }
-        else
-            {
-            redirect($redirection_endpoint);
-            }
-        exit();
+        $error = $lang["error_save_not_allowed_fc_has_children"];
         }
-    else
+
+    if(!isset($error))
         {
+        save_collection($ref, $coldata);
+
+        if($redirect)
+            {
+            if($redirection_endpoint == "")
+                {
+                $redirection_endpoint = generateURL(
+                    "{$baseurl_short}pages/collection_manage.php",
+                    array(
+                        "offset" => $offset,
+                        "col_order_by" => $col_order_by,
+                        "sort" => $sort,
+                        "find" => $find,
+                        "reload" => "true",
+                    ));
+                }
+            if($modal)
+                {
+                ?>
+                <script>
+                ModalClose();
+                CentralSpaceLoad('<?php echo htmlspecialchars($redirection_endpoint); ?>');
+                </script>
+                <?php
+                }
+            else
+                {
+                redirect($redirection_endpoint);
+                }
+            exit();
+            }
+
         # No redirect, we stay on this page. Reload the collection info.
         $collection = get_collection($ref);
         }
-	}
+    }
 
 $form_action = generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $collection["ref"]));
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
+<?php
+if(isset($error))
+    {
+    render_top_page_error_style($error);
+    }
+?>
 <h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
 <p><?php echo text("introtext"); ?></p>
 <form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">

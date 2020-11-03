@@ -4900,3 +4900,21 @@ function render_array_in_table_cells($array)
         echo "</table>";
         }
     }
+
+/**
+* Render the top page error style version
+* 
+* @param string $err_msg Error message
+* 
+* @return void
+*/
+function render_top_page_error_style(string $err_msg)
+    {
+    if(trim($err_msg) == "")
+        {
+        return;
+        }
+
+    ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
+    return;
+    }
