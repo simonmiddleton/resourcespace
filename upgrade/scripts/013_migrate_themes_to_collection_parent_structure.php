@@ -1,5 +1,6 @@
 <?php
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Starting migrating themes to collections using parent structure...");
+$theme_category_levels = (isset($theme_category_levels) ? $theme_category_levels : 20);
 $featured_collections = sql_query("SELECT * FROM collection WHERE public = 1 AND length(theme) > 0");
 foreach($featured_collections as $collection)
     {
