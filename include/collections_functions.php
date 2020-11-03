@@ -426,50 +426,53 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
  * @return boolean
  */
 function collection_writeable($collection)
-	{
+    {
     $collectiondata = get_collection($collection);
+    if($collectiondata===false)
+        {
+        return false;
+        }
 
-	global $userref,$usergroup, $allow_smart_collections;
-	if ($allow_smart_collections && !isset($userref))
-		{ 
-		if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null)
-			{
-			return false; // so "you cannot modify this collection"
-			}
-		}
-	
-	# Load a list of attached users
-	$attached=sql_array("select user value from user_collection where collection='" . escape_check($collection) . "'");
-	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='" . escape_check($collection) . "'");
-	
-	// Can edit if 
-	// - The user owns the collection (if we are anonymous user and are using session collections then this must also have the same session id )
-	// - The user has system setup access (needs to be able to sort out user issues)
-	// - Collection changes are allowed and :-
-	//    a) User is attached to the collection or
-	//    b) Collection is public or a theme and the user either has the 'h' permission or the collection is editable
+    global $userref,$usergroup, $allow_smart_collections;
+    if ($allow_smart_collections && !isset($userref))
+        { 
+        if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null)
+            {
+            return false; // so "you cannot modify this collection"
+            }
+        }
 
+    # Load a list of attached users
+    $attached=sql_array("select user value from user_collection where collection='" . escape_check($collection) . "'");
+    $attached_groups=sql_array("select usergroup value from usergroup_collection where collection='" . escape_check($collection) . "'");
 
-	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
-	debug("collection session : " . $collectiondata["session_id"]);
-	debug("collection user : " . $collectiondata["user"]);
-	debug("anonymous_login : " . $anonymous_login);
-	debug("userref : " . $userref);
-	debug("username : " . $username);
-	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
+    // Can edit if 
+    // - The user owns the collection (if we are anonymous user and are using session collections then this must also have the same session id )
+    // - The user has system setup access (needs to be able to sort out user issues)
+    // - Collection changes are allowed and :-
+    //    a) User is attached to the collection or
+    //    b) Collection is public or a theme and the user either has the 'h' permission or the collection is editable
 
-	$writable=
-	    // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
-		($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
-		// Collection is public AND either they have the 'h' permission OR allow_changes has been set
-		|| ((checkperm("h") || $collectiondata["allow_changes"]==1) && $collectiondata["public"]==1)
-		// Collection has been shared but is not public AND user is either attached or in attached group
-		|| ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
-		// System admin
-		|| checkperm("a");
-	return $writable;
-	
-	}
+    global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
+    debug("collection session : " . $collectiondata["session_id"]);
+    debug("collection user : " . $collectiondata["user"]);
+    debug("anonymous_login : " . $anonymous_login);
+    debug("userref : " . $userref);
+    debug("username : " . $username);
+    debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
+
+    $writable=
+        // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
+        ($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
+        // Collection is public AND either they have the 'h' permission OR allow_changes has been set
+        || ((checkperm("h") || $collectiondata["allow_changes"]==1) && $collectiondata["public"]==1)
+        // Collection has been shared but is not public AND user is either attached or in attached group
+        || ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
+        // System admin
+        || checkperm("a");
+    return $writable;
+
+    }
 	
 /**
  * Returns true if the current user has read access to the given collection.
@@ -481,8 +484,7 @@ function collection_readable($collection)
 	{
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
-	$collectiondata=get_collection($collection);
-
+    $collectiondata=get_collection($collection);
     if($collectiondata === false)
         {
         return false;
@@ -2353,7 +2355,12 @@ function send_collection_feedback($collection,$comment)
     {
     global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
 
-    $cinfo=get_collection($collection);if ($cinfo===false) {exit("Collection not found");}
+    $cinfo=get_collection($collection);    
+    if($cinfo===false)
+        {
+        error_alert($lang["error-collectionnotfound"]);
+        exit();
+        }
     $user=get_user($cinfo["user"]);
     $body=$lang["collectionfeedbackemail"] . "\n\n";
 
