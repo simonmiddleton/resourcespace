@@ -90,41 +90,41 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
 		# Attempt to fetch the remote contents but suppress errors.
-                $rc_url = $remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host);
-                $ch=curl_init();
-                $checktimeout=2;
-                curl_setopt($ch, CURLOPT_URL, $rc_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
-                $r=curl_exec($ch);
-                curl_close($ch);
+        $rc_url = $remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host);
+        $ch=curl_init();
+        $checktimeout=2;
+        curl_setopt($ch, CURLOPT_URL, $rc_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+        $r=curl_exec($ch);
 
-                if (!curl_errno($ch))
-          		{
+        if (!curl_errno($ch))
+            {
 			# Fetch remote config was a success.
 			# Validate the return to make sure it's an expected config file
 			# The last 33 characters must be a hash and the sign of the previous characters.
 			$sign=substr($r,-32); # Last 32 characters is a signature
 			$r=substr($r,0,strlen($r)-33);
 			if ($sign==md5($remote_config_key . $r))
-					{
-					$remote_config=$r;
-					set_sysvar($remote_config_sysvar,$remote_config);
-					}
-			else
-					{
-					# Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
-					# Do nothing; proceed with old config and try again later.
-					}
+                {
+                $remote_config=$r;
+                set_sysvar($remote_config_sysvar,$remote_config);
+                }
+            else
+                {
+                # Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
+                # Do nothing; proceed with old config and try again later.
+                }
 			}
 		else
 			{
 			# The attempt to fetch the remote configuration failed.
 			# Do nothing; the cached copy will be used and we will try again later.
-                        $errortext = curl_strerror(curl_errno($ch));
-                        debug("Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
-			}
+            $errortext = curl_strerror(curl_errno($ch));
+            debug("Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
+            }
+        curl_close($ch);
 
 		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
 		}
