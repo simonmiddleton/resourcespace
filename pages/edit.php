@@ -1634,7 +1634,8 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
+    <input type= "hidden" name="modal" id="modalcopyfrom" value="<?php echo ($modal?"true":"false") ?>">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true,<?php echo $modal ?>);">
     <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
     <div class="clearerleft"> </div>
  </div><!-- end of question_copyfrom -->
