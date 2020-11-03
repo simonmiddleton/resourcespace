@@ -92,7 +92,7 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
             }
         else
             {
-            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref IN ('" . implode("','",array_column($resources,"ref")) , "')");
+            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref IN ('" . implode("','",array_column($resources,"ref")) . "')");
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
             
