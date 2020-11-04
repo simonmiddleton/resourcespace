@@ -615,10 +615,26 @@ if('' != $tile_type && $tile_type !== "conf")
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
 
             $parent = (isset($link_parts["parent"]) ? (int) validate_collection_parent(array("parent" => (int) $link_parts["parent"])) : 0);
-            $resources = dash_tile_featured_collection_get_resources($parent, array());
+            $parent_col_data = get_collection($parent);
+            $parent_col_data = (is_array($parent_col_data) ? $parent_col_data : array());
+
+            $resources = dash_tile_featured_collection_get_resources($parent_col_data, array());
+            // The resource manually selected for a category doesn't have to be part of the branch (or any FCs). Add it 
+            // to the list of resources as if it is.
+            if(
+                !empty($parent_col_data)
+                && $parent_col_data["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]
+                && $parent_col_data["bg_img_resource_ref"] > 0 && get_resource_access($parent_col_data["bg_img_resource_ref"]) == RESOURCE_ACCESS_FULL
+            )
+                {
+                $resources[] = array(
+                    "ref" => $parent_col_data["bg_img_resource_ref"],
+                    "field{$view_title_field}" => get_data_by_field($parent_col_data["bg_img_resource_ref"], $view_title_field));
+                }
+
             if(!is_numeric($promoted_resource))
                 {
-                $promoted_resource = dash_tile_featured_collection_get_resources($parent, array("limit" => 1, "use_thumbnail_selection_method" => true));
+                $promoted_resource = dash_tile_featured_collection_get_resources($parent_col_data, array("limit" => 1, "use_thumbnail_selection_method" => true));
                 $promoted_resource = (!empty($promoted_resource) ? $promoted_resource[0]["ref"] : 0);
                 }
             }

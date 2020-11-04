@@ -80,15 +80,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             {
             $coldata["featured_collections_changes"]["thumbnail_selection_method"] = $thumbnail_selection_method;
 
-            $collection_resources = get_collection_resources($collection["ref"]);
-            $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
-            $fc_resources = (is_featured_collection_category($collection) ? get_featured_collection_resources($collection, array()) : $collection_resources);
             $bg_img_resource_ref = getval("bg_img_resource_ref", 0, true);
-
             if(
                 $thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"]
-                && in_array($bg_img_resource_ref, $fc_resources)
-                && get_resource_access($bg_img_resource_ref) == 0
+                && $bg_img_resource_ref > 0 && get_resource_access($bg_img_resource_ref) == RESOURCE_ACCESS_FULL
             )
                 {
                 $coldata["bg_img_resource_ref"] = $bg_img_resource_ref;

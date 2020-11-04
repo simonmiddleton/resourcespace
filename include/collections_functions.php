@@ -2043,7 +2043,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
             {
-            return ($c["bg_img_resource_ref"] > 0 ? array($c["bg_img_resource_ref"]) : array());
+            return ($c["bg_img_resource_ref"] > 0 && get_resource_access($c["bg_img_resource_ref"]) == RESOURCE_ACCESS_FULL ? array($c["bg_img_resource_ref"]) : array());
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($imgs_limit))
