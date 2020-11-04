@@ -2688,7 +2688,7 @@ function copy_filter($filter)
 */ 
 function update_search_from_request($search)
     {
-    //global $config_separators;
+    global $config_separators;
     reset ($_POST);reset($_GET);
 
     foreach (array_merge($_GET, $_POST) as $key=>$value)
