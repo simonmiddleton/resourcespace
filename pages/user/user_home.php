@@ -46,8 +46,9 @@ $introtext=text("introtext");
             {
             ?>
             <li>
-                <a href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i><br /><?php echo $lang['actions_myactions']; ?></a>
+                <a href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i><br /><?php echo $lang['actions_myactions']; ?>
                 <span style="display: none;" class="ActionCountPill Pill"></span>
+                </a>
             </li>
             <?php
             }
@@ -55,8 +56,9 @@ $introtext=text("introtext");
 
         <script>message_poll();</script>
         <li id="MyMessagesUserMenuItem">
-            <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br /><?php echo $lang['mymessages']; ?></a>
+            <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br /><?php echo $lang['mymessages']; ?>
             <span style="display: none;" class="MessageCountPill Pill"></span>
+            </a>
         </li>
 
         <?php
@@ -64,12 +66,8 @@ $introtext=text("introtext");
         if($offline_job_queue)
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR, $userref);
-            $failedjobcount = count($failedjobs);
-            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . "</a>";
-            if ($failedjobcount>0)
-        	    {
-		        echo "&nbsp;<span class='Pill FailedJobCountPill'>" . $failedjobcount  . "</span>";
-                }
+            $failedjobcount = 2;
+            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount>0?"<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
             echo "</li>";
             }
 

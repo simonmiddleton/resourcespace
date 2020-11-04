@@ -72,7 +72,7 @@ include "../../include/header.php";
  		}
  	?>
 				
-	<?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?></a>
+	<?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?>
         <?php
         $condition = "";
         if (checkperm("Rb")) {$condition = "and assigned_to='" . $userref . "'";} # Only show pending for this user?
@@ -84,16 +84,18 @@ include "../../include/header.php";
 		  <?php
 		  }
 		?>
+        </a>
     </li><?php } ?>
 
-    <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?></a><br>
+    <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?><br>
     <?php
         $unassigned = sql_value("select count(*) value from research_request where status = 0",0);
         if ($unassigned > 0)
             {
             ?>&nbsp;<span class="Pill"><?php echo $unassigned ?></span><?php
             }
-        ?> 
+        ?>
+        </a> 
     </li><?php }
 
     if(checkperm('u'))
