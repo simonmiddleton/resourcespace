@@ -10,8 +10,9 @@ foreach($featured_collections as $collection)
         {
         $col = "theme" . ($level == 1 ? "" : $level);
 
-        if(trim($collection[$col]) == "")
+        if(!isset($collection[$col]) || trim($collection[$col]) == "")
             {
+            logScript("Column '{$col}' is not set or empty! Skipping...");
             continue;
             }
 
