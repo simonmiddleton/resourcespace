@@ -2033,8 +2033,7 @@ function get_featured_collection_resources(array $c, array $ctx)
 
         $node_search = NODE_TOKEN_PREFIX . $c['ref'];
 
-        // do_search() uses -1 to indicate no limit on fetchrows
-        $imgs_limit = (!is_null($imgs_limit) ? $imgs_limit : -1);
+        $imgs_limit = (!is_null($imgs_limit) ? $imgs_limit : 1);
 
         // Access control is still in place (ie permissions are honoured)
         $images = do_search($node_search, '', 'hit_count', 0, $imgs_limit, 'desc', false, 0, false, false, '', true, false, true);
