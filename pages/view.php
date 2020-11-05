@@ -349,7 +349,7 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
 		{
 		if($field["fref"]==$display_field_below_preview)
 			{
-			$displaycondition=check_view_display_condition($fields,$df);
+			$displaycondition=check_view_display_condition($fields,$df,$fields_all);
 			if($displaycondition)
 				{
 				$previewcaption=$fields[$df];

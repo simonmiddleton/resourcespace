@@ -3000,7 +3000,7 @@ $welcome_text_picturepanel=false;
 # Hide Welcome Text
 $no_welcometext = false;
 
-#Show a specified metadata field below the resource preview image on the view page. Useful for phoo captions. 
+#Show a specified metadata field below the resource preview image on the view page. Useful for photo captions. 
 #$display_field_below_preview=18;
 
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
