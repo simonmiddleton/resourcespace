@@ -1099,7 +1099,7 @@ function save_collection($ref, $coldata=array())
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
 
-            if(isset($sqlset["type"]))
+            if(isset($sqlset["type"]) || isset($sqlset["parent"]))
                 {
                 clear_query_cache("featured_collections");
                 }
@@ -4544,7 +4544,8 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
         sprintf("SELECT ref, `name`, parent FROM collection WHERE `type` = %s AND ref = '%s'",
             COLLECTION_TYPE_FEATURED,
             $ref
-        )
+        ),
+        "featured_collections"
     );
 
     if(empty($collection))
