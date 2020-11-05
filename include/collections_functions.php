@@ -1080,11 +1080,17 @@ function save_collection($ref, $coldata=array())
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
+            $clear_fc_query_cache = false;
             foreach($sqlset as $colopt => $colset)
                 {
                 if($sqlupdate != "")
                     {
                     $sqlupdate .= ", ";    
+                    }
+
+                if(in_array($colopt, array("type", "parent", "thumbnail_selection_method", "bg_img_resource_ref")))
+                    {
+                    $clear_fc_query_cache = true;
                     }
 
                 if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
@@ -1099,7 +1105,7 @@ function save_collection($ref, $coldata=array())
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
 
-            if(isset($sqlset["type"]) || isset($sqlset["parent"]))
+            if($clear_fc_query_cache)
                 {
                 clear_query_cache("featured_collections");
                 }
