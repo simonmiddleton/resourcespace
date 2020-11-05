@@ -4587,7 +4587,7 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 */
 function process_posted_featured_collection_categories(int $depth, array $branch_path)
     {
-    global $enable_themes;
+    global $enable_themes, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS;
 
     if(!($enable_themes && checkperm("h")))
         {
@@ -4634,6 +4634,11 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         if($force_featured_collection_type)
             {
             $fc_update["force_featured_collection_type"] = true;
+            }
+
+        if(is_null($fc_category_at_level) && (int) $new_parent > 0)
+            {
+            $fc_update["thumbnail_selection_method"] = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"];
             }
 
         return $fc_update;
