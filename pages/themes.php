@@ -2,6 +2,7 @@
 include_once "../include/db.php";
 include "../include/authenticate.php";
 
+$theme_category_levels = (isset($theme_category_levels) ? $theme_category_levels : 3);
 $themes = GetThemesFromRequest($theme_category_levels);
 $last_theme_found = array_slice($themes, -1);
 $find_by_last_theme_name = array_pop($last_theme_found);
