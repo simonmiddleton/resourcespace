@@ -2064,7 +2064,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         "from" => "FROM collection AS c",
         "join" => array(
             "JOIN collection_resource AS cr ON cr.collection = c.ref",
-            "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0 AND r.has_image = 1"
+            "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0"
         ),
         "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
     );
