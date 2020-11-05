@@ -534,8 +534,11 @@ $urlparams= array(
 );
 
 
+if (!hook("replaceviewnav"))
+    {
+
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
-if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false)) { ?>
+if ( isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false)) { ?>
 <div class="backtoresults">
 <a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
 <?php 
@@ -569,7 +572,8 @@ else if($modal)
 		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
 	<?php
-	}
+    }
+}
 	?>
 
 <h1><?php hook("beforeviewtitle");?><?php
