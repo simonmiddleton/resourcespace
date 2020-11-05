@@ -1,6 +1,15 @@
 <?php
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Starting migrating themes to collections using parent structure...");
 $theme_category_levels = (isset($theme_category_levels) ? $theme_category_levels : 3);
+
+// Check public and theme are set in order to be able to continue with this script. This should apply to new systems 
+// where these columns are not generated anymore
+$collection_structure = array_column(sql_query("DESCRIBE collection", "", -1, false), "Field");
+if(!in_array("public", $collection_structure) || !in_array("theme", $collection_structure))
+    {
+    return;
+    }
+
 $featured_collections = sql_query("SELECT * FROM collection WHERE public = 1 AND length(theme) > 0");
 foreach($featured_collections as $collection)
     {
