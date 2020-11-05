@@ -30,7 +30,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
 
     if($use_error_exception === true)
         {
-        $errline = ($errline == "N/A" || !is_numeric($errline) ? NULL : $errline);
+        $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         }
     else if (substr(PHP_SAPI, 0, 3) == 'cli')
@@ -73,6 +73,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     // Optionally log errors to a cental server.
     if (isset($log_error_messages_url))
         {
+        $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
         $backtrace = json_encode(
