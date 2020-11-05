@@ -1078,11 +1078,17 @@ function save_collection($ref, $coldata=array())
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
+            $clear_fc_query_cache = false;
             foreach($sqlset as $colopt => $colset)
                 {
                 if($sqlupdate != "")
                     {
                     $sqlupdate .= ", ";    
+                    }
+
+                if(in_array($colopt, array("type", "parent", "thumbnail_selection_method", "bg_img_resource_ref")))
+                    {
+                    $clear_fc_query_cache = true;
                     }
 
                 if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
@@ -1097,7 +1103,7 @@ function save_collection($ref, $coldata=array())
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
 
-            if(isset($sqlset["type"]) || isset($sqlset["parent"]))
+            if($clear_fc_query_cache)
                 {
                 clear_query_cache("featured_collections");
                 }
@@ -4574,7 +4580,7 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 */
 function process_posted_featured_collection_categories(int $depth, array $branch_path)
     {
-    global $enable_themes;
+    global $enable_themes, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS;
 
     if(!($enable_themes && checkperm("h")))
         {
@@ -4621,6 +4627,12 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         if($force_featured_collection_type)
             {
             $fc_update["force_featured_collection_type"] = true;
+            }
+
+        // When moving a public collection to featured, default to most popular image
+        if($depth == 0 && is_null($fc_category_at_level) && (int) $new_parent > 0)
+            {
+            $fc_update["thumbnail_selection_method"] = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"];
             }
 
         return $fc_update;
