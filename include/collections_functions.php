@@ -4636,7 +4636,8 @@ function process_posted_featured_collection_categories(int $depth, array $branch
             $fc_update["force_featured_collection_type"] = true;
             }
 
-        if(is_null($fc_category_at_level) && (int) $new_parent > 0)
+        // When moving a public collection to featured, default to most popular image
+        if($depth == 0 && is_null($fc_category_at_level) && (int) $new_parent > 0)
             {
             $fc_update["thumbnail_selection_method"] = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"];
             }
