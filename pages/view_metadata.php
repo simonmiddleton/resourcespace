@@ -129,8 +129,7 @@ foreach($fields_tab_names as $tabname)
     for($i = 0; $i < count($fields); $i++)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-
-        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'])
+        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] || ($fields[$i]['resource_type'] == '999' && $resource["archive"] == 2))
             {
             if($displaycondition && $tabname == $fields[$i]['tab_name'])
                 {
