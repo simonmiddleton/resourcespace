@@ -1286,13 +1286,13 @@ function get_smart_theme_headers()
  */
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
     {
-    global $smart_themes_omit_archived, $themes_category_split_pages;
+    global $smart_themes_omit_archived;
 
     $return = array();
 
     // Determine if this should cascade onto children for category tree type
     $recursive = false;
-    if($is_category_tree && !$themes_category_split_pages)
+    if($is_category_tree)
         {
         $recursive = true;
         }
@@ -1325,13 +1325,10 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         $parent_node_to_use = 0;
         $is_parent          = false;
 
-        if($is_category_tree)
+        if(is_parent_node($nodes[$n]['ref']))
             {
-            if(is_parent_node($nodes[$n]['ref']))
-                {
-                $parent_node_to_use = $nodes[$n]['ref'];
-                $is_parent          = true;
-                }
+            $parent_node_to_use = $nodes[$n]['ref'];
+            $is_parent          = true;
 
             $tree_node_depth = get_tree_node_level($nodes[$n]['ref']);
 
