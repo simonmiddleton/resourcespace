@@ -2682,7 +2682,7 @@ function collection_min_access($collection)
             $result = array();
             }
         }
-    if(count($result) > 0 && isset($result[0]["access"]))
+    if(count($result) > 0 && isset($result[0]["access"]) && !checkperm("v"))
         {
         $minaccess = max(array_column($result,"access"));
         }
