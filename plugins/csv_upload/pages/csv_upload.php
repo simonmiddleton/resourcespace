@@ -628,7 +628,7 @@ switch($csvstep)
                         }
                     else
                         {
-                        echo "<div class='Fixed'>" . $lang["csv_upload_process_offline_disabled"] . "</div>";
+                        echo "<div class='Fixed'>" . $lang["offline_processing_disabled"] . "</div>";
                         }?>
                     <div class="clearerleft"> </div>
                 </div>

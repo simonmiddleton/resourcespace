@@ -2832,17 +2832,32 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
  * Update the data/status/time of a job queue record.
  *
  * @param  integer $ref
- * @param  array $job_data
+ * @param  array $job_data - pass empty array to leave unchanged
  * @param  string $newstatus
  * @param  string $newtime
  * @return void
  */
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
     {
-    $sql="UPDATE job_queue SET job_data='" . escape_check(json_encode($job_data)) . "'";
-    if($newtime!=""){$sql.=",start_date='" . $newtime . "'";}
-    if($newstatus!=""){$sql.=",status='" . $newstatus . "'";}
-    $sql.=" WHERE ref='" . $ref . "'";
+    $update_sql = array();
+    if (count($job_data) > 0)
+        {
+        $update_sql[] = "job_data='" . escape_check(json_encode($job_data)) . "'";
+        } 
+    if($newtime!="")
+        {
+        $update_sql[] = "start_date='" . escape_check($newtime) . "'";
+        }
+    if($newstatus!="")
+        {
+        $update_sql[] = "status='" . escape_check($newstatus) . "'";
+        }
+    if(count($update_sql) == 0)
+        {
+        return false;
+        }
+    
+    $sql = "UPDATE job_queue SET " . implode(",",$update_sql) . " WHERE ref='" . $ref . "'";
     sql_query($sql);
     }
 

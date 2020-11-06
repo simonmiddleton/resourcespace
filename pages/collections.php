@@ -689,29 +689,20 @@ if ($research!="")
 	}
 	
 hook("processusercommand");
-?>
 
-
-<?php 
 $searches=get_saved_searches($usercollection);
 
-// Do an initial count of how many resources there are in the collection (only returning ref and archive)
-$results_all  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true, true);
-$count_result = count($results_all);
-
-// Then do another pass getting all data for the maximum allowed collection thumbs
-$result = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, $max_collection_thumbs, "ASC");
+$result  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true,false);
+$count_result = count($result);
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
-
-
 
 # E-commerce functionality. Work out total price, if $basket_stores_size is enabled so that they've already selected a suitable size.
 $totalprice=0;
 if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	{
-	foreach ($results_all as $resource)
+	foreach ($result as $resource)
 		{
 		# For each resource in the collection, fetch the price (set in config.php, or config override for group specific pricing)
 		$id=(isset($resource["purchase_size"])) ? $resource["purchase_size"] : "";
@@ -790,16 +781,16 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
   	<?php echo $count_result . " " . $lang["youfoundresources"]?><br />
   	</div>
     <?php
-	if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all)>0)) { ?>
+	if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
 		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
-	<?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all)>0) { ?>
+	<?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
 	<a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
 	<?php }
      if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo $lang["sendfeedback"]?></a><?php } ?>
     <?php if ($count_result>0 && checkperm("q"))
     	{ 
 		# Ability to request a whole collection (only if user has restricted access to any of these resources)
-		$min_access=collection_min_access($results_all);
+		$min_access=collection_min_access($result);
 		if ($min_access!=0)
 			{
 		    ?>
@@ -892,7 +883,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 	hook("beforecollectiontoolscolumn");
 
     $resources_count = $count_result;
-	render_actions($cinfo, false,true,'',$results_all);
+	render_actions($cinfo, false,true,'',$result);
     hook("aftercollectionsrenderactions");
 	?>
  	<ul>
@@ -958,13 +949,8 @@ if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $in
 # Loop through thumbnails
 if ($count_result>0) 
 	{
-	$results_count=count($result);
-	if($results_count>$max_collection_thumbs)
-		{
-		$results_count=$max_collection_thumbs;
-		}
 	# loop and display the results
-	for ($n=0;$n<$results_count;$n++)					
+	for ($n=0;$n<$count_result && $n < $max_collection_thumbs;$n++)					
 		{
 		$ref=$result[$n]["ref"];
 		?>
@@ -974,7 +960,9 @@ if ($count_result>0)
         <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
         
 		<?php if (!hook("rendercollectionthumb")){?>
-		<?php $access=get_resource_access($result[$n]);
+        <?php
+        
+        $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
@@ -1143,14 +1131,14 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0])
 	<div id="CollectionMinTitle" class="ExternalShare"><h2><?php echo i18n_get_collection_name($tempcol)?></h2></div>
 	<div id="CollectionMinRightNav" class="ExternalShare">
 		<?php if(!hook("replaceanoncollectiontools")){ ?>
-		<?php if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($results_all) > 0) { ?>
+		<?php if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result) > 0) { ?>
 		<li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo $lang["action-download"]?></a></li>
 		<?php } ?>
 		<?php if ($feedback) {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo $lang["sendfeedback"]?></a></li><?php } ?>
 		<?php if ($count_result>0)
 			{ 
 			# Ability to request a whole collection (only if user has restricted access to any of these resources)
-			$min_access=collection_min_access($results_all);
+			$min_access=collection_min_access($result);
 			if ($min_access!=0)
 				{
 				?>
@@ -1179,7 +1167,7 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0])
 		<div id="CollectionMinRightNav">
     	<?php
 	    // Render dropdown actions
-		render_actions($cinfo, false, false, "min",$results_all);
+		render_actions($cinfo, false, false, "min",$result);
 		?>
 		</div>
 

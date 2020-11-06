@@ -3721,3 +3721,6 @@ $search_engine_noindex_external_shares=false;
 
 // Use a tile layout for the user/admin/system menus. If false, use a list layout for menus.
 $tilenav=true;
+
+// Maximum number of resources beyond which a CSV metadata export will force an offline job to be created (provided that $offline_job_queue==true)
+$metadata_export_offline_limit = 10000;

@@ -58,7 +58,6 @@ $lang["csv_upload_mapping_header"]              = "Column Header";
 $lang["csv_upload_mapping_csv_data"]            = "Sample data from CSV";
 $lang["csv_upload_using_config"]                = "Using existing CSV configuration";
 $lang["csv_upload_process_offline"]             = "Process CSV file offline? This should be used for large CSV files. You will be notified via a ResourceSpace message once the upload is complete";
-$lang["csv_upload_process_offline_disabled"]    = "Offline processing is not enabled on this system. To enable offline processing of CSVs please contact your system administrator";
 $lang["csv_upload_oj_created"]                  = "CSV upload job created with job ID # %%JOBREF%%. <br/>You will receive a ResourceSpace system message once the job has completed";
 $lang["csv_upload_oj_complete"]                 = "CSV upload job complete. Click the link to view the full log file";
 $lang["csv_upload_oj_failed"]                   = "CSV upload job failed";
