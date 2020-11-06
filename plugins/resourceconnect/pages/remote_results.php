@@ -190,7 +190,7 @@ else
         <div class="ResourcePanel">
         
     
-        <a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);">
+        <a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return CentralSpaceLoad(this,true,true);">
         
         <?php if ($result["has_image"]==1) {
             

@@ -16,20 +16,14 @@ function HookResourceconnectViewNextpreviewregeneratekey()
 
 function HooKResourceconnectViewReplaceviewnav()
     {
-    # Replace navigation links for view page.
-    global $is_resourceconnect,$show_related_themes, $lang;
-    
-    if (!isset($is_resourceconnect))
-        {
-        return false;
-        }
-
-        $show_related_themes=false;# Never show related themes
-        
-        echo '<div class="backtoresults"><a class="closeLink fa fa-times" title="' . $lang["close"] .'"  onClick="getElementById(\'simple_search_form\').submit()"></a></div>';
-
-        return true;
-       
+     # Replace navigation links for view page.
+   global $is_resourceconnect,$show_related_themes;
+   
+   if (isset($is_resourceconnect))
+       {      
+       $show_related_themes=false;# Never show related themes
+      return true;
+       }
     }
 
 function HooKResourceconnectViewReplacemaxlink()
