@@ -828,6 +828,11 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 	if(!isset($done[$shortpath]))
 		{
         $alt_parts=pathinfo($alternativefile);
+
+        if (substr($alt_parts['filename'],0,1) == ".")
+            {
+            return false;
+            }
         
         if(isset($staticsync_alternative_file_text) && strpos($alternativefile,$staticsync_alternative_file_text) !== false)
 		    {

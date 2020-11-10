@@ -349,7 +349,7 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
 		{
 		if($field["fref"]==$display_field_below_preview)
 			{
-			$displaycondition=check_view_display_condition($fields,$df);
+			$displaycondition=check_view_display_condition($fields,$df,$fields_all);
 			if($displaycondition)
 				{
 				$previewcaption=$fields[$df];
@@ -534,6 +534,7 @@ $urlparams= array(
 );
 
 
+
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
 if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false)) { ?>
 <div class="backtoresults">
@@ -569,7 +570,7 @@ else if($modal)
 		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
 	<?php
-	}
+    }
 	?>
 
 <h1><?php hook("beforeviewtitle");?><?php

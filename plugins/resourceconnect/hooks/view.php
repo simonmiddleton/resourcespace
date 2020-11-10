@@ -16,14 +16,14 @@ function HookResourceconnectViewNextpreviewregeneratekey()
 
 function HooKResourceconnectViewReplaceviewnav()
     {
-    # Replace navigation links for view page.
-    global $is_resourceconnect,$show_related_themes;
-    
-    if (isset($is_resourceconnect))
-        {       
-        $show_related_themes=false;# Never show related themes
-        return true;
-        }
+     # Replace navigation links for view page.
+   global $is_resourceconnect,$show_related_themes;
+   
+   if (isset($is_resourceconnect))
+       {      
+       $show_related_themes=false;# Never show related themes
+      return true;
+       }
     }
 
 function HooKResourceconnectViewReplacemaxlink()

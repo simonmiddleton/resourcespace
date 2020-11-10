@@ -1080,11 +1080,17 @@ function save_collection($ref, $coldata=array())
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
+            $clear_fc_query_cache = false;
             foreach($sqlset as $colopt => $colset)
                 {
                 if($sqlupdate != "")
                     {
                     $sqlupdate .= ", ";    
+                    }
+
+                if(in_array($colopt, array("type", "parent", "thumbnail_selection_method", "bg_img_resource_ref")))
+                    {
+                    $clear_fc_query_cache = true;
                     }
 
                 if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
@@ -1099,7 +1105,7 @@ function save_collection($ref, $coldata=array())
             $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
             sql_query($sql);
 
-            if(isset($sqlset["type"]))
+            if($clear_fc_query_cache)
                 {
                 clear_query_cache("featured_collections");
                 }
@@ -1282,13 +1288,13 @@ function get_smart_theme_headers()
  */
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
     {
-    global $smart_themes_omit_archived, $themes_category_split_pages;
+    global $smart_themes_omit_archived;
 
     $return = array();
 
     // Determine if this should cascade onto children for category tree type
     $recursive = false;
-    if($is_category_tree && !$themes_category_split_pages)
+    if($is_category_tree)
         {
         $recursive = true;
         }
@@ -1321,13 +1327,10 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         $parent_node_to_use = 0;
         $is_parent          = false;
 
-        if($is_category_tree)
+        if(is_parent_node($nodes[$n]['ref']))
             {
-            if(is_parent_node($nodes[$n]['ref']))
-                {
-                $parent_node_to_use = $nodes[$n]['ref'];
-                $is_parent          = true;
-                }
+            $parent_node_to_use = $nodes[$n]['ref'];
+            $is_parent          = true;
 
             $tree_node_depth = get_tree_node_level($nodes[$n]['ref']);
 
@@ -1654,8 +1657,11 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
     // We build a collection list to allow featured collections children that are externally shared as part of a parent,
     // to all be shared with the same parameters (e.g key, access, group). When the collection is not COLLECTION_TYPE_FEATURED
     // this will hold just that collection
-    $sub_fcs = (!empty($sub_fcs) ? $sub_fcs : get_featured_collection_categ_sub_fcs($collection));
-    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : $sub_fcs);
+    $collections = array($collection["ref"]);
+    if($is_featured_collection_category)
+        {
+        $collections = (!empty($sub_fcs) ? $sub_fcs : get_featured_collection_categ_sub_fcs($collection));
+        }
 
     // Generate the key based on the original collection. For featured collection category, all sub featured collections
     // will share the same key
@@ -2000,7 +2006,7 @@ function allow_multi_edit($collection,$collectionid = 0)
 * generate_featured_collection_image_urls() but useful to determine if a FC category is full of empty FCs.
 * 
 * @param array $c   Collection data structure similar to the one returned by {@see get_featured_collections()}
-* @param array $ctx Extra context used to get FC images (e.g smart FC?, limit on number of images returned). Context 
+* @param array $ctx Extra context used to get FC resources (e.g smart FC?, limit on number of resources returned). Context 
 *                   information should take precedence over internal logic (e.g determining the result limit)
 * 
 * @return array
@@ -2012,9 +2018,19 @@ function get_featured_collection_resources(array $c, array $ctx)
         return array();
         }
 
+    global $CACHE_FC_RESOURCES;
+    $CACHE_FC_RESOURCES = (!is_null($CACHE_FC_RESOURCES) && is_array($CACHE_FC_RESOURCES) ? $CACHE_FC_RESOURCES : array());
+    // create a unique ID for this result set as the context for the same FC may differ
+    $cache_id = $c["ref"] . md5(json_encode($ctx));
+    if(isset($CACHE_FC_RESOURCES[$cache_id]))
+        {
+        return $CACHE_FC_RESOURCES[$cache_id];
+        }
+
     $c_ref_escaped = escape_check($c["ref"]);
-    $imgs_limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
+    $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
+    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
 
     // Smart FCs
     if(isset($ctx["smart"]) && $ctx["smart"] === true)
@@ -2027,12 +2043,15 @@ function get_featured_collection_resources(array $c, array $ctx)
 
         $node_search = NODE_TOKEN_PREFIX . $c['ref'];
 
-        // do_search() uses -1 to indicate no limit on fetchrows
-        $imgs_limit = (!is_null($imgs_limit) ? $imgs_limit : -1);
+        $limit = (!is_null($limit) ? $limit : 1);
 
         // Access control is still in place (ie permissions are honoured)
-        $images = do_search($node_search, '', 'hit_count', 0, $imgs_limit, 'desc', false, 0, false, false, '', true, false, true);
-        return (is_array($images) ? array_column($images, "ref") : array());
+        $smart_fc_resources = do_search($node_search, '', 'hit_count', 0, $limit, 'desc', false, 0, false, false, '', true, false, true);
+        $smart_fc_resources = (is_array($smart_fc_resources) ? array_column($smart_fc_resources, "ref") : array());
+
+        $CACHE_FC_RESOURCES[$cache_id] = $smart_fc_resources;
+
+        return $smart_fc_resources;
         }
 
     if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
@@ -2048,13 +2067,13 @@ function get_featured_collection_resources(array $c, array $ctx)
             return ($c["bg_img_resource_ref"] > 0 && get_resource_access($c["bg_img_resource_ref"]) == RESOURCE_ACCESS_FULL ? array($c["bg_img_resource_ref"]) : array());
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($imgs_limit))
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
             {
-            $imgs_limit = 1;
+            $limit = 1;
             }
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] && is_null($imgs_limit))
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] && is_null($limit))
             {
-            $imgs_limit = $theme_images_number;
+            $limit = $theme_images_number;
             }
         }
 
@@ -2071,7 +2090,7 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     if(is_featured_collection_category($c))
         {
-        $collections = get_featured_collection_categ_sub_fcs($c);
+        $collections = get_featured_collection_categ_sub_fcs($c, array("all_fcs" => $all_fcs));
         if(!empty($collections))
             {
             $c_refs_csv_escaped = implode("', '", escape_check_array_values($collections));
@@ -2103,10 +2122,15 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     $sql = sprintf("SELECT DISTINCT ti.ref AS `value` FROM (%s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
-        sql_limit(null, $imgs_limit)
+        sql_limit(null, $limit)
     );
 
-    return sql_array($sql, "themeimage");
+
+    $fc_resources = sql_array($sql, "themeimage");
+
+    $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
+
+    return $fc_resources;
     }
 
 
@@ -2121,26 +2145,72 @@ function get_featured_collection_resources(array $c, array $ctx)
 */
 function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
     {
+    global $CACHE_FC_CATEG_SUB_FCS;
+    $CACHE_FC_CATEG_SUB_FCS = (!is_null($CACHE_FC_CATEG_SUB_FCS) && is_array($CACHE_FC_CATEG_SUB_FCS) ? $CACHE_FC_CATEG_SUB_FCS : array());
+    if(isset($CACHE_FC_CATEG_SUB_FCS[$c["ref"]]))
+        {
+        return $CACHE_FC_CATEG_SUB_FCS[$c["ref"]];
+        }
+
     $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : true);
+    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) && !empty($ctx["all_fcs"]) ? $ctx["all_fcs"] : get_all_featured_collections());
 
-    $all_fcs = sql_array(sprintf(
-        "SELECT ref AS `value` FROM (
-                SELECT ref,
-                       (SELECT if(count(resource) > 0, true, false) FROM collection_resource WHERE collection = c.ref) AS has_resources
-                  FROM collection AS c
-                 WHERE `type` = %s
-                   AND parent IS NOT NULL
-                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
-            ) AS fc
-         WHERE fc.has_resources > 0",
-        COLLECTION_TYPE_FEATURED,
-        ($access_control ? featured_collections_permissions_filter_sql("AND", "ref") : "")
-    ), "featured_collections");
+    $collections = array();
 
-    // Filter out featured collections that have a different root path
-    $collections = filter_featured_collections_by_root($all_fcs, $c["ref"]);
+    $allowed_fcs = ($access_control ? compute_featured_collections_acess_control() : true);
+    if($allowed_fcs === false)
+        {
+        $CACHE_FC_CATEG_SUB_FCS[$c["ref"]] = $collections;
+        return $collections;
+        }
+    else if(is_array($allowed_fcs))
+        {
+        $allowed_fcs_flipped = array_flip($allowed_fcs);
+        
+        // Collection is not allowed
+        if(!isset($allowed_fcs_flipped[$c['ref']]))
+            {
+            $CACHE_FC_CATEG_SUB_FCS[$c["ref"]] = $collections;
+            return $collections;
+            }
+        }
 
-    debug("get_featured_collection_categ_sub_fcs: returned collections: " . implode(", ", $collections));
+    $all_fcs_rp = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
+    $all_fcs = array_flip_by_value_key($all_fcs, 'ref');
+
+    $queue = new SplQueue();
+    $queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
+    $queue->enqueue($c['ref']);
+
+    while(!$queue->isEmpty())
+        {
+        $fc = $queue->dequeue();
+
+        $fc_parent = ($all_fcs[$fc]['parent'] > 0 ? $all_fcs[$fc]['parent'] : 0);
+        $fc_children = array();
+
+        if(
+            $all_fcs[$fc]['has_resources'] > 0
+            && (
+                $allowed_fcs === true
+                || is_array($allowed_fcs) && !isset($allowed_fcs_flipped[$fc])))
+            {
+            $collections[] = $fc;
+            }
+        else if($all_fcs[$fc]['has_children'] > 0)
+            {
+            $fc_children = array_keys($all_fcs_rp, $fc);
+            }
+
+        foreach($fc_children as $fc_child_ref)
+            {
+            $queue->enqueue($fc_child_ref);
+            }
+        }
+
+    $CACHE_FC_CATEG_SUB_FCS[$c["ref"]] = $collections;
+
+    debug("get_featured_collection_categ_sub_fcs(ref = {$c["ref"]}): returned collections: " . implode(", ", $collections));
     return $collections;
     }
 
@@ -2680,7 +2750,7 @@ function collection_min_access($collection)
             $result = array();
             }
         }
-    if(count($result) > 0 && isset($result[0]["access"]))
+    if(count($result) > 0 && isset($result[0]["access"]) && !checkperm("v"))
         {
         $minaccess = max(array_column($result,"access"));
         }
@@ -4278,6 +4348,35 @@ function save_themename()
 /**
 * Get all featured collections
 * 
+* @return array
+*/
+function get_all_featured_collections()
+    {
+    return sql_query(
+        sprintf(
+              "SELECT DISTINCT c.ref,
+                      c.`name`,
+                      c.`type`,
+                      c.parent,
+                      c.thumbnail_selection_method,
+                      c.bg_img_resource_ref,
+                      c.created,
+                      count(DISTINCT cr.resource) > 0 AS has_resources,
+                      count(DISTINCT cc.ref) > 0 AS has_children
+                 FROM collection AS c
+            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            LEFT JOIN collection AS cc ON c.ref = cc.parent
+                WHERE c.`type` = %s
+             GROUP BY c.ref",
+            COLLECTION_TYPE_FEATURED
+        ),
+        "featured_collections");
+    }
+
+
+/**
+* Get all featured collections by parent node
+* 
 * @param integer $parent  The ref of the parent collection. When a featured collection contains another collection, it is
 *                         then considered a featured collection category and won't have any resources associated with it.
 * @param array   $ctx     Contextual data (e.g disable access control). This param MUST NOT get exposed over the API
@@ -4319,8 +4418,8 @@ function get_featured_collections(int $parent, array $ctx)
 
 
 /**
-* Build appropriate SQL (for WHERE clause) to filter out featured collections the user has NO ACCESS to.
-* 
+* Build appropriate SQL (for WHERE clause) to filter out featured collections for the user. The function will use either an
+* IN or NOT IN depending which list is smaller to increase performance of the search
 * 
 * @param string $prefix SQL WHERE clause element. Mostly should be either WHERE, AND -or- OR depending on the SQL statement 
 *                       this is part of.
@@ -4330,68 +4429,40 @@ function get_featured_collections(int $parent, array $ctx)
 */
 function featured_collections_permissions_filter_sql(string $prefix, string $column)
     {
+    global $CACHE_FC_PERMS_FILTER_SQL;
+    $CACHE_FC_PERMS_FILTER_SQL = (!is_null($CACHE_FC_PERMS_FILTER_SQL) && is_array($CACHE_FC_PERMS_FILTER_SQL) ? $CACHE_FC_PERMS_FILTER_SQL : array());
+    $cache_id = md5("{$prefix}-{$column}");
+    if(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
+        {
+        return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
+        }
+
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
     $prefix = " " . trim($prefix);
     $column = trim($column);
 
-    $all_fcs = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED), "featured_collections");
-    $allowed_fcs = $all_fcs;
+    $computed_fcs = compute_featured_collections_acess_control();
 
-    if(!checkperm("j*"))
+    if($computed_fcs === true)
         {
-        $allowed_fcs = array();
-
-        // Find allowed featured collection categories roots (based on permission j[ID])
-        $fc_root_allowed_refs = array_filter($all_fcs, function(string $ref) { return checkperm("j{$ref}"); });
-        if(empty($fc_root_allowed_refs))
-            {
-            // Misconfiguration - user can only see specific FCs but none have been selected
-            return "{$prefix} 1 = 0";
-            }
-
-        // Filter out featured collections that have a different root paths
-        foreach($fc_root_allowed_refs as $fc_root_ref)
-            {
-            $filtered_fcs_by_root = filter_featured_collections_by_root($all_fcs, $fc_root_ref);
-            if(!empty($filtered_fcs_by_root))
-                {
-                $allowed_fcs = array_merge($allowed_fcs, $filtered_fcs_by_root);
-                }
-            }
-
-        $allowed_fcs = array_unique($allowed_fcs);
+        $return = ""; # No access control needed! User should see all featured collections
+        }
+    else if(is_array($computed_fcs))
+        {
+        $fcs_list = "'" . join("', '", array_map('escape_check', $computed_fcs)) . "'";
+        $return = "{$prefix} {$column} IN ({$fcs_list})";
+        }
+    else
+        {
+        // User is not allowed to see any of the available FCs
+        $return = "{$prefix} 1 = 0";
         }
 
-    // Filter out featured collections explicitly forbidden. Prevent access to any sub-featured collections as well
-    $fc_not_allowed_refs = array_filter($allowed_fcs, function($ref) { return checkperm("-j{$ref}"); });
-    $not_allowed = array();
-    foreach($fc_not_allowed_refs as $fc_not_allowed_ref)
-        {
-        $filtered_fcs_by_root = filter_featured_collections_by_root($allowed_fcs, $fc_not_allowed_ref);
-        if(!empty($filtered_fcs_by_root))
-            {
-            $not_allowed = array_merge($not_allowed, $filtered_fcs_by_root);
-            }
-        }
-    $not_allowed = array_unique($not_allowed);
-    $allowed_fcs = array_diff($allowed_fcs, $not_allowed);
+    $CACHE_FC_PERMS_FILTER_SQL[$cache_id] = $return;
 
-    // If we've reached this far, and we have the same number of FCs allowed as we have in total, then there's no need to add the filter
-    if(count($all_fcs) == count($allowed_fcs))
-        {
-        return ""; # No access control needed! User should see all featured collections
-        }
-
-    if(!empty($allowed_fcs))
-        {
-        $fcs_allowed = "'" . join("', '", escape_check_array_values($allowed_fcs)) . "'";
-        return "{$prefix} {$column} IN ({$fcs_allowed})";
-        }
-
-    // User is not allowed to see any of the available FCs
-    return "{$prefix} 1 = 0";
+    return $return;
     }
 
 
@@ -4404,13 +4475,21 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
 */
 function featured_collection_check_access_control(int $c_ref)
     {
-    $sql = sprintf("SELECT EXISTS(SELECT ref FROM collection WHERE `type` = %s AND ref = '%s' %s) AS `value`",
-        COLLECTION_TYPE_FEATURED,
-        escape_check($c_ref),
-        featured_collections_permissions_filter_sql("AND", "ref"),
-        "featured_collections"
-    );
-    return (bool) sql_value($sql, false);
+    $fcs_access_control = compute_featured_collections_acess_control();
+    if($fcs_access_control === true)
+        {
+        return true;
+        }
+    else if(is_array($fcs_access_control))
+        {
+        $fcs_access_control = array_flip($fcs_access_control);
+        if(isset($fcs_access_control[$c_ref]))
+            {
+            return true;
+            }
+        }
+
+    return false;
     }
 
 
@@ -4527,45 +4606,19 @@ function validate_collection_parent($c)
 /**
 * Get to the root of the branch starting from the leaf featured collection
 * 
-* @param  integer  $ref    Collection ref which is considered a leaf of the tree
-* @param  array    $carry  Branch structure data which is carried forward. Normally this is an empty array when we start
-*                          from the beginning (ie. an actual leaf).
+* @param  integer  $ref  Collection ref which is considered a leaf of the tree
+* @param  array    $fcs  List of all featured collections
 * 
 * @return array Branch path structure starting from root to the leaf
 */
-function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
+function get_featured_collection_category_branch_by_leaf(int $ref, array $fcs)
     {
-    if($ref <= 0)
+    if(empty($fcs))
         {
-        return array_reverse($carry);
+        $fcs = get_all_featured_collections();
         }
 
-    $collection = sql_query(
-        sprintf("SELECT ref, `name`, parent FROM collection WHERE `type` = %s AND ref = '%s'",
-            COLLECTION_TYPE_FEATURED,
-            $ref
-        )
-    );
-
-    if(empty($collection))
-        {
-        return array_reverse($carry);
-        }
-    $collection = $collection[0];
-    $collection_parent = validate_collection_parent($collection);
-
-    $carry[] = array(
-        "ref"    => $collection["ref"],
-        "name"   => $collection["name"],
-        "parent" => $collection_parent,
-    );
-
-    if(is_null($collection_parent))
-        {
-        return array_reverse($carry);
-        }
-
-    return get_featured_collection_category_branch_by_leaf($collection_parent, $carry);
+    return compute_node_branch_path($fcs, $ref);
     }
 
 
@@ -4580,7 +4633,7 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $carry)
 */
 function process_posted_featured_collection_categories(int $depth, array $branch_path)
     {
-    global $enable_themes;
+    global $enable_themes, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS;
 
     if(!($enable_themes && checkperm("h")))
         {
@@ -4627,6 +4680,12 @@ function process_posted_featured_collection_categories(int $depth, array $branch
         if($force_featured_collection_type)
             {
             $fc_update["force_featured_collection_type"] = true;
+            }
+
+        // When moving a public collection to featured, default to most popular image
+        if($depth == 0 && is_null($fc_category_at_level) && (int) $new_parent > 0)
+            {
+            $fc_update["thumbnail_selection_method"] = $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"];
             }
 
         return $fc_update;
@@ -4745,7 +4804,6 @@ function allow_featured_collection_share(array $c)
         }
 
     $sub_fcs = (!isset($c["sub_fcs"]) ? get_featured_collection_categ_sub_fcs($c) : $c["sub_fcs"]);
-    
     return array_reduce($sub_fcs, function($carry, $item)
         {
         // Fake a collection data structure. allow_collection_share() only needs the ref
@@ -4764,27 +4822,39 @@ function allow_featured_collection_share(array $c)
 * 
 * @param array $fcs   List of featured collections refs to filter out
 * @param int   $c_ref A root featured collection ref
+* @param array $ctx   Contextual data
 * 
 * @return array
 */
-function filter_featured_collections_by_root(array $fcs, int $c_ref)
+function filter_featured_collections_by_root(array $fcs, int $c_ref, array $ctx = array())
     {
     if(empty($fcs))
         {
         return array();
         }
 
+    global $CACHE_FCS_BY_ROOT;
+    $CACHE_FCS_BY_ROOT = (!is_null($CACHE_FCS_BY_ROOT) && is_array($CACHE_FCS_BY_ROOT) ? $CACHE_FCS_BY_ROOT : array());
+    $cache_id = $c_ref . md5(json_encode($fcs));
+    if(isset($CACHE_FCS_BY_ROOT[$cache_id][$c_ref]))
+        {
+        return $CACHE_FCS_BY_ROOT[$cache_id][$c_ref];
+        }
+
+    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
     $branch_path_fct = function($carry, $item) { return "{$carry}/{$item["ref"]}"; };
 
-    $category_branch_path = get_featured_collection_category_branch_by_leaf($c_ref, array());
+    $category_branch_path = get_featured_collection_category_branch_by_leaf($c_ref, $all_fcs);
     $category_branch_path_str = array_reduce($category_branch_path, $branch_path_fct, "");
 
-    $collections = array_filter($fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str)
+    $collections = array_filter($fcs, function(int $ref) use ($branch_path_fct, $category_branch_path_str, $all_fcs)
         {
-        $branch_path = get_featured_collection_category_branch_by_leaf($ref, array());
+        $branch_path = get_featured_collection_category_branch_by_leaf($ref, $all_fcs);
         $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
         return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
         });
+
+    $CACHE_FCS_BY_ROOT[$cache_id][$c_ref] = $collections;
 
     return array_values($collections);
     }
@@ -4912,3 +4982,108 @@ function allow_upload_to_collection(array $c)
     return false;
     }
 
+
+/**
+* Compute the featured collections allowed based on current access control
+* 
+* @return boolean|array Returns FALSE if user should not see any featured collections (usually means misconfiguration) -or-
+*                       TRUE if user has access to all featured collections. If some access control is in place, then the
+*                       return will be an array with all the allowed featured collections
+*/
+function compute_featured_collections_acess_control()
+    {
+    global $CACHE_FC_ACCESS_CONTROL;
+    if(!is_null($CACHE_FC_ACCESS_CONTROL))
+        {
+        return $CACHE_FC_ACCESS_CONTROL;
+        }
+
+    $all_fcs = sql_query(sprintf("SELECT ref, parent FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED), "featured_collections");
+    $all_fcs = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
+    $root_fcs = array_filter($all_fcs, function($v) { return $v == 0; });
+
+    $fcs_allowed = array();
+    $fcs_not_allowed = array();
+
+    if(!checkperm("j*"))
+        {
+        $fc_root_allowed_refs = array_filter($root_fcs, 'permission_j', ARRAY_FILTER_USE_KEY);
+        if(empty($fc_root_allowed_refs))
+            {
+            // Misconfiguration - user can only see specific FCs but none have been selected
+            return false;
+            }
+
+        $root_fcs = $fc_root_allowed_refs;
+        }
+
+    // BFS traverse the tree to establish what FCs are allowed
+    $queue = new SplQueue();
+    $queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
+    foreach(array_keys($root_fcs) as $root_fc_ref)
+        {
+        $queue->enqueue($root_fc_ref);
+        }
+
+    while(!$queue->isEmpty())
+        {
+        $fc = $queue->dequeue();
+
+        $fc_parent = ($all_fcs[$fc] > 0 ? $all_fcs[$fc] : 0);
+        $fc_children = array_keys($all_fcs, $fc);
+        $fcs_allowed_flipped = array_flip($fcs_allowed);
+        $fcs_not_allowed_flipped = array_flip($fcs_not_allowed);
+        $is_fc_allowed = false;
+
+        // Has the node itself OR its parent been marked as no access already? Mark all nodes' children the same
+        if(isset($fcs_not_allowed_flipped[$fc]) || isset($fcs_not_allowed_flipped[$fc_parent]))
+            {
+            $fc_not_allowed_refs = $fc_children;
+            }
+        // Filter out featured collections explicitly forbidden
+        else if(permission_negative_j($fc))
+            {
+            $fcs_not_allowed[] = $fc;
+            $fc_not_allowed_refs = $fc_children;
+            }
+        else if($fc_parent > 0 && permission_negative_j($fc_parent))
+            {
+            // Filter out featured collections where the parent has been explicitly forbidden
+            $fcs_not_allowed[] = $fc_parent;
+            $fc_not_allowed_refs = $fc_children;
+            }
+        else
+            {
+            $is_fc_allowed = true;
+            $fc_not_allowed_refs = array_filter($fc_children, 'permission_negative_j');
+            }
+
+        if($is_fc_allowed && !isset($fcs_allowed_flipped[$fc]))
+            {
+            $fcs_allowed[] = $fc;
+            }
+
+        $fcs_allowed = array_merge($fcs_allowed, array_diff($fc_children, $fc_not_allowed_refs));
+        $fcs_not_allowed = array_merge($fcs_not_allowed, $fc_not_allowed_refs);
+
+        foreach($fc_children as $fc_child_ref)
+            {
+            $queue->enqueue($fc_child_ref);
+            }
+        }
+
+    $count_all_fcs = count($all_fcs);
+    if($count_all_fcs === count($fcs_allowed))
+        {
+        // No access control needed! User should see all featured collections
+        $return = true;
+        }
+    else
+        {
+        $return = $fcs_allowed;
+        }
+
+    $CACHE_FC_ACCESS_CONTROL = $return;
+
+    return $return;
+    }

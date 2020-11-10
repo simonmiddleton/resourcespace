@@ -2,6 +2,18 @@
 include_once "../include/db.php";
 include "../include/authenticate.php";
 
+$smart_theme = getval("smart_theme", 0, true);
+if($smart_theme > 0)
+    {
+    $node = getval("node", 0, true);
+    $smart_redirect_params = array(
+        "smart_rtf" => $smart_theme,
+        "smart_fc_parent" => ($node > 0 ? $node : ""),
+    );
+    redirect(generateURL("{$baseurl}/pages/collections_featured.php", $smart_redirect_params));
+    }
+
+$theme_category_levels = (isset($theme_category_levels) ? $theme_category_levels : 3);
 $themes = GetThemesFromRequest($theme_category_levels);
 $last_theme_found = array_slice($themes, -1);
 $find_by_last_theme_name = array_pop($last_theme_found);

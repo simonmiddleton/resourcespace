@@ -1991,7 +1991,6 @@ $show_collection_name = false;
 
 # Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
 # Can be tested or used for custom link by adding querystring parameter simpleview=true to collections_featured.php e.g. pages/collections_featured.php?simpleview=true
-# NOTE: only works with $themes_category_split_pages=true;
 $themes_simple_view=false;
 # Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images=true;
@@ -1999,12 +1998,6 @@ $themes_simple_images=true;
 # Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
-# Display theme categories as links, and themes on separate pages?
-$themes_category_split_pages=false;
-# Display breadcrumb-style theme parent links instead of "Subcategories"
-$themes_category_split_pages_parents=false;
-# Include "Themes" root node before theme level crumbs to add context and link to collections_featured.php
-$themes_category_split_pages_parents_root_node=true;
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
 # If a theme header contains a single collection, allow the title to be a direct link to the collection.
@@ -2014,7 +2007,6 @@ $themes_single_collection_shortcut=false;
 $themes_with_resources_only=false;
 
 # optional columns in themes collection lists
-$themes_column_sorting=false; // only works with themes_category_split_pages
 $themes_date_column=false;
 $themes_ref_column=false;
 
@@ -3000,7 +2992,7 @@ $welcome_text_picturepanel=false;
 # Hide Welcome Text
 $no_welcometext = false;
 
-#Show a specified metadata field below the resource preview image on the view page. Useful for phoo captions. 
+#Show a specified metadata field below the resource preview image on the view page. Useful for photo captions. 
 #$display_field_below_preview=18;
 
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.

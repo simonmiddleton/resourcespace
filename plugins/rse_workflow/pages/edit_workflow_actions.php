@@ -160,7 +160,7 @@ else
 				echo $fromstatetext; 
 				?>
 			</td>
-			<td><?php echo $lang["status" . $workflowaction["statusto"]]; ?>
+			<td><?php echo ( isset($lang["status".$workflowaction["statusto"]]) ) ? $lang["status".$workflowaction["statusto"]] : $workflowaction["statusto"]; ?>
 			</td>
 			<td>wf<?php echo $workflowaction["ref"]; ?>
 			</td>

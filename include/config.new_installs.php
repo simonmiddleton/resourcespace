@@ -19,7 +19,6 @@ $home_slideshow_width=1920;
 $home_slideshow_height=1080;
 
 $themes_simple_view=true;
-$themes_category_split_pages=true;
 
 $stemming=true;
 $case_insensitive_username=true;

@@ -52,7 +52,7 @@ if($findtext && $searchtext != '')
 ?>
 <div class="BasicsBox">
     <h1><?php echo $lang["findtextinpdf"]; ?></h1>
-    <form id="FindTextInPDF" class="modalform" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <form id="FindTextInPDF" class="modalform" method="GET" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
         <?php generateFormToken("FindTextInPDF"); ?>
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
         <div class="Question">
