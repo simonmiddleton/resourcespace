@@ -888,18 +888,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
 					}
 												
-				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
-				if ($error) 
-					{
-					global $lang;
-					if (getval("autosave","")!="")
-						{
-						exit($error);
-						}
-					$errors[$fields[$n]["ref"]]=$error;
-					continue;
-					}
-				
+                $error = hook("additionalvalcheck", "all", array($fields, $fields[$n]));
+                if($error)
+                    {
+                    $errors[$fields[$n]["ref"]]=$error;
+                    continue;
+                    }
 				} // End of if not a fixed list (node) field
 
             if(
