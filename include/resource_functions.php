@@ -2243,10 +2243,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
     if (in_array($fieldinfo['type'], $NODE_FIELDS))
         {
+        $newvalues_translated = $newvalues;
         $newvalues = array();
         foreach($fieldoptions as $nodedata)
             {
-            $newvalues_translated = $newvalues;
             $translate_newvalues = array_walk(
                 $newvalues_translated,
                 function (&$value, $index)
@@ -2278,7 +2278,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             $newvalues[] = $value;
             }
-        
+
         $current_field_nodes = get_resource_nodes($resource,$field);
         $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
         $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
