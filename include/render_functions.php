@@ -4236,6 +4236,7 @@ function render_featured_collections(array $ctx, array $items)
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
 
     foreach($items as $fc)
         {
@@ -4276,6 +4277,7 @@ function render_featured_collections(array $ctx, array $items)
                 array(
                     "smart" => $is_smart_featured_collection,
                     "use_thumbnail_selection_method" => !$is_smart_featured_collection,
+                    "all_fcs" => $all_fcs,
                 ));
             $fc_images = generate_featured_collection_image_urls($fc_resources, "pre");
 

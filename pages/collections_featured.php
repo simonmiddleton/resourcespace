@@ -36,6 +36,8 @@ if(getval("new", "") == "true" && getval("cta", "") == "true")
     exit();
     }
 
+// List of all FCs. For huge trees, helps increase performance but might require an increase for memory_limit in php.ini
+$all_fcs = get_all_featured_collections();
 include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
@@ -55,7 +57,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
             "title" => strip_prefix_chars(i18n_get_translated($branch["name"]),"*"),
             "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
-        }, get_featured_collection_category_branch_by_leaf($parent, array()));
+        }, compute_node_branch_path($all_fcs, $parent));
 
     renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");
     }
@@ -65,6 +67,7 @@ $full_width = !$themes_simple_view;
 $rendering_options = array(
     "full_width" => $full_width,
     "general_url_params" => $general_url_params,
+    "all_fcs" => $all_fcs,
 );
 
 
@@ -192,6 +195,7 @@ if($themes_show_background_image && !$full_width)
             // get_featured_collection_resources() is expecting a featured collection structure. $parent_collection_data being a 
             // collection structure is a superset containing the required information (ref, parent, has_resources) for the function to work
             $get_fc_imgs_ctx["use_thumbnail_selection_method"] = true;
+            $get_fc_imgs_ctx["all_fcs"] = $all_fcs;
             $bg_fc_images = get_featured_collection_resources($parent_collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }
