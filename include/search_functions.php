@@ -1203,8 +1203,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Duplicate Resources (based on file_checksum)
     if (substr($search,0,11)=="!duplicates") 
         {
-        # find duplicates of a given resource
-        
         # Extract the resource ID
         $ref=explode(" ",$search);
         $ref=str_replace("!duplicates","",$ref[0]);
@@ -1213,21 +1211,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         if ($ref!="") 
             {
-            $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
-            if($returnsql) {return $sql;}
-            $results=sql_query($sql,false,$fetchrows);
-            $count=count($results);
-            if ($count>1) 
+            # Find duplicates of a given resource
+            if (ctype_digit($ref)) 
                 {
-                return $results;
+                $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join 
+                    WHERE $sql_filter AND file_checksum <> '' AND file_checksum IS NOT NULL 
+                                      AND file_checksum = (SELECT file_checksum FROM resource WHERE ref=$ref AND (file_checksum <> '' AND file_checksum IS NOT NULL) ) 
+                    ORDER BY file_checksum, ref";    
+                if($returnsql) {return $sql;}
+                $results=sql_query($sql,false,$fetchrows);
+                $count=count($results);
+                if ($count>1) 
+                    {
+                    return $results;
+                    }
+                else 
+                    {
+                    return array();
+                    }
                 }
-            else 
+            else
                 {
-                return false;
+                # Given resource is not a valid identifier
+                return array();
                 }
             }
         else
             {
+            # Find all duplicate resources
             $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             }
