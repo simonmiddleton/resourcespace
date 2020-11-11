@@ -9,10 +9,12 @@ $lang['museumplus_api_pass'] = $lang['password'];
 
 $lang['museumplus_RS_settings_header'] = 'ResourceSpace settings';
 $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus identifier (MpID)';
+$lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules\' name for which the MpID is valid';
 $lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
 $lang['museumplus_cms_form_part'] = 'Specify which MuseumPlus form should be used for the URL that points to the Object module in MuseumPlus';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
 $lang['museumplus_search_match_field'] = 'The field that stores the MpID on MuseumPlus side';
+
 $lang['museumplus_script_header'] = 'Script settings';
 $lang['museumplus_last_run_date'] = '
 <div class="Question">
@@ -26,6 +28,12 @@ $lang['museumplus_enable_script'] = 'Enable MuseumPlus script';
 $lang['museumplus_interval_run'] = 'Run script at the following interval (e.g. +1 day, +2 weeks, fortnight). Leave blank and it will run everytime cron_copy_hitcount.php runs)';
 $lang['museumplus_log_directory'] = 'Directory to store script logs in. If this is left blank or is invalid then no logging will occur.';
 $lang['museumplus_integrity_check_field'] = 'Integrity check field';
+
+$lang['museumplus_media_sync_header'] = 'Media sync';
+$lang['museumplus_media_sync'] = 'Sync preview sizes with MuseumPlus? You can specify which ones to push from System > Image sizes area';
+$lang['museumplus_deciding_factor_field'] = 'Metadata field used as the deciding factor for syncing resource previews to MuseumPlus (must be a checkbox type with only one option)';
+
+
 $lang['museumplus_rs_mappings_header'] = 'MuseumPlus - ResourceSpace mappings';
 $lang['museumplus_add_mapping'] = 'Add mapping';
 $lang['museumplus_mplus_field_name'] = 'MuseumPlus field name';
@@ -39,3 +47,5 @@ $lang['museumplus_error_no_data_found'] = 'No data found in MuseumPlus for this 
 $lang['museumplus_warning_script_not_completed'] = "WARNING: The MuseumPlus script has not completed since '%script_last_ran'.\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.";
 $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\nphp museumplus_script.php --clear-lock";
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
+$lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
+

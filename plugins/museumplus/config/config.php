@@ -4,6 +4,7 @@ include_once dirname(__DIR__) . '/include/museumplus_functions.php';
 // Constants
 define('MPLUS_LOCK', 'museumplus_import');
 define('MPLUS_LAST_IMPORT', 'last_museumplus_import');
+define('MPLUS_MEDIA_MODULE_NAME', 'Multimedia'); # @see http://docs.zetcom.com/ws/
 
 
 // API
@@ -16,8 +17,10 @@ $museumplus_search_mpid_field = '';
 
 // ResourceSpace settings
 $museumplus_mpid_field = null;
+$museumplus_module_name_field = null;
 $museumplus_resource_types = array();
-$museumplus_cms_url_form_part = "";
+$museumplus_cms_url_form_part = ""; # drop this as M+ will not need this anymore
+
 
 // Script settings
 $museumplus_enable_script = true;
@@ -25,6 +28,12 @@ $museumplus_interval_run = ''; // see http://php.net/manual/en/datetime.formats.
 $museumplus_log_directory = '';
 $museumplus_script_failure_notify_days = 3;
 $museumplus_integrity_check_field = null; # not in use until we can reliably get integrity checks of the data from M+
+
+
+// Media syncing
+$museumplus_media_sync = false;
+$museumplus_deciding_factor_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
+
 
 // MuseumPlus - ResourceSpace mappings
 $museumplus_rs_saved_mappings = base64_encode(serialize(array()));

@@ -64,8 +64,8 @@ $page_def[] = config_add_text_input('museumplus_search_mpid_field', $lang['museu
 // ResourceSpace settings
 $page_def[] = config_add_section_header($lang['museumplus_RS_settings_header']);
 $page_def[] = config_add_single_ftype_select('museumplus_mpid_field', $lang['museumplus_mpid_field'], 420);
+$page_def[] = config_add_single_ftype_select('museumplus_module_name_field', $lang['museumplus_module_name_field'], 420, false, $FIXED_LIST_FIELD_TYPES);
 $page_def[] = config_add_multi_rtype_select('museumplus_resource_types', $lang['museumplus_resource_types'], 420);
-$page_def[] = config_add_text_input('museumplus_cms_url_form_part', $lang['museumplus_cms_form_part']);
 
 // Script settings
 $page_def[] = config_add_section_header($lang['museumplus_script_header']);
@@ -77,6 +77,11 @@ $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museu
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
 $page_def[] = config_add_text_input('museumplus_log_directory', $lang['museumplus_log_directory']);
 // $page_def[] = config_add_single_ftype_select('museumplus_integrity_check_field', $lang['museumplus_mpid_field'], 420); # not in use until we can reliably get integrity checks of the data from M+
+
+// Media sync
+$page_def[] = config_add_section_header($lang['museumplus_media_sync_header']);
+$page_def[] = config_add_boolean_select('museumplus_media_sync', $lang['museumplus_media_sync']);
+$page_def[] = config_add_single_ftype_select('museumplus_deciding_factor_field', $lang['museumplus_deciding_factor_field'], 420, false, array(FIELD_TYPE_CHECK_BOX_LIST));
 
 // MuseumPlus - ResourceSpace mappings
 $page_def[] = config_add_section_header($lang['museumplus_rs_mappings_header']);
@@ -107,7 +112,6 @@ foreach($museumplus_rs_mappings as $mplus_field_name => $mplus_rs_field)
         }
     $museumplus_rs_mappings_html .= '</select></td></tr>';
     }
-
 
 $museumplus_rs_mappings_html .= '
 <tr id ="newrow">
@@ -142,8 +146,7 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
-    $error = htmlspecialchars($error);
-    echo "<div class=\"PageInformal\">{$error}</div>";
+    render_top_page_error_style($error);
     }
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['museumplus_configuration']);
 ?>
