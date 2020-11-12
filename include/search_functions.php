@@ -1291,8 +1291,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($collectionsearchsql)
             {
             $searchsql=$collectionsearchsql;
-            }
-    
+            }    
 
         if($returnsql){return $searchsql;}
         

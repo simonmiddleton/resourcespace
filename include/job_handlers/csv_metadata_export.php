@@ -39,7 +39,7 @@ $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_fil
 
 $csvurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename . ".csv";
 
-generateResourcesMetadataCSV($search_results,$personaldata, $allavailable, $csvfile);
+generateResourcesMetadataCSV($exportresources,$personaldata, $allavailable, $csvfile);
 
 $jobsuccess = true;
 

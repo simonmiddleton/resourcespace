@@ -6,12 +6,12 @@
 /**
 * Generates the CSV content of the metadata for resources passed in the array
 *
-* @param array $resources (either an array of resource ids or an array returned from search results)
+* @param array $resources (array of resource ids)
 * @return string
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false,$outputfile="")
     {
-    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key;
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key, $get_resource_data_cache;
     
     // Write the CSV to a disk to avoid memory issues with large result sets
     $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "/csv_export_" . uniqid() . ".csv";
@@ -48,29 +48,31 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         {
         $resources_fields_data = array();
         $fullresdata = get_resource_field_data_batch($resourcebatches[$n],true,$k != '',true,$csvoptions);
-
+        
+        // Get data for all resources
+        $resource_data_array = get_resource_data_batch($resourcebatches[$n]);
         foreach($resourcebatches[$n] as $resource)
             {
-            $resdata = $resource;
-            if(checkperm("T" . $resdata["resource_type"]))
+            $resdata = isset($resource_data_array[$resource]) ? $resource_data_array[$resource] : false;
+            if(!$resdata || checkperm("T" . $resdata["resource_type"]))
                 {
                 continue;
                 }
 
             // Add resource type
             $restype = get_resource_type_name($resdata["resource_type"]);
-            $resources_fields_data[$resource['ref']]["resource_type"] = $restype;
+            $resources_fields_data[$resource]["resource_type"] = $restype;
             
             // Add contributor
             $udata=get_user($resdata["created_by"]);
             if ($udata!==false)
                 {
-                $resources_fields_data[$resource['ref']]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
                 }
 
             if ($alldata && $file_checksums)
                 {
-                $resources_fields_data[$resource['ref']]["file_checksum"] = $resdata["file_checksum"];
+                $resources_fields_data[$resource]["file_checksum"] = $resdata["file_checksum"];
                 }       
             foreach($allfields as $restypefield)
                 {
@@ -84,11 +86,11 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                         !(checkperm("T" . $restypefield["resource_type"]))
                     &&
                         (
-                        $restypefield["resource_type"] == $resource["resource_type"]
+                        $restypefield["resource_type"] == $resdata["resource_type"]
                         ||
-                        ($restypefield["resource_type"] == 0 && (bool)$resource_types[$resource["resource_type"]]["inherit_global_fields"])
+                        ($restypefield["resource_type"] == 0 && (bool)$resource_types[$resdata["resource_type"]]["inherit_global_fields"])
                         ||
-                        ($restypefield["resource_type"] == 999 && $resource["archive"] == 2)
+                        ($restypefield["resource_type"] == 999 && $resdata["archive"] == 2)
                         )
                     )
                     {
@@ -97,26 +99,26 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                         $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
                         }
                     // Check if the resource has a value for this field in the data retrieved
-                    $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource['ref']], 'ref'));
-                    $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource['ref']][$resdataidx]["value"] : "";
-                    $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
+                    $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource], 'ref'));
+                    $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource][$resdataidx]["value"] : "";
+                    $resources_fields_data[$resource][$restypefield['ref']] = $fieldvalue;
                     }
                 }
 
             /*Provide the original URL only if we have access to the resource or the user group
             doesn't have restricted access to the original size*/
-            $access = get_resource_access($resource);
-            if(0 != $access || checkperm("T{$resource['resource_type']}_"))
+            $access = get_resource_access($resdata);
+            if(0 != $access || checkperm("T{$resdata['resource_type']}_"))
                 {
                 continue;
                 }
             if($csv_export_add_original_size_url_column)
                 {
-                $filepath      = get_resource_path($resource['ref'], true, '', false, $resource['file_extension'], -1, 1, false, '', -1, false);
-                $original_link = get_resource_path($resource['ref'], false, '', false, $resource['file_extension'], -1, 1, false, '', -1, false);
+                $filepath      = get_resource_path($resource, true, '', false, $resdata['file_extension'], -1, 1, false, '', -1, false);
+                $original_link = get_resource_path($resource, false, '', false, $resdata['file_extension'], -1, 1, false, '', -1, false);
                 if(file_exists($filepath))
                     {
-                    $resources_fields_data[$resource['ref']]['original_link'] = $original_link;
+                    $resources_fields_data[$resource]['original_link'] = $original_link;
                     }
                 }
             }

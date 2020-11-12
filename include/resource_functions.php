@@ -366,8 +366,8 @@ function get_resource_data($ref,$cache=true)
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
-    truncate_cache_arrays();
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
+    truncate_cache_arrays();
     $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
@@ -404,6 +404,30 @@ function get_resource_data($ref,$cache=true)
         {
         return false;
         }
+    }
+
+
+
+/**
+ * get_resource_data_batch - get data from resource table for all resource IDs
+ *
+ * @param  mixed $refs - array of resource IDs
+ * @return array
+ */
+function get_resource_data_batch($refs)
+    {
+    global $get_resource_data_cache;
+    truncate_cache_arrays();
+    $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
+    $resdata=sql_query("SELECT *,mapzoom,lock_user FROM resource WHERE ref IN ('" . implode("','",$resids)  . "')");
+    // Create array with resource ID as index
+    $resource_data = array();
+    foreach($resdata as $resdatarow)
+       {
+       $resource_data[$resdatarow["ref"]] = $resdatarow;
+       $get_resource_data_cache[$resdatarow["ref"]] = $resdatarow;
+       }
+    return $resource_data;
     }
 
 /**

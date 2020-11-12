@@ -18,15 +18,8 @@ $submitted  = getval("submit","") != "";
 $personaldata   = (getvalescaped('personaldata', '') != '');
 $allavailable    = (getvalescaped('allavailable', '') != '');
 
-if ($allavailable && $file_checksums)
-    {
-    // We need full data, not just resource IDs
-    $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch);
-    }
-else
-    {
-    $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
-    }
+$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
+
 $resultcount = is_array($search_results) ? count($search_results) : 0;
 if($resultcount == 0)
     {
@@ -46,7 +39,7 @@ if($submitted && $resultcount > 0)
         $job_data=array();
         $job_data["personaldata"]   = $personaldata;
         $job_data["allavailable"]   = $allavailable;
-        $job_data["search_results"] = $search_results;
+        $job_data["exportresources"]= array_column($search_results,"ref");
         $job_data["search"]         = $search;
         $job_data["restypes"]       = $restypes;
         $job_data["archive"]        = $archive;
