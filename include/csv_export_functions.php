@@ -11,13 +11,16 @@
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false,$outputfile="")
     {
-    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k;
-    $return                 = '';
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key;
+    
+    // Write the CSV to a disk to avoid memory issues with large result sets
+    $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "csv_export_" . uniqid() . "csv";
+
     $csv_field_headers      = array();
-    $resources_fields_data  = array();
     $csvoptions = array("csvexport"=>true,"personal"=>$personal,"alldata"=>$alldata);
     $allfields = get_resource_type_fields("","order_by","asc");
-
+    $cache_location=get_query_cache_location();
+    $cache_data = array();
     $restypearr = get_resource_types();
     $resource_types = array();
     // Sort into array with ids as keys
@@ -41,16 +44,13 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     // Array to store fields that have data, if no data we won't include it
     $include_fields = array();
 
-    foreach ($resourcebatches as $resourcebatch)
+    for($n=0;$n<count($resourcebatches);$n++)
         {
-        memdebug();       
-
-        $fullresdata = get_resource_field_data_batch($resourcebatch,true,$k != '',true,$csvoptions);
-
-        foreach($resourcebatch as $resource)
+        $resources_fields_data = array();
+        $fullresdata = get_resource_field_data_batch($resourcebatches[$n],true,$k != '',true,$csvoptions);
+        foreach($resourcebatches[$n] as $resource)
             {
             $resdata = $resource;
-            debug("BANG processing resource - " . $resource["ref"]);
             if(checkperm("T" . $resdata["resource_type"]))
                 {
                 continue;
@@ -91,19 +91,16 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                         )
                     )
                     {
-                    $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
+                    if(!isset($csv_field_headers[$restypefield["ref"]]))
+                        {
+                        $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
+                        }
                     // Check if the resource has a value for this field in the data retrieved
                     $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource['ref']], 'ref'));
                     $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource['ref']][$resdataidx]["value"] : "";
                     $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
                     }
                 }
-
-            // // Add original size URL column values
-            // if(!$csv_export_add_original_size_url_column)
-            //     {
-            //     continue;
-            //     }
 
             /*Provide the original URL only if we have access to the resource or the user group
             doesn't have restricted access to the original size*/
@@ -122,52 +119,69 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                     }
                 }
             }
+
+        // Save data to temporay files in order to prevent memory limits being reached
+        $tempjson = json_encode($resources_fields_data);
+        $cache_data[$n] = $cache_location . "/csv_export_" . md5($scramble_key . $tempjson) . ".json"; // Scrambled path to cache
+        file_put_contents($cache_data[$n], $tempjson);
+        $tempjson = null;
         }
    
     $csv_field_headers = array_unique($csv_field_headers);
 
     // Header
-    $return = '"' . $lang['resourceids'] . '","' . implode('","', $csv_field_headers) . "\"\n";
+    $header = '"' . $lang['resourceids'] . '","' . implode('","', $csv_field_headers) . '"\n';
+    file_put_contents($tempcsv,$header);
 
     // Results
-    $csv_row = '';
-    foreach($resources_fields_data as $resource_id => $resource_fields)
+    for($n=0;$n<count($resourcebatches);$n++)
         {
-        // First column will always be Resource ID
-        $csv_row = $resource_id . ',';
-
-        // Field values
-        foreach($csv_field_headers as $column_header => $column_header_title)
+        $filedata = "";
+        $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
+        foreach($resources_fields_data as $resource_id => $resource_fields)
             {
-            if(!array_key_exists($column_header, $resource_fields))
-                {
-                $csv_row .= '"",';
-                continue;
-                }
+            // First column will always be Resource ID
+            $csv_row = $resource_id . ',';
 
-            foreach($resource_fields as $field_name => $field_value)
+            // Field values
+            foreach($csv_field_headers as $column_header => $column_header_title)
                 {
-                if($column_header == $field_name)
+                if(!array_key_exists($column_header, $resource_fields))
                     {
-                    $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
+                    $csv_row .= '"",';
+                    continue;
+                    }
+
+                foreach($resource_fields as $field_name => $field_value)
+                    {
+                    if($column_header == $field_name)
+                        {
+                        $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
+                        }
                     }
                 }
+            
+            $csv_row = rtrim($csv_row, ',');
+            $csv_row .= "\n";
+            $filedata .= $csv_row;
             }
         
-        $csv_row = rtrim($csv_row, ',');
-        $csv_row .= "\n";
-        $return  .= $csv_row;
-        }
-        
+        // Add this data to the file and delete disk copy of array
+        $csvhandle = fopen($tempcsv,"a");
+        fwrite($csvhandle, $filedata);
+        fclose($csvhandle);
+        unlink($cache_data[$n]);
+        }        
+    
     if($outputfile != "")
         {
-        file_put_contents($outputfile, $return);
+        // Data has been saved to file, just return
         return true;
         }
 
-    return $return;
+    // Echo the data for immediate download
+    echo file_get_contents($tempcsv);
     }
-
 
 /**
 * Generates the file content when exporting nodes
@@ -209,32 +223,3 @@ function generateNodesExport(array $field, $parent = null, $send_headers = false
 
     return $return;
     }
-
-
-function memdebug()
-    {
-     debug("BANG: Memory usage from <em>memory_get_usage()</em>: " . round(memory_get_usage(true) / 1024) . "KB");
-     debug("BANG: Memory usage from <em>tasklist</em>: " . round(memory_get_process_usage(true) / 1024) . "KB");
-
-    }
-
- 
-/**
- * Returns memory usage from /proc<PID>/status in bytes.
- *
- * @return int|bool sum of VmRSS and VmSwap in bytes. On error returns false.
- */
-function memory_get_process_usage()
-{
-    $status = file_get_contents('/proc/' . getmypid() . '/status');
-    
-    $matchArr = array();
-    preg_match_all('~^(VmRSS|VmSwap):\s*([0-9]+).*$~im', $status, $matchArr);
-    
-    if(!isset($matchArr[2][0]) || !isset($matchArr[2][1]))
-    {
-        return false;
-    }
-    
-    return intval($matchArr[2][0]) + intval($matchArr[2][1]);
-}

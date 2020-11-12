@@ -44,6 +44,22 @@ if(!is_array($job_details) || count($job_details) == 0)
                     if($name =="job_data")
                         {
                         $job_data= json_decode($value, true);
+                        foreach($job_data as $job_data_name => &$job_data_value)
+                            {
+                            if(is_array($job_data_value) && count($job_data_value) > 100)
+                                {
+                                $job_data_short = array();
+                                $job_data_count = count($job_data_value);
+                                $job_data_short[$job_data_name] = array_slice($job_data_value,0,10);
+                                $job_data_short["(additional elements)"] = $job_data_count . " total elements";
+                                $job_data_value = $job_data_short;
+                                }
+                            elseif(strlen($job_data_value) > 100)
+                                {
+                                // If a job data element is e.g. a search result set it can be very large
+                                $job_data_value = mb_strcut($job_data_value,0,100);
+                                }
+                            }
                         render_array_in_table_cells($job_data);
                         }
                     else

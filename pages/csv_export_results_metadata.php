@@ -15,7 +15,6 @@ $sort       = getvalescaped('sort', '');
 $starsearch = getvalescaped('starsearch', '');
 $offline    = getval("process_offline","") != "";
 $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
-
 $resultcount = is_array($search_results) ? count($search_results) : 0;
 if($resultcount == 0)
     {
@@ -26,22 +25,26 @@ if(getval("submit","") != "" && $resultcount > 0)
     {
     $personaldata   = (getvalescaped('personaldata', '') != '');
     $allavailable    = (getvalescaped('allavailable', '') != '');
-    
+
+    $findstrings = array("%%SEARCH%%","%%TIME%%");
+    $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
+    $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
+   
     if($offline || $resultcount > $metadata_export_offline_limit)
         {
         // Generate offline job 
         $job_data=array();
         $job_data["personaldata"]   = $personaldata;
         $job_data["allavailable"]   = $allavailable;
+        $job_data["search_results"] = $search_results;
         $job_data["search"]         = $search;
         $job_data["restypes"]       = $restypes;
-        $job_data["order_by"]       = $order_by;
         $job_data["archive"]        = $archive;
         $job_data["sort"]           = $sort;
         $job_data["starsearch"]     = $starsearch;
 
         $job_code = "csv_metadata_export_" . md5($userref . json_encode($job_data)); // unique code for this job, used to prevent duplicate job creation.
-        $jobadded = job_queue_add("csv_metadata_export",$job_data,$userref,'',$lang["download_file_created"],$lang["download_file_creation_failed"],$job_code);
+        $jobadded = job_queue_add("csv_metadata_export",$job_data,$userref,'',$lang["csv_export_file_ready"] . " : " . $csv_filename ,$lang["download_file_creation_failed"],$job_code);
         if((string)(int)$jobadded !== (string)$jobadded)
             {
             $message = $lang["oj-creation-failure-text"];
@@ -58,7 +61,7 @@ if(getval("submit","") != "" && $resultcount > 0)
         if (!hook('csvreplaceheader'))
             {
             header("Content-type: application/octet-stream");
-            header("Content-disposition: attachment; filename=search_results_metadata.csv");
+            header("Content-disposition: attachment; filename=" . $csv_filename  . ".csv");
             }
         
         generateResourcesMetadataCSV($search_results,$personaldata, $allavailable);
