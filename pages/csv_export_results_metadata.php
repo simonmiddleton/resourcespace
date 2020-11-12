@@ -67,7 +67,7 @@ if($submitted && $resultcount > 0)
             header("Content-disposition: attachment; filename=" . $csv_filename  . ".csv");
             }
         
-        generateResourcesMetadataCSV($search_results,$personaldata, $allavailable);
+        generateResourcesMetadataCSV(array_column($search_results,"ref"),$personaldata, $allavailable);
         exit();   
         } 
     }
