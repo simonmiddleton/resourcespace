@@ -30,7 +30,6 @@ else
     return;
     }
 
-//$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch);
 $randstring = md5(json_encode($job_data));
 $csvfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . $randstring . $scramble_key) . ".csv";
 

@@ -14,7 +14,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key;
     
     // Write the CSV to a disk to avoid memory issues with large result sets
-    $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "csv_export_" . uniqid() . "csv";
+    $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "/csv_export_" . uniqid() . ".csv";
 
     $csv_field_headers      = array();
     $csvoptions = array("csvexport"=>true,"personal"=>$personal,"alldata"=>$alldata);
@@ -48,6 +48,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         {
         $resources_fields_data = array();
         $fullresdata = get_resource_field_data_batch($resourcebatches[$n],true,$k != '',true,$csvoptions);
+
         foreach($resourcebatches[$n] as $resource)
             {
             $resdata = $resource;
@@ -130,7 +131,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     $csv_field_headers = array_unique($csv_field_headers);
 
     // Header
-    $header = '"' . $lang['resourceids'] . '","' . implode('","', $csv_field_headers) . '"\n';
+    $header = "\"" . $lang['resourceids'] . "\",\"" . implode('","', $csv_field_headers) . "\"\n";
     file_put_contents($tempcsv,$header);
 
     // Results
@@ -167,9 +168,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             }
         
         // Add this data to the file and delete disk copy of array
-        $csvhandle = fopen($tempcsv,"a");
-        fwrite($csvhandle, $filedata);
-        fclose($csvhandle);
+        file_put_contents($tempcsv,$filedata, FILE_APPEND);
         unlink($cache_data[$n]);
         }        
     

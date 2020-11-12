@@ -1976,7 +1976,7 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
             {
             $results[$noderow["resource"]][$noderow["resource_type_field"]] = array();
             }
-        
+
         $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
             "ref"                   => $noderow["ref"],
             "resource_type_field"   => $noderow["resource_type_field"],

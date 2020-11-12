@@ -14,17 +14,27 @@ $archive    = getvalescaped('archive', '');
 $sort       = getvalescaped('sort', '');
 $starsearch = getvalescaped('starsearch', '');
 $offline    = getval("process_offline","") != "";
-$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
+$submitted  = getval("submit","") != "";
+$personaldata   = (getvalescaped('personaldata', '') != '');
+$allavailable    = (getvalescaped('allavailable', '') != '');
+
+if ($allavailable && $file_checksums)
+    {
+    // We need full data, not just resource IDs
+    $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch);
+    }
+else
+    {
+    $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
+    }
 $resultcount = is_array($search_results) ? count($search_results) : 0;
 if($resultcount == 0)
     {
     $error = $lang["noresourcesfound"]; 
     }
 
-if(getval("submit","") != "" && $resultcount > 0)
+if($submitted && $resultcount > 0)
     {
-    $personaldata   = (getvalescaped('personaldata', '') != '');
-    $allavailable    = (getvalescaped('allavailable', '') != '');
 
     $findstrings = array("%%SEARCH%%","%%TIME%%");
     $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
@@ -99,13 +109,13 @@ elseif (isset($message))
 
         <div class="Question" id="question_personal">
             <label for="personaldata"><?php echo htmlspecialchars($lang['csvExportResultsMetadataPersonal']) ?></label>
-            <input name="personaldata" id="personaldata" type="checkbox" value="true" style="margin-top:7px;"> 
+            <input name="personaldata" id="personaldata" type="checkbox" value="true" style="margin-top:7px;" <?php if($personaldata){echo " checked ";} ?>> 
             <div class="clearerleft"> </div>
         </div>
         
         <div class="Question" id="question_personal">
             <label for="allavailable"><?php echo htmlspecialchars($lang['csvExportResultsMetadataAll']) ?></label>
-            <input name="allavailable" id="allavailable" type="checkbox" value="true" style="margin-top:7px;"> 
+            <input name="allavailable" id="allavailable" type="checkbox" value="true" style="margin-top:7px;" <?php if($allavailable){echo " checked ";} ?>> 
             <div class="clearerleft"> </div>
         </div>
 
@@ -114,7 +124,7 @@ elseif (isset($message))
             <?php 
             if($offline_job_queue)
                 {
-                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='return false;' checked" : "") . ">";
+                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='return false;' checked" : ($submitted && !$offline ? "" : " checked ")) . ">";
                 }
             else
                 {
