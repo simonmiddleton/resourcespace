@@ -33,7 +33,11 @@ if(!collection_readable($ref))
     {
     exit($lang["no_access_to_collection"]);
     }
-else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+else if(
+    $collection["type"] == COLLECTION_TYPE_FEATURED
+    && !featured_collection_check_access_control((int) $collection["ref"])
+    && !allow_featured_collection_share($collection)
+)
     {
     exit(error_alert($lang["error-permissiondenied"], true, 403));
     }
@@ -80,12 +84,12 @@ else if(is_featured_collection_category($collection))
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
     if(empty($fc_resources))
         {
-        $show_error = true;
-        $error = $lang["cannotshareemptythemecategory"];
+        exit(error_alert($lang["cannotshareemptythemecategory"], true, 200));
         }
 
     // Further checks at collection-resource level. Recurse through category's sub FCs
     $collection["sub_fcs"] = get_featured_collection_categ_sub_fcs($collection);
+    $collectionstates = false;
     $sub_fcs_resources_states = array();
     $sub_fcs_resources_minaccess = array();
     foreach($collection["sub_fcs"] as $sub_fc)

@@ -4346,7 +4346,7 @@ function render_featured_collections(array $ctx, array $items)
                     "text" => $lang["add_to_dash"]);
                 }
 
-            if(checkperm("h") && allow_featured_collection_share($fc))
+            if(checkperm("h"))
                 {
                 $render_ctx["tools"][] = array(
                     "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
