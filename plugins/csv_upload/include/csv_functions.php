@@ -116,7 +116,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 	while ((($line=fgetcsv($file))!==false) && ($error_count<$max_error_count || $max_error_count==0))
 		{
         $line_count++;
-		if (!$processcsv && count($line) != count($headers))	// check that the current row has the correct number of columns
+		if (count($line) != count($headers))	// check that the current row has the correct number of columns
 			{
             $logtext = "Error: Incorrect number of columns(" . count($line) . ") found on line " . $line_count . " (should be " . count($headers) . ")";
             csv_upload_log($logfile,$logtext);
