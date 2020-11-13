@@ -1606,7 +1606,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 
                 if($sql_filter_properties != "")
                     {
-                    $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                    if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+                        {
+                        $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                        }
                     if ($sql_filter == "")
                         {
                         $sql_filter .= " WHERE " . $sql_filter_properties;
