@@ -1497,15 +1497,17 @@ function is_field_displayed($field)
     {
     global $ref, $resource, $upload_review_mode;
 
-    # Field is an archive only field
+    # Conditions under which the field is not displayed
     return !(
+        # Field is an archive only field
         (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
-        # Field has write access denied
-        || (checkperm("F*") && !checkperm("F-" . $field["ref"])
-        && !($ref < 0 && checkperm("P" . $field["ref"])))
+        # Field does not have individual write access allowed; and does not have edit access allowed on upload
+        || (checkperm("F*") && !checkperm("F-" . $field["ref"]) && !($ref < 0 && checkperm("P" . $field["ref"])))
+        # Field has write access denied directly
         || checkperm("F" . $field["ref"])
-        # Upload only field
-        || (($ref < 0 || $upload_review_mode) && $field["hide_when_uploading"] && $field["required"]==0)
+        # Field is hidden on upload
+        || (($ref < 0 || $upload_review_mode) && $field["hide_when_uploading"])
+        # Other field conditions
         || hook('edithidefield', '', array('field' => $field))
         || hook('edithidefield2', '', array('field' => $field)));
     }
