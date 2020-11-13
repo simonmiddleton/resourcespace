@@ -6837,7 +6837,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         }
     else
         {
-        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false);
+        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false,true);
         if(!$uploadstatus)
             {
             debug("replace_resource_file - upload_file() failed");
