@@ -495,18 +495,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     }
                 }
 
-              // important! we trim values, as options may contain a space after the comma
-			//echo "Found value for " . $field_name . ": " . $cell_value . "<br>";
-            if (array_key_exists($column_id,$line))
-                {
-                $cell_value=trim($line[$column_id]);
-                }		
-            else
-                {
-                $cell_value="";
-                }
-
-            $cell_count++;
+                $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
+                //echo "Found value for " . $field_name . ": " . $cell_value . "<br>";
 
             // Raise error if it's a required field and has an empty or null value
             if (in_array($cell_value,  array(null,"") ))
