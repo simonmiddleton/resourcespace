@@ -1603,24 +1603,23 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                         $sql_filter_properties .= $sql_filter_properties_and .  $orientation_filters[$propertyval];
                     break;
                     }
-                
-                if($sql_filter_properties != "")
-                    {
-                    if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
-                        {
-                        $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
-                        }
-                    if ($sql_filter == "")
-                        {
-                        $sql_filter .= " WHERE " . $sql_filter_properties;
-                        }
-                    else
-                        {
-                        $sql_filter .= " AND " . $sql_filter_properties;
-                        }
-                    }
                 }
             }
+        if($sql_filter_properties != "")
+        {
+        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+            {
+            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            }
+        if ($sql_filter == "")
+            {
+            $sql_filter .= " WHERE " . $sql_filter_properties;
+            }
+        else
+            {
+            $sql_filter .= " AND " . $sql_filter_properties;
+            }
+        }
 
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
 
