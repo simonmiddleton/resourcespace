@@ -29,7 +29,11 @@ if(!collection_readable($ref))
     {
     exit($lang["no_access_to_collection"]);
     }
-else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+else if(
+    $collection["type"] == COLLECTION_TYPE_FEATURED
+    && !featured_collection_check_access_control((int) $collection["ref"])
+    && !allow_featured_collection_share($collection)
+)
     {
     exit(error_alert($lang["error-permissiondenied"], true, 403));
     }
@@ -64,6 +68,7 @@ if(is_featured_collection_category($collection))
         $sub_fcs = array_values(array_column($sub_fcs, "ref"));
         }
     $collection["sub_fcs"] = $sub_fcs;
+    $collectionstates = false;
     $sub_fcs_resources_states = array();
     $sub_fcs_resources_minaccess = array();
     foreach($collection["sub_fcs"] as $sub_fc)

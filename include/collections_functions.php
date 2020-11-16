@@ -2191,7 +2191,9 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
             $all_fcs[$fc]['has_resources'] > 0
             && (
                 $allowed_fcs === true
-                || is_array($allowed_fcs) && !isset($allowed_fcs_flipped[$fc])))
+                || (is_array($allowed_fcs) && isset($allowed_fcs_flipped[$fc]))
+            )
+        )
             {
             $collections[] = $fc;
             }
