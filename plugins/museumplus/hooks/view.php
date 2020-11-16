@@ -27,7 +27,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
 
             $sec_link_parts = explode(':', $sec_link_str);
             $sec_link_module = (isset($sec_link_parts[0]) ? $sec_link_parts[0] : '');
-            $sec_link_id = (isset($sec_link_parts[1]) ? $sec_link_parts[1] : 0);
+            $sec_link_id = (isset($sec_link_parts[1]) && is_numeric($sec_link_parts[1]) ? $sec_link_parts[1] : 0);
 
             $mplus_module_record_url = mplus_generate_module_record_url($sec_link_module, (int) $sec_link_id);
 
@@ -78,7 +78,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
 
         $value = highlightkeywords($museumplus_mpid_field, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
 
-        $mplus_object_url = mplus_generate_module_record_url($resource_module_name, $museumplus_mpid_field);
+        $mplus_object_url = (is_numeric($museumplus_mpid_field) ? mplus_generate_module_record_url($resource_module_name, $museumplus_mpid_field) : '');
         ?>
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($field['title']); ?></h3>
