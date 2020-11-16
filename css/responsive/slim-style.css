@@ -374,7 +374,7 @@ body {
         border: #1378BF;        
     }
 }
-@media(max-width:900px) {
+@media(max-width:990px) {
     #HeaderButtons {
         padding-left:150px;
     }
@@ -387,7 +387,7 @@ body {
         background:none!important;
     }
 }
-@media(max-width:575px) {
+@media(max-width:640px) {
     #HeaderButtons .rbText{
         display:none;
     }
@@ -424,10 +424,11 @@ body {
         margin-left: 10px;
     }
 }
-@media(max-width:380px) {
+@media(max-width:384px) {
     #HeaderImg {
         max-width: 160px;
         margin-top: 5px;
+        margin-right: 250px;        
         height:auto;
     }
 }
