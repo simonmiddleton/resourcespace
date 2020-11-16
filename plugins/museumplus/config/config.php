@@ -18,6 +18,9 @@ $museumplus_search_mpid_field = '';
 // ResourceSpace settings
 $museumplus_mpid_field = null;
 $museumplus_module_name_field = null;
+// Field to hold extra secondary links. RS will just generate appropriate M+ URLs based on each link. Secondary links 
+// have a special syntax format: <module name>:<technical ID> e.g. "Object:1234".
+$museumplus_secondary_links_field = null;
 $museumplus_resource_types = array();
 $museumplus_cms_url_form_part = ""; # drop this as M+ will not need this anymore
 
@@ -32,7 +35,7 @@ $museumplus_integrity_check_field = null; # not in use until we can reliably get
 
 // Media syncing
 $museumplus_media_sync = false;
-$museumplus_deciding_factor_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
+$museumplus_media_sync_df_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
 
 
 // MuseumPlus - ResourceSpace mappings

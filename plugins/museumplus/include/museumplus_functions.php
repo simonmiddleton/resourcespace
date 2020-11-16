@@ -299,3 +299,33 @@ function get_museumplus_resources()
 
     return $found_resources;
     }
+
+/**
+* Generate a MuseumPlus URL for any module records without having to know the form name
+* 
+* @param string  $module Module name
+* @param integer $id     Module record technical (internal) ID
+* 
+* @return string Returns the generated URL or empty string on failure
+*/
+function mplus_generate_module_record_url(string $module, int $id)
+    {
+    global $museumplus_host, $museumplus_application;
+
+    $host = trim($museumplus_host);
+    $application = trim($museumplus_application);
+    $module = trim($module);
+    $id = ($id > 0 ? $id : '');
+
+    if($host == '' || $application == '' || $module == '' || $id == '')
+        {
+        return '';
+        }
+
+    return sprintf('%s/%s/v#!m/%s/%s',
+        $host,
+        $application,
+        htmlspecialchars($module),
+        htmlspecialchars($id));
+    }
+

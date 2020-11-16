@@ -65,6 +65,17 @@ $page_def[] = config_add_text_input('museumplus_search_mpid_field', $lang['museu
 $page_def[] = config_add_section_header($lang['museumplus_RS_settings_header']);
 $page_def[] = config_add_single_ftype_select('museumplus_mpid_field', $lang['museumplus_mpid_field'], 420);
 $page_def[] = config_add_single_ftype_select('museumplus_module_name_field', $lang['museumplus_module_name_field'], 420, false, $FIXED_LIST_FIELD_TYPES);
+$page_def[] = config_add_single_ftype_select(
+    'museumplus_secondary_links_field',
+    $lang['museumplus_secondary_links_field'],
+    420,
+    false,
+    array(
+        FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+        FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+        FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+    )
+);
 $page_def[] = config_add_multi_rtype_select('museumplus_resource_types', $lang['museumplus_resource_types'], 420);
 
 // Script settings
@@ -81,7 +92,7 @@ $page_def[] = config_add_text_input('museumplus_log_directory', $lang['museumplu
 // Media sync
 $page_def[] = config_add_section_header($lang['museumplus_media_sync_header']);
 $page_def[] = config_add_boolean_select('museumplus_media_sync', $lang['museumplus_media_sync']);
-$page_def[] = config_add_single_ftype_select('museumplus_deciding_factor_field', $lang['museumplus_deciding_factor_field'], 420, false, array(FIELD_TYPE_CHECK_BOX_LIST));
+$page_def[] = config_add_single_ftype_select('museumplus_media_sync_df_field', $lang['museumplus_media_sync_df_field'], 420, false, array(FIELD_TYPE_CHECK_BOX_LIST));
 
 // MuseumPlus - ResourceSpace mappings
 $page_def[] = config_add_section_header($lang['museumplus_rs_mappings_header']);
