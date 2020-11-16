@@ -4220,3 +4220,75 @@ function trim_filename(string $s)
 
     return $s;
     }
+
+/**
+* Flip array keys to use one of the keys of the values it contains. All elements (ie values) of the array must contain 
+* the key (ie. they are arrays). Helper function to greatly increase search performance on huge PHP arrays.
+* 
+* IMPORTANT: make sure that for the key you use all elements have a unique value set.
+* 
+* Example: Result after calling array_flip_by_value_key($nodes, 'ref');
+*     [20382] => Array
+*         (
+*             [ref] => 20382
+*             [name] => Example node
+*             [parent] => 20381
+*         )
+* 
+* @param array  $a
+* @param string $k A values' key to use as an index/key in the main array, ideally an integer
+* 
+* @return array
+*/
+function array_flip_by_value_key(array $a, string $k)
+    {
+    $return = array();
+    foreach($a as $val)
+        {
+        $return[$val[$k]] = $val;
+        }
+    return $return;
+    }
+
+/**
+* Reshape array using the keys of its values. All values must contain the selected keys.
+* 
+* @param array  $a Array to reshape
+* @param string $k The current elements' key to be used as the KEY in the new array. MUST be unique otherwise elements will be lost
+* @param string $v The current elements' key to be used as the VALUE in the new array
+* 
+* @return array
+*/
+function reshape_array_by_value_keys(array $a, string $k, string $v)
+    {
+    $return = array();
+    foreach($a as $val)
+        {
+        $return[$val[$k]] = $val[$v];
+        }
+    return $return;
+    }
+
+/**
+* Permission check for "j[ref]"
+* 
+* @param integer $ref Featured collection category ref
+* 
+* @return boolean
+*/
+function permission_j(int $ref)
+    {
+    return checkperm("j{$ref}");
+    }
+
+/**
+* Permission check for "-j[ref]"
+* 
+* @param integer $ref Featured collection sub-category ref
+* 
+* @return boolean
+*/
+function permission_negative_j(int $ref)
+    {
+    return checkperm("-j{$ref}");
+    }

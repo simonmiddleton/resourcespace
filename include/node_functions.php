@@ -1833,3 +1833,93 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         }
     return $nodestrings;
     }
+
+/**
+* Get to the root of the branch starting from a node.
+* 
+* IMPORTANT: the term nodes here is generic, it refers to a tree node structure containing at least ref and parent
+* 
+* @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "ref" index)
+* @param  integer  $id     Node ref we compute the branch path for
+* @param  array    $carry  Branch structure data which is carried forward. List of nodes, first item is the ROOT node
+* 
+* @return array Branch path structure starting from root to the searched node
+*/
+function compute_node_branch_path(array $nodes, int $id)
+    {
+    if(empty($nodes))
+        {
+        return array();
+        }
+
+    global $NODE_BRANCH_PATHS_CACHE;
+    $NODE_BRANCH_PATHS_CACHE = (!is_null($NODE_BRANCH_PATHS_CACHE) && is_array($NODE_BRANCH_PATHS_CACHE) ? $NODE_BRANCH_PATHS_CACHE : array());
+    // create a unique ID for this list of nodes since these can be used for anything
+    $nodes_list_id = md5(json_encode($nodes));
+
+    if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
+        {
+        return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+        }
+
+    $found_node_index = array_search($id, array_column($nodes, 'ref'));
+    if($found_node_index === false)
+        {
+        return array();
+        }
+
+    $node = $nodes[$found_node_index];
+    $node_parent = (isset($node["parent"]) && $node["parent"] > 0 ? (int) $node["parent"] : null);
+
+    $path = array($node);
+    while(!is_null($node_parent))
+        {
+        $id = $node_parent;
+        if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
+            {
+            return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+            }
+
+        $found_node_index = array_search($id, array_column($nodes, 'ref'));
+        if($found_node_index === false)
+            {
+            break;
+            }
+
+        $node = $nodes[$found_node_index];
+        $node_parent = (isset($node["parent"]) && $node["parent"] > 0 ? (int) $node["parent"] : null);
+
+        $path[] = $node;
+        }
+
+    $path_reverse = array_reverse($path);
+    $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id] = $path_reverse;
+
+    return $path_reverse;
+    }
+
+/**
+* Find all nodes with parent
+* 
+* @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "parent" index)
+* @param  integer  $id     Parent node ref to search by
+* 
+* @return array
+*/
+function compute_nodes_by_parent(array $nodes, int $id)
+    {
+    $found_nodes_keys = array_keys(array_column($nodes, 'parent'), $id);
+
+    $result = array();
+    foreach($found_nodes_keys as $nodes_key)
+        {
+        if(!isset($nodes[$nodes_key]))
+            {
+            continue;
+            }
+
+        $result[] = $nodes[$nodes_key];
+        }
+
+    return $result;
+    }

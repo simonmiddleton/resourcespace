@@ -2,9 +2,23 @@
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // Test to ensure that J permission blocks access to resources that are outside public collections that the user has access to.
 
+$clear_relevant_caches = function()
+    {
+    global $CACHE_FC_ACCESS_CONTROL, $CACHE_FC_CATEG_SUB_FCS, $CACHE_FC_PERMS_FILTER_SQL, $CACHE_FCS_BY_ROOT, $CACHE_FC_RESOURCES;
+
+    $CACHE_FC_ACCESS_CONTROL = null;
+    $CACHE_FC_PERMS_FILTER_SQL = null;
+    $CACHE_FC_CATEG_SUB_FCS = null;
+    $CACHE_FCS_BY_ROOT = null;
+    $CACHE_FC_RESOURCES = null;
+
+    clear_query_cache("featured_collections");
+    };
+
 $saved_userref = $userref;
 $userref = 999; 
 $savedpermissions = $userpermissions;
+$clear_relevant_caches();
 
 
 // Create 5 new resources
@@ -66,6 +80,7 @@ add_resource_to_collection($resourced,$spring);
 // ----- Access to all themes and access to resources not in themes -----
 // All resources should be shown
 $userpermissions = array('s','j*');
+$clear_relevant_caches();
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -84,6 +99,7 @@ if (!is_array($results)
 // ----- Access to all themes and no access to resources not in themes -----
 // Resources a,b,c,d should be shown
 $userpermissions = array('s','j*','J');
+$clear_relevant_caches();
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -102,6 +118,7 @@ if (!is_array($results)
 // ----- Access to Mountains themes and no access to resources not in themes -----
 // Resource a,b should be shown
 $userpermissions = array('s', "j{$fc_cat_mountains}",'J');
+$clear_relevant_caches();
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -120,6 +137,7 @@ if (!is_array($results)
 // ----- Access to Mountains but not Cuillin subtheme and no access to resources not in themes -----
 // Resource a should be shown
 $userpermissions = array('s', "j{$fc_cat_mountains}", "-j{$fc_cat_cuillin}"/*,'jMountains','j-Mountains|Cuillin'*/,'J');
+$clear_relevant_caches();
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -135,7 +153,8 @@ if (!is_array($results)
 // END SUBTEST D
 
 
-//End of tests
-
+//Teardown
 $userref = $saved_userref;
 $userpermissions = $savedpermissions;
+$clear_relevant_caches();
+unset($clear_relevant_caches);

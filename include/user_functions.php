@@ -1735,7 +1735,7 @@ function check_access_key_collection($collection, $key)
     foreach($collections as $collection_ref)
         {
         $resources_alt = hook("GetResourcesToCheck","",array($collection));
-        $resources = ($resources_alt !== false ? $resources_alt : get_collection_resources($collection_ref));
+        $resources = (is_array($resources_alt) && !empty($resources_alt) ? $resources_alt : get_collection_resources($collection_ref));
 
         if(!check_access_key($resources, $key))
             {
