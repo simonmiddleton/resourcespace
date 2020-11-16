@@ -88,6 +88,13 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
                 {
                 $coldata["bg_img_resource_ref"] = $bg_img_resource_ref;
                 }
+            // If invalid bg_img_resource_ref or no full access to resource, then don't submit the change
+            else if($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+                {
+                $reset_thumbnail_selection_method = (isset($collection['thumbnail_selection_method']) ? $collection['thumbnail_selection_method'] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+                $coldata['featured_collections_changes']['thumbnail_selection_method'] = $reset_thumbnail_selection_method;
+                $coldata['bg_img_resource_ref'] = 0;
+                }
             }
         }
 
