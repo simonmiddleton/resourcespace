@@ -199,7 +199,7 @@ elseif($type==LOG_CODE_UPLOADED)
             {
             copy($revert_path,$current_path);
             sql_query("update resource set file_extension='" . escape_check($revert_ext) . "' where ref='$resource'");
-            create_previews($resource,false,$revert_ext);
+            create_previews($resource,false,$revert_ext,false,false,-1,false,false,true,array(),true);
             }
         else
             {
