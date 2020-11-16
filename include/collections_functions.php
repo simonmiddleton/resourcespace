@@ -518,7 +518,6 @@ function collection_readable($collection)
 			{
 			return true;
 			}
-
 		}
 
 	return false;
@@ -4009,11 +4008,8 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     {
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
-    $csv_fh      = fopen($csv_file, 'w') OR die("can't open file");
-    $csv_content = generateResourcesMetadataCSV($result);
-    fwrite($csv_fh, $csv_content);
-    fclose($csv_fh);
-
+    generateResourcesMetadataCSV($result, false,false,$csv_file);
+    
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
         {
