@@ -14,7 +14,7 @@ function SensitiveImageResultsReplace($collection)
     {
     // Blur image in search results and collections bar
     global $sensitive_images_field,$result,$n;
-    if ($sensitive_images_field>0)
+    if ($sensitive_images_field>0 && isset($result[$n]["field" . $sensitive_images_field]))
         {
         $sensitive=$result[$n]["field" . $sensitive_images_field];
         if (strlen($sensitive)>0)

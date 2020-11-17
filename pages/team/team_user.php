@@ -269,7 +269,7 @@ if(!hook("replace_create_user"))
     		<div class="Question">
     			<label for="newuser"><?php echo $lang["createuserwithusername"]?></label>
     			<div class="tickset">
-    			 <div class="Inline"><input type=text name="newuser" id="newuser" maxlength="100" class="shrtwidth" /></div>
+    			 <div class="Inline"><input type=text name="newuser" id="newuser" maxlength="50" class="shrtwidth" /></div>
     			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
     			</div>
     			<div class="clearerleft"> </div>

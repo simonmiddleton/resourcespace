@@ -1203,8 +1203,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Duplicate Resources (based on file_checksum)
     if (substr($search,0,11)=="!duplicates") 
         {
-        # find duplicates of a given resource
-        
         # Extract the resource ID
         $ref=explode(" ",$search);
         $ref=str_replace("!duplicates","",$ref[0]);
@@ -1213,21 +1211,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         if ($ref!="") 
             {
-            $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
-            if($returnsql) {return $sql;}
-            $results=sql_query($sql,false,$fetchrows);
-            $count=count($results);
-            if ($count>1) 
+            # Find duplicates of a given resource
+            if (ctype_digit($ref)) 
                 {
-                return $results;
+                $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join 
+                    WHERE $sql_filter AND file_checksum <> '' AND file_checksum IS NOT NULL 
+                                      AND file_checksum = (SELECT file_checksum FROM resource WHERE ref=$ref AND (file_checksum <> '' AND file_checksum IS NOT NULL) ) 
+                    ORDER BY file_checksum, ref";    
+                if($returnsql) {return $sql;}
+                $results=sql_query($sql,false,$fetchrows);
+                $count=count($results);
+                if ($count>1) 
+                    {
+                    return $results;
+                    }
+                else 
+                    {
+                    return array();
+                    }
                 }
-            else 
+            else
                 {
-                return false;
+                # Given resource is not a valid identifier
+                return array();
                 }
             }
         else
             {
+            # Find all duplicate resources
             $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             }
@@ -1291,15 +1302,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($collectionsearchsql)
             {
             $searchsql=$collectionsearchsql;
-            }
-    
+            }    
 
         if($returnsql){return $searchsql;}
         
         if($return_refs_only)
             {
             // note that we actually include archive and created_by columns too as often used to work out permission to edit collection
-            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive','created_by','access'));
+            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','resource_type','archive','created_by','access'));
             }
         else
             {
@@ -1592,21 +1602,23 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                         $sql_filter_properties .= $sql_filter_properties_and .  $orientation_filters[$propertyval];
                     break;
                     }
-                
-                if($sql_filter_properties != "")
-                    {
-                    $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
-                    if ($sql_filter == "")
-                        {
-                        $sql_filter .= " WHERE " . $sql_filter_properties;
-                        }
-                    else
-                        {
-                        $sql_filter .= " AND " . $sql_filter_properties;
-                        }
-                    }
                 }
             }
+        if($sql_filter_properties != "")
+        {
+        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+            {
+            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            }
+        if ($sql_filter == "")
+            {
+            $sql_filter .= " WHERE " . $sql_filter_properties;
+            }
+        else
+            {
+            $sql_filter .= " AND " . $sql_filter_properties;
+            }
+        }
 
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
 
@@ -2172,7 +2184,7 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     
     // Default highlighting. This used to use '<' and '>' characters as placeholders but now changed as they were being removed by strip_tags
     if ($highlight === null) {
-        $highlight = '||RS_HIGHLIGHT_OPEN||\1||RS_HIGHLIGHT_CLOSE||';
+        $highlight = '\(\1\)';
     }
     
     // Select pattern to use
@@ -2217,8 +2229,8 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     $text=str_replace("♣","#zwspace;",$text);    
 
     # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-    $text=str_replace("||RS_HIGHLIGHT_OPEN||",'<span class="highlight">',$text);
-    $text=str_replace("||RS_HIGHLIGHT_CLOSE||",'</span>',$text);
+    $text=str_replace("\(",'<span class="highlight">',$text);
+    $text=str_replace("\)",'</span>',$text);
     return $text;
     }
         

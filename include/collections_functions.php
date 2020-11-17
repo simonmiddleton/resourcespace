@@ -518,7 +518,6 @@ function collection_readable($collection)
 			{
 			return true;
 			}
-
 		}
 
 	return false;
@@ -2054,6 +2053,24 @@ function get_featured_collection_resources(array $c, array $ctx)
         return $smart_fc_resources;
         }
 
+    // Access control
+    $rca_joins = array();
+    $rca_where = '';
+    $fc_permissions_where = '';
+    if(!checkperm("v"))
+        {
+        global $usergroup, $userref;
+        $rca_joins = array(
+            sprintf('LEFT JOIN resource_custom_access AS rca_u ON r.ref = rca_u.resource AND rca_u.user = \'%s\' AND (rca_u.user_expires IS NULL OR rca_u.user_expires > now())', escape_check($userref)),
+            sprintf('LEFT JOIN resource_custom_access AS rca_ug ON r.ref = rca_ug.resource AND rca_ug.usergroup = \'%s\'', escape_check($usergroup)),
+        );
+        $rca_where = sprintf(
+            'AND (r.access < %1$s OR (r.access IN (%1$s, %2$s) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < %1$s) OR (rca_u.access IS NOT NULL AND rca_u.access < %1$s))))',
+            RESOURCE_ACCESS_CONFIDENTIAL,
+            RESOURCE_ACCESS_CUSTOM_GROUP);
+        $fc_permissions_where = featured_collections_permissions_filter_sql("AND", "c.ref");
+        }
+
     if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
         {
         global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
@@ -2062,9 +2079,14 @@ function get_featured_collection_resources(array $c, array $ctx)
             {
             return array();
             }
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] && $c["bg_img_resource_ref"] > 0)
             {
-            return ($c["bg_img_resource_ref"] > 0 && get_resource_access($c["bg_img_resource_ref"]) == RESOURCE_ACCESS_FULL ? array($c["bg_img_resource_ref"]) : array());
+            $limit = 1;
+            $union = sprintf("
+                UNION SELECT ref, 1 AS use_as_theme_thumbnail, r.hit_count FROM resource AS r %s WHERE r.ref = '%s' %s",
+                implode(" ", $rca_joins),
+                escape_check($c["bg_img_resource_ref"]),
+                $rca_where);
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
@@ -2081,9 +2103,12 @@ function get_featured_collection_resources(array $c, array $ctx)
     $subquery = array(
         "select" => "SELECT r.ref, cr.use_as_theme_thumbnail, r.hit_count",
         "from" => "FROM collection AS c",
-        "join" => array(
-            "JOIN collection_resource AS cr ON cr.collection = c.ref",
-            "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0"
+        "join" => array_merge(
+            array(
+                "JOIN collection_resource AS cr ON cr.collection = c.ref",
+                "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0",
+            ),
+            $rca_joins
         ),
         "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
     );
@@ -2098,30 +2123,12 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
         }
 
-
-    // Access control
-    if(!checkperm("v"))
-        {
-        global $usergroup, $userref;
-        $subquery["join"][] = "LEFT OUTER JOIN resource_custom_access AS rca2" 
-            ." ON r.ref = rca2.resource"
-            ." AND rca2.user = '" . escape_check($userref) . "'"
-            ." AND (rca2.user_expires IS NULL OR rca2.user_expires > now())"
-            ." AND rca2.access <> 2";
-        $subquery["join"][] = "LEFT OUTER JOIN resource_custom_access AS rca"
-            ." ON r.ref = rca.resource"
-            ." AND rca.usergroup = '" . escape_check($usergroup) . "'"
-            ." AND rca.access <> 2";
-
-        # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
-        $subquery["where"] .= " AND (r.access <> 2 OR (r.access = 2 AND ((rca.access IS NOT NULL AND rca.access <> 2) OR (rca2.access IS NOT NULL AND rca2.access <> 2))))";
-        $subquery["where"] .= featured_collections_permissions_filter_sql("AND", "c.ref");
-        }
-
     $subquery["join"] = implode(" ", $subquery["join"]);
+    $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
 
-    $sql = sprintf("SELECT DISTINCT ti.ref AS `value` FROM (%s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+    $sql = sprintf("SELECT DISTINCT ti.ref AS `value` FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
+        (isset($union) ? $union : ''),
         sql_limit(null, $limit)
     );
 
@@ -2193,7 +2200,9 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
             $all_fcs[$fc]['has_resources'] > 0
             && (
                 $allowed_fcs === true
-                || is_array($allowed_fcs) && !isset($allowed_fcs_flipped[$fc])))
+                || (is_array($allowed_fcs) && isset($allowed_fcs_flipped[$fc]))
+            )
+        )
             {
             $collections[] = $fc;
             }
@@ -2227,14 +2236,21 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
     {
     $images = array();
 
-    foreach($resource_refs as $ref)
+    $refs_list = array_filter($resource_refs, 'is_numeric');
+    if(empty($refs_list))
         {
-        if(!is_int((int) $ref))
-            {
-            continue;
-            }
+        return $images;
+        }
+    $refs_list = "'" . implode("','", $refs_list) . "'";
 
-        if(file_exists(get_resource_path($ref, true, $size, false)))
+    $refs_rtype = sql_query("SELECT ref, resource_type FROM resource WHERE ref IN ({$refs_list})", 'featured_collections');
+
+    foreach($refs_rtype as $ref_rt)
+        {
+        $ref = $ref_rt['ref'];
+        $resource_type = $ref_rt['resource_type'];
+
+        if(file_exists(get_resource_path($ref, true, $size, false)) && resource_download_allowed($ref, $size, $resource_type))
             {
             $images[] = get_resource_path($ref, false, $size, false);
             }
@@ -3992,11 +4008,8 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     {
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
-    $csv_fh      = fopen($csv_file, 'w') OR die("can't open file");
-    $csv_content = generateResourcesMetadataCSV($result);
-    fwrite($csv_fh, $csv_content);
-    fclose($csv_fh);
-
+    generateResourcesMetadataCSV($result, false,false,$csv_file);
+    
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
         {

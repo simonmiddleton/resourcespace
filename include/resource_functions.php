@@ -366,8 +366,8 @@ function get_resource_data($ref,$cache=true)
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
-    truncate_cache_arrays();
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
+    truncate_cache_arrays();
     $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
@@ -404,6 +404,30 @@ function get_resource_data($ref,$cache=true)
         {
         return false;
         }
+    }
+
+
+
+/**
+ * get_resource_data_batch - get data from resource table for all resource IDs
+ *
+ * @param  mixed $refs - array of resource IDs
+ * @return array
+ */
+function get_resource_data_batch($refs)
+    {
+    global $get_resource_data_cache;
+    truncate_cache_arrays();
+    $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
+    $resdata=sql_query("SELECT *,mapzoom,lock_user FROM resource WHERE ref IN ('" . implode("','",$resids)  . "')");
+    // Create array with resource ID as index
+    $resource_data = array();
+    foreach($resdata as $resdatarow)
+       {
+       $resource_data[$resdatarow["ref"]] = $resdatarow;
+       $get_resource_data_cache[$resdatarow["ref"]] = $resdatarow;
+       }
+    return $resource_data;
     }
 
 /**
@@ -888,18 +912,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
 					}
 												
-				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
-				if ($error) 
-					{
-					global $lang;
-					if (getval("autosave","")!="")
-						{
-						exit($error);
-						}
-					$errors[$fields[$n]["ref"]]=$error;
-					continue;
-					}
-				
+                $error = hook("additionalvalcheck", "all", array($fields, $fields[$n]));
+                if($error)
+                    {
+                    $errors[$fields[$n]["ref"]]=$error;
+                    continue;
+                    }
 				} // End of if not a fixed list (node) field
 
             if(
@@ -2871,7 +2889,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $return[] = $fields[$n];
             }
         }   
-
     # Remove duplicate fields e.g. $view_title_field included when $inherit_global_fields is false and also as a valid field. 
     $return = array_unique($return, SORT_REGULAR);
     
@@ -2882,14 +2899,14 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
  * get_resource_field_data_batch - Get all resource data for the given resources
  * Used by CSV metadata export. 
  * 
- * Returns a multidimensional array with resource IDs as top level keys, followed by metadata field IDs as keys
+ * Returns a multidimensional array with resource IDs as top level keys, then fields (order determined by $ord_by setting) 
  * 
  * e.g. 
  * Array
  * (
  *     [119912] => array
  *         (
- *          [8] => Array
+ *          [0] => Array
  *              (
  *              [resource] => 119912
  *              [value] => This is the title of resource 119912
@@ -2940,6 +2957,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     else
         {
         $resources = array_filter($resources,function($v){return (string)(int)$v == $v;});
+        $resourceids = $resources;
         $refsin = implode("','",$resources);
         $allresourcedata = sql_query("SELECT ref, resource_type FROm resource WHERE ref IN ('" . $refsin . "') ");
         foreach($allresourcedata as $resourcedata)
@@ -3008,15 +3026,22 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Add category tree values, reflecting tree structure
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    $alltreenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
     foreach($tree_fields as $tree_field)
         {
-        $addfield= $tree_field;
+        $addfield = $tree_field;
         foreach($getresources as $getresource)
             {
-            $treenodes = get_resource_nodes($getresource["ref"], $tree_field["ref"], true, SORT_ASC);
-            $treetext_arr = get_tree_strings($treenodes);
-            // Quoting each element is required for csv export
-            $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
+            if(isset($alltreenodes[$getresource["ref"]][$tree_field["ref"]]) && is_array($alltreenodes[$getresource["ref"]][$tree_field["ref"]]))
+                {
+                $treetext_arr = get_tree_strings($alltreenodes[$getresource["ref"]][$tree_field["ref"]]);
+                // Quoting each element is required for csv export
+                $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
+                }
+            else
+                {
+                $treetext_arr = array();
+                }
             $addfield["resource"] = $getresource["ref"];
             $addfield["value"] = count($treetext_arr) > 0 ? $valstring : "";
             $addfield["resource_type_field"] = $tree_field["ref"];
@@ -3085,8 +3110,8 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
                 $rowadded = true;
                 }
-        # Add title field even if $inherit_global_fields = false
 
+        # Add title field even if $inherit_global_fields = false
         if  (!$rowadded && 
                 $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
                 && 
@@ -3096,7 +3121,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
             }
         }
-
+    $fields = array();
     foreach($allresdata as $resourceid => $resdata)
         {
         $fieldorder_by = array();
@@ -3117,7 +3142,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
             }
         }
-
     return $allresdata;
     }
     
@@ -3618,7 +3642,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='$type'","", "schema"),"resourcetype-");
+	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","", "schema"),"resourcetype-");
 	}
 	
 function get_resource_custom_access($resource)
@@ -6843,7 +6867,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         }
     else
         {
-        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false);
+        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false,true);
         if(!$uploadstatus)
             {
             debug("replace_resource_file - upload_file() failed");

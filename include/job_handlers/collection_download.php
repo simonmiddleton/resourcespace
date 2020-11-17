@@ -267,7 +267,7 @@ collection_download_process_summary_notes(
 if($include_csv_file == 'yes')
     {
     collection_download_process_csv_metadata_file(
-        $collection_resources,
+        array_column($collection_resources,"ref"),
         $id,
         $collection,
         false,

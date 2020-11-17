@@ -23,7 +23,7 @@ include_once 'metadata_functions.php';
  * @param  bool $deletesource               Delete resource after upload
  * @return void
  */
-function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true)
+function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true, $replace_file=false)
     {
     debug("upload_file(ref = $ref, no_exif = " . ($no_exif ? "TRUE" : "FALSE")  . ",revert = " . ($revert ? "TRUE" : "FALSE")  . ", autorotate = " . ($autorotate ? "TRUE" : "FALSE")  . ", file_path = $file_path, after_upload_processing = " . ($after_upload_processing ? "TRUE" : "FALSE")  . ")");
 
@@ -508,7 +508,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
             if ($enable_thumbnail_creation_on_upload)
                 { 
-                create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
+                create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required,array(),$replace_file);
                 }
             else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
                 {
@@ -1086,7 +1086,7 @@ function iptc_return_utf8($text)
     return $text;
     }
  
-function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
+function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array(),$replace_file=false)
     {
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
     global $previews_allow_enlarge;
@@ -1228,7 +1228,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         if (isset($imagemagick_path))
             {
-            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes);
+            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes,$replace_file);
             return $return_val;
             }
         else
@@ -1337,7 +1337,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     return true;
     }
 
-function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
+function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array(),$replace_file=false)
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
@@ -1575,7 +1575,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 # Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
                 # mean that the height/width of the larger sizes is less than the required target height/width
                 list($checkw,$checkh) = @getimagesize($file);
-                if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
+                if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path && !$replace_file)
                     {
                     // Get the larger size again, but with previewbased set if not ingested
                     $file = get_preview_source_file($ref, $extension, $previewonly, !$ingested, $alternative, $ingested);

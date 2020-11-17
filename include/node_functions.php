@@ -1923,3 +1923,69 @@ function compute_nodes_by_parent(array $nodes, int $id)
 
     return $result;
     }
+
+/**
+* Get all nodes for given resources and fields. Returns a multidimensional array wth resource IDs as top level indexes and field IDs as second level indexes
+* 
+* @param array $resources
+* @param array $resource_type_fields
+* @param boolean $detailed             Set to true to return full node details (as get_node() does)
+* @param boolean $node_sort            Set to SORT_ASC to sort nodes ascending, SORT_DESC sort nodes descending, null means do not sort
+* 
+* @return array
+*/
+function get_resource_nodes_batch(array $resources, array $resource_type_fields = array(), bool $detailed = false, $node_sort = null)
+    {
+    $sql_select = "rn.resource, n.ref, n.resource_type_field ";
+
+    if($detailed)
+        {
+        $sql_select .= ",n.* ";
+        }
+
+    $resources = array_filter($resources,function($resource){return (string)(int)$resource==(string)$resource;}); // remove non-numeric values
+    $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN ('" . implode("','",$resources) . "')";
+
+    if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
+        {
+        $fields = array_filter($resource_type_fields,function($field){return (string)(int)$field==(string)$field;});
+        $query .= " AND n.resource_type_field IN ('" . implode("','",$fields) . "')";
+        }
+
+    if(!is_null($node_sort))
+        {
+        if($node_sort == SORT_ASC)
+            {
+            $query .= " ORDER BY n.ref ASC";
+            }
+        if($node_sort == SORT_DESC)
+            {
+            $query .= " ORDER BY n.ref DESC";
+            }
+        }
+
+    $noderows = sql_query($query);
+    $results = array();
+    foreach($noderows as $noderow)
+        {
+        if(!isset($results[$noderow["resource"]]))
+            {
+            $results[$noderow["resource"]] = array();
+            }
+        if(!isset($results[$noderow["resource"]][$noderow["resource_type_field"]]))
+            {
+            $results[$noderow["resource"]][$noderow["resource_type_field"]] = array();
+            }
+
+        $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
+            "ref"                   => $noderow["ref"],
+            "resource_type_field"   => $noderow["resource_type_field"],
+            "name"                  => $noderow["name"],
+            "parent"                => $noderow["parent"],
+            "order_by"              => $noderow["order_by"],
+            );
+        }
+
+    return $results;
+    }
+

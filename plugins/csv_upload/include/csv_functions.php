@@ -116,7 +116,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
 	while ((($line=fgetcsv($file))!==false) && ($error_count<$max_error_count || $max_error_count==0))
 		{
         $line_count++;
-		if (!$processcsv && count($line) != count($headers))	// check that the current row has the correct number of columns
+		if (count($line) != count($headers))	// check that the current row has the correct number of columns
 			{
             $logtext = "Error: Incorrect number of columns(" . count($line) . ") found on line " . $line_count . " (should be " . count($headers) . ")";
             csv_upload_log($logfile,$logtext);
@@ -495,10 +495,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_err
                     }
                 }
 
-            $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
-			//echo "Found value for " . $field_name . ": " . $cell_value . "<br>";
-
-            $cell_count++;
+                $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
+                //echo "Found value for " . $field_name . ": " . $cell_value . "<br>";
 
             // Raise error if it's a required field and has an empty or null value
             if (in_array($cell_value,  array(null,"") ))
