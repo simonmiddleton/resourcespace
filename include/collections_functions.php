@@ -482,6 +482,8 @@ function collection_writeable($collection)
  */
 function collection_readable($collection)
 	{
+    # Precautionary check to see if user has access to parent thus access to collection
+    if(!validate_collection_parent($collection)=="" && (!checkperm("j*")) && (!checkperm("j" . validate_collection_parent($collection)))) {return false;}
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
     $collectiondata=get_collection($collection);
@@ -505,7 +507,6 @@ function collection_readable($collection)
 		}
 
 	# Perform these checks only if a user is logged in
-	global $userref;
 	if (is_numeric($userref))
 		{
 		# Access if:

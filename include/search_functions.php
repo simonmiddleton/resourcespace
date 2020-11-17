@@ -1247,6 +1247,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # View Collection
     if (substr($search, 0, 11) == '!collection')
         {
+        global $userref;
+
         $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
@@ -1263,10 +1265,18 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        if(!collection_readable($collection))
+        if(validate_collection_parent($collection)=="" || (checkperm("j*")) || (checkperm("j" . validate_collection_parent($collection))))
             {
-            return array();
+            if(!collection_readable($collection))
+                {
+                return array();
+                }
             }
+        else
+            {
+            exit($lang["error-permissiondenied"]);
+            }
+        
 
         # Smart collections update
         global $allow_smart_collections, $smart_collections_async;
