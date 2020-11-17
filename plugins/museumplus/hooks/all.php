@@ -1,4 +1,10 @@
 <?php
+function HookMuseumplusAllInitialise()
+    {
+    debug("TEST.f: HookMuseumplusAllInitialise() --- TODO: migrate old config mappings to new config mappings structure");
+    return false;
+    }
+
 function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
     {
     global $lang, $museumplus_mpid_field, $museumplus_resource_types, $museumplus_host, $museumplus_application,

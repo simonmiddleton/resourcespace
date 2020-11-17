@@ -12,7 +12,6 @@ $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus id
 $lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules\' name for which the MpID is valid';
 $lang['museumplus_secondary_links_field'] = 'Metadata field used to hold the secondary links to other modules. ResourceSpace will generate a MuseumPlus URL for each of the links. Links will have a special syntax format: module_name:ID (e.g. "Object:1234")';
 $lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
-$lang['museumplus_cms_form_part'] = 'Specify which MuseumPlus form should be used for the URL that points to the Object module in MuseumPlus';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
 $lang['museumplus_search_match_field'] = 'The field that stores the MpID on MuseumPlus side';
 
@@ -31,8 +30,6 @@ $lang['museumplus_log_directory'] = 'Directory to store script logs in. If this 
 $lang['museumplus_integrity_check_field'] = 'Integrity check field';
 
 $lang['museumplus_media_sync_header'] = 'Media sync';
-$lang['museumplus_media_sync'] = 'Sync preview sizes with MuseumPlus? You can specify which ones to push from System > Image sizes area';
-$lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding factor for syncing resource previews to MuseumPlus (must be a checkbox type with only one option)';
 
 
 $lang['museumplus_rs_mappings_header'] = 'MuseumPlus - ResourceSpace mappings';
@@ -40,6 +37,16 @@ $lang['museumplus_add_mapping'] = 'Add mapping';
 $lang['museumplus_mplus_field_name'] = 'MuseumPlus field name';
 $lang['museumplus_rs_field'] = 'ResourceSpace field';
 $lang['museumplus_view_in_museumplus'] = 'View in MuseumPlus';
+
+$lang["museumplus_module_setup"] = "Module setup";
+$lang["museumplus_module_name"] = "MuseumPlus module name";
+$lang["museumplus_mplus_id_field"] = "MuseumPlus ID field name (leave empty to just use the technical ID '__id')";
+$lang["museumplus_rs_uid_field"] = $lang['museumplus_mpid_field'];
+$lang["museumplus_applicable_resource_types"] = "Applicable resource type(s)";
+$lang['museumplus_media_sync'] = 'Sync preview sizes with MuseumPlus? You can specify which ones to push from System > Image sizes area';
+$lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding factor for syncing resource previews to MuseumPlus (must be a checkbox type with only one option)';
+$lang["museumplus_field_mappings"] = "MuseumPlus - ResourceSpace field mappings";
+
 
 // Errors/ warnings
 $lang['museumplus_error_bad_conn_data'] = 'MuseumPlus Connection Data invalid';
