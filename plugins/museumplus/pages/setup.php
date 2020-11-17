@@ -15,7 +15,7 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
 
 // Save MuseumPlus - RS mappings
 if('' != getval('submit', '') || '' != getval('save', ''))
@@ -48,7 +48,7 @@ if('' != getval('submit', '') || '' != getval('save', ''))
         }
 
     $museumplus_rs_mappings = $mplus_rs_mappings_new;
-    $museumplus_rs_saved_mappings  = base64_encode(serialize($mplus_rs_mappings_new));
+    $museumplus_rs_saved_mappings = plugin_encode_complex_configs($mplus_rs_mappings_new);
     }
 
 

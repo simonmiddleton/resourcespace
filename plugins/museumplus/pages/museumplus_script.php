@@ -106,7 +106,7 @@ set_process_lock(MPLUS_LOCK);
 $mplus_script_start_time = microtime(true);
 $mplus_resources         = get_museumplus_resources();
 
-$museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
 
 logScript('Retrieving data from MuseumPlus...', $mplus_log_file);
 foreach($mplus_resources as $mplus_resource)

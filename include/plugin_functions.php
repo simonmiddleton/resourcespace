@@ -1531,4 +1531,27 @@ function register_plugin($plugin)
 	
 	return true;	
 	}
-	
+
+/**
+* Encode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
+* 
+* @param mixed $c Configuration requiring encoding
+* 
+* @return string
+*/
+function plugin_encode_complex_configs($c)
+    {
+    return base64_encode(serialize($c));
+    }
+
+/**
+* Decode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
+* 
+* @param string $b64sc Configuration encoded prior with {@see plugin_encode_complex_configs()}
+* 
+* @return mixed
+*/
+function plugin_decode_complex_configs(string $b64sc)
+    {
+    return unserialize(base64_decode($b64sc));
+    }

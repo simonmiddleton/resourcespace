@@ -12,7 +12,7 @@ include_once '../include/museumplus_functions.php';
 
 $ref = getval('ref', 0, true);
 $mpid = getval('mpid', get_data_by_field($ref, $museumplus_mpid_field)); # CAN BE ALPHANUMERIC
-$museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
 
 $connection_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
 if(empty($connection_data))

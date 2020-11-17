@@ -22,7 +22,7 @@ function HookMuseumplusAllAdditionalvalcheck($fields, $fields_item)
         return false;
         }
 
-    $museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+    $museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
 
     $conn_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
     if(empty($conn_data))

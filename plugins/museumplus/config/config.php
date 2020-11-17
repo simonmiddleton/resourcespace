@@ -38,5 +38,22 @@ $museumplus_media_sync_df_field = null; # must be a checkbox type with only one 
 
 
 // MuseumPlus - ResourceSpace mappings
-$museumplus_rs_saved_mappings = base64_encode(serialize(array()));
+$museumplus_rs_saved_mappings = plugin_encode_complex_configs(array());
 
+// TODO: once structure established, create/compute migration from old configs to new one.
+// TODO: build new page for configuring a module mapping
+$new_mapping_structure = array(
+    array(
+        'module_name' => 'Object', # for migration purposes: always Object
+        'mplus_id_field' => 'ObjObjectNumberVrt', # for migration purposes: $museumplus_search_mpid_field. this means we search by a virtual ID first and if invalid, try the technical id (ie __id). If empty, only try the technical one
+        'rs_uid_field' => 88, # for migration purposes: $museumplus_mpid_field. this can be re-used between modules
+        'applicable_resource_types' => array(5), # for migration purposes: $museumplus_resource_types.
+        'media_sync' => false, # for migration purposes: N/A.
+        'media_sync_df_field' => 89, # for migration purposes: N/A.
+        'mplus_rs_mappings' => array(
+            'ObjUuidVrt' => 85,
+            'ObjObjectNumberVrt' => 86,
+        ), # for migration purposes: $museumplus_rs_saved_mappings.
+    )
+);
+$museumplus_rs_saved_mappings = plugin_encode_complex_configs($new_mapping_structure);

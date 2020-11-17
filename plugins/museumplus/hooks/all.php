@@ -29,7 +29,7 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
         return;
         }
 
-    $museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+    $museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
     $mplus_data = mplus_search($conn_data, $museumplus_rs_mappings, 'Object', $mpid, $museumplus_search_mpid_field);
 
     foreach($mplus_data as $mplus_field => $field_value)
