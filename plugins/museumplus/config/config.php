@@ -22,7 +22,6 @@ $museumplus_module_name_field = null;
 // have a special syntax format: <module name>:<technical ID> e.g. "Object:1234".
 $museumplus_secondary_links_field = null;
 $museumplus_resource_types = array();
-$museumplus_cms_url_form_part = ""; # drop this as M+ will not need this anymore
 
 
 // Script settings
