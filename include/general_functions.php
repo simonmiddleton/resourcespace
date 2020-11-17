@@ -889,7 +889,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     # Work out correct EOL to use for mails (should use the system EOL).
     if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
 
-    
+    $headers = '';
+
     if (count($files)>0)
         {
         //add boundary string and mime type specification
@@ -936,10 +937,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     if (substr($reply_to,-1)==","){$reply_to=substr($reply_to,0,-1);}
     
     $reply_tos=explode(",",$reply_to);
-    
-    # Add headers
-    $headers="";
-    #$headers .= "X-Sender:  x-sender" . $eol;
+
     $headers .= "From: ";
     #allow multiple emails, and fix for long format emails
     for ($n=0;$n<count($reply_tos);$n++){
