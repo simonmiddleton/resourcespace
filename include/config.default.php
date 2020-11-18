@@ -3715,4 +3715,9 @@ $search_engine_noindex_external_shares=false;
 $tilenav=true;
 
 // Maximum number of resources beyond which a CSV metadata export will force an offline job to be created (provided that $offline_job_queue==true)
-$metadata_export_offline_limit = 10000;
+$metadata_export_offline_limit = 10000;// Optional periodic report size parameters
+// Maximum number of rows in an emailed report before it will be added as an attachment. 
+// Reports with fewer rows than this will be displayed as a table in the message body
+$report_rows_attachment_limit = 100;
+// Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
+$report_rows_zip_limit = 10000;
