@@ -482,8 +482,11 @@ function collection_writeable($collection)
  */
 function collection_readable($collection)
 	{
-    # Precautionary check to see if user has access to parent thus access to collection
-    if(!validate_collection_parent($collection)=="" && (!checkperm("j*")) && (!checkperm("j" . validate_collection_parent($collection)))) {return false;}
+    global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
+
+    # Precautionary check to see if user has featured collection access or collection is their own
+    if(!in_array($collection, array_column(get_user_collections($userref), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
+
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
     $collectiondata=get_collection($collection);
@@ -495,9 +498,7 @@ function collection_readable($collection)
 	# Load a list of attached users
 	$attached=sql_array("select user value from user_collection where collection='$collection'");
 	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
-	global $userref,$usergroup;
 
-	global $ignore_collection_access, $collection_commenting;
 	# Access if collection_commenting is enabled and request feedback checked
 	# Access if it's a public collection (or theme)
 	# Access if k is not empty or option to ignore collection access is enabled and k is empty
