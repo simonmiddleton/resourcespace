@@ -2258,7 +2258,7 @@ jQuery('document').ready(function()
     {
 	/* Call SelectTab upon page load to select first tab*/
     SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
-    registerCollapsibleSections(false);
+    registerCollapsibleSections(true);
     });
 </script>
 <?php
