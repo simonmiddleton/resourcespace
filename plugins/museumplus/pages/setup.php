@@ -113,8 +113,6 @@ if(isset($error))
     render_top_page_error_style($error);
     }
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['museumplus_configuration']);
-
-$err_module_conf_not_found = str_replace('?', $lang['museumplus_module'], $lang["softwarenotfound"]);
 ?>
 <script>
 function museumplus_edit_module_conf(id)
@@ -131,7 +129,6 @@ function museumplus_delete_module_conf(element, id)
         }
 
     CentralSpaceShowLoading();
-
     jQuery.ajax(
         {
         type: 'POST',
@@ -140,7 +137,8 @@ function museumplus_delete_module_conf(element, id)
             id: id,
             action: 'delete',
             <?php echo generateAjaxToken('MplusModuleConfigForm'); ?>
-        }
+        },
+        dataType: "json"
         })
         .done(function(response, textStatus, jqXHR)
             {
@@ -150,7 +148,13 @@ function museumplus_delete_module_conf(element, id)
             })
         .fail(function(data, textStatus, jqXHR)
             {
-            styledalert("<?php echo $err_module_conf_not_found; ?>", '<?php echo $lang["museumplus_error_not_deleted_module_conf"]; ?>');
+            if(typeof data.responseJSON === 'undefined')
+                {
+                return;
+                }
+
+            var response = data.responseJSON;
+            styledalert(response.data.title, response.data.message);
             })
         .always(function()
             {

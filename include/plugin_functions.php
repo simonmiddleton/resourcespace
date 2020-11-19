@@ -361,7 +361,7 @@ function set_plugin_config($plugin_name, $config)
     }
 
 /**
- * Check is a plugin is activated.
+ * Check if a plugin is activated.
  *
  * Returns true is a plugin is activated in the plugins database.
  *

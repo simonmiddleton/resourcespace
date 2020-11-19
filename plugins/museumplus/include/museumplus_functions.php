@@ -329,3 +329,28 @@ function mplus_generate_module_record_url(string $module, int $id)
         htmlspecialchars($id));
     }
 
+
+/**
+* Save MuseumPlus modules configuration
+* 
+* @param array $cf Modules configuration to save
+* 
+* @return void
+*/
+function mplus_save_module_config(array $cf)
+    {
+    $mplus_config = get_plugin_config('museumplus');
+    if(is_null($mplus_config))
+        {
+        $mplus_config = array();
+        }
+
+    $mplus_config['museumplus_modules_saved_config'] = plugin_encode_complex_configs($cf);
+
+    if(is_plugin_activated('museumplus'))
+        {
+        set_plugin_config('museumplus', $mplus_config);
+        }
+
+    return;
+    }

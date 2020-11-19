@@ -1,6 +1,7 @@
 <?php
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
+include '../../../include/ajax_functions.php';
 if(!checkperm('a'))
     {
     exit(error_alert($lang["error-permissiondenied"], true, 403));
@@ -32,18 +33,59 @@ $breadcrumbs = array(
 $id = getval('id', 0, true);
 $action = getval('action', '');
 
-$module_name = '';
-$mplus_id_field = '';
-$rs_uid_field = null;
-$applicable_resource_types = array();
-$media_sync = false;
-$media_sync_df_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
-$field_mappings = array();
+$module_name = getval('module_name', '');
+$mplus_id_field = getval('mplus_id_field', '');
+$rs_uid_field = getval('rs_uid_field', 0, true);
+$applicable_resource_types = getval('applicable_resource_types', array());
+$media_sync = (getval('media_sync', 0, true) == 1);
+$media_sync_df_field = getval('media_sync_df_field', 0, true); # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
+$field_mappings = getval('field_mappings', array());
 
 
-// TODO: save/new/delete actions
+if(getval('save', '') !== '' && enforcePostRequest(false))
+    {
+    if($id == 0)
+        {
+        $new_id = 1;
+        do
+            {
+            ++$new_id;
+            }
+        while(isset($museumplus_modules_config[$new_id]));
 
+        $id = $new_id;
+        }
 
+    $field_mappings = array_filter($field_mappings, function($v) { return ($v['field_name'] != '' && $v['rs_field'] > 0); });
+
+    $museumplus_modules_config[$id] = array(
+        'module_name'   => $module_name,
+        'mplus_id_field' => $mplus_id_field,
+        'rs_uid_field'  => $rs_uid_field,
+        'applicable_resource_types' => $applicable_resource_types,
+        'media_sync' => $media_sync,
+        'media_sync_df_field' => $media_sync_df_field,
+        'field_mappings' => $field_mappings,
+    );
+
+    mplus_save_module_config($museumplus_modules_config);
+    }
+else if($action == 'delete' && $id > 0 && enforcePostRequest(false))
+    {
+    if(!isset($museumplus_modules_config[$id]))
+        {
+        $fail_msg = array_merge(
+            ajax_build_message($lang['museumplus_error_not_deleted_module_conf']),
+            array('title' => str_replace("'?'", "{$lang['museumplus_module']} #{$id}", $lang["softwarenotfound"]))
+        );
+
+        ajax_send_response(400, ajax_response_fail($fail_msg));
+        }
+
+    unset($museumplus_modules_config[$id]);
+    mplus_save_module_config($museumplus_modules_config);
+    ajax_send_response(200, ajax_response_ok_no_data());
+    }
 
 if($id > 0 && isset($museumplus_modules_config[$id]))
     {
@@ -77,7 +119,7 @@ if(isset($error))
     }
 ?>
     <form id="MplusModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
-    <?php generateFormToken("mplus_module_config"); ?>
+    <?php generateFormToken("MplusModuleConfigForm"); ?>
     <div class="Question">
         <label><?php echo $lang["museumplus_module_name"]; ?></label>
         <input name="module_name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($module_name); ?>">

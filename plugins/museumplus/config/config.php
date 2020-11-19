@@ -37,7 +37,7 @@ $museumplus_rs_saved_mappings = plugin_encode_complex_configs(array()); # deprec
 
 // TODO: once structure established, create/compute migration from old configs to new one.
 $new_mapping_structure = array(
-    array(
+    1 => array(
         'module_name' => 'Object', # for migration purposes: always Object
         'mplus_id_field' => 'ObjObjectNumberVrt', # for migration purposes: $museumplus_search_mpid_field. this means we search by a virtual ID first and if invalid, try the technical id (ie __id). If empty, only try the technical one
         'rs_uid_field' => 88, # for migration purposes: $museumplus_mpid_field. this can be re-used between modules
