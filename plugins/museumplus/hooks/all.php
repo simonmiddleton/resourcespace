@@ -1,8 +1,48 @@
 <?php
 function HookMuseumplusAllInitialise()
     {
-    debug("TEST.f: HookMuseumplusAllInitialise() --- TODO: migrate old config mappings to new config mappings structure");
-    return false;
+    $mplus_config = get_plugin_config('museumplus');
+
+    if(
+        isset($mplus_config['museumplus_search_mpid_field'])
+        && isset($mplus_config['museumplus_mpid_field'])
+        && isset($mplus_config['museumplus_resource_types'])
+        && isset($mplus_config['museumplus_rs_saved_mappings'])
+        && isset($mplus_config['museumplus_cms_url_form_part'])
+    )
+        {
+        $field_mappings = array();
+        $museumplus_rs_saved_mappings = plugin_decode_complex_configs($mplus_config['museumplus_rs_saved_mappings']);
+        foreach($museumplus_rs_saved_mappings as $field_name => $rs_field)
+            {
+            $field_mappings[] = array(
+                'field_name' => $field_name,
+                'rs_field' => $rs_field);
+            }
+
+        $module_configs = array(
+            1 => array(
+                'module_name' => 'Object',
+                'mplus_id_field' => $mplus_config['museumplus_search_mpid_field'],
+                'rs_uid_field' => $mplus_config['museumplus_mpid_field'],
+                'applicable_resource_types' => $mplus_config['museumplus_resource_types'],
+                'media_sync' => false,
+                'media_sync_df_field' => 0,
+                'field_mappings' => $field_mappings,
+            )
+        );
+
+        $mplus_config['museumplus_modules_saved_config'] = plugin_encode_complex_configs($module_configs);
+        unset($mplus_config['museumplus_search_mpid_field']);
+        unset($mplus_config['museumplus_mpid_field']);
+        unset($mplus_config['museumplus_resource_types']);
+        unset($mplus_config['museumplus_rs_saved_mappings']);
+        unset($mplus_config['museumplus_cms_url_form_part']); # not migrated but no longer needed
+
+        set_plugin_config('museumplus', $mplus_config);
+        }
+
+    return;
     }
 
 function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)

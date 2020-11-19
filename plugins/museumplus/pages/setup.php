@@ -12,7 +12,6 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
 $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 
 
@@ -95,8 +94,6 @@ $museumplus_modules_conf_html .= "</table>
     <a href=\"{$baseurl}/plugins/museumplus/pages/setup_module.php\" onclick=\"return CentralSpaceLoad(this, true);\">{$lang['museumplus_add_new_module']}</a>
 ";
 $page_def[] = config_add_html($museumplus_modules_conf_html);
-
-$page_def[] = config_add_hidden('museumplus_rs_saved_mappings');
 $page_def[] = config_add_hidden('museumplus_modules_saved_config');
 
 
