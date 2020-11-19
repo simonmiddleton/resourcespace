@@ -32,28 +32,30 @@ $breadcrumbs = array(
 $id = getval('id', 0, true);
 $action = getval('action', '');
 
+$module_name = '';
+$mplus_id_field = '';
+$rs_uid_field = null;
+$applicable_resource_types = array();
+$media_sync = false;
+$media_sync_df_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
+$field_mappings = array();
+
 
 // TODO: save/new/delete actions
 
 
-$museumplus_module_name = '';
-$museumplus_mplus_id_field = '';
-$museumplus_rs_uid_field = null;
-$museumplus_applicable_resource_types = array();
-$museumplus_media_sync = false;
-$museumplus_media_sync_df_field = null; # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
-$museumplus_field_mappings = array();
-if(isset($museumplus_modules_config[$id]))
+
+if($id > 0 && isset($museumplus_modules_config[$id]))
     {
     $record = $museumplus_modules_config[$id];
 
-    $museumplus_module_name = $record['module_name'];
-    $museumplus_mplus_id_field = $record['mplus_id_field'];
-    $museumplus_rs_uid_field = $record['rs_uid_field'];
-    $museumplus_applicable_resource_types = $record['applicable_resource_types'];
-    $museumplus_media_sync = $record['media_sync'];
-    $museumplus_media_sync_df_field = $record['media_sync_df_field'];
-    $museumplus_field_mappings = $record['field_mappings'];
+    $module_name = $record['module_name'];
+    $mplus_id_field = $record['mplus_id_field'];
+    $rs_uid_field = $record['rs_uid_field'];
+    $applicable_resource_types = $record['applicable_resource_types'];
+    $media_sync = $record['media_sync'];
+    $media_sync_df_field = $record['media_sync_df_field'];
+    $field_mappings = $record['field_mappings'];
     }
 
 $form_action = generateURL(
@@ -78,36 +80,36 @@ if(isset($error))
     <?php generateFormToken("mplus_module_config"); ?>
     <div class="Question">
         <label><?php echo $lang["museumplus_module_name"]; ?></label>
-        <input name="museumplus_module_name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($museumplus_module_name); ?>">
+        <input name="module_name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($module_name); ?>">
         <div class="clearerleft"></div>
     </div>
     <div class="Question">
         <label><?php echo $lang["museumplus_mplus_id_field"]; ?></label>
-        <input name="museumplus_mplus_id_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($museumplus_mplus_id_field); ?>">
-        <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'museumplus_mplus_id_field', array()); ?>
+        <input name="mplus_id_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($mplus_id_field); ?>">
+        <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'mplus_id_field', array()); ?>
         <div class="clearerleft"></div>
     </div>
     <?php
     render_field_selector_question(
         $lang["museumplus_mpid_field"],
-        "museumplus_rs_uid_field",
+        "rs_uid_field",
         array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE),
         "stdwidth",
         false,
-        $museumplus_rs_uid_field);
+        $rs_uid_field);
     config_multi_rtype_select(
-        "museumplus_applicable_resource_types",
+        "applicable_resource_types",
         $lang["museumplus_applicable_resource_types"],
-        $museumplus_applicable_resource_types,
+        $applicable_resource_types,
         420);
-    config_boolean_select('museumplus_media_sync', $lang['museumplus_media_sync'], $museumplus_media_sync);
+    config_boolean_select('media_sync', $lang['museumplus_media_sync'], $media_sync);
     render_field_selector_question(
         $lang["museumplus_media_sync_df_field"],
-        "museumplus_media_sync_df_field",
+        "media_sync_df_field",
         array(FIELD_TYPE_CHECK_BOX_LIST),
         "stdwidth",
         false,
-        $museumplus_media_sync_df_field);
+        $media_sync_df_field);
     ?>
         <div class="Question">
             <label for="buttons"><?php echo $lang["museumplus_field_mappings"]; ?></label>
@@ -119,18 +121,18 @@ if(isset($error))
                         <th><strong><!-- actions --></strong></th>
                     </tr>
                 <?php
-                foreach($museumplus_field_mappings as $mapping_index => $mapping)
+                foreach($field_mappings as $mapping_index => $mapping)
                     {
                     ?>
                     <tr>
                         <td>
                             <input class="medwidth"
                                    type="text"
-                                   name="museumplus_field_mappings[<?php echo $mapping_index; ?>][field_name]"
+                                   name="field_mappings[<?php echo $mapping_index; ?>][field_name]"
                                    value="<?php echo htmlspecialchars($mapping['field_name']); ?>">
                         </td>
                         <td>
-                            <select class="medwidth" name="museumplus_field_mappings[<?php echo $mapping_index; ?>][rs_field]">
+                            <select class="medwidth" name="field_mappings[<?php echo $mapping_index; ?>][rs_field]">
                                 <option value=""><?php echo $lang['select']; ?></option>
                             <?php
                             foreach($rtfs as $rtf)
@@ -174,8 +176,8 @@ function museumplus_add_new_field_mapping(element)
     var new_row_html = '';
 
     new_row_html += '<tr>';
-    new_row_html += '<td><input class="medwidth" type="text" name="museumplus_field_mappings[' + row_index + '][field_name]" value=""></td>';
-    new_row_html += '<td><select class="medwidth" name="museumplus_field_mappings[' + row_index + '][rs_field]">';
+    new_row_html += '<td><input class="medwidth" type="text" name="field_mappings[' + row_index + '][field_name]" value=""></td>';
+    new_row_html += '<td><select class="medwidth" name="field_mappings[' + row_index + '][rs_field]">';
     new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
     <?php
     foreach($rtfs as $rtf)
@@ -207,8 +209,8 @@ function museumplus_reindex_table()
     {
     jQuery('#MplusModuleFieldsMappingTable tr').not(':first').not(':last').each(function(i) 
         {
-        var field_name = "museumplus_field_mappings[" + i + "][field_name]";
-        var rs_field = "museumplus_field_mappings[" + i + "][rs_field]";
+        var field_name = "field_mappings[" + i + "][field_name]";
+        var rs_field = "field_mappings[" + i + "][rs_field]";
 
         // Change name of each input/select to use the correct index
         jQuery(this).find('td').eq(0).find('input').attr('name', field_name);
