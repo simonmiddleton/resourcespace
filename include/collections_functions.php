@@ -485,7 +485,7 @@ function collection_readable($collection)
     global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
 
     # Precautionary check to see if user has featured collection access or collection is their own
-    if(!in_array($collection, array_column(get_user_collections($userref), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
+    if(!in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
 
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
@@ -582,6 +582,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         sql_null_or_val((string)(int) $rs_session, $rs_session == ""),
         ($public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD)
     );
+    debug("jacktest: \$sql = {$sql}");
     sql_query($sql);
 
     $ref = sql_insert_id();
