@@ -1982,16 +1982,23 @@ function allow_multi_edit($collection,$collectionid = 0)
 	else
 		{            
 		// Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
+        $resultcount = 0;
 		if(!is_array($collection))
 			{
 			// Need the collection resources so need to run the search
 			$collectionid = $collection;
 			$collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,false);
 			}
-			
-		$resultcount = count($collection);
-		$editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,true);
-		$editcount = count($editresults);
+        if(is_array($collection))
+            {
+            $resultcount = count($collection);
+            }
+        $editcount = 0;
+        $editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,true);
+        if(is_array($editresults))
+            {
+            $editcount = count($editresults);
+            }
 		if($resultcount != $editcount){return false;}
 		}
 	
