@@ -4922,3 +4922,37 @@ function render_top_page_error_style(string $err_msg)
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
     return;
     }
+
+
+/**
+* Render a FormHelper. These are used in forms, to provide extra information to the user to a question.
+* 
+* @param string $txt Help text
+* @param string $id  Div ID
+* @param array  $ctx Contextual data
+* 
+* @return void
+*/
+function render_question_form_helper(string $txt, string $id, array $ctx)
+    {
+    $txt = trim($txt);
+    $id = trim($id);
+
+    if($txt === '' || $id === '')
+        {
+        return;
+        }
+
+    $ctx_class = (isset($ctx['class']) && is_array($ctx['class']) ? $ctx['class'] : array());
+    $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
+
+
+    $class = htmlspecialchars(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', htmlspecialchars($ctx_style)) : '');
+    ?>
+    <div id="help_<?php echo htmlspecialchars($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+        <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
+    </div>
+    <?php
+    return;
+    }
