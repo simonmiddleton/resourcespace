@@ -70,14 +70,7 @@ body {
         width:100%;
     }
     
-    #SearchBarContainer {
-        margin:0;
-        width:96%;
-        margin-left:2%;
-        margin-right:2%;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
+   
     .SlimHeader #CentralSpaceContainer,#CentralSpaceContainer {
         width:94%;
         margin-left:3%;
@@ -445,16 +438,19 @@ body {
 #SearchBox #ssearchbox:focus {
     outline:none;
 }
-@media(max-width:1100px) {
+@media(max-width:1200px) {
     .ResponsiveSimpleSearch {
         text-align: left;
         display: inline-block;
         margin: 10px;
     }
     #SearchBox {
-        float:none;
-        display:inline-block;
-        width:100%;
+        float:right;
+        width: 295px;
+        text-align: left;
+        height: inherit;
+        overflow-x: hidden;
+       
         margin:0;
     }
     #searchbutton, #ssearchbox {
