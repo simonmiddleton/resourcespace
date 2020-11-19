@@ -33,10 +33,9 @@ $museumplus_integrity_check_field = null; # not in use until we can reliably get
 
 
 // MuseumPlus - ResourceSpace mappings
-$museumplus_rs_saved_mappings = plugin_encode_complex_configs(array()); # deprecated. Once a system is migrated, this will not be used anymore. Now part of the new modules mapping structure.
+$museumplus_rs_saved_mappings = plugin_encode_complex_configs(array()); # deprecated. Once a system is migrated (i.e. RS v9.4+), this will not be used anymore. Now part of the new modules mapping structure.
 
 // TODO: once structure established, create/compute migration from old configs to new one.
-// TODO: build new page for configuring a module mapping
 $new_mapping_structure = array(
     array(
         'module_name' => 'Object', # for migration purposes: always Object

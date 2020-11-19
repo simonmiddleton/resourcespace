@@ -22,7 +22,7 @@ $breadcrumbs = array(
     ),
     array(
         'title' => $lang['museumplus_configuration'],
-        'href'  => $baseurl_short . $plugin_yaml['config_url']
+        'href'  => $baseurl . $plugin_yaml['config_url']
     ),
     array(
         'title' => $lang['museumplus_module_setup'],
@@ -84,11 +84,12 @@ if(isset($error))
     <div class="Question">
         <label><?php echo $lang["museumplus_mplus_id_field"]; ?></label>
         <input name="museumplus_mplus_id_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($museumplus_mplus_id_field); ?>">
+        <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'museumplus_mplus_id_field', array()); ?>
         <div class="clearerleft"></div>
     </div>
     <?php
     render_field_selector_question(
-        $lang["museumplus_rs_uid_field"],
+        $lang["museumplus_mpid_field"],
         "museumplus_rs_uid_field",
         array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE),
         "stdwidth",

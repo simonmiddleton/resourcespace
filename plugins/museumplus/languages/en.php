@@ -13,7 +13,6 @@ $lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules
 $lang['museumplus_secondary_links_field'] = 'Metadata field used to hold the secondary links to other modules. ResourceSpace will generate a MuseumPlus URL for each of the links. Links will have a special syntax format: module_name:ID (e.g. "Object:1234")';
 $lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
-$lang['museumplus_search_match_field'] = 'The field that stores the MpID on MuseumPlus side';
 
 $lang['museumplus_script_header'] = 'Script settings';
 $lang['museumplus_last_run_date'] = '
@@ -29,23 +28,25 @@ $lang['museumplus_interval_run'] = 'Run script at the following interval (e.g. +
 $lang['museumplus_log_directory'] = 'Directory to store script logs in. If this is left blank or is invalid then no logging will occur.';
 $lang['museumplus_integrity_check_field'] = 'Integrity check field';
 
-$lang['museumplus_media_sync_header'] = 'Media sync';
 
-
-$lang['museumplus_rs_mappings_header'] = 'MuseumPlus - ResourceSpace mappings';
-$lang['museumplus_add_mapping'] = 'Add mapping';
+$lang['museumplus_modules_configuration_header'] = 'Modules configuration';
+$lang["museumplus_module"] = "Module";
+$lang["museumplus_add_new_module"] = "Add new MuseumPlus module";
 $lang['museumplus_mplus_field_name'] = 'MuseumPlus field name';
 $lang['museumplus_rs_field'] = 'ResourceSpace field';
 $lang['museumplus_view_in_museumplus'] = 'View in MuseumPlus';
+$lang["museumplus_confirm_delete_module_config"] = "Are you sure you would like to delete this module configuration? This action cannot be undone!";
 
 $lang["museumplus_module_setup"] = "Module setup";
 $lang["museumplus_module_name"] = "MuseumPlus module name";
-$lang["museumplus_mplus_id_field"] = "MuseumPlus ID field name (leave empty to just use the technical ID '__id')";
-$lang["museumplus_rs_uid_field"] = $lang['museumplus_mpid_field'];
+$lang["museumplus_mplus_id_field"] = "MuseumPlus ID field name";
+$lang["museumplus_mplus_id_field_helptxt"] = "Leave empty to use the technical ID '__id' (default)";
+$lang["museumplus_rs_uid_field"] = "ResourceSpace UID field";
 $lang["museumplus_applicable_resource_types"] = "Applicable resource type(s)";
 $lang['museumplus_media_sync'] = 'Sync preview sizes with MuseumPlus? You can specify which ones to push from System > Image sizes area';
 $lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding factor for syncing resource previews to MuseumPlus (must be a checkbox type with only one option)';
 $lang["museumplus_field_mappings"] = "MuseumPlus - ResourceSpace field mappings";
+$lang['museumplus_add_mapping'] = 'Add mapping';
 
 
 // Errors/ warnings
@@ -56,4 +57,5 @@ $lang['museumplus_warning_script_not_completed'] = "WARNING: The MuseumPlus scri
 $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\nphp museumplus_script.php --clear-lock";
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
 $lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
+$lang["museumplus_error_not_deleted_module_conf"] = "Unable to delete the requested module configuration.";
 
