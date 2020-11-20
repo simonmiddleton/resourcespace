@@ -6,7 +6,6 @@ if (! (checkperm("c") || checkperm("d")))
     {exit ("Permission denied.");}
 include "../include/image_processing.php";
 
-
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
@@ -700,12 +699,12 @@ if ($_FILES)
 
                             # Add to collection?
                             if (is_numeric($collection_add))
-                                    {
-                                    add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
-                                    }
-                            if ($upload_then_edit && $replace == "" && $replace_resource == "")
                                 {
-                                # Switch to the user's special upload collection.
+                                add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
+                                }
+                            if ($upload_then_edit && $replace == "" && $replace_resource == "" && $collection_add != $upload_review_col)
+                                {
+                                # Also add to the user's special upload collection.
                                 add_resource_to_collection($ref,$upload_review_col,false,"",$resource_type); 
                                 }
                             
@@ -1589,8 +1588,17 @@ else
 
 ?>
 <?php hook("upload_page_top"); ?>
+<div class="BasicsBox titlediv">
+    <?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } 
 
-<?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } ?>
+    if(is_numeric($collection_add) && can_share_upload_link($collection_add))
+        {
+        $share_up_url = generateurl($baseurl_short . "pages/share_upload.php",array("collection"=>$collection_add));
+        echo "<div id='share-upload_link' class='sharelink'><a href='" . $share_up_url . "' onclick='return CentralSpaceLoad(this,true);'>" . $lang["action-share-upload-link"] . "</a></div>";
+        }
+    ?>
+</div>
+<div class="clearerleft"></div>
 <div id="plupload_instructions"><p><?php echo $intro;render_help_link("user/uploading");?></p></div>
 <?php
 

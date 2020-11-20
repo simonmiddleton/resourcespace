@@ -2873,7 +2873,6 @@ $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
 $lang["error_saveorigalternative"]      = "Error saving original as alternative file";   
-
 $lang["start"]                          = "Start";
 
 # File integrity checks
@@ -2883,24 +2882,24 @@ $lang["file_integrity_fail_search"]         = "File integrity failures";
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["team_resource_integrity_fail"]       = "View suspect resources";
 $lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";
-$lang["collection_description"]         = "Description";
-$lang["collection_copy_resources"]      = "Copy collection resources";
-$lang["collection_actiontype_1"]        = "Resources";
-$lang["collection_actiontype_2"]        = "Collection";
-$lang["collection_actiontype_3"]        = "Edit";
-$lang["collection_actiontype_4"]        = "Share";
-$lang["collection_actiontype_5"]        = "Research";
-$lang["collection_actiontype_6"]        = "Advanced";
-$lang["collection_actiontype_999"]      = "Other";
+$lang["collection_description"]             = "Description";
+$lang["collection_copy_resources"]          = "Copy collection resources";
+$lang["collection_actiontype_1"]            = "Resources";
+$lang["collection_actiontype_2"]            = "Collection";
+$lang["collection_actiontype_3"]            = "Edit";
+$lang["collection_actiontype_4"]            = "Share";
+$lang["collection_actiontype_5"]            = "Research";
+$lang["collection_actiontype_6"]            = "Advanced";
+$lang["collection_actiontype_999"]          = "Other";
 
 # Date checks
 # %row% row number if in csv or similar, %date% field data, %field% field name
-$lang["unknown_date_format_error"]         = "Error: %row% '%date%' in [%field%] invalid yyyy-mm-dd hh:mm format (partials allowed e.g. no time, day or month)";
+$lang["unknown_date_format_error"]          = "Error: %row% '%date%' in [%field%] invalid yyyy-mm-dd hh:mm format (partials allowed e.g. no time, day or month)";
 # %row% row number if in csv or similar, %date% field data, %field% field name, %parts% an imploded array of parts that are invalid
-$lang["date_format_error"]                 = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
+$lang["date_format_error"]                  = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
-$lang["invalid_date_error2"]                 = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
+$lang["invalid_date_error2"]                = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
@@ -2923,7 +2922,7 @@ $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "The file posted has not been found";
 $lang["error-theme-missing"]                = "Featured collection missing or has not been specified.";
 $lang["system_config_search_engines"]       = "Search engines";
-$lang["search_engine_noindex"] = "Request that search engines don't index this site";
+$lang["search_engine_noindex"]              = "Request that search engines don't index this site";
 $lang["search_engine_noindex_external_shares"] = "Request that search engines do not index external shares";
 
 $lang["job_details"]                        = "Job details";
@@ -2950,3 +2949,10 @@ $lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME
 $lang["csv_export_file_ready"]              = "Your CSV export is ready";
 $lang["offline_processing_disabled"]        = "Offline job processing is not configured on this system. To enable this please contact your system administrator";
 $lang['csv_export_offline_only']            = "Offline processing must be used when exporting data for more than %%RESOURCE_COUNT%% resources";
+
+// Share upload link
+$lang["action-share-upload-link"]           = "Share upload link";
+$lang["title-upload-link-create"]           = "Create external upload link";
+$lang["title-upload-link-edit"]             = "Edit external upload link";
+$lang["warning-upload-link"]                = "WARNING: creating an external upload URL will allow anyone who obtains the link to upload files";
+$lang["warning-upload-instructions"]        = "Please set the required upload link options";

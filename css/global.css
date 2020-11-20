@@ -709,7 +709,7 @@ div.autocomplete ul li {
 
 #prevLink, #nextLink{ width: 49%; height: 100%; background-image: url(data:image/gif;base64,AAAA); /* Trick IE into showing hover */ display: block; }
 #prevLink { left: 0; float: left;}
-#nextLink { right: 0; float: right;}
+#nextLink, .sharelink { right: 0; float: right;}
 
 #imageDataContainer{font-size: 0.7em; margin: 0 auto; line-height: 1.4em; overflow: auto; width: 100%   ; }
 
@@ -1912,3 +1912,12 @@ a.BrowseRefresh{
 .TileReflow br {display:none;}
 .TileReflow .fa {display:inline-block; min-width:26px;}
 .TileReflow a:hover {text-decoration:none;}
+
+.titlediv h1 {float :left;}
+.sharelink:before {
+    content: "\f0c1";
+    font: normal normal normal 14px "Font Awesome 5 Free";
+    font-weight: 600;
+    padding-right:12px;
+    display: inline-block; width:0.6em;
+}

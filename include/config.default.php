@@ -3721,3 +3721,6 @@ $metadata_export_offline_limit = 10000;// Optional periodic report size paramete
 $report_rows_attachment_limit = 100;
 // Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
 $report_rows_zip_limit = 10000;
+
+// Optional arrayof user ids that upload links can be 'shared as' in order to limit metadata field and resource type visibility etc.
+$upload_link_users = array();

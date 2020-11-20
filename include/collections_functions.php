@@ -2636,7 +2636,7 @@ function get_collection_external_access($collection)
     $condition="";
     if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
 
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='" . escape_check($collection) . "' $condition group by access_key order by date");
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash,upload,status from external_access_keys where collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
 
 
@@ -2879,14 +2879,25 @@ function is_collection_approved($collection)
 		return array_unique($collectionstates);
 		}
 
-function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")
+/**
+ * Update an existing external access share
+ *
+ * @param  string $key          External access key
+ * @param  int $access          Share access level
+ * @param  string $expires      Share expiration date
+ * @param  int $group           ID of usergroup that share will emulate permissions for
+ * @param  string $sharepwd     Share password
+ * @param  bool $upload         Set to true if share is an upload link (no visibility of existing resources)
+ * @return void
+ */
+function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="", $upload=0)
 	{
 	global $userref,$usergroup, $scramble_key;
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . escape_check($expires) . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
-	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd));
+	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . escape_check($expires) . "'") . ",date=now(),usergroup='$group', upload='" . (int)$upload . "'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
+	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $upload));
 	return true;
 	}
 	
@@ -3306,6 +3317,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['category'] = ACTIONGROUP_SHARE;
         $options[$o]['order_by']  = 140;
         $o++;
+        }
+
+    // Share external link to upload to collection
+    if(can_share_upload_link($collection_data))
+        {
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("collection"=>$collection_data['ref']));
+        $options[$o]['value']='share_upload';
+		$options[$o]['label']=$lang['action-share-upload-link'];
+		$options[$o]['data_attr']=$data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_SHARE;
+        $options[$o]['order_by'] = 30;
+		$o++;
         }
         
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
@@ -5109,4 +5132,48 @@ function compute_featured_collections_acess_control()
     $CACHE_FC_ACCESS_CONTROL = $return;
 
     return $return;
+    }
+
+/**
+ * Check if user is permitted to create an external upload link for the given collection
+ *
+ * @param  array $collection_data   Array of collection data
+ * @return boolean
+ */
+function can_share_upload_link($collection_data)
+    {
+    if(!is_array($collection_data) && is_numeric($collection_data))
+        {
+        $collection_data = get_collection($collection_data);
+        }
+    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup"));
+    }
+    
+/**
+ * Check if user can edit an existing upload share
+ *
+ * @param  int $collection          Collection ID of share
+ * @param  string $uploadkey        External upload key
+ * 
+ * @return bool
+ */
+function can_edit_upload_share($collection,$uploadkey)
+    {
+    // TODO check that the key was shared by the user
+    return checkperm('a');
+    }
+
+/**
+ * Get details of an existing upload share
+ *
+ * @param  integer  $collection     Collection ID
+ * @param  string   $uploadkey      share key (optional) If omitted all shares will be returned
+ * 
+ * @return array    Details of upload share
+ */
+function get_upload_share_details($collection,$uploadkey="")
+    {
+    $condition = $uploadkey != "" ? " AND access_key='" . escape_check($uploadkey) . "'" : "";
+    $details = sql_query("SELECT status, user, password_hash, expires FROM external_access_keys WHERE upload=1" . $condition);
+    return $details;
     }

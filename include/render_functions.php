@@ -4922,3 +4922,25 @@ function render_top_page_error_style(string $err_msg)
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
     return;
     }
+
+function render_workflow_state_question($current=null, $checkaccess=true)
+    {
+    global $additional_archive_states, $lang;
+    $statusoptions = array();
+    for ($n=-2;$n<=3;$n++)
+        {
+        if (!$checkaccess || checkperm("e" . $n) || $n==$current)
+            {
+            $statusoptions[$n] =  isset($lang["status" . $n]) ?  $lang["status" . $n] : $n;
+            }
+        }
+    foreach ($additional_archive_states as $additional_archive_state)
+        {
+        if (!$checkaccess || checkperm("e" . $additional_archive_state) || $additional_archive_state==$current)
+            {
+            $statusoptions[$additional_archive_state] =  isset($lang["status" . $additional_archive_state]) ?  $lang["status" . $additional_archive_state] : $additional_archive_state;
+            }
+        }
+    
+    render_dropdown_question($lang["status"], "share_status", $statusoptions, $current, " class=\"stdWidth\"");
+    }
