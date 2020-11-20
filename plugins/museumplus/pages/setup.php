@@ -54,7 +54,16 @@ $page_def[] = config_add_text_input('museumplus_api_pass', $lang['museumplus_api
 
 // ResourceSpace settings
 $page_def[] = config_add_section_header($lang['museumplus_RS_settings_header']);
-$page_def[] = config_add_single_ftype_select('museumplus_module_name_field', $lang['museumplus_module_name_field'], 420, false, $FIXED_LIST_FIELD_TYPES);
+$page_def[] = config_add_single_ftype_select(
+    'museumplus_module_name_field',
+    $lang['museumplus_module_name_field'],
+    420,
+    false,
+    array(
+        FIELD_TYPE_DROP_DOWN_LIST,
+        FIELD_TYPE_RADIO_BUTTONS,
+    )
+);
 $page_def[] = config_add_single_ftype_select(
     'museumplus_secondary_links_field',
     $lang['museumplus_secondary_links_field'],

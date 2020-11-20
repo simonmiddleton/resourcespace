@@ -41,3 +41,11 @@ $museumplus_modules_saved_config = plugin_encode_complex_configs(array(
         'field_mappings' => array(),
     )
 ));
+/*
+TODO: delete once finished. Useful when working out what code to change/remove:
+Configs now under modules:
+- museumplus_search_mpid_field  => mplus_id_field
+- museumplus_mpid_field         => rs_uid_field
+- museumplus_resource_types     => applicable_resource_types
+- museumplus_rs_saved_mappings  => field_mappings (modified where each mapping is an array now as opposed to "module_name=>rs_field_ref" mappings)
+*/

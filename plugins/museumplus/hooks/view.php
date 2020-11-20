@@ -1,13 +1,21 @@
 <?php
 function HookMuseumplusViewRenderfield($field, $resource)
     {
-    global $baseurl, $search, $ref, $museumplus_mpid_field, $museumplus_resource_types, $lang, $museumplus_secondary_links_field,
-    $museumplus_module_name_field;
+    global $baseurl, $search, $ref, $lang, $museumplus_secondary_links_field;
+
+    $resource_association = mplus_get_associated_module_conf($resource['ref']);
+    if(empty($resource_association))
+        {
+        return false;
+        }
+    $rs_uid_field = $resource_association['rs_uid_field'];
+    $applicable_resource_types = $resource_association['applicable_resource_types'];
+    $module_name = $resource_association['module_name'];
 
     $field_ref = (isset($field['ref']) ? $field['ref'] : 0);
     $field_value = (isset($field['value']) ? trim($field['value']) : '');
 
-    if(!in_array($resource['resource_type'], $museumplus_resource_types) || $field_ref == 0 || $field_value === '')
+    if(!in_array($resource['resource_type'], $applicable_resource_types) || $field_ref == 0 || $field_value === '')
         {
         return false;
         }
@@ -61,24 +69,17 @@ function HookMuseumplusViewRenderfield($field, $resource)
         return false;
         }
 
-    if($field_ref == $museumplus_mpid_field)
+    if($field_ref == $rs_uid_field)
         {
-        $museumplus_mpid_field = $field['value'];
-        if(trim($museumplus_mpid_field) == '')
+        $mpid = $field_value;
+        if($mpid === '')
             {
             return false;
             }
 
-        $resource_module_name = get_resource_nodes($resource['ref'], $museumplus_module_name_field, true);
-        if(empty($resource_module_name))
-            {
-            return false;
-            }
-        $resource_module_name = $resource_module_name[0]['name'];
+        $value = highlightkeywords($mpid, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
 
-        $value = highlightkeywords($museumplus_mpid_field, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
-
-        $mplus_object_url = (is_numeric($museumplus_mpid_field) ? mplus_generate_module_record_url($resource_module_name, $museumplus_mpid_field) : '');
+        $mplus_object_url = (is_numeric($mpid) ? mplus_generate_module_record_url($module_name, $mpid) : '');
         ?>
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($field['title']); ?></h3>

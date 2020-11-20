@@ -354,3 +354,37 @@ function mplus_save_module_config(array $cf)
 
     return;
     }
+
+/**
+* For a resource, obtain the associated modules' configuration
+* 
+* @param integer $resource_ref
+* 
+* @return array The associated modules' configuration
+*/
+function mplus_get_associated_module_conf(int $resource_ref)
+    {
+    global $museumplus_modules_saved_config, $museumplus_module_name_field;
+
+    if($resource_ref <= 0 || is_null($museumplus_modules_saved_config) || $museumplus_modules_saved_config === '')
+        {
+        return array();
+        }
+
+    $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
+
+    $resource_module_name = get_resource_nodes($resource_ref, $museumplus_module_name_field, true);
+    $resource_module_name = (!empty($resource_module_name) ? $resource_module_name[0]['name'] : 'Object');
+
+    $found_index = array_search($resource_module_name, array_column($museumplus_modules_config, 'module_name'));
+    if($found_index === false)
+        {
+        return array();
+        }
+    // museumplus_modules_config index starts from one as these are used as end user records' IDs. See the setup_module.php
+    // array_search() doesn't honour the multidimensional array index and returns the found index counting from zero.
+    $found_index = ++$found_index;
+
+    return $museumplus_modules_config[$found_index];
+    }
+
