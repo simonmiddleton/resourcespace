@@ -4956,3 +4956,20 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
     <?php
     return;
     }
+
+
+/**
+* Render an HTML hidden input
+* 
+* @param string $name  Input name
+* @param string $value Input value
+* 
+* @return void
+*/
+function render_hidden_input(string $name, string $value)
+    {
+    ?>
+    <input type="hidden" name="<?php echo htmlspecialchars($name); ?>" value="<?php echo htmlspecialchars($value); ?>">
+    <?php
+    return;
+    }

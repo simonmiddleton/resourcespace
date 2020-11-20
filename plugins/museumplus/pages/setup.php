@@ -12,7 +12,37 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
+#############################################################
+##### RSC file upload -or- saving after loading the RSC #####
+$rsc_upload = (getval('upload','') !== '');
+$rsc_save = (getval('submit', '') != '' || getval('save', '') != '');
+$add_rsc_modules_saved_config = true;
+
+// This is processed in config_gen_setup_post() but it's losing the museumplus_modules_saved_config information. We 
+// need it in order to be able to generate the HTML for it ($page_def).
+if($rsc_upload)
+    {
+    $error = handle_rsc_upload($plugin_name);
+    }
+
+$museumplus_modules_config = plugin_decode_complex_configs(getval('museumplus_modules_saved_config', $museumplus_modules_saved_config));
+
+if(!is_array($museumplus_modules_config))
+    {
+    $error = $lang['museumplus_error_unknown_type_saved_config'];
+    $museumplus_modules_config = array();
+    $add_rsc_modules_saved_config = false;
+    }
+
+if($add_rsc_modules_saved_config && ($rsc_upload || $rsc_save) && enforcePostRequest(false))
+    {
+    // This information is managed on a different custom page (setup_module.php). This needs saving as well otherwise the
+    // default will be used instead and the RSC value will be lost.
+    $page_def[] = config_add_hidden_input('museumplus_modules_saved_config');
+    }
+##### END of RSC file upload or saving after loading the RSC #####
+###################################################################
+
 
 
 // API settings
@@ -94,7 +124,6 @@ $museumplus_modules_conf_html .= "</table>
     <a href=\"{$baseurl}/plugins/museumplus/pages/setup_module.php\" onclick=\"return CentralSpaceLoad(this, true);\">{$lang['museumplus_add_new_module']}</a>
 ";
 $page_def[] = config_add_html($museumplus_modules_conf_html);
-$page_def[] = config_add_hidden('museumplus_modules_saved_config');
 
 
 

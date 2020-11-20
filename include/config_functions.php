@@ -444,6 +444,20 @@ function config_add_text_input($config_var, $label, $password = false, $width = 
 
 
 /**
+* Generate a data structure to instruct the configuration page generator to add a hidden input
+* 
+* @param string $cf_var_name  Plugins' configuration variable name
+* @param string $cf_var_value Value
+* 
+* @return array
+*/
+function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
+    {
+    return array('text_hidden_input', $cf_var_name, $cf_var_value);
+    }
+
+
+/**
 * Generate an HTML input file with its own form
 *
 * @param string $name        HTML input file name attribute

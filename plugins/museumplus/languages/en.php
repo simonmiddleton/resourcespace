@@ -11,7 +11,6 @@ $lang['museumplus_RS_settings_header'] = 'ResourceSpace settings';
 $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus identifier (MpID)';
 $lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules\' name for which the MpID is valid';
 $lang['museumplus_secondary_links_field'] = 'Metadata field used to hold the secondary links to other modules. ResourceSpace will generate a MuseumPlus URL for each of the links. Links will have a special syntax format: module_name:ID (e.g. "Object:1234")';
-$lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
 
 $lang['museumplus_script_header'] = 'Script settings';
@@ -58,4 +57,5 @@ $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run b
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
 $lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
 $lang["museumplus_error_not_deleted_module_conf"] = "Unable to delete the requested module configuration.";
+$lang["museumplus_error_unknown_type_saved_config"] = "The 'museumplus_modules_saved_config' is of an unknwon type!";
 
