@@ -1781,7 +1781,8 @@ function add_smart_collection()
 	sql_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) values ('$newcollection','" . $search . "','" . $restypes . "','" . $archive . "','".$starsearch."')");
 	$savedsearch=sql_insert_id();
 	sql_query("update collection set savedsearch='$savedsearch' where ref='$newcollection'"); 
-	set_user_collection($userref,$newcollection);
+    set_user_collection($userref,$newcollection);
+    refresh_collection_frame($newcollection);
 	}
 
 /**
