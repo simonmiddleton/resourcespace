@@ -1,5 +1,6 @@
 <?php
 $lang['museumplus_configuration'] = 'MuseumPlus Configuration';
+$lang['museumplus_push_size'] = 'Tick to push this size to MuseumPlus system (if applicable)';
 
 $lang['museumplus_api_settings_header'] = 'API details';
 $lang['museumplus_host'] = 'Host';
