@@ -123,11 +123,14 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                 }
             }
 
-        // Save data to temporay files in order to prevent memory limits being reached
-        $tempjson = json_encode($resources_fields_data);
-        $cache_data[$n] = $cache_location . "/csv_export_" . md5($scramble_key . $tempjson) . ".json"; // Scrambled path to cache
-        file_put_contents($cache_data[$n], $tempjson);
-        $tempjson = null;
+        if(count($resources_fields_data) > 0)
+            {
+            // Save data to temporay files in order to prevent memory limits being reached
+            $tempjson = json_encode($resources_fields_data);
+            $cache_data[$n] = $cache_location . "/csv_export_" . md5($scramble_key . $tempjson) . ".json"; // Scrambled path to cache
+            file_put_contents($cache_data[$n], $tempjson);
+            $tempjson = null;
+            }
         }
    
     $csv_field_headers = array_unique($csv_field_headers);
@@ -140,6 +143,16 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     for($n=0;$n<count($resourcebatches);$n++)
         {
         $filedata = "";
+        $resources_fields_data = array();
+        if(file_exists($cache_data[$n]))
+            {
+            $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
+            }
+        if(is_null($resources_fields_data))
+            {
+            $resources_fields_data = array();
+            }
+
         $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
         foreach($resources_fields_data as $resource_id => $resource_fields)
             {
@@ -171,7 +184,10 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         
         // Add this data to the file and delete disk copy of array
         file_put_contents($tempcsv,$filedata, FILE_APPEND);
-        unlink($cache_data[$n]);
+        if(file_exists($cache_data[$n]))
+            {
+            unlink($cache_data[$n]);
+            }
         }        
     
     if($outputfile != "")

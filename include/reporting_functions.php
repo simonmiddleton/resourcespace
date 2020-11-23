@@ -32,40 +32,78 @@ function get_reports()
     return $return;
     }
 
-function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false)
+/**
+ * do_report   - Runs the specified report. This is used in a number of ways:-
+ *               1) Outputs an HTML table to screen ($download = false)
+ *               2) Produces a CSV 
+ *                  - for direct download from team_report.php
+ *                  - captured and saved as a CSV file if called by send_periodic_report_emails() and over 100 rows are returned
+ *                
+ *
+ * @param  int $ref                 Report ID
+ * @param  mixed $from_y            Start year (used for reprts with date placholders)
+ * @param  mixed $from_m            Start month
+ * @param  mixed $from_d            Start day
+ * @param  mixed $to_y              End year
+ * @param  mixed $to_m              To month
+ * @param  mixed $to_d              To day
+ * @param  mixed $download          Output as CSV attachment (default)/output directly to client
+ * @param  mixed $add_border        Optional table border (not for download)
+ * @param  mixed $foremail          Sending as email?
+ * @return void | string | array    Outputs CSV file, returns HTML table or returns an array with path to the CSV file, rows and filename
+ */
+function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false)
     {
     # Run report with id $ref for the date range specified. Returns a result array.
-    global $lang, $baseurl;
+    global $lang, $baseurl, $report_rows_attachment_limit;
 
     $report=sql_query("select * from report where ref='$ref'");$report=$report[0];
     $report['name'] = get_report_name($report);
-
-    if ($download)
+    if($download || $foremail)
         {
         $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+        }
+
+    if($results = hook("customreport", "", array($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download,$add_border, $report)))
+        {
+        // Hook has created the $results array
+        }
+    else
+        {
+        // Generate report results normally
+        $sql=$report["query"];
+        $sql=str_replace("[from-y]",$from_y,$sql);
+        $sql=str_replace("[from-m]",$from_m,$sql);
+        $sql=str_replace("[from-d]",$from_d,$sql);
+        $sql=str_replace("[to-y]",$to_y,$sql);
+        $sql=str_replace("[to-m]",$to_m,$sql);
+        $sql=str_replace("[to-d]",$to_d,$sql);
+
+        global $view_title_field;
+        $sql=str_replace("[title_field]",$view_title_field,$sql);
+        $results=sql_query($sql);
+        }
+    
+    $resultcount = count($results);    
+    if($resultcount == 0)
+        {
+        // No point downloading as the resultant file will be empty
+        $download=false;
+        }            
+    if ($download)
+        {
         header("Content-type: application/octet-stream");
         header("Content-disposition: attachment; filename=" . $filename . "");
         }
 
-    if($results = hook("customreport", "", array($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download,$add_border, $report))); else {
-
-    $sql=$report["query"];
-    $sql=str_replace("[from-y]",$from_y,$sql);
-    $sql=str_replace("[from-m]",$from_m,$sql);
-    $sql=str_replace("[from-d]",$from_d,$sql);
-    $sql=str_replace("[to-y]",$to_y,$sql);
-    $sql=str_replace("[to-m]",$to_m,$sql);
-    $sql=str_replace("[to-d]",$to_d,$sql);
-
-    global $view_title_field;
-    $sql=str_replace("[title_field]",$view_title_field,$sql);
-
-    $results=sql_query($sql);
-    }
-
-    if ($download)
+    if ($download || ($foremail && $resultcount > $report_rows_attachment_limit))
         {
-        for ($n=0;$n<count($results);$n++)
+        if($foremail)
+            {
+            ob_clean();
+            ob_start();
+            }
+        for ($n=0;$n<$resultcount;$n++)
             {
             $result=$results[$n];
             if ($n==0)
@@ -100,6 +138,16 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                     }
                 }
             echo "\n";
+            }
+
+        if($foremail)
+            {
+            $output = ob_get_contents();
+            ob_end_clean();
+            $unique_id=uniqid();
+            $reportfile = get_temp_dir(false, "Reports") . "/Report_" . $unique_id . ".csv";
+            file_put_contents($reportfile,$output);
+            return array("file" => $reportfile,"filename" => $filename, "rows" => $resultcount);
             }
         }
     else
@@ -245,10 +293,10 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
     }
 
 
-function send_periodic_report_emails($echo_out = true)
+function send_periodic_report_emails($echo_out = true, $toemail=true)
     {
     # For all configured periodic reports, send a mail if necessary.
-    global $lang,$baseurl;
+    global $lang,$baseurl, $report_rows_zip_limit;
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
@@ -261,6 +309,10 @@ function send_periodic_report_emails($echo_out = true)
          WHERE pe.last_sent IS NULL
             OR date_add(date(pe.last_sent), INTERVAL pe.email_days DAY) <= date(now());
     ";
+
+    // Keep record of temporary CSV/ZIP files to delete after emails have been sent
+    $deletefiles = array();
+
     $reports=sql_query($query);
     foreach ($reports as $report)
         {
@@ -274,24 +326,47 @@ function send_periodic_report_emails($echo_out = true)
         $to_m = date("m");
         $to_d = date("d");
 
-        # Translates the report name.
+        // Translates the report name.
         $report["name"] = lang_or_i18n_get_translated($report["name"], "report-");
 
-        # Generate remote HTML table.
-        $output=do_report($report["report"], $from_y, $from_m, $from_d, $to_y, $to_m, $to_d,false,true);
+        # Generate report (table or CSV)
+        $output=do_report($report["report"], $from_y, $from_m, $from_d, $to_y, $to_m, $to_d,false,true, $toemail);
 
-        # Formulate a title
+        // Formulate a title
         $title = $report["name"] . ": " . str_replace("?",$report["period"],$lang["lastndays"]);
 
-        # Send mail to original user - this contains the unsubscribe link
-        # Note: this is basically the only way at the moment to delete a periodic report
-        $delete_link = sprintf('<br />%s<br />%s/?dr=%s',
-            $lang['report_delete_periodic_email_link'],
-            $baseurl,
-            $report['ref']
-        );
+        // If report is large, make it an attachment (requires $use_phpmailer=true)
+        $reportfiles = array();
+        if(is_array($output) && isset($output["file"]))
+            {
+            $deletefiles[] = $output["file"];
+            //Include the file as an attachment
+            if($output["rows"] > $report_rows_zip_limit)
+                {
+                // Convert to  zip file
+                $unique_id=uniqid();
+                $zipfile = get_temp_dir(false, "Reports") . "/Report_" . $unique_id . ".zip";
+                $zip = new ZipArchive();
+                $zip->open($zipfile, ZIPARCHIVE::CREATE);
+                $zip->addFile($output["file"], $output["filename"]);
+            
+                $zip->close();
+                $deletefiles[] = $zipfile;
+                $zipname = str_replace(".csv",".zip", $output["filename"]);
+                $reportfiles[$zipname] = $zipfile;
+                }
+            else
+                {
+                $reportfiles[$output["filename"]] = $output["file"];
+                }
+            $output = str_replace("%%REPORTTITLE%%", $title, $lang["report_periodic_email_report_attached"]);
+            }
 
-        $unsubscribe="<br />" . $lang["unsubscribereport"] . "<br />" . $baseurl . "/?ur=" . $report["ref"];
+        // Send mail to original user - this contains the unsubscribe link
+        // Note: this is basically the only way at the moment to delete a periodic report
+        $delete_link = "<br /><br />" . $lang["report_delete_periodic_email_link"] . "<br /><a href=\"" . $baseurl . "/?dr=" . $report["ref"] . "\" target=\"_blank\">" . $baseurl . "/?dr=" . $report["ref"] . "</a>";
+        
+        $unsubscribe="<br /><br />" . $lang["unsubscribereport"] . "<br /><a href=\"" . $baseurl . "/?ur=" . $report["ref"] . "\" target=\"_blank\">" . $baseurl . "/?ur=" . $report["ref"] . "</a>";
         $email=$report["email"];
 
         // Check user unsubscribed from this report
@@ -305,11 +380,10 @@ function send_periodic_report_emails($echo_out = true)
             $report['ref']
         );
         $unsubscribed_user = sql_value($query, false);
-
         if(!$unsubscribed_user)
             {
             if ($echo_out) {echo $lang["sendingreportto"] . " " . $email . "<br />" . $output . $delete_link . $unsubscribe . "<br />";}
-            send_mail($email,$title,$output . $delete_link  . $unsubscribe);
+            send_mail($email,$title,$output . $delete_link  . $unsubscribe,"","","","","","","",$reportfiles);
             }
 
         // Jump to next report if this should only be sent to one user
@@ -369,6 +443,20 @@ function send_periodic_report_emails($echo_out = true)
         # Mark as done.
         sql_query('UPDATE report_periodic_emails set last_sent = now() where ref = "' . $report['ref'] . '";');
         }
+
+    $GLOBALS["use_error_exception"] = true;
+    foreach($deletefiles as $deletefile)
+        {
+        try
+            {
+            unlink($deletefile);
+            }
+        catch(Exception $e)
+            {
+            debug("BANG Unable to delete - file not found: " . $deletefile);
+            }
+        }
+    unset($GLOBALS["use_error_exception"]);
     }
 
 function delete_periodic_report($ref)

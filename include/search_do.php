@@ -914,76 +914,76 @@ function do_search(
                             # make a new keyword
                             $keyref = resolve_keyword($quotedkeyword, true,true,false);
                             }
-											
-						 // Add code to find matching keywords in non-fixed list fields  
-						$union_restriction_clause = "";
-						$union_restriction_clause_node = "";
 
-						// TODO: change $c to [union_index]
+                        // Add code to find matching keywords in non-fixed list fields  
+                        $union_restriction_clause = "";
+                        $union_restriction_clause_node = "";
 
-						if (!empty($sql_exclude_fields))
-							{
-							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field NOT IN (" . $sql_exclude_fields . ")";
-							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
-							}
+                        if (!empty($sql_exclude_fields))
+                            {
+                            $union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field NOT IN (" . $sql_exclude_fields . ")";
+                            $union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+                            }
 
-						if (count($hidden_indexed_fields) > 0)
-							{
-							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
-							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
-							}
+                        if (count($hidden_indexed_fields) > 0)
+                            {
+                            $union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
+                            $union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                            }
                             
                         if ($quotedfieldid != "")
-							{
-							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
-							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node = '" . $quotedfieldid . "'";
-							}
+                            {
+                            $union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
+                            $union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node = '" . $quotedfieldid . "'";
+                            }
 						 
-						if ($qk==1)
-							{
-							$freeunion = " SELECT qrk_[union_index]_" . $qk . ".resource, [bit_or_condition] qrk_[union_index]_" . $qk . ".hit_count AS score FROM resource_keyword qrk_[union_index]_" . $qk;                                                
-							// Add code to find matching nodes in resource_node
-							$fixedunion = " SELECT rn_[union_index]_" . $qk . ".resource, [bit_or_condition] rn_[union_index]_" . $qk . ".hit_count AS score FROM resource_node rn_[union_index]_" . $qk .
+                        if ($qk==1)
+                            {
+                            $freeunion = " SELECT qrk_[union_index]_" . $qk . ".resource, [bit_or_condition] qrk_[union_index]_" . $qk . ".hit_count AS score FROM resource_keyword qrk_[union_index]_" . $qk;                                                
+                            // Add code to find matching nodes in resource_node
+                            $fixedunion = " SELECT rn_[union_index]_" . $qk . ".resource, [bit_or_condition] rn_[union_index]_" . $qk . ".hit_count AS score FROM resource_node rn_[union_index]_" . $qk .
                                 " LEFT OUTER JOIN `node_keyword` nk_[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nk_[union_index]_" . $qk . ".node LEFT OUTER JOIN `node` nn[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nn[union_index]_" . $qk . ".ref " .
-								" AND (nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
-							$freeunioncondition="qrk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
-							$fixedunioncondition="nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
-							}
-						else
-							{
-							# For keywords other than the first one, check the position is next to the previous keyword.                                           
-							$freeunion .= " JOIN resource_keyword qrk_[union_index]_" . $qk . "
-								ON qrk_[union_index]_" . $qk . ".resource = qrk_[union_index]_" . ($qk-1) . ".resource
-								AND qrk_[union_index]_" . $qk . ".keyword = '" .$keyref . "'
-								AND qrk_[union_index]_" . $qk . ".position = qrk_[union_index]_" . ($qk-1) . ".position + " . $last_key_offset . "
-								AND qrk_[union_index]_" . $qk . ".resource_type_field = qrk_[union_index]_" . ($qk-1) . ".resource_type_field";    
-						   
-						   # For keywords other than the first one, check the position is next to the previous keyword.
-							# Also check these occurances are within the same field.
-							$fixedunion .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = '" . $keyref . "' AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
-							}
-						$qk++;
-						} // End of if keyword not excluded (not in $noadd array)
-					} // End of each keyword in quoted string
-					
-				if($omit)# Exclude matching resources from query (omit feature)
-					{
-					if ($sql_filter != "")
-						{
-						$sql_filter .= " AND ";
-						}		
-					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-					}
-				elseif (isset($freeunion))
-					{
-					$sql_keyword_union[] = $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . " GROUP BY resource ";
-					$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-					$sql_keyword_union_or[]=FALSE;
-					$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
-					}
+                                " AND (nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
+                            $freeunioncondition="qrk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
+                            $fixedunioncondition="nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
+                            }
+                        else
+                            {
+                            # For keywords other than the first one, check the position is next to the previous keyword.                                           
+                            $freeunion .= " JOIN resource_keyword qrk_[union_index]_" . $qk . "
+                                ON qrk_[union_index]_" . $qk . ".resource = qrk_[union_index]_" . ($qk-1) . ".resource
+                                AND qrk_[union_index]_" . $qk . ".keyword = '" .$keyref . "'
+                                AND qrk_[union_index]_" . $qk . ".position = qrk_[union_index]_" . ($qk-1) . ".position + " . $last_key_offset . "
+                                AND qrk_[union_index]_" . $qk . ".resource_type_field = qrk_[union_index]_" . ($qk-1) . ".resource_type_field";    
+                            
+                            # For keywords other than the first one, check the position is next to the previous keyword.
+                            # Also check these occurances are within the same field.
+                            $fixedunion .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = '" . $keyref . "' AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
+                            }
+                        
+                        $skipped_last=false;
+                        $qk++;
+                        } // End of if keyword not excluded (not in $noadd array)
+                    } // End of each keyword in quoted string
+
+                if($omit)# Exclude matching resources from query (omit feature)
+                    {
+                    if ($sql_filter != "")
+                        {
+                        $sql_filter .= " AND ";
+                        }		
+                    $sql_filter .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+                    }
+                elseif (isset($freeunion))
+                    {
+                    $sql_keyword_union[] = $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . " GROUP BY resource ";
+                    $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
+                    $sql_keyword_union_or[]=FALSE;
+                    $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                    }
                 $c++;
-				}	// End of if quoted string
-			} // end keywords expanded loop        
+                }	// End of if quoted string
+            } // end keywords expanded loop        
         } // end keysearch if
 
     // *******************************************************************************
