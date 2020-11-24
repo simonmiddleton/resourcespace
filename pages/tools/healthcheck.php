@@ -50,7 +50,13 @@ if(!file_exists($file) || !is_readable($file))
     exit("FAIL - Hash not saved or unreadable in file'{$file}'");
     }
 
-$check=file_get_contents($file);unlink($file);
+$check=file_get_contents($file);
+
+if(file_exists($file))
+    {
+    unlink($file);
+    }
+
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
 
 // Check write access to sql_log
