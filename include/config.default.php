@@ -2413,12 +2413,8 @@ $use_plugins_manager = true;
 # Allow Plugin Upload
 $enable_plugin_upload = true;
 
-
-# ------------- Geocoding / geolocation -------------
-# Note that a Google Maps API key is no longer required.
-#Disable geocoding features?
+# Disable geocoding features?
 $disable_geocoding = false;
-$use_google_maps = false;
 
 # After obtaining an API key, please set the following config option:
 # $google_maps_api_key = '';
