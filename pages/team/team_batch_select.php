@@ -30,6 +30,12 @@ if ($use_local)
 	{
 	# File list from local upload directory.
 
+    # Check if an upload directory has been configured.
+    if ($local_ftp_upload_folder=="")
+        {
+        exit($lang["missing_folder"]);
+        }
+
 	# Define the titles:
 	$titleh1 = $lang["addresourcebatchlocalfolder"];
 	$titleh2 = str_replace(array("%number","%subtitle"), array("2", $lang["upload_file"]), $lang["header-upload-subtitle"]);
