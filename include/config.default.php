@@ -2327,7 +2327,7 @@ $upload_methods = array(
 
 # Allow to change the location of the upload folder, so that it is not in the
 # web visible path. Relative and abolute paths are allowed.
-$local_ftp_upload_folder = 'upload/';
+$local_ftp_upload_folder = '';
 
 # Use a file tree display for local folder upload
 $local_upload_file_tree=false;
