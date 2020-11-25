@@ -972,10 +972,18 @@ else if(1 == $resource['has_image'])
                 <?php
                 }
 			
-			// Swap the image with the 'scr' size when hoverable image zooming is enabled in config 
+			// Swap the image with the 'lpr' size when hoverable image zooming is enabled in config. If 'lpr' size not available then use the 'scr' size.
             if($image_preview_zoom)
                 {
-                $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+				$pathtofile = get_resource_path($ref, true,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+				if (file_exists($pathtofile))
+				    {
+				    $previewurl = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+					}
+					else
+					{
+					$previewurl = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+					}
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
