@@ -1667,7 +1667,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
 
     // Generate the key based on the original collection. For featured collection category, all sub featured collections
     // will share the same key
-    $k = substr(md5($collection["ref"] . "," . time()), 0, 10);
+    $k = generate_share_key($collection["ref"]);
 
     $main_collection = $collection; // keep record of this info as we need it at the end to record the successful generation of a key for a featured collection category
     $created_sub_fc_access_key = false;
@@ -5176,4 +5176,60 @@ function get_upload_share_details($collection,$uploadkey="")
     $condition = $uploadkey != "" ? " AND access_key='" . escape_check($uploadkey) . "'" : "";
     $details = sql_query("SELECT status, user, password_hash, expires FROM external_access_keys WHERE upload=1" . $condition);
     return $details;
+    }
+
+function create_upload_link(int $collection,$shareoptions)
+    {
+    global $upload_link_users, $lang, $scramble_key, $userref;
+    $setcolumns = array();
+    $validshareopts = array("user","expires","password");
+
+    $key = generate_share_key($collection);
+    foreach($validshareopts as $option)
+        {
+        if(isset($shareoptions[$option]))
+            {
+            if($option == "password")
+                {
+                // Only set if it has actually been set to a string
+                if(trim($shareoptions[$option]) != "")
+                    {
+                    $setcolumns["password_hash"] = hash('sha256', $key . $shareoptions[$option] . $scramble_key);
+                    }
+                }
+            else
+                {
+                $setcolumns[$option] = escape_check($shareoptions[$option]);
+                }
+            }
+        }
+    if(!in_array($setcolumns["user"],$upload_link_users) && !$setcolumns["user"] == $userref)
+        {
+        return $lang["error_invalid_user"];
+        }
+    
+    if(strtotime($setcolumns["expires"]) < time())
+        {
+        return $lang["error_invalid_date"];
+        }
+    
+    
+    $setcolumns["collection"] = $collection;
+    $setcolumns["access_key"] = $key;
+    $setcolumns["upload"] = '1';
+    $setcolumns["date"] = date("Y-m-d",time());
+    $insert_columns = array_keys($setcolumns);
+    $insert_values  = array_values($setcolumns);
+
+    $sql = "INSERT INTO external_access_keys
+            (" . implode(",",$insert_columns) . ")
+            VALUES  ('" . implode("','",$insert_values). "')";
+    
+    sql_query($sql);
+    return $key;    
+    }
+
+function generate_share_key($string)
+    {
+    return substr(md5($string . "," . time()), 0, 10);
     }

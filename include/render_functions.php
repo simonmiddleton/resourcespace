@@ -2596,7 +2596,8 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
     {
     global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
-    if(!hook('replaceemailaccessselector')): ?>
+    if(!hook('replaceemailaccessselector'))
+        {?>
         <div class="Question" id="question_access">
             <label for="archive"><?php echo ($emailing ? $lang["externalselectresourceaccess"] : $lang["access"]) ?></label>
             <select class="stdwidth" name="access" id="access">
@@ -2612,8 +2613,8 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 ?>
             </select>
             <div class="clearerleft"> </div>
-        </div>
-    <?php endif; #hook replaceemailaccessselector
+        </div><?php
+        } #hook replaceemailaccessselector
     
     if(!hook('replaceemailexpiryselector'))
         {
@@ -2680,12 +2681,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         <input type="hidden" name="usergroup" value="<?php echo $usergroup; ?>">
         <?php
         }
-        ?>
-        <div class="Question">
-            <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
-        </div>
-        <?php
+        render_share_password_question(true);
         hook("additionalresourceshare");
         ?>
     <?php        
@@ -4943,4 +4939,43 @@ function render_workflow_state_question($current=null, $checkaccess=true)
         }
     
     render_dropdown_question($lang["status"], "share_status", $statusoptions, $current, " class=\"stdWidth\"");
+    }
+
+function render_share_password_question($blank=true)
+    {
+    global $lang;
+    ?>
+    <div class="Question">
+    <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+    <input type="text" id="inputpassword" name="inputpassword" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>" 
+        onclick="pclick('inputpassword');" onfocus="pclick('inputpassword');" onblur="pblur('inputpassword');">
+    <input type="hidden" id="sharepassword" name="sharepassword" value="(unchanged)">
+    </div>
+    <script>
+    var passInput="";
+    var passState="(unchanged)";
+    var passHistory="";
+    function pclick(id) 
+        {
+        // Set to password mode
+        document.getElementById(id).type="password";
+        document.getElementById(id).value=passState;
+        document.getElementById(id).select();
+        }
+    function pblur(id) 
+        {
+        // Copy keyed input other than bracketed placeholders to hidden password
+        passInput = document.getElementById(id).value;
+        if(passInput!="(unchanged)" && passInput!="(changed)") 
+            {
+            document.getElementById("sharepassword").value=passInput; 
+            passState="(changed)";
+            }
+        // Return to text mode showing the appropriate bracketed placeholder
+        document.getElementById(id).value=passState;
+        document.getElementById(id).type="text";
+        }
+    </script>
+    </div>
+    <?php
     }

@@ -3724,3 +3724,5 @@ $report_rows_zip_limit = 10000;
 
 // Optional arrayof user ids that upload links can be 'shared as' in order to limit metadata field and resource type visibility etc.
 $upload_link_users = array();
+// Workflow state that will be set for all resources uploaded using the share link
+$upload_link_workflow_state = -1;

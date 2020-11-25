@@ -1,15 +1,6 @@
 <?php
 include "../include/db.php";
 
-include "../include/authenticate.php";
-if (! (checkperm("c") || checkperm("d")))
-    {exit ("Permission denied.");}
-include "../include/image_processing.php";
-
-$overquota                              = overquota();
-$status                                 = '';
-$resource_type                          = getvalescaped('resource_type', '');
-
 // The collection_add parameter can have the following values:-
 //  'new'       Add to new collection
 //  'false'     Do not add to collection
@@ -17,6 +8,22 @@ $resource_type                          = getvalescaped('resource_type', '');
 //  is_numeric  Use this collection  
 $collection_add                         = getvalescaped('collection_add', 'false');
 
+// External share support
+$k                                      = getvalescaped('k','');
+if (($k=="") || (!check_access_key_collection($collection_add,$k)))
+    {
+    include "../include/authenticate.php";
+    if (! (checkperm("c") || checkperm("d")))
+        {
+        exit ("Permission denied.");
+        }
+    }
+
+include "../include/image_processing.php";
+
+$overquota                              = overquota();
+$status                                 = '';
+$resource_type                          = getvalescaped('resource_type', '');
 $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);

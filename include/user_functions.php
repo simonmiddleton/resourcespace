@@ -1704,7 +1704,7 @@ function check_access_key_collection($collection, $key)
         }
 
     hook("external_share_view_as_internal_override");
-    global $external_share_view_as_internal;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
         // We want to authenticate the user so we can show the page as internal
@@ -1730,7 +1730,44 @@ function check_access_key_collection($collection, $key)
     // get_featured_collection_categ_sub_fcs() does the check internally
     $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
 
-    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '%s' AND access_key = '{$key}'";
+    // Get key info - 
+    $keyinfo = sql_query("
+                    SELECT user,
+                           usergroup,
+                           expires,
+                           upload,
+                           password_hash,
+                           collection
+                      FROM external_access_keys
+                     WHERE access_key = '{$key}'
+                       AND (expires IS NULL OR expires > now())");
+    
+    if(count($keyinfo) == 0)
+        {
+        return false;
+        }
+
+    if($keyinfo[0]["password_hash"] != "" && PHP_SAPI != "cli")
+        {
+        // A share password has been set. Check if user has a valid cookie set
+        $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
+        $check = check_share_password($key,"",$share_access_cookie);
+        if(!$check)
+            {
+            $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"return_url" => $baseurl . (isset($_SERVER["REQUEST_URI"]) ? urlencode(str_replace($baseurl_short,"/",$_SERVER["REQUEST_URI"])) : "/c=" . $collection["ref"] . "&k=" . $key)));
+            redirect($url);
+            exit();
+            }
+        }
+       
+    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '" . $collection["ref"] . "' AND access_key = '{$key}'";
+
+    if((bool)$keyinfo[0]["upload"] === true)
+        {
+        $uploadurl = get_upload_url($collection["ref"],$k);
+        redirect($uploadurl);
+        exit();
+        }
 
     foreach($collections as $collection_ref)
         {
@@ -2385,4 +2422,25 @@ function internal_share_access()
     {
     global $k, $external_share_view_as_internal, $is_authenticated;
     return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    }
+
+/**
+ * Generate upload URL - alters based on $upload_then_edit setting and external uploads
+ *
+ * @param  string $collection - optional collection
+ * @param  string $accesskey - used for external users
+ * @return string
+ */
+function get_upload_url($collection="",$k="")
+    {
+    global $upload_then_edit, $userref;
+    if ($upload_then_edit || $k != "" || !isset($userref))
+        {
+        $url = generateURL("pages/upload_plupload.php",array("k" => $k,"collection_add"=>$collection));
+        }
+    else
+        {
+        $url = generateURL("pages/edit.php", array("ref" => "-" . $userref,"collection_add"=>$collection));
+        }
+    return $url;
     }

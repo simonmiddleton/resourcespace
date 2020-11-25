@@ -2952,7 +2952,12 @@ $lang['csv_export_offline_only']            = "Offline processing must be used w
 
 // Share upload link
 $lang["action-share-upload-link"]           = "Share upload link";
+$lang["action-email-upload-link"]           = "Email link directly";
 $lang["title-upload-link-create"]           = "Create external upload link";
+$lang["button-upload-link-create"]          = "Create link";
 $lang["title-upload-link-edit"]             = "Edit external upload link";
 $lang["warning-upload-link"]                = "WARNING: creating an external upload URL will allow anyone who obtains the link to upload files";
 $lang["warning-upload-instructions"]        = "Please set the required upload link options";
+$lang["error_invalid_user"]                 = "Invalid user";
+$lang["error_invalid_date"]                 = "Invalid date";
+$lang["password_unchanged"]                 = "(unchanged)";
