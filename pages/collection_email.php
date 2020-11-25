@@ -44,7 +44,7 @@ if(!$allow_share || checkperm("b"))
 
 $themeshare = false;
 $themename = "";
-$subthemes = (getval("subthemes", "false") != "false");
+$subthemes = (getval("subthemes", "true") != "false");
 if(is_featured_collection_category($collection))
     {
     $themeshare = true;
