@@ -582,7 +582,6 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         sql_null_or_val((string)(int) $rs_session, $rs_session == ""),
         ($public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD)
     );
-    debug("jacktest: \$sql = {$sql}");
     sql_query($sql);
 
     $ref = sql_insert_id();
