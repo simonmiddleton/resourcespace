@@ -373,6 +373,8 @@ function mplus_get_associated_module_conf(int $resource_ref)
 
     $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 
+    // A resource can only be linked to one module (for syncing purposes). If module name field is not defined, fallback to 'Object'
+    // Note: museumplus_module_name_field should already be constrained to fixed list fields that support only one value (ie. dropdown and radio)
     $resource_module_name = get_resource_nodes($resource_ref, $museumplus_module_name_field, true);
     $resource_module_name = (!empty($resource_module_name) ? $resource_module_name[0]['name'] : 'Object');
 
@@ -388,3 +390,122 @@ function mplus_get_associated_module_conf(int $resource_ref)
     return $museumplus_modules_config[$found_index];
     }
 
+
+/**
+* For a resource associated modules' configuration, obtain all the relevant values from ResourceSpace metadata fields
+* (e.g the actual module record ID based on the 'rs_uid_field' module configuration).
+* 
+* IMPORTANT: this is a transformation from the RS field IDs to their values. Structure of the return array will be similar 
+* (e.g. for 'rs_uid_field' instead of the ID of the field it will be the value for that field)
+* 
+* @param integer $ref         Resource ref
+* @param array   $module_conf The resource associated modules' configuration structure. {@see mplus_get_associated_module_conf()}
+* 
+* @return array The associated modules' configuration
+*/
+function mplus_get_resource_module_conf_values(int $ref, array $module_conf)
+    {
+    // Get the module record ID associated with the resource
+    if(isset($module_conf['rs_uid_field']) && $module_conf['rs_uid_field'] > 0)
+        {
+        $module_conf['rs_uid_field'] = get_data_by_field($ref, $module_conf['rs_uid_field']);
+        }
+
+    // Get the decision factor value - if multimedia (ie selected preview images) should be pushed to MuseumPlus system
+    // Note: for our purpose, all we care is if that field has one node (from media_sync_df_field) associated with the resource.
+    // We do not care what value this is. These fields are meant to be something like "Sync with CMS?" where the only option is "Yes".
+    if(isset($module_conf['media_sync_df_field']) && $module_conf['media_sync_df_field'] > 0)
+        {
+        $media_sync_df_nodes = get_resource_nodes($ref, $module_conf['media_sync_df_field'], false);
+        $module_conf['media_sync_df_field'] = (count($media_sync_df_nodes) === 1);
+        }
+
+    if(isset($module_conf['field_mappings']) && count($module_conf['field_mappings']) > 0)
+        {
+        $use_permissions = false;
+        $resource_fields_data = get_resource_field_data($ref, false, $use_permissions);
+
+        foreach($module_conf['field_mappings'] as $i => $mapped_field)
+            {
+            $found_index = array_search($mapped_field['rs_field'], array_column($resource_fields_data, 'ref'));
+            if($found_index === false)
+                {
+                continue;
+                }
+
+            $module_conf['field_mappings'][$i]['rs_field'] = $resource_fields_data[$found_index]['value'];
+            }
+        }
+
+    return $module_conf;
+    }
+
+
+/**
+* Validate a modules' record ID (technical or virtual)
+* 
+* @param string     $module The module name (e.g Object)
+* @param string|int $id     The modules' record ID. IMPORTANT: technical IDs are integers, virtual IDs are strings.
+* 
+* @return integer|boolean Returns the valid MuseumPlus module record technical ID, FALSE otherwise
+*/
+function mplus_validate_id($module, $id)
+    {
+    if($id === '')
+        {
+        return false;
+        }
+
+    // - for validation, always try the virtual ID (if one was configured) first, then check the technical ID.
+    // - for validation, always error if a virtual ID finds more than a record
+    return false;
+    }
+
+
+
+
+
+/*
+#####
+SYNCING data from M+ ---- old code that was in HookMuseumplusAllAdditionalvalcheck()
+USE AS REFERENCE ONLY! (if even needed since the structure has changed)
+#####
+
+
+// Other plugins can modify the field (e.g when MpID field is the original filename without the extension) in which case,
+// code needs to be able to handle this so it will attempt to retrieve it from the database instead.
+$mpid = getvalescaped("field_{$museumplus_mpid_field}", get_data_by_field($ref, $museumplus_mpid_field)); # CAN BE ALPHANUMERIC
+if(trim($mpid) === '')
+    {
+    return false;
+    }
+
+$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
+
+$conn_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
+if(empty($conn_data))
+    {
+    return $lang['museumplus_error_bad_conn_data'];
+    }
+
+$mplus_data = mplus_search($conn_data, $museumplus_rs_mappings, 'Object', $mpid, $museumplus_search_mpid_field);
+
+update_field($ref, $museumplus_mpid_field, escape_check($mpid));
+
+if(empty($mplus_data))
+    {
+    return str_replace('%mpid', $mpid, $lang['museumplus_error_no_data_found']);
+    }
+
+foreach($mplus_data as $mplus_field => $field_value)
+    {
+    if(!array_key_exists($mplus_field, $museumplus_rs_mappings))
+        {
+        continue;
+        }
+
+    $rs_field = $museumplus_rs_mappings[$mplus_field];
+
+    update_field($ref, $rs_field, escape_check($field_value));
+    }
+*/

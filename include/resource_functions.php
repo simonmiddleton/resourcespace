@@ -1176,7 +1176,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
 	
-    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
+    // Plugins can do extra actions once all fields have been saved and return errors back if needed
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
+    if(is_array($plg_errors) && !empty($plg_errors))
+        {
+        $errors = array_merge($errors, $plg_errors);
+        }
 
 	if (count($errors)==0) {return true;} else {return $errors;}
 	}

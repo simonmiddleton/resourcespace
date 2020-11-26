@@ -92,3 +92,82 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
 
     return;
     }
+
+
+function HookMuseumplusAllAdditionalvalcheck($fields, $fields_item)
+    {
+    global $resource, $museumplus_module_name_field;
+
+    $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
+    if(
+        empty($associated_module_cfg)
+        || !in_array($resource['resource_type'], $associated_module_cfg['applicable_resource_types'])
+        // Changing any other field other than the module name or the M+ ID for a resource
+        || !in_array($fields_item['ref'], array($museumplus_module_name_field, $associated_module_cfg['rs_uid_field']))
+    )
+        {
+        return false;
+        }
+
+    $GLOBALS['museumplus_trigger_id_validation'] = true;
+
+    return false;
+    }
+
+
+function HookMuseumplusAllAftersaveresourcedata($ref)
+    {
+    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(resource_ref = {$ref});");
+    // The global 'museumplus_trigger_id_validation' is set in Additionalvalcheck if either the module name OR the rs_uid_field
+    // have changed to trigger this process
+    if(!isset($GLOBALS['museumplus_trigger_id_validation']))
+        {
+        return false;
+        }
+
+    $resource = get_resource_data($ref);
+    if($resource === false)
+        {
+        return false;
+        }
+
+    $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
+    if(
+        empty($associated_module_cfg)
+        || !in_array($resource['resource_type'], $associated_module_cfg['applicable_resource_types'])
+    )
+        {
+        return false;
+        }
+
+    $module_name = $associated_module_cfg['module_name'];
+    $rs_uid_field = $associated_module_cfg['rs_uid_field'];
+    $resource_assoc_module_cfg_values = mplus_get_resource_module_conf_values($resource['ref'], $associated_module_cfg);
+
+    $errors = array();
+    if(isset($GLOBALS['hook_return_value']) && is_array($GLOBALS['hook_return_value']) && !empty($GLOBALS['hook_return_value']))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $errors = $GLOBALS['hook_return_value'];
+        }
+
+    global $lang;
+
+    $mpid = trim($resource_assoc_module_cfg_values['rs_uid_field']); # CAN BE ALPHANUMERIC (technical IDs are integers, virtual IDs are strings)
+
+    // STEP 1: validate the record ID for the linked module
+    $valid_id = mplus_validate_id($module_name, $mpid);
+    if($mpid != '' && $valid_id === false)
+        {
+        $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];
+        }
+
+
+
+    if(!empty($errors))
+        {
+        return $errors;
+        }
+
+    return false;
+    }
