@@ -563,7 +563,7 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 ?>
 <script>
 
-function ajax_download(download_offline)
+function ajax_download(download_offline, tar)
 	{
     var ifrm = document.getElementById('downloadiframe');
     ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
@@ -586,38 +586,45 @@ function ajax_download(download_offline)
 	jQuery('#text').prop('disabled', true);
 	jQuery('#archivesettings').prop('disabled', true);
 
-	
-	progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode($uniqid) ?>&user=<?php echo urlencode($userref) ?>", {
-        method: 'post',          // method; get or post
-        data: '',               //  e.g. {name: "John", greeting: "hello"}
-        minTimeout: 500,       // starting value for the timeout in milliseconds
-        maxTimeout: 2000,       // maximum length of time between requests
-        multiplier: 1.5,          // the amount to expand the timeout by if the response hasn't changed (up to maxTimeout)
-        type: 'text'           // response type - text, xml, json, etc.  
-    }, function(remoteData, success, xhr, handle) {
-         if (remoteData.indexOf("file")!=-1){
-					var numfiles=remoteData.replace("file ","");
-					if (numfiles==1){
-						var message=numfiles+' <?php echo $lang['fileaddedtozip']?>';
-					} else { 
-						var message=numfiles+' <?php echo $lang['filesaddedtozip']?>';
-					}	 
-					var status=(numfiles/<?php echo count($result)?>*100)+"%";
-					console.log(status);
-					document.getElementById('progress2').innerHTML=message;
-				}
-				else if (remoteData=="complete"){ 
-				   document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
-                   document.getElementById('progress').style.display="none";
-                   progress.stop();    
-                }  
-                else {
-					// fix zip message or allow any
-					console.log(remoteData);
-					document.getElementById('progress2').innerHTML=remoteData.replace("zipping","<?php echo $lang['zipping']?>");
-                }
-     
-    });
+	if(tar)
+        {
+        document.getElementById('progress2').innerHTML="<?php echo $lang['collection_download_tar_started']?>";
+        document.getElementById('progress').style.display="none";
+        }
+    else
+        {
+        progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode($uniqid) ?>&user=<?php echo urlencode($userref) ?>", {
+                method: 'post',          // method; get or post
+                data: '',               //  e.g. {name: "John", greeting: "hello"}
+                minTimeout: 500,       // starting value for the timeout in milliseconds
+                maxTimeout: 2000,       // maximum length of time between requests
+                multiplier: 1.5,          // the amount to expand the timeout by if the response hasn't changed (up to maxTimeout)
+                type: 'text'           // response type - text, xml, json, etc.  
+            }, function(remoteData, success, xhr, handle) {
+                 if (remoteData.indexOf("file")!=-1){
+                            var numfiles=remoteData.replace("file ","");
+                            if (numfiles==1){
+                                var message=numfiles+' <?php echo $lang['fileaddedtozip']?>';
+                            } else { 
+                                var message=numfiles+' <?php echo $lang['filesaddedtozip']?>';
+                            }    
+                            var status=(numfiles/<?php echo count($result)?>*100)+"%";
+                            console.log(status);
+                            document.getElementById('progress2').innerHTML=message;
+                        }
+                        else if (remoteData=="complete"){ 
+                           document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
+                           document.getElementById('progress').style.display="none";
+                           progress.stop();    
+                        }  
+                        else {
+                            // fix zip message or allow any
+                            console.log(remoteData);
+                            document.getElementById('progress2').innerHTML=remoteData.replace("zipping","<?php echo $lang['zipping']?>");
+                        }
+             
+            });
+        }
 	}
 
 </script>
@@ -747,11 +754,12 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     <?php
     }
 ?>
-	
+
+<script>var tar=false;</script>	
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
-	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){ajax_on=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{ajax_on=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
 		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
 		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
 	</select>
@@ -766,12 +774,16 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 	
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
-	<script>var ajax_on=<?php echo ($collection_download_tar)?"true":"false"; ?>;</script>
 	<input type="submit"
            onclick="
-            if(ajax_on)
+            if(tar)
                 {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>);
+                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, false);
+                return false;
+                }
+            else
+                {
+                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, true);
                 return false;
                 }
            "
