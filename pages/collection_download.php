@@ -755,11 +755,11 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 
-<script>var tar=false;</script>	
+<script>var tar=true;</script>	
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
-	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
 		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
 		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
 	</select>
@@ -778,12 +778,12 @@ if($exiftool_write && !$force_exiftool_write_metadata)
            onclick="
             if(tar)
                 {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, false);
+                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, true);
                 return false;
                 }
             else
                 {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, true);
+                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, false);
                 return false;
                 }
            "
