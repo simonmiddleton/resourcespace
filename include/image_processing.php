@@ -1609,7 +1609,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if(!$imagemagick_mpr)
                 {
                 $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
-                debug("CLI-MJB COMMAND=".$command);
             }
 
             # fetch target width and height
