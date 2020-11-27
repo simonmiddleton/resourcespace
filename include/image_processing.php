@@ -1594,21 +1594,23 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
 
-            if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif" || getval("noflatten","")!="") {
+            // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and will eventually be replaced by -alpha off)
+            // Extensions for which the alpha/matte channel should not be disabled (and therefore option -flatten is unnecessary)
+            $extensions_no_alpha_off = array('png', 'gif', 'tif', 'psd');
+
+            if( $prefix == "cr2:" || $prefix == "nef:" || in_array($extension, $extensions_no_alpha_off) || getval("noflatten","")!="") {
                 $flatten = "";
             } else {
                 $flatten = "-flatten";
             }
 
-            // Extensions for which the alpha/ matte channel should not be set to Off (i.e. +matte option) *** '+matte' no longer exists but is the same as '-alpha off'
-            $extensions_no_alpha_off = array('png', 'gif', 'tif', 'psd');
-            
             $preview_quality=get_preview_quality($ps[$n]['id']);
        
             if(!$imagemagick_mpr)
                 {
                 $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
-                }
+                debug("CLI-MJB COMMAND=".$command);
+            }
 
             # fetch target width and height
             $tw=$ps[$n]["width"];
@@ -1774,7 +1776,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"");
+                        $runcommand = $command ." ".( !in_array($extension, $extensions_no_alpha_off) ? " +matte $profile " : "" );
                         
                         if($crop)
                             {
