@@ -60,7 +60,7 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		}
 	foreach($admin_notify_emails as $admin_notify_email)
 		{
-		send_mail($admin_notify_email,$subject,$message,$applicationname,$email_from,"emailcontactadmin",$templatevars,$applicationname);
+		send_mail($admin_notify_email,$subject,unescape($message),$applicationname,$email_from,"emailcontactadmin",$templatevars,$applicationname);
     	}
 	
 	if (count($admin_notify_users)>0)
