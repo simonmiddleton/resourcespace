@@ -84,23 +84,26 @@ else
             // Get all available sizes
             $sizes = get_image_sizes($resourceid,true,"jpg",false);
             $availsizes = array();
-            foreach($sizes as $size)
+            if ($imageWidth > 0 && $imageHeight > 0)
                 {
-                // Compute actual pixel size - use same calculations as when generating previews
-                if ($portrait)
+                foreach($sizes as $size)
                     {
-                    // portrait or square
-                    $preheight = $size['height'];
-                    $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
-                    }
-                else
-                    {                    
-                    $prewidth = $size['width'];
-                    $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
-                    }
-                if($prewidth > 0 && $preheight > 0 && $prewidth <= $iiif_max_width && $preheight <= $iiif_max_height)
-                    {
-                    $availsizes[] = array("id"=>$size['id'],"width" => $prewidth, "height" => $preheight);
+                    // Compute actual pixel size - use same calculations as when generating previews
+                    if ($portrait)
+                        {
+                        // portrait or square
+                        $preheight = $size['height'];
+                        $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
+                        }
+                    else
+                        {                    
+                        $prewidth = $size['width'];
+                        $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
+                        }
+                    if($prewidth > 0 && $preheight > 0 && $prewidth <= $iiif_max_width && $preheight <= $iiif_max_height)
+                        {
+                        $availsizes[] = array("id"=>$size['id'],"width" => $prewidth, "height" => $preheight);
+                        }
                     }
                 }
 
