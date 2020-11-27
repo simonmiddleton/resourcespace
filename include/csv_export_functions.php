@@ -6,131 +6,199 @@
 /**
 * Generates the CSV content of the metadata for resources passed in the array
 *
-* @param array $resources (either an array of resource ids or an array returned from search results)
+* @param array $resources (array of resource ids)
 * @return string
 */
-function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
+function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false,$outputfile="")
     {
-    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k;
-    $return                 = '';
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key, $get_resource_data_cache;
+    
+    // Write the CSV to a disk to avoid memory issues with large result sets
+    $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "/csv_export_" . uniqid() . ".csv";
+
     $csv_field_headers      = array();
-    $resources_fields_data  = array();
     $csvoptions = array("csvexport"=>true,"personal"=>$personal,"alldata"=>$alldata);
-    $allresdata = get_resource_field_data_batch($resources,true,$k != '',true,$csvoptions);
     $allfields = get_resource_type_fields("","order_by","asc");
-
-    foreach($resources as $resource)
+    $cache_location=get_query_cache_location();
+    $cache_data = array();
+    $restypearr = get_resource_types();
+    $resource_types = array();
+    // Sort into array with ids as keys
+    foreach($restypearr as $restype)
         {
-        $resdata = $resource;
-        if(checkperm("T" . $resdata["resource_type"]))
-            {
-            continue;
-            }
-
-        // Add resource type
-        $restype = get_resource_type_name($resdata["resource_type"]);
-        $csv_field_headers["resource_type"] = $lang["resourcetype"];
-        $resources_fields_data[$resource['ref']]["resource_type"] = $restype;
-        
-        // Add contributor
-        $udata=get_user($resdata["created_by"]);
-        if ($udata!==false)
-            {
-            $csv_field_headers["created_by"] = $lang["contributedby"];
-            $resources_fields_data[$resource['ref']]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
-            }
-
-        if ($alldata && $file_checksums)
-            {
-            $csv_field_headers["file_checksum"] = $lang["filechecksum"];
-            $resources_fields_data[$resource['ref']]["file_checksum"] = $resdata["file_checksum"];
-            }       
-        foreach($allfields as $restypefield)
-            {
-            if  (
-                   metadata_field_view_access($restypefield["ref"])  
-                && 
-                    (!$personal || $restypefield["personal_data"])
-                && 
-                    ($alldata || $restypefield["include_in_csv_export"])
-                && 
-                    !(checkperm("T" . $restypefield["resource_type"]))
-                )
-                {
-                $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
-                // Check if the resource has a value for this field in the data retrieved
-                $resdataidx =array_search($restypefield["ref"], array_column($allresdata[$resource['ref']], 'ref'));
-                $fieldvalue = ($resdataidx !== false) ? $allresdata[$resource['ref']][$resdataidx]["value"] : "";
-                $resources_fields_data[$resource['ref']][$restypefield['ref']] = $fieldvalue;
-                }
-            }
-
-        // Add original size URL column values
-        if(!$csv_export_add_original_size_url_column)
-            {
-            continue;
-            }
-
-        /*Provide the original URL only if we have access to the resource or the user group
-        doesn't have restricted access to the original size*/
-        $access = get_resource_access($resource);
-        if(0 != $access || checkperm("T{$resource['resource_type']}_"))
-            {
-            continue;
-            }
-
-        $filepath      = get_resource_path($resource['ref'], true, '', false, $resource['file_extension'], -1, 1, false, '', -1, false);
-        $original_link = get_resource_path($resource['ref'], false, '', false, $resource['file_extension'], -1, 1, false, '', -1, false);
-        if(file_exists($filepath))
-            {
-            $resources_fields_data[$resource['ref']]['original_link'] = $original_link;
-            }
+        $resource_types[$restype["ref"]] = $restype;
         }
 
+    // Break resources up into smaller arrays to avoid hitting memory limits
+    $resourcebatches = array_chunk($resources, 2000);
+
+    $csv_field_headers["resource_type"] = $lang["resourcetype"];
+    $csv_field_headers["created_by"] = $lang["contributedby"];
+    $csv_field_headers["file_checksum"] = $lang["filechecksum"];
     // Add original size URL column
     if($csv_export_add_original_size_url_column)
         {
         $csv_field_headers['original_link'] = $lang['collection_download_original'];
         }
 
-    $csv_field_headers = array_unique($csv_field_headers);
+    // Array to store fields that have data, if no data we won't include it
+    $include_fields = array();
 
-    // Header
-    $return = '"' . $lang['resourceids'] . '","' . implode('","', $csv_field_headers) . "\"\n";
-
-    // Results
-    $csv_row = '';
-    foreach($resources_fields_data as $resource_id => $resource_fields)
+    for($n=0;$n<count($resourcebatches);$n++)
         {
-        // First column will always be Resource ID
-        $csv_row = $resource_id . ',';
-
-        // Field values
-        foreach($csv_field_headers as $column_header => $column_header_title)
+        $resources_fields_data = array();
+        $fullresdata = get_resource_field_data_batch($resourcebatches[$n],true,$k != '',true,$csvoptions);
+        
+        // Get data for all resources
+        $resource_data_array = get_resource_data_batch($resourcebatches[$n]);
+        foreach($resourcebatches[$n] as $resource)
             {
-            if(!array_key_exists($column_header, $resource_fields))
+            $resdata = isset($resource_data_array[$resource]) ? $resource_data_array[$resource] : false;
+            if(!$resdata || checkperm("T" . $resdata["resource_type"]))
                 {
-                $csv_row .= '"",';
                 continue;
                 }
 
-            foreach($resource_fields as $field_name => $field_value)
+            // Add resource type
+            $restype = get_resource_type_name($resdata["resource_type"]);
+            $resources_fields_data[$resource]["resource_type"] = $restype;
+            
+            // Add contributor
+            $udata=get_user($resdata["created_by"]);
+            if ($udata!==false)
                 {
-                if($column_header == $field_name)
+                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+                }
+
+            if ($alldata && $file_checksums)
+                {
+                $resources_fields_data[$resource]["file_checksum"] = $resdata["file_checksum"];
+                }       
+            foreach($allfields as $restypefield)
+                {
+                if  (
+                    metadata_field_view_access($restypefield["ref"])  
+                    && 
+                        (!$personal || $restypefield["personal_data"])
+                    && 
+                        ($alldata || $restypefield["include_in_csv_export"])
+                    && 
+                        !(checkperm("T" . $restypefield["resource_type"]))
+                    &&
+                        (
+                        $restypefield["resource_type"] == $resdata["resource_type"]
+                        ||
+                        ($restypefield["resource_type"] == 0 && (bool)$resource_types[$resdata["resource_type"]]["inherit_global_fields"])
+                        ||
+                        ($restypefield["resource_type"] == 999 && $resdata["archive"] == 2)
+                        )
+                    )
                     {
-                    $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
+                    if(!isset($csv_field_headers[$restypefield["ref"]]))
+                        {
+                        $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
+                        }
+                    // Check if the resource has a value for this field in the data retrieved
+                    $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource], 'ref'));
+                    $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource][$resdataidx]["value"] : "";
+                    $resources_fields_data[$resource][$restypefield['ref']] = $fieldvalue;
+                    }
+                }
+
+            /*Provide the original URL only if we have access to the resource or the user group
+            doesn't have restricted access to the original size*/
+            $access = get_resource_access($resdata);
+            if(0 != $access || checkperm("T{$resdata['resource_type']}_"))
+                {
+                continue;
+                }
+            if($csv_export_add_original_size_url_column)
+                {
+                $filepath      = get_resource_path($resource, true, '', false, $resdata['file_extension'], -1, 1, false, '', -1, false);
+                $original_link = get_resource_path($resource, false, '', false, $resdata['file_extension'], -1, 1, false, '', -1, false);
+                if(file_exists($filepath))
+                    {
+                    $resources_fields_data[$resource]['original_link'] = $original_link;
                     }
                 }
             }
+
+        if(count($resources_fields_data) > 0)
+            {
+            // Save data to temporay files in order to prevent memory limits being reached
+            $tempjson = json_encode($resources_fields_data);
+            $cache_data[$n] = $cache_location . "/csv_export_" . md5($scramble_key . $tempjson) . ".json"; // Scrambled path to cache
+            file_put_contents($cache_data[$n], $tempjson);
+            $tempjson = null;
+            }
+        }
+   
+    $csv_field_headers = array_unique($csv_field_headers);
+
+    // Header
+    $header = "\"" . $lang['resourceids'] . "\",\"" . implode('","', $csv_field_headers) . "\"\n";
+    file_put_contents($tempcsv,$header);
+
+    // Results
+    for($n=0;$n<count($resourcebatches);$n++)
+        {
+        $filedata = "";
+        $resources_fields_data = array();
+        if(file_exists($cache_data[$n]))
+            {
+            $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
+            }
+        if(is_null($resources_fields_data))
+            {
+            $resources_fields_data = array();
+            }
+
+        $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
+        foreach($resources_fields_data as $resource_id => $resource_fields)
+            {
+            // First column will always be Resource ID
+            $csv_row = $resource_id . ',';
+
+            // Field values
+            foreach($csv_field_headers as $column_header => $column_header_title)
+                {
+                if(!array_key_exists($column_header, $resource_fields))
+                    {
+                    $csv_row .= '"",';
+                    continue;
+                    }
+
+                foreach($resource_fields as $field_name => $field_value)
+                    {
+                    if($column_header == $field_name)
+                        {
+                        $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
+                        }
+                    }
+                }
+            
+            $csv_row = rtrim($csv_row, ',');
+            $csv_row .= "\n";
+            $filedata .= $csv_row;
+            }
         
-        $csv_row = rtrim($csv_row, ',');
-        $csv_row .= "\n";
-        $return  .= $csv_row;
+        // Add this data to the file and delete disk copy of array
+        file_put_contents($tempcsv,$filedata, FILE_APPEND);
+        if(file_exists($cache_data[$n]))
+            {
+            unlink($cache_data[$n]);
+            }
+        }        
+    
+    if($outputfile != "")
+        {
+        // Data has been saved to file, just return
+        return true;
         }
 
-    return $return;
+    // Echo the data for immediate download
+    echo file_get_contents($tempcsv);
     }
-
 
 /**
 * Generates the file content when exporting nodes

@@ -45,7 +45,7 @@ if($offline_job_queue)
     $runningjobs=job_queue_get_jobs("",STATUS_INPROGRESS,"","","ref", "ASC");
     foreach($runningjobs as $runningjob)
         {
-        $runningjob_data = json_decode($runningjob["job_data"]);
+        $runningjob_data = json_decode($runningjob["job_data"],true);
         job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
         if(!is_process_lock("job_" . $runningjob["ref"]))
             {

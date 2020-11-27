@@ -512,8 +512,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     $db_connection_mode = "read_write";
     $db_connection = $db["read_write"];
     
-    if(
-        db_use_multiple_connection_modes()
+    if(db_use_multiple_connection_modes()
         && (
             db_get_connection_mode() == "read_only"
             || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
@@ -529,8 +528,8 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
-	$result = mysqli_query($db_connection, $sql);
-	
+    $result = mysqli_query($db_connection, $sql);
+    
     if ($config_show_performance_footer){
     	# Stats
    		# Log performance data		

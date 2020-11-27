@@ -22,7 +22,7 @@ function safe_file_name($name)
             }
         }
 
-    $newname = substr($newname, 0, 30);
+    $newname = mb_substr($newname, 0, 50);
 
     return $newname;
     }
