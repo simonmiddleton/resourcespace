@@ -106,7 +106,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
 function setup_user($userdata)
-	{        
+	{
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
@@ -1575,9 +1575,9 @@ function check_access_key($resources,$key)
             }
         }
         
-    # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
-    $user=$keys[0]["user"];
-    $expires=$keys[0]["expires"];
+    $user       = $keys[0]["user"];
+    $group      = $keys[0]["usergroup"];
+    $expires    = $keys[0]["expires"];
             
     # Has this expired?
     if ($expires!="" && strtotime($expires)<time())
@@ -1591,95 +1591,8 @@ function check_access_key($resources,$key)
         <?php
         exit();
         }
-    
-    global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
-            $groupjoin="u.usergroup=g.ref";
-            $permissionselect="g.permissions";
-            if ($keys[0]["usergroup"]!="")
-                {
-                # Select the user group from the access key instead.
-                $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
-                $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
-                }
-    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
-    if (count($userinfo)>0)
-        {
-        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
-        $userpermissions=explode(",",$userinfo[0]["permissions"]);
-        
-        if ($search_filter_nodes)
-            {
-            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
-                {
-                // User search filter override
-                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
-                }
-            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
-                {
-                // Group search filter
-                $usersearchfilter = $userinfo[0]["search_filter_id"];
-                }
-            }
-        else
-            {
-            // Old style search filter that hasn't been migrated
-            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
-            }
-
-        if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
-        $userrequestmode=0; # Always use 'email' request mode for external users
-        
-        # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
-        global $emulate_plugins_set;            
-        if ($emulate_plugins_set!==true)
-            {
-            global $plugins;
-            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
-            foreach($enabled_plugins as $plugin)
-                {
-                $s=explode(",",$plugin['enabled_groups']);
-                if (in_array($usergroup,$s))
-                    {
-                    include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-                    register_plugin($plugin['name']);
-                    $plugins[]=$plugin['name'];
-                    }
-                }
-            for ($n=count($plugins)-1;$n>=0;$n--)
-                {
-                register_plugin_language($plugins[$n]);
-                }
-            $emulate_plugins_set=true;                  
-            }
-        
-        if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
-            {
-
-            # Apply config override options
-            $config_options=trim($userinfo[0]["config_options"]);
-
-            // We need to get all globals as we don't know what may be referenced here
-            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
-
-            }
-        }
-    
-    # Special case for anonymous logins.
-    # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
-    global $anonymous_login;
-    if (isset($anonymous_login))
-        {
-        global $username,$baseurl;
-        if(is_array($anonymous_login))
-        {
-        foreach($anonymous_login as $key => $val)
-            {
-            if($baseurl==$key){$anonymous_login=$val;}
-            }
-        }
-        $username=$anonymous_login;     
-        }
+    # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
+    emulate_user($user, $group);
     
     # Set the 'last used' date for this key
     sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource IN ('" . implode("','",$resources) . "') AND access_key = '$key_escaped'");
@@ -1704,7 +1617,7 @@ function check_access_key_collection($collection, $key)
         }
 
     hook("external_share_view_as_internal_override");
-    global $external_share_view_as_internal, $baseurl, $baseurl_short;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename, $upload_share_active;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
         // We want to authenticate the user so we can show the page as internal
@@ -1762,11 +1675,20 @@ function check_access_key_collection($collection, $key)
        
     $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '" . $collection["ref"] . "' AND access_key = '{$key}'";
 
-    if((bool)$keyinfo[0]["upload"] === true)
+    if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
         {
-        $uploadurl = get_upload_url($collection["ref"],$k);
-        redirect($uploadurl);
-        exit();
+        // External upload link -set session to use for creating temporary collection      
+        $upload_share_active = true;
+        # "Emulate" the user that e-mailed the resource by setting the same group and permissions  
+        emulate_user($keyinfo[0]["user"],'');
+        get_rs_session_id(true);
+        if($pagename != "upload_plupload")
+            {
+            $uploadurl = get_upload_url($collection["ref"],$key);
+            redirect($uploadurl);
+            exit();
+            }
+        return true;
         }
 
     foreach($collections as $collection_ref)
@@ -2051,8 +1973,8 @@ function create_password_reset_key($username)
  */
 function get_rs_session_id($create=false)
     {
-    global $baseurl, $anonymous_login, $usergroup;
-    // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
+    global $baseurl, $anonymous_login, $usergroup, $upload_share_active;
+    // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users or users accessing external upload links 
     if(isset($_COOKIE["rs_session"]))
         {
         if (!headers_sent())
@@ -2071,26 +1993,29 @@ function get_rs_session_id($create=false)
             rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
             }
 
-        if(is_array($anonymous_login))
+        if(!$upload_share_active)
             {
-            foreach($anonymous_login as $key => $val)
+            if(is_array($anonymous_login))
                 {
-                if($baseurl == $key)
+                foreach($anonymous_login as $key => $val)
                     {
-                    $anonymous_login = $val;
+                    if($baseurl == $key)
+                        {
+                        $anonymous_login = $val;
+                        }
                     }
                 }
-            }
 
-        $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
+            $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
 
-        if (count($valid) >= 1)
-            {
-            // setup_user hasn't been called yet, we just need the usergroup
-            $usergroup = $valid[0]["usergroup"];
+            if (count($valid) >= 1)
+                {
+                // setup_user hasn't been called yet, we just need the usergroup
+                $usergroup = $valid[0]["usergroup"];
 
-            // Log this in the daily stats
-            daily_stat("User session", $valid[0]["ref"]);
+                // Log this in the daily stats
+                daily_stat("User session", $valid[0]["ref"]);
+                }
             }
 
         return $rs_session;
@@ -2443,4 +2368,117 @@ function get_upload_url($collection="",$k="")
         $url = generateURL("pages/edit.php", array("ref" => "-" . $userref,"collection_add"=>$collection));
         }
     return $url;
+    }
+
+/**
+ * Used to emulate system users when accessing system anonymously or via external shares
+ * Sets global array such as $userpermissions, $username and sets any relevant config options
+ *
+ * @param  int $user            User ID
+ * @param  int $usergroup       usergroup ID  
+ * @return void
+ */
+function emulate_user($user, $usergroup="")
+    {
+    global $usergroup, $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
+    global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
+    global $username,$baseurl, $anonymous_login, $upload_share_active;
+
+
+    if(!is_numeric($user) || ($usergroup != "" && !is_numeric($usergroup)))
+        {
+        return false;
+        }
+
+    $groupjoin="u.usergroup=g.ref";
+    $permissionselect="g.permissions";
+    if ($usergroup!="")
+        {
+        # Select the user group from the access key instead.
+        $groupjoin="g.ref='" . escape_check($usergroup) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
+        $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+        }
+    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
+    if (count($userinfo)>0)
+        {
+        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+        $userpermissions=explode(",",$userinfo[0]["permissions"]);
+
+        if($upload_share_active)
+            {
+            // Disable some permissions for added security
+            $addperms = array('D','b','p');
+            $removeperms = array('v','q','i','A','h','a','t','r','m','u','exup');
+            $userpermissions = array_merge($userpermissions, $addperms);
+            $userpermissions = array_diff($userpermissions, $removeperms);
+            $userref = $user;
+            }
+        
+        if ($search_filter_nodes)
+            {
+            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
+                }
+            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userinfo[0]["search_filter_id"];
+                }
+            }
+        else
+            {
+            // Old style search filter that hasn't been migrated
+            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            }
+
+        if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
+        $userrequestmode=0; # Always use 'email' request mode for external users
+        
+        # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
+        if ($emulate_plugins_set!==true)
+            {
+            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            foreach($enabled_plugins as $plugin)
+                {
+                $s=explode(",",$plugin['enabled_groups']);
+                if (in_array($usergroup,$s))
+                    {
+                    include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+                    register_plugin($plugin['name']);
+                    $plugins[]=$plugin['name'];
+                    }
+                }
+            for ($n=count($plugins)-1;$n>=0;$n--)
+                {
+                register_plugin_language($plugins[$n]);
+                }
+            $emulate_plugins_set=true;                  
+            }
+        
+        if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
+            {
+            # Apply config override options
+            $config_options=trim($userinfo[0]["config_options"]);
+
+            // We need to get all globals as we don't know what may be referenced here
+            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+            eval($config_options);
+            }
+        }
+    
+    # Special case for anonymous logins.
+    # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
+    if (isset($anonymous_login))
+        {
+        if(is_array($anonymous_login))
+            {
+            foreach($anonymous_login as $key => $val)
+                {
+                if($baseurl==$key){$anonymous_login=$val;}
+                }
+            }
+        $username=$anonymous_login;     
+        }
     }

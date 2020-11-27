@@ -375,7 +375,7 @@ include "../include/header.php";
 		<h2><?php echo $lang["externalusersharing"]?></h2>
 
 		<?php
-		$keys=get_collection_external_access($ref);
+        $keys=get_collection_external_access($ref);
 		if (count($keys)==0)
 			{
 			?>

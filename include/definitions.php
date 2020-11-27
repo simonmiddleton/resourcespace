@@ -320,6 +320,9 @@ define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then ed
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
 define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
 define("COLLECTION_TYPE_PUBLIC",    4); # public collections
+define("COLLECTION_SHARE_UPLOAD",   5); # public collections
+
+
 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "no_image" => 0,
     "most_popular_image" => 1,

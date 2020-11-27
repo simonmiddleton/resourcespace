@@ -95,9 +95,8 @@ if(getval('dr', '') != '')
 if (getval("upload","") != "")
 	{
     # Redirect to upload page
-    $topurl = get_upload_url($k);
+    $topurl = get_upload_url($c,$k);
 	}
-
 
 # Redirect.
 redirect($topurl);

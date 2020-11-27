@@ -554,12 +554,12 @@ function set_user_collection($user,$collection)
  * @param  boolean $public
  * @return integer
  */
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false)
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false, $extraparams=array())
 	{
     debug_function_call("create_collection", func_get_args());
 
-	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	if($username==$anonymous_login && $anonymous_user_session_collection)
+	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection, $upload_share_active;
+	if(($username==$anonymous_login && $anonymous_user_session_collection) || $upload_share_active)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
 		$rs_session=get_rs_session_id(true);
@@ -567,22 +567,52 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 	else
 		{	
 		$rs_session="";
-		}
+        }
+        
+    $setcolumns = array();
+    $extracolopts = array("type",
+                        "keywords",
+                        "saved_search",
+                        "session_id",
+                        "description",
+                        "savedsearch",
+                        "parent",
+                        "thumbnail_selection_method",
+                    );
+    foreach($extracolopts as $coloption)
+        {
+        if(isset($extraparams[$coloption]))
+            {
+            $setcolumns[$coloption] = escape_check($extraparams[$coloption]);
+            }
+        }
+    
+    $setcolumns["name"]             = escape_check(mb_strcut($name, 0, 100));
+    $setcolumns["user"]             = escape_check($userid);
+    $setcolumns["allow_changes"]    = escape_check($allowchanges);
+    $setcolumns["cant_delete"]      = escape_check($cant_delete);
+    $setcolumns["public"]           = escape_check($cant_delete);
+    if($ref != 0)
+        {
+        $setcolumns["ref"] = (int)$ref;
+        }
+    if(trim($rs_session) != "")
+        {
+        $setcolumns["session_id"]   = escape_check($rs_session);
+        }
+    if($public)
+        {
+        $setcolumns["type"]         = escape_check($userid);
+        }
 
-    $sql = sprintf(
-        "INSERT INTO collection (%sname, user, created, allow_changes, cant_delete, session_id, type)
-              VALUES (%s'%s', '%s', NOW(), '%s', '%s', %s, %s)",
-        ($ref != 0 ? "ref, " : ""),
-        // Values start here
-        ($ref != 0 ? "'" . escape_check($ref) . "', " : ""),
-        escape_check(mb_strcut($name, 0, 100)),
-        escape_check($userid),
-        escape_check($allowchanges),
-        escape_check($cant_delete),
-        sql_null_or_val((string)(int) $rs_session, $rs_session == ""),
-        ($public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD)
-    );
-    debug("jacktest: \$sql = {$sql}");
+    $insert_columns = array_keys($setcolumns);
+    $insert_values  = array_values($setcolumns);
+
+    $sql = "INSERT INTO collection
+            (" . implode(",",$insert_columns) . ", created)
+            VALUES
+            ('" . implode("','",$insert_values). "',NOW())";
+    
     sql_query($sql);
 
     $ref = sql_insert_id();
@@ -2633,10 +2663,12 @@ function get_collection_external_access($collection)
 	global $userref;
 
 	# Restrict to only their shares unless they have the elevated 'v' permission
-    $condition="";
-    if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
-
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash,upload,status from external_access_keys where collection='" . escape_check($collection) . "' $condition group by access_key order by date");
+    $condition="AND upload=0 ";
+    if (!checkperm("v"))
+        {
+        $condition .= "AND user='" . escape_check($userref) . "'";
+        }
+	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload,status from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
 
 
@@ -2954,15 +2986,23 @@ function show_hide_collection($colref, $show=true, $user="")
  */
 function get_session_collections($rs_session,$userref="",$create=false)
 	{
+    global $upload_share_active;
 	$extrasql="";
 	if($userref!="")
 		{
 		$extrasql="AND user='" . escape_check($userref) ."'";	
 		}
-	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type = '" . COLLECTION_TYPE_STANDARD . "' " . $extrasql,"");
+	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "') " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
-		$collectionrefs[0]=create_collection($userref,"Default Collection",0,1); # Do not translate this string!	
+        if($upload_share_active)
+            {
+            $collectionrefs[0]=create_collection($userref,"New uploads",0,1); # Do not translate this string!
+            }
+        else
+            {
+            $collectionrefs[0]=create_collection($userref,"Default Collection",0,1); # Do not translate this string!	
+            }
 		}		
 	return $collectionrefs;	
 	}

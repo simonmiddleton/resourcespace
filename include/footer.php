@@ -58,7 +58,7 @@ if($responsive_ui)
     </div>
     <?php
     }
-if ($pagename!="login" && ($k=="" || (isset($internal_share_access) && $internal_share_access)))
+if (true || $pagename!="login" && ($k=="" || (isset($internal_share_access) && $internal_share_access)))
 	{ ?>
 	<div id="FooterNavLeft" class="">
 	<span id="FooterLanguages">

@@ -6,11 +6,11 @@ include "../include/db.php";
 //  'false'     Do not add to collection
 //  'undefined' Not passed in, so replace it with the current user collection
 //  is_numeric  Use this collection  
-$collection_add                         = getvalescaped('collection_add', 'false');
+$collection_add = getvalescaped('collection_add', 'false');
 
 // External share support
-$k                                      = getvalescaped('k','');
-if (($k=="") || (!check_access_key_collection($collection_add,$k)))
+$k = getvalescaped('k','');
+if ($k=="" || (!check_access_key_collection($collection_add,$k)))
     {
     include "../include/authenticate.php";
     if (! (checkperm("c") || checkperm("d")))
@@ -102,8 +102,29 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		{
 		collection_set_public($collection_add);
 		}
-	}
-if ($upload_then_edit && $replace == "" && $replace_resource == "")
+    }
+    
+if($upload_share_active)
+    {
+    include_once "../include/login_functions.php";
+        
+    $rs_session = get_rs_session_id(true);
+    $ci=get_session_collections($rs_session);
+    if (count($ci)==0)
+        {
+        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
+        }
+    else
+        {
+        $usercollection = $ci[0];
+        }
+    $upload_review_col = $usercollection;
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array('upload_review_mode' => true)
+        );	
+    }
+elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
     {
     # Switch to the user's special upload collection.
     $upload_review_col = 0-$userref;
@@ -194,7 +215,8 @@ $uploadparams= array(
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
     'single'                                 => ($single ? "true" : "false"),
-    'status'                                 => $setarchivestate
+    'status'                                 => $setarchivestate,
+    'k'                                      => $k,
 );
 
 global $merge_filename_with_title, $merge_filename_with_title_default;
@@ -292,7 +314,11 @@ else if ($resource_type!="" && !$alternative)
     $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
 
-if (is_numeric($collection_add))
+if($upload_share_active)
+    {
+    refresh_collection_frame($usercollection);
+    }
+elseif (is_numeric($collection_add))
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -413,7 +439,11 @@ if ($_FILES)
 	header("Pragma: no-cache");
 
 	// Settings
-	#$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+    #$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+    if($upload_share_active)
+        {
+        $session_hash = generate_session_hash($k . $rs_session);
+        }
 	$targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . $session_hash;
 
 	$cleanupTargetDir = true; // Remove old files
@@ -715,8 +745,8 @@ if ($_FILES)
                                 add_resource_to_collection($ref,$upload_review_col,false,"",$resource_type); 
                                 }
                             
-							$relateto= getvalescaped("relateto","",true);   
-                            if($relateto!="")
+							$relateto = getvalescaped("relateto","",true);   
+                            if($relateto!="" && !$upload_share_active)
                                 {
                                 // This has been added from a related resource upload link
                                 sql_query("insert into resource_related(resource,related) values ($relateto,$ref)");
@@ -1513,7 +1543,7 @@ jQuery(document).ready(function () {
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.
-if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
+if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0 && !$upload_share_active)
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
