@@ -9,12 +9,12 @@ include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
  * @param  array $meta              Array of resource types and associated fields returned by meta_get_map() in include/meta_functions.php
  * @param  array $resource_types    Array of resource type data, with the resource type ID as the key
  * @param  array $messages          Array to store processing, information and error messages, passed by reference
+ * @param  array $csv_set_options   Array of CSV processsing options, includes CSV column to metadata field mappings
  * @param  int $max_error_count     Maximum number of fatal errors to accept before aborting
  * @param  bool $processcsv         Process data? If false data will be checked without making changes
- * @param  array $csv_set_options   Array of CSV processsing options, includes CSV column to metadtaa field mappings
  * @return void 
  */
-function csv_upload_process($filename,&$meta,$resource_types,&$messages,$max_error_count=100,$processcsv=false,$csv_set_options)
+function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set_options,$max_error_count=100,$processcsv=false)
 	{
     // Ensure /r line endings (such as those created in MS Excel) are handled correctly
 	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  

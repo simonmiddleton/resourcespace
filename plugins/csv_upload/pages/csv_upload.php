@@ -603,7 +603,7 @@ switch($csvstep)
         echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
         $meta=meta_get_map();
         $messages=array();
-        csv_upload_process($csvfile,$meta,$resource_types,$messages,100,false,$csv_set_options);
+        csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
         ?>
         <div class="BasicsBox">
             <textarea rows="20" cols="100"><?php 
@@ -691,7 +691,7 @@ switch($csvstep)
             $messages=array();
             // Processing immediately. Ensure connection does not get dropped
             set_time_limit(0);
-            csv_upload_process($csvfile,$meta,$resource_types,$messages,0,true,$csv_set_options);
+            csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options,0,true);
             }
         if(count($messages) > 0)   
             {
