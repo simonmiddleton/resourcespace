@@ -2300,7 +2300,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $nodes_to_remove[] = $nodedata["ref"];
                 }
-            $newvalues[] = $value;
+            // Assure no duplication added
+            if(!in_array($value, $newvalues))
+                {
+                $newvalues[] = $value;
+                }
             }
 
         $current_field_nodes = get_resource_nodes($resource,$field);
