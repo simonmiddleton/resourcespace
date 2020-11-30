@@ -36,7 +36,8 @@ update_field($resourced,'title','test_000985_D');
 update_field($resourcee,'title','test_000985_E');
 
 // Set dummy nodes
-$dummynode = set_node(NULL,73,'test000985','',1000);
+$test985field = create_resource_type_field("Test 985",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"testnineeightfive",1);
+$dummynode = set_node(NULL,$test985field,'test000985','',1000);
 add_resource_nodes($resourcea,array($dummynode));
 add_resource_nodes($resourceb,array($dummynode));
 add_resource_nodes($resourcec,array($dummynode));
@@ -79,7 +80,7 @@ add_resource_to_collection($resourced,$spring);
 // SUBTEST A
 // ----- Access to all themes and access to resources not in themes -----
 // All resources should be shown
-$userpermissions = array('s','j*');
+$userpermissions = array('f*','s','j*');
 $clear_relevant_caches();
 $results = do_search('test000985');
 
@@ -98,7 +99,7 @@ if (!is_array($results)
 // SUBTEST B
 // ----- Access to all themes and no access to resources not in themes -----
 // Resources a,b,c,d should be shown
-$userpermissions = array('s','j*','J');
+$userpermissions = array('f*','s','j*','J');
 $clear_relevant_caches();
 $results = do_search('test000985');
 
@@ -117,8 +118,10 @@ if (!is_array($results)
 // SUBTEST C
 // ----- Access to Mountains themes and no access to resources not in themes -----
 // Resource a,b should be shown
-$userpermissions = array('s', "j{$fc_cat_mountains}",'J');
+$userpermissions = array('f*','s', "j{$fc_cat_mountains}",'J');
 $clear_relevant_caches();
+global $CACHE_FC_ACCESS_CONTROL;
+unset($CACHE_FC_ACCESS_CONTROL);
 $results = do_search('test000985');
 
 if (!is_array($results) 
@@ -136,7 +139,7 @@ if (!is_array($results)
 // SUBTEST D
 // ----- Access to Mountains but not Cuillin subtheme and no access to resources not in themes -----
 // Resource a should be shown
-$userpermissions = array('s', "j{$fc_cat_mountains}", "-j{$fc_cat_cuillin}"/*,'jMountains','j-Mountains|Cuillin'*/,'J');
+$userpermissions = array('f*','s', "j{$fc_cat_mountains}", "-j{$fc_cat_cuillin}"/*,'jMountains','j-Mountains|Cuillin'*/,'J');
 $clear_relevant_caches();
 $results = do_search('test000985');
 
@@ -151,7 +154,6 @@ if (!is_array($results)
     }
 
 // END SUBTEST D
-
 
 //Teardown
 $userref = $saved_userref;
