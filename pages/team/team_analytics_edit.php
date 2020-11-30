@@ -145,7 +145,7 @@ else
 
 <div class="Question">
 <label for="report_name"><?php echo $lang["report_name"] ?></label>
-<input type="text" class="stdwidth" id="report_name" name="name" value="<?php echo htmlspecialchars(getval("name",@$report["name"])) ?>"/>
+<input type="text" class="stdwidth" id="report_name" name="name" value="<?php echo htmlspecialchars(getval("name",isset($report["name"])?$report["name"]:"")) ?>"/>
 <!--<input type="submit" name="suggest" value="Suggest" />-->
 <div class="clearerleft"> </div>
 </div>
