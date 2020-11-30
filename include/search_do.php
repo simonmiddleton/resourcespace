@@ -351,14 +351,20 @@ function do_search(
                                 }
 							if(0 === count($fieldinfo))
 								{
-								return;
-								}
-							$fieldinfo=$fieldinfo[0];
-                            $fieldinfo_cache[$fieldname]=$fieldinfo;
+                                // Search may just happen to include a colon - treat the colon as a space and add to $keywords array to process separately
+                                $addedkeywords = explode(":",$keyword);
+                                $keywords = array_merge($keywords,$addedkeywords);
+                                continue;
+                                }
+                            else
+                                {
+                             $fieldinfo=$fieldinfo[0];
+                                $fieldinfo_cache[$fieldname]=$fieldinfo;
+                                }
                             }
                         }
 
-					//First try and process special keyword types
+                    //First try and process special keyword types
                     if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'],$DATE_FIELD_TYPES))
                         {
                         // ********************************************************************************
