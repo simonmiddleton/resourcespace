@@ -1085,8 +1085,14 @@ function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
 	{
 	global $lang, $imperial_measurements,$sizes,$n,$view_default_dpi;
 	
-	if (isset($sizes[$n]['resolution'])&& $sizes[$n]['resolution']!=0) { $dpi=$sizes[$n]['resolution']; }
-	else if (!isset($dpi) || $dpi==0) { $dpi=$view_default_dpi; }
+    if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
+        {
+        $dpi=$sizes[$n]['resolution'];
+        }
+    else if (!isset($dpi) || $dpi==0)
+        {
+        $dpi=$view_default_dpi;
+        }
 
 	if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
 		{
