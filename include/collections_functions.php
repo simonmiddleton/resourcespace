@@ -4433,8 +4433,7 @@ function get_featured_collections(int $parent, array $ctx)
              GROUP BY c.ref",
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, $parent == 0)
-        ),
-        "featured_collections"
+            )
         );
 
     if(!$access_control)
