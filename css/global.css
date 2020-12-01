@@ -358,7 +358,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 /*Right Search Box layout*/
 #SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
-#SearchBoxPanel {width: 100%;}
+#SearchBoxPanel {width: inherit;}
 #ResearchBoxPanel {width: 100%;margin-top: 15px;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none;}
 
