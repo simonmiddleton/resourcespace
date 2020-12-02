@@ -152,7 +152,7 @@ function populate_resource_nodes($startingref=0)
 	return true;
 	}
 
-function migrate_filter($filtertext)
+function migrate_filter($filtertext,$allowpartialmigration=false)
     {
     if(trim($filtertext) == "")
         {
@@ -189,6 +189,7 @@ function migrate_filter($filtertext)
     $n = 1;
     foreach($filter_rules as $filter_rule)
         {
+        $rulevalid=false;
         $logtext .= "FILTER MIGRATION: -- Parsing filter rule #" . $n . " : '" . $filter_rule . "'\n";
         $rule_parts = explode("=",$filter_rule);
         $rulefields = $rule_parts[0];
@@ -232,11 +233,12 @@ function migrate_filter($filtertext)
             $nodeidx = array_search(mb_strtolower($rulevalue), array_map("mb_strtolower", array_column($all_valid_nodes, 'name')));
                     
             if($nodeidx !== false)
-                {
+                {                       
                 $nodeid = $all_valid_nodes[$nodeidx]["ref"];
                 $logtext .=  "FILTER MIGRATION: --- field option (node) exists, node id #: " . $all_valid_nodes[$nodeidx]["ref"] . "\n";
                 
                 $nodeinsert[] = "('" . $new_filter_rule . "','" . $nodeid . "','" . $node_condition . "')";
+                if($allowpartialmigration){$rulevalid = true;} // Atleast one rule is valid so the filter can be created
                 }
             else
                 {
@@ -246,7 +248,7 @@ function migrate_filter($filtertext)
             }
 
         debug($logtext);       
-        if(count($errors) > 0)
+        if(count($errors) > 0 && !$rulevalid)
             {
             delete_filter($filterid);
             return $errors;
@@ -259,6 +261,7 @@ function migrate_filter($filtertext)
         }
         
     debug("FILTER MIGRATION: filter migration completed for '" . $filtertext);
+    $logtext .= "FILTER MIGRATION: filter migration completed for '" . $filtertext . "\n";
     
     return $filterid;
     }
