@@ -363,12 +363,10 @@ echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['lda
 </div>
 <div class="clearerleft"></div>
 
-
+</form>
 <?php
     display_rsc_upload($upload_status);
 ?>
-
-</form>
 </div>	
 
 <script language="javascript">
