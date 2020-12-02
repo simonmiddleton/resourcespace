@@ -2958,6 +2958,8 @@ $lang["button-upload-link-create"]          = "Create link";
 $lang["title-upload-link-edit"]             = "Edit external upload link";
 $lang["warning-upload-link"]                = "WARNING: creating an external upload URL will allow anyone who obtains the link to upload files";
 $lang["warning-upload-instructions"]        = "Please set the required upload link options";
+$lang["upload_share_complete"]              = "Thank you for uploading. Please click the button below to upload more resources<div class='clearerleft' /><div><input type='button' value='Upload' onclick='CentralSpaceLoad(\"upload_plupload.php\");'></div>";
 $lang["error_invalid_user"]                 = "Invalid user";
 $lang["error_invalid_date"]                 = "Invalid date";
+$lang["error_no_resources_edit"]            = "No resources found to edit. If you have just uploaded files please report this error.";
 $lang["password_unchanged"]                 = "(unchanged)";

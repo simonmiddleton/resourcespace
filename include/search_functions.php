@@ -854,6 +854,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     # append resource type restrictions based on 'T' permission 
     # look for all 'T' permissions and append to the SQL filter.
     $rtfilter=array();
+    
     for ($n=0;$n<count($userpermissions);$n++)
         {
         if (substr($userpermissions[$n],0,1)=="T")

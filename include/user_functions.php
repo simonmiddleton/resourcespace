@@ -1509,14 +1509,14 @@ function check_access_key($resources,$key)
         }
     hook("external_share_view_as_internal_override");
 
-    global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short;
 
     if(
         $external_share_view_as_internal
         && (
             isset($_COOKIE["user"])
             && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
-            && !(isset($is_authenticated) && $is_authenticated)
+            && !is_authenticated()
         ))
             {
             return false;
@@ -1617,7 +1617,7 @@ function check_access_key_collection($collection, $key)
         }
 
     hook("external_share_view_as_internal_override");
-    global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename, $upload_share_active;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
         // We want to authenticate the user so we can show the page as internal
@@ -1629,21 +1629,8 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
-    $collection_resources = get_collection_resources($collection["ref"]);
-    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
-    $is_featured_collection_category = is_featured_collection_category($collection);
-
-    if(!$is_featured_collection_category && !$collection["has_resources"])
-        {
-        return false;
-        }
-
-    // From this point all collections should have resources. For FC categories, its sub FCs will have resources because
-    // get_featured_collection_categ_sub_fcs() does the check internally
-    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
-
-    // Get key info - 
+    
+    // Get key info 
     $keyinfo = sql_query("
                     SELECT user,
                            usergroup,
@@ -1659,6 +1646,18 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
+    $collection_resources = get_collection_resources($collection["ref"]);
+    $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
+    $is_featured_collection_category = is_featured_collection_category($collection);
+
+    if(!$is_featured_collection_category && (!$collection["has_resources"] && !(bool)$keyinfo[0]["upload"]))
+        {
+        return false;
+        }
+
+    // From this point all collections should have resources. For FC categories, its sub FCs will have resources because
+    // get_featured_collection_categ_sub_fcs() does the check internally
+    $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
 
     if($keyinfo[0]["password_hash"] != "" && PHP_SAPI != "cli")
         {
@@ -1677,17 +1676,8 @@ function check_access_key_collection($collection, $key)
 
     if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
         {
-        // External upload link -set session to use for creating temporary collection      
-        $upload_share_active = true;
-        # "Emulate" the user that e-mailed the resource by setting the same group and permissions  
-        emulate_user($keyinfo[0]["user"],'');
-        get_rs_session_id(true);
-        if($pagename != "upload_plupload")
-            {
-            $uploadurl = get_upload_url($collection["ref"],$key);
-            redirect($uploadurl);
-            exit();
-            }
+        // External upload link -set session to use for creating temporary collection
+        upload_share_setup($key,$collection["ref"],$keyinfo[0]["user"]);   
         return true;
         }
 
@@ -1973,7 +1963,7 @@ function create_password_reset_key($username)
  */
 function get_rs_session_id($create=false)
     {
-    global $baseurl, $anonymous_login, $usergroup, $upload_share_active;
+    global $baseurl, $anonymous_login, $usergroup;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users or users accessing external upload links 
     if(isset($_COOKIE["rs_session"]))
         {
@@ -1993,7 +1983,7 @@ function get_rs_session_id($create=false)
             rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
             }
 
-        if(!$upload_share_active)
+        if(!upload_share_active())
             {
             if(is_array($anonymous_login))
                 {
@@ -2345,8 +2335,8 @@ function checkperm_user_edit($user)
 */
 function internal_share_access()
     {
-    global $k, $external_share_view_as_internal, $is_authenticated;
-    return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    global $k, $external_share_view_as_internal;
+    return ($k != "" && $external_share_view_as_internal && is_authenticated());
     }
 
 /**
@@ -2382,7 +2372,7 @@ function emulate_user($user, $usergroup="")
     {
     global $usergroup, $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
-    global $username,$baseurl, $anonymous_login, $upload_share_active;
+    global $username,$baseurl, $anonymous_login;
 
 
     if(!is_numeric($user) || ($usergroup != "" && !is_numeric($usergroup)))
@@ -2404,13 +2394,14 @@ function emulate_user($user, $usergroup="")
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
         $userpermissions=explode(",",$userinfo[0]["permissions"]);
 
-        if($upload_share_active)
+        if(upload_share_active())
             {
             // Disable some permissions for added security
             $addperms = array('D','b','p');
             $removeperms = array('v','q','i','A','h','a','t','r','m','u','exup');
             $userpermissions = array_merge($userpermissions, $addperms);
             $userpermissions = array_diff($userpermissions, $removeperms);
+            $userpermissions = array_values($userpermissions);
             $userref = $user;
             }
         
@@ -2481,4 +2472,10 @@ function emulate_user($user, $usergroup="")
             }
         $username=$anonymous_login;     
         }
+    }
+
+function is_authenticated()
+    {
+    global $is_authenticated;
+    return isset($is_authenticated) && $is_authenticated;
     }

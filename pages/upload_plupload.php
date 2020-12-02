@@ -7,6 +7,10 @@ include "../include/db.php";
 //  'undefined' Not passed in, so replace it with the current user collection
 //  is_numeric  Use this collection  
 $collection_add = getvalescaped('collection_add', 'false');
+if($collection_add =='false' && isset($_COOKIE["upload_share_active"]))
+    {
+    $collection_add = $_COOKIE["upload_share_active"];
+    }
 
 // External share support
 $k = getvalescaped('k','');
@@ -104,10 +108,8 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		}
     }
     
-if($upload_share_active)
+if(upload_share_active())
     {
-    include_once "../include/login_functions.php";
-        
     $rs_session = get_rs_session_id(true);
     $ci=get_session_collections($rs_session);
     if (count($ci)==0)
@@ -121,7 +123,10 @@ if($upload_share_active)
     $upload_review_col = $usercollection;
     $redirecturl = generateURL(
         "{$baseurl}/pages/edit.php",
-        array('upload_review_mode' => true)
+        array('upload_review_mode' => true,
+              //'collection_share' => $collection_add,
+              'collection' => $usercollection,
+              'k' => $k)
         );	
     }
 elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
@@ -156,7 +161,7 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         $redirecturl = generateURL(
             "{$baseurl}/pages/edit.php",
             array(
-                'upload_review_mode' => true,
+                'upload_review_mode' => true
             ),
             $redirecturl_extra_params);	
         }
@@ -314,7 +319,7 @@ else if ($resource_type!="" && !$alternative)
     $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
 
-if($upload_share_active)
+if(upload_share_active())
     {
     refresh_collection_frame($usercollection);
     }
@@ -440,8 +445,9 @@ if ($_FILES)
 
 	// Settings
     #$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-    if($upload_share_active)
+    if(upload_share_active())
         {
+        include_once "../include/login_functions.php";
         $session_hash = generate_session_hash($k . $rs_session);
         }
 	$targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . $session_hash;
@@ -746,7 +752,7 @@ if ($_FILES)
                                 }
                             
 							$relateto = getvalescaped("relateto","",true);   
-                            if($relateto!="" && !$upload_share_active)
+                            if($relateto!="" && !upload_share_active())
                                 {
                                 // This has been added from a related resource upload link
                                 sql_query("insert into resource_related(resource,related) values ($relateto,$ref)");
@@ -1243,7 +1249,7 @@ var pluploadconfig = {
                         uploader.bind('BeforeUpload', function(up, files) {
                             
                             <?php
-                            if ($upload_then_edit && $replace == "" && $replace_resource == "")
+                            if ($upload_then_edit && $replace == "" && $replace_resource == "" && !upload_share_active())
                                 {?>
                                 if(typeof newcol == 'undefined')
                                     {
@@ -1543,7 +1549,7 @@ jQuery(document).ready(function () {
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.
-if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0 && !$upload_share_active)
+if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0 && !upload_share_active())
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
@@ -1599,23 +1605,26 @@ if ($replace!="")
 	{
 	# Replace Resource Batch
 	$titleh1 = $lang["replaceresourcebatch"];
-	$titleh2 = "";
 	$intro = $lang["intro-plupload_upload-replace_resource"];
 	}
 elseif ($replace_resource!="")
 	{
 	# Replace file
 	$titleh1 = $lang["replacefile"];
-	$titleh2 = "";
 	$intro = $lang["intro-plupload_upload-replace_resource"];
 	}
 elseif ($alternative!="")
 	{
 	# Batch upload alternative files 
 	$titleh1 = $lang["alternativebatchupload"];
-	$titleh2 = "";
 	$intro = $lang["intro-plupload"];
 	}
+elseif (upload_share_active())
+    {
+    $collectiondata = get_collection($collection_add);
+    $titleh1 = $lang["addresourcebatchbrowser"] . ": " . i18n_get_collection_name($collectiondata);
+    $intro = $lang["intro-plupload"];
+    }
 else
 	{
 	# Add Resource Batch - In Browser 
@@ -1626,7 +1635,7 @@ else
 ?>
 <?php hook("upload_page_top"); ?>
 <div class="BasicsBox titlediv">
-    <?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } 
+    <?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1; ?></h1><?php } 
 
     if(is_numeric($collection_add) && can_share_upload_link($collection_add))
         {
@@ -1662,7 +1671,18 @@ if ($allowed_extensions!="" && $alternative==''){
 </div>	
 <?php
 hook ("beforepluploadform");
-if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($alternative) && (int) $alternative > 0) && (display_upload_options() || $replace_resource_preserve_option))
+if(     ($replace_resource != '' 
+        ||
+        $replace != '' 
+        || 
+        $upload_then_edit)
+    && 
+        !(isset($alternative) && (int) $alternative > 0) 
+    && 
+        (display_upload_options() || $replace_resource_preserve_option)
+    && 
+        !upload_share_active()
+    )
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>

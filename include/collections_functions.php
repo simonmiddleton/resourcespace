@@ -428,6 +428,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 function collection_writeable($collection)
     {
     $collectiondata = get_collection($collection);
+    debug("BANG" . __LINE__);
     if($collectiondata===false)
         {
         return false;
@@ -558,8 +559,8 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 	{
     debug_function_call("create_collection", func_get_args());
 
-	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection, $upload_share_active;
-	if(($username==$anonymous_login && $anonymous_user_session_collection) || $upload_share_active)
+	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
+	if(($username==$anonymous_login && $anonymous_user_session_collection) || upload_share_active())
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
 		$rs_session=get_rs_session_id(true);
@@ -2986,18 +2987,17 @@ function show_hide_collection($colref, $show=true, $user="")
  */
 function get_session_collections($rs_session,$userref="",$create=false)
 	{
-    global $upload_share_active;
 	$extrasql="";
 	if($userref!="")
 		{
 		$extrasql="AND user='" . escape_check($userref) ."'";	
 		}
-	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "') " . $extrasql,"");
+	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_SHARE_UPLOAD . "') " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
-        if($upload_share_active)
+        if(upload_share_active())
             {
-            $collectionrefs[0]=create_collection($userref,"New uploads",0,1); # Do not translate this string!
+            $collectionrefs[0]=create_collection($userref,"New uploads",0,1,0,false,array("type"=>5)); # Do not translate this string!
             }
         else
             {
@@ -5218,6 +5218,7 @@ function get_upload_share_details($collection,$uploadkey="")
     return $details;
     }
 
+// TODO add documentation
 function create_upload_link(int $collection,$shareoptions)
     {
     global $upload_link_users, $lang, $scramble_key, $userref;
@@ -5268,8 +5269,50 @@ function create_upload_link(int $collection,$shareoptions)
     sql_query($sql);
     return $key;    
     }
-
+// TODO add documentation
 function generate_share_key($string)
     {
     return substr(md5($string . "," . time()), 0, 10);
+    }
+// TODO add documentation
+function upload_share_active()
+    {
+    global $upload_share_active;
+    return ($upload_share_active || isset($_COOKIE["upload_share_active"])) && !is_authenticated();
+    }
+
+/**
+ * Set up external upload share  
+ *
+ * @param  string $key      access key
+ * @param  int $collection  collection ID
+ * @param  int $user        user ID   
+ * @return void
+ */
+function upload_share_setup(string $key,int $collection,int $user)
+    {
+    global $baseurl, $pagename, $upload_share_active;
+    emulate_user($user);
+    $rs_session = get_rs_session_id(true);
+    if(!upload_share_active())  
+        {
+        rs_setcookie("upload_share_active",$collection, 1, "", "", substr($baseurl,0,5)=="https", true);
+        rs_setcookie("k",$key, 1, "", "",substr($baseurl,0,5)=="https", true);
+        $upload_share_active = true;
+        }
+
+    $validpages = array(
+        "upload_plupload",
+        "edit",
+        "category_tree_lazy_load",
+        "suggest_keywords",
+        );
+
+    if(!in_array($pagename,$validpages))
+        {
+        $uploadurl = get_upload_url($collection,$key);
+        redirect($uploadurl);
+        exit();
+        }
+    return true;
     }

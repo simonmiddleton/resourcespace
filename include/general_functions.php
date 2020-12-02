@@ -4125,12 +4125,16 @@ function pagename()
  */
 function text($name)
 	{
-	global $site_text,$pagename,$language,$languages,$usergroup,$lang;
+	global $pagename,$lang;
 
 	$key=$pagename . "__" . $name;	
-	if (array_key_exists($key,$lang)) {return $lang[$key];}
-	else if(array_key_exists("all__" . $name,$lang)) {return $lang["all__" . $name];}
-	
+    if (array_key_exists($key,$lang))
+        {return $lang[$key];}
+    else if(array_key_exists("all__" . $name,$lang))
+        {return $lang["all__" . $name];}
+    else if(array_key_exists($name,$lang))
+        {return $lang[$name];}	
+
 	return "";
 	}
     

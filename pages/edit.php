@@ -1,8 +1,18 @@
 <?php
 include_once "../include/db.php";
-include "../include/authenticate.php"; 
+
+// External share support
+$k = getvalescaped('k','');
+$upload_collection = getval('upload_share_active',''); 
+if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
+    {  
+    include "../include/authenticate.php";
+    if (! (checkperm("c") || checkperm("d")))
+        {
+        exit ("Permission denied.");
+        }
+    }
 include_once "../include/image_processing.php";
-include_once '../include/node_functions.php';
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
@@ -22,7 +32,7 @@ $modal = (getval("modal", "") == "true");
 $single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
 $uploader = getvalescaped("uploader","");
-$collection = getvalescaped('collection', '', true);
+$collection = getvalescaped('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
@@ -78,11 +88,31 @@ $save_auto_next = getval("save_auto_next","") != "";
 
 if ($upload_review_mode)
     {
+        debug("BANG collection: " . $collection);
     # Set the collection and ref if not already set.
-    $collection=0-$userref;
+    if(upload_share_active()) 
+        {
+        $rs_session = get_rs_session_id(true);
+        $ci=get_session_collections($rs_session);
+        if (count($ci)==0)
+            {
+                exit("HERE");
+            error_alert($lang["error_no_resources_edit"]);
+            }
+        else
+            {
+            $collection=$ci[0];
+            debug("BANG collection now : " . $collection);
+            }            
+        } 
+    else
+        {
+        $collection=0-$userref;
+        }
     # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
     if ($edit_access_for_contributor == false)
         {
+            debug("BANG cleanup now : " . $collection);
         collection_cleanup_inaccessible_resources($collection);
         }
     # Start reviewing at the first resource. Need to search all worflow states and remove filters as no data has been set yet
@@ -104,7 +134,17 @@ if ($upload_review_mode)
         }
     else 
         {
-        redirect("pages/search.php?search=!last1000");
+        if(upload_share_active())
+            {
+            // Delete the temporary upload_collection
+            delete_collection($collection);
+            redirect("pages/done.php?text=upload_share_complete");
+            }
+        else
+            {
+            redirect("pages/search.php?search=!last1000");
+            }
+        exit();
         }
     }
 
@@ -201,8 +241,6 @@ if ($go!="")
         $use = $ref;
         }
    }
-
-$collection=getvalescaped("collection",0,true);
 $editsearch = getval("editsearchresults","") != "";
 $edit_selection_collection_resources = ($editsearch && $collection == $USER_SELECTION_COLLECTION);
 if($editsearch)
@@ -307,20 +345,20 @@ $resource_file_readonly=resource_file_readonly($ref);
 
 # If upload template, check if the user has upload permission.
 if ($ref<0 && !(checkperm("c") || checkperm("d")))
-{
-  $error=$lang['error-permissiondenied'];
-  error_alert($error);
-  exit();
-}
+    {
+    $error=$lang['error-permissiondenied'];
+    error_alert($error);
+    exit();
+    }
 
 # Check edit permission.
 if (!get_edit_access($ref,$resource["archive"],false,$resource))
-{
+    {
     # The user is not allowed to edit this resource or the resource doesn't exist.
-  $error=$lang['error-permissiondenied'];
-  error_alert($error,!$modal);
-  exit();
-}
+    $error=$lang['error-permissiondenied'];
+    error_alert($error,!$modal);
+    exit();
+    }
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
@@ -339,15 +377,15 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     }
 
 if (getval("regen","")!="" && enforcePostRequest($ajax))
-{
-  sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
-  create_previews($ref,false,$resource["file_extension"]);
-}
+    {
+    sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
+    create_previews($ref,false,$resource["file_extension"]);
+    }
 
 if (getval("regenexif","")!="" && enforcePostRequest($ajax))
-{
-  extract_exif_comment($ref);
-}
+    {
+    extract_exif_comment($ref);
+    }
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
@@ -369,33 +407,37 @@ if(0 > $ref && $reset_date_upload_template && isset($reset_date_field) && '' == 
     {
     update_field($ref, $reset_date_field, date('Y-m-d H:i'));
     }
-        
+
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
-  {
-	# check free space
-	if (isset($disksize)){ # Use disk quota rather than real disk size
-		$avail=$disksize*(1024*1024*1024);
-		$used=get_total_disk_usage();
-		$free=$avail-$used;
-	}
-	else{		
-		$avail=disk_total_space($storagedir);
-		$free=disk_free_space($storagedir);
-		$used=$avail-$free;
-	}
-	
-	# echo "free: ".$free."<br/>";
-	# convert limit
-	$limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
-	# echo "no_upload: ".$limit."<br/>";
-	# compare against size setting
-	if($free<=$limit){
-		# shut down uploading by redirecting to explanation page
-		$explain=$baseurl_short."pages/no_uploads.php";
-		redirect($explain);
-	}
-  }
+    {
+    # check free space
+    if (isset($disksize))
+        {
+            # Use disk quota rather than real disk size
+        $avail=$disksize*(1024*1024*1024);
+        $used=get_total_disk_usage();
+        $free=$avail-$used;
+        }
+    else
+        {		
+        $avail=disk_total_space($storagedir);
+        $free=disk_free_space($storagedir);
+        $used=$avail-$free;
+        }
+        
+    # echo "free: ".$free."<br/>";
+    # convert limit
+    $limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
+    # echo "no_upload: ".$limit."<br/>";
+    # compare against size setting
+    if($free<=$limit)
+        {
+        # shut down uploading by redirecting to explanation page
+        $explain=$baseurl_short."pages/no_uploads.php";
+        redirect($explain);
+        }
+    }
   
 $urlparams= array(
 	'ref'				=> $ref,
@@ -462,7 +504,16 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 if ($upload_review_mode)
                     {
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
-                    remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
+                    if(upload_share_active())
+                        {
+                            debug("BANG " . $collection);
+                        remove_resource_from_collection($ref,$collection);  
+                        }
+                    else
+                        {
+                        remove_resource_from_collection($ref,0-$userref);
+                        refresh_collection_frame();
+                        }
                     
                     // If the metadata template has been locked it needs to be passed in the redirect
                     if(in_array("metadatatemplate",$locked_fields))
@@ -833,25 +884,25 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
 
 # Simulate reupload (preserving filename and thumbs, but otherwise resetting metadata).
 if (getval("exif","")!="")
-   {
-   upload_file($ref,$no_exif=false,true);
-   resource_log($ref,"r","");
-   }   
+    {
+    upload_file($ref,$no_exif=false,true);
+    resource_log($ref,"r","");
+    }   
 
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
-   {
-   refresh_collection_frame();
-   }
+    {
+    refresh_collection_frame();
+    }
 
 include "../include/header.php";
 ?>
 <script>
 <?php
 if ($lockable_fields)
-        {
-        echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
-        }?>
+    {
+    echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
+    }?>
 
 jQuery(document).ready(function()
 {
@@ -1037,7 +1088,6 @@ function ShowHelp(field)
 </script>
 
 <?php
-
 if($ref < 0)
     {
     // Include upload_params in form action url
@@ -1067,347 +1117,367 @@ else
       ">
     <?php generateFormToken("mainform"); ?>
     <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
-   <div class="BasicsBox">
-      <input type="hidden" name="submitted" value="true">
-   <?php 
-   if ($multiple) 
-    {?>
-    <input type="hidden" name="last_resource_edit" value="<?php echo $last_resource_edit ? $last_resource_edit["time"] :  0 ; ?>">
-    <input type="hidden" id="ignoreconflict" name="ignoreconflict" value="">
+    <div class="BasicsBox">
+        <input type="hidden" name="submitted" value="true">
+    <?php 
+    if ($multiple) 
+        {?>
+        <input type="hidden" name="last_resource_edit" value="<?php echo $last_resource_edit ? $last_resource_edit["time"] :  0 ; ?>">
+        <input type="hidden" id="ignoreconflict" name="ignoreconflict" value="">
 
-    <h1 id="editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
-      <p style="padding-bottom:20px;"><?php $qty = count($items);
-      echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
-      # The script doesn't allow editing of empty collections, no need to handle that case here.
-      echo text("multiple");
-      ?> </p> <?php
-      if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
-      } 
+        <h1 id="editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
+        <p style="padding-bottom:20px;"><?php $qty = count($items);
+        echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
+        # The script doesn't allow editing of empty collections, no need to handle that case here.
+        echo text("multiple");
+        ?> </p> <?php
+        if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
+        } 
    elseif ($ref>0)
-      {
-      if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
-         {?>
-         <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-         <?php
-         }
-      if (!hook("replaceeditheader")) 
-         { ?>
-         <div class="RecordHeader">
-          <?php
-         # Draw nav
-         if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
-         
-         if (!$upload_review_mode) { ?>
-         <h1 id="editresource"><?php echo $lang["action-editmetadata"];render_help_link("user/editing-resources");?></h1>
-         <?php } else { ?>
-        <h1 id="editresource"><?php echo $lang["refinemetadata"];render_help_link("user/editing-resources");?></h1>
-        <?php } ?>
-        
-         </div><!-- end of RecordHeader -->
-         <?php
-         if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
-         
-         if (!$upload_review_mode)
-            { ?>
-            <div class="Question" id="resource_ref_div" style="border-top:none;">
-               <label><?php echo $lang["resourceid"]?></label>
-               <div class="Fixed"><?php echo urlencode($ref) ?></div>
-               <div class="clearerleft"> </div>
-            </div>
-            <?php
-            }
-         }
-    
-      global $custompermshowfile;
-      hook('custompermshowfile');
-      if(((!$is_template && !checkperm('F*')) || $custompermshowfile) && !hook('replaceeditpreview'))
-         { ?>
-         <div class="Question" id="question_file">
-            <label><?php echo $lang["file"]?></label>
-         <div class="Fixed">
-         <?php
-         if ($resource["has_image"]==1)
-            { ?>
-            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
-            <?php // check for watermarked version and show it if it exists
-            if (checkperm("w"))
-               {
-               $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
-               if (file_exists($wmpath))
-                  { ?>
-                  <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
-                  <?php 
-                  }
-               } ?>
-            <br />
-            <?php
-            }
-         else
-            {
-            # Show the no-preview icon
-              ?>
-              <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
-              <br />
-              <?php
-            }
-         if ($resource["file_extension"]!="") 
-            { ?>           
-            <strong>
-            <?php 
-            echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
-            ?>
-            </strong>
-            <?php 
-            if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
-               { ?> 
-               &nbsp;&nbsp;
-               <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo $lang['showwatermark']?>'){jQuery(this).text('<?php echo $lang['hidewatermark']?>');} else {jQuery(this).text('<?php echo $lang['showwatermark']?>');}"><?php echo $lang['showwatermark']?></a>
-               <?php 
-               } ?>
-            <br />
-            <?php 
-            }
-
-        if($top_nav_upload_type == 'local')
-            {
-            $replace_upload_type = 'plupload';
-            }
-        else 
-            {
-            $replace_upload_type=$top_nav_upload_type;
-            }
-
-        // Allow to upload only if resource is not a data only type
-        if (0 < $ref && !$noupload && !$resource_file_readonly && !$upload_review_mode)
-            {
-            ?>
-            <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php",$urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
-            <?php
-            }
-         if ($resource["file_extension"]!="") 
-            {hook("afterreplacefile");} 
-         else 
-            {hook("afteruploadfile");}
-         if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
-            { ?>
-            <br />
-     <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a><?php } ?>
-     <?php
-     if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode) { ?><br />
-     <a href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a><?php } ?>
-     <?php if ($allow_metadata_revert){?><br />
-     <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a><?php } ?>
-        <?php hook("afterfileoptions"); ?>
-     </div>
-     <div class="clearerleft"> </div>
-  </div>
-  <?php }
-  hook("beforeimagecorrection");
-
-  if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
-  <div class="Question" id="question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label>
-   <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>); <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
-   <option value=""><?php echo $lang["select"]?></option>
-   <?php if ($resource["has_image"]==1) { ?>
-   <?php
-# On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
-# A local configuration setting allows this to be rectified
-   if (!$image_rotate_reverse_options)
-   {
-     ?>
-     <option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
-     <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
-     <?php
-  }
-  else
-  {
-     ?>
-     <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
-     <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
-     <?php
-  }
-  ?>
-  <?php if ($tweak_allow_gamma){?>
-  <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
-  <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
-  <?php } ?>
-  <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
-  <?php } else { ?>
-  <option value="restore"><?php echo $lang["retrypreviews"]?></option>
-  <?php } ?>
-  <?php hook("moretweakingopt"); ?>
-</select>
-<div class="clearerleft"> </div>
-</div>
-<?php } ?>
-
-
-<?php }
-else
-  { # Upload template: (writes to resource with ID [negative user ref])
-   if (!hook("replaceeditheader"))
-   {
-    # Define the title h1:
-    if ($single)
         {
-        if (getval("status","")=="2")
+        if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
+            {?>
+            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+            <?php
+            }
+        if (!hook("replaceeditheader")) 
+            { ?>
+            <div class="RecordHeader">
+            <?php
+            # Draw nav
+            if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
+            
+            if (!$upload_review_mode) { ?>
+            <h1 id="editresource"><?php echo $lang["action-editmetadata"];render_help_link("user/editing-resources");?></h1>
+            <?php } else { ?>
+            <h1 id="editresource"><?php echo $lang["refinemetadata"];render_help_link("user/editing-resources");?></h1>
+            <?php } ?>
+            
+            </div><!-- end of RecordHeader -->
+            <?php
+            if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
+            
+            if (!$upload_review_mode)
+                { ?>
+                <div class="Question" id="resource_ref_div" style="border-top:none;">
+                <label><?php echo $lang["resourceid"]?></label>
+                <div class="Fixed"><?php echo urlencode($ref) ?></div>
+                <div class="clearerleft"> </div>
+                </div>
+                <?php
+                }
+            }
+        
+        global $custompermshowfile;
+        hook('custompermshowfile');
+        if(     (
+                (!$is_template && !checkperm('F*'))
+                    ||
+                $custompermshowfile
+                    ||
+                upload_share_active()
+                )
+            &&
+                !hook('replaceeditpreview')
+            )
+            { ?>
+            <div class="Question" id="question_file">
+                <label><?php echo $lang["file"]?></label>
+            <div class="Fixed">
+            <?php
+            if ($resource["has_image"]==1)
+                { ?>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
+                <?php // check for watermarked version and show it if it exists
+                if (checkperm("w"))
+                    {
+                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    if (file_exists($wmpath))
+                        { ?>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <?php 
+                        }
+                    } ?>
+                <br />
+                <?php
+                }
+            else
+                {
+                # Show the no-preview icon
+                ?>
+                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+                <br />
+                <?php
+                }
+            if ($resource["file_extension"]!="") 
+                { ?>           
+                <strong>
+                <?php 
+                echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
+                ?>
+                </strong>
+                <?php 
+                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
+                    {?> 
+                    &nbsp;&nbsp;
+                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo $lang['showwatermark']?>'){jQuery(this).text('<?php echo $lang['hidewatermark']?>');} else {jQuery(this).text('<?php echo $lang['showwatermark']?>');}"><?php echo $lang['showwatermark']?></a>
+                    <?php 
+                    }?>
+                <br />
+                <?php 
+                }
+
+            if($top_nav_upload_type == 'local')
+                {
+                $replace_upload_type = 'plupload';
+                }
+            else 
+                {
+                $replace_upload_type=$top_nav_upload_type;
+                }
+
+            // Allow to upload only if resource is not a data only type
+            if (0 < $ref && !$noupload && !$resource_file_readonly && !$upload_review_mode)
+                {
+                ?>
+                <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php",$urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
+                <?php
+                }
+            if ($resource["file_extension"]!="") 
+                {hook("afterreplacefile");} 
+            else 
+                {hook("afteruploadfile");}
+            if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
+                { ?>
+                <br />
+                <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a>
+                <?php
+                }
+
+            if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode)
+                {?>
+                <br />
+                <a href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a>
+                <?php 
+                }
+            if ($allow_metadata_revert)
+                {?>
+                <br />
+                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
+                <?php
+                }
+            hook("afterfileoptions"); ?>
+            </div>
+            <div class="clearerleft"> </div>
+        </div>
+    <?php }
+    hook("beforeimagecorrection");
+
+    if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode)
+        { ?>
+        <div class="Question" id="question_imagecorrection">
+            <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label>
+            <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>); <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
+            <option value=""><?php echo $lang["select"]?></option>
+            <?php if ($resource["has_image"]==1)
+                {
+                # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
+                # A local configuration setting allows this to be rectified
+                if (!$image_rotate_reverse_options)
+                    {
+                    ?>
+                    <option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
+                    <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
+                    <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
+                    <?php
+                    }
+                if ($tweak_allow_gamma)
+                    {?>
+                    <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
+                    <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
+                    <?php
+                    }?>
+                <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
+                <?php
+                }
+            else
+                {?>
+                <option value="restore"><?php echo $lang["retrypreviews"]?></option>
+                <?php
+                } 
+            hook("moretweakingopt"); ?>
+            </select>
+            <div class="clearerleft"> </div>
+        </div><?php
+        } 
+    }
+else
+    { # Upload template: (writes to resource with ID [negative user ref])
+    if (!hook("replaceeditheader"))
+        {
+        # Define the title h1:
+        if ($single)
             {
-            $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
+            if (getval("status","")=="2")
+                {
+                $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
+                }
+            else
+                {
+                $titleh1 = $lang["addresource"]; # Add Single Resource
+                }
+            }
+        elseif ($uploader == "ftp")
+            {
+            # Add Resource Batch - Fetch from FTP server
+            $titleh1 = $lang["addresourcebatchftp"];
+            }
+        elseif ((getval("local","")!="")||($uploader == "local"))
+            {
+            # Add Resource Batch - Fetch from local upload folder
+            $titleh1 = $lang["addresourcebatchlocalfolder"];
             }
         else
             {
-            $titleh1 = $lang["addresource"]; # Add Single Resource
-            }
-        }
-    elseif ($uploader == "ftp")
-        {
-        # Add Resource Batch - Fetch from FTP server
-        $titleh1 = $lang["addresourcebatchftp"];
-        }
-    elseif ((getval("local","")!="")||($uploader == "local"))
-        {
-         # Add Resource Batch - Fetch from local upload folder
-        $titleh1 = $lang["addresourcebatchlocalfolder"];
-        }
-   else
-        {
-        // Defualt - batch upload using plupload
-        $titleh1 = $lang["addresourcebatchbrowser"];
-        }    
-    ?>
-    
-    <h1><?php echo $titleh1 ?></h1>
-    <p><?php echo $lang["intro-batch_edit"];render_help_link("user/uploading");?></p>
-    
-    <?php
- }
-
-# Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
-
-if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
-
-  } ?>
-
-<?php hook("editbefresmetadata"); ?>
-<?php if (!hook("replaceedittype")) { ?>
-<?php
-if(!$multiple)
-    {
-    ?>
-    <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
-        <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
-        if ($lockable_fields)
-            {
-            renderLockButton('resource_type', $locked_fields);
-            }?>
-       </label>
-       <?php if ($check_edit_checksums)
-        {
-        $resource=get_resource_data($ref);
-        ?>
-        <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
+            // Defualt - batch upload using plupload
+            $titleh1 = $lang["addresourcebatchbrowser"];
+            }?>        
+        <h1><?php echo $titleh1 ?></h1>
+        <p><?php echo $lang["intro-batch_edit"];render_help_link("user/uploading");?></p>
         <?php
         }
-        ?>
-
-        <select name="resource_type" id="resourcetype" class="stdwidth" 
-                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
-        <?php
-        $types                = get_resource_types();
-        $shown_resource_types = array();
-        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
-          {
-          echo "<option value='' selected>" . $lang["select"] . "</option>";
-          }
-          
-        for($n = 0; $n < count($types); $n++)
-            {
-            $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
-            // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
-            if(0 > $ref 
-                && 
-                    (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
-                    ||
-                    (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
-                    ||
-                    (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
-                &&
-                    $resource['resource_type'] != $types[$n]['ref']
-                )
-                {
-                continue;
-                }
-
-            $shown_resource_types[] = $types[$n]['ref'];
-            ?>
-            <option value="<?php echo $types[$n]['ref']; ?>"
-                <?php
-                if(($resource['resource_type'] == $types[$n]['ref'] && getval("resource_type","") == "") || getval("resource_type","") == $types[$n]['ref'])
-                    {
-                    $selected_type = $types[$n]['ref'];
-                    ?>selected<?php
-                    }
-                    ?>
-            ><?php echo htmlspecialchars($types[$n]["name"])?></option>
-            <?php
-            }
-
-        // make sure the user template resource (edit template) has the correct resource type when they upload so they can see the correct specific fields
-        if('' == getval('submitted', ''))
-            {
-            if(!isset($selected_type))
-                {
-                // Display error if no resource type can be found - resource specific metadata cannot be loaded.    
-                if (empty($shown_resource_types))
-                    {
-                    error_alert($lang['resource_type_not_found'], false);
-                    exit();
-                    }
-                $selected_type = $shown_resource_types[0];
-                }
-
-            $resource['resource_type'] = $selected_type;
-            }
-            ?>
-        </select>
-        <div class="clearerleft"></div>
-    </div>
-    <?php
+    # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
+    if ($edit_show_save_clear_buttons_at_top)
+        {
+        SaveAndClearButtons("NoPaddingSaveClear");
+        }
     }
-else
+
+hook("editbefresmetadata"); ?>
+<?php if (!hook("replaceedittype"))
     {
-    # Multiple method of changing resource type.
-    ?>
-    <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["resourcetype"] ?></h2>
-    <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>">
-      <div class="Question">
-        <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo $lang["editallresourcetypewarning"] ?>');} else {q.style.display='none';}">
-        &nbsp;
-        <label for="editresourcetype"><?php echo $lang["resourcetype"] ?></label>
-      </div>
-    <div class="Question" style="display:none;" id="editresourcetype_question">
-        <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
-        <select name="resource_type" id="resourcetype" class="stdwidth">
+    if(!$multiple)
+        {
+        ?>
+        <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
+            <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
+            if ($lockable_fields)
+                {
+                renderLockButton('resource_type', $locked_fields);
+                }?>
+        </label>
+        <?php if ($check_edit_checksums)
+            {
+            $resource=get_resource_data($ref);
+            ?>
+            <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
             <?php
-            $types = get_resource_types();
+            }
+            ?>
+
+            <select name="resource_type" id="resourcetype" class="stdwidth" 
+                    onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+            <?php
+            $types                = get_resource_types();
+            $shown_resource_types = array();
+            if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
+            {
+            echo "<option value='' selected>" . $lang["select"] . "</option>";
+            }
+            
             for($n = 0; $n < count($types); $n++)
                 {
-                if(in_array($types[$n]['ref'], $hide_resource_types))
+                $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
+                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if(0 > $ref 
+                    && 
+                        (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
+                        ||
+                        (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
+                        ||
+                        (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                    &&
+                        $resource['resource_type'] != $types[$n]['ref']
+                    )
                     {
                     continue;
                     }
+
+                $shown_resource_types[] = $types[$n]['ref'];
                 ?>
-                <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option>
+                <option value="<?php echo $types[$n]['ref']; ?>"
+                    <?php
+                    if(($resource['resource_type'] == $types[$n]['ref'] && getval("resource_type","") == "") || getval("resource_type","") == $types[$n]['ref'])
+                        {
+                        $selected_type = $types[$n]['ref'];
+                        ?>selected<?php
+                        }
+                        ?>
+                ><?php echo htmlspecialchars($types[$n]["name"])?></option>
                 <?php
                 }
-            ?>
-        </select>
-        <div class="clearerleft"></div>
-    </div>
-    <?php
-    }
-} # end hook("replaceedittype")
+
+            // make sure the user template resource (edit template) has the correct resource type when they upload so they can see the correct specific fields
+            if('' == getval('submitted', ''))
+                {
+                if(!isset($selected_type))
+                    {
+                    // Display error if no resource type can be found - resource specific metadata cannot be loaded.    
+                    if (empty($shown_resource_types))
+                        {
+                        error_alert($lang['resource_type_not_found'], false);
+                        exit();
+                        }
+                    $selected_type = $shown_resource_types[0];
+                    }
+
+                $resource['resource_type'] = $selected_type;
+                }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+        <?php
+        }
+    else
+        {
+        # Multiple method of changing resource type.
+        ?>
+        <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["resourcetype"] ?></h2>
+        <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>">
+        <div class="Question">
+            <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo $lang["editallresourcetypewarning"] ?>');} else {q.style.display='none';}">
+            &nbsp;
+            <label for="editresourcetype"><?php echo $lang["resourcetype"] ?></label>
+        </div>
+        <div class="Question" style="display:none;" id="editresourcetype_question">
+            <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
+            <select name="resource_type" id="resourcetype" class="stdwidth">
+                <?php
+                $types = get_resource_types();
+                for($n = 0; $n < count($types); $n++)
+                    {
+                    if(in_array($types[$n]['ref'], $hide_resource_types))
+                        {
+                        continue;
+                        }
+                    ?>
+                    <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option>
+                    <?php
+                    }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+        <?php
+        }
+    } # end hook("replaceedittype")
 
 # For new users check that they have access to the default resource type, setting from the available types if they don't to ensure metadata fields load correctly.
 if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && $selected_type != 0)
@@ -1814,10 +1884,17 @@ else # Edit Resource(s).
 <?php
 
 # Status / Access / Related Resources
-if (  ($ref > 0 && $upload_review_mode && eval($show_status_and_access_on_upload_perm) )  # If editing a resource after upload
-   || ($ref < 0 && eval($show_status_and_access_on_upload_perm) ) # If editing a resource template
-   || ($ref > 0 && !$upload_review_mode) # If regular resource edit
-   || !hook("editstatushide")  ) # If grant_edit plugin isn't overriding
+if (    (
+        ($ref > 0 && $upload_review_mode && eval($show_status_and_access_on_upload_perm) )  # If editing a resource after upload
+        ||
+        ($ref < 0 && eval($show_status_and_access_on_upload_perm) ) # If editing a resource template
+        ||
+        ($ref > 0 && !$upload_review_mode) # If regular resource edit
+        || !hook("editstatushide") 
+        )
+   && 
+        upload_share_active() == false
+   ) # If grant_edit plugin isn't overriding
 {
   if(!hook("replacestatusandrelationshipsheader"))
   {

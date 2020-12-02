@@ -4947,11 +4947,23 @@ function render_share_password_question($blank=true)
     ?>
     <div class="Question">
     <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-    <input type="text" id="inputpassword" name="inputpassword" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>" 
-        onclick="pclick('inputpassword');" onfocus="pclick('inputpassword');" onblur="pblur('inputpassword');">
-    <input type="hidden" id="sharepassword" name="sharepassword" value="(unchanged)">
+    <input type="password" id="inputpassword" name="inputpassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('inputpassword');"></span>
     </div>
     <script>
+
+    function togglePassword(pwdelement)
+        {
+        input = jQuery('#' + pwdelement);
+        if (input.attr("type") == "password")
+            {
+            input.attr("type", "text");
+            }
+        else
+            {
+            input.attr("type", "password");
+            }
+        }
     var passInput="";
     var passState="(unchanged)";
     var passHistory="";
