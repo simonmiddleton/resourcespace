@@ -2089,7 +2089,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             {
             return array();
             }
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] && $c["bg_img_resource_ref"] > 0)
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
             {
             $limit = 1;
             $union = sprintf("
