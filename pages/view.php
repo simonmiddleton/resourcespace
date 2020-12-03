@@ -874,8 +874,6 @@ else if(1 == $resource['has_image'])
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
-						// indicate visually that tagging is being initialised
-						setVisualIndicator(preview_image);
 
                         anno.addPlugin('RSTagging',
                             {
