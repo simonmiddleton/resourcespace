@@ -72,9 +72,9 @@ function HookAnnotateAllAdditionalheaderjs(){
         // Prevent duplication of image if loading is interrupted:
         var canvasExists = document.getElementsByClassName("image-annotate-canvas");
         if (canvasExists.length != 0)
-        {
+            {
             return
-        }
+            }
 
         // Set function's optional arguments:
         page = typeof page !== 'undefined' ? page : 1;
