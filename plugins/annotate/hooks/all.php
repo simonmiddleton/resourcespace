@@ -68,6 +68,14 @@ function HookAnnotateAllAdditionalheaderjs(){
 <script type="text/javascript" src="<?php echo $baseurl_short?>plugins/annotate/lib/jquery/js/jquery.annotate.js?css_reload_key=<?php echo $css_reload_key?>"></script>
 <script language="javascript">
     function annotate(ref,k,w,h,annotate_toggle,page, modal){
+
+        // Prevent duplication of image if loading is interrupted:
+        var canvasExists = document.getElementsByClassName("image-annotate-canvas");
+        if (canvasExists.length != 0)
+        {
+            return
+        }
+
         // Set function's optional arguments:
         page = typeof page !== 'undefined' ? page : 1;
         modal = typeof modal !== 'undefined' ? modal : false;
