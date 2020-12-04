@@ -17,7 +17,7 @@ $run_mode = ('true' == getval('run_mode', '') ? true : false);
 if($ajax && $run_mode && enforcePostRequest($ajax))
     {
     $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . "{$SCRIPTS[$script]['file']} --emu_test_mode=false --emu_userref={$userref}";
-    run_command($command);
+    run_external($command);
 
     exit();
     }
@@ -25,7 +25,7 @@ if($ajax && $run_mode && enforcePostRequest($ajax))
 if(file_exists($SCRIPTS[$script]['file']))
     {
     $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . "{$SCRIPTS[$script]['file']} --emu_test_mode=true --emu_userref={$userref}";
-    $output  = run_command($command);
+    $output  = run_external($command);
     }
 else
     {

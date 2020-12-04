@@ -2064,6 +2064,88 @@ function run_command($command, $geterrors = false, array $params = array())
     return $output;
     }
 
+/**
+ * Similar to run_command but returns an array with the resulting output (stdout & stderr) fetched concurrently
+ * for improved performance.
+ *
+ * @param  mixed $command   Command to run
+ *
+ * @return array Command output
+ */
+function run_external($command)
+    {
+    global $debug_log;
+    
+    $pipes = array();
+    $output = array();
+    # Pipes for stdin, stdout and stderr
+    $descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("pipe", "w"));
+
+    # Execute the command
+    $process = proc_open($command, $descriptorspec, $pipes);
+
+    # Ensure command returns an external PHP resource
+    if (!is_resource($process))
+        {
+        return false;
+        }
+    
+    # Immediately close the input pipe
+    fclose($pipes[0]);
+    
+    # Set both output streams to non-blocking mode
+    stream_set_blocking($pipes[1], false);
+    stream_set_blocking($pipes[2], false);
+
+    while (true)
+        {
+        $read = array();
+
+        if (!feof($pipes[1]))
+            {
+            $read[] = $pipes[1];
+            }
+
+        if (!feof($pipes[2]))
+            {
+            $read[] = $pipes[2];
+            }
+ 
+        if (!$read)
+            {
+            break;
+            }
+ 
+        $write = NULL;
+        $except = NULL;
+        $ready = stream_select($read, $write, $except, 2);
+ 
+        if ($ready === false)
+            {
+            break;
+            }
+ 
+        foreach ($read as $r)
+            {
+            # Read a line and strip newline and carriage return from the end
+            $line = rtrim(fgets($r, 1024),"\r\n");  
+            $output[] = $line;
+            }
+        }
+ 
+    # Close the output pipes
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    
+    if ($debug_log)
+        {
+        debug("CLI output: ". implode("\n", $output));
+        }
+ 
+    proc_close($process);
+ 
+    return $output;
+    }
 
 /**
  * Display a styledalert() modal error and optionally return the browser to the previous page after 2 seconds
