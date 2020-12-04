@@ -4389,3 +4389,14 @@ function permission_negative_j(int $ref)
     {
     return checkperm("-j{$ref}");
     }
+
+/**
+ * Validate if value is integer or string integer
+ *
+ * @param  mixed $var - variable to check
+ * @return boolean true if variable resolves to integer value
+ */
+function is_int_loose($var)
+    {
+    return (string)(int)$var === (string)$var;
+     }

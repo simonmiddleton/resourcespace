@@ -2130,7 +2130,6 @@ function get_featured_collection_resources(array $c, array $ctx)
         sql_limit(null, $limit)
     );
 
-
     $fc_resources = sql_array($sql, "themeimage");
 
     $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
@@ -2162,7 +2161,7 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
 
     $collections = array();
 
-    $allowed_fcs = ($access_control ? compute_featured_collections_acess_control() : true);
+    $allowed_fcs = ($access_control ? compute_featured_collections_access_control() : true);
     if($allowed_fcs === false)
         {
         $CACHE_FC_CATEG_SUB_FCS[$c["ref"]] = $collections;
@@ -4398,7 +4397,7 @@ function get_featured_collections(int $parent, array $ctx)
 
     $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : true);
 
-    return sql_query(
+    $allfcs = sql_query(
         sprintf(
               "SELECT DISTINCT c.ref,
                       c.`name`,
@@ -4414,12 +4413,26 @@ function get_featured_collections(int $parent, array $ctx)
             LEFT JOIN collection AS cc ON c.ref = cc.parent
                 WHERE c.`type` = %s
                   AND c.parent %s
-                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)
              GROUP BY c.ref",
             COLLECTION_TYPE_FEATURED,
-            sql_is_null_or_eq_val((string) $parent, $parent == 0),
-            ($access_control ? featured_collections_permissions_filter_sql("AND", "c.ref") : "")
-        ));
+            sql_is_null_or_eq_val((string) $parent, $parent == 0)
+            )
+        );
+
+    if(!$access_control)
+        {
+        return $allfcs;
+        }
+
+    $validcollections = array();
+    foreach($allfcs as $fc)
+        {
+        if(featured_collection_check_access_control($fc["ref"]))
+            {
+            $validcollections[]=$fc;
+            }
+        }
+    return $validcollections;
     }
 
 
@@ -4449,8 +4462,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $prefix = " " . trim($prefix);
     $column = trim($column);
 
-    $computed_fcs = compute_featured_collections_acess_control();
-
+    $computed_fcs = compute_featured_collections_access_control();
     if($computed_fcs === true)
         {
         $return = ""; # No access control needed! User should see all featured collections
@@ -4467,7 +4479,6 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         }
 
     $CACHE_FC_PERMS_FILTER_SQL[$cache_id] = $return;
-
     return $return;
     }
 
@@ -4481,21 +4492,44 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
 */
 function featured_collection_check_access_control(int $c_ref)
     {
-    $fcs_access_control = compute_featured_collections_acess_control();
-    if($fcs_access_control === true)
+    if(checkperm("-j" . $c_ref))
+        {
+        return false;
+        }
+    elseif(checkperm("j*") || checkperm("j" . $c_ref))
         {
         return true;
         }
-    else if(is_array($fcs_access_control))
+    else
         {
-        $fcs_access_control = array_flip($fcs_access_control);
-        if(isset($fcs_access_control[$c_ref]))
-            {
-            return true;
-            }
-        }
+        // Get all parents
+        $allparents = sql_query("
+                SELECT  C2.ref, C2.parent
+                  FROM  (SELECT @r AS p_ref,
+                        (SELECT @r := parent FROM collection WHERE ref = p_ref) AS parent,
+                        @l := @l + 1 AS lvl
+                  FROM  (SELECT @r := '" . $c_ref . "', @l := 0) vars,
+                        collection c
+                 WHERE  @r <> 0) C1
+                  JOIN  collection C2
+                    ON  C1.p_ref = C2.ref
+              ORDER BY  C1.lvl DESC",
+                "featured_collections");
 
-    return false;
+          foreach($allparents as $parent)
+                {
+                if(checkperm("-j" . $parent["ref"]))
+                    {
+                    // Denied access to parent
+                    return false;
+                    }
+                elseif(checkperm("j" . $parent["ref"]))
+                    {
+                    return true;
+                    }
+                }
+        return false; // No explicit permission given and user doesn't have f*
+        }
     }
 
 
@@ -4996,100 +5030,94 @@ function allow_upload_to_collection(array $c)
 *                       TRUE if user has access to all featured collections. If some access control is in place, then the
 *                       return will be an array with all the allowed featured collections
 */
-function compute_featured_collections_acess_control()
+function compute_featured_collections_access_control()
     {
-    global $CACHE_FC_ACCESS_CONTROL;
+    global $CACHE_FC_ACCESS_CONTROL, $userpermissions;
     if(!is_null($CACHE_FC_ACCESS_CONTROL))
         {
         return $CACHE_FC_ACCESS_CONTROL;
         }
 
     $all_fcs = sql_query(sprintf("SELECT ref, parent FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED), "featured_collections");
-    $all_fcs = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
-    $root_fcs = array_filter($all_fcs, function($v) { return $v == 0; });
-
-    $fcs_allowed = array();
-    $fcs_not_allowed = array();
-
-    if(!checkperm("j*"))
+    $all_fcs_rp = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
+    // Set up arrays to store permitted/blocked featured collections
+    $includerefs = array();
+    $excluderefs = array();
+    if(checkperm("j*"))
         {
-        $fc_root_allowed_refs = array_filter($root_fcs, 'permission_j', ARRAY_FILTER_USE_KEY);
-        if(empty($fc_root_allowed_refs))
+        // Check for -jX permissions.
+        foreach($userpermissions as $userpermission)
+            {
+            if(substr($userpermission,0,2) == "-j")
+                {
+                $fcid = substr($userpermission,2);
+                if(is_int_loose($fcid))
+                    {
+                    // Collection access has been explicitly denied
+                    $excluderefs[] = $fcid;
+                    }                
+                }
+            }
+        if(count($excluderefs) == 0)
+            {
+            return true;
+            }
+        }
+    else
+        {
+        // No access to all, check for j{field} permissions that open up access
+        foreach($userpermissions as $userpermission)
+            {
+            if(substr($userpermission,0,1) == "j")
+                {
+                $fcid = substr($userpermission,1);
+                if(is_int_loose($fcid))
+                    {
+                    $includerefs[] = $fcid;
+                    // Add children of this collection unless a -j permission has been added below it
+                    $children = array_keys($all_fcs_rp,$fcid);
+                    $queue = new SplQueue();
+                    $queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
+                    foreach($children as $child_fc)
+                        {
+                        $queue->enqueue($child_fc);
+                        }
+                
+                    while(!$queue->isEmpty())
+                        {
+                        $checkfc = $queue->dequeue();
+                        if(!checkperm("-j" . $checkfc))
+                            {
+                            $includerefs[] = $checkfc;
+                            // Also add children of this collection to queue to check
+                            $fcs_sub = array_keys($all_fcs_rp,$checkfc);
+                            foreach($fcs_sub as $fc_sub)
+                                {
+                                $queue->enqueue($fc_sub);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+        if(count($includerefs) == 0)
             {
             // Misconfiguration - user can only see specific FCs but none have been selected
             return false;
             }
-
-        $root_fcs = $fc_root_allowed_refs;
         }
 
-    // BFS traverse the tree to establish what FCs are allowed
-    $queue = new SplQueue();
-    $queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
-    foreach(array_keys($root_fcs) as $root_fc_ref)
+    $return = array();
+    foreach($all_fcs_rp as $fc => $fcp)
         {
-        $queue->enqueue($root_fc_ref);
-        }
-
-    while(!$queue->isEmpty())
-        {
-        $fc = $queue->dequeue();
-
-        $fc_parent = ($all_fcs[$fc] > 0 ? $all_fcs[$fc] : 0);
-        $fc_children = array_keys($all_fcs, $fc);
-        $fcs_allowed_flipped = array_flip($fcs_allowed);
-        $fcs_not_allowed_flipped = array_flip($fcs_not_allowed);
-        $is_fc_allowed = false;
-
-        // Has the node itself OR its parent been marked as no access already? Mark all nodes' children the same
-        if(isset($fcs_not_allowed_flipped[$fc]) || isset($fcs_not_allowed_flipped[$fc_parent]))
+        if(in_array($fc, $includerefs) && !in_array($fc,$excluderefs))
             {
-            $fc_not_allowed_refs = $fc_children;
-            }
-        // Filter out featured collections explicitly forbidden
-        else if(permission_negative_j($fc))
-            {
-            $fcs_not_allowed[] = $fc;
-            $fc_not_allowed_refs = $fc_children;
-            }
-        else if($fc_parent > 0 && permission_negative_j($fc_parent))
-            {
-            // Filter out featured collections where the parent has been explicitly forbidden
-            $fcs_not_allowed[] = $fc_parent;
-            $fc_not_allowed_refs = $fc_children;
-            }
-        else
-            {
-            $is_fc_allowed = true;
-            $fc_not_allowed_refs = array_filter($fc_children, 'permission_negative_j');
-            }
-
-        if($is_fc_allowed && !isset($fcs_allowed_flipped[$fc]))
-            {
-            $fcs_allowed[] = $fc;
-            }
-
-        $fcs_allowed = array_merge($fcs_allowed, array_diff($fc_children, $fc_not_allowed_refs));
-        $fcs_not_allowed = array_merge($fcs_not_allowed, $fc_not_allowed_refs);
-
-        foreach($fc_children as $fc_child_ref)
-            {
-            $queue->enqueue($fc_child_ref);
+            $return[] = $fc;
             }
         }
-
-    $count_all_fcs = count($all_fcs);
-    if($count_all_fcs === count($fcs_allowed))
-        {
-        // No access control needed! User should see all featured collections
-        $return = true;
-        }
-    else
-        {
-        $return = $fcs_allowed;
-        }
-
+        
     $CACHE_FC_ACCESS_CONTROL = $return;
-
     return $return;
     }
+

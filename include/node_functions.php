@@ -1943,12 +1943,12 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
         $sql_select .= ",n.* ";
         }
 
-    $resources = array_filter($resources,function($resource){return (string)(int)$resource==(string)$resource;}); // remove non-numeric values
+    $resources = array_filter($resources,"is_int_loose"); // remove non-numeric values
     $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN ('" . implode("','",$resources) . "')";
 
     if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
         {
-        $fields = array_filter($resource_type_fields,function($field){return (string)(int)$field==(string)$field;});
+        $fields = array_filter($resource_type_fields,"is_int_loose");
         $query .= " AND n.resource_type_field IN ('" . implode("','",$fields) . "')";
         }
 
