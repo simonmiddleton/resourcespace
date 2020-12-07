@@ -455,7 +455,7 @@ function collection_writeable($collection)
     global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
     debug("collection session : " . $collectiondata["session_id"]);
     debug("collection user : " . $collectiondata["user"]);
-    debug("anonymous_login : " . $anonymous_login);
+    debug("anonymous_login : " . isset($anonymous_login) && is_string($anonymous_login) ? $anonymous_login : "(no)");
     debug("userref : " . $userref);
     debug("username : " . $username);
     debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
@@ -557,16 +557,16 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 	{
     debug_function_call("create_collection", func_get_args());
 
-	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	if($username==$anonymous_login && $anonymous_user_session_collection)
-		{		
-		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
-		$rs_session=get_rs_session_id(true);
-		}
-	else
-		{	
-		$rs_session="";
-		}
+    global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
+    if($username==$anonymous_login && $anonymous_user_session_collection)
+        {
+        // We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
+        $rs_session=get_rs_session_id(true);
+        }
+    else
+        {	
+        $rs_session="";
+        }
 
     $sql = sprintf(
         "INSERT INTO collection (%sname, user, created, allow_changes, cant_delete, session_id, type)
@@ -4469,7 +4469,6 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         {
         return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
         }
-
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
@@ -5135,3 +5134,28 @@ function compute_featured_collections_access_control()
     return $return;
     }
 
+/**
+ * Remove all old anonymous collections
+ *
+ * @param  int $limit   Maximum number of collections to delete - if run from browser this is kept low to avoid delays
+ * @return void
+ */
+function cleanup_anonymous_collections(int $limit = 100)
+    {
+    global $anonymous_login;
+
+    $sql_limit = $limit == 0 ? "" : "LIMIT " . $limit;
+
+    if(!is_array($anonymous_login))
+        {
+        $anonymous_login = array($anonymous_login);
+        }
+    foreach ($anonymous_login as $anonymous_user)
+        {;
+        $user = get_user_by_username($anonymous_user);
+        if(is_int_loose($user))
+            {
+            sql_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit);
+            }
+        }
+    }

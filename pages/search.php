@@ -275,7 +275,7 @@ else
     }
 
 $view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
-if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request)
+if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request && $USER_SELECTION_COLLECTION != "user_selection_collection")
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
     }
@@ -350,7 +350,7 @@ $allow_reorder=false;
 # get current collection resources to pre-fill checkboxes
 if($use_selection_collection)
     {
-    $selection_collection_resources = get_collection_resources(get_user_selection_collection($userref));
+    $selection_collection_resources = $USER_SELECTION_COLLECTION=="user_selection_collection" ? array() : get_collection_resources(get_user_selection_collection($userref));
     $selection_collection_resources_count = count($selection_collection_resources);
     }
 
@@ -1666,7 +1666,7 @@ if($use_selection_collection)
                 var csrf_data = '{<?php echo generateAjaxToken("ProcessCollectionResourceSelection"); ?>}';
                 // Convert token from format {CSRFToken:"data"} to strict JSON format which is {"CSRFToken":"data"} so that it can be parsed 
                 var csrf_data = csrf_data.replace('<?php echo $CSRF_token_identifier; ?>','"<?php echo $CSRF_token_identifier; ?>"');
-                ProcessCollectionResourceSelection(res_list, primary_action, <?php echo $USER_SELECTION_COLLECTION; ?>, csrf_data);
+                ProcessCollectionResourceSelection(res_list, primary_action, '<?php echo $USER_SELECTION_COLLECTION; ?>', csrf_data);
 
                 // Reset processing points
                 resource_starting=null;
@@ -1688,7 +1688,7 @@ if($use_selection_collection)
                 var csrf_data = '{<?php echo generateAjaxToken("ProcessCollectionResourceSelection"); ?>}';
                 // Convert token from format {CSRFToken:"data"} to strict JSON format which is {"CSRFToken":"data"} so that it can be parsed 
                 var csrf_data = csrf_data.replace('<?php echo $CSRF_token_identifier; ?>','"<?php echo $CSRF_token_identifier; ?>"');
-                ProcessCollectionResourceSelection(res_list, primary_action, <?php echo $USER_SELECTION_COLLECTION; ?>, csrf_data);
+                ProcessCollectionResourceSelection(res_list, primary_action, '<?php echo $USER_SELECTION_COLLECTION; ?>', csrf_data);
                 }
 
             else if (resource_ending) {
