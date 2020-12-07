@@ -2027,7 +2027,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         return array();
         }
 
-    global $CACHE_FC_RESOURCES;
+    global $CACHE_FC_RESOURCES, $themes_simple_images;
     $CACHE_FC_RESOURCES = (!is_null($CACHE_FC_RESOURCES) && is_array($CACHE_FC_RESOURCES) ? $CACHE_FC_RESOURCES : array());
     // create a unique ID for this result set as the context for the same FC may differ
     $cache_id = $c["ref"] . md5(json_encode($ctx));
@@ -2125,12 +2125,42 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     if(is_featured_collection_category($c))
         {
-        $collections = get_featured_collection_categ_sub_fcs($c, array("all_fcs" => $all_fcs));
-        if(!empty($collections))
+        $all_fcs = sql_query("SELECT ref, parent FROM collection WHERE `type`='" . COLLECTION_TYPE_FEATURED . "'", "featured_collections");
+        $all_fcs_rp = array_column($all_fcs, 'parent','ref');
+
+        // Array to hold resources
+        $fcresources=array();
+
+        // Create stack of collections to search 
+        // (not a queue as we want to get to the lowest child collections first where the resources are)
+        $colstack = new SplStack(); // 
+        $children = array_keys($all_fcs_rp,$c["ref"]);
+        foreach($children as $child_fc)
             {
-            $c_refs_csv_escaped = implode("', '", escape_check_array_values($collections));
-            $subquery["where"] = "WHERE c.ref IN ('{$c_refs_csv_escaped}') AND c.`type` = " . COLLECTION_TYPE_FEATURED;
+            $colstack->push($child_fc);
             }
+
+        while(count($fcresources) < $themes_simple_images && !$colstack->isEmpty())
+            {
+            $checkfc = $colstack->pop();
+            if(!in_array($checkfc,$all_fcs_rp))
+                {
+                $subfcimages = get_collection_resources($checkfc);        
+                if(is_array($subfcimages) && count($subfcimages) > 0)
+                    {
+                    $fcresources = array_merge($fcresources,$subfcimages);                
+                    }
+                continue;
+                }       
+     
+            // Either a parent FC or no results, add sub fcs to stack
+            $children = array_keys($all_fcs_rp,$checkfc);
+            foreach($children as $child_fc)
+                {
+                $colstack->push($child_fc);
+                }
+            }
+        $subquery["where"] = "WHERE r.ref IN ('" . implode("','",$fcresources) . "')";
         }
 
     $subquery["join"] = implode(" ", $subquery["join"]);
