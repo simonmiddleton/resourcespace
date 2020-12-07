@@ -194,19 +194,12 @@ function setup_user($userdata)
             }
         }
     
-    if($username == $anonymous_login)
+    $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
+    if(is_null($USER_SELECTION_COLLECTION) && !(isset($anonymous_login) && $username == $anonymous_login))
         {
-        // Don't create a new collection for every anonymous page load, just use a placeholder
-        $USER_SELECTION_COLLECTION = "user_selection_collection";
-        }
-    else
-        {
-        $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
-        if(is_null($USER_SELECTION_COLLECTION))
-            {
-            $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
-            update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
-            }
+        // Don't create a new collection on every anonymous page load, it will be created when an action is performed
+        $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
+        update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
         }
 
     $newfilter = false;

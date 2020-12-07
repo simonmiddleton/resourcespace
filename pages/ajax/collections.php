@@ -24,10 +24,9 @@ $allowed_actions = array(
     "remove_multiple_resources"
     );
 
-$collection = getval("collection", "");
-if($collection == "user_selection_collection")
+$collection = getval("collection", 0, true);
+if($collection==0 && isset($anonymous_login) && $username==$anonymous_login)
     {
-    $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
     if(is_null($USER_SELECTION_COLLECTION))
         {
         // No selection collection is created for anonymous users until an action is performed by the user so create one now
@@ -36,7 +35,6 @@ if($collection == "user_selection_collection")
         }
     $collection = $USER_SELECTION_COLLECTION;
     }
-$collection = (int)$collection;
 
 if(isset($selection_collection_only) && $collection != $USER_SELECTION_COLLECTION)
     {        

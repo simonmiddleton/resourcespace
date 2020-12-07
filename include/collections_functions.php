@@ -147,7 +147,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		{
 		# No collections of one's own? The user must have at least one Default Collection
 		global $usercollection;
-		$usercollection=create_collection ("Default Collection",$name,0,1); // make not deletable
+		$usercollection=create_collection ($user,"Default Collection",0,1); // make not deletable
 		set_user_collection($user,$usercollection);
 		
 		# Recurse to send the updated collection list.

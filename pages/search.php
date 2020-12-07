@@ -275,7 +275,7 @@ else
     }
 
 $view_selected_request = ($use_selection_collection && mb_strpos($search, "!collection{$USER_SELECTION_COLLECTION}") !== false);
-if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request && $USER_SELECTION_COLLECTION != "user_selection_collection")
+if($use_selection_collection && $clear_selection_collection && !$paging_request && !$thumbtypechange && !$view_selected_request && !is_null($USER_SELECTION_COLLECTION))
     {
     remove_all_resources_from_collection($USER_SELECTION_COLLECTION);
     }
@@ -350,8 +350,16 @@ $allow_reorder=false;
 # get current collection resources to pre-fill checkboxes
 if($use_selection_collection)
     {
-    $selection_collection_resources = $USER_SELECTION_COLLECTION=="user_selection_collection" ? array() : get_collection_resources(get_user_selection_collection($userref));
-    $selection_collection_resources_count = count($selection_collection_resources);
+    if(is_null($USER_SELECTION_COLLECTION))
+        {
+        $selection_collection_resources = array();
+        $selection_collection_resources_count = 0;        
+        }
+    else
+        {
+        $selection_collection_resources = get_collection_resources($USER_SELECTION_COLLECTION);
+        $selection_collection_resources_count = count($selection_collection_resources);
+        }
     }
 
 $hiddenfields=getvalescaped("hiddenfields","");
