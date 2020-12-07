@@ -147,8 +147,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		{
 		# No collections of one's own? The user must have at least one Default Collection
 		global $usercollection;
-		$name=get_mycollection_name($user);
-		$usercollection=create_collection ($user,$name,0,1); // make not deletable
+		$usercollection=create_collection ("Default Collection",$name,0,1); // make not deletable
 		set_user_collection($user,$usercollection);
 		
 		# Recurse to send the updated collection list.
@@ -2426,40 +2425,8 @@ function relate_to_collection($ref,$collection)
     $colresources = get_collection_resources($collection);
     sql_query("delete from resource_related where resource='" . escape_check($ref) . "' and related in ('" . join("','",$colresources) . "')");  
     sql_query("insert into resource_related(resource,related) values (" . escape_check($ref) . "," . join("),(" . $ref . ",",$colresources) . ")");
-	}	
-    
-    
-/**
- * Fetches the next name for a new Default Collection for the given user (Default Collection 1, 2 etc.)
- *
- * @param  integer $userref
- * @return void
- */
-function get_mycollection_name($userref)
-	{
-	global $lang;
-	for ($n=1;$n<500;$n++)
-		{
-		# Construct a name for this Default Collection. The name is translated when displayed!
-		if ($n==1)
-			{
-			$name = "Default Collection"; # Do not translate this string!
-			}
-		else
-			{
-			$name = "Default Collection " . $n; # Do not translate this string!
-			}
-		$ref=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='$name'",0);
-		if ($ref==0)
-			{
-			# No match!
-			return $name;
-			}
-		}
-	# Tried nearly 500 names(!) so just return a standard name 
-	return "Default Collection";
 	}
-	
+
 /**
  * Fetch all the comments for a given collection.
  *
