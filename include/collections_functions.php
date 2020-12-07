@@ -147,8 +147,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 		{
 		# No collections of one's own? The user must have at least one Default Collection
 		global $usercollection;
-		$name=get_mycollection_name($user);
-		$usercollection=create_collection ($user,$name,0,1); // make not deletable
+		$usercollection=create_collection ($user,"Default Collection",0,1); // make not deletable
 		set_user_collection($user,$usercollection);
 		
 		# Recurse to send the updated collection list.
@@ -458,18 +457,18 @@ function collection_writeable($collection)
 	debug("username : " . $username);
 	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
 
-	$writable=
-	    // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
-		($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
-		// Collection is public AND either they have the 'h' permission OR allow_changes has been set
-		|| ((checkperm("h") || $collectiondata["allow_changes"]==1) && $collectiondata["public"]==1)
-		// Collection has been shared but is not public AND user is either attached or in attached group
-		|| ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
-		// System admin
-		|| checkperm("a");
-	return $writable;
-	
-	}
+    $writable=
+        // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
+        ($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
+        // Collection is public AND either they have the 'h' permission OR allow_changes has been set
+        || ((checkperm("h") || $collectiondata["allow_changes"]==1) && $collectiondata["public"]==1)
+        // Collection has been shared but is not public AND user is either attached or in attached group
+        || ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
+        // System admin
+        || checkperm("a");
+    return $writable;
+
+    }
 	
 /**
  * Returns true if the current user has read access to the given collection.
@@ -554,16 +553,16 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 	{
     debug_function_call("create_collection", func_get_args());
 
-	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	if($username==$anonymous_login && $anonymous_user_session_collection)
-		{		
-		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
-		$rs_session=get_rs_session_id(true);
-		}
-	else
-		{	
-		$rs_session="";
-		}
+    global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
+    if($username==$anonymous_login && $anonymous_user_session_collection)
+        {
+        // We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
+        $rs_session=get_rs_session_id(true);
+        }
+    else
+        {	
+        $rs_session="";
+        }
 
     $sql = sprintf(
         "INSERT INTO collection (%sname, user, created, allow_changes, cant_delete, session_id, type)
@@ -2384,40 +2383,8 @@ function relate_to_collection($ref,$collection)
     $colresources = get_collection_resources($collection);
     sql_query("delete from resource_related where resource='" . escape_check($ref) . "' and related in ('" . join("','",$colresources) . "')");  
     sql_query("insert into resource_related(resource,related) values (" . escape_check($ref) . "," . join("),(" . $ref . ",",$colresources) . ")");
-	}	
-    
-    
-/**
- * Fetches the next name for a new Default Collection for the given user (Default Collection 1, 2 etc.)
- *
- * @param  integer $userref
- * @return void
- */
-function get_mycollection_name($userref)
-	{
-	global $lang;
-	for ($n=1;$n<500;$n++)
-		{
-		# Construct a name for this Default Collection. The name is translated when displayed!
-		if ($n==1)
-			{
-			$name = "Default Collection"; # Do not translate this string!
-			}
-		else
-			{
-			$name = "Default Collection " . $n; # Do not translate this string!
-			}
-		$ref=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='$name'",0);
-		if ($ref==0)
-			{
-			# No match!
-			return $name;
-			}
-		}
-	# Tried nearly 500 names(!) so just return a standard name 
-	return "Default Collection";
 	}
-	
+
 /**
  * Fetch all the comments for a given collection.
  *
@@ -4455,7 +4422,6 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         {
         return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
         }
-
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
@@ -5121,3 +5087,28 @@ function compute_featured_collections_access_control()
     return $return;
     }
 
+/**
+ * Remove all old anonymous collections
+ *
+ * @param  int $limit   Maximum number of collections to delete - if run from browser this is kept low to avoid delays
+ * @return void
+ */
+function cleanup_anonymous_collections(int $limit = 100)
+    {
+    global $anonymous_login;
+
+    $sql_limit = $limit == 0 ? "" : "LIMIT " . $limit;
+
+    if(!is_array($anonymous_login))
+        {
+        $anonymous_login = array($anonymous_login);
+        }
+    foreach ($anonymous_login as $anonymous_user)
+        {;
+        $user = get_user_by_username($anonymous_user);
+        if(is_int_loose($user))
+            {
+            sql_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit);
+            }
+        }
+    }

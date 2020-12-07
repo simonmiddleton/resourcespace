@@ -96,7 +96,7 @@ if ($collection!="" && $collection!="undefined")
 		{
 		# Create new collection
 		if ($entername!=""){ $name=$entername;} 
-		else { $name=get_mycollection_name($userref);}
+		else { $name="Default Collection";}
 		$new=create_collection ($userref,$name);
 		set_user_collection($userref,$new);
 		

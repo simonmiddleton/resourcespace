@@ -151,52 +151,53 @@ function setup_user($userdata)
 
     $ip_restrict_group=trim($userdata["ip_restrict_group"]);
     $ip_restrict_user=trim($userdata["ip_restrict_user"]);
-    
-    if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
-		{
-		// Get all the collections that relate to this session
-		$sessioncollections=get_session_collections($rs_session,$userref,true); 
-		if($anonymous_user_session_collection)
-			{
-			// Just get the first one if more
-			$usercollection=$sessioncollections[0];		
-			$collection_allow_creation=false; // Hide all links that allow creation of new collections
-			}
-		else
-			{
-			// Unlikely scenario, but maybe we do allow anonymous users to change the selected collection for all other anonymous users
-			$usercollection=$userdata["current_collection"];
-			}		
-		}
-	else
-		{
-		$usercollection=$userdata["current_collection"];
-		// Check collection actually exists
-		$validcollection=$userdata["current_collection_valid"];
-		if($validcollection==0)
-			{
-			// Not a valid collection - switch to user's primary collection if there is one
-			$usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
-			if ($usercollection!=0)
-				{
-				# set this to be the user's current collection
-				sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-				}
-			}
-		
-		if ($usercollection==0 || !is_numeric($usercollection))
-			{
-			# Create a collection for this user
-			# The collection name is translated when displayed!
-			$usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
-			# set this to be the user's current collection
-			sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-			}
-        }
 
-    $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
-    if(is_null($USER_SELECTION_COLLECTION))
+    if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
         {
+        // Get all the collections that relate to this session
+        $sessioncollections=get_session_collections($rs_session,$userref,true); 
+        if($anonymous_user_session_collection)
+            {
+            // Just get the first one if more
+            $usercollection=$sessioncollections[0];		
+            $collection_allow_creation=false; // Hide all links that allow creation of new collections
+            }
+        else
+            {
+            // Unlikely scenario, but maybe we do allow anonymous users to change the selected collection for all other anonymous users
+            $usercollection=$userdata["current_collection"];
+            }
+        }
+    else
+        {
+        $usercollection=$userdata["current_collection"];
+        // Check collection actually exists
+        $validcollection=$userdata["current_collection_valid"];
+        if($validcollection==0)
+            {
+            // Not a valid collection - switch to user's primary collection if there is one
+            $usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
+            if ($usercollection!=0)
+                {
+                # set this to be the user's current collection
+                sql_query("update user set current_collection='$usercollection' where ref='$userref'");
+                }
+            }
+        
+        if ($usercollection==0 || !is_numeric($usercollection))
+            {
+            # Create a collection for this user
+            # The collection name is translated when displayed!
+            $usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
+            # set this to be the user's current collection
+            sql_query("update user set current_collection='$usercollection' where ref='$userref'");
+            }
+        }
+    
+    $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
+    if(is_null($USER_SELECTION_COLLECTION) && !(isset($anonymous_login) && $username == $anonymous_login))
+        {
+        // Don't create a new collection on every anonymous page load, it will be created when an action is performed
         $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
         update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
         }
