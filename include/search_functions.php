@@ -2149,6 +2149,12 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
+
+    /*
+    this function requires that needle array does not contain any of the following characters: "(" ")"
+    */
+    $remove_from_needle = array("(", ")");
+    $needle = str_replace($remove_from_needle, "", $needle);
     /*
     Sometimes the text can contain HTML entities and can break the highlighting feature
     Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
@@ -2171,7 +2177,7 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     
     // Default highlighting. This used to use '<' and '>' characters as placeholders but now changed as they were being removed by strip_tags
     if ($highlight === null) {
-        $highlight = '||RS_HIGHLIGHT_OPEN||\1||RS_HIGHLIGHT_CLOSE||';
+        $highlight = '\(\1\)';
     }
     
     // Select pattern to use
@@ -2216,8 +2222,8 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     $text=str_replace("♣","#zwspace;",$text);    
 
     # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-    $text=str_replace("||RS_HIGHLIGHT_OPEN||",'<span class="highlight">',$text);
-    $text=str_replace("||RS_HIGHLIGHT_CLOSE||",'</span>',$text);
+    $text=str_replace("\(",'<span class="highlight">',$text);
+    $text=str_replace("\)",'</span>',$text);
     return $text;
     }
         
