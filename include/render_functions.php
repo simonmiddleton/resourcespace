@@ -1400,24 +1400,24 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
-	?>
-	<div class="<?php echo implode(" ", $div_class); ?>">
-		<label><?php echo $label; ?></label>
-		<select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
-		<?php
-		foreach ($options as $optionvalue=>$optiontext)
-			{
-			?>
-			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
-			<?php
-			}
-		?>
-		</select>
+    ?>
+    <div class="<?php echo implode(" ", $div_class); ?>">
+        <label for="<?php echo $inputname?>"><?php echo $label; ?></label>
+        <select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+        <?php
+        foreach ($options as $optionvalue=>$optiontext)
+            {
+            ?>
+            <option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+            <?php
+            }
+        ?>
+        </select>
         <div class="clearerleft"></div>
-	</div>
-	<?php
+    </div>
+    <?php
     return;
-	}
+    }
 
 /**
 * Render a table row (tr) for a single access key
@@ -4949,7 +4949,6 @@ function render_share_password_question($blank=true)
     <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
     <input type="password" id="inputpassword" name="inputpassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
     <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('inputpassword');"></span>
-    </div>
     <script>
 
     function togglePassword(pwdelement)

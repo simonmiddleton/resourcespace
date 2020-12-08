@@ -1266,7 +1266,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        if(in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) || featured_collection_check_access_control($collection))
+        $upload_share_active = upload_share_active();
+        $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
             {
             if(!collection_readable($collection))
                 {

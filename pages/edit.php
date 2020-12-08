@@ -88,21 +88,18 @@ $save_auto_next = getval("save_auto_next","") != "";
 
 if ($upload_review_mode)
     {
-        debug("BANG collection: " . $collection);
     # Set the collection and ref if not already set.
-    if(upload_share_active()) 
+    if(upload_share_active()!== false) 
         {
         $rs_session = get_rs_session_id(true);
         $ci=get_session_collections($rs_session);
         if (count($ci)==0)
             {
-                exit("HERE");
             error_alert($lang["error_no_resources_edit"]);
             }
         else
             {
             $collection=$ci[0];
-            debug("BANG collection now : " . $collection);
             }            
         } 
     else
@@ -112,7 +109,6 @@ if ($upload_review_mode)
     # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
     if ($edit_access_for_contributor == false)
         {
-            debug("BANG cleanup now : " . $collection);
         collection_cleanup_inaccessible_resources($collection);
         }
     # Start reviewing at the first resource. Need to search all worflow states and remove filters as no data has been set yet
@@ -134,7 +130,7 @@ if ($upload_review_mode)
         }
     else 
         {
-        if(upload_share_active())
+        if(upload_share_active()!== false)
             {
             // Delete the temporary upload_collection
             delete_collection($collection);
@@ -506,7 +502,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
                     if(upload_share_active())
                         {
-                            debug("BANG " . $collection);
                         remove_resource_from_collection($ref,$collection);  
                         }
                     else

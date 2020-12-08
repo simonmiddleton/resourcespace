@@ -1963,15 +1963,16 @@ function create_password_reset_key($username)
  */
 function get_rs_session_id($create=false)
     {
-    global $baseurl, $anonymous_login, $usergroup;
+    global $baseurl, $anonymous_login, $usergroup, $rs_session;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users or users accessing external upload links 
-    if(isset($_COOKIE["rs_session"]))
+    $existing_session = isset($rs_session) ? $rs_session : (isset($_COOKIE["rs_session"]) ? $_COOKIE["rs_session"] : "");
+    if($existing_session != "")
         {
         if (!headers_sent())
             {
-            rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
+            rs_setcookie("rs_session",$existing_session, 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
             }
-        return($_COOKIE["rs_session"]);
+        return($existing_session);
         }
     if ($create) 
         {
@@ -2370,6 +2371,7 @@ function get_upload_url($collection="",$k="")
  */
 function emulate_user($user, $usergroup="")
     {
+    debug_function_call("emulate_user",func_get_args());
     global $usergroup, $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
     global $username,$baseurl, $anonymous_login;

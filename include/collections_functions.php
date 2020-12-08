@@ -428,7 +428,6 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 function collection_writeable($collection)
     {
     $collectiondata = get_collection($collection);
-    debug("BANG" . __LINE__);
     if($collectiondata===false)
         {
         return false;
@@ -589,7 +588,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         }
     
     $setcolumns["name"]             = escape_check(mb_strcut($name, 0, 100));
-    $setcolumns["user"]             = escape_check($userid);
+    $setcolumns["user"]             = is_numeric($userid) ? $userid : 0;
     $setcolumns["allow_changes"]    = escape_check($allowchanges);
     $setcolumns["cant_delete"]      = escape_check($cant_delete);
     $setcolumns["public"]           = escape_check($cant_delete);
@@ -603,7 +602,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         }
     if($public)
         {
-        $setcolumns["type"]         = escape_check($userid);
+        $setcolumns["type"]         = 1;
         }
 
     $insert_columns = array_keys($setcolumns);
@@ -1024,19 +1023,21 @@ function save_collection($ref, $coldata=array())
     if(count($coldata) == 0)
         {
         // Old way
-        $coldata["name"]            = getval("name","");
-        $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
-        $coldata["public"]          = getval('public', 0, true);
-        $coldata["keywords"]        = getval("keywords","");
+        $coldata["name"]                = getval("name","");
+        $coldata["allow_changes"]       = getval("allow_changes","") != "" ? 1 : 0;
+        $coldata["public"]              = getval('public',0,true);
+        $coldata["keywords"]            = getval("keywords","");
+        $coldata["result_limit"]        = getval("result_limit",0,true);
+        $coldata["relateall"]           = getval("relateall","") != "";
+        $coldata["removeall"]           = getval("removeall","") != "";
+        $coldata["deleteall"]           = getval("deleteall","") != "";
+        $coldata["users"]               = getval("users","");
 
         if (checkperm("h"))
             {
             $coldata["home_page_publish"]   = (getval("home_page_publish","") != "") ? "1" : "0";
             $coldata["home_page_text"]      = getval("home_page_text","");
-            if (getval("home_page_image","") != "")
-                {
-                $coldata["home_page_image"] = getval("home_page_image","");
-                }
+            $coldata["home_page_image"]     = getval("home_page_image","");
             }
         }
         
@@ -1094,7 +1095,6 @@ function save_collection($ref, $coldata=array())
 
                 continue;
                 }
-
             if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
                 {
                 $sqlset[$colopt] = $colset;
@@ -1165,28 +1165,29 @@ function save_collection($ref, $coldata=array())
 
 	index_collection($ref);
   
-	$old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
-	$new_attached_users=array();
-	$collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
-	if($collection_owner=='')
-		{
-		$collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
-		}
-	
-	sql_query("delete from user_collection where collection='$ref'");
-	
-	if ($attach_user_smart_groups)
-		{
-		$old_attached_groups=sql_array("SELECT usergroup value FROM usergroup_collection WHERE collection='$ref'");
-		sql_query("delete from usergroup_collection where collection='$ref'");
-		}
+
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-    $users=getvalescaped("users",false);
-	if (($users)!="")
+	if (isset($coldata["users"]) && $coldata["users"]!="")
         {
+        $old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
+        $new_attached_users=array();
+        $collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
+        if($collection_owner=='')
+            {
+            $collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
+            }
+        
+        sql_query("delete from user_collection where collection='$ref'");
+        
+        if ($attach_user_smart_groups)
+            {
+            $old_attached_groups=sql_array("SELECT usergroup value FROM usergroup_collection WHERE collection='$ref'");
+            sql_query("delete from usergroup_collection where collection='$ref'");
+            }
+    
         # Build a new list and insert
-        $users=resolve_userlist_groups($users);
+        $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
         $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
         if (count($urefs)>0)
@@ -1242,19 +1243,19 @@ function save_collection($ref, $coldata=array())
         }
 
     # Relate all resources?
-    if (getval("relateall","")!="")
+    if (isset($coldata["relateall"]) && $coldata["relateall"] != "")
         {
         relate_all_collection($ref);
         }
 
     # Remove all resources?
-    if (getval("removeall","")!="")
+    if (isset($coldata["removeall"]) && $coldata["removeall"]!="")
         {
         remove_all_resources_from_collection($ref);
         }
 		
 	# Delete all resources?
-	if (getval("deleteall","")!="" && !checkperm("D"))
+	if (isset($coldata["deleteall"]) && $coldata["deleteall"]!="" && !checkperm("D"))
         {
         if(allow_multi_edit($ref))
             {
@@ -1262,10 +1263,8 @@ function save_collection($ref, $coldata=array())
             }
         }
 
-    $result_limit = getvalescaped("result_limit", 0, true);
-
     # Update limit count for saved search
-	if ($result_limit > 0)
+	if (isset($coldata["result_limit"]) && (int)$coldata["result_limit"] > 0)
         {
         sql_query("update collection_savedsearch set result_limit='" . $result_limit . "' where collection='$ref'");
         }
@@ -2991,7 +2990,11 @@ function get_session_collections($rs_session,$userref="",$create=false)
 	if($userref!="")
 		{
 		$extrasql="AND user='" . escape_check($userref) ."'";	
-		}
+        }
+    else
+        {
+        $userref='NULL';
+        }
 	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_SHARE_UPLOAD . "') " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
@@ -5218,7 +5221,17 @@ function get_upload_share_details($collection,$uploadkey="")
     return $details;
     }
 
-// TODO add documentation
+/**
+ * Creates an upload link for a collection that can be shared
+ *
+ * @param  int      $collection  Collection ID
+ * @param  array    $shareoptions - values to set
+ *                      'user'          User id to share as (must be in $upload_link_users array)
+ *                      'expires'       Expiration date
+ *                      'password'      Optional password for share access
+ * 
+ * @return string   Share access key
+ */
 function create_upload_link(int $collection,$shareoptions)
     {
     global $upload_link_users, $lang, $scramble_key, $userref;
@@ -5248,13 +5261,12 @@ function create_upload_link(int $collection,$shareoptions)
         {
         return $lang["error_invalid_user"];
         }
-    
+
     if(strtotime($setcolumns["expires"]) < time())
         {
         return $lang["error_invalid_date"];
         }
-    
-    
+
     $setcolumns["collection"] = $collection;
     $setcolumns["access_key"] = $key;
     $setcolumns["upload"] = '1';
@@ -5262,23 +5274,46 @@ function create_upload_link(int $collection,$shareoptions)
     $insert_columns = array_keys($setcolumns);
     $insert_values  = array_values($setcolumns);
 
+    // Add user to collection so that the users can upload to it when emulating that user
+    add_collection($setcolumns["user"],$collection);
+    save_collection($collection, array("allow_changes"=>1));
+
     $sql = "INSERT INTO external_access_keys
             (" . implode(",",$insert_columns) . ")
             VALUES  ('" . implode("','",$insert_values). "')";
-    
     sql_query($sql);
+
     return $key;    
     }
-// TODO add documentation
+
+/**
+ * Generates an external share key based on provided string
+ *
+ * @param  string   $string
+ * @return string   Generated key
+ */
 function generate_share_key($string)
     {
     return substr(md5($string . "," . time()), 0, 10);
     }
-// TODO add documentation
+    
+/**
+ * Check if an external upload link is being used
+ *
+ * @return mixed false|int  ID of upload collection, or false if not active
+ */
 function upload_share_active()
     {
     global $upload_share_active;
-    return ($upload_share_active || isset($_COOKIE["upload_share_active"])) && !is_authenticated();
+    if(isset($upload_share_active))
+        {
+        return $upload_share_active;
+        }
+    elseif(isset($_COOKIE["upload_share_active"]))
+        {
+        return (int)$_COOKIE["upload_share_active"];
+        }
+    return false;
     }
 
 /**
@@ -5291,16 +5326,21 @@ function upload_share_active()
  */
 function upload_share_setup(string $key,int $collection,int $user)
     {
+    debug_function_call("upload_share_setup",func_get_args());
     global $baseurl, $pagename, $upload_share_active;
     emulate_user($user);
+    $upload_share_active = upload_share_active();
     $rs_session = get_rs_session_id(true);
-    if(!upload_share_active())  
+    if(!$upload_share_active || ($upload_share_active != $collection) || (isset($_COOKIE["k"]) && $_COOKIE["k"] != $key))  
         {
+        // Create a new session even if one exists to ensure a new collection is created for this share
+        //rs_setcookie("rs_session",'', 7, "", "",substr($baseurl,0,5)=="https", true);
         rs_setcookie("upload_share_active",$collection, 1, "", "", substr($baseurl,0,5)=="https", true);
         rs_setcookie("k",$key, 1, "", "",substr($baseurl,0,5)=="https", true);
         $upload_share_active = true;
         }
 
+    // Upload link key can only work on these pages
     $validpages = array(
         "upload_plupload",
         "edit",

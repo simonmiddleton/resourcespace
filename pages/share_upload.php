@@ -44,7 +44,7 @@ if($uploadkey != "")
     }
 else
     {
-    $sharepwd       = getval("sharepassword","");
+    $sharepwd       = getval("inputpassword","");
     $shareuser      = getval("shareuser",$userref,true);
     if(!isset($validshareusers[$shareuser]))
         {
@@ -76,7 +76,8 @@ if($submitted && !isset($errortext))
         }
     if(is_string($result))
         {
-        $errortext = $result;
+        $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $result;
+        $errortext = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
         }
     }
 $page_header = $editing ? $lang["title-upload-link-edit"] : $lang["title-upload-link-create"];
@@ -96,8 +97,7 @@ include "../include/header.php";
 
         echo "<p><strong>" . $lang["warning-upload-link"] . "</strong></p>"; 
         echo "<p>" . $lang["warning-upload-instructions"] . "</p>";
-     ?>
-
+        ?>
         <form method=post id="shareuploadform" action="<?php echo $baseurl_short; ?>pages/share_upload.php?collection=<?php echo $collection; ?>" onsubmit="return CentralSpacePost(this,true);">
             <input type="hidden" name="deleteshare" id="deleteshare" value="">   
             <input type="hidden" name="submitted" id="submit" value="true">    
@@ -117,7 +117,6 @@ include "../include/header.php";
                 }                
 
             //render_dropdown_question($lang["status"], "sharestatus", $statusoptions, $sharestatus, " class=\"stdwidth\"");
-
             //render_workflow_state_question($sharestatus);
             ?>
             <div class="Question">
