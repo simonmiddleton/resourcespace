@@ -2123,7 +2123,7 @@ function get_featured_collection_resources(array $c, array $ctx)
     $subquery["join"] = implode(" ", $subquery["join"]);
     $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
 
-    $sql = sprintf("SELECT DISTINCT ti.ref AS `value` FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+    $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
         (isset($union) ? $union : ''),
         sql_limit(null, $limit)
