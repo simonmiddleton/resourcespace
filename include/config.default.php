@@ -272,7 +272,7 @@ $languages["sv"]="Svenska"; # Swedish
 # Disable language selection options (Includes Browser Detection for language)
 $disable_languages=false;
 
-# Show the language chooser on the bottom of each page
+# Show the language chooser on the user_home.php page
 $show_language_chooser=true;
 
 # Allow Browser Language Detection
@@ -3308,9 +3308,6 @@ $csv_export_add_original_size_url_column = false;
 
 // Show required field legend on upload
 $show_required_field_label = true;
-
-// Show extra home / about / contact us links in the page footer?
-$bottom_links_bar=false;
 
 # Prevent users without accounts from requesting resources when accessing external shares. If true, external users requesting access will be redirected to the login screen so only recommended if account requests are allowed.
 $prevent_external_requests=false;
