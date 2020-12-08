@@ -358,7 +358,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 /*Right Search Box layout*/
 #SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
-#SearchBoxPanel {width: 100%;}
+#SearchBoxPanel {width: inherit;}
 #ResearchBoxPanel {width: 100%;margin-top: 15px;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none;}
 
@@ -1904,7 +1904,7 @@ a.BrowseRefresh{
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0 0 10px 0;}
-.TileNav li {padding:10px;margin:0;width:90px;float:left;height:110px;text-align:center;position:relative;}
+.TileNav li {padding:10px 0;margin:0;width:110px;float:left;height:110px;text-align:center;position:relative;word-break:break-word}
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:48px;padding-bottom:15px;}
 .TileNav .Pill {position:absolute; top:10px; right:25px;border-radius:10px;font-size:115%;}

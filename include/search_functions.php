@@ -2175,6 +2175,12 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
+
+    /*
+    this function requires that needle array does not contain any of the following characters: "(" ")"
+    */
+    $remove_from_needle = array("(", ")");
+    $needle = str_replace($remove_from_needle, "", $needle);
     /*
     Sometimes the text can contain HTML entities and can break the highlighting feature
     Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string

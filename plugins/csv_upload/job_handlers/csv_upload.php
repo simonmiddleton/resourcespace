@@ -36,7 +36,7 @@ $logfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($us
 $logurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
 $csv_set_options["log_file"] = $logfile;
 
-csv_upload_process($csvfile,$meta,$resource_types,$messages,0,true,$csv_set_options);
+csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options,0,true);
 
 // Send a message to the user
 job_queue_update($jobref, $job_data, STATUS_COMPLETE);

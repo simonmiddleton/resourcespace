@@ -874,8 +874,6 @@ else if(1 == $resource['has_image'])
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
-						// indicate visually that tagging is being initialised
-						setVisualIndicator(preview_image);
 
                         anno.addPlugin('RSTagging',
                             {
@@ -972,10 +970,18 @@ else if(1 == $resource['has_image'])
                 <?php
                 }
 			
-			// Swap the image with the 'scr' size when hoverable image zooming is enabled in config 
+			// Swap the image with the 'lpr' size when hoverable image zooming is enabled in config. If 'lpr' size not available then use the 'scr' size.
             if($image_preview_zoom)
                 {
-                $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+				$pathtofile = get_resource_path($ref, true,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+				if (file_exists($pathtofile))
+				    {
+				    $previewurl = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+					}
+					else
+					{
+					$previewurl = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+					}
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1077,8 +1083,14 @@ function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
 	{
 	global $lang, $imperial_measurements,$sizes,$n,$view_default_dpi;
 	
-	if (isset($sizes[$n]['resolution'])&& $sizes[$n]['resolution']!=0) { $dpi=$sizes[$n]['resolution']; }
-	else if (!isset($dpi) || $dpi==0) { $dpi=$view_default_dpi; }
+    if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
+        {
+        $dpi=$sizes[$n]['resolution'];
+        }
+    else if (!isset($dpi) || $dpi==0)
+        {
+        $dpi=$view_default_dpi;
+        }
 
 	if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
 		{

@@ -96,7 +96,7 @@ if ($collection!="" && $collection!="undefined")
 		{
 		# Create new collection
 		if ($entername!=""){ $name=$entername;} 
-		else { $name=get_mycollection_name($userref);}
+		else { $name="Default Collection";}
 		$new=create_collection ($userref,$name);
 		set_user_collection($userref,$new);
 		
@@ -712,7 +712,7 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 			$price=$pricing[$id];
 			
 			# Pricing adjustment hook (for discounts or other price adjustments plugin).
-			$priceadjust=hook("adjust_item_price","",array($price,$resource["ref"],$resource["purchase_size"]));
+			$priceadjust=hook("adjust_item_price","",array($price,$resource["ref"],$id));
 			if ($priceadjust!==false)
 				{
 				$price=$priceadjust;

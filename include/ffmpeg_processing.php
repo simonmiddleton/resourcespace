@@ -179,7 +179,7 @@ if($video_preview_hls_support!=0)
         $deletefiles[] = $tmp_ffmpeg_file;
         }
             
-    $output=run_command($shell_exec_cmd);
+    $output=run_external($shell_exec_cmd);
      
     if (!file_exists($hlsfile))
         {

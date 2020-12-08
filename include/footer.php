@@ -13,100 +13,58 @@ if(getval("loginmodal",""))
 	}
 	
 # Do not display header / footer when dynamically loading CentralSpace contents.
-if (getval("ajax","")=="" && !hook("replace_footer")) 
+if (getval("ajax","") == "" && !hook("replace_footer")) 
 	{ 
 	hook("beforefooter");
-?>
-<div class="clearer"></div>
-
-<!-- Use aria-live assertive for high priority changes in the content: -->
-<span role="status" aria-live="assertive" class="ui-helper-hidden-accessible"></span>
-
-<!-- Global Trash Bin -->
-<?php if (!hook("replacetrashbin")) 
-	{
-	render_trash("trash", "");
-	} ?>
-
-<div class="clearerleft"></div>
-</div><!--End div-CentralSpace-->
-
-
-<div class="clearer"></div>
-
-<?php hook("footertop"); ?>
-<?php
-$omit_footer_pages=array("user_request","user_password","preview_all","done","change_language");
-if(!$preview_header_footer){$omit_footer_pages[]="preview";}
-$modify_omit_footer_pages=hook("modify_omit_footer_pages","",array($omit_footer_pages));
-if(!empty($modify_omit_footer_pages))
-	{
-	$omit_footer_pages=$modify_omit_footer_pages;
-	}
-
-if($pagename == "login") 
-{ ?>
-
-<!--Global Footer-->
-<div id="Footer">
-<?php
-if($responsive_ui)
-    {
     ?>
-    <div class="ResponsiveViewFullSite">
-        <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo $lang['responsive_view_full_site']; ?></a>
-    </div>
-    <?php
-    }
-if (true || $pagename!="login" && ($k=="" || (isset($internal_share_access) && $internal_share_access)))
-	{ ?>
-	<div id="FooterNavLeft" class="">
-	<span id="FooterLanguages">
-	<?php 
-	if ($disable_languages==false && $show_language_chooser)
-		{
-		echo $lang["language"]?>: <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/change_language.php"><?php echo $languages[$language]?></a>
-		<?php 	
-		} ?>
-	</span>
-	</div>
-	<?php 
-	if (!hook("replacefooternavright"))
-		{
-		if ($bottom_links_bar && ($about_link || $contact_link))
-			{ ?>
-			<div id="FooterNavRight" class="HorizontalNav HorizontalWhiteNav">
-			<ul>
-			<?php 
-			if (!hook("replacefooterlinks"))
-				{
-				if (!$use_theme_as_home && !$use_recent_as_home) { ?><li><a href="<?php echo $baseurl?>/pages/<?php echo $default_home_page?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["home"]?></a></li><?php }
-				if ($about_link) { ?><li id="footer_about_link"><a href="<?php echo $baseurl?>/pages/about.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["aboutus"]?></a></li><?php }
-				if ($contact_link || $nav2contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["contactus"]?></a></li><?php }
-				} /* end hook replacefooterlinks */ 
-			?>
-			</ul>
-			</div>
-			<?php 
-			}
-		} /* end hook replacefooternavright */
-	} 
+    <div class="clearer"></div>
 
-if(!hook("replace_footernavrightbottom"))
-	{
-	?>
-	<div id="FooterNavRightBottom" class="OxColourPale"><?php echo text("footer")?></div>
-	<?php
-	}
-?>
-<div class="clearer"></div>
-</div>
-<?php 
-}
+    <!-- Use aria-live assertive for high priority changes in the content: -->
+    <span role="status" aria-live="assertive" class="ui-helper-hidden-accessible"></span>
 
-echo $extrafooterhtml;
+    <!-- Global Trash Bin -->
+    <?php if (!hook("replacetrashbin")) 
+    	{
+    	render_trash("trash", "");
+    	} ?>
 
-} // end ajax
+    <div class="clearerleft"></div>
+    </div><!--End div-CentralSpace-->
+
+    <div class="clearer"></div>
+
+    <?php hook("footertop");
+
+    if ($pagename == "login") 
+        {
+        ?>
+        <!--Global Footer-->
+        <div id="Footer">
+        <?php
+        if ($responsive_ui)
+            {
+            ?>
+            <div class="ResponsiveViewFullSite">
+                <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo $lang['responsive_view_full_site']; ?></a>
+            </div>
+            <?php
+            }
+
+        if (!hook("replace_footernavrightbottom"))
+        	{
+            ?>
+            <div id="FooterNavRightBottom" class="OxColourPale"><?php echo text("footer")?></div>
+            <?php
+        	}
+        ?>
+        <div class="clearer"></div>
+        </div>
+        <?php 
+        }
+
+    echo $extrafooterhtml;
+
+    } // end ajax
 
 /* always include the below as they are perpage */
 
@@ -115,7 +73,6 @@ if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview
     echo "</div><!-- End CentralSpaceContainer -->";
     }
     
-
 echo "</div><!-- End UICenter -->";
 
 hook("footerbottom");
