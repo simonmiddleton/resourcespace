@@ -730,6 +730,8 @@ if ($_FILES)
                                 if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
                                     {
                                     update_resource_type($ref, $resource_type_from_extension);
+                                    // The resource type has been changed so clear the cached value
+                                    $GLOBALS['get_resource_data_cache'] = array();
                                     }
                                 }
 
