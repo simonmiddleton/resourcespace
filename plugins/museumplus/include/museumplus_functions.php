@@ -360,7 +360,7 @@ function mplus_save_module_config(array $cf)
 * 
 * @param integer $resource_ref
 * 
-* @return array The associated modules' configuration
+* @return array The associated modules' configuration, empty array if not found
 */
 function mplus_get_associated_module_conf(int $resource_ref)
     {
@@ -373,21 +373,27 @@ function mplus_get_associated_module_conf(int $resource_ref)
 
     $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 
-    // A resource can only be linked to one module (for syncing purposes). If module name field is not defined, fallback to 'Object'
-    // Note: museumplus_module_name_field should already be constrained to fixed list fields that support only one value (ie. dropdown and radio)
+    // A resource can only be linked to one module (for syncing purposes). If module name field is not defined, fallback 
+    // to 'Object' (initially this plugin only worked with the Object module so it's considered a safe default value)
+    // Note: museumplus_module_name_field should already be constrained to fixed list fields that support only one value 
+    // (ie. dropdown and radio) on the setup_module.php page
     $resource_module_name = get_resource_nodes($resource_ref, $museumplus_module_name_field, true);
     $resource_module_name = (!empty($resource_module_name) ? $resource_module_name[0]['name'] : 'Object');
 
-    $found_index = array_search($resource_module_name, array_column($museumplus_modules_config, 'module_name'));
-    if($found_index === false)
+    // Used a foreach (instead of array_search) because $museumplus_modules_config indexes start from 1 as these are used 
+    // as end user record IDs and they might not be in order. Using array_search you'll have to offset it by one (as it 
+    // doesn't honour the original keys) and you can potentially return the wrong configuration back.
+    $found_index = null;
+    foreach($museumplus_modules_config as $mod_cfg_id => $module_cfg)
         {
-        return array();
+        if($module_cfg['module_name'] == $resource_module_name)
+            {
+            $found_index = $mod_cfg_id;
+            break;
+            }
         }
-    // museumplus_modules_config index starts from one as these are used as end user records' IDs. See the setup_module.php
-    // array_search() doesn't honour the multidimensional array index and returns the found index counting from zero.
-    $found_index = ++$found_index;
 
-    return $museumplus_modules_config[$found_index];
+    return (is_null($found_index) ? array() : $museumplus_modules_config[$found_index]);
     }
 
 

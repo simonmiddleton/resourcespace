@@ -94,43 +94,34 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
     }
 
 
-function HookMuseumplusAllAdditionalvalcheck($fields, $fields_item)
+/**
+* MuseumPlus plugin attaching to the 'aftersaveresourcedata' hook
+* IMPORTANT: aftersaveresourcedata hook is called from both save_resource_data() and save_resource_data_multi()!
+* 
+* @param int|array $R Generic type for resource ID(s). It will be a resource ref when hook is called from 
+*                     save_resource_data() -and- a list of resource IDs when called from save_resource_data_multi().
+* @param array $added_nodes   List of nodes added. When called from save_resource_data_multi() it is a list of all added nodes.
+* @param array $removed_nodes List of nodes removed. When called from save_resource_data_multi() it is a list of all removed nodes.
+* 
+* @return boolean|array Returns false to show hook didn't run or list of errors. See hook 'aftersaveresourcedata' in resource_functions.php for more info
+*/
+function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes)
     {
-    global $resource, $museumplus_module_name_field;
-
-    $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
-    if(
-        empty($associated_module_cfg)
-        || !in_array($resource['resource_type'], $associated_module_cfg['applicable_resource_types'])
-        // Changing any other field other than the module name or the M+ ID for a resource
-        || !in_array($fields_item['ref'], array($museumplus_module_name_field, $associated_module_cfg['rs_uid_field']))
-    )
+    // We don't do any processing for batch editing (ie save_resource_data_multi()). This will be picked up by the museumplus_script.php
+    // TODO: monitor q11959 if this needs to change
+    if(is_array($R))
         {
         return false;
         }
 
-    $GLOBALS['museumplus_trigger_id_validation'] = true;
-
-    return false;
-    }
-
-
-function HookMuseumplusAllAftersaveresourcedata($ref)
-    {
-    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(resource_ref = {$ref});");
-    // The global 'museumplus_trigger_id_validation' is set in Additionalvalcheck if either the module name OR the rs_uid_field
-    // have changed to trigger this process
-    if(!isset($GLOBALS['museumplus_trigger_id_validation']))
-        {
-        return false;
-        }
-
-    $resource = get_resource_data($ref);
+    $resource = get_resource_data($R);
     if($resource === false)
         {
         return false;
         }
 
+    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(ref = {$resource['ref']});");
+
     $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
     if(
         empty($associated_module_cfg)
@@ -139,6 +130,10 @@ function HookMuseumplusAllAftersaveresourcedata($ref)
         {
         return false;
         }
+
+    // TODO: A state change to Active will trigger syncing. If the resource is moved out of the Active state, then no 
+    // syncing will happen and data will remain as it is at the date it moved out of the state.
+
 
     $module_name = $associated_module_cfg['module_name'];
     $rs_uid_field = $associated_module_cfg['rs_uid_field'];
@@ -161,7 +156,6 @@ function HookMuseumplusAllAftersaveresourcedata($ref)
         {
         $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];
         }
-
 
 
     if(!empty($errors))

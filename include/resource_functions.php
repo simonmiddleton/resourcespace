@@ -1177,7 +1177,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
 	
     // Plugins can do extra actions once all fields have been saved and return errors back if needed
-    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields));
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);
@@ -1921,8 +1921,9 @@ function save_resource_data_multi($collection,$editsearch = array())
 		}
 
 	hook("saveextraresourcedata","",array($list));
-	
-    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
+
+    // Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
+    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', array()));
 
     if (count($errors)==0) {return true;} else {return $errors;}
     
