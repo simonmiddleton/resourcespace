@@ -358,43 +358,96 @@ function mplus_save_module_config(array $cf)
 /**
 * For a resource, obtain the associated modules' configuration
 * 
-* @param integer $resource_ref
+* @param array $resource_refs
 * 
 * @return array The associated modules' configuration, empty array if not found
 */
-function mplus_get_associated_module_conf(int $resource_ref)
+function mplus_get_associated_module_conf(array $resource_refs)
     {
-    global $museumplus_modules_saved_config, $museumplus_module_name_field;
+    if(empty($resource_refs))
+        {
+        return array();
+        }
 
-    if($resource_ref <= 0 || is_null($museumplus_modules_saved_config) || $museumplus_modules_saved_config === '')
+    global $museumplus_module_name_field;
+
+    $available_module_names = array_column(get_nodes($museumplus_module_name_field), 'name', 'ref');
+    $rn_batch = get_resource_nodes_batch($resource_refs, array($museumplus_module_name_field), true);
+
+    // Each resource can only be linked to one module (for syncing data purposes). If the module name field is not defined/set,
+    // fallback to 'Object' (initially this plugin only worked with the Object module so it's considered a safe default value)
+    if(empty($rn_batch))
+        {
+        $object_cfg = mplus_get_cfg_by_module_name('Object');
+        if(empty($object_cfg))
+            {
+            return array();
+            }
+
+        $return_default_object = array();
+        foreach($resource_refs as $r_ref)
+            {
+            $return_default_object[$r_ref] = $object_cfg;
+            }
+
+        return $return_default_object;
+        }
+
+    foreach($rn_batch as $resource_ref => $rn_fields)
+        {
+        // 
+        }
+
+
+
+    // Note: museumplus_module_name_field should already be constrained to fixed list fields that support only one value 
+    // (ie. dropdown and radio) on the setup_module.php page
+    $resource_module_name = get_resource_nodes($resource_ref, $museumplus_module_name_field, true);
+    $resource_module_name = (!empty($resource_module_name) ? $resource_module_name[0]['name'] : 'Object');
+
+
+    return (is_null($found_index) ? array() : $museumplus_modules_config[$found_index]);
+    }
+
+
+/**
+* Find the module configuration using the module name.
+* 
+* @param string $n Module name to search by in the plugin configuration
+* 
+* @return array Returns the module configuration record found. @see $museumplus_modules_saved_config elements for the array structure 
+*/
+function mplus_get_cfg_by_module_name(string $n)
+    {
+    global $museumplus_modules_saved_config;
+
+    if(is_null($museumplus_modules_saved_config) || $museumplus_modules_saved_config === '')
         {
         return array();
         }
 
     $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);
 
-    // A resource can only be linked to one module (for syncing purposes). If module name field is not defined, fallback 
-    // to 'Object' (initially this plugin only worked with the Object module so it's considered a safe default value)
-    // Note: museumplus_module_name_field should already be constrained to fixed list fields that support only one value 
-    // (ie. dropdown and radio) on the setup_module.php page
-    $resource_module_name = get_resource_nodes($resource_ref, $museumplus_module_name_field, true);
-    $resource_module_name = (!empty($resource_module_name) ? $resource_module_name[0]['name'] : 'Object');
-
     // Used a foreach (instead of array_search) because $museumplus_modules_config indexes start from 1 as these are used 
     // as end user record IDs and they might not be in order. Using array_search you'll have to offset it by one (as it 
     // doesn't honour the original keys) and you can potentially return the wrong configuration back.
-    $found_index = null;
     foreach($museumplus_modules_config as $mod_cfg_id => $module_cfg)
         {
-        if($module_cfg['module_name'] == $resource_module_name)
+        if($module_cfg['module_name'] == $n)
             {
             $found_index = $mod_cfg_id;
             break;
             }
         }
 
-    return (is_null($found_index) ? array() : $museumplus_modules_config[$found_index]);
+    if(isset($found_index))
+        {
+        return $museumplus_modules_config[$found_index];
+        }
+
+    return array();
     }
+
 
 
 /**

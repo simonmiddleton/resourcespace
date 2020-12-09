@@ -107,20 +107,23 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
 */
 function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes)
     {
-    // We don't do any processing for batch editing (ie save_resource_data_multi()). This will be picked up by the museumplus_script.php
-    // TODO: monitor q11959 if this needs to change
-    if(is_array($R))
+    if(!(is_numeric($R) || is_array($R)))
         {
         return false;
         }
 
-    $resource = get_resource_data($R);
-    if($resource === false)
+    $refs = (is_array($R) ? $R : array($R));
+    $resources = get_resource_data_batch($refs);
+
+    // if resources are not in the "Active" state, then no further processing is required
+    $resources = array_filter($resources, function($r) { return $r['archive'] == 0; });
+
+    if(empty($resources))
         {
         return false;
         }
 
-    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(ref = {$resource['ref']});");
+    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(refs = ".json_encode($refs).");");
 
     $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
     if(
@@ -130,6 +133,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         return false;
         }
+    debug("TEST.f: trigger CMS process...");
 
     // TODO: A state change to Active will trigger syncing. If the resource is moved out of the Active state, then no 
     // syncing will happen and data will remain as it is at the date it moved out of the state.
@@ -156,6 +160,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];
         }
+
 
 
     if(!empty($errors))
