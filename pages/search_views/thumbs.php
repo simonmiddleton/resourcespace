@@ -23,7 +23,7 @@ if (!hook("renderresultthumb"))
 
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
-        $thumbs_displayed_fields_height += 28;
+        $thumbs_displayed_fields_height += 31;
         }
 
     if($resource_type_icons)
