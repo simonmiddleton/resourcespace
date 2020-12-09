@@ -83,7 +83,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos,
            $userref, $k, $internal_share_access;
 
-    if($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+    if(!empty($resource["lock_user"]) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
         {
         return false;
         }
