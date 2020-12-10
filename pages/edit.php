@@ -36,6 +36,7 @@ $collection = getvalescaped('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$external_upload = upload_share_active();
 
 if($camera_autorotation)
     {
@@ -130,11 +131,16 @@ if ($upload_review_mode)
         }
     else 
         {
-        if(upload_share_active()!== false)
+        if($external_upload !== false)
             {
+            debug("external upload - no resources to review");
             // Delete the temporary upload_collection
             delete_collection($collection);
-            redirect("pages/done.php?text=upload_share_complete");
+
+            // TODO Should this be the actual creator of the share?
+            external_upload_notify($external_upload, $k, $collection);
+            $url = $baseurl_short . "pages/done.php?text=upload_share_complete";
+            redirect($url);
             }
         else
             {
@@ -338,7 +344,6 @@ resource_type_config_override($resource["resource_type"]);
 
 # File readonly?
 $resource_file_readonly=resource_file_readonly($ref);
-
 # If upload template, check if the user has upload permission.
 if ($ref<0 && !(checkperm("c") || checkperm("d")))
     {
@@ -617,8 +622,22 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         else
                             {
                             // All saved, redirect to recent user uploads to the set archive state
+                            if($external_upload !== false)
+                                {
+                                debug("external upload - finished reviewing resources");
+                                // Delete the temporary upload_collection
+                                delete_collection($collection);
+                                // Send notification to creator of upload 
+                                // TODO Should this be the actual creator of the share?
+                                external_upload_notify($external_upload, $k, $collection);
+                                $url = $baseurl_short . "pages/done.php?text=upload_share_complete";
+                                }
+                            else
+                                {
+                                $url = generateURL($baseurl_short . "pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
+                                }                                
                             ?>
-                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true")); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo urlencode($url); ?>',true);</script>
                             <?php
                             exit();
                             }

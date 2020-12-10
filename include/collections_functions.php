@@ -630,7 +630,14 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 function delete_collection($collection)
 	{
 	global $home_dash, $lang;
-	if(!is_array($collection)){$collection=get_collection($collection);}
+    if(!is_array($collection))
+        {
+        $collection=get_collection($collection);
+        }
+    if(!$collection)
+        {
+        return false;
+        }
     $ref=$collection["ref"];
     $type = $collection["type"];
 	
@@ -5409,4 +5416,47 @@ function upload_share_setup(string $key,int $collection,int $user)
         exit();
         }
     return true;
+    }
+
+
+/**
+ * Notify the creator of an external upload share that resources have been uploaded
+ *
+ * @param  int $collection      Ref of external shared collection 
+ * @param  string $k            External upload access key
+ * @param  int $tempcollection  Ref of temporay upload collection
+ * @return void
+ */
+function external_upload_notify($collection, $k, $tempcollection)
+    {
+    global $applicationname,$baseurl,$lang;
+
+    $upload_share = get_upload_share_details($collection,$k);
+    if(!isset($upload_share[0]["user"]))
+        {
+        debug("external_upload_notify() - unable to find external share details: " . func_get_args());
+        }
+    $user               = $upload_share[0]["user"];
+    $templatevars       = array();
+    $url                = $baseurl . "/?c=" . (int)$collection;
+    $templatevars['url']= $url;	
+    		
+    $message=$lang["notify_upload_share_new"] . "\n\n". $lang["clicklinkviewcollection"] . "\n\n" . $url;
+    $notificationmessage=$lang["notify_upload_share_new"];
+        
+    // Does the user want an email or notification?
+    get_config_option($user,'email_user_notifications', $send_email);    
+    if($send_email)
+        {
+        $notify_email=sql_value("select email value from user where ref='$user'","");
+        if($notify_email!='')
+            {
+            send_mail($notify_email,$applicationname . ": " . $lang["notify_upload_share_new_subject"],$message,"","","emailnotifyuploadsharenew",$templatevars);
+            }
+        }        
+    else
+        {
+        global $userref;
+        message_add($user,$notificationmessage,$url);
+        }
     }

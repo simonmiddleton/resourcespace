@@ -5083,6 +5083,13 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
 
+    # Cannot edit if accessing upload share and resource not in the collection associated witrh their session
+    $external_upload = upload_share_active();
+    if($external_upload && !in_array($resource,get_collection_resources($external_upload)))
+        {
+        return false;
+        }
+
     # Cannot edit if pending status (<0) and neither admin ('t') nor created by currentuser 
     #             and does not have force edit access to the resource type
     if (    $status<0 && !( checkperm("t") || $resourcedata['created_by'] == $userref ) 

@@ -2965,3 +2965,6 @@ $lang["error_invalid_user"]                 = "Invalid user";
 $lang["error_invalid_date"]                 = "Invalid date";
 $lang["error_no_resources_edit"]            = "No resources found to edit. If you have just uploaded files please report this error.";
 $lang["password_unchanged"]                 = "(unchanged)";
+$lang["notify_upload_share_new"]            = "Resources have been uploaded to your shared collection";
+$lang["notify_upload_share_new_subject"]    = "New external uploads";
+$lang["all__emailnotifyuploadsharenew"]     ="<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
