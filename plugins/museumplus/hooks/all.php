@@ -163,6 +163,8 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
 
 
+
+
     if(!empty($errors))
         {
         return $errors;

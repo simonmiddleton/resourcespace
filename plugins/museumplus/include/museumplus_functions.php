@@ -521,6 +521,47 @@ function mplus_validate_id($module, $id)
     }
 
 
+/**
+* Log events related to MuseumPlus integration. Any information that can be useful (even a user trying to save a resource)
+* 
+* @param string $message Log message. Max size 255 characters.
+* @param string $level   Logging level (Options could be: Trace, Debug, Info, Warn, Error, Fatal). Max size 10 characters.
+* @param array  $ctx     Contextual data relevant to the event. Try namespacing the data if needed using keys (e.g http_request - and then 
+*                        the body could contain different aspects: header, body, url etc.).
+*                        IMPORTANT: make sure to never log sensitive information (e.g MuseumPlus authentication credentials)
+* 
+* @return void
+*/
+function mplus_log_event(string $message, string $level = 'trace', array $ctx = array())
+    {
+    global $userref, $username;
+
+    // Information that should always be logged
+    $ctx['user'] = array($userref => $username);
+
+    // JSON encode context. If it fails attempt to log it in the debug log.
+    $json_encoded_ctx = json_encode($ctx);
+    if(json_last_error() !== JSON_ERROR_NONE)
+        {
+        $json_last_error_msg = json_last_error_msg();
+
+        debug("mplus_log_event: [{$level}] {$message}. This triggered the following JSON error: {$json_last_error_msg}");
+        debug("mplus_log_event: JSON error when \$ctx = " . print_r($ctx, true));
+
+        // Log instead the JSON error message
+        $json_encoded_ctx = "Please check debug log. The context triggered the following JSON error: {$json_last_error_msg}";
+        }
+
+    $q = sprintf(
+        "INSERT INTO museumplus_log (`level`, message, `context`) VALUES ('%s', %s, '%s');",
+        escape_check(sql_truncate_text_val(mb_strtolower($level), 10)),
+        sql_null_or_val(sql_truncate_text_val($message, 255), $message === ''),
+        escape_check($json_encoded_ctx)
+    );
+    sql_query($q);
+
+    return;
+    }
 
 
 
