@@ -5030,7 +5030,7 @@ function allow_upload_to_collection(array $c)
 
     if(
         ($k == "" || $internal_share_access)
-        && $c["savedsearch"] == 0
+        && ($c["savedsearch"] == "" || $c["savedsearch"] == 0)
         && ($userref == $c["user"] || $c["allow_changes"] == 1 || checkperm("h"))
         && (checkperm("c") || checkperm("d"))
     )
