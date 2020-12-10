@@ -967,7 +967,7 @@ if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $in
 if ($count_result>0) 
 	{
 	# loop and display the results
-	for ($n=0;$n<$count_result && $n < $max_collection_thumbs;$n++)					
+	for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
 		{
 		$ref=$result[$n]["ref"];
 		?>
