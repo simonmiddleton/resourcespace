@@ -11,6 +11,11 @@ function HookMuseumplusAllInitialise()
         && isset($mplus_config['museumplus_cms_url_form_part'])
     )
         {
+        $old_config = $mplus_config;
+        // Remove sensitive information
+        unset($old_config['museumplus_host'], $old_config['museumplus_application'], $old_config['museumplus_api_user'], $old_config['museumplus_api_pass']);
+        mplus_log_event('Migrating old MuseumPlus plugin configuration', array('old_mplus_plugin_config' => $old_config));
+
         $field_mappings = array();
         $museumplus_rs_saved_mappings = plugin_decode_complex_configs($mplus_config['museumplus_rs_saved_mappings']);
         foreach($museumplus_rs_saved_mappings as $field_name => $rs_field)
@@ -107,23 +112,31 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
 */
 function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes)
     {
+    mplus_log_event(
+        'Called HookMuseumplusAllAftersaveresourcedata',
+        array(
+            'args' => array(
+                'R' => $R,
+                'added_nodes' => $added_nodes,
+                'removed_nodes' => $removed_nodes,
+            ),
+        ),
+        'trace'
+    );
+
     if(!(is_numeric($R) || is_array($R)))
         {
         return false;
         }
-
     $refs = (is_array($R) ? $R : array($R));
-    $resources = get_resource_data_batch($refs);
 
+    $resources = get_resource_data_batch($refs);
     // if resources are not in the "Active" state, then no further processing is required
     $resources = array_filter($resources, function($r) { return $r['archive'] == 0; });
-
     if(empty($resources))
         {
         return false;
         }
-
-    debug("TEST.f: HookMuseumplusAllAftersaveresourcedata(refs = ".json_encode($refs).");");
 
     $associated_module_cfg = mplus_get_associated_module_conf($resource['ref']);
     if(
@@ -133,11 +146,11 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         return false;
         }
-    debug("TEST.f: trigger CMS process...");
 
-    // TODO: A state change to Active will trigger syncing. If the resource is moved out of the Active state, then no 
-    // syncing will happen and data will remain as it is at the date it moved out of the state.
-
+    mplus_log_event(
+        'Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...',
+        array('resources' => $resources)
+    );
 
     $module_name = $associated_module_cfg['module_name'];
     $rs_uid_field = $associated_module_cfg['rs_uid_field'];
