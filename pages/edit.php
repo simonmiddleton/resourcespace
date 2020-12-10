@@ -13,7 +13,6 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
         }
     }
 include_once "../include/image_processing.php";
-
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref

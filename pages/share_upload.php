@@ -3,23 +3,27 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 // Set up array of valid users that share can be set to emulate
-$validshareusers = array();
-foreach($upload_link_users as $upload_link_user)
+$validsharegroups = array();
+foreach($allowed_external_share_groups as $allowed_external_share_group)
     {
-    $up_user = get_user($upload_link_user);
+    $up_group = get_usergroup($allowed_external_share_group);
         
-    if($up_user)
+    if($up_group)
         {
-        $validshareusers[$upload_link_user] = $up_user["fullname"] != "" ? $up_user["fullname"] : $up_user["username"];
+        $validsharegroups[$allowed_external_share_group] = $up_group["name"];
         }
-    if(!isset($validshareusers[$userref]))
+
+    // Add the user's own group
+    if(!isset($validsharegroups[$usergroup]))
         {
-        $validshareusers[$userref] = $username;
+        $up_group = get_usergroup($usergroup);
+        $validsharegroups[$usergroup] = $up_group["name"];
         }
     }
 
-$collection	= getvalescaped('collection', 0, true);
-$uploadkey  = getval("uploadkey","");
+$collection	    = getvalescaped('collection', 0, true);
+$uploadkey      = getval("uploadkey","");
+$save_errors    = array();
 if($uploadkey != "")
     {
     $shareinfo      = get_upload_share_details($collection,$uploadkey);
@@ -30,38 +34,42 @@ if($uploadkey != "")
         exit();
         }
 
-    print_r($shareinfo);
+    //print_r($shareinfo);
     $editing        = $uploadkey != "" && $editable;
     $sharepwd       = isset($shareinfo["password_hash"]) && $shareinfo["password_hash"] != "" ? "password_placeholder" : "";
-    $shareuser      = isset($shareinfo["user"]) ? $shareinfo["user"] : $userref;
-    $shareexpires   = isset($shareinfo["user"]) ? $shareinfo["user"] : $userref;    
+    $shareusergroup = isset($shareinfo["usergroup"]) ? $shareinfo["usergroup"] : $usergroup;
+    $shareexpires   = isset($shareinfo["expires"]) ? $shareinfo["expires"] : NULL;    
     //$sharestatus  = isset($shareinfo["status"]) ? $shareinfo["status"] : get_default_archive_state();
-    if(!isset($validshareusers[$shareuser]))
+    if(!isset($validsharegroups[$shareusergroup]))
         {
-        $curshareuser = get_user($shareuser);
-        $validshareusers[$shareuser]  = $curshareuser["fullname"] != "" ? $curshareuser["fullname"] : $curshareuser["username"];
+        $cursharegroup = get_user($shareusergroup);
+        $validsharegroups[$shareusergroup]  = $cursharegroup["name"];
         }
     }
 else
     {
     $sharepwd       = getval("inputpassword","");
-    $shareuser      = getval("shareuser",$userref,true);
-    if(!isset($validshareusers[$shareuser]))
+    $shareusergroup = getval("usergroup",$usergroup,true);
+    if(!isset($validsharegroups[$shareusergroup]))
         {
-        $errortext = $lang["error_invalid_user"];
+        $save_errors[] = $lang["error_invalid_usergroup"];
         }
 
     $shareexpires   = getval("shareexpires","");
-    $editing        = false; 
+    if($shareexpires == "")
+        {
+        $save_errors[] = $lang["error_invalid_date"];
+        }
+    $editing = false; 
     }
 
 $collectiondata	= get_collection($collection);
 $submitted = getval("submitted","") != "";
 
-if($submitted && !isset($errortext))
+if($submitted && count($save_errors)==0)
     {
     $shareoptions = array(
-        "user" => $shareuser,
+        "usergroup" => $shareusergroup,
         "expires" => $shareexpires,
         "password" => $sharepwd,
         "upload" => 1,
@@ -77,12 +85,13 @@ if($submitted && !isset($errortext))
     if(is_string($result))
         {
         $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $result;
-        $errortext = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
+        $save_errors[] = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
         }
     }
 $page_header = $editing ? $lang["title-upload-link-edit"] : $lang["title-upload-link-create"];
 
 include "../include/header.php";
+
 ?>
 <div class="BasicsBox"> 	
 	<?php
@@ -90,9 +99,9 @@ include "../include/header.php";
         ?>
         <h1><?php echo $page_header; render_help_link("user/share-upload-link");?></h1>
         <?php
-        if(isset($errortext))
+        if(count($save_errors) > 0)
             {
-            echo "<div class='PageInformal'>" . $errortext . "</div>";
+            echo "<div class='PageInformal'>" . implode("<br/>", $save_errors) . "</div>";
             }
 
         echo "<p><strong>" . $lang["warning-upload-link"] . "</strong></p>"; 
@@ -111,9 +120,9 @@ include "../include/header.php";
             </div>
 
             <?php
-            if(count($validshareusers) > 1)
+            if(count($validsharegroups) > 1)
                 {
-                render_dropdown_question($lang["user"], "shareuser", $validshareusers, $shareuser, " class=\"stdwidth\"");
+                render_dropdown_question($lang["property-user_group"], "usergroup", $validsharegroups, $shareusergroup, " class=\"stdwidth\"");
                 }                
 
             //render_dropdown_question($lang["status"], "sharestatus", $statusoptions, $sharestatus, " class=\"stdwidth\"");
@@ -121,7 +130,7 @@ include "../include/header.php";
             ?>
             <div class="Question">
                 <label><?php echo $lang["expires"] ?></label>
-                <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?> value="<?php if($shareexpires != ""){echo $shareexpires;} ?>"></input>
+                <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?>" value="<?php if($shareexpires != ""){echo $shareexpires;}else{echo date("Y-m-d",time()+60*60*24*7);} ?>"></input>
                 <div class="clearerleft"> </div>
             </div>
 

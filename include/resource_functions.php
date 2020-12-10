@@ -2217,7 +2217,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if(count($fieldoptiontranslations) < 2)
                 {
                 $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
-                debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
+                //debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
                 }
             else
                 {

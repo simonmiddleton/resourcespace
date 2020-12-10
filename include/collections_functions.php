@@ -5295,9 +5295,9 @@ function get_upload_share_details($collection,$uploadkey="")
  */
 function create_upload_link(int $collection,$shareoptions)
     {
-    global $upload_link_users, $lang, $scramble_key, $userref;
+    global $allowed_external_share_groups, $lang, $scramble_key, $userref, $usergroup;
     $setcolumns = array();
-    $validshareopts = array("user","expires","password");
+    $validshareopts = array("usergroup","expires","password");
 
     $key = generate_share_key($collection);
     foreach($validshareopts as $option)
@@ -5318,9 +5318,9 @@ function create_upload_link(int $collection,$shareoptions)
                 }
             }
         }
-    if(!in_array($setcolumns["user"],$upload_link_users) && !$setcolumns["user"] == $userref)
+    if(!in_array($setcolumns["usergroup"],$allowed_external_share_groups) && !$setcolumns["usergroup"] == $usergroup)
         {
-        return $lang["error_invalid_user"];
+        return $lang["error_invalid_usergroup"];
         }
 
     if(strtotime($setcolumns["expires"]) < time())
@@ -5328,15 +5328,16 @@ function create_upload_link(int $collection,$shareoptions)
         return $lang["error_invalid_date"];
         }
 
+    $setcolumns["user"] = $userref;
     $setcolumns["collection"] = $collection;
     $setcolumns["access_key"] = $key;
     $setcolumns["upload"] = '1';
-    $setcolumns["date"] = date("Y-m-d",time());
+    $setcolumns["date"] = date("Y-m-d H:i",time());
     $insert_columns = array_keys($setcolumns);
     $insert_values  = array_values($setcolumns);
 
     // Add user to collection so that the users can upload to it when emulating that user
-    add_collection($setcolumns["user"],$collection);
+    //add_collection($setcolumns["user"],$collection);
     save_collection($collection, array("allow_changes"=>1));
 
     $sql = "INSERT INTO external_access_keys
@@ -5380,16 +5381,30 @@ function upload_share_active()
 /**
  * Set up external upload share  
  *
- * @param  string $key      access key
- * @param  int $collection  collection ID
- * @param  int $user        user ID   
+ * @param  string $key          access key
+ * @param  array $shareopts     Array of share options
+ *                              "collection"    - (int) collection ID
+ *                              "user"          - (int) user ID of share creator
+ *                              "usergroup"     - (int) usergroup ID used for share
  * @return void
  */
-function upload_share_setup(string $key,int $collection,int $user)
+function upload_share_setup(string $key,$shareopts = array())
     {
     debug_function_call("upload_share_setup",func_get_args());
     global $baseurl, $pagename, $upload_share_active;
-    emulate_user($user);
+    global $upload_link_workflow_state, $override_status_default;
+
+    $rqdopts = array("collection", "usergroup", "user");
+    foreach($rqdopts as $rqdopt)
+        {
+        if(!isset($shareopts[$rqdopt]))
+            {
+            return false;
+            }
+        $$rqdopt = (int)$shareopts[$rqdopt];
+        }
+
+    emulate_user($user, $usergroup);
     $upload_share_active = upload_share_active();
     $rs_session = get_rs_session_id(true);
     if(!$upload_share_active || ($upload_share_active != $collection) || (isset($_COOKIE["k"]) && $_COOKIE["k"] != $key))  
@@ -5399,6 +5414,12 @@ function upload_share_setup(string $key,int $collection,int $user)
         rs_setcookie("upload_share_active",$collection, 1, "", "", substr($baseurl,0,5)=="https", true);
         rs_setcookie("k",$key, 1, "", "",substr($baseurl,0,5)=="https", true);
         $upload_share_active = true;
+        }
+
+    // Set default archive state
+    if(in_array($upload_link_workflow_state, get_workflow_states()))
+        {
+        $override_status_default = $upload_link_workflow_state;
         }
 
     // Upload link key can only work on these pages
@@ -5457,6 +5478,6 @@ function external_upload_notify($collection, $k, $tempcollection)
     else
         {
         global $userref;
-        message_add($user,$notificationmessage,$url);
+        message_add($user,$notificationmessage,$url,0);
         }
     }

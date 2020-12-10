@@ -1678,7 +1678,12 @@ function check_access_key_collection($collection, $key)
     if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
         {
         // External upload link -set session to use for creating temporary collection
-        upload_share_setup($key,$collection["ref"],$keyinfo[0]["user"]);   
+        $shareopts = array(
+            "collection"    => $collection["ref"],
+            "usergroup"     => $keyinfo[0]["usergroup"],
+            "user"          => $keyinfo[0]["user"],
+            );        
+        upload_share_setup($key,$shareopts);
         return true;
         }
 
@@ -2373,9 +2378,9 @@ function get_upload_url($collection="",$k="")
 function emulate_user($user, $usergroup="")
     {
     debug_function_call("emulate_user",func_get_args());
-    global $usergroup, $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
+    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
-    global $username,$baseurl, $anonymous_login;
+    global $username,$baseurl, $anonymous_login, $upload_link_workflow_state;
 
 
     if(!is_numeric($user) || ($usergroup != "" && !is_numeric($usergroup)))
@@ -2385,6 +2390,7 @@ function emulate_user($user, $usergroup="")
 
     $groupjoin="u.usergroup=g.ref";
     $permissionselect="g.permissions";
+
     if ($usergroup!="")
         {
         # Select the user group from the access key instead.
@@ -2402,6 +2408,10 @@ function emulate_user($user, $usergroup="")
             // Disable some permissions for added security
             $addperms = array('D','b','p');
             $removeperms = array('v','q','i','A','h','a','t','r','m','u','exup');
+
+            // add access to the designated workflow state
+            $addperms[] = "e" . $upload_link_workflow_state;
+
             $userpermissions = array_merge($userpermissions, $addperms);
             $userpermissions = array_diff($userpermissions, $removeperms);
             $userpermissions = array_values($userpermissions);

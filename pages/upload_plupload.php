@@ -41,7 +41,6 @@ $archive                                = getvalescaped('archive', '', true);
 $setarchivestate                        = getvalescaped('status', '', true);
 // Validate this workflow state is permitted or set the default if nothing passed 
 $setarchivestate                        = get_default_archive_state($setarchivestate);
-
 $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $batch_replace_min                      = getval("batch_replace_min",0,true); # Replace Resource Batch - minimum ID of resource to replace
