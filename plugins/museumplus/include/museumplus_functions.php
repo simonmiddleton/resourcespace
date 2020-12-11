@@ -358,14 +358,16 @@ function mplus_save_module_config(array $cf)
 
 /**
 * For a list of resources, obtain the associated modules' configuration.
+* IMPORTANT: make sure the return of this function is not exposed to the end user when called using the $with_values param.
 * 
-* @param array $resource_refs List of resource IDs
+* @param array   $resource_refs List of resource IDs
+* @param boolean $with_values   Should associated module configurations include the RS metadata fields values (this applies
+*                               to module configurations that are using a metadata field - e.g. rs_uid_field or the field mappings).
 * 
-* @return array The associated modules' configurations for each of the resources in the list -or- an empty array if it failed.
+* @return array The associated modules' configurations for each of the resources in the list -or- an empty array.
 */
-function mplus_get_associated_module_conf(array $resource_refs)
+function mplus_get_associated_module_conf(array $resource_refs, bool $with_values)
     {
-    $resource_refs = array_filter($resource_refs, 'is_numeric');
     if(empty($resource_refs))
         {
         return array();
@@ -385,6 +387,9 @@ function mplus_get_associated_module_conf(array $resource_refs)
         {
         return array();
         }
+
+    // Don't honour user permissions as this data shouldn't reach the end user. It should be used to trigger other processes (as needed based on the values).
+    $rfd_batch = ($with_values ? get_resource_field_data_batch($resource_refs, false) : array());
 
     $resources_with_assoc_module_config = array();
     foreach($resource_refs as $r_ref)
@@ -406,7 +411,7 @@ function mplus_get_associated_module_conf(array $resource_refs)
                         'museumplus_module_name_field' => $museumplus_module_name_field,
                         'resource_module_name' => $resource_module_name,
                     ),
-                    'warn');
+                    'error');
 
                 continue;
                 }
@@ -419,10 +424,61 @@ function mplus_get_associated_module_conf(array $resource_refs)
             {
             $resources_with_assoc_module_config[$r_ref] = $object_cfg;
             }
-        // None of the resources had an explicit link with a module. Fallback to the "Object" module
-        else if(!$found_resources_nodes)
+        // None of the resources had an explicit link with a module. Fallback to the "Object" module configuration (if it exists)
+        else if(!$found_resources_nodes && !empty($object_cfg))
             {
             $resources_with_assoc_module_config[$r_ref] = $object_cfg;
+            }
+        else
+            {
+            mplus_log_event('Unable to determine the associated module configuration. MuseumPlus plugin should have at least the "Object" module configured', array('resource_ref' => $r_ref), 'error');
+            continue;
+            }
+
+
+        // Include the metadata field values (if required - $with_values)
+        if($with_values)
+            {
+            // No data found at all for this resource? No point in returning this record, we won't be able to process it in this state.
+            if(!isset($rfd_batch[$r_ref]))
+                {
+                unset($resources_with_assoc_module_config[$r_ref]);
+                continue;
+                }
+
+            $rs_uid_field = $resources_with_assoc_module_config[$r_ref]['rs_uid_field'];
+            $field_mappings_rs_fields = array_column($resources_with_assoc_module_config[$r_ref]['field_mappings'], 'rs_field');
+            $rs_fields = array_merge(array($rs_uid_field), $field_mappings_rs_fields);
+
+            // Array of resource type field data for all the fields involved with this associated module configuration (e.g for rs_uid_field
+            // or each of the field_mappings). Keys are the resource type field ref and values are the value of that field for this resource
+            $assoc_rtf_data = array();
+
+            foreach($rfd_batch[$r_ref] as $resource_field_data)
+                {
+                if(!in_array($resource_field_data['ref'], $rs_fields))
+                    {
+                    continue;
+                    }
+
+                $assoc_rtf_data[$resource_field_data['ref']] = $resource_field_data['value'];
+                }
+
+            // Get MuseumPlus identifier (MpID). The information that really "links" to a MuseumPlus module record
+            if(!isset($assoc_rtf_data[$rs_uid_field]))
+                {
+                unset($resources_with_assoc_module_config[$r_ref]);
+                continue;
+                }
+
+            // All mapped fields need to have a value. Default to empty string.
+            $rs_no_val_fields = array_diff($rs_fields, array_keys($assoc_rtf_data));
+            foreach($rs_no_val_fields as $no_val_field)
+                {
+                $assoc_rtf_data[$no_val_field] = '';
+                }
+
+            $resources_with_assoc_module_config[$r_ref]['field_values'] = $assoc_rtf_data;
             }
         }
 
@@ -466,56 +522,6 @@ function mplus_get_cfg_by_module_name(string $n)
         }
 
     return array();
-    }
-
-
-/**
-* For a resource associated modules' configuration, obtain all the relevant values from ResourceSpace metadata fields
-* (e.g the actual module record ID based on the 'rs_uid_field' module configuration).
-* 
-* IMPORTANT: this is a transformation from the RS field IDs to their values. Structure of the return array will be similar 
-* (e.g. for 'rs_uid_field' instead of the ID of the field it will be the value for that field)
-* 
-* @param integer $ref         Resource ref
-* @param array   $module_conf The resource associated modules' configuration structure. {@see mplus_get_associated_module_conf()}
-* 
-* @return array The associated modules' configuration
-*/
-function mplus_get_resource_module_conf_values(int $ref, array $module_conf)
-    {
-    // Get the module record ID associated with the resource
-    if(isset($module_conf['rs_uid_field']) && $module_conf['rs_uid_field'] > 0)
-        {
-        $module_conf['rs_uid_field'] = get_data_by_field($ref, $module_conf['rs_uid_field']);
-        }
-
-    // Get the decision factor value - if multimedia (ie selected preview images) should be pushed to MuseumPlus system
-    // Note: for our purpose, all we care is if that field has one node (from media_sync_df_field) associated with the resource.
-    // We do not care what value this is. These fields are meant to be something like "Sync with CMS?" where the only option is "Yes".
-    if(isset($module_conf['media_sync_df_field']) && $module_conf['media_sync_df_field'] > 0)
-        {
-        $media_sync_df_nodes = get_resource_nodes($ref, $module_conf['media_sync_df_field'], false);
-        $module_conf['media_sync_df_field'] = (count($media_sync_df_nodes) === 1);
-        }
-
-    if(isset($module_conf['field_mappings']) && count($module_conf['field_mappings']) > 0)
-        {
-        $use_permissions = false;
-        $resource_fields_data = get_resource_field_data($ref, false, $use_permissions);
-
-        foreach($module_conf['field_mappings'] as $i => $mapped_field)
-            {
-            $found_index = array_search($mapped_field['rs_field'], array_column($resource_fields_data, 'ref'));
-            if($found_index === false)
-                {
-                continue;
-                }
-
-            $module_conf['field_mappings'][$i]['rs_field'] = $resource_fields_data[$found_index]['value'];
-            }
-        }
-
-    return $module_conf;
     }
 
 

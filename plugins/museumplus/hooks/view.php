@@ -3,14 +3,14 @@ function HookMuseumplusViewRenderfield($field, $resource)
     {
     global $baseurl, $search, $ref, $lang, $museumplus_secondary_links_field;
 
-    $resource_association = mplus_get_associated_module_conf($resource['ref']);
+    $resource_association = mplus_get_associated_module_conf(array($resource['ref']), false);
     if(empty($resource_association))
         {
         return false;
         }
-    $rs_uid_field = $resource_association['rs_uid_field'];
-    $applicable_resource_types = $resource_association['applicable_resource_types'];
-    $module_name = $resource_association['module_name'];
+    $rs_uid_field = $resource_association[$resource['ref']]['rs_uid_field'];
+    $applicable_resource_types = $resource_association[$resource['ref']]['applicable_resource_types'];
+    $module_name = $resource_association[$resource['ref']]['module_name'];
 
     $field_ref = (isset($field['ref']) ? $field['ref'] : 0);
     $field_value = (isset($field['value']) ? trim($field['value']) : '');

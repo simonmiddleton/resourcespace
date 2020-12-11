@@ -2908,9 +2908,9 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
 /**
  * get_resource_field_data_batch - Get all resource data for the given resources
- * Used by CSV metadata export. 
  * 
  * Returns a multidimensional array with resource IDs as top level keys, then fields (order determined by $ord_by setting) 
+ * IMPORTANT: This differs from get_resource_field_data() in that only fields containing data will be returned.
  * 
  * e.g. 
  * Array
@@ -2929,7 +2929,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
  *              [type] => 1))
  *              ....
  * 
- * This differs from get_resource_field_data() in that only fields containing data will be returned.
  *
  * @param array $resources (either an array of resource ids or an array returned from search results)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
@@ -3063,7 +3062,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     if (empty($fields))
         {
-        return false;
+        return array();
         }
     // Convert to array with resource ID as index
     $res=0;

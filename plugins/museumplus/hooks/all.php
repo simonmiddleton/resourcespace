@@ -135,7 +135,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
     $resources = array_keys(array_filter($batch_resource_data, function($r) { return $r['archive'] == 0; }));
     // resources will get mutated after this call. From this point, resource ID is in the key and the value is the associated module config.
     // Note: resources for which a module config wasn't found have been dropped from the list as no further processing is needed.
-    $resources = mplus_get_associated_module_conf($resources);
+    $resources = mplus_get_associated_module_conf($resources, true);
     // if resources have a type not valid for the associated module configuration then no further processing is required
     $resources = array_filter(
         $resources,
@@ -154,10 +154,6 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         array('resources' => $resources)
     );
 
-    $module_name = $associated_module_cfg['module_name'];
-    $rs_uid_field = $associated_module_cfg['rs_uid_field'];
-    $resource_assoc_module_cfg_values = mplus_get_resource_module_conf_values($resource['ref'], $associated_module_cfg);
-
     $errors = array();
     if(isset($GLOBALS['hook_return_value']) && is_array($GLOBALS['hook_return_value']) && !empty($GLOBALS['hook_return_value']))
         {
@@ -175,6 +171,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];
         }
+
 
 
 
