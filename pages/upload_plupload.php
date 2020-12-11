@@ -968,7 +968,13 @@ if ($_FILES)
 	
 elseif ($upload_no_file && getval("createblank","")!="")
 	{
-    $ref=copy_resource(0-$userref);    
+    $ref=copy_resource(0-$userref); 
+                                
+    if($ref === false)
+        { # If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
+        $ref = create_resource($resource_type, $setarchivestate);
+        }   
+        
 	# Add to collection?
 	if (is_numeric($collection_add))
 		{
