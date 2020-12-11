@@ -42,7 +42,7 @@ if($uploadkey != "")
     //$sharestatus  = isset($shareinfo["status"]) ? $shareinfo["status"] : get_default_archive_state();
     if(!isset($validsharegroups[$shareusergroup]))
         {
-        $cursharegroup = get_user($shareusergroup);
+        $cursharegroup = get_usergroup($shareusergroup);
         $validsharegroups[$shareusergroup]  = $cursharegroup["name"];
         }
     }
@@ -50,42 +50,44 @@ else
     {
     $sharepwd       = getval("inputpassword","");
     $shareusergroup = getval("usergroup",$usergroup,true);
-    if(!isset($validsharegroups[$shareusergroup]))
-        {
-        $save_errors[] = $lang["error_invalid_usergroup"];
-        }
-
     $shareexpires   = getval("shareexpires","");
-    if($shareexpires == "")
-        {
-        $save_errors[] = $lang["error_invalid_date"];
-        }
     $editing = false; 
     }
 
 $collectiondata	= get_collection($collection);
 $submitted = getval("submitted","") != "";
 
-if($submitted && count($save_errors)==0)
-    {
-    $shareoptions = array(
-        "usergroup" => $shareusergroup,
-        "expires" => $shareexpires,
-        "password" => $sharepwd,
-        "upload" => 1,
-        );
-    if($uploadkey != "")
+if($submitted)
+    {    
+    if($shareexpires == "")
         {
-        $result = edit_collection_external_access($uploadkey,-1,$shareexpires,"",$sharepwd,1);
+        $save_errors[] = $lang["error_invalid_date"];
         }
-    else
+    if(!isset($validsharegroups[$shareusergroup]))
         {
-        $result = create_upload_link($collection,$shareoptions);
+        $save_errors[] = $lang["error_invalid_usergroup"];
         }
-    if(is_string($result))
+    if(count($save_errors) == 0)
         {
-        $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $result;
-        $save_errors[] = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
+        $shareoptions = array(
+            "usergroup" => $shareusergroup,
+            "expires" => $shareexpires,
+            "password" => $sharepwd,
+            "upload" => 1,
+            );
+        if($uploadkey != "")
+            {
+            $result = edit_collection_external_access($uploadkey,-1,$shareexpires,"",$sharepwd,1);
+            }
+        else
+            {
+            $result = create_upload_link($collection,$shareoptions);
+            }
+        if(is_string($result))
+            {
+            $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $result;
+            $save_errors[] = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
+            }
         }
     }
 $page_header = $editing ? $lang["title-upload-link-edit"] : $lang["title-upload-link-create"];

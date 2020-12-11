@@ -8517,3 +8517,85 @@ function get_resource_lock_message($lockuser)
         }
     }
 
+function get_external_shares(array $filteropts)
+    {
+    global $userref;
+
+    $validfilterops = array(
+        "share_group",
+        "share_user",
+        "share_order_by",
+        "share_sort",
+        "share_type",
+    );
+    foreach($validfilterops as $validfilterop)
+        {
+        if(isset($filteropts[$validfilterop]))
+            {
+            $$validfilterop = $filteropts[$validfilterop];
+            }
+        else
+            {
+            $$validfilterop = NULL;
+            }
+        }
+
+    $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key");
+    if(!in_array($share_order_by, $valid_orderby))
+        {
+        $share_order_by = "expires";
+        }
+    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
+
+    $conditions = array();
+    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
+        )
+        {
+        $conditions[] = "eak.user ='" . (int)$share_user . "'";
+        }
+    elseif(!checkperm('a'))
+        {
+        $conditions[] = "eak.user ='" . (int)$userref . "'";
+        }
+
+    if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
+        {
+        $conditions[] = "eak.usergroup ='" . (int)$share_group . "'";
+        }
+    if($share_type == 0)
+        {
+        $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
+        }
+    elseif($share_type == 1)
+        {
+        $conditions[] = "eak.upload=1";
+        }
+
+    $conditional_sql="";
+    if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
+
+    $external_access_keys_query = 
+        "SELECT access_key,
+                LEFT(group_concat(resource),200) resources,
+                ifnull(collection,'-') collection,
+                user,
+                eak.email,
+                min(date) date,
+                max(lastused) lastused,
+                eak.access,
+                eak.expires,
+                eak.usergroup,
+                eak.upload,
+                ug.name sharedas,
+                u.fullname,
+                u.username
+           FROM external_access_keys eak
+      LEFT JOIN user u ON u.ref=eak.user 
+      LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
+                $conditional_sql .
+     " GROUP BY access_key
+       ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
+
+    $external_shares = sql_query($external_access_keys_query);
+    return $external_shares;
+    }

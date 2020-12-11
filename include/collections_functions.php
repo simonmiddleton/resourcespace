@@ -5336,9 +5336,7 @@ function create_upload_link(int $collection,$shareoptions)
     $insert_columns = array_keys($setcolumns);
     $insert_values  = array_values($setcolumns);
 
-    // Add user to collection so that the users can upload to it when emulating that user
-    //add_collection($setcolumns["user"],$collection);
-    save_collection($collection, array("allow_changes"=>1));
+    //save_collection($collection, array("allow_changes"=>1));
 
     $sql = "INSERT INTO external_access_keys
             (" . implode(",",$insert_columns) . ")

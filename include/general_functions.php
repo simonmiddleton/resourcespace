@@ -3072,6 +3072,10 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " user ='" . escape_check($user) . "'";
         }
+    else
+        {
+        $condition[] = " user ='" . $userref . "'";
+        }
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
         {
@@ -3864,7 +3868,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
     $is_html = ($html != strip_tags($html));
-
+    
     $allowed_tags = array_merge($permitted_html_tags, $tags);
     $allowed_attributes = array_merge($permitted_html_attributes, $attributes);
 

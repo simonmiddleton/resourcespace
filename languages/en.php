@@ -2967,4 +2967,12 @@ $lang["error_no_resources_edit"]            = "No resources found to edit. If yo
 $lang["password_unchanged"]                 = "(unchanged)";
 $lang["notify_upload_share_new"]            = "Resources have been uploaded to your shared collection";
 $lang["notify_upload_share_new_subject"]    = "New external uploads";
-$lang["all__emailnotifyuploadsharenew"]     ="<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyuploadsharenew"]     = "<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["my_external_shares"]                 = "My external shares";
+$lang["manage_shares_title"]                = "External shares";
+$lang["share_user"]                         = "Shared by";
+$lang["share_usergroup"]                    = "Shared as";
+$lang["shared_resources"]                   = "Resources";
+$lang["share_type"]                         = "Share type";
+$lang["share_type_access"]                  = "Access";
+$lang["share_type_upload"]                  = "Upload";

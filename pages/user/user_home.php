@@ -71,6 +71,12 @@ $introtext=text("introtext");
             echo "</li>";
             }
 
+        if($allow_share)
+            {
+            echo "<li><a href='" . $baseurl_short . "pages/manage_external_shares.php?share_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-share-alt'></i><br />" . $lang['my_external_shares'] . "</a>";
+            echo "</li>";
+            }
+            
 		if($home_dash && checkPermission_dashmanage())
 			{ ?>
 			<li><a href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-th"></i><br /><?php echo $lang["manage_own_dash"];?></a></li>
