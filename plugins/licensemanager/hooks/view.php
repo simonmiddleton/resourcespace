@@ -29,7 +29,7 @@ function HookLicensemanagerViewCustompanels()
         );
         $new_license_url = generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$new_license_url_params);
         ?>    
-    <p>&gt;&nbsp;<a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["new_license"] ?></a></p>	
+    <p><a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_license"] ?></a></p>	
     <?php } ?>
    
 	<?php if (count($licenses)>0) { ?>

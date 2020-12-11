@@ -72,7 +72,7 @@ $url="list.php?findtext=".urlencode($findtext)."&offset=". $offset;
 $jumpcount=1;
 ?>
 
-<p><a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=new" onClick="CentralSpaceLoad(this);return false;"><?php echo LINK_CARET_PLUS_CIRCLE . $lang["new_license"] ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=new" onClick="CentralSpaceLoad(this);return false;"><?php echo LINK_PLUS_CIRCLE . $lang["new_license"] ?></a></p>
 
 
 <div class="Listview">
