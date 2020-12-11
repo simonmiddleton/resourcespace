@@ -151,7 +151,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
     mplus_log_event(
         'Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...',
-        array('resources' => $resources)
+        array('resources' => array_keys($resources))
     );
 
     $errors = array();
@@ -163,6 +163,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
     global $lang;
 
+    // TODO; start processing resources (as a batch) for Mplus purposes
     $mpid = trim($resource_assoc_module_cfg_values['rs_uid_field']); # CAN BE ALPHANUMERIC (technical IDs are integers, virtual IDs are strings)
 
     // STEP 1: validate the record ID for the linked module
@@ -171,6 +172,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];
         }
+
 
 
 
