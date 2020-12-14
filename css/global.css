@@ -1620,17 +1620,29 @@ a.Enabled, a:visited.Enabled {
 
 #OverFlowLinks {
     margin: 5px;
-    padding: 5px;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.93), rgba(0, 0, 0, 0.93), rgba(0, 0, 0, 0.93), rgba(0, 0, 0, 0.93), rgba(0, 0, 0, 0.93));
+    padding: 15px 18px 5px 15px;
+    background-color: rgba(0, 0, 0, 0.6);
     display: none;
     position: absolute;
     right: 100px;
     border-radius: 0 0 4px 4px;
     z-index: 500;
+    text-align: left;
+}
+
+#OverFlowLinks a:hover {
+    opacity: 1;
+    text-decoration: none;
+}
+
+#OverFlowLinks #HiddenLinks {
+    margin: 0;
+    padding: 0;
 }
 
 #HiddenLinks li {
     display: block;
+    padding: 0 0 10px 0;
 }
 
 .HelpHeader {
