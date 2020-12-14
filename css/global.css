@@ -66,16 +66,15 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     border: none;
 }
 
-button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
+button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
-    background-color: #2E99E6;
+    background-color: #1988d7;
     background-image: none;
     color: #fff;
     text-decoration: none;
     cursor: pointer;
     font-weight: normal;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
@@ -100,15 +99,16 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     max-width: 230px;
 }
 
-button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover,.UploadButton a {
-    background: #1378BF;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover,.UploadButton a:hover {
+    filter: brightness(1.08);
+    -moz-filter: brightness(1.08);
+    -webkit-filter: brightness(1.08);    
 }
 
-button:active, input[type=submit]:active, input[type=button]:active, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:active
-{
-    background: #1378BF;
-    box-shadow: none;
+button:active, input[type=submit]:active, input[type=button]:active, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:active,.UploadButton a:active {
+    filter: brightness(0.92);
+    -moz-filter: brightness(0.92);
+    -webkit-filter: brightness(0.92);    
 }
 
 span+input {
@@ -1853,10 +1853,7 @@ a.BrowseRefresh{
     padding:0 10px 0 10px;
     opacity:0.9 !important;
     margin-right:10px;
-    }
-.UploadButton a:hover
-    {
-    opacity:1 !important;
+    border: none;
     }
 
 .HelpLink {
