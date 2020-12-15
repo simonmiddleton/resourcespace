@@ -21,8 +21,6 @@ function HookAnnotateViewRenderinnerresourcepreview()
         return false;
         }
 
-    $download_multisize=true;
-
     $video_preview_file = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension);
 
     if(file_exists($video_preview_file))
