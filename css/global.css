@@ -32,10 +32,10 @@ img {border:0}
 em {font-style: italic;}
 strong {font-weight: bold;}
 ol, ul {margin:0 0 0 2.5em;padding:0 0 1em;}
-ul ul, ul ol, ol ul, ol ol {margin:0 0 0 2.5em;padding:1em 0 0em;}
-li {padding:0em 0 1em;margin:0;}
-blockquote {padding:0 0 2em; margin:0em 2.5em;}
-blockquote blockquote {padding:1em 0 2em; margin:0em 2.5em;}
+ul ul, ul ol, ol ul, ol ol {margin:0 0 0 2.5em;padding:1em 0 0;}
+li {padding:0 0 1em;margin:0;}
+blockquote {padding:0 0 2em; margin:0 2.5em;}
+blockquote blockquote {padding:1em 0 2em; margin:0 2.5em;}
 a:link, a:visited {text-decoration:none;}
 a:hover, a:active {text-decoration:underline;}
 input,textarea {box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
@@ -59,7 +59,7 @@ input[type="text"], input[type=submit], input[type=button], input[type="password
 
 input[type="text"], input[type="password"], input[type="number"], textarea, select, .sp-replacer {
     border: 1px solid rgba(0,0,0,0.25);
-    box-shadow: inset 0px 1px 2px 0px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
  }
 
 .TopInpageNavLeft select, .TopInpageNavLeft select:focus {
@@ -189,14 +189,14 @@ select::-ms-expand
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
 
-.headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0px; left: 0px;}
+.headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0; left: 0;}
 .TeamCentreAlertIcon { position: relative; top: 3px;}
 
 .ui-layout-container{overflow:auto;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
 #HeaderNav2 {padding-left: 30px;}
-#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0em;}
+#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0;}
 .HeaderImgLink{float:left;height:100%;width: auto;margin-right: 20px;}
 #HeaderImg{margin:0;max-height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
@@ -247,7 +247,7 @@ img[src$=".svg"]
     }
 
 /* Slim header with fixed top bar */
-div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-index: 1100; }
+div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0; z-index: 1100; }
 div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
 div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
@@ -257,19 +257,19 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
-#login_box #Footer {margin: 0px 0px 10px 0px;}
+#login_box #Footer {margin: 0 0 10px 0;}
 
 #CentralSpaceContainer {
-    margin:0px 15px 20px;
+    margin:0 15px 20px;
     padding:0 0 0 0;
     text-align:left;
     }
-#CentralSpaceContainerRestrict {margin:0px 15px 20px 25px;padding:0;text-align:left;}
+#CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;}
-.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0px; position:relative;}
+.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;padding-right:120px;}
 .TopInpageNavRight{position:absolute;right:0;top:3px;width:max-content;text-align:right;}
@@ -281,8 +281,8 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .TopInpageNav a:link, .TopInpageNav a:visited, .BottomInpageNav a:link, .BottomInpageNav a:visited , #CentralSpaceLogin a:link, #CentralSpaceLogin a:visited {text-decoration:none;}
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 
-.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0px;}
-.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px; font-size: 16px; line-height: 36px;}
+.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0;}
+.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 16px; line-height: 36px;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
 .HorizontalWhiteNav li:first-child {border-left:none;}
@@ -298,34 +298,34 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .CollectionStatsAnon {margin-bottom:15px;}
 .CollectBack h2 {font-size: 1.3em;}
 #CollectionMenu ul {padding:0.2em 0;margin:0;list-style:none;}
-#CollectionMenu li {padding:0;margin:0px 8px 1px 0px;float:left;white-space:nowrap;}
+#CollectionMenu li {padding:0;margin:0 8px 1px 0;float:left;white-space:nowrap;}
 #CollectionMenuExp ul {padding:0.2em 0;margin:0;list-style:none;}
-#CollectionMenuExp li {padding:0;margin:0px 8px 1px 0px;float:left;white-space:nowrap;}
+#CollectionMenuExp li {padding:0;margin:0 8px 1px 0;float:left;white-space:nowrap;}
 .CollectBack a:link, .CollectBack a:visited {text-decoration:none;}
 .CollectBack a:hover, .CollectBack a:active {text-decoration:underline;}
 
 .CollectBack form {padding:0; margin:0;}
-.CollectBack .SearchWidth {width: 190px;font-size: 0.9em;margin: 0px 0px;padding-right: 28px;}
-.CollectBack .SearchWidthExp {width: 200px;font-size: 0.9em;margin: 0px 0px;padding: 0px;}
+.CollectBack .SearchWidth {width: 190px;font-size: 0.9em;margin: 0 0;padding-right: 28px;}
+.CollectBack .SearchWidthExp {width: 200px;font-size: 0.9em;margin: 0 0;padding: 0;}
 .CollectBack .SearchItem {margin: 0 0 10px;padding: 0;}
 .CollectBack .MinSearchItem {margin: 0;padding: 0;}
 
-#CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0px 0px;}
-#CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0px 0px;padding: 0px;}
+#CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0 0;}
+#CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0 0;padding: 0;}
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
-.NumberSearchWidth {font-size: 0.9em;width:80px;font-size: 0.9em;margin: 0px 0px;padding: 0px;margin-bottom:3px;}
+.NumberSearchWidth {width:80px;font-size: 0.9em;margin: 0 0;padding: 0;margin-bottom:3px;}
 
-.CollectionPanelShell {padding:5px;float: left;margin: 0px 10px 10px 0px;width: 110px;text-align: left;border-radius: 4px;}
+.CollectionPanelShell {padding:5px;float: left;margin: 0 10px 10px 0;width: 110px;text-align: left;border-radius: 4px;}
 .CollectionPanelInfo{width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .CollectionPanelThumb{max-height: 75px;}
 .CollectionResourceAlign {width:110px;height:90px;text-align: center;vertical-align: middle;}
 
-#CollectionMinTitle{float: left;margin: 4px 10px 0px 25px;}
-#CollectionMinDropTitle{float: left;padding:0.2em 0em;margin-top: 6px;}
-#CollectionMinDrop{float: left;margin: 4px 0px 0px;padding:0.2em 0em}
+#CollectionMinTitle{float: left;margin: 4px 10px 0 25px;}
+#CollectionMinDropTitle{float: left;padding:0.2em 0;margin-top: 6px;}
+#CollectionMinDrop{float: left;margin: 4px 0 0;padding:0.2em 0}
 #CollectionMinDrop form{margin:0;padding:0}
-#CollectionMinitems{float: left;margin: 5px 10px 0px;padding:0.35em 0em}
-#CollectionMinRightNav{float: right;margin: 4px 25px 0px 0px;padding:0.2em 0em}
+#CollectionMinitems{float: left;margin: 5px 10px 0;padding:0.35em 0}
+#CollectionMinRightNav{float: right;margin: 4px 25px 0 0;padding:0.2em 0}
 #CollectionMinRightNav #toggleThumbsLink, #CollectionMinRightNav .ActionsContainer {float:right;}
 #CollectionMinRightNav.CollectionBasket #toggleThumbsLink {float: none;}
 .CollectionTitleLinks a {margin: 5px 4px;}
@@ -334,15 +334,15 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 #CollectionMinDrop .SearchWidth {width: 190px;margin:0; min-height: 20px;}
 #CollectionMinDrop .SearchWidthExp {width: 200px;font-size: 0.7em ;margin:0;padding: 0;}
-#CollectionMinRightNav ul {padding:0em 0;margin:0;list-style:none;}
-#CollectionMinRightNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px;}
+#CollectionMinRightNav ul {padding:0 0;margin:0;list-style:none;}
+#CollectionMinRightNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0;}
 
 /* Chosen support - General */
 .chosen-container .chosen-results li {word-wrap: normal;}
 
 /* Chosen support - Collection bar */
-.chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-drop {border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;}
-.chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-single {border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;}
+.chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-drop {border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;}
+.chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-single {border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;}
 .chosen-container.chosen-drop-up .chosen-drop {top: auto; bottom: 100%;}
 #CollectionDiv #CollectionMinDiv .chosen-drop {display:none;}
 #CollectionDiv .chosen-results li.active-result {display:list-item; float:none; padding:5px 6px;}
@@ -366,7 +366,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanel {padding:0;margin:0 14px 14px 0;width: 175px;float:left;position:relative; overflow: hidden;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
 .ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px;text-align:justify;text-overflow: ellipsis;}   
-.ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}   
+.ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0;float: left;clear: left;display:inline;}
 .ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}   
 .ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
@@ -380,11 +380,11 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}
 
-.ResourcePanelShellSmall {padding:0;float: left;margin: 0px 15px 10px 0px;width: 105px;}
+.ResourcePanelShellSmall {padding:0;float: left;margin: 0 15px 10px 0;width: 105px;}
 .ResourcePanelSmall {padding:0;margin:0;width: 105px;padding-bottom:5px;}
 .ResourceAlignSmall {width:105px;height:90px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelShellLarge {padding:0 0 10px; float: left;margin: 0px 15px 0px 0px;width: 365px;}
+.ResourcePanelShellLarge {padding:0 0 10px; float: left;margin: 0 15px 0 0;width: 365px;}
 .ResourcePanelShellLarge.ui-draggable {text-align: left;}
 .ResourcePanelLarge {width: 320px;}
 .ResourcePanelLarge .ResourcePanelIcons {font-size:1.25em; width: 310px;}
@@ -417,7 +417,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace {padding: 15px;width: auto;}
 .SearchSpace p {padding:0 0 0.5em; margin:0; font-size:0.95em; line-height:1.1em;}
 .SearchSpace form {padding:0; margin:0;}
-.SearchSpace .SearchWidth {width: 250px;font-size: 1em;margin: 3px 0px;}
+.SearchSpace .SearchWidth {width: 250px;font-size: 1em;margin: 3px 0;}
 .SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 4px 5px 0;}
 .SearchSpace .SearchWidthRight {margin-right:0;}
 
@@ -427,19 +427,19 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace a:link, .SearchSpace a:visited {text-decoration:none;}
 .SearchSpace a:hover, .SearchSpace a:active {text-decoration:underline;}
 
-.ListDropdown {width: 115px;margin:0px;padding-left: 8px;height:18px;}
+.ListDropdown {width: 115px;margin:0;padding-left: 8px;height:18px;}
 
 /*Forms*/
 #CentralSpaceLogin form {margin:0;padding:0;}
-.Question{padding: 0.7em 0em 0.7em 0.5em;}
-.QuestionSubmit{ padding: 1em 0em 1em 0.5em;}
+.Question{padding: 0.7em 0 0.7em 0.5em;}
+.QuestionSubmit{ padding: 1em 0 1em 0.5em;}
 .QuestionSubmit.QuestionSticky {
     position: -webkit-sticky; 
     position: sticky;
     bottom: 0;
     background-color: #f2f2f2;
     border-top: 1px solid #c1c1c1;
-    box-shadow: 0px -12px 15px -12px #bbbbbb;
+    box-shadow: 0 -12px 15px -12px #bbbbbb;
 }
 /* IE does not support position: sticky so fall back to standard styling */
 @media all and (-ms-high-contrast:none) {
@@ -452,18 +452,18 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
-.Question .Lineup {margin: 3px 0px;}
-.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;margin: 3px 0px;}
-.Question select {margin: 3px 0px;}
-.Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0px;}
-.Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0px;}
-.Question .vshrtwidth{width: 93px;font-size: 0.9em;margin: 3px 0px;}
-.Question .medcomplementwidth{width: 105px;font-size: 1em;margin: 3px 0px 0px 2px;}
-.Question .Inline {float: left;margin: 0 10px 0 0px;vertical-align: middle;}
+.Question .Lineup {margin: 3px 0;}
+.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;margin: 3px 0;}
+.Question select {margin: 3px 0;}
+.Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0;}
+.Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0;}
+.Question .vshrtwidth{width: 93px;font-size: 0.9em;margin: 3px 0;}
+.Question .medcomplementwidth{width: 105px;font-size: 1em;margin: 3px 0 0 2px;}
+.Question .Inline {float: left;margin: 0 10px 0 0;vertical-align: middle;}
 .Question .Inline label { float: none; font-weight: normal; margin-top: 0; width: auto; }
 .Question .tickset {float: left;}
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
-.Question .InnerLabel {width:90px; margin-top:  0px;}
+.Question .InnerLabel {width:90px; margin-top:  0;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
 .WideTextQuestion label { width: 95%; float: right; }
 
@@ -476,17 +476,17 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .FormWide .Question .Inline label { width: auto; }
 .FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%}
 .FormWide .Question .tickset .stdwidth{width: 99%}
-.FormWide .Question .FormHelp {margin: 0px 10px 4px 20%;}
+.FormWide .Question .FormHelp {margin: 0 10px 4px 20%;}
 .FormWide .Question .FormHelp .FormHelpInner {width: 87.2%; margin-left: 10px;}
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
-.FormError{font-weight: bold;font-size: 1.1em;margin: 0px 0px 10px 190px;padding: 10px 0px 0px;}
-.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0px 0px 25px;text-align: center;padding: 3px 3px 6px;}
-.PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 0px 10px; text-align: center; padding: 3px; border-radius:4px; }
+.FormError{font-weight: bold;font-size: 1.1em;margin: 0 0 10px 190px;padding: 10px 0 0;}
+.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0 0 25px;text-align: center;padding: 3px 3px 6px;}
+.PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 0 10px; text-align: center; padding: 3px; border-radius:4px; }
 .AutoSaveStatus {font-weight: bold;float:right;padding:6px 0 0;min-width:100px;}
 .PurgeUsersMonths {width:4em;}
 /*Record Panel layout*/
-.RecordBox {margin: 20px 15px 15px 0px;}
+.RecordBox {margin: 20px 15px 15px 0;}
 .RecordPanel {padding: 15px 20px 15px 20px;}
 .backtoresults {float: right;margin: 0.4em 0 0 0.25em;}
 .backtoresults .upLink, .backtoresults .nextLink,.backtoresults .prevLink {
@@ -504,7 +504,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {float:left;margin: 0px 15px 15px 0px; position: relative; min-width: 720px;}
+#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;}
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
@@ -537,18 +537,18 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel form { margin:0; padding:0;}
 .RecordPanel .Title {padding:0.1em 0 0.5em;font-size:1.25em;clear: left;}
 
-.NoFind {font-size: 1.1em;margin: 50px 0px 25px;text-align: center;padding: 1rem;border-radius: 4px;}
+.NoFind {font-size: 1.1em;margin: 50px 0 25px;text-align: center;padding: 1rem;border-radius: 4px;}
 
 .RecordPanel .Col {float: left;width: 352px;margin-bottom: 10px;}
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
-.RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0px 10px 2px 0px;padding: 0px;}
+.RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
-.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
-.RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0px;padding: 0px;}
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #999;}
+.RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
 .RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
-.RecordPanel .RecordDownload table {width: 100%;margin: 0px;padding: 0px;}
+.RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
 .RecordPanel .RecordDownload td {padding: 5px 5px 5px 0;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
 .RecordPanel .RecordDownloadSpace {padding: 5px 10px 0 10px;}
@@ -567,27 +567,27 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
 /* Basic page */
-.BasicsBox {margin: 15px 15px 10px 0px;}
-.BasicsBox h1 {padding: 0px 0px 0.5em;}
+.BasicsBox {margin: 15px 15px 10px 0;}
+.BasicsBox h1 {padding: 0 0 0.5em;}
 .BasicsBox h2 {font-size: 1.2em;margin-bottom: 4px;}
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
-.BasicsBox .HorizontalNav li {display:inline;padding:0em 0.9em 0em 0em;margin:0em 0.5em 0em 0em;}
+.BasicsBox .HorizontalNav li {display:inline;padding:0 0.9em 0 0;margin:0 0.5em 0 0;}
 .BasicsBox .VerticalNav ul {padding:0.2em 0;margin:0 0 1em;list-style:none;}
-.BasicsBox .VerticalNav li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.75em 0px;}
-.nopadding,.nopadding .VerticalNav ul {padding:0px;margin:0px;}
-.nopad, .BasicsBox .nopad {padding:0px;}
+.BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.75em 0;}
+.nopadding,.nopadding .VerticalNav ul {padding:0;margin:0;}
+.nopad, .BasicsBox .nopad {padding:0;}
 
 /* Themes */
-.ThemeBox {float: left;width: 250px;margin: 0px 15px 15px 0px;padding: 0px;}
+.ThemeBox {float: left;width: 250px;margin: 0 15px 15px 0;padding: 0;}
 .ThemeBox ul {padding:0.2em 0;margin:0 0 0.5em;list-style:none;}
-.ThemeBox li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.25em 0.25em;}
+.ThemeBox li {padding:0 0.35em 0 0;margin:0 0.5em 0.25em 0.25em;}
 
 /*Home styling */
 .HomePanel {margin:15px 15px 0 0;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
 .HomePanel h2 {display:block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
-.HomePicturePanel {    margin:0px 15px 10px 0px;float: left;width: 517px;}
+.HomePicturePanel {    margin:0 15px 10px 0;float: left;width: 517px;}
 .HomePicturePanelIN img {width:517px; height:350px;}
 .HomePicturePanelIN {height: 350px;}
 
@@ -618,16 +618,12 @@ table.TableArray:not(:first-of-type) {margin-top: 5px;}
 
 .RecordStory .highlight {padding:2px;}
 
-#InfoBox {display:none;position:absolute;top:0px;left:0px;width:362px;height:303px;background-repeat:no-repeat;
-behavior: url('../css/iepngfix.htc');
-}
+#InfoBox {display:none;position:absolute;top:0;left:0;width:362px;height:303px;background-repeat:no-repeat;}
 #InfoBoxInner {margin:15px 32px 15px 18px;height:210px;overflow:hidden;}
 #InfoBoxInner h2 {font-size:1.2em;}
 #InfoBoxInner p {padding:0;margin:0 0 5px 0;}
 
-#InfoBoxCollection {display:none;position:absolute;top:0px;left:0px;width:376px;height:112px;background-repeat:no-repeat;
-behavior: url('../css/iepngfix.htc');
-}
+#InfoBoxCollection {display:none;position:absolute;top:0;left:0;width:376px;height:112px;background-repeat:no-repeat;}
 #InfoBoxCollectionInner {margin:6px 32px 10px 20px;height:90px;overflow:hidden;}
 #InfoBoxCollectionInner h2 {font-size:1.2em;font-weight:bold;text-align:left;}
 #InfoBoxCollectionInner p {padding:0;margin:0 0 5px 0;text-align:left;}
@@ -639,9 +635,9 @@ behavior: url('../css/iepngfix.htc');
 .NewFlag { display: inline; font-size: 0.6em; margin-left: 5px; padding: 1px 3px; font-weight: bolder; }
 .Breadcrumbs {float:left;margin-top:4px;}
 .SearchBreadcrumbs {margin-top:15px;}
-.SearchTitle {padding: 0px;margin-top:-10px;margin-bottom:5px;}
+.SearchTitle {padding: 0;margin-top:-10px;margin-bottom:5px;}
 .SearchTitle + p{padding-bottom: 7px;}
-.SearchBreadcrumbs + .RecordHeader .SearchTitle {margin-top:0px;}
+.SearchBreadcrumbs + .RecordHeader .SearchTitle {margin-top:0;}
 
 .CategoryBox {overflow:auto;width:414px;height:80px;padding:2px;font-size:1em;}
 .MiniCategoryBox {overflow:auto;width:auto;height:80px;padding:2px;font-size:1em;}
@@ -649,7 +645,7 @@ behavior: url('../css/iepngfix.htc');
 .CategoryTree {overflow:auto;width:420px;height:400px;display:none;}
 .backline {
     background-image: url(../gfx/interface/line.gif);
-    background-position: 14px 0px;
+    background-position: 14px 0;
     background-repeat: repeat-y;
 }
 .node_parent_chosen_selector {
@@ -670,13 +666,13 @@ behavior: url('../css/iepngfix.htc');
 div.autocomplete {
     position:absolute;
     width:250px;
-  margin:0px;
-  padding:0px;
+  margin:0;
+  padding:0;
 }
 div.autocomplete ul {
     list-style-type:none;
-    margin:0px;
-    padding:0px;
+    margin:0;
+    padding:0;
 }
 div.autocomplete ul li {
     list-style-type:none;
@@ -702,7 +698,7 @@ div.autocomplete ul li {
 #outerImageContainer{ position: relative; width: 250px; height: 250px; margin: 0 auto; }
 #imageContainer{ padding: 10px; }
 
-#loading{ position: absolute; top: 40%; left: 0%; height: 25%; width: 100%; text-align: center; line-height: 0; }
+#loading{ position: absolute; top: 40%; left: 0; height: 25%; width: 100%; text-align: center; line-height: 0; }
 #hoverNav{ position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
 #imageContainer>#hoverNav{ left: 0;}
 #hoverNav a{ outline: none;}
@@ -720,7 +716,7 @@ div.autocomplete ul li {
 
 #overlay{position: absolute; top: 0; left: 0; z-index: 90; width: 100%; height: 500px;}
 
-.FormHelp{margin: 0px 0px 10px 310px;padding: 0;}
+.FormHelp{margin: 0 0 10px 310px;padding: 0;}
 .FormHelpInner{width:408px;padding:5px;margin:10px 0 0 0;}
 
 #ThemeBox {padding:0;margin:0;text-align:left;width: 170px;}
@@ -793,7 +789,6 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 .CollapsibleSection 
     {
-    margin-bottom: 10px;
     margin:10px 15px 0 0;
     }
 
@@ -864,16 +859,14 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     float: left;
     }
 
-.smalllisticon{background: url(../gfx/interface/listicon.svg) no-repeat 0px; opacity: 0.65;}
-.smalllisticonactive {background: url(../gfx/interface/listiconactive.svg) no-repeat 0px;}
-.xlthumbsicon{background: url(../gfx/interface/xlicon.svg) no-repeat 0px; opacity: 0.65;}
-.xlthumbsiconactive {background: url(../gfx/interface/xliconactive.svg) no-repeat 0px;}
-.smallthumbsicon{background: url(../gfx/interface/smallicon.svg) no-repeat 0px; opacity: 0.65;}
-.smallthumbsiconactive{background: url(../gfx/interface/smalliconactive.svg) no-repeat 0px;}
-.largethumbsicon{background: url(../gfx/interface/largeicon.svg) no-repeat 0px; opacity: 0.65;}
-.largethumbsiconactive{background: url(../gfx/interface/largeiconactive.svg) no-repeat 0px;}
-.stripicon{background: url(../gfx/interface/stripicon.svg) no-repeat 0px; opacity: 0.65;}
-.stripiconactive{background: url(../gfx/interface/stripiconactive.svg) no-repeat 0px;}
+.smalllisticon{background: url(../gfx/interface/listicon.svg) no-repeat 0; opacity: 0.65;}
+.smalllisticonactive {background: url(../gfx/interface/listiconactive.svg) no-repeat 0;}
+.xlthumbsicon{background: url(../gfx/interface/xlicon.svg) no-repeat 0; opacity: 0.65;}
+.xlthumbsiconactive {background: url(../gfx/interface/xliconactive.svg) no-repeat 0;}
+.largethumbsicon{background: url(../gfx/interface/largeicon.svg) no-repeat 0; opacity: 0.65;}
+.largethumbsiconactive{background: url(../gfx/interface/largeiconactive.svg) no-repeat 0;}
+.stripicon{background: url(../gfx/interface/stripicon.svg) no-repeat 0; opacity: 0.65;}
+.stripiconactive{background: url(../gfx/interface/stripiconactive.svg) no-repeat 0;}
 
 .icondisplay
     {
@@ -1109,7 +1102,7 @@ a.HomePanel:hover {
     padding-top: 150px; 
     display: none;
     position: fixed;
-    top: 0px;
+    top: 0;
     left: 45%;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -1119,7 +1112,7 @@ a.HomePanel:hover {
     display: block;
     position: absolute;
     bottom: 8px;
-    left: 0px;
+    left: 0;
     text-transform: capitalize;
     text-align: center;
     font-size: 100px;
@@ -1302,7 +1295,7 @@ div.MessageBox a {
    
 .FeaturedSimpleLink{
     position: absolute;
-    padding: 0px;
+    padding: 0;
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -1371,7 +1364,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 
 #CentralSpaceLogin #login_box {
     margin-bottom: 100px;
-    padding: 10px 15px 0px 15px;
+    padding: 10px 15px 0 15px;
     border-radius: 4px;
     position: absolute;
 }
@@ -1386,7 +1379,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 .FilterItemContainer:nth-child(2) {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .FilterItemContainer > label {
@@ -1518,7 +1511,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     height: 41px;
     width: 100%;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     z-index: 1;
 }
 
@@ -1531,7 +1524,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 
 .ToolsOptionLink {
     float: right;
-    margin: 5px 10px 0px 0px;
+    margin: 5px 10px 0 0;
 }
 
 .ToolsOptionLink:link, .ToolsOptionLink:visited {
@@ -1584,7 +1577,7 @@ a.Enabled, a:visited.Enabled {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    margin: 1em 1em 0.8em 0em;;
+    margin: 1em 1em 0.8em 0;;
     padding: 8px 10px;
     background: gray;
 }
@@ -1756,14 +1749,13 @@ select.MultiSelect:before {
 }
 #BrowseBarTabContainer{
     display: inline-block;
-    right: 0px;
+    right: 0;
     height: 100%;
 }
 #BrowseBarTab {    
     position: relative;
     float: right;
     top: 130px;
-    width:0px;
     height: 140px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -1801,7 +1793,7 @@ select.MultiSelect:before {
 }
 
 #BrowseBarContainer .BrowseBarItem:first-child {
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 .BrowseBarRoot .BrowseBarLink {
