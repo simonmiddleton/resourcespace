@@ -364,7 +364,7 @@ function mplus_save_module_config(array $cf)
 * @param boolean $with_values   Should associated module configurations include the RS metadata fields values (this applies
 *                               to module configurations that are using a metadata field - e.g. rs_uid_field or the field mappings).
 * 
-* @return array The associated modules' configurations for each of the resources in the list -or- an empty array.
+* @return array The associated modules' configuration for each of the resources in the list -or- an empty array.
 */
 function mplus_get_associated_module_conf(array $resource_refs, bool $with_values)
     {
@@ -439,7 +439,7 @@ function mplus_get_associated_module_conf(array $resource_refs, bool $with_value
         // Include the metadata field values (if required - $with_values)
         if($with_values)
             {
-            // No data found at all for this resource? No point in returning this record, we won't be able to process it in this state.
+            // No data found at all for this resource? No point in returning this resource record, we won't be able to process it in this state.
             if(!isset($rfd_batch[$r_ref]))
                 {
                 unset($resources_with_assoc_module_config[$r_ref]);
@@ -528,21 +528,74 @@ function mplus_get_cfg_by_module_name(string $n)
 /**
 * Validate a modules' record ID (technical or virtual)
 * 
-* @param string     $module The module name (e.g Object)
-* @param string|int $id     The modules' record ID. IMPORTANT: technical IDs are integers, virtual IDs are strings.
+* @param array $ramc Resources associated module configurations. {@see mplus_get_associated_module_conf()}
 * 
 * @return integer|boolean Returns the valid MuseumPlus module record technical ID, FALSE otherwise
 */
-function mplus_validate_id($module, $id)
+function mplus_validate_id(array $ramc, bool $use_technical_id)
     {
-    if($id === '')
+    // print_r($var);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+    $field_path = ($use_technical_id ? MPLUS_FIELD_ID : 'the associated module conf[mplus_id_field]');
+
+    $modules = mplus_flip_struct_by_module($ramc);
+    // print_r($modules);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+    foreach($modules as $module_name => $module_data)
         {
-        return false;
+        $search_xml = mplus_build_search(array('ObjObjectNumberVrt', 'ObjStyleTxt'),
+            array('AN2020.5', '88036'), 'ObjObjectNumberVrt');
+
+        echo $search_xml->saveXML();die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+        // TODO; update this function to work with these params instead
+        // mplus_search($module_name, $search_xml);
         }
+
+
+    foreach($ramc as $resource_amc)
+        {
+        $mpid = $resource_amc['field_values'][$resource_amc['rs_uid_field']]; # CAN BE ALPHANUMERIC (technical IDs are integers, virtual IDs are strings)
+
+        // TODO: build API query (don't forget to chunk it). Update the search function
+        $mpria_search = mplus_build_search(array('ObjObjectNumberVrt', 'ObjStyleTxt'),
+            array('AN2020.5', '88036'), 'ObjObjectNumberVrt');
+
+        echo $mpria_search->saveXML();die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+
+        }
+
 
     // - for validation, always try the virtual ID (if one was configured) first, then check the technical ID.
     // - for validation, always error if a virtual ID finds more than a record
     return false;
+    }
+
+
+/**
+* Transpose a resource associated module config array to one ready to be used for batch searching via MuseumPlus API. 
+* Utility function for validation & syncing.
+* 
+* @param array $ramc Resources associated module configurations. {@see mplus_get_associated_module_conf()}
+* 
+* @return array Returns array structure where the key is the module name and value contains information useful for 
+*               validation/syncing data from MuseumPlus
+*/
+function mplus_flip_struct_by_module(array $ramc)
+    {
+    $flipped_struct = array();
+    foreach($ramc as $resource_ref => $amc)
+        {
+        if(!isset($flipped_struct[$amc['module_name']]))
+            {
+            $flipped_struct[$amc['module_name']] = array(
+                'mplus_id_field' => ($amc['mplus_id_field'] !== '' ? $amc['mplus_id_field'] : MPLUS_FIELD_ID),
+                'field_mappings' => array_column($amc['field_mappings'], 'field_name'),
+                'resources' => array(),
+            );
+            }
+
+        $flipped_struct[$amc['module_name']]['resources'][$resource_ref] = $amc['field_values'][$amc['rs_uid_field']];
+        }
+
+    return $flipped_struct;
     }
 
 

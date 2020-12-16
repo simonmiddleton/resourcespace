@@ -1,5 +1,6 @@
 <?php
 include_once dirname(__DIR__) . '/include/museumplus_functions.php';
+include_once dirname(__DIR__) . '/include/museumplus_search_functions.php';
 
 ############################################################
 ### Constants ##############################################
@@ -7,6 +8,7 @@ include_once dirname(__DIR__) . '/include/museumplus_functions.php';
 define('MPLUS_LOCK', 'museumplus_import');
 define('MPLUS_LAST_IMPORT', 'last_museumplus_import');
 define('MPLUS_MEDIA_MODULE_NAME', 'Multimedia'); # @see http://docs.zetcom.com/ws/
+define('MPLUS_FIELD_ID', '__id'); # @see http://docs.zetcom.com/ws/
 
 
 ############################################################
