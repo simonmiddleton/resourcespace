@@ -96,146 +96,23 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
 * 
 * @see http://docs.zetcom.com/ws/
 * 
-* @param string $host
-* @param string $application
-* @param string $user
-* @param string $pass
-* 
 * @return array
 */
-function mplus_generate_connection_data($host, $application, $user, $pass)
+function mplus_get_connection_data()
     {
-    if(trim($host) == '' || trim($application) == '' || trim($user) == '' || trim($pass) == '')
+    global $museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass;
+
+    if(trim($museumplus_host) == '' || trim($museumplus_application) == '' || trim($museumplus_api_user) == '' || trim($museumplus_api_pass) == '')
         {
+        mplus_log_event('Missing MuseumPlus API configuration (host, application, API username or API password', array(), 'error');
         return array();
         }
 
-    $result = array(
-        'host' => $host,
-        'application' => $application,
-        'username' => $user,
-        'password' => $pass,
-    );
-
-    return $result;
-    }
-
-
-/**
-* Run a module search in the search service using an expert search expression
-* 
-* @uses do_http_request()
-* 
-* @param array  $conn_data        Connection data. @see mplus_generate_connection_data()
-* @param array  $mappings         MuseumPlus - ResourceSpace mappings
-* @param string $module_name      Module name
-* @param string $mpid             MuseumPlus ID
-* @param string $mplus_mpid_field MuseumPlus field name that stores the MpID in the searched module
-* 
-* @return array
-*/
-function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $mplus_mpid_field)
-    {
-    global $lang;
-    if(
-        empty($conn_data)
-        || empty($mappings)
-        || trim($module_name) === ''
-        || trim($mpid) === ''
-        || trim($mplus_mpid_field) === '')
-        {
-        return array();
-        }
-
-    $basic_auth = "{$conn_data['username']}:{$conn_data['password']}";
-    $url = "{$conn_data['host']}/{$conn_data['application']}/ria-ws/application/module/{$module_name}/search/";
-
-    $xml = new DOMDocument('1.0', 'UTF-8');
-    $application = $xml->createElement('application');
-    $application->setAttribute('xmlns', 'http://www.zetcom.com/ria/ws/module/search');
-    $application->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-    $application->setAttribute('xsi:schemaLocation', 'http://www.zetcom.com/ria/ws/module/search http://www.zetcom.com/ria/ws/module/search/search_1_1.xsd');
-    $application = $xml->appendChild($application);
-
-    $modules = $xml->createElement('modules');
-    $modules = $application->appendChild($modules);
-
-    $module = $xml->createElement('module');
-    $module->setAttribute('name', $module_name);
-    $module = $modules->appendChild($module);
-
-    $search = $xml->createElement('search');
-    $search->setAttribute('limit', 1);
-    $search->setAttribute('offset', 0);
-    $search = $module->appendChild($search);
-
-    $select = $xml->createElement('select');
-    $select = $search->appendChild($select);
-
-    // Always select the systems' field "__lastModified"
-    $field = $xml->createElement('field');
-    $field->setAttribute('fieldPath', '__lastModified');
-    $field = $select->appendChild($field);
-
-    // Fields to select
-    foreach($mappings as $mplus_field => $rs_field)
-        {
-        $field = $xml->createElement('field');
-        $field->setAttribute('fieldPath', $mplus_field);
-        $field = $select->appendChild($field);
-        }
-
-    // Search criteria
-    $expert = $xml->createElement('expert');
-    $expert = $search->appendChild($expert);
-    $equalsField = $xml->createElement('equalsField');
-    $equalsField->setAttribute('fieldPath', $mplus_mpid_field);
-    $equalsField->setAttribute('operand', $mpid);
-    $equalsField = $expert->appendChild($equalsField);
-
-    $request_xml = $xml->saveXML();
-
-    $result = do_http_request($url, $basic_auth, "application/xml", "POST", $request_xml);
-
-    if($result['status_code'] != 200)
-        {
-        return array();
-        }
-
-    if($result['headers']['content-type'][0] == 'application/xml')
-        {
-        $xml = new DOMDocument();
-        $xml->loadXML($result['result']);
-        }
-
-    $result = array();
-    foreach($xml->getElementsByTagName('systemField') as $system_field)
-        {
-        foreach($system_field->attributes as $attr)
-            {
-            if($attr->nodeName != 'name' || $attr->nodeValue != '__lastModified')
-                {
-                continue;
-                }
-
-            $value = $system_field->getElementsByTagName('value');
-            $result[$attr->nodeValue] = $value[0]->nodeValue;
-            }
-        }
-    foreach($xml->getElementsByTagName('virtualField') as $virtual_field)
-        {
-        foreach($virtual_field->attributes as $attr)
-            {
-            if($attr->nodeName != 'name')
-                {
-                continue;
-                }
-
-            $result[$attr->nodeValue] = $virtual_field->nodeValue;
-            }
-        }
-
-    return $result;
+    return array(
+        'host'        => $museumplus_host,
+        'application' => $museumplus_application,
+        'username'    => $museumplus_api_user,
+        'password'    => $museumplus_api_pass);
     }
 
 
@@ -534,32 +411,31 @@ function mplus_get_cfg_by_module_name(string $n)
 */
 function mplus_validate_id(array $ramc, bool $use_technical_id)
     {
+    global $museumplus_api_batch_chunk_size;
     // print_r($var);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-    $field_path = ($use_technical_id ? MPLUS_FIELD_ID : 'the associated module conf[mplus_id_field]');
 
     $modules = mplus_flip_struct_by_module($ramc);
-    // print_r($modules);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-    foreach($modules as $module_name => $module_data)
+    foreach($modules as $module_name => $mdata)
         {
-        $search_xml = mplus_build_search(array('ObjObjectNumberVrt', 'ObjStyleTxt'),
-            array('AN2020.5', '88036'), 'ObjObjectNumberVrt');
+        $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
+        // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs
+        // to be specifically selected. This simplifies the logic when it comes to determine if we found module items for
+        // the searched value
+        $select_fields = array($field_path);
 
-        echo $search_xml->saveXML();die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-        // TODO; update this function to work with these params instead
-        // mplus_search($module_name, $search_xml);
-        }
+        foreach(array_chunk($mdata['resources'], $museumplus_api_batch_chunk_size, true) as $resources_chunk)
+            {
+            $search_xml = mplus_xml_search_by_fieldpath($field_path, $resources_chunk, $select_fields);
+            $mplus_search = mplus_search($module_name, $search_xml);
 
+            if(empty($mplus_search))
+                {
+                continue;
+                }
 
-    foreach($ramc as $resource_amc)
-        {
-        $mpid = $resource_amc['field_values'][$resource_amc['rs_uid_field']]; # CAN BE ALPHANUMERIC (technical IDs are integers, virtual IDs are strings)
-
-        // TODO: build API query (don't forget to chunk it). Update the search function
-        $mpria_search = mplus_build_search(array('ObjObjectNumberVrt', 'ObjStyleTxt'),
-            array('AN2020.5', '88036'), 'ObjObjectNumberVrt');
-
-        echo $mpria_search->saveXML();die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-
+            print_r($mplus_search);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+            // TODO: process results. Determine if we need to run another search using the technical ID fieldPath instead
+            }
         }
 
 
@@ -586,6 +462,7 @@ function mplus_flip_struct_by_module(array $ramc)
         if(!isset($flipped_struct[$amc['module_name']]))
             {
             $flipped_struct[$amc['module_name']] = array(
+                // always try the virtual ID (if one was configured), otherwise default to the technical ID
                 'mplus_id_field' => ($amc['mplus_id_field'] !== '' ? $amc['mplus_id_field'] : MPLUS_FIELD_ID),
                 'field_mappings' => array_column($amc['field_mappings'], 'field_name'),
                 'resources' => array(),
