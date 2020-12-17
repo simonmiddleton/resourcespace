@@ -157,15 +157,22 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 	return $return;
 	}
 
+
+$GLOBALS['get_collection_cache'] = array();
 /**
  * Returns all data for collection $ref.
  *
- * @param  int  $ref   Collection ID
+ * @param  int  $ref        Collection ID
+ * @param bool  $usecache   Optionally retrieve from cache
  * 
  * @return array|boolean
  */
-function get_collection($ref)
+function get_collection($ref, $usecache = false)
 	{
+    if(isset($GLOBALS['get_collection_cache'][$ref]) && $usecache)
+        {
+        return $GLOBALS['get_collection_cache'][$ref];
+        }
     $return=sql_query("select c.*, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method, c.bg_img_resource_ref from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
     if (count($return)==0)
         {
@@ -206,6 +213,7 @@ function get_collection($ref)
         global $COLLECTION_PUBLIC_TYPES;
         $return["public"] = (int) in_array($return["type"], $COLLECTION_PUBLIC_TYPES);
 
+        $GLOBALS['get_collection_cache'][$ref] = $return;
         return $return;
         }
 	
@@ -1486,8 +1494,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 					}
 				
 				#log this
-				collection_log($reflist[$nx1],"S",0, sql_value ("select username as value from user where ref = $urefs[$nx2]",""));
-
+                collection_log($reflist[$nx1],"S",0, sql_value ("select username as value from user where ref = $urefs[$nx2]",""));
 				}
 			}
 		}
@@ -1626,7 +1633,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			}
 		}
 		else{
-			# Set empty expiration tempaltevars
+			# Set empty expiration templatevars
 			$templatevars['expires_date']='';
 			$templatevars['expires_days']='';
 		}
@@ -2923,17 +2930,65 @@ function is_collection_approved($collection)
  * @param  string $expires      Share expiration date
  * @param  int $group           ID of usergroup that share will emulate permissions for
  * @param  string $sharepwd     Share password
- * @param  bool $upload         Set to true if share is an upload link (no visibility of existing resources)
- * @return void
+ * @param  array $shareopts     Array of additional share options
+ *                              "collection"    - int   collection ID
+ *                              "upload"        - bool  Set to true if share is an upload link (no visibility of existing resources)
+ * 
+ * @return boolean
  */
-function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="", $upload=0)
+function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="", $shareopts=array())
 	{
-	global $userref,$usergroup, $scramble_key;
-	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
-	if ($key==""){return false;}
-	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . escape_check($expires) . "'") . ",date=now(),usergroup='$group', upload='" . (int)$upload . "'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
-	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $upload));
+    global $userref,$usergroup, $scramble_key;
+    
+    $extraopts = array("collection", "upload");
+    foreach($extraopts as $extraopt)
+        {
+        if(isset($shareopts[$extraopt]))
+            {
+            $$extraopt = $shareopts[$extraopt];
+            }
+        }
+    if ($key=="")
+        {
+        return false;
+        }
+
+    if(!isset($upload) || !$upload)
+        {
+        // Only relevant for non-upload shares
+        if ($group=="" || !checkperm("x"))
+            {
+            // Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
+            $group=$usergroup;
+            }
+        }
+    // Ensure these are escaped as required here
+    $setvals = array(
+        "access"    => (int)$access,
+        "date"      => "now()",
+        "usergroup" => (int)$group,
+        "upload"    => isset($upload) && $upload ? "1" : "upload",
+        );
+    if($expires!="") 
+        {
+        $setvals["expires"] = "'" . escape_check($expires) . "'";
+        }
+    if($sharepwd != "(unchanged)")
+        {
+        $setvals["password_hash"] = ($sharepwd == "") ? "''" : "'" . hash('sha256', $key . $sharepwd . $scramble_key) . "'";
+        }
+    $setsql = "";
+    foreach($setvals as $setkey => $setval)
+        {
+        $setsql .= $setsql == "" ? "" : ",";
+        $setsql .= $setkey . "=" . $setval ;
+        }
+	sql_query("UPDATE external_access_keys
+                  SET " . $setsql . "
+                WHERE access_key='$key'" . 
+                      (isset($collection) ? " AND collection='" . (int)$collection . "'": "")
+                );
+	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $shareopts));
 	return true;
 	}
 	
@@ -2957,7 +3012,7 @@ function show_hide_collection($colref, $show=true, $user="")
 	else
 		{
 		//Get hidden collections for user
-		$hidden_collections=explode(",",sql_value("select hidden_collections from user where ref='" . escape_check($user) . "'",""));
+		$hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
 		}
 		
 	if($show)
@@ -2976,7 +3031,7 @@ function show_hide_collection($colref, $show=true, $user="")
 			$hidden_collections[]=$colref;
 			}
 		}
-	sql_query("update user set hidden_collections ='" . implode(",",$hidden_collections) . "' where ref='" . escape_check($user) . "'");
+	sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
 	}
 	
 /**
@@ -3367,6 +3422,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Share external link to upload to collection
+    debug(" BANG HERE");
     if(can_share_upload_link($collection_data))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("collection"=>$collection_data['ref']));
@@ -4421,23 +4477,6 @@ function delete_old_collections($userref=0, $days=30)
     return $deletioncount;
     }
 
-
-    
-/**
- * Process saving the theme name after a rename in the UI
- *
- * @return void
- */
-function save_themename()
-	{
-	global $baseurl, $link, $themename, $collection_column;
-	$sql="update collection set	" . $collection_column . "='" . getvalescaped("rename","") . "' where " . $collection_column . "='" . escape_check($themename)."'";
-	sql_query($sql);
-	hook("after_save_themename");
-	redirect("pages/" . $link);
-	}
-
-
 /**
 * Get all featured collections
 * 
@@ -4671,7 +4710,6 @@ function is_featured_collection_category(array $fc)
     return ($fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0);
     }
 
-
 /**
 * Check if a collection is a featured collection category by checking if the collection has been used as a parent. This 
 * function will make a DB query to find this out, it does not use existing structures.
@@ -4701,7 +4739,6 @@ function is_featured_collection_category_by_children(int $c_ref)
     return ($found_ref > 0);
     }
 
-
 /**
 * Validate a collection parent value
 * 
@@ -4729,7 +4766,6 @@ function validate_collection_parent($c)
     return (trim($collection["parent"]) == "" ? null : (int) $collection["parent"]);
     }
 
-
 /**
 * Get to the root of the branch starting from the leaf featured collection
 * 
@@ -4747,7 +4783,6 @@ function get_featured_collection_category_branch_by_leaf(int $ref, array $fcs)
 
     return compute_node_branch_path($fcs, $ref);
     }
-
 
 /**
 * Process POSTed featured collections categories data for a collection
@@ -5263,8 +5298,16 @@ function can_share_upload_link($collection_data)
  */
 function can_edit_upload_share($collection,$uploadkey)
     {
-    // TODO check that the key was shared by the user
-    return checkperm('a');
+    global $userref;
+    if(checkperm('a'))
+        {
+        return true;
+        }
+    $share_details = get_upload_share_details($collection,$uploadkey);
+    return ((isset($details["user"]) && $details["user"] == $userref)
+        || 
+      (checkperm("ex") && isset($details["expires"]) && empty($details["expires"]))
+    );
     }
 
 /**
@@ -5287,63 +5330,132 @@ function get_upload_share_details($collection,$uploadkey="")
  *
  * @param  int      $collection  Collection ID
  * @param  array    $shareoptions - values to set
- *                      'user'          User id to share as (must be in $upload_link_users array)
- *                      'expires'       Expiration date
+ *                      'usergroup'     Usergroup id to share as (must be in $upload_link_usergroups array)
+ *                      'expires'       Expiration date in 'YYYY-MM-DD' format
  *                      'password'      Optional password for share access
+ *                      'emails'        Optional array of email addresses to generate keys for
  * 
  * @return string   Share access key
  */
-function create_upload_link(int $collection,$shareoptions)
+function create_upload_link($collection,$shareoptions)
     {
-    global $allowed_external_share_groups, $lang, $scramble_key, $userref, $usergroup;
-    $setcolumns = array();
-    $validshareopts = array("usergroup","expires","password");
+    global $upload_link_usergroups, $lang, $scramble_key, $usergroup, $userref;
+    global $baseurl, $applicationname;
+    
+    $stdshareopts = array("user","usergroup","expires");
 
-    $key = generate_share_key($collection);
-    foreach($validshareopts as $option)
-        {
-        if(isset($shareoptions[$option]))
-            {
-            if($option == "password")
-                {
-                // Only set if it has actually been set to a string
-                if(trim($shareoptions[$option]) != "")
-                    {
-                    $setcolumns["password_hash"] = hash('sha256', $key . $shareoptions[$option] . $scramble_key);
-                    }
-                }
-            else
-                {
-                $setcolumns[$option] = escape_check($shareoptions[$option]);
-                }
-            }
-        }
-    if(!in_array($setcolumns["usergroup"],$allowed_external_share_groups) && !$setcolumns["usergroup"] == $usergroup)
+    if(!in_array($shareoptions["usergroup"],$upload_link_usergroups) && !($shareoptions["usergroup"] == $usergroup))
         {
         return $lang["error_invalid_usergroup"];
         }
 
-    if(strtotime($setcolumns["expires"]) < time())
+    if(strtotime($shareoptions["expires"]) < time())
         {
         return $lang["error_invalid_date"];
         }
+    // Generate as many new keys as required
+    $newkeys = array();
+    $numkeys = isset($shareoptions["emails"]) ? count($shareoptions["emails"]) : 1;
+    for ($n=0;$n<$numkeys;$n++)
+        {
+        $newkeys[$n] = generate_share_key($collection);
+        }
+    
+    // Create array to store sql insert data
+    $setcolumns = array(
+        "collection"    => $collection,
+        "user"          => $userref,
+        "upload"        => '1',
+        "date"          => date("Y-m-d H:i",time()),
+        );
+    foreach($stdshareopts as $option)
+        {
+        if(isset($shareoptions[$option]))
+            {
+            $setcolumns[$option] = escape_check($shareoptions[$option]);
+            }
+        }
+    
+    $newshares = array(); // Create array of new share details to return
+    for($n=0;$n<$numkeys;$n++)
+        {       
+        $setcolumns["access_key"] = $newkeys[$n];
+        if(isset($shareoptions["password"]) && $shareoptions["password"] != "")
+            {
+            // Only set if it has actually been set to a string
+            $setcolumns["password_hash"] = hash('sha256', $newkeys[$n] . $shareoptions["password"] . $scramble_key);
+            }
 
-    $setcolumns["user"] = $userref;
-    $setcolumns["collection"] = $collection;
-    $setcolumns["access_key"] = $key;
-    $setcolumns["upload"] = '1';
-    $setcolumns["date"] = date("Y-m-d H:i",time());
-    $insert_columns = array_keys($setcolumns);
-    $insert_values  = array_values($setcolumns);
+        if(isset($shareoptions["emails"][$n]))
+            {
+            if(!filter_var($shareoptions["emails"][$n], FILTER_VALIDATE_EMAIL))
+                {
+                $newshares[$n] = "";
+                continue;
+                }
+            $setcolumns["email"] = $shareoptions["emails"][$n];
+            }
+        $insert_columns = array_keys($setcolumns);
+        $insert_values  = array_values($setcolumns);
 
-    //save_collection($collection, array("allow_changes"=>1));
 
-    $sql = "INSERT INTO external_access_keys
-            (" . implode(",",$insert_columns) . ")
-            VALUES  ('" . implode("','",$insert_values). "')";
-    sql_query($sql);
+        $sql = "INSERT INTO external_access_keys
+                (" . implode(",",$insert_columns) . ")
+                VALUES  ('" . implode("','",$insert_values). "')";
+        sql_query($sql);
 
-    return $key;    
+        $newshares[$n] = $newkeys[$n];
+
+        if(isset($shareoptions["emails"][$n]))
+            {
+            // Send email
+            $url=$baseurl . "/?c=" . $collection . "&k=" . $newkeys[$n];		
+            $coldata = get_collection($collection, true);
+            $userdetails=get_user($userref); 
+			$collection_name = i18n_get_collection_name($coldata);
+            $link="<a href='" . $url . "'>" . $collection_name . "</a>";
+            $passwordtext = (isset($shareoptions["password"]) && $shareoptions["password"] != "") ? $lang["upload_share_email_password"] . " : '" . $shareoptions["password"] . "'" : "";
+            $templatevars = array();	
+            $templatevars['link']           = $link;  
+            $templatevars['message']        = trim($shareoptions["message"]) != "" ? $shareoptions["message"] : "";        
+            $templatevars['from_name']      = $userdetails["fullname"]=="" ? $userdetails["username"] : $userdetails["fullname"];
+            $templatevars['applicationname']= $applicationname;
+            $templatevars['passwordtext']   = $passwordtext;
+            $expires = isset($shareoptions["expires"]) ? $shareoptions["expires"] : "";
+            if($expires=="")
+                {
+                $templatevars['expires_date']=$lang["email_link_expires_never"];
+                $templatevars['expires_days']=$lang["email_link_expires_never"];
+                }
+            else
+                {
+                $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
+                $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
+                $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
+                if($day_count>1)
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_days'].".";
+                    }
+                else
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
+                }
+            $subject = $lang["upload_share_email_subject"] . $applicationname;
+
+            $body = $templatevars['from_name'] . " " . $lang["upload_share_email_text"] . $applicationname;
+            $body .= "<br/><br/>\n" . ($templatevars['message'] != "" ? $templatevars['message'] : "");
+            $body .= "<br/><br/>\n" . $templatevars['link'];
+            if($passwordtext != "")
+                {
+                $body .= "<br/><br/>\n" . $passwordtext;
+                }
+            send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
+            }
+        collection_log($collection,LOG_CODE_COLLECTION_SHARED_UPLOAD,NULL,(isset($shareoptions["emails"][$n]) ? $shareoptions["emails"][$n] : ""));
+        }
+
+    return $newshares;    
     }
 
 /**
@@ -5354,7 +5466,7 @@ function create_upload_link(int $collection,$shareoptions)
  */
 function generate_share_key($string)
     {
-    return substr(md5($string . "," . time()), 0, 10);
+    return substr(md5($string . "," . time() . rand()), 0, 10);
     }
     
 /**
@@ -5369,9 +5481,10 @@ function upload_share_active()
         {
         return $upload_share_active;
         }
-    elseif(isset($_COOKIE["upload_share_active"]))
+    elseif(isset($_COOKIE["upload_share_active"]) && getval("k","") != "")
         {
-        return (int)$_COOKIE["upload_share_active"];
+        $upload_share_active = (int)$_COOKIE["upload_share_active"];
+        return $upload_share_active;
         }
     return false;
     }
@@ -5405,12 +5518,12 @@ function upload_share_setup(string $key,$shareopts = array())
     emulate_user($user, $usergroup);
     $upload_share_active = upload_share_active();
     $rs_session = get_rs_session_id(true);
-    if(!$upload_share_active || ($upload_share_active != $collection) || (isset($_COOKIE["k"]) && $_COOKIE["k"] != $key))  
+    
+    if(!$upload_share_active || $upload_share_active != $collection)
         {
-        // Create a new session even if one exists to ensure a new collection is created for this share
-        //rs_setcookie("rs_session",'', 7, "", "",substr($baseurl,0,5)=="https", true);
+        // Create a new session even if one exists to ensure a new temporary collection is created for this share
+        rs_setcookie("rs_session",'', 7, "", "",substr($baseurl,0,5)=="https", true);
         rs_setcookie("upload_share_active",$collection, 1, "", "", substr($baseurl,0,5)=="https", true);
-        rs_setcookie("k",$key, 1, "", "",substr($baseurl,0,5)=="https", true);
         $upload_share_active = true;
         }
 
@@ -5426,6 +5539,7 @@ function upload_share_setup(string $key,$shareopts = array())
         "edit",
         "category_tree_lazy_load",
         "suggest_keywords",
+        "add_keyword",
         );
 
     if(!in_array($pagename,$validpages))

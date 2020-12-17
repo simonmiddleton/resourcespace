@@ -94,39 +94,5 @@ include '../../include/header.php';
 
 
 </div><!-- end of BasicBox -->
-<script>
-function delete_access_key(access_key, resource, collection)
-    {
-    var confirmationMessage = "<?php echo $lang['confirmdeleteaccessresource']; ?>";
-    var post_data = {
-        ajax: true,
-        delete_access_key: access_key,
-        resource: resource,
-        <?php echo generateAjaxToken("delete_access_key"); ?>
-    };
-
-    if(collection != '')
-        {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccess']; ?>";
-
-        delete post_data.resource;
-        post_data.collection = collection;
-        }
-
-    if(confirm(confirmationMessage))
-        {
-        jQuery.post('<?php echo $baseurl; ?>/pages/team/team_external_shares.php', post_data, function(response) {
-            if(response.success === true)
-                {
-                jQuery('#access_key_' + access_key).remove();
-                }
-        }, 'json');
-        
-        return false;
-        }
-
-    return true;
-    }
-</script>
 <?php
 include '../../include/footer.php';

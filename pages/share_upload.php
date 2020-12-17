@@ -2,31 +2,46 @@
 include "../include/db.php";
 include "../include/authenticate.php";
 
+if(!(checkperm('a') || checkperm('exup')))
+    {
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
+
 // Set up array of valid users that share can be set to emulate
 $validsharegroups = array();
-foreach($allowed_external_share_groups as $allowed_external_share_group)
+foreach($upload_link_usergroups as $upload_link_usergroup)
     {
-    $up_group = get_usergroup($allowed_external_share_group);
+    $up_group = get_usergroup($upload_link_usergroup);
         
     if($up_group)
         {
-        $validsharegroups[$allowed_external_share_group] = $up_group["name"];
+        $validsharegroups[$upload_link_usergroup] = $up_group["name"];
         }
-
-    // Add the user's own group
-    if(!isset($validsharegroups[$usergroup]))
-        {
-        $up_group = get_usergroup($usergroup);
-        $validsharegroups[$usergroup] = $up_group["name"];
-        }
+    }
+if(count($validsharegroups) == 0)
+    {
+    // No specific configuration, add the user's own group
+    $up_group = get_usergroup($usergroup);
+    $validsharegroups[$usergroup] = $up_group["name"];
     }
 
 $collection	    = getvalescaped('collection', 0, true);
 $uploadkey      = getval("uploadkey","");
-$save_errors    = array();
+$messages    = array();
 if($uploadkey != "")
     {
     $shareinfo      = get_upload_share_details($collection,$uploadkey);
+    if(isset($shareinfo[0]))
+        {
+        $shareinfo  = $shareinfo[0];
+        }
+    else
+        {
+        error_alert($lang["error_invalid_key"],true);
+        exit();        
+        }
+    
     $editable       = can_edit_upload_share($collection,$uploadkey);
     if(!$editable)
         {
@@ -34,23 +49,27 @@ if($uploadkey != "")
         exit();
         }
 
-    //print_r($shareinfo);
     $editing        = $uploadkey != "" && $editable;
-    $sharepwd       = isset($shareinfo["password_hash"]) && $shareinfo["password_hash"] != "" ? "password_placeholder" : "";
-    $shareusergroup = isset($shareinfo["usergroup"]) ? $shareinfo["usergroup"] : $usergroup;
-    $shareexpires   = isset($shareinfo["expires"]) ? $shareinfo["expires"] : NULL;    
-    //$sharestatus  = isset($shareinfo["status"]) ? $shareinfo["status"] : get_default_archive_state();
-    if(!isset($validsharegroups[$shareusergroup]))
+    $exsharepwd       = isset($shareinfo["password_hash"]) && $shareinfo["password_hash"] != "" ? "password_placeholder" : "";
+    $exshareusergroup = isset($shareinfo["usergroup"]) ? $shareinfo["usergroup"] : $usergroup;
+    $exshareexpires   = isset($shareinfo["expires"]) ? $shareinfo["expires"] : NULL; 
+    if(!isset($validsharegroups[$exshareusergroup]))
         {
-        $cursharegroup = get_usergroup($shareusergroup);
-        $validsharegroups[$shareusergroup]  = $cursharegroup["name"];
+        $cursharegroup = get_usergroup($exshareusergroup);
+        $validsharegroups[$exshareusergroup]  = $cursharegroup["name"];
         }
+    
+    $sharepwd       = getval("sharepassword",$exsharepwd);
+    $shareusergroup = getval("usergroup",$exshareusergroup,true);
+    $shareexpires   = getval("shareexpires",$exshareexpires);
     }
 else
     {
-    $sharepwd       = getval("inputpassword","");
+    $sharepwd       = getval("sharepassword","");
     $shareusergroup = getval("usergroup",$usergroup,true);
     $shareexpires   = getval("shareexpires","");
+    $emails         = getval("users","");
+    $emailmessage   = getval("message","");
     $editing = false; 
     }
 
@@ -61,36 +80,64 @@ if($submitted)
     {    
     if($shareexpires == "")
         {
-        $save_errors[] = $lang["error_invalid_date"];
+            exit("HERE");
+        $messages[] = $lang["error_invalid_date"];
         }
     if(!isset($validsharegroups[$shareusergroup]))
         {
-        $save_errors[] = $lang["error_invalid_usergroup"];
+        $messages[] = $lang["error_invalid_usergroup"];
         }
-    if(count($save_errors) == 0)
+
+    if(count($messages) == 0)
         {
         $shareoptions = array(
+            "collection"=> $collection,
             "usergroup" => $shareusergroup,
-            "expires" => $shareexpires,
-            "password" => $sharepwd,
-            "upload" => 1,
+            "user"      => $userref,
+            "expires"   => $shareexpires,
+            "password"  => $sharepwd,
+            "upload"    => 1,
+            "message"   => $emailmessage,
             );
+        if($emails != "")
+            {
+            $shareoptions["emails"] = trim_array(explode(",",$emails));
+            }
         if($uploadkey != "")
             {
-            $result = edit_collection_external_access($uploadkey,-1,$shareexpires,"",$sharepwd,1);
+            $result = edit_collection_external_access($uploadkey,-1,$shareexpires,"",$sharepwd,$shareoptions);
+            if($result)
+                {
+                $messages[] = $lang["saved"];
+                }
+            else
+                {
+                $messages[] = $lang["error"];                    
+                }
             }
         else
             {
             $result = create_upload_link($collection,$shareoptions);
-            }
-        if(is_string($result))
-            {
-            $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $result;
-            $save_errors[] = $lang["generateurlexternal"] . "<br/><a href='" . $shareurl . "'>" . $shareurl  . "</a>";
+            if(is_array($result))
+                {
+                $messages[] = $lang["upload_shares_emailed"];
+                foreach($result as $key=>$sharekey)
+                    {
+                    if($sharekey === "")
+                        {
+                        $messages[] = $lang["error_invalid_email"]  . (isset($shareoptions["emails"][$key]) ? " (" . $shareoptions["emails"][$key] . ")" : "");
+                        }
+                    else
+                        {
+                        $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $sharekey;
+                        $messages[] = "<a href='" . $shareurl . "'>" . $shareurl  . "</a>" . (isset($shareoptions["emails"][$key]) ? " (" . $shareoptions["emails"][$key] . ")" : "");
+                        }
+                    }
+                }
             }
         }
     }
-$page_header = $editing ? $lang["title-upload-link-edit"] : $lang["title-upload-link-create"];
+$page_header = $editing ? $lang["title-upload-link-edit"] . ":  " . $uploadkey : $lang["title-upload-link-create"];
 
 include "../include/header.php";
 
@@ -101,9 +148,9 @@ include "../include/header.php";
         ?>
         <h1><?php echo $page_header; render_help_link("user/share-upload-link");?></h1>
         <?php
-        if(count($save_errors) > 0)
+        if(count($messages) > 0)
             {
-            echo "<div class='PageInformal'>" . implode("<br/>", $save_errors) . "</div>";
+            echo "<div class='PageInformal'>" . implode("<br/>", $messages) . "</div>";
             }
 
         echo "<p><strong>" . $lang["warning-upload-link"] . "</strong></p>"; 
@@ -126,52 +173,50 @@ include "../include/header.php";
                 {
                 render_dropdown_question($lang["property-user_group"], "usergroup", $validsharegroups, $shareusergroup, " class=\"stdwidth\"");
                 }                
-
-            //render_dropdown_question($lang["status"], "sharestatus", $statusoptions, $sharestatus, " class=\"stdwidth\"");
-            //render_workflow_state_question($sharestatus);
             ?>
             <div class="Question">
-                <label><?php echo $lang["expires"] ?></label>
-                <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?>" value="<?php if($shareexpires != ""){echo $shareexpires;}else{echo date("Y-m-d",time()+60*60*24*7);} ?>"></input>
+                <label><?php echo $lang["expires"]; ?></label>
+                <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?>" value="<?php if($shareexpires != ""){echo substr($shareexpires,0,10);}else{echo date("Y-m-d",time()+60*60*24*7);} ?>"></input>
                 <div class="clearerleft"> </div>
             </div>
 
             <?php 
-            render_share_password_question($sharepwd == "");
-            ?>
+            render_share_password_question($sharepwd == "");            
 
-            <h2 class="CollapsibleSectionHead" id="EmailUploadSectionHead"><?php echo $lang["action-email-upload-link"]; ?></h2>
+            if($editing)
+                {?>
+                <div class="QuestionSubmit">
+                    <label for="buttons"> </label>			
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["save"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                </div><?php
+                }
+            else
+                {?>
+                <h2 class="CollapsibleSectionHead" id="EmailUploadSectionHead"><?php echo $lang["action-email-upload-link"]; ?></h2>
 
-            <div class="CollapsibleSection" id="EmailUploadSection">
-                <div class="Question">
-                    <label for="message"><?php echo $lang["message"]?></label>
-                    <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
-                <div class="clearerleft"> </div>
-                </div>
-                <div class="Question">
-                    <label for="users"><?php $lang["emailtousers"]; ?></label>
-                    <?php $userstring=getval("users","");include "../include/user_select.php"; ?>
-                    <div class="clearerleft"> </div>
-                </div>
-                <?php 
-                if ($list_recipients)
-                    {?>
+                <div class="CollapsibleSection" id="EmailUploadSection" style="display:none;">
                     <div class="Question">
-                        <label for="list_recipients"><?php echo $lang["list-recipients-label"]; ?></label>
-                        <input type=checkbox id="list_recipients" name="list_recipients">
+                        <label for="message"><?php echo $lang["message"]?></label>
+                        <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"><?php echo htmlspecialchars($emailmessage); ?></textarea>
+                    <div class="clearerleft"> </div>
+                    </div>
+                    <div class="Question">
+                        <label for="users"><?php echo $lang["upload_share_email_users"]; ?></label>
+                        <?php $userstring=getval("users","");include "../include/user_select.php"; ?>
                         <div class="clearerleft"> </div>
-                    </div><?php
-                    }?>
-            </div>
-            <div class="QuestionSubmit">
-                <label for="buttons"> </label>			
-                <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["button-upload-link-create"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
-            </div>
+                    </div>
+                </div>
+                <div class="QuestionSubmit">
+                    <label for="buttons"> </label>			
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["button-upload-link-create"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                </div><?php
+                }
+                ?>
         </form>
         <script>
         jQuery('document').ready(function()
             {
-            registerCollapsibleSections(true);
+            registerCollapsibleSections(false);
             });
         </script>
 

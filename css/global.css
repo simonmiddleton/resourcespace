@@ -405,7 +405,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .DESC {display: inline;padding-right: 10px;}
 
 /*Resource Panel layout*/
-.Listview {overflow-x:auto; margin: 0 0 25px 0;}
+.Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
 .Listview td, .Listview th {padding:6px 8px 6px 8px;vertical-align: top;}

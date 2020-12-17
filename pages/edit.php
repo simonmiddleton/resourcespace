@@ -77,6 +77,7 @@ $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
+$uploadparams["k"] = $k;
 
 # Upload review mode will be true if we are coming from upload_plupload and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
@@ -135,10 +136,8 @@ if ($upload_review_mode)
             debug("external upload - no resources to review");
             // Delete the temporary upload_collection
             delete_collection($collection);
-
-            // TODO Should this be the actual creator of the share?
             external_upload_notify($external_upload, $k, $collection);
-            $url = $baseurl_short . "pages/done.php?text=upload_share_complete";
+            $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k));
             redirect($url);
             }
         else
@@ -451,7 +450,8 @@ $urlparams= array(
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
     'collection'        => $collection,
-    'editsearchresults' => ($editsearch ? "true" : "")
+    'editsearchresults' => ($editsearch ? "true" : ""),
+    'k'                 => $k,
 );
 
 check_order_by_in_table_joins($order_by);
@@ -629,11 +629,11 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 // Send notification to creator of upload 
                                 // TODO Should this be the actual creator of the share?
                                 external_upload_notify($external_upload, $k, $collection);
-                                $url = $baseurl_short . "pages/done.php?text=upload_share_complete";
+                                $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k));
                                 }
                             else
                                 {
-                                $url = generateURL($baseurl_short . "pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
+                                $url = generateURL($baseurl . "/pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
                                 }                                
                             ?>
                             <script>CentralSpaceLoad('<?php echo urlencode($url); ?>',true);</script>

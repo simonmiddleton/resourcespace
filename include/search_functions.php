@@ -1128,7 +1128,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES, $lang;
+    global $FIXED_LIST_FIELD_TYPES, $lang, $k;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1268,8 +1268,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Check access
         $upload_share_active = upload_share_active();
         $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
-        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
-            {
+
+        //print_r($validcollections);
+        if(validate_collection_parent($collection)=="" || (checkperm("j*")) || (checkperm("j" . validate_collection_parent($collection))))            {
             if(!collection_readable($collection))
                 {
                 return array();

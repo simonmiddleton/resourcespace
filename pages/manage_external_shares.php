@@ -9,12 +9,18 @@ if($share_user != $userref && !checkperm('a'))
     $share_user = $userref;
     }
 
-$share_group  = getval("share_group",-1,true);
-//$share_type    = getval("share_type","");
-$share_orderby = getval("share_orderby","ref");
-$share_sort    = (strtoupper(getval("share_sort","ASC")) == "ASC") ? "ASC" : "DESC";
-$share_type  = getval("share_type",-1,true);
+$share_group        = getval("share_group",-1,true);
+$share_orderby      = getval("share_orderby","ref");
+$share_sort         = (strtoupper(getval("share_sort","ASC")) == "ASC") ? "ASC" : "DESC";
+$share_type         = getval("share_type",-1,true);
+$share_collection   = getval("share_collection",-1,true);
 
+
+if($share_collection != -1 && collection_readable($share_collection))
+    {
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
 if(!checkperm('a') || $share_user == $userref)
     {
     $pagetitle  = $lang["my_external_shares"];
@@ -24,17 +30,35 @@ else
     $pagetitle  = $lang["manage_shares_title"];
     }
 
-$deleteshare = getval("delete_share",0,true);
-$resetshare = getval("reset_share",0,true);
-if($deleteshare > 0 && enforcePostRequest(true))
+$ajax              = ('true' == getval('ajax', '') ? true : false);
+$delete_access_key = getval('delete_access_key', '');
+// Process access key deletion
+if($delete_access_key != "" && enforcePostRequest($ajax))
     {
-    // TODO DELETE SHARE
+    $deleteresource   = getvalescaped('delete_resource', '');
+    $deletecollection = getvalescaped('delete_collection', '');
+    $response   = array(
+        'success' => false
+    );
+
+    if($deleteresource != "")
+        {
+        delete_resource_access_key($deleteresource, $delete_access_key);
+        $response['success'] = true;
+        }
+    elseif($deletecollection != "")
+        {
+        delete_collection_access_key($deletecollection, $delete_access_key);
+        $response['success'] = true;
+        }
+
+    exit(json_encode($response));
     }
+
 elseif(getval("purge_expired",'') != '' && enforcePostRequest(true))
     {
     // TODO DELETE EXPIRED SHARES
     }
-
 
 $sharefltr = array(
     "share_group"       => $share_group,
@@ -42,12 +66,10 @@ $sharefltr = array(
     "share_order_by"    => $share_orderby,
     "share_sort"        => $share_sort,
     "share_type"        => $share_type,
+    "share_collection"  => $share_collection,
     );
 
 $shares = get_external_shares($sharefltr);
-//$allgroups = get_usergroups();
-
-//print_r($allgroups);
 $allsharedgroups = array("-1" => $lang["action-select"]);
 $sharedgroups = array_unique(array_column($shares,"usergroup"));
 foreach($sharedgroups as $sharedgroup)
@@ -70,11 +92,14 @@ if ($offset>$sharecount) {$offset = 0;}
 $curpage=floor($offset/$per_page)+1;
 
 $curparams = array(
-    "share_user"    =>$share_user,
-    "share_group"   =>$share_group,
-    "share_orderby" => $share_orderby,
-    "share_sort"    =>$share_sort,
-    "share_type"    =>$share_type,
+    "share_user"        =>$share_user,
+    "share_group"       =>$share_group,
+    "share_orderby"     =>$share_orderby,
+    "share_collection"  =>$share_collection,
+    "share_sort"        =>$share_sort,
+    "share_type"        =>$share_type,
+    "per_page"          =>$per_page,
+    "offset"            =>$offset,
 );
 
 $url = generateurl($baseurl . "/pages/manage_external_shares.php",$curparams);
@@ -82,8 +107,8 @@ $url = generateurl($baseurl . "/pages/manage_external_shares.php",$curparams);
 $tabledata = array(
     "class" => "ShareTable",
     "headers"=>array(
-        "collection"=>array("name"=>$lang["collection"],"sortable"=>true),
-        "resources"=>array("name"=>$lang["shared_resources"],"sortable"=>true),
+        "collection"=>array("name"=>$lang["collection"],"html"=>true,"sortable"=>true),
+        "resource"=>array("name"=>$lang["columnheader-resource_id"],"sortable"=>true),
         //"user"=>array("name"=>$lang["user"],"sortable"=>true),
         "sharedas"=>array("name"=>$lang["share_usergroup"],"sortable"=>true),
         "email"=>array("name"=>$lang["email"],"sortable"=>true),
@@ -92,7 +117,7 @@ $tabledata = array(
         "date"=>array("name"=>$lang["created"],"sortable"=>true),
         "lastused"=>array("name"=>$lang["lastused"],"sortable"=>true),
         "access_key"=>array("name"=>$lang["accesskey"],"html"=>true,"sortable"=>true),
-        "type"=>array("name"=>$lang["share_type"],"sortable"=>true),
+        "upload"=>array("name"=>$lang["share_type"],"sortable"=>true),
         "tools"=>array("name"=>$lang["tools"],"sortable"=>false)
         ),
 
@@ -103,7 +128,7 @@ $tabledata = array(
 
     "defaulturl"=>$baseurl . "/pages/manage_external_shares.php",
     "params"=>$curparams,
-    "pager"=>array("current"=>$curpage,"total"=>$totalpages),
+    "pager"=>array("current"=>$curpage,"total"=>$totalpages, "per_page"=>$per_page, "break" =>false),
     "data"=>array()
     );
 
@@ -113,30 +138,25 @@ if(!checkperm('a'))
     }
 for($n=0;$n<$sharecount;$n++)
     {
-    // TODO Check if expired
-    // if(in_array($shares[$n]["status"],array(STATUS_ERROR,STATUS_COMPLETE)))
-    //     {
-    //     $$expiredshares++;
-    //     }    
-
-    if($n >= $offset && $offset + $per_page)
+    if($n >= $offset && ($n < $offset + $per_page))
         {
+        $colshare = is_int_loose($shares[$n]["collection"]) && $shares[$n]["collection"] > 0;
         $tableshare =array();
-        $tableshare["collection"] = $shares[$n]["collection"];
-        //$tableshare["type"] = $shares[$n]["type"];
+        $tableshare["rowid"] = "access_key_" . $shares[$n]["access_key"];
+        $tableshare["collection"] = "<a href='" . $baseurl_short . "?c=" . $shares[$n]["collection"] . "' target='_blank'>" . $shares[$n]["collection"] . "</a>";
         if(checkperm('a'))
             {
-            // Only required if can see shares for different users
+            // Only required if user can see shares for different users
             $tableshare["fullname"] = $shares[$n]["fullname"];
             }
-        $tableshare["sharedas"]    = i18n_get_translated($shares[$n]["sharedas"]);
-        $tableshare["resources"]    = $shares[$n]["resources"];
+        $tableshare["sharedas"]     = i18n_get_translated($shares[$n]["sharedas"]);
+        $tableshare["resource"]     = $shares[$n]["resource"];
         $tableshare["email"]        = $shares[$n]["email"];
-        $tableshare["expires"]      = nicedate($shares[$n]["expires"]);
+        $tableshare["expires"]      = $shares[$n]["expires"] ? nicedate($shares[$n]["expires"]) : $lang["never"];
         $tableshare["lastused"]     = $shares[$n]["lastused"];
 
         $keylink = $baseurl . "/?";
-        $keylink .= (is_int_loose($shares[$n]["collection"]) && $shares[$n]["collection"] > 0) ? "c=" . (int)$shares[$n]["collection"] :  ((int)$shares[$n]["resources"] > 0 ? "r=" .(int)$shares[$n]["resources"] : "");
+        $keylink .= $colshare ? "c=" . (int)$shares[$n]["collection"] :  ((int)$shares[$n]["resource"] > 0 ? "r=" .(int)$shares[$n]["resource"] : "");
         $keylink .= "&k=" . $shares[$n]["access_key"];
         $tableshare["access_key"]   = "<a href='" . $keylink . "' target='_blank'>" . $shares[$n]["access_key"] . "<a>";
 
@@ -146,7 +166,7 @@ for($n=0;$n<$sharecount;$n++)
             $tableshare["alerticon"] = "fas fa-exclamation-triangle";
             }
 
-        $tableshare["type"]       = (bool)$shares[$n]["upload"] ? $lang["share_type_upload"] : $lang["share_type_access"];
+        $tableshare["upload"] = (bool)$shares[$n]["upload"] ? $lang["share_type_upload"] : $lang["share_type_view"];
 
 
         $tableshare["tools"] = array();
@@ -156,25 +176,54 @@ for($n=0;$n<$sharecount;$n++)
             "text"=>$lang["action-delete"],
             "url"=>"#",
             "modal"=>false,
-            "onclick"=>"update_share(\"" . $shares[$n]["collection"] . "\",\"" . $shares[$n]["access_key"] . "\",\"delete_share\");return false;"
+            "onclick"=>"delete_access_key(\"" . $shares[$n]["access_key"] . "\",\"" . $shares[$n]["resource"] . "\",\"" . $shares[$n]["collection"] . "\");return false;"
             );
 
         if(checkperm('a') || $shares[$n]["user"] == $userref)
             {
-            $editlink = generateurl($baseurl . "/collection_share.php", 
-                array(
-                    "collection"    => $shares[$n]["collection"],
-                    "key"           => $shares[$n]["access_key"],
-                ));
+            if((bool)$shares[$n]["upload"])
+                {
+                // Edit an upload share
+                $editlink = generateurl($baseurl . "/pages/share_upload.php", 
+                    array(
+                        "collection"    => $shares[$n]["collection"],
+                        "uploadkey"     => $shares[$n]["access_key"],
+                    ));
+                }
+            elseif($colshare)
+                {
+                $editlink = generateurl($baseurl . "/pages/collection_share.php", 
+                    array(
+                        "ref"               => $shares[$n]["collection"],
+                        "editaccess"        => $shares[$n]["access_key"],
+                        "editaccesslevel"   => $shares[$n]["access"],
+                        "editexpiration"    => $shares[$n]["expires"],
+                        "editgroup"         => $shares[$n]["usergroup"],
+                        "password"          => $shares[$n]["password_hash"] != "" ? "true" : "",
+                    ));
+                }
+            else
+                {
+                // Edit a resource share
+                $editlink = generateurl($baseurl . "/pages/resource_share.php", 
+                    array(
+                        "ref"               => $shares[$n]["resource"],
+                        "editaccess"        => $shares[$n]["access_key"],
+                        "editaccesslevel"   => $shares[$n]["access"],
+                        "editexpiration"    => $shares[$n]["expires"],
+                        "usergroup"         => $shares[$n]["usergroup"],
+                        "password"          => $shares[$n]["password_hash"] != "" ? "true" : "",
+                    ));
+                }
+
             $tableshare["tools"][] = array(
-                "icon"=>"fas fa-pencil",
+                "icon"=>"fa fa-pencil",
                 "text"=>$lang["action-edit"],
-                "url"=>"#",
+                "url"=>$editlink,
                 "modal"=>false,
-                "onclick"=>"return CentralSpaceLoad('" . $editlink . "');"
+                "onclick"=>"return CentralSpaceLoad(\"" . $editlink . "\");"
                 );
             }
-
 
         $tabledata["data"][] = $tableshare;
         }
@@ -185,42 +234,49 @@ include '../include/header.php';
 ?>
 
 <script>
-    function update_share(collection, key, action)
+function delete_access_key(access_key, resource, collection)
+    {
+    var confirmationMessage = "<?php echo $lang['confirmdeleteaccessresource']; ?>";
+    var post_data = {
+        ajax: true,
+        delete_access_key: access_key,
+        delete_resource: resource,
+        <?php echo generateAjaxToken("delete_access_key"); ?>
+    };
+
+    if(collection != '')
         {
-        var temp_form = document.createElement("form");
-        temp_form.setAttribute("id", "shareform");
-        temp_form.setAttribute("method", "post");
-        temp_form.setAttribute("action", '<?php echo $url ?>');
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccess']; ?>";
+        delete post_data.resource;
+        post_data.delete_collection = collection;
+        }
 
-        var i = document.createElement("input");
-        i.setAttribute("type", "hidden");
-        i.setAttribute("name", action);
-        i.setAttribute("value", ref);
-        temp_form.appendChild(i);
-
-        <?php
-        if($CSRF_enabled)
-            {
-            ?>
-            var csrf = document.createElement("input");
-            csrf.setAttribute("type", "hidden");
-            csrf.setAttribute("name", "<?php echo $CSRF_token_identifier; ?>");
-            csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "shareform"); ?>");
-            temp_form.appendChild(csrf);
-            <?php
-            }
-            ?>
+    if(confirm(confirmationMessage))
+        {
+        jQuery.post('<?php echo $url; ?>', post_data, function(response)
+                {
+                if(response.success === true)
+                    {
+                    jQuery('#access_key_' + access_key).remove();
+                    }
+                },
+                'json'
+            );
         
-        document.getElementById('share_list_container').appendChild(temp_form);
-        CentralSpacePost(document.getElementById('shareform'),true);
+        return false;
+        }
 
-        }
-    function clearsharefilter()
-        {
-        jQuery('#share_group').val('-1');
-        jQuery('#share_type').val('-1');
-        jQuery('#autocomplete').val('');
-        }
+    return true;
+    }
+
+function clearsharefilter()
+    {
+    jQuery('#share_group').val('-1');
+    jQuery('#share_type').val('-1');
+    jQuery('#share_user').val('');
+    jQuery('#autocomplete').val('');
+    CentralSpacePost(document.getElementById('ShareFilterForm'));
+    }
 
 </script>
 
@@ -250,7 +306,7 @@ include '../include/header.php';
             render_dropdown_question($lang["property-user_group"], "share_group", $allsharedgroups, $share_group, " class=\"stdwidth\"");
             $sharetypes = array(
                     "-1"    => $lang["action-select"],
-                    "0"     => $lang["share_type_access"],
+                    "0"     => $lang["share_type_view"],
                     "1"     => $lang["share_type_upload"],
                 );
 
@@ -264,9 +320,7 @@ include '../include/header.php';
                     <div class="clearerleft"></div>
                 </div>
                 <?php
-                }?>
-
-            
+                }?>           
 
 
             <div class="Question"  id="QuestionShareFilterSubmit">

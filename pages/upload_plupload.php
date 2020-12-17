@@ -443,20 +443,16 @@ if ($_FILES)
 	header("Pragma: no-cache");
 
 	// Settings
-    #$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
     if(upload_share_active())
         {
-        include_once "../include/login_functions.php";
-        $session_hash = generate_session_hash($k . $rs_session);
+        $session_hash = $rs_session;
         }
 	$targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "plupload" . DIRECTORY_SEPARATOR . $session_hash;
 
 	$cleanupTargetDir = true; // Remove old files
 	$maxFileAge = 5 * 3600; // Temp file age in seconds
-	@set_time_limit($php_time_limit);
-
-        
-        debug("PLUPLOAD - receiving file from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
+	set_time_limit($php_time_limit);
+    debug("PLUPLOAD - receiving file from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
         
 	# Work out the extension
 	$extension=explode(".",$plfilename);
@@ -466,8 +462,8 @@ if ($_FILES)
 	global $banned_extensions;
 	if (in_array($extension,$banned_extensions) || ($allowed_extensions!="" && !in_array($extension,explode(",",$allowed_extensions))))
 		{
-            debug("PLUPLOAD - invalid file extension received from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
-       		die('{"jsonrpc" : "2.0", "error" : {"code": 105, "message": "Banned file extension."}, "id" : "id"}');
+        debug("PLUPLOAD - invalid file extension received from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
+       	die('{"jsonrpc" : "2.0", "error" : {"code": 105, "message": "Banned file extension."}, "id" : "id"}');
 		}
 	hook('additional_plupload_checks');
 	// Clean the filename for security reasons

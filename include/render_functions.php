@@ -2594,7 +2594,7 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
 */
 function render_share_options($collectionshare=true, $ref=0, $emailing=false)
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
+    global $lang, $ref, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
     
     if(!hook('replaceemailaccessselector'))
         {?>
@@ -4748,6 +4748,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - current page
  *  - total pages
  * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - If "rowid" is specified this wil be used as the id attribute for the <tr> element
  *  - An additional 'tools' element can be included to add custom action icons
  *  - "class" - FontAwesome class to use for icon
  *  - "text" - title attribute
@@ -4777,11 +4778,25 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 function render_table($tabledata)
     {
     ?>
-    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
+    <div class="TablePagerHolder"><?php
+    if(isset($tabledata["pager"]))
+        {
+        $pageroptions = array(
+            "curpage" => $tabledata["pager"]["current"],
+            "totalpages" => $tabledata["pager"]["total"],
+            "per_page" => isset($tabledata["pager"]["per_page"]) ? $tabledata["pager"]["per_page"] : $default_perpage,
+            "break" => isset($tabledata["pager"]["break"]) ? $tabledata["pager"]["break"] : true,
+            "scrolltotop" => isset($tabledata["pager"]["scrolltotop"]) ? $tabledata["pager"]["scrolltotop"] : true,
+            "url" => $tabledata["defaulturl"],
+            "url_params" => $tabledata["params"],
+            );
+        pager(true, true,$pageroptions);
+        }?>
+    </div><?php
 
-    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
-    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
-    echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
+    echo "<tbody><tr class='ListviewTitleStyle'>\n";
     echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
@@ -4805,17 +4820,18 @@ function render_table($tabledata)
         
         echo "</th>";
         }
-    echo "</tr>"; // End of table header row
+    echo "</tr>\n"; // End of table header row
 
     if(count($tabledata["data"]) == 0)
         {
-        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>\n";
         }
     else
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            echo "<tr>";
+            $rowid = isset($rowdata["rowid"]) ? " id = '" . $rowdata["rowid"]  . "'" : "";
+            echo "<tr" . $rowid . ">";
 
             if(isset($rowdata['alerticon']))
                 {
@@ -4857,10 +4873,10 @@ function render_table($tabledata)
                     }
                 else
                     {
-                    echo "<td></td>";
+                    echo "<td></td>\n";
                     }
                 }
-            echo "</tr>";
+            echo "</tr>\n";
             }
         }
     echo "</tbody>";
@@ -4946,9 +4962,9 @@ function render_share_password_question($blank=true)
     global $lang;
     ?>
     <div class="Question">
-    <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-    <input type="password" id="inputpassword" name="inputpassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
-    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('inputpassword');"></span>
+    <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+    <input type="password" id="sharepassword" name="sharepassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 
     function togglePassword(pwdelement)

@@ -1612,7 +1612,7 @@ function check_access_key($resources,$key)
 */
 function check_access_key_collection($collection, $key)
     {
-    if('' == $collection || !is_numeric($collection))
+    if(!is_int_loose($collection))
         {
         return false;
         }
@@ -1630,6 +1630,7 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
+
     
     // Get key info 
     $keyinfo = sql_query("

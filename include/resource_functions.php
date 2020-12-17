@@ -467,12 +467,12 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$index_contributed_by;
+    global $always_record_resource_creator,$index_contributed_by, $k;
 
     if(!is_numeric($archive))
-    {
-    return false;   
-    }
+        {
+        return false;   
+        }
 
     $alltypes=get_resource_types();    
     if(!in_array($resource_type,array_column($alltypes,"ref")))
@@ -521,8 +521,14 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	add_keyword_mappings($insert, $insert, -1);
 
 	# Log this			
-	daily_stat("Create resource",$insert);
-	resource_log($insert, LOG_CODE_CREATED, 0);
+    daily_stat("Create resource",$insert);
+
+
+    resource_log($insert, LOG_CODE_CREATED, 0);
+    if(upload_share_active())
+        {
+        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
+        }
 	
 	# Also index contributed by field, unless disabled
 	if ($index_contributed_by)
@@ -8527,6 +8533,7 @@ function get_external_shares(array $filteropts)
         "share_order_by",
         "share_sort",
         "share_type",
+        "share_collection",
     );
     foreach($validfilterops as $validfilterop)
         {
@@ -8540,7 +8547,7 @@ function get_external_shares(array $filteropts)
             }
         }
 
-    $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key");
+    $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key", "upload");
     if(!in_array($share_order_by, $valid_orderby))
         {
         $share_order_by = "expires";
@@ -8570,14 +8577,21 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.upload=1";
         }
+    if((int)$share_collection > 0)
+        {
+        $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
+        }
 
     $conditional_sql="";
     if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
 
     $external_access_keys_query = 
         "SELECT access_key,
-                LEFT(group_concat(resource),200) resources,
                 ifnull(collection,'-') collection,
+                CASE 
+                    WHEN collection IS NULL THEN resource
+                    ELSE '-'
+                END AS 'resource',
                 user,
                 eak.email,
                 min(date) date,
@@ -8585,6 +8599,7 @@ function get_external_shares(array $filteropts)
                 eak.access,
                 eak.expires,
                 eak.usergroup,
+                eak.password_hash,
                 eak.upload,
                 ug.name sharedas,
                 u.fullname,
@@ -8593,7 +8608,7 @@ function get_external_shares(array $filteropts)
       LEFT JOIN user u ON u.ref=eak.user 
       LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
                 $conditional_sql .
-     " GROUP BY access_key
+     " GROUP BY access_key, collection
        ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
 
     $external_shares = sql_query($external_access_keys_query);
