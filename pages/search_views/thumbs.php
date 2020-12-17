@@ -9,9 +9,9 @@ if (!hook("renderresultthumb"))
     if ($display == "xlthumbs") 
         {
         $resolved_title_trim=$xl_search_results_title_trim;
-        $resolved_title_height = 350 + (31 * count($xl_thumbs_display_fields));
+        $resolved_title_height = 351 + (31 * count($xl_thumbs_display_fields));
         $resolved_title_wordwrap = $xl_search_results_title_wordwrap;
-        } 
+        }
     else 
         {
         $resolved_title_trim=$search_results_title_trim;
@@ -19,7 +19,7 @@ if (!hook("renderresultthumb"))
         $resolved_title_wordwrap = $search_results_title_wordwrap;
         }
 
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 206) + (31 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 351 : 206) + (31 * count($thumbs_display_fields));
 
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
