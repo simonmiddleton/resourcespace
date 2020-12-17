@@ -405,18 +405,30 @@ function mplus_get_cfg_by_module_name(string $n)
 /**
 * Validate a modules' record ID (technical or virtual)
 * 
-* @param array $ramc Resources associated module configurations. {@see mplus_get_associated_module_conf()}
+* @param array   $ramc             Resources associated module configurations. {@see mplus_get_associated_module_conf()}
+* @param boolean $use_technical_id Force validating using the technical ID (ie __id) fieldPath.
 * 
-* @return integer|boolean Returns the valid MuseumPlus module record technical ID, FALSE otherwise
+* @return array Returns the valid resources that have a valid combination of "module name - MpID (virtual or technical)".
+*               The returned resource associated module configuration will get mutated with:
+*               - an additional "__id" key which will always hold the technical ID of the module item "linked" to that
+*                 resource - always use MPLUS_FIELD_ID constant to find it;
+*               - an optional "error" key to hold any errors the end user should be aware of;
 */
 function mplus_validate_id(array $ramc, bool $use_technical_id)
     {
-    global $museumplus_api_batch_chunk_size;
+    // 
+    global $lang, $museumplus_api_batch_chunk_size;
     // print_r($var);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
+    $valid_ramc = array();
+    $end_user_e = ['error' => ''];
+    // $error = $lang['museumplus_error_invalid_id'];
+
     $modules = mplus_flip_struct_by_module($ramc);
+    // print_r($modules);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
     foreach($modules as $module_name => $mdata)
         {
+        // print_r($mdata);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
         // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs
         // to be specifically selected. This simplifies the logic when it comes to determine if we found module items for
@@ -426,22 +438,62 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         foreach(array_chunk($mdata['resources'], $museumplus_api_batch_chunk_size, true) as $resources_chunk)
             {
             $search_xml = mplus_xml_search_by_fieldpath($field_path, $resources_chunk, $select_fields);
-            $mplus_search = mplus_search($module_name, $search_xml);
 
+            // $mplus_search = mplus_search($module_name, $search_xml);
+            $mplus_search = plugin_decode_complex_configs(mplus_get_response_stub('no_module_items_found')); # TODO: remove stub
             if(empty($mplus_search))
                 {
+                // Search failed for some reason. Move to the next chunk silently (do not exit process) and don't try 
+                // to validate using the technical ID
                 continue;
                 }
 
-            print_r($mplus_search);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+            $mplus_search_xml = mplus_get_response_xml($mplus_search);
             // TODO: process results. Determine if we need to run another search using the technical ID fieldPath instead
+            $module_node = $mplus_search_xml->getElementsByTagName("module")->item(0);
+            if($module_node->hasAttributes())
+                {
+                $totalSize_attr = $module_node->attributes->getNamedItem('totalSize');
+                $totalSize_value = $totalSize_attr->value;
+
+                // No module items found
+                if($totalSize_value === 0)
+                    {
+                    // if()
+                    }
+                // Search returned more records than we searched for. Issue on MuseumPlus side, a virtual ID has been re-used
+                // on multiple module items. ResourceSpace would be unable to determine which module item is the one "linked" to the resource
+                else if($totalSize_value > count($resources_chunk))
+                    {
+                    $end_user_e['error'] = $lang['museumplus_id_returns_multiple_records'];
+                    mplus_log_event(
+                        'mplus_validate_id(): Search responded with more records than we searched for',
+                        array(
+                            'module_name' => $module_name,
+                            'resources_chunk' => $resources_chunk,
+                            'searched_by_technical_id' => ($field_path === MPLUS_FIELD_ID),
+                        ),
+                        'error');
+                    }
+                }
+
+
+
+
+            print_r($module_node);die(PHP_EOL . "You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             }
         }
 
 
     // - for validation, always try the virtual ID (if one was configured) first, then check the technical ID.
     // - for validation, always error if a virtual ID finds more than a record
-    return false;
+
+    // if($end_user_e['error'] !== '')
+    //     {
+    //     $valid_ramc = $end_user_e;
+    //     }
+
+    return $valid_ramc;
     }
 
 

@@ -113,7 +113,7 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
 function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes)
     {
     mplus_log_event(
-        'Called HookMuseumplusAllAftersaveresourcedata',
+        'Called HookMuseumplusAllAftersaveresourcedata()',
         array(
             'args' => array(
                 'R' => $R,
@@ -163,10 +163,11 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
     global $lang;
 
-    // TODO; start processing resources (as a batch) for Mplus purposes --- work in progress (see mplus_validate_id())
     // STEP 1: validate the record ID for the linked module
     $resources_with_valid_ids = mplus_validate_id($resources, false);
     // TODO; update error handling once mplus_validate_id() is done
+    // because we're chunking validation, errors don't mean we have to stop the process. Only if we end up with no valid
+    // resources.
     if($mpid != '' && $valid_id === false)
         {
         $errors['museumplus_invalid_id'] = $lang['museumplus_error_invalid_id'];

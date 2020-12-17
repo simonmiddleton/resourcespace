@@ -1,6 +1,7 @@
 <?php
 /**
-* Build the search XML for MuseumPlus API request body - {@see http://docs.zetcom.com/ws/module/search/search_1_4.xsd}
+* Build the search XML for MuseumPlus API request body
+* {@see http://docs.zetcom.com/ws/module/search/search_1_4.xsd}
 * 
 * @param string $fp   Field path used to identify the "linked" modules. This is essentially either the technical ID field (ie. __id)
 *                     or another virtual field (e.g ObjObjectNumberVrt)
@@ -102,7 +103,7 @@ function mplus_search(string $module_name, DOMDocument $search)
 
     if($result['status_code'] != 200)
         {
-        mplus_log_event('mplus_search(): Request failed (i.e. status code NOT 200)', array('status_code' => $result['status_code']), 'warn');
+        mplus_log_event('mplus_search(): Request failed! Response status code NOT 200.', array('status_code' => $result['status_code']), 'warn');
         return array();
         }
 
@@ -110,14 +111,29 @@ function mplus_search(string $module_name, DOMDocument $search)
     }
 
 
-#### legacy code from mplus_search(). Might be useful later
-/*
-if($result['headers']['content-type'][0] == 'application/xml')
+/**
+* Get XML response body received from MuseumPlus search request
+* {@see http://docs.zetcom.com/ws/module/module_1_4.xsd}
+* 
+* @param array $result Search results as returned by {@see mplus_search()}
+* 
+* @return DOMDocument
+*/
+function mplus_get_response_xml(array $result)
     {
-    $xml = new DOMDocument();
-    $xml->loadXML($result['result']);
+    // $xml = new DOMDocument();
+    $xml = new DOMDocument('1.0', 'UTF-8');
+
+    if($result['headers']['content-type'][0] == 'application/xml')
+        {
+        $xml->loadXML($result['result']);
+        }
+
+    return $xml;
     }
 
+#### legacy code from mplus_search(). Might be useful later
+/*
 $result = array();
 foreach($xml->getElementsByTagName('systemField') as $system_field)
     {

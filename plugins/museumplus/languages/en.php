@@ -56,8 +56,8 @@ $lang['museumplus_error_no_data_found'] = 'No data found in MuseumPlus for this 
 $lang['museumplus_warning_script_not_completed'] = "WARNING: The MuseumPlus script has not completed since '%script_last_ran'.\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.";
 $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\nphp museumplus_script.php --clear-lock";
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
-$lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
 $lang["museumplus_error_not_deleted_module_conf"] = "Unable to delete the requested module configuration.";
 $lang["museumplus_error_unknown_type_saved_config"] = "The 'museumplus_modules_saved_config' is of an unknwon type!";
 $lang["museumplus_error_invalid_id"] = "Invalid module record ID. Please make sure that either the correct Module or Record ID have been input!";
+$lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
 
