@@ -7,9 +7,10 @@ include "../include/db.php";
 //  'undefined' Not passed in, so replace it with the current user collection
 //  is_numeric  Use this collection  
 $collection_add = getvalescaped('collection_add', 'false');
-if($collection_add =='false' && isset($_COOKIE["upload_share_active"]))
+$external_upload = upload_share_active();
+if($collection_add =='false' && $external_upload)
     {
-    $collection_add = $_COOKIE["upload_share_active"];
+    $collection_add = $external_upload;
     }
 
 // External share support
@@ -107,7 +108,7 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 		}
     }
     
-if(upload_share_active())
+if($external_upload)
     {
     $rs_session = get_rs_session_id(true);
     $ci=get_session_collections($rs_session);
@@ -318,7 +319,7 @@ else if ($resource_type!="" && !$alternative)
     $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
 
-if(upload_share_active())
+if(!upload_share_active())
     {
     refresh_collection_frame($usercollection);
     }
@@ -1618,15 +1619,16 @@ elseif (upload_share_active())
     {
     $collectiondata = get_collection($collection_add);
     $titleh1 = $lang["addresourcebatchbrowser"] . ": " . i18n_get_collection_name($collectiondata);
-    $intro = $lang["intro-plupload"];
+	$intro = $lang["intro-plupload"];
+    $before_intro = $lang["intro-plupload_external_share"];
     }
 else
 	{
 	# Add Resource Batch - In Browser 
 	$titleh1 = $lang["addresourcebatchbrowser"];
 	$intro = $lang["intro-plupload"];
-	}	
-
+    }
+    
 ?>
 <?php hook("upload_page_top"); ?>
 <div class="BasicsBox titlediv">
@@ -1634,12 +1636,18 @@ else
 
     if(is_numeric($collection_add) && can_share_upload_link($collection_add))
         {
-        $share_up_url = generateurl($baseurl_short . "pages/share_upload.php",array("collection"=>$collection_add));
+        $share_up_url = generateurl($baseurl_short . "pages/share_upload.php",array("share_collection"=>$collection_add));
         echo "<div id='share-upload_link' class='sharelink'><a href='" . $share_up_url . "' onclick='return CentralSpaceLoad(this,true);'>" . $lang["action-share-upload-link"] . "</a></div>";
         }
     ?>
 </div>
 <div class="clearerleft"></div>
+<?php
+if(isset($before_intro))
+    {
+    echo "<p>" . $before_intro . "</p>";
+    }
+?>
 <div id="plupload_instructions"><p><?php echo $intro;render_help_link("user/uploading");?></p></div>
 <?php
 

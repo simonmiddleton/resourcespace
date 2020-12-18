@@ -22,6 +22,7 @@ $archive=getvalescaped("archive","");
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
+$k = getval("k","");
 
 include "../include/header.php";
 ?>
@@ -31,7 +32,7 @@ include "../include/header.php";
     <p><?php echo text(htmlspecialchars(getvalescaped("text",""))) ?></p>
    
     <?php
-    if ((getval("user","")!="" || getval("k","")!="" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin","")=="")
+    if ((getval("user","")!="" || $k!="" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin","")=="")
         {
         # User logged in?
         if(!hook("donebacktoresource"))
@@ -45,10 +46,21 @@ include "../include/header.php";
                 <?php
                 }
             }
-        if (getval("k","")=="")
+        if ($k=="")
             {?>
             <p><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetoresults"]?></a></p>
             <p><a href="<?php echo ($use_theme_as_home?$baseurl_short.'pages/collections_featured.php':$default_home_page)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetohome"]?></a></p>
+            <?php
+            }
+        elseif($k!="" && upload_share_active())
+            {
+            $collection = getval("collection",0,true);
+            $uploadurl = get_upload_url($collection,$k);
+            ?>
+            <div class='clearerleft'></div>
+            <div>
+                <input type='button' value='<?php echo $lang["upload"];?>' onclick='CentralSpaceLoad("<?php echo $uploadurl; ?>");'>
+            </div>    
             <?php
             }
         hook("extra");

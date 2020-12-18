@@ -201,12 +201,13 @@ $url = generateURL(
 <?php
 for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	{
-	if (!isset($lang["log-".$log[$n]["type"]])){$lang["log-".$log[$n]["type"]]="";}
+    if (!isset($lang["log-".$log[$n]["type"]])){$lang["log-".$log[$n]["type"]]="";}
+    $logusertext = $log[$n]["access_key"] != "" ? ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) : $log[$n]["fullname"];
 	?>
 	<!--List Item-->
 	<tr>
 	<td nowrap><?php echo nicedate($log[$n]["date"],true,true, true)?></td>
-	<td nowrap><?php echo (hook("userdisplay","",array($log[$n]))?"":($log[$n]["access_key"]!=""?$lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . $log[$n]["shared_by"]:$log[$n]["fullname"])) ?></td>
+	<td nowrap><?php echo hook("userdisplay","",array($log[$n])) ? "" : $logusertext ?></td>
 	
     <?php
     if($filter_dld_records_only)

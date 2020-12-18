@@ -90,13 +90,14 @@ $save_auto_next = getval("save_auto_next","") != "";
 if ($upload_review_mode)
     {
     # Set the collection and ref if not already set.
-    if(upload_share_active()!== false) 
+    if($external_upload !== false) 
         {
         $rs_session = get_rs_session_id(true);
         $ci=get_session_collections($rs_session);
         if (count($ci)==0)
             {
             error_alert($lang["error_no_resources_edit"]);
+            exit();
             }
         else
             {
@@ -131,13 +132,13 @@ if ($upload_review_mode)
         }
     else 
         {
-        if($external_upload !== false)
+        if($external_upload)
             {
             debug("external upload - no resources to review");
             // Delete the temporary upload_collection
             delete_collection($collection);
             external_upload_notify($external_upload, $k, $collection);
-            $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k));
+            $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k, "collection"=>$external_upload));
             redirect($url);
             }
         else
@@ -504,7 +505,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 if ($upload_review_mode)
                     {
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
-                    if(upload_share_active())
+                    if($external_upload)
                         {
                         remove_resource_from_collection($ref,$collection);  
                         }
@@ -621,7 +622,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         else
                             {
                             // All saved, redirect to recent user uploads to the set archive state
-                            if($external_upload !== false)
+                            if($external_upload)
                                 {
                                 debug("external upload - finished reviewing resources");
                                 // Delete the temporary upload_collection
@@ -629,7 +630,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 // Send notification to creator of upload 
                                 // TODO Should this be the actual creator of the share?
                                 external_upload_notify($external_upload, $k, $collection);
-                                $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k));
+                                $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k,"collection"=>$external_upload));
                                 }
                             else
                                 {
@@ -1188,7 +1189,7 @@ else
                     ||
                 $custompermshowfile
                     ||
-                upload_share_active()
+                $external_upload
                 )
             &&
                 !hook('replaceeditpreview')

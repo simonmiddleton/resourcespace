@@ -523,7 +523,6 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	# Log this			
     daily_stat("Create resource",$insert);
 
-
     resource_log($insert, LOG_CODE_CREATED, 0);
     if(upload_share_active())
         {
@@ -3519,13 +3518,8 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
             // do not do a diff, just dump out whole new value (this is so we can cleanly append transform output)
             case LOG_CODE_TRANSFORMED:
-                $diff = $tovalue;
-                break;
-
             case LOG_CODE_NODE_REVERT:
-                $diff = $tovalue;
-                break;
-
+            case LOG_CODE_EXTERNAL_UPLOAD:
             case LOG_CODE_CREATED:
                 $diff = $tovalue;
                 break;
@@ -3620,7 +3614,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.purchase_size,
                         ps.name AS size,
                         r.access_key,
-                        ekeys_u.fullname AS shared_by{$extrafields}
+                        ekeys_u.fullname AS shared_by {$extrafields}
                    FROM resource_log AS r 
         LEFT OUTER JOIN user AS u ON u.ref = r.user
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
@@ -4952,8 +4946,8 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	if ($key==""){return false;}
 	# Update the expiration and acccess
 	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
-	hook('edit_resource_external_access','',array($key,$access,$expires,$group));
-	return true;
+    hook('edit_resource_external_access','',array($key,$access,$expires,$group));
+    return true;
 	}
 
 /**
@@ -8523,6 +8517,18 @@ function get_resource_lock_message($lockuser)
         }
     }
 
+/**
+ * Get details of external shares
+ *
+ * @param  array $filteropts    Array of options to filter shares returned
+ *                              "share_group"       - (int) Usergroup ref 'shared as'
+ *                              "share_user"        - (int) user ID of share creator
+ *                              "share_order_by"    - (string) order by column 
+ *                              "share_sort"        - (string) sortorder (ASC or DESC)
+ *                              "share_type"        - (int) 0=view, 1=upload
+ *                              "share_collection"  - (int) Collection ID
+ * @return array
+ */
 function get_external_shares(array $filteropts)
     {
     global $userref;
@@ -8582,6 +8588,7 @@ function get_external_shares(array $filteropts)
         $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
         }
 
+        //TODO  LIMIT to collecions they can see
     $conditional_sql="";
     if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
 

@@ -627,7 +627,7 @@ $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to s
 $lang['log-f']="Replaced file";
 $lang['log-X']="Locked resource";
 $lang['log-Y']="Unlocked resource";
-$lang['log-A']="External share upload";
+$lang['log-EUP']="External share upload";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -1335,6 +1335,8 @@ $lang["collectionlog-A"]="Changed access to "; // +notes field
 $lang["collectionlog-Z"]="Collection downloaded";
 $lang["collectionlog-U"]="Allow users to modify";
 $lang["collectionlog-e"]="Edited"; // Generic edit
+$lang["collectionlog-SEU"]="Shared upload link externally";
+$lang["collectionlog-EEU"]="Edited external upload";
 
 $lang["viewuncollectedresources"]="View resources not used in collections";
 
@@ -2968,7 +2970,7 @@ $lang["upload_share_email_text"]            = " has sent you a link to upload fi
 $lang["upload_share_email_password"]        = "Use this password to access the link";
 $lang["upload_share_email_clicklink"]       = "Please click the link below to start uploading";
 $lang["upload_share_email_template"]        = "<br />\n[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> \n[lang_message] : [message]<br /><br />\n[lang_upload_share_email_clicklink]<br />\n<br />\n[link]\n<br />\n<br />\n[passwordtext]";
-$lang["upload_share_complete"]              = "Thank you for uploading. Please click the button below to upload more resources<div class='clearerleft' /><div><input type='button' value='Upload' onclick='CentralSpaceLoad(\"upload_plupload.php\");'></div>";
+$lang["upload_share_complete"]              = "Thank you for uploading. Please click the button below to upload more resources";
 $lang["error_invalid_usergroup"]            = "Invalid usergroup";
 $lang["error_invalid_date"]                 = "Invalid date";
 $lang["error_invalid_key"]                  = "Invalid key";
@@ -2979,10 +2981,15 @@ $lang["password_unchanged"]                 = "(unchanged)";
 $lang["notify_upload_share_new"]            = "Resources have been uploaded to your shared collection";
 $lang["notify_upload_share_new_subject"]    = "New external uploads";
 $lang["all__emailnotifyuploadsharenew"]     = "<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["my_external_shares"]                 = "My external shares";
+$lang["my_shares"]                          = "My shares";
 $lang["manage_shares_title"]                = "External shares";
+$lang["share_purge_text"]                   = "Delete expired shares";
+$lang["shares_purged_message"]              = "Deleted %%DELETEDCOUNT%% shares";
+$lang["share_confirm_purge"]                = "Are you sure you want to delete all expired shares?";
+$lang["external_shares_view_existing"]      = "View existing upload shares for this collection.";
 $lang["share_user"]                         = "Shared by";
 $lang["share_usergroup"]                    = "Shared as";
 $lang["share_type"]                         = "Share type";
 $lang["share_type_view"]                    = "View";
 $lang["share_type_upload"]                  = "Upload";
+$lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";

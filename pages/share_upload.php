@@ -26,12 +26,13 @@ if(count($validsharegroups) == 0)
     $validsharegroups[$usergroup] = $up_group["name"];
     }
 
-$collection	    = getvalescaped('collection', 0, true);
-$uploadkey      = getval("uploadkey","");
-$messages    = array();
+$share_collection   = getval('share_collection', 0, true);
+$uploadkey          = getval("uploadkey","");
+$emailmessage       = getval("message","");
+$messages           = array();
 if($uploadkey != "")
     {
-    $shareinfo      = get_upload_share_details($collection,$uploadkey);
+    $shareinfo      = get_upload_share_details($share_collection,$uploadkey);
     if(isset($shareinfo[0]))
         {
         $shareinfo  = $shareinfo[0];
@@ -42,7 +43,7 @@ if($uploadkey != "")
         exit();        
         }
     
-    $editable       = can_edit_upload_share($collection,$uploadkey);
+    $editable       = can_edit_upload_share($share_collection,$uploadkey);
     if(!$editable)
         {
         error_alert($lang["error-permissiondenied"],true);
@@ -69,18 +70,24 @@ else
     $shareusergroup = getval("usergroup",$usergroup,true);
     $shareexpires   = getval("shareexpires","");
     $emails         = getval("users","");
-    $emailmessage   = getval("message","");
     $editing = false; 
     }
 
-$collectiondata	= get_collection($collection);
-$submitted = getval("submitted","") != "";
+$collectiondata	= get_collection($share_collection);
 
+// Get existing shares for this collection
+$cursharefltr = array(
+    "share_user"        => (checkperm('a') || checkperm('ex') ? '' : $userref),
+    "share_type"        => "1",
+    "share_collection"  => $share_collection,
+    );
+$curshares = get_external_shares($cursharefltr);
+
+$submitted = getval("submitted","") != "";
 if($submitted)
     {    
     if($shareexpires == "")
         {
-            exit("HERE");
         $messages[] = $lang["error_invalid_date"];
         }
     if(!isset($validsharegroups[$shareusergroup]))
@@ -91,7 +98,7 @@ if($submitted)
     if(count($messages) == 0)
         {
         $shareoptions = array(
-            "collection"=> $collection,
+            "collection"=> $share_collection,
             "usergroup" => $shareusergroup,
             "user"      => $userref,
             "expires"   => $shareexpires,
@@ -99,13 +106,14 @@ if($submitted)
             "upload"    => 1,
             "message"   => $emailmessage,
             );
-        if($emails != "")
+        if(isset($emails) && $emails != "")
             {
             $shareoptions["emails"] = trim_array(explode(",",$emails));
             }
         if($uploadkey != "")
             {
-            $result = edit_collection_external_access($uploadkey,-1,$shareexpires,"",$sharepwd,$shareoptions);
+            $shareoptions["group"] = $shareusergroup;
+            $result = edit_collection_external_access($uploadkey,-1,$shareexpires,$shareusergroup,$sharepwd,$shareoptions);
             if($result)
                 {
                 $messages[] = $lang["saved"];
@@ -117,7 +125,7 @@ if($submitted)
             }
         else
             {
-            $result = create_upload_link($collection,$shareoptions);
+            $result = create_upload_link($share_collection,$shareoptions);
             if(is_array($result))
                 {
                 $messages[] = $lang["upload_shares_emailed"];
@@ -129,7 +137,7 @@ if($submitted)
                         }
                     else
                         {
-                        $shareurl = $baseurl . "/?c=" . $collection . "&k=" . $sharekey;
+                        $shareurl = $baseurl . "/?c=" . $share_collection . "&k=" . $sharekey;
                         $messages[] = "<a href='" . $shareurl . "'>" . $shareurl  . "</a>" . (isset($shareoptions["emails"][$key]) ? " (" . $shareoptions["emails"][$key] . ")" : "");
                         }
                     }
@@ -155,8 +163,13 @@ include "../include/header.php";
 
         echo "<p><strong>" . $lang["warning-upload-link"] . "</strong></p>"; 
         echo "<p>" . $lang["warning-upload-instructions"] . "</p>";
+
+        if(count($curshares) > 0)
+            {
+            echo "<p><a href='" . generateURL($baseurl_short . "pages/manage_external_shares.php", $cursharefltr) . "'>" . LINK_CARET . $lang["external_shares_view_existing"] . "</a></p>";
+            }
         ?>
-        <form method=post id="shareuploadform" action="<?php echo $baseurl_short; ?>pages/share_upload.php?collection=<?php echo $collection; ?>" onsubmit="return CentralSpacePost(this,true);">
+        <form method=post id="shareuploadform" action="<?php echo generateURL($baseurl_short . "pages/share_upload.php", $cursharefltr); ?>" onsubmit="return CentralSpacePost(this,true);">
             <input type="hidden" name="deleteshare" id="deleteshare" value="">   
             <input type="hidden" name="submitted" id="submit" value="true">    
             <input type="hidden" name="uploadkey" id="uploadkey" value="<?php echo htmlspecialchars($uploadkey); ?>">

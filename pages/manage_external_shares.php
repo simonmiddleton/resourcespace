@@ -3,7 +3,7 @@ include '../include/db.php';
 include '../include/authenticate.php';
 
 $share_user    = getval("share_user",0,true);
-if($share_user != $userref && !checkperm('a'))
+if($share_user != $userref && !(checkperm('a') || checkperm('noex')))
     {
     // User does not have permission to see other user's shares
     $share_user = $userref;
@@ -15,15 +15,14 @@ $share_sort         = (strtoupper(getval("share_sort","ASC")) == "ASC") ? "ASC" 
 $share_type         = getval("share_type",-1,true);
 $share_collection   = getval("share_collection",-1,true);
 
-
-if($share_collection != -1 && collection_readable($share_collection))
+if($share_collection != -1 &&!collection_readable($share_collection))
     {
     error_alert($lang["error-permissiondenied"],true);
     exit();
     }
 if(!checkperm('a') || $share_user == $userref)
     {
-    $pagetitle  = $lang["my_external_shares"];
+    $pagetitle  = $lang["my_shares"];
     }
 else
     {
@@ -32,6 +31,8 @@ else
 
 $ajax              = ('true' == getval('ajax', '') ? true : false);
 $delete_access_key = getval('delete_access_key', '');
+$messages           = array();
+
 // Process access key deletion
 if($delete_access_key != "" && enforcePostRequest($ajax))
     {
@@ -51,13 +52,13 @@ if($delete_access_key != "" && enforcePostRequest($ajax))
         delete_collection_access_key($deletecollection, $delete_access_key);
         $response['success'] = true;
         }
+    else
+        {
+        delete_collection_access_key(0, $delete_access_key);
+        $response['success'] = true;
+        }
 
     exit(json_encode($response));
-    }
-
-elseif(getval("purge_expired",'') != '' && enforcePostRequest(true))
-    {
-    // TODO DELETE EXPIRED SHARES
     }
 
 $sharefltr = array(
@@ -68,6 +69,12 @@ $sharefltr = array(
     "share_type"        => $share_type,
     "share_collection"  => $share_collection,
     );
+
+if(getval("purge_expired",'') != '' && enforcePostRequest(true))
+    {
+    $deleted = purge_expired_shares($sharefltr);
+    $messages[] = str_replace("%%DELETEDCOUNT%%",$deleted,$lang["shares_purged_message"]);
+    }
 
 $shares = get_external_shares($sharefltr);
 $allsharedgroups = array("-1" => $lang["action-select"]);
@@ -80,6 +87,17 @@ foreach($sharedgroups as $sharedgroup)
         $allsharedgroups[$sharedgroup] = $up_group["name"];
         }
     }
+$allsharedcols = array("-1" => ($share_collection == -1 ? $lang["action-select"] : $lang["all"]));
+$sharedcols = array_unique(array_column($shares,"collection"));
+foreach($sharedcols as $sharedcol)
+    {    
+    $coldetails = get_collection($sharedcol);
+    if($coldetails)
+        {
+        $allsharedcols[$sharedcol] = i18n_get_translated($coldetails["name"]);
+        }
+    }
+    
 
 //echo "<pre>" . print_r($shares) . "</pre>";
 $expiredshares = 0;
@@ -104,12 +122,13 @@ $curparams = array(
 
 $url = generateurl($baseurl . "/pages/manage_external_shares.php",$curparams);
 
+
+//TODO  LIMIT DELETION to writeable collections
 $tabledata = array(
     "class" => "ShareTable",
     "headers"=>array(
-        "collection"=>array("name"=>$lang["collection"],"html"=>true,"sortable"=>true),
+        "collection"=>array("name"=>$lang["collectionid"],"html"=>true,"sortable"=>true),
         "resource"=>array("name"=>$lang["columnheader-resource_id"],"sortable"=>true),
-        //"user"=>array("name"=>$lang["user"],"sortable"=>true),
         "sharedas"=>array("name"=>$lang["share_usergroup"],"sortable"=>true),
         "email"=>array("name"=>$lang["email"],"sortable"=>true),
         "fullname"=>array("name"=>$lang["user_created_by"],"sortable"=>true),
@@ -163,6 +182,7 @@ for($n=0;$n<$sharecount;$n++)
         $tableshare["date"] = nicedate($shares[$n]["date"],true,true,true); 
         if($shares[$n]["expires"] < date("Y-m-d H:i:s",time()))
             {
+            $expiredshares++;
             $tableshare["alerticon"] = "fas fa-exclamation-triangle";
             }
 
@@ -186,7 +206,7 @@ for($n=0;$n<$sharecount;$n++)
                 // Edit an upload share
                 $editlink = generateurl($baseurl . "/pages/share_upload.php", 
                     array(
-                        "collection"    => $shares[$n]["collection"],
+                        "share_collection"    => $shares[$n]["collection"],
                         "uploadkey"     => $shares[$n]["access_key"],
                     ));
                 }
@@ -269,8 +289,44 @@ function delete_access_key(access_key, resource, collection)
     return true;
     }
 
+function purge_expired_shares()
+    {
+    var temp_form = document.createElement("form");
+    temp_form.setAttribute("id", "purgeform");
+    temp_form.setAttribute("method", "post");
+    temp_form.setAttribute("action", '<?php echo $url ?>');
+
+    var i = document.createElement("input");
+    i.setAttribute("type", "hidden");
+    i.setAttribute("name", "purge_expired");
+    i.setAttribute("value", "true");
+    temp_form.appendChild(i);
+
+    <?php
+    if($CSRF_enabled)
+        {
+        ?>
+        var csrf = document.createElement("input");
+        csrf.setAttribute("type", "hidden");
+        csrf.setAttribute("name", "<?php echo $CSRF_token_identifier; ?>");
+        csrf.setAttribute("value", "<?php echo generateCSRFToken($usersession, "shareform"); ?>");
+        temp_form.appendChild(csrf);
+        <?php
+        }?>
+
+    confirmationMessage = "<?php echo $lang['share_confirm_purge']; ?>";
+
+    if(confirm(confirmationMessage))
+        {
+        document.getElementById('share_list_container').appendChild(temp_form);
+        CentralSpacePost(document.getElementById('purgeform'),true);
+        }
+    }
+
+
 function clearsharefilter()
     {
+    jQuery('#share_collection').val('-1');
     jQuery('#share_group').val('-1');
     jQuery('#share_type').val('-1');
     jQuery('#share_user').val('');
@@ -283,6 +339,11 @@ function clearsharefilter()
 <div class='BasicsBox'>
     <h1><?php echo htmlspecialchars($pagetitle);render_help_link('user/manage_external_shares'); ?></h1>
     <?php
+
+    if(count($messages) > 0)
+        {
+        echo "<div class='PageInformal'>" . implode("<br/>", $messages) . "</div>";
+        }
     $introtext=text("introtext");
     if ($introtext!="")
         {
@@ -291,7 +352,7 @@ function clearsharefilter()
 
     if(checkperm('a') && $expiredshares > 0)
         {
-        echo "<p><a href='#' onclick='if(confirm(\"" . $lang["share_confirm_purge"] . "\")){update_share(true,NULL,\"purge_shares\");}'>" . LINK_CARET . $lang["shares_action_purge_complete"] . "</a></p>";
+        echo "<p><a href='#' onclick='purge_expired_shares();return false;'>" . LINK_CARET . $lang["share_purge_text"] . "</a></p>";
         }
 
     ?>
@@ -303,6 +364,7 @@ function clearsharefilter()
         ?>
         <div id="QuestionShareFilter">
             <?php
+            render_dropdown_question($lang["collection"], "share_collection", $allsharedcols, $share_collection, " class=\"stdwidth\"");
             render_dropdown_question($lang["property-user_group"], "share_group", $allsharedgroups, $share_group, " class=\"stdwidth\"");
             $sharetypes = array(
                     "-1"    => $lang["action-select"],

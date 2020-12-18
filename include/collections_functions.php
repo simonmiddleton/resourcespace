@@ -2693,12 +2693,16 @@ function get_collection_external_access($collection)
 function delete_collection_access_key($collection,$access_key)
 	{
 	# Get details for log
-	$users = sql_value("select group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value from external_access_keys where collection='" . escape_check($collection) . "' and access_key = '" . escape_check($access_key) . "' group by access_key ", "");
+	$users = sql_value("SELECT group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value FROM external_access_keys WHERE collection='" . escape_check($collection) . "' AND access_key = '" . escape_check($access_key) . "' group by access_key ", "");
 	# Deletes the given access key.
-	sql_query("delete from external_access_keys where access_key='" . escape_check($access_key) . "' and collection='" . escape_check($collection) . "'");
+    $sql = "DELETE FROM external_access_keys WHERE access_key='" . escape_check($access_key) . "'";
+    if($collection != 0)
+        {
+        $sql .= " AND collection='" . escape_check($collection) . "'";
+        }
+    sql_query($sql);
 	# log changes
 	collection_log($collection,"t","",$users);
-
 	}
 	
 /**
@@ -2938,7 +2942,7 @@ function is_collection_approved($collection)
  */
 function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="", $shareopts=array())
 	{
-    global $userref,$usergroup, $scramble_key;
+    global $usergroup, $scramble_key, $lang;
     
     $extraopts = array("collection", "upload");
     foreach($extraopts as $extraopt)
@@ -2988,7 +2992,24 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
                 WHERE access_key='$key'" . 
                       (isset($collection) ? " AND collection='" . (int)$collection . "'": "")
                 );
-	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $shareopts));
+    hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $shareopts));
+    if(isset($collection))
+        {
+        $lognotes = array("access_key" => $key);
+        foreach($setvals as $column => $value)
+            {
+            if($column=="password_hash")
+                {
+                $lognotes[] = trim($value) != "" ? "password=TRUE" : "";
+                }
+            else
+                {
+                $lognotes[] = $column . "=" .  $value;
+                }
+            }
+        collection_log($collection,LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE,NULL,"(" . implode(",",$lognotes) . ")");
+        }    
+       
 	return true;
 	}
 	
@@ -3425,7 +3446,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     debug(" BANG HERE");
     if(can_share_upload_link($collection_data))
         {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("collection"=>$collection_data['ref']));
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("share_collection"=>$collection_data['ref']));
         $options[$o]['value']='share_upload';
 		$options[$o]['label']=$lang['action-share-upload-link'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -5452,7 +5473,19 @@ function create_upload_link($collection,$shareoptions)
                 }
             send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
             }
-        collection_log($collection,LOG_CODE_COLLECTION_SHARED_UPLOAD,NULL,(isset($shareoptions["emails"][$n]) ? $shareoptions["emails"][$n] : ""));
+        $lognotes = array();
+        foreach($setcolumns as $column => $value)
+            {
+            if($column=="password_hash")
+                {
+                $lognotes[] = trim($value) != "" ? "password=TRUE" : "";
+                }
+            else
+                {
+                $lognotes[] = $column . "=" .  $value;
+                }
+            }
+        collection_log($collection,LOG_CODE_COLLECTION_SHARED_UPLOAD,NULL,(isset($shareoptions["emails"][$n]) ? $shareoptions["emails"][$n] : "") . "(" . implode(",",$lognotes) . ")");
         }
 
     return $newshares;    
@@ -5592,4 +5625,77 @@ function external_upload_notify($collection, $k, $tempcollection)
         global $userref;
         message_add($user,$notificationmessage,$url,0);
         }
+    }
+
+
+/**
+ * Purge all expired shares/**
+ * @param  array $filteropts    Array of options to filter shares purged
+ *                              "share_group"       - (int) Usergroup ref 'shared as'
+ *                              "share_user"        - (int) user ID of share creator
+ *                              "share_type"        - (int) 0=view, 1=upload
+ *                              "share_collection"  - (int) Collection ID
+ * @return void
+ */
+function purge_expired_shares($filteropts)
+    {
+    global $userref;
+
+    $validfilterops = array(
+        "share_group",
+        "share_user",
+        "share_type",
+        "share_collection",
+    );
+    foreach($validfilterops as $validfilterop)
+        {
+        if(isset($filteropts[$validfilterop]))
+            {
+            $$validfilterop = $filteropts[$validfilterop];
+            }
+        else
+            {
+            $$validfilterop = NULL;
+            }
+        }
+   
+    $conditions = array();
+    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
+        )
+        {
+        $conditions[] = "user ='" . (int)$share_user . "'";
+        }
+    elseif(!checkperm('a'))
+        {
+        $conditions[] = "user ='" . (int)$userref . "'";
+        }
+
+    if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
+        {
+        $conditions[] = "usergroup ='" . (int)$share_group . "'";
+        }
+    if($share_type == 0)
+        {
+        $conditions[] = "(upload=0 OR upload IS NULL)";
+        }
+    elseif($share_type == 1)
+        {
+        $conditions[] = "upload=1";
+        }
+    if((int)$share_collection > 0)
+        {
+        $conditions[] = "collection ='" . (int)$share_collection . "'";
+        }
+
+    //TODO  LIMIT to collecions they can see
+    $conditional_sql=" WHERE expires < now()";
+    if (count($conditions)>0)
+        {
+        $conditional_sql .= " AND " . implode(" AND ",$conditions);
+        }
+
+    $purge_query = "DELETE FROM external_access_keys " . $conditional_sql;
+    sql_query($purge_query);
+    $deleted = sql_affected_rows();
+    return $deleted;
     }
