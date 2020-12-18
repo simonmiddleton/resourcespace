@@ -1,5 +1,6 @@
 <?php
 include_once dirname(__DIR__) . '/include/museumplus_functions.php';
+include_once dirname(__DIR__) . '/include/museumplus_resource_functions.php';
 include_once dirname(__DIR__) . '/include/museumplus_search_functions.php';
 
 ############################################################
