@@ -69,7 +69,7 @@ if($ajax && 'get_sheetstyle_fields' == getval('action', ''))
         {
         $response[] = array(
             'ref'   => $field_data['ref'],
-            'title' => $field_data['title'],
+            'title' => i18n_get_translated($field_data['title']),
         );
         }
 
