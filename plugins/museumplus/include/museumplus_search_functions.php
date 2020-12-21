@@ -5,13 +5,20 @@
 * 
 * @param string $fp   Field path used to identify the "linked" modules. This is essentially either the technical ID field (ie. __id)
 *                     or another virtual field (e.g ObjObjectNumberVrt)
-* @param array  $vals MuseumPlus modules' fields to return back
-* @param array  $sfs  Module record IDs to search for in MuseumPlus
+* @param array  $vals Module record IDs to search for in MuseumPlus
+* @param array  $sfs  MuseumPlus modules' fields to return back
 * 
 * @return DOMDocument Returns XML document with the search criteria
 */
 function mplus_xml_search_by_fieldpath(string $fp, array $vals, array $sfs)
     {
+    mplus_log_event('Called mplus_xml_search_by_fieldpath()',
+        array(
+            'expert_search_fieldPath' => $fp,
+            'resource_mpid' => $vals,
+        ),
+        'debug');
+
     $xml = new DOMDocument('1.0', 'UTF-8');
     $search = $xml->createElement('search');
     $search->setAttribute('limit', count($vals));
