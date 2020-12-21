@@ -416,6 +416,7 @@ function mplus_get_cfg_by_module_name(string $n)
 */
 function mplus_validate_id(array $ramc, bool $use_technical_id)
     {
+    // print_r($ramc);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
     // 
     global $lang, $museumplus_api_batch_chunk_size;
     // print_r($var);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
@@ -437,14 +438,43 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
 
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
+        $resources_mpdata = mplus_resource_get_data(array_keys($mdata['resources']));
 
-        //DONE - figure out which resources need to be validated (compare with the table column "museumplus_data_md5").
-        $resources_to_validate = mplus_compute_resources_to_validate(array_keys($mdata['resources']), $computed_md5s);
-        print_r($computed_md5s);
-        print_r($resources_to_validate);
-        // TODO; the ones already valid (ie table column "museumplus_technical_id" is not null) are put straight in the valid_ramc
-        // array and get the museumplus_technical_id value in the "__id" key
-        die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+        $resources_to_validate = [];
+        foreach($resources_mpdata as $r_mpdata)
+            {
+            /*
+            md5_hash | __id  | state
+            ========================
+            null     | null  | to validate
+            value    | null  | validation failed previously, skip now. Users need to relook at the modulename-mpid combo or an admin needs to determine what happened
+            value    | value | already valid, add technical id (__id) to valid_ramc for further processing (e.g syncing data)
+            != value | value | to validate. Module name and/or MpID changed so we need to revalidate (and clear the current __id) the association
+            */
+            $r_ref = $r_mpdata['ref'];
+            $r_technical_id = trim($r_mpdata['museumplus_technical_id']);
+            $r_md5 = trim($r_mpdata['museumplus_data_md5']);
+
+            // The computed MD5 helps us figure out if either the module name or MpID have changed since our last attempt. 
+            // A different computed MD5 should always trigger validation of the resource-module association
+            $r_computed_md5 = (isset($computed_md5s[$r_ref]) ? trim($computed_md5s[$r_ref]) : '');
+
+            // Validation failed previously for this resource-module association (one validation attempt has been made) and
+            // no changes have been recorded to the "module name - MpID" combo
+            if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id === '')
+                {
+                continue;
+                }
+            // No changes have been recorded to the "module name - MpID" combo and this resource-module association is valid
+            // and we have a technical (ie. "__id") ID to use for further processing (e.g syncing data from M+)
+            else if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
+                {
+                $valid_ramc[$r_ref] = array_merge($ramc[$r_ref], [MPLUS_FIELD_ID => $r_technical_id]);
+                continue;
+                }
+
+            $resources_to_validate[] = $r_ref;
+            }
 
         foreach(array_chunk($resources_to_validate, $museumplus_api_batch_chunk_size, true) as $resources_chunk)
             {
@@ -493,6 +523,8 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
 
 
             print_r($module_node);die(PHP_EOL . "You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+            // TODO: save computed_md5s (at this point we know data has changed and we've revalidated)
+            // TODO: save technical ID
             }
         }
 
@@ -502,7 +534,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
 
     if(!empty($errors))
         {
-        $valid_ramc['errors'] = $errors;
+        $valid_ramc['errors'] = array_unique($errors);
         }
 
     return $valid_ramc;
@@ -559,37 +591,6 @@ function mplus_compute_data_md5(array $resources_data, string $module_name)
         $md5s[$r_ref] = md5("{$r_ref}_comb({$module_name}-{$mpid})");
         }
     return $md5s;
-    }
-
-
-/**
-* Helper function used to determine from a batch of resources which ones need to validate the "module name - MpID" combination.
-* 
-* @param array $refs    List of resource IDs
-* @param array $ref_md5 List of computed resource data MD5s. {@see mplus_compute_data_md5()}
-* 
-* @return array Returns a list of resources that need to be validated. The returned array has the resource IDs in the key.
-*/
-function mplus_compute_resources_to_validate(array $refs, array $ref_md5)
-    {
-    $refs_to_validate = [];
-    $db_md5s = mplus_resource_get_data_md5($refs);
-
-    foreach($refs as $r_ref)
-        {
-        $db_val = (isset($db_md5s[$r_ref]) ? trim($db_md5s[$r_ref]) : 'force_db');
-        $computed_val = (isset($ref_md5[$r_ref]) ? trim($ref_md5[$r_ref]) : 'force_computed');
-
-        // If MD5 hashes match, no need to validate this resource again. Nothing has changed in the combination "module name - MpID"
-        if($db_val !== '' && $db_val === $computed_val)
-            {
-            continue;
-            }
-
-        $refs_to_validate[$r_ref] = null;
-        }
-
-    return $refs_to_validate;
     }
 
 
