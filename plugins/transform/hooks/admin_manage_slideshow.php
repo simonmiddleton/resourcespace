@@ -69,7 +69,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
               action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
               onsubmit="return CentralSpacePost(this);">
             <?php generateFormToken("RecropSlideshowImage_{$slideshow_image}"); ?>
-            <input name="ref" type="text" value="<?php echo $slideshow_file_info['resource_ref']; ?>">
+            <input name="ref" type="hidden" value="<?php echo $slideshow_file_info['resource_ref']; ?>">
             <input name="manage_slideshow_action" type="hidden" value="replace">
             <input name="manage_slideshow_id" type="hidden" value="<?php echo $slideshow_image; ?>">
             <input name="return_to_url" type="hidden" value="<?php echo $baseurl; ?>/pages/admin/admin_manage_slideshow.php">

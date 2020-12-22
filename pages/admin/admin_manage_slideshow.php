@@ -200,6 +200,7 @@ button[disabled]{
             <tbody>
                 <tr class="ListviewTitleStyle">
                     <td><?php echo $lang["preview"]; ?></td>
+                    <td><?php echo $lang["resourceid"]; ?></td>
                     <td><?php echo $lang["home_page"]; ?></td>
                     <td><?php echo $lang["theme"]; ?></td>
                     <td><?php echo $lang["login_word"]; ?></td>
@@ -257,6 +258,9 @@ button[disabled]{
                         <?php
                         }
                     ?>
+                    </td>
+                    <td>
+                        <?php echo $slideshow_file_info['resource_ref']; ?>
                     </td>
                     <td>
                         <input type="checkbox"
