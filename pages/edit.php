@@ -510,7 +510,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             foreach($fields as $field)
                                 {
                                 $fielderror = false;
-                                if($field['required'] == 1)
+                                if($field['required'] == 1 && $field['hide_when_uploading'] != 1)
                                     {
                                     $displaycondition = check_display_condition(0, $field, $fields, false); 
                                     if($displaycondition)
