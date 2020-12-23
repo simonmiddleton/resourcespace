@@ -476,11 +476,12 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         // to be specifically selected. This simplifies the logic when it comes to determine if we found module items for
         // the searched value
         $select_fields = array($field_path);
-        $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
 
+        $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
         if($run_search_using_technical_id)
             {
             $resources_to_validate = array_filter($resources_to_validate, 'is_numeric');
+            mplus_resource_mark_validation_failed(array_diff_key($computed_md5s, $resources_to_validate));
             }
 
         foreach(array_chunk($resources_to_validate, $museumplus_api_batch_chunk_size, true) as $resources_chunk)
@@ -513,8 +514,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                     // Validating using the technical ID (ie "__id") fieldPath failed. Update MD5 hashes and move on to next chunk.
                     else
                         {
-                        // this chunk failed M+ validation, record the new md5s and move on to next chunk
-                        echo "Last attempt to validate with __id failed! In file " . __FILE__ . " at line " . __LINE__ . PHP_EOL;
+                        mplus_resource_mark_validation_failed(array_intersect_key($computed_md5s, $resources_chunk));
                         }
 
                     continue;
@@ -534,7 +534,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                         'error');
                     $errors[] = $lang['museumplus_id_returns_multiple_records'];
 
-                    // TODO: record the new md5s and move on to the next chunk
+                    mplus_resource_mark_validation_failed(array_intersect_key($computed_md5s, $resources_chunk));
                     continue;
                     }
                 }
