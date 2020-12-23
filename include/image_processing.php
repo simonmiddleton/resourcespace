@@ -968,7 +968,7 @@ function extract_exif_comment($ref,$extension="")
         # exif_read_data()
         #       
         
-        if (function_exists("exif_read_data") && !in_array($extension,$exiftool_no_process) && in_array($extension,array('jpg','jpeg','tif','tiff')))
+        if (function_exists("exif_read_data") && !in_array($extension,$exiftool_no_process))
             {
             $data=exif_read_data($image);
             }
