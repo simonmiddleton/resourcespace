@@ -473,8 +473,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         // print_r($mdata);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
         // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs
-        // to be specifically selected. This simplifies the logic when it comes to determine if we found module items for
-        // the searched value
+        // to be specifically selected.
         $select_fields = array($field_path);
 
         $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
@@ -529,7 +528,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                         array(
                             'module_name' => $module_name,
                             'resources_chunk' => $resources_chunk,
-                            'searched_by_technical_id' => ($field_path === MPLUS_FIELD_ID),
+                            'searched_by_technical_id' => $run_search_using_technical_id,
                         ),
                         'error');
                     $errors[] = $lang['museumplus_id_returns_multiple_records'];
@@ -540,9 +539,62 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                 }
 
             // TODO: process and move to valid_ramc any resource that got a module item back
-            print_r($module_node);die(PHP_EOL . "You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-            // TODO: save computed_md5s (at this point we know data has changed and we've revalidated)
-            // TODO: save technical ID
+            $found_valid_associations = [];
+            if($run_search_using_technical_id)
+                {
+                foreach($mplus_search_xml->getElementsByTagName('systemField') as $system_field)
+                    {
+                    if($system_field->getAttribute('name') !== MPLUS_FIELD_ID)
+                        {
+                        continue;
+                        }
+
+                    $technical_id_value = $system_field->nodeValue;
+
+                    foreach($resources_to_validate as $r_ref => $r_mpid)
+                        {
+                        if($r_mpid != $technical_id_value)
+                            {
+                            continue;
+                            }
+
+                        $found_valid_associations[$r_ref] = $technical_id_value;
+                        $valid_ramc[$r_ref] = $ramc[$r_ref] + [MPLUS_FIELD_ID => $technical_id_value];
+                        }
+                    }
+                }
+            else
+                {
+                foreach($mplus_search_xml->getElementsByTagName('virtualField') as $virtual_field)
+                    {
+                    if($virtual_field->getAttribute('name') !== $field_path)
+                        {
+                        continue;
+                        }
+
+                    $vrt_field_value = $virtual_field->nodeValue;
+                    $technical_id_value = $virtual_field->parentNode->getAttribute('id');
+
+                    if($technical_id_value === '')
+                        {
+                        continue;
+                        }
+
+                    foreach($resources_to_validate as $r_ref => $r_mpid)
+                        {
+                        if($r_mpid != $vrt_field_value)
+                            {
+                            continue;
+                            }
+
+                        $found_valid_associations[$r_ref] = $technical_id_value;
+                        $valid_ramc[$r_ref] = $ramc[$r_ref] + [MPLUS_FIELD_ID => $technical_id_value];
+                        }
+                    }
+                }
+
+            print_r($found_valid_associations);die(PHP_EOL . "You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+            TODO: save computed_md5s (at this point we know data has changed and we've revalidated) and the valid associated technical ID
             }
         }
 
