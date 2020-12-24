@@ -2021,7 +2021,7 @@ function allow_multi_edit($collection,$collectionid = 0)
 */
 function get_featured_collection_resources(array $c, array $ctx)
     {
-    if(!is_int((int) $c["ref"]))
+    if(!isset($c["ref"]) || !is_int((int) $c["ref"]))
         {
         return array();
         }
