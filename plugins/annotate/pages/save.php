@@ -33,7 +33,10 @@ if ($oldtext!="")
 	remove_keyword_mappings($ref,i18n_get_indexable($oldtext),-1,false,false,"annotation_ref",$id);
     }
 
-sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
+if (ctype_digit($id))
+    {
+    sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
+    }
 
 if (substr($text,0,strlen($username))!=$username)
     {
