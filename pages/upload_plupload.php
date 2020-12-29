@@ -1270,6 +1270,7 @@ var pluploadconfig = {
                                     jQuery.post("<?php echo $baseurl_short; ?>pages/upload_plupload.php",
                                             {
                                             uploaded_refs: resource_keys,
+                                            queue_index: 1,
                                             <?php echo generateAjaxToken("plupload-UploadComplete"); ?>
                                             }
                                         );
