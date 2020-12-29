@@ -9,6 +9,8 @@ var button_toggle_off="";
 var error_saving = "";
 var error_deleting = "";
 
+var areasurrogate = 0;
+
 function isInt(value) { 
     return !isNaN(parseInt(value)) && (parseFloat(value) == parseInt(value)); 
 }
@@ -438,11 +440,13 @@ function isInt(value) {
 
         this.editable = (note.editable && image.editable);
 
+        areasurrogate += 1;
+
         // Add the area
-        this.area = $('<div class="image-annotate-area' + (this.editable ? ' image-annotate-area-editable' : '') + '"><div>');
+        this.area = $('<div id="areasurrogate_' + areasurrogate + '" class="image-annotate-area' + (this.editable ? ' image-annotate-area-editable' : '') + '"><div>');
         image.canvas.children('.image-annotate-view').prepend(this.area);
 		
-        image.canvas.children('.image-annotate-view').prepend(this.area);
+        // image.canvas.children('.image-annotate-view').prepend(this.area);
         
         // Add the note
         this.form = $('<div class="image-annotate-note" style="width:auto">' + note.text + '</div>');
@@ -450,26 +454,35 @@ function isInt(value) {
         image.canvas.children('.image-annotate-view').append(this.form);
         this.form.children('span.actions').hide();
 
-		
-
         // Set the position and size of the note
         this.setPosition();
 
         // Add the behavior: hide/display the note when hovering the area
         var annotation = this;
 
-		// fix z-index when multiple notes are visible
+		// Fix z-index when necessary where multiple notes are visible
 		this.area.hover(function() {
             annotation.show(); 
-            toTop(annotation.area);
-            toTop(annotation.form);
+
+            // Send this element to the top if it doesn't fully block another area element
+            if (!isBlocker(annotation.area)) {
+                toTop(annotation.area);
+                toTop(annotation.form);
+            };
+
         }, function() {
 			annotation.hide(); 
         });
+
         this.form.hover(function() {
             annotation.show(); 
-            toTop(annotation.area);
-            toTop(annotation.form);
+
+            // Send this element to the top if it doesn't fully block another area element
+            if (!isBlocker(annotation.area)) {
+                toTop(annotation.area);
+                toTop(annotation.form);
+            };
+
         }, function() {
 			annotation.hide();
         });
@@ -486,6 +499,28 @@ function isInt(value) {
             });
         }
     };
+
+    // Is the selected area element fully blocking any other area element
+    function isBlocker(element){
+        var selected_id = $(element)[0].id;
+        var selected_top = $(element)[0].offsetTop;
+        var selected_height = $(element)[0].offsetHeight;
+        var selected_left = $(element)[0].offsetLeft;
+        var selected_width = $(element)[0].offsetWidth;
+	    var fullyBlockedFound = false;   
+		$(".image-annotate-area").each(function() {
+            if ($(this)[0].id != selected_id) {
+                if (   selected_top <= $(this)[0].offsetTop 
+                    && selected_height >= $(this)[0].offsetHeight
+                    && selected_left <= $(this)[0].offsetLeft
+                    && selected_width >= $(this)[0].offsetWidth ) {
+                    fullyBlockedFound = true;
+                    return false; // No need to check any more areas; break out of .each loop
+                }
+            }
+        });
+        return fullyBlockedFound;
+	};
 
     function toTop(element){
 		var index_highest = 50;   
