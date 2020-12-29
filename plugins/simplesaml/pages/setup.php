@@ -95,7 +95,7 @@ include '../../../include/header.php';
 else
     {
     require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-    $config = SimpleSAML_Configuration::getInstance();
+    $config = \SimpleSAML\Configuration::getInstance();
     $version = $config->getVersion();
     if($version != $simplesaml_version)
         {
