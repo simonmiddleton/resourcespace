@@ -5,7 +5,7 @@
 * 
 * @param string $fp   Field path used to identify the "linked" modules. This is essentially either the technical ID field (ie. __id)
 *                     or another virtual field (e.g ObjObjectNumberVrt)
-* @param array  $vals Module record IDs to search for in MuseumPlus
+* @param array  $vals Module record IDs to search for in MuseumPlus. Hash table where key is resource ID and value is the MpID
 * @param array  $sfs  MuseumPlus modules' fields to return back
 * 
 * @return DOMDocument Returns XML document with the search criteria

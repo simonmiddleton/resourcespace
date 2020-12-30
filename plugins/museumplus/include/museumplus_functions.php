@@ -416,6 +416,7 @@ function mplus_get_cfg_by_module_name(string $n)
 */
 function mplus_validate_id(array $ramc, bool $use_technical_id)
     {
+    debug(sprintf("mplus_validate_id(): mplus_validate_id(use_technical_id = %s)", json_encode($use_technical_id)));
     mplus_log_event('Called mplus_validate_id()', ['use_technical_id' => $use_technical_id], 'debug');
 
     global $lang, $museumplus_api_batch_chunk_size;
@@ -424,7 +425,6 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
     $valid_ramc = [];
     $ramc_to_retry = [];
     $errors = [];
-    // $error = $lang['museumplus_error_invalid_id'];
 
     $modules = mplus_flip_struct_by_module($ramc);
     // print_r($modules);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
@@ -433,6 +433,8 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         // mplus_log_event('mplus_validate_id: ', ['var' => $var], 'debug');
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
         $resources_mpdata = mplus_resource_get_data(array_keys($mdata['resources']));
+        debug("mplus_validate_id(): module_name = {$module_name}");
+        debug("mplus_validate_id(): computed_md5s = " . json_encode($computed_md5s));
 
         $resources_to_validate = [];
         foreach($resources_mpdata as $r_mpdata)
@@ -457,6 +459,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
             // no changes have been recorded to the "module name - MpID" combo
             if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id === '')
                 {
+                unset($computed_md5s[$r_ref]);
                 continue;
                 }
             // No changes have been recorded to the "module name - MpID" combo and this resource-module association is valid
@@ -464,11 +467,13 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
             else if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
                 {
                 $valid_ramc[$r_ref] = $ramc[$r_ref] + [MPLUS_FIELD_ID => $r_technical_id];
+                unset($computed_md5s[$r_ref]);
                 continue;
                 }
 
             $resources_to_validate[$r_ref] = $mdata['resources'][$r_ref];
             }
+        debug("mplus_validate_id(): resources_to_validate = " . json_encode($resources_to_validate));
 
         // print_r($mdata);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
@@ -477,16 +482,22 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
         $select_fields = array($field_path);
 
         $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
+        debug("mplus_validate_id(): run_search_using_technical_id = " . json_encode($run_search_using_technical_id));
         if($run_search_using_technical_id)
             {
             $resources_to_validate = array_filter($resources_to_validate, 'is_numeric');
-            mplus_resource_mark_validation_failed(array_diff_key($computed_md5s, $resources_to_validate));
+            debug("mplus_validate_id(): Filtered resources by numeric MpID");
+            $non_numeric_resources = array_diff_key($computed_md5s, $resources_to_validate);
+            debug("mplus_validate_id(): Resources that that don't have a numeric MpID (to be marked invalid) = " . json_encode($non_numeric_resources));
+
+            mplus_resource_mark_validation_failed($non_numeric_resources);
             }
 
         foreach(array_chunk($resources_to_validate, $museumplus_api_batch_chunk_size, true) as $resources_chunk)
             {
-            $search_xml = mplus_xml_search_by_fieldpath($field_path, $resources_chunk, $select_fields);
+            debug("mplus_validate_id(): resources_chunk = " . json_encode($resources_chunk));
 
+            $search_xml = mplus_xml_search_by_fieldpath($field_path, $resources_chunk, $select_fields);
             $mplus_search = mplus_search($module_name, $search_xml);
             if(empty($mplus_search))
                 {
@@ -494,7 +505,6 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                 // to validate using the technical ID (if this validation used a virtual one)
                 continue;
                 }
-
             $mplus_search_xml = mplus_get_response_xml($mplus_search);
 
             $module_node = $mplus_search_xml->getElementsByTagName("module")->item(0);
@@ -514,6 +524,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                     else
                         {
                         mplus_resource_mark_validation_failed(array_intersect_key($computed_md5s, $resources_chunk));
+                        $errors[] = $lang['museumplus_error_invalid_association'];
                         }
 
                     continue;
@@ -538,7 +549,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                     }
                 }
 
-            // TODO: process and move to valid_ramc any resource that got a module item back
+            // Process and move to valid_ramc any resource that got a module item back using its associated MpID
             $found_valid_associations = [];
             if($run_search_using_technical_id)
                 {
@@ -593,8 +604,27 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                     }
                 }
 
-            print_r($found_valid_associations);die(PHP_EOL . "You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-            TODO: save computed_md5s (at this point we know data has changed and we've revalidated) and the valid associated technical ID
+            // Save computed_md5s (at this point we know data has changed and we've revalidated) and the valid associated technical ID
+            mplus_resource_update_association($found_valid_associations, $computed_md5s);
+
+            // Handle remaining invalid module associations
+            $invalid_associations = array_diff_key($resources_chunk, $found_valid_associations);
+            if(!empty($invalid_associations))
+                {
+                debug("mplus_validate_id(): invalid_associations = " . json_encode($invalid_associations));
+
+                // First attempt failed, push these ramcs to be validated using the technical ID instead
+                if(!$run_search_using_technical_id)
+                    {
+                    $ramc_to_retry += array_intersect_key($ramc, $invalid_associations);
+                    }
+                // Validating using the technical ID (ie "__id") fieldPath failed. Update MD5 hashes and move on to next chunk.
+                else
+                    {
+                    mplus_resource_mark_validation_failed(array_intersect_key($computed_md5s, $invalid_associations));
+                    $errors[] = $lang['museumplus_error_invalid_association'];
+                    }
+                }
             }
         }
 
@@ -685,7 +715,7 @@ function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info'
     // Information that should always be logged
     $ctx['user'] = array($userref => $username);
 
-    // JSON encode context. If it fails attempt to log it in the debug log.
+    // JSON encode the context. If it fails, attempt to log it in the debug log.
     $json_encoded_ctx = json_encode($ctx);
     if(json_last_error() !== JSON_ERROR_NONE)
         {

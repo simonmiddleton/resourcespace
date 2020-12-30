@@ -58,6 +58,6 @@ $lang['museumplus_error_script_failed'] = "The MuseumPlus script failed to run b
 $lang['museumplus_php_utility_not_found'] = '$php_path configuration option MUST be set in order for cron functionality to successfully run!';
 $lang["museumplus_error_not_deleted_module_conf"] = "Unable to delete the requested module configuration.";
 $lang["museumplus_error_unknown_type_saved_config"] = "The 'museumplus_modules_saved_config' is of an unknwon type!";
-$lang["museumplus_error_invalid_id"] = "Invalid module record ID. Please make sure that either the correct Module or Record ID have been input!";
+$lang["museumplus_error_invalid_association"] = "Invalid module(s) association. Please make sure that for each resource, either the correct Module or Record ID have been input!";
 $lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
 
