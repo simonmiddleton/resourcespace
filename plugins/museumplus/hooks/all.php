@@ -163,15 +163,28 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
     global $lang;
 
-    // STEP 1: validate the record ID for the linked module
+    // STEP 1: validate the MpID for the associated module
     $resources_with_valid_ids = mplus_validate_id($resources, false);
-    // TODO; update error handling once mplus_validate_id() is done.
-    // Note: most errors should not stop the process as mplus_validate_id() is supposed to return resources that can proceed 
-    // to the next step (ie we have a technical ID for it and the data hasn't changed)
+
+    if(isset($resources_with_valid_ids['errors']))
+        {
+        // $errors = array_merge($errors, $resources_with_valid_ids['errors']);
+        $validation_errors = $resources_with_valid_ids['errors'];
+        unset($resources_with_valid_ids['errors']);
+        }
+
+    if(empty($resources_with_valid_ids))
+        {
+        return $errors;
+        }
+
+    // STEP 2: has the link been removed or updated (todo: determine change in data of interest)?
+    // - If the M+ ID is being removed (ie unlinking the resource from the Module record), ResourceSpace will clear all 
+    // the M+ mapped data fields and M+ notified resource has been unlinked.
+    // Note: If data changes (determine using md5), then make sure to clear all mapped fields of that module_config first.
 
 
-
-
+    // STEP 3: Sync data from MuseumPlus (if resource has been re-associated with a different module record item)
 
 
 

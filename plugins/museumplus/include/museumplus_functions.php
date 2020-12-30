@@ -411,7 +411,7 @@ function mplus_get_cfg_by_module_name(string $n)
 * @return array Returns the valid resources that have a valid combination of "module name - MpID (virtual or technical)".
 *               The returned resource associated module configuration will get mutated with:
 *               - an additional "__id" key which will always hold the technical ID of the module item "linked" to that
-*                 resource - always use MPLUS_FIELD_ID constant to find it;
+*                 resource - always use MPLUS_FIELD_ID constant to find this key;
 *               - an optional "errors" key to hold any errors the end user should be aware of;
 */
 function mplus_validate_id(array $ramc, bool $use_technical_id)
@@ -420,17 +420,14 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
     mplus_log_event('Called mplus_validate_id()', ['use_technical_id' => $use_technical_id], 'debug');
 
     global $lang, $museumplus_api_batch_chunk_size;
-    // print_r($var);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
     $valid_ramc = [];
     $ramc_to_retry = [];
     $errors = [];
 
     $modules = mplus_flip_struct_by_module($ramc);
-    // print_r($modules);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
     foreach($modules as $module_name => $mdata)
         {
-        // mplus_log_event('mplus_validate_id: ', ['var' => $var], 'debug');
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
         $resources_mpdata = mplus_resource_get_data(array_keys($mdata['resources']));
         debug("mplus_validate_id(): module_name = {$module_name}");
@@ -475,10 +472,8 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
             }
         debug("mplus_validate_id(): resources_to_validate = " . json_encode($resources_to_validate));
 
-        // print_r($mdata);die("You died in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
-        // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs
-        // to be specifically selected.
+        // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs to be specifically selected.
         $select_fields = array($field_path);
 
         $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
