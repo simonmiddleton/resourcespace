@@ -104,7 +104,7 @@ function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
 * IMPORTANT: aftersaveresourcedata hook is called from both save_resource_data() and save_resource_data_multi()!
 * 
 * @param int|array $R Generic type for resource ID(s). It will be a resource ref when hook is called from 
-*                     save_resource_data() -and- a list of resource IDs when called from save_resource_data_multi().
+*                     save_resource_data() -or- a list of resource IDs when called from save_resource_data_multi().
 * @param array $added_nodes   List of nodes added. When called from save_resource_data_multi() it is a list of all added nodes.
 * @param array $removed_nodes List of nodes removed. When called from save_resource_data_multi() it is a list of all removed nodes.
 * 
@@ -121,7 +121,7 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
                 'removed_nodes' => $removed_nodes,
             ),
         ),
-        'trace'
+        'debug'
     );
 
     if(!(is_numeric($R) || is_array($R)))
@@ -155,16 +155,14 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
     );
 
     $errors = array();
-    if(isset($GLOBALS['hook_return_value']) && is_array($GLOBALS['hook_return_value']) && !empty($GLOBALS['hook_return_value']))
-        {
-        // @see hook() for an explanation about the hook_return_value global
-        $errors = $GLOBALS['hook_return_value'];
-        }
-
     global $lang;
 
-    // STEP 1: validate the MpID for the associated module
-    $resources_with_valid_ids = mplus_validate_id($resources, false);
+
+    // STEP 1: Clear (if configured) metadata fields mapped to MuseumPlus fields
+    mplus_resource_clear_metadata(array_keys($resources));
+
+    // STEP 2: validate the MpID for the associated module
+    $resources_with_valid_ids = mplus_validate_association($resources, false);
 
     if(isset($resources_with_valid_ids['errors']))
         {
@@ -177,12 +175,6 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         {
         return $errors;
         }
-
-    // STEP 2: has the link been removed or updated (todo: determine change in data of interest)?
-    // - If the M+ ID is being removed (ie unlinking the resource from the Module record), ResourceSpace will clear all 
-    // the M+ mapped data fields and M+ notified resource has been unlinked.
-    // Note: If data changes (determine using md5), then make sure to clear all mapped fields of that module_config first.
-
 
     // STEP 3: Sync data from MuseumPlus (if resource has been re-associated with a different module record item)
 

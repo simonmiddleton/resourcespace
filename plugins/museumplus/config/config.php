@@ -21,7 +21,7 @@ $museumplus_api_user = '';
 $museumplus_api_pass = '';
 // Batch chunk size for Mplus API requests (e.g for expert searches).
 // IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is integer
-$museumplus_api_batch_chunk_size = (isset($GLOBALS['museumplus_api_batch_chunk_size']) && $GLOBALS['museumplus_api_batch_chunk_size'] > 0 ? $GLOBALS['museumplus_api_batch_chunk_size'] : 50);
+$museumplus_api_batch_chunk_size = (isset($GLOBALS['museumplus_api_batch_chunk_size']) && is_int($GLOBALS['museumplus_api_batch_chunk_size']) && $GLOBALS['museumplus_api_batch_chunk_size'] > 0 ? $GLOBALS['museumplus_api_batch_chunk_size'] : 50);
 
 
 ############################################################
@@ -32,7 +32,7 @@ $museumplus_module_name_field = 0;
 // have a special syntax format: <module name>:<technical ID> e.g. "Object:1234".
 $museumplus_secondary_links_field = 0;
 // Should "unlinking" a resource from a module record clear the data from the mapped fields in RS? If you need to change it, add it to config.php.
-$museumplus_clear_field_mappings_on_unlink = (isset($GLOBALS['museumplus_clear_field_mappings_on_unlink']) && is_bool($GLOBALS['museumplus_clear_field_mappings_on_unlink']) ? $GLOBALS['museumplus_clear_field_mappings_on_unlink'] : false);
+$museumplus_clear_field_mappings_on_change = (isset($GLOBALS['museumplus_clear_field_mappings_on_change']) && is_bool($GLOBALS['museumplus_clear_field_mappings_on_change']) ? $GLOBALS['museumplus_clear_field_mappings_on_change'] : false);
 
 
 ############################################################

@@ -341,17 +341,16 @@ function mplus_get_associated_module_conf(array $resource_refs, bool $with_value
                 $assoc_rtf_data[$resource_field_data['ref']] = $resource_field_data['value'];
                 }
 
-            // Get MuseumPlus identifier (MpID). The information that really "links" to a MuseumPlus module record
-            if(!isset($assoc_rtf_data[$rs_uid_field]))
-                {
-                unset($resources_with_assoc_module_config[$r_ref]);
-                continue;
-                }
-
             // All mapped fields need to have a value. Default to empty string.
             $rs_no_val_fields = array_diff($rs_fields, array_keys($assoc_rtf_data));
             foreach($rs_no_val_fields as $no_val_field)
                 {
+                if($no_val_field == $rs_uid_field)
+                    {
+                    $assoc_rtf_data = [$rs_uid_field => ''] + $assoc_rtf_data;
+                    continue;
+                    }
+
                 $assoc_rtf_data[$no_val_field] = '';
                 }
 
@@ -414,10 +413,10 @@ function mplus_get_cfg_by_module_name(string $n)
 *                 resource - always use MPLUS_FIELD_ID constant to find this key;
 *               - an optional "errors" key to hold any errors the end user should be aware of;
 */
-function mplus_validate_id(array $ramc, bool $use_technical_id)
+function mplus_validate_association(array $ramc, bool $use_technical_id)
     {
-    debug(sprintf("mplus_validate_id(): mplus_validate_id(use_technical_id = %s)", json_encode($use_technical_id)));
-    mplus_log_event('Called mplus_validate_id()', ['use_technical_id' => $use_technical_id], 'debug');
+    debug(sprintf("mplus_validate_association(): mplus_validate_association(use_technical_id = %s)", json_encode($use_technical_id)));
+    mplus_log_event('Called mplus_validate_association()', ['use_technical_id' => $use_technical_id], 'debug');
 
     global $lang, $museumplus_api_batch_chunk_size;
 
@@ -428,10 +427,13 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
     $modules = mplus_flip_struct_by_module($ramc);
     foreach($modules as $module_name => $mdata)
         {
+        // Remove resources that don't have the MuseumPlus identifier (MpID). The information that really "links" to a MuseumPlus module record.
+        $mdata['resources'] = array_filter($mdata['resources'], function ($v) { return trim($v) != ''; });
+
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
         $resources_mpdata = mplus_resource_get_data(array_keys($mdata['resources']));
-        debug("mplus_validate_id(): module_name = {$module_name}");
-        debug("mplus_validate_id(): computed_md5s = " . json_encode($computed_md5s));
+        debug("mplus_validate_association(): module_name = {$module_name}");
+        debug("mplus_validate_association(): computed_md5s = " . json_encode($computed_md5s));
 
         $resources_to_validate = [];
         foreach($resources_mpdata as $r_mpdata)
@@ -470,27 +472,27 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
 
             $resources_to_validate[$r_ref] = $mdata['resources'][$r_ref];
             }
-        debug("mplus_validate_id(): resources_to_validate = " . json_encode($resources_to_validate));
+        debug("mplus_validate_association(): resources_to_validate = " . json_encode($resources_to_validate));
 
         $field_path = ($use_technical_id ? MPLUS_FIELD_ID : $mdata['mplus_id_field']);
         // The technical ID will always be returned as an attribute of the moduleItem element, but the virtual field needs to be specifically selected.
         $select_fields = array($field_path);
 
         $run_search_using_technical_id = ($field_path === MPLUS_FIELD_ID);
-        debug("mplus_validate_id(): run_search_using_technical_id = " . json_encode($run_search_using_technical_id));
+        debug("mplus_validate_association(): run_search_using_technical_id = " . json_encode($run_search_using_technical_id));
         if($run_search_using_technical_id)
             {
             $resources_to_validate = array_filter($resources_to_validate, 'is_numeric');
-            debug("mplus_validate_id(): Filtered resources by numeric MpID");
+            debug("mplus_validate_association(): Filtered resources by numeric MpID");
             $non_numeric_resources = array_diff_key($computed_md5s, $resources_to_validate);
-            debug("mplus_validate_id(): Resources that that don't have a numeric MpID (to be marked invalid) = " . json_encode($non_numeric_resources));
+            debug("mplus_validate_association(): Resources that that don't have a numeric MpID (to be marked invalid) = " . json_encode($non_numeric_resources));
 
             mplus_resource_mark_validation_failed($non_numeric_resources);
             }
 
         foreach(array_chunk($resources_to_validate, $museumplus_api_batch_chunk_size, true) as $resources_chunk)
             {
-            debug("mplus_validate_id(): resources_chunk = " . json_encode($resources_chunk));
+            debug("mplus_validate_association(): resources_chunk = " . json_encode($resources_chunk));
 
             $search_xml = mplus_xml_search_by_fieldpath($field_path, $resources_chunk, $select_fields);
             $mplus_search = mplus_search($module_name, $search_xml);
@@ -530,7 +532,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
                 else if($totalSize > count($resources_chunk))
                     {
                     mplus_log_event(
-                        'mplus_validate_id(): Search responded with more records than we searched for',
+                        'mplus_validate_association(): Search responded with more records than we searched for',
                         array(
                             'module_name' => $module_name,
                             'resources_chunk' => $resources_chunk,
@@ -606,7 +608,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
             $invalid_associations = array_diff_key($resources_chunk, $found_valid_associations);
             if(!empty($invalid_associations))
                 {
-                debug("mplus_validate_id(): invalid_associations = " . json_encode($invalid_associations));
+                debug("mplus_validate_association(): invalid_associations = " . json_encode($invalid_associations));
 
                 // First attempt failed, push these ramcs to be validated using the technical ID instead
                 if(!$run_search_using_technical_id)
@@ -627,7 +629,7 @@ function mplus_validate_id(array $ramc, bool $use_technical_id)
     // One last attempt to validate the resource-module associations, this time using the technical ID (__id).
     if(!empty($ramc_to_retry))
         {
-        $valid_ramc += mplus_validate_id($ramc_to_retry, true);
+        $valid_ramc += mplus_validate_association($ramc_to_retry, true);
         }
 
     if(!empty($errors))
