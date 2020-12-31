@@ -9,12 +9,12 @@ var button_toggle_off="";
 var error_saving = "";
 var error_deleting = "";
 
-var areasurrogate = 0;
-
 function isInt(value) { 
     return !isNaN(parseInt(value)) && (parseFloat(value) == parseInt(value)); 
 }
 (function($) {
+
+    var areasurrogate = 0;
 
     $.fn.annotateImage = function(options) {
         ///	<summary>
@@ -61,7 +61,7 @@ function isInt(value) {
         } else {
             $.fn.annotateImage.load(this);
         }
-        
+
        /*
         this.canvas.children('.image-annotate-view').hover(function() {image.canvas.css({"overflow":"visible"});
             $(this).show();
@@ -198,6 +198,15 @@ function isInt(value) {
 			$('.image-annotate-view').show();
             $('.image-annotate-note').show();
         }
+
+        // Set initial z-indices
+        $('.image-annotate-area').each(function(i, area) {
+            if (!isBlocker(area)) {
+                toTop(area);                
+            }
+
+        });
+
     };
 
     $.fn.annotateImage.getTicks = function() {
@@ -507,20 +516,25 @@ function isInt(value) {
         var selected_height = $(element)[0].offsetHeight;
         var selected_left = $(element)[0].offsetLeft;
         var selected_width = $(element)[0].offsetWidth;
+        var selected_bottom = selected_top + selected_height;
+        var selected_right = selected_left + selected_width;
+        
 	    var fullyBlockedFound = false;   
-		$(".image-annotate-area").each(function() {
-            if ($(this)[0].id != selected_id) {
-                if (   selected_top <= $(this)[0].offsetTop 
-                    && selected_height >= $(this)[0].offsetHeight
-                    && selected_left <= $(this)[0].offsetLeft
-                    && selected_width >= $(this)[0].offsetWidth ) {
-                    fullyBlockedFound = true;
+		$(".image-annotate-area").each(function(i, area) {
+            if ($(area)[0].id != selected_id) {
+                if (   selected_top <= $(area)[0].offsetTop 
+                    && selected_bottom >= ($(area)[0].offsetTop + $(area)[0].offsetHeight)
+                    && selected_left <= $(area)[0].offsetLeft
+                    && selected_right >= ($(area)[0].offsetLeft + $(area)[0].offsetWidth) ) {
+                        // console.log("SELECTED_ID="+selected_id+" BLOCKS="+$(area)[0].id);
+                        fullyBlockedFound = true;
                     return false; // No need to check any more areas; break out of .each loop
                 }
             }
         });
         return fullyBlockedFound;
 	};
+
 
     function toTop(element){
 		var index_highest = 50;   
@@ -651,9 +665,12 @@ function isInt(value) {
         this.note.text = text;
         this.note.id = editable.note.id;
         this.editable = true;
-            
-        toTop(this.area);
-        toTop(this.form);
+
+        // Send this element to the top if it doesn't fully block another area element
+        if (!isBlocker(this.area)) {
+            toTop(this.area);
+            toTop(this.form);
+        }
     };
 
 })(jQuery);
