@@ -60,4 +60,5 @@ $lang["museumplus_error_not_deleted_module_conf"] = "Unable to delete the reques
 $lang["museumplus_error_unknown_type_saved_config"] = "The 'museumplus_modules_saved_config' is of an unknwon type!";
 $lang["museumplus_error_invalid_association"] = "Invalid module(s) association. Please make sure that for each resource, either the correct Module or Record ID have been input!";
 $lang['museumplus_id_returns_multiple_records'] = 'Multiple records found - please enter the technical ID instead';
+$lang['museumplus_error_module_no_field_maps'] = 'Unable to sync data from MuseumPlus. Reason: module \'%name\' has no field mappings configured.';
 

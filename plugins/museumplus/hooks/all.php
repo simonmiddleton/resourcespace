@@ -163,7 +163,6 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
 
     // STEP 2: validate the MpID for the associated module
     $resources_with_valid_ids = mplus_validate_association($resources, false);
-
     if(isset($resources_with_valid_ids['errors']))
         {
         // $errors = array_merge($errors, $resources_with_valid_ids['errors']);

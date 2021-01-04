@@ -671,6 +671,8 @@ function mplus_flip_struct_by_module(array $ramc)
     $flipped_struct = array();
     foreach($ramc as $resource_ref => $amc)
         {
+        if(!is_numeric($resource_ref)) { continue; }
+
         if(!isset($flipped_struct[$amc['module_name']]))
             {
             $flipped_struct[$amc['module_name']] = array(
