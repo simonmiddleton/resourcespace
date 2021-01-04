@@ -12,6 +12,12 @@ $search 		= getvalescaped("search","");
 $starsearch		= getvalescaped('starsearch', '', true);
 $ref			= getvalescaped("ref", 0, true);
 
+// Share options
+$expires        = getvalescaped("expires","");
+$access         = getval("access",-1, true);	
+$group          = getval("usergroup",0,true);
+$sharepwd       = getvalescaped('sharepassword', '');
+
 $collection = get_collection($ref);
 if($collection === false)
     {
@@ -129,13 +135,9 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	# Build a new list and insert
 	$users=getvalescaped("users","");
 	$message=getvalescaped("message","");
-	$access=getvalescaped("access",-1);
 	$add_internal_access=(getvalescaped("grant_internal_access","")!="");
-	$expires=getvalescaped("expires","");	
 	$feedback=getvalescaped("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
 	$list_recipients=getvalescaped("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
-	$group=getvalescaped("usergroup","");
-    $sharepwd = getvalescaped('sharepassword', '');
 	
 	$use_user_email=getvalescaped("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
@@ -327,8 +329,14 @@ if($allow_edit)
 <?php
 if(!$internal_share_only)
 	{
-	render_share_options(true, $ref, true);  
-	} // End of section checking $internal_share_only
+    $shareoptions = array(
+        "password"          => $sharepwd != "",
+        "editaccesslevel"   => $access,
+        "editexpiration"    => $expires,
+        "editgroup"         => $group,
+        );
+	render_share_options($shareoptions);
+	}
 	
 	hook("collectionemailafterexternal");
 	?>

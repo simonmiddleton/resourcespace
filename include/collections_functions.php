@@ -598,7 +598,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
     $setcolumns["user"]             = is_numeric($userid) ? $userid : 0;
     $setcolumns["allow_changes"]    = escape_check($allowchanges);
     $setcolumns["cant_delete"]      = escape_check($cant_delete);
-    $setcolumns["public"]           = escape_check($cant_delete);
+    $setcolumns["public"]           = $public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD;
     if($ref != 0)
         {
         $setcolumns["ref"] = (int)$ref;
@@ -609,7 +609,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         }
     if($public)
         {
-        $setcolumns["type"]         = 1;
+        $setcolumns["type"]         = COLLECTION_TYPE_PUBLIC;
         }
 
     $insert_columns = array_keys($setcolumns);
@@ -830,7 +830,9 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $public_type_filter_sql,
         ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? " OR {$featured_type_filter_sql}" : $featured_type_filter_sql)
     );
+debug("BANG " . $public_type_filter_sql);
 
+debug("BANG " . $type_filter_sql);
     $main_sql = sprintf(
         "SELECT *
            FROM (
@@ -3443,7 +3445,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Share external link to upload to collection
-    debug(" BANG HERE");
     if(can_share_upload_link($collection_data))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("share_collection"=>$collection_data['ref']));
@@ -5332,21 +5333,6 @@ function can_edit_upload_share($collection,$uploadkey)
     }
 
 /**
- * Get details of an existing upload share
- *
- * @param  integer  $collection     Collection ID
- * @param  string   $uploadkey      share key (optional) If omitted all shares will be returned
- * 
- * @return array    Details of upload share
- */
-function get_upload_share_details($collection,$uploadkey="")
-    {
-    $condition = $uploadkey != "" ? " AND access_key='" . escape_check($uploadkey) . "'" : "";
-    $details = sql_query("SELECT status, user, password_hash, expires FROM external_access_keys WHERE upload=1" . $condition);
-    return $details;
-    }
-
-/**
  * Creates an upload link for a collection that can be shared
  *
  * @param  int      $collection  Collection ID
@@ -5660,8 +5646,7 @@ function purge_expired_shares($filteropts)
         }
    
     $conditions = array();
-    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
-        )
+    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user)))
         {
         $conditions[] = "user ='" . (int)$share_user . "'";
         }
@@ -5687,7 +5672,7 @@ function purge_expired_shares($filteropts)
         $conditions[] = "collection ='" . (int)$share_collection . "'";
         }
 
-    //TODO  LIMIT to collecions they can see
+    //TODO  LIMIT to collections they can see
     $conditional_sql=" WHERE expires < now()";
     if (count($conditions)>0)
         {

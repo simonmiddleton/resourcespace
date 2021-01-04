@@ -2585,27 +2585,46 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
     return array($width, $height, $margin);
     }
 
-
-
 /**
-* Render the share options (used on collection_share.php and resource_share.php)
-* 
-* @return void
-*/
-function render_share_options($collectionshare=true, $ref=0, $emailing=false)
+ * Render the share options (used on collection_share.php and resource_share.php)
+ *
+ * @param  array $shareopts     Array of share options. If not set will use the old getval() methods
+ *                  "password" bool             Has a password been set for this share? (password will not actually be displayed)
+ *                  "editaccesslevel" int       Current access level of share
+ *                  "editexpiration" string     Current expiration date
+ *                  "editgroup" int             ID of existing share group
+ * @return void
+ */
+function render_share_options($shareopts=array())
     {
-    global $lang, $ref, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
-    
+    global $lang, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
+    $validshareops = array(
+        "password",
+        "editaccesslevel",
+        "editexpiration",
+        "editgroup",
+        );
+    foreach($validshareops as $validshareop)
+        {
+        if(isset($shareopts[$validshareop]))
+            {
+            $$validshareop = $shareopts[$validshareop];
+            }
+        else
+            {
+            $$validshareop = getval($validshareop,'');
+            }
+        }
     if(!hook('replaceemailaccessselector'))
         {?>
         <div class="Question" id="question_access">
-            <label for="archive"><?php echo ($emailing ? $lang["externalselectresourceaccess"] : $lang["access"]) ?></label>
+            <label for="archive"><?php echo $lang["access"] ?></label>
             <select class="stdwidth" name="access" id="access">
             <?php
             # List available access levels. The highest level must be the minimum user access level.
             for ($n=$minaccess;$n<=1;$n++) 
                 { 
-                $selected = getvalescaped("editaccesslevel","") == $n;
+                $selected = $editaccesslevel == $n;
                 ?>
                 <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
                 <?php 
@@ -2620,7 +2639,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         {
         ?>
         <div class="Question">
-            <label><?php echo ($emailing ? $lang["externalselectresourceexpires"] : $lang["expires"]) ?></label>
+            <label><?php echo $lang["expires"] ?></label>
             <select name="expires" class="stdwidth">
             <?php 
             if($resource_share_expire_never) 
@@ -2631,7 +2650,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
-                $selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
+                $selected   = (substr($editexpiration,0,10) == $ymd_date);
                 $date_text  = nicedate($ymd_date,false,true);
                 $option_class = '';
                 $day_date = date('D', $date);
@@ -2654,7 +2673,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         # for this share (the default is to use the current user's user group).
         ?>
         <div class="Question">
-            <label for="groupselect"><?php echo ($emailing ? $lang["externalshare_using_permissions_from_user_group"] : $lang["share_using_permissions_from_user_group"]) ?></label>
+            <label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"]; ?></label>
             <select id="groupselect" name="usergroup" class="stdwidth">
             <?php $grouplist = get_usergroups(true);
             foreach ($grouplist as $group)
@@ -2664,7 +2683,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                     continue;
                     }
 
-                $selected = getval("editgroup","") == $group["ref"] || (getval("editgroup","") == "" && $usergroup == $group["ref"]);
+                $selected = $editgroup == $group["ref"] || ($editgroup == "" && $usergroup == $group["ref"]);
                 ?>
                 <option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
                 <?php
@@ -2681,7 +2700,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         <input type="hidden" name="usergroup" value="<?php echo $usergroup; ?>">
         <?php
         }
-        render_share_password_question(true);
+        render_share_password_question(!$password);
         hook("additionalresourceshare");
         ?>
     <?php        

@@ -77,7 +77,7 @@ if(getval("purge_expired",'') != '' && enforcePostRequest(true))
     }
 
 $shares = get_external_shares($sharefltr);
-$allsharedgroups = array("-1" => $lang["action-select"]);
+$allsharedgroups = array("-1" => ($share_group == -1 ? $lang["action-select"] : $lang["all"]));
 $sharedgroups = array_unique(array_column($shares,"usergroup"));
 foreach($sharedgroups as $sharedgroup)
     {    
@@ -367,7 +367,7 @@ function clearsharefilter()
             render_dropdown_question($lang["collection"], "share_collection", $allsharedcols, $share_collection, " class=\"stdwidth\"");
             render_dropdown_question($lang["property-user_group"], "share_group", $allsharedgroups, $share_group, " class=\"stdwidth\"");
             $sharetypes = array(
-                    "-1"    => $lang["action-select"],
+                    "-1"    => ($share_type == -1 ? $lang["action-select"] : $lang["all"]),
                     "0"     => $lang["share_type_view"],
                     "1"     => $lang["share_type_upload"],
                 );

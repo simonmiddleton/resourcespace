@@ -32,7 +32,7 @@ $emailmessage       = getval("message","");
 $messages           = array();
 if($uploadkey != "")
     {
-    $shareinfo      = get_upload_share_details($share_collection,$uploadkey);
+    $shareinfo      = get_external_shares(array("share_collection"=>$share_collection, "access_key"=>$uploadkey));
     if(isset($shareinfo[0]))
         {
         $shareinfo  = $shareinfo[0];

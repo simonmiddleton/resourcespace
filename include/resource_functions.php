@@ -8527,6 +8527,8 @@ function get_resource_lock_message($lockuser)
  *                              "share_sort"        - (string) sortorder (ASC or DESC)
  *                              "share_type"        - (int) 0=view, 1=upload
  *                              "share_collection"  - (int) Collection ID
+ *                              "share_resource"    - (int) Resource ID
+ *                              "access_key"        - (string) Access key
  * @return array
  */
 function get_external_shares(array $filteropts)
@@ -8540,6 +8542,8 @@ function get_external_shares(array $filteropts)
         "share_sort",
         "share_type",
         "share_collection",
+        "share_resource",
+        "access_key",
     );
     foreach($validfilterops as $validfilterop)
         {
@@ -8575,6 +8579,12 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.usergroup ='" . (int)$share_group . "'";
         }
+    
+    if(!is_null($access_key))
+        {
+        $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
+        }
+
     if($share_type == 0)
         {
         $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
@@ -8587,8 +8597,11 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
         }
+    if((int)$share_resource > 0)
+        {
+        $conditions[] = "eak.resource ='" . (int)$share_resource . "'";
+        }
 
-        //TODO  LIMIT to collecions they can see
     $conditional_sql="";
     if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
 
@@ -8602,6 +8615,7 @@ function get_external_shares(array $filteropts)
                 user,
                 eak.email,
                 min(date) date,
+                MAX(date) maxdate,
                 max(lastused) lastused,
                 eak.access,
                 eak.expires,
