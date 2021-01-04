@@ -428,7 +428,23 @@ function mplus_validate_association(array $ramc, bool $use_technical_id)
     foreach($modules as $module_name => $mdata)
         {
         // Remove resources that don't have the MuseumPlus identifier (MpID). The information that really "links" to a MuseumPlus module record.
-        $mdata['resources'] = array_filter($mdata['resources'], function ($v) { return trim($v) != ''; });
+        $empty_mpid = [];
+        $empty_mpid_md5 = [];
+        $non_empty_mpid = [];
+        foreach($mdata['resources'] as $r_ref => $r_mpid)
+            {
+            if($r_mpid != '')
+                {
+                $non_empty_mpid[$r_ref] = $r_mpid;
+                continue;
+                }
+
+            // Prepare to clear the association data in the resource table
+            $empty_mpid[$r_ref] = '';
+            $empty_mpid_md5[$r_ref] = '';
+            }
+        mplus_resource_update_association($empty_mpid, $empty_mpid_md5);
+        $mdata['resources'] = $non_empty_mpid;
 
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
         $resources_mpdata = mplus_resource_get_data(array_keys($mdata['resources']));

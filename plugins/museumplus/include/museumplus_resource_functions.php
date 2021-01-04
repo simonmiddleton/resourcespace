@@ -147,7 +147,7 @@ function mplus_resource_clear_metadata(array $refs)
         {
         $resource_type_fields = array_merge($resource_type_fields, array_column($module_cfg['field_mappings'], 'rs_field'));
         }
-    $resource_type_fields = array_filter(array_unique($resource_type_fields), 'ctype_digit');
+    $resource_type_fields = array_values(array_filter(array_unique($resource_type_fields), 'ctype_digit'));
     if(empty($resource_type_fields)) { return; }
 
     $sql_in_refs = implode('\', \'', $refs);
@@ -180,6 +180,7 @@ function mplus_resource_clear_metadata(array $refs)
         {
         sql_query("UPDATE resource SET {$sql_joins} WHERE ref IN ('{$sql_in_refs}')");
         }
+
     mplus_log_event('Cleared metadata field values',
         [
             'refs' => $refs,
