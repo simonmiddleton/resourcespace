@@ -138,7 +138,11 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
 		}
 
 	$baseDirectory = get_temp_dir() . '/format_chooser';
-	@mkdir($baseDirectory);
+	
+	if (!file_exists($baseDirectory))
+	    {
+	    mkdir($baseDirectory);
+	    }
 
 	$target = $baseDirectory . '/' . get_download_filename($resource['ref'],$size,-1,$ext);
 

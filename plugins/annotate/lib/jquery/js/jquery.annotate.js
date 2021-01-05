@@ -14,6 +14,8 @@ function isInt(value) {
 }
 (function($) {
 
+    var areasurrogate = 0;
+
     $.fn.annotateImage = function(options) {
         ///	<summary>
         ///		Creates annotations on the given image.
@@ -59,7 +61,7 @@ function isInt(value) {
         } else {
             $.fn.annotateImage.load(this);
         }
-        
+
        /*
         this.canvas.children('.image-annotate-view').hover(function() {image.canvas.css({"overflow":"visible"});
             $(this).show();
@@ -196,6 +198,15 @@ function isInt(value) {
 			$('.image-annotate-view').show();
             $('.image-annotate-note').show();
         }
+
+        // Set initial z-indices
+        $('.image-annotate-area').each(function(i, area) {
+            if (!isBlocker(area)) {
+                toTop(area);                
+            }
+
+        });
+
     };
 
     $.fn.annotateImage.getTicks = function() {
@@ -438,11 +449,13 @@ function isInt(value) {
 
         this.editable = (note.editable && image.editable);
 
+        areasurrogate += 1;
+
         // Add the area
-        this.area = $('<div class="image-annotate-area' + (this.editable ? ' image-annotate-area-editable' : '') + '"><div>');
+        this.area = $('<div id="areasurrogate_' + areasurrogate + '" class="image-annotate-area' + (this.editable ? ' image-annotate-area-editable' : '') + '"><div>');
         image.canvas.children('.image-annotate-view').prepend(this.area);
 		
-        image.canvas.children('.image-annotate-view').prepend(this.area);
+        // image.canvas.children('.image-annotate-view').prepend(this.area);
         
         // Add the note
         this.form = $('<div class="image-annotate-note" style="width:auto">' + note.text + '</div>');
@@ -450,26 +463,35 @@ function isInt(value) {
         image.canvas.children('.image-annotate-view').append(this.form);
         this.form.children('span.actions').hide();
 
-		
-
         // Set the position and size of the note
         this.setPosition();
 
         // Add the behavior: hide/display the note when hovering the area
         var annotation = this;
 
-		// fix z-index when multiple notes are visible
+		// Fix z-index when necessary where multiple notes are visible
 		this.area.hover(function() {
             annotation.show(); 
-            toTop(annotation.area);
-            toTop(annotation.form);
+
+            // Send this element to the top if it doesn't fully block another area element
+            if (!isBlocker(annotation.area)) {
+                toTop(annotation.area);
+                toTop(annotation.form);
+            };
+
         }, function() {
 			annotation.hide(); 
         });
+
         this.form.hover(function() {
             annotation.show(); 
-            toTop(annotation.area);
-            toTop(annotation.form);
+
+            // Send this element to the top if it doesn't fully block another area element
+            if (!isBlocker(annotation.area)) {
+                toTop(annotation.area);
+                toTop(annotation.form);
+            };
+
         }, function() {
 			annotation.hide();
         });
@@ -486,6 +508,33 @@ function isInt(value) {
             });
         }
     };
+
+    // Is the selected area element fully blocking any other area element
+    function isBlocker(element){
+        var selected_id = $(element)[0].id;
+        var selected_top = $(element)[0].offsetTop;
+        var selected_height = $(element)[0].offsetHeight;
+        var selected_left = $(element)[0].offsetLeft;
+        var selected_width = $(element)[0].offsetWidth;
+        var selected_bottom = selected_top + selected_height;
+        var selected_right = selected_left + selected_width;
+        
+	    var fullyBlockedFound = false;   
+		$(".image-annotate-area").each(function(i, area) {
+            if ($(area)[0].id != selected_id) {
+                if (   selected_top <= $(area)[0].offsetTop 
+                    && selected_bottom >= ($(area)[0].offsetTop + $(area)[0].offsetHeight)
+                    && selected_left <= $(area)[0].offsetLeft
+                    && selected_right >= ($(area)[0].offsetLeft + $(area)[0].offsetWidth) ) {
+                        // console.log("SELECTED_ID="+selected_id+" BLOCKS="+$(area)[0].id);
+                        fullyBlockedFound = true;
+                    return false; // No need to check any more areas; break out of .each loop
+                }
+            }
+        });
+        return fullyBlockedFound;
+	};
+
 
     function toTop(element){
 		var index_highest = 50;   
@@ -616,9 +665,12 @@ function isInt(value) {
         this.note.text = text;
         this.note.id = editable.note.id;
         this.editable = true;
-            
-        toTop(this.area);
-        toTop(this.form);
+
+        // Send this element to the top if it doesn't fully block another area element
+        if (!isBlocker(this.area)) {
+            toTop(this.area);
+            toTop(this.form);
+        }
     };
 
 })(jQuery);

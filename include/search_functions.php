@@ -1269,7 +1269,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $upload_share_active = upload_share_active();
         $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
 
-        //print_r($validcollections);
         if(validate_collection_parent($collection)=="" || (checkperm("j*")) || (checkperm("j" . validate_collection_parent($collection))))            {
             if(!collection_readable($collection))
                 {

@@ -275,7 +275,7 @@ include "../include/user_select.php"; ?>
 
 if(!$user_select_internal)
 	{
-    render_share_options(false, $ref, true);    
+    render_share_options(false, true);    
     }
 	?>
 

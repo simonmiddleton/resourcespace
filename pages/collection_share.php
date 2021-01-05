@@ -290,7 +290,6 @@ include "../include/header.php";
 		}
 	if (!$internal_share_only && ($editing || $generateurl))
 		{
-		global $ignore_collection_access;
         if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"]==1 || $ignore_collection_access)
 			{
 			?>
@@ -304,8 +303,11 @@ include "../include/header.php";
 			{
 			?>
 			<p><?php if (!$editing || $editexternalurl){echo $lang["selectgenerateurlexternal"];} ?></p>
-			
-            <?php
+			<?php
+            if($editing)
+                {
+                echo "<div class='Question'><label>" . $lang["collectionname"]  . "</label><div class='Fixed'>" . i18n_get_collection_name($collection) . "</div><div class='clearerleft'></div></div>";
+                }
             $shareoptions = array(
                 "password"          => ($sharepwd != "" ? true : false),
                 "editaccesslevel"   => $access,

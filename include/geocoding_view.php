@@ -113,7 +113,7 @@
     else
         {
         ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo $lang['location-add'];?></a>
         <?php
         }
 

@@ -5,10 +5,12 @@ include "../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["installationcheck"];render_help_link("systemadmin/install_overview");?></h1>
-  <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">&gt; <?php echo $lang["repeatinstallationcheck"]?></a>
-  <br/><br/>
-<table class="InfoTable">
+    <h1><?php echo $lang["installationcheck"];render_help_link("systemadmin/install_overview");?></h1>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
+        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["repeatinstallationcheck"]?>
+    </a>
+    <br/><br/>
+    <table class="InfoTable">
 <?php
 
 

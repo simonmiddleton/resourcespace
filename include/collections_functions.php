@@ -492,7 +492,7 @@ function collection_readable($collection)
     global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
 
     # Precautionary check to see if user has featured collection access or collection is their own
-    if(!in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
+    if(getval("k","") == "" && !in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
 
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
@@ -509,7 +509,13 @@ function collection_readable($collection)
 	# Access if collection_commenting is enabled and request feedback checked
 	# Access if it's a public collection (or theme)
 	# Access if k is not empty or option to ignore collection access is enabled and k is empty
-	if ($collection_commenting && $collectiondata['request_feedback'] == 1 || $collectiondata["public"]==1 || getval("k","")!="" || getval("k","")=="" && $ignore_collection_access)
+    if (($collection_commenting && $collectiondata['request_feedback'] == 1)
+         ||
+        $collectiondata["public"]==1 
+         ||
+        getval("k","")!=""
+         ||
+        (getval("k","")=="" && $ignore_collection_access))
 		{
 		return true;
 		}
@@ -2068,7 +2074,7 @@ function allow_multi_edit($collection,$collectionid = 0)
 */
 function get_featured_collection_resources(array $c, array $ctx)
     {
-    if(!is_int((int) $c["ref"]))
+    if(!isset($c["ref"]) || !is_int((int) $c["ref"]))
         {
         return array();
         }
@@ -2842,6 +2848,12 @@ function collection_min_access($collection)
             return ($minextaccess);
             }
 		}
+    
+    if ($minaccess = 3)
+        {
+            # Custom permissions are being used so test access to each resource, restricting access as needed
+            $minaccess = 0;
+        }
 
     for($n = 0; $n < count($result); $n++)
         {
@@ -2978,6 +2990,10 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     if($expires!="") 
         {
         $setvals["expires"] = "'" . escape_check($expires) . "'";
+        }
+    else
+        {
+        $setvals["expires"] = "NULL";
         }
     if($sharepwd != "(unchanged)")
         {
@@ -5155,8 +5171,8 @@ function allow_upload_to_collection(array $c)
 
     if(
         ($k == "" || $internal_share_access)
-        && $c["savedsearch"] == 0
-        && ($userref == $c["user"] || $c["allow_changes"] == 1 || checkperm("h"))
+        && ($c["savedsearch"] == "" || $c["savedsearch"] == 0)
+        && ($userref == $c["user"] || $c["allow_changes"] == 1 || checkperm("h") || checkperm("a"))
         && (checkperm("c") || checkperm("d"))
     )
         {
@@ -5325,7 +5341,8 @@ function can_edit_upload_share($collection,$uploadkey)
         {
         return true;
         }
-    $share_details = get_upload_share_details($collection,$uploadkey);
+    $share_details = get_external_shares(array("share_collection"=>$collection,"share_type"=>1, "access_key"=>$uploadkey));
+    $details = isset($share_details[0]) ? $share_details[0] : array();
     return ((isset($details["user"]) && $details["user"] == $userref)
         || 
       (checkperm("ex") && isset($details["expires"]) && empty($details["expires"]))
@@ -5650,7 +5667,7 @@ function purge_expired_shares($filteropts)
         {
         $conditions[] = "user ='" . (int)$share_user . "'";
         }
-    elseif(!checkperm('a'))
+    elseif(!checkperm('a') && !checkperm('ex'))
         {
         $conditions[] = "user ='" . (int)$userref . "'";
         }
@@ -5672,7 +5689,6 @@ function purge_expired_shares($filteropts)
         $conditions[] = "collection ='" . (int)$share_collection . "'";
         }
 
-    //TODO  LIMIT to collections they can see
     $conditional_sql=" WHERE expires < now()";
     if (count($conditions)>0)
         {

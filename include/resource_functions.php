@@ -8572,7 +8572,13 @@ function get_external_shares(array $filteropts)
         }
     elseif(!checkperm('a'))
         {
-        $conditions[] = "eak.user ='" . (int)$userref . "'";
+        $usercondition = "eak.user ='" . (int)$userref . "'";
+        if(checkperm("ex"))
+            {
+            // Can also see shares that never expire
+            $usercondition = " (expires ='' OR expires IS NULL OR " . $usercondition . ")";
+            }
+        $conditions[] =$usercondition;
         }
 
     if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
@@ -8585,11 +8591,11 @@ function get_external_shares(array $filteropts)
         $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
         }
 
-    if($share_type == 0)
+    if($share_type === 0)
         {
         $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
         }
-    elseif($share_type == 1)
+    elseif($share_type === 1)
         {
         $conditions[] = "eak.upload=1";
         }

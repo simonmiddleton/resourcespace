@@ -71,7 +71,7 @@ $per_page=15;
 $results=count($groups);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
-$url="admin_group_management.php?" . ($order_by ? "orderby={$order_by}" : "");
+$url="admin_group_management.php?find=" . $find . "&" . ($order_by ? "orderby={$order_by}" : "");
 
 function addColumnHeader($orderName, $labelKey)
 {

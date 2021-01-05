@@ -41,6 +41,7 @@ if(
         exit();
         }
 
+    // Set current slideshow entry to the entry which has the id to be moved
     reset($slideshow_files);
     while (current($slideshow_files) !== $slideshow_files[$slideshow_id_index])
         {
@@ -171,6 +172,13 @@ include '../../include/header.php';
 
 
 ?>
+<style>
+button:disabled,
+button[disabled]{
+    color: #666666;
+    cursor: not-allowed;
+}
+</style>
 <div class="BasicsBox">
     <?php
     $links_trail = array(
@@ -192,6 +200,7 @@ include '../../include/header.php';
             <tbody>
                 <tr class="ListviewTitleStyle">
                     <td><?php echo $lang["preview"]; ?></td>
+                    <td><?php echo $lang["resourceid"]; ?></td>
                     <td><?php echo $lang["home_page"]; ?></td>
                     <td><?php echo $lang["theme"]; ?></td>
                     <td><?php echo $lang["login_word"]; ?></td>
@@ -201,13 +210,13 @@ include '../../include/header.php';
             foreach($slideshow_files as $slideshow_index => $slideshow_file_info)
                 {
                 $moveup_disabled = '';
+                $movedown_disabled = '';
                 if($slideshow_index == 0 || count($slideshow_files) == 1)
                     {
                     $moveup_disabled = ' disabled';
                     }
 
-                $movedown_disabled = '';
-                if(($slideshow_index - 1) == count($slideshow_files) || count($slideshow_files) == 1)
+                if(($slideshow_index == (count($slideshow_files) - 1)) || count($slideshow_files) == 1)
                     {
                     $movedown_disabled = ' disabled';
                     }
@@ -221,17 +230,18 @@ include '../../include/header.php';
                 $homepage_show = ($slideshow_file_info['homepage_show'] == 1 ? 'checked' : '');
                 $featured_collections_show = ($slideshow_file_info['featured_collections_show'] == 1 ? 'checked' : '');
                 $login_show = ($slideshow_file_info['login_show'] == 1 ? 'checked' : '');
+                $slideshow_ref = $slideshow_file_info['ref'];
                 ?>
-                <tr id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>">
+                <tr id="slideshow_<?php echo $slideshow_ref; ?>">
                     <td>
                     <?php
                     if(isset($slideshow_file_info['link']))
                         {
                         ?>
                         <a href="<?php echo $slideshow_file_info['link']; ?>" onclick="return ModalLoad(this, true);">
-                            <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>"
+                            <img id="slideshow_img_<?php echo $slideshow_ref; ?>"
                                  src="<?php echo $slideshow_file_info['file_url']; ?>"
-                                 alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>"
+                                 alt="Slideshow Image <?php echo $slideshow_ref; ?>"
                                  width="150"
                                  height="80">
                          </a>
@@ -240,9 +250,9 @@ include '../../include/header.php';
                     else
                         {
                         ?>
-                        <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>"
+                        <img id="slideshow_img_<?php echo $slideshow_ref; ?>"
                              src="<?php echo $slideshow_file_info['file_url']; ?>"
-                             alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>"
+                             alt="Slideshow Image <?php echo $slideshow_ref; ?>"
                              width="150"
                              height="80">
                         <?php
@@ -250,40 +260,44 @@ include '../../include/header.php';
                     ?>
                     </td>
                     <td>
+                        <?php echo $slideshow_file_info['resource_ref']; ?>
+                    </td>
+                    <td>
                         <input type="checkbox"
                                name="homepage_show"
                                value="1"
-                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               onclick="SetSlideshowFlag(this);"
                                <?php echo $homepage_show; ?>>
                     </td>
                     <td>
                         <input type="checkbox"
                                name="featured_collections_show"
                                value="1"
-                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               onclick="SetSlideshowFlag(this);"
                                <?php echo $featured_collections_show; ?>>
                     </td>
                     <td>
                         <input type="checkbox"
                                name="login_show"
                                value="1"
-                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               onclick="SetSlideshowFlag(this);"
                                <?php echo $login_show; ?>>
                     </td>
                     <td>
-                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_moveup"
-                                type="submit"
-                                onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'moveup');"
+                        <button id="slideshow_<?php echo $slideshow_ref; ?>_moveup"
+                                type="submit" slideMoveUpButton
+                                onclick="ReorderSlideshowImage(this, 'moveup');"
                                 <?php echo $moveup_disabled; ?>><?php echo $lang['action-move-up']; ?></button>
-                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_movedown"
-                                type="submit"
-                                onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
+                        <button id="slideshow_<?php echo $slideshow_ref; ?>_movedown"
+                                type="submit" slideMoveDownButton 
+                                onclick="ReorderSlideshowImage(this, 'movedown');"
                                 <?php echo $movedown_disabled; ?>><?php echo $lang['action-move-down']; ?></button>
-                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_file_info)); ?>
-                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
-                                type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"
+                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_ref, $slideshow_file_info)); ?>
+                        <button id="slideshow_<?php echo $slideshow_ref; ?>_delete"
+                                type="submit" slideDeleteButton
+                                onclick="DeleteSlideshowImage(this);"
                                 <?php echo $delete_btn_disabled; ?>><?php echo $lang['action-delete']; ?></button>
-                        <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
+                        <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_ref, $slideshow_files)); ?>
                     </td>
                 </tr>
                 <?php
@@ -308,9 +322,12 @@ if($slideshow_big)
 ?>
 </div>
 <script>
-function SetSlideshowFlag(element, id)
+function SetSlideshowFlag(element)
     {
     var input = jQuery(element);
+
+    // Extract reference from row identifier r from "slideshow_r"
+    var slideshow_row_id = element.parentElement.parentElement.id.substr(10);
 
     var flag_value = 0;
     if(element.checked)
@@ -323,7 +340,7 @@ function SetSlideshowFlag(element, id)
         {
         ajax: true,
         action: 'set_flag',
-        slideshow_id: id,
+        slideshow_id: slideshow_row_id,
         flag: input.attr('name'),
         value: flag_value,
         <?php echo generateAjaxToken("SetSlideshowFlag"); ?>
@@ -345,14 +362,18 @@ function SetSlideshowFlag(element, id)
     return false;
     }
 
-function ReorderSlideshowImage(id, direction)
+function ReorderSlideshowImage(element, direction)
     {
     var post_url  = '<?php echo $manageurl ?>';
+
+    // Extract reference from row identifier r from "slideshow_r"
+    var slideshow_row_id = element.parentElement.parentElement.id.substr(10);
+
     var post_data =
         {
         ajax: true,
         action: direction,
-        slideshow_id: id,
+        slideshow_id: slideshow_row_id,
         <?php echo generateAjaxToken("ReorderSlideshowImage"); ?>
         };
 
@@ -360,46 +381,51 @@ function ReorderSlideshowImage(id, direction)
         {
         if(response.sibling !== false)
             {
-            var from_img_elem = jQuery('#slideshow_img_' + id);
-            var to_img_elem   = jQuery('#slideshow_img_' + response.sibling);
-            var from_img_src  = from_img_elem.attr('src');
-            var to_img_src    = to_img_elem.attr('src');
 
-            // Swap the images to reflect reordering visually
-            to_img_elem.attr('src', from_img_src);
-            from_img_elem.attr('src', to_img_src);
-
-            jQuery('#slideshow_' + response.sibling + '_moveup').prop('disabled', false);
-            jQuery('#slideshow_' + response.sibling + '_movedown').prop('disabled', false);
-
-            // Check response for any information regarding position
-            // if first then disable Move up button
-            if(response.is_first_sibling)
+            // Establish row elements and their corresponding button elements
+            var moving_row      = jQuery('#slideshow_' + slideshow_row_id);
+            var moving_moveup   = jQuery('#slideshow_' + slideshow_row_id + '_moveup');
+            var moving_movedown = jQuery('#slideshow_' + slideshow_row_id + '_movedown');
+            var target_row      = jQuery('#slideshow_' + response.sibling);
+            var target_moveup   = jQuery('#slideshow_' + response.sibling + '_moveup');
+            var target_movedown = jQuery('#slideshow_' + response.sibling + '_movedown');
+            
+            // Swap rows
+            if(direction == 'moveup')
                 {
-                jQuery('#slideshow_' + response.sibling + '_moveup').prop('disabled', true);
-                }
-
-            // if last then disable Move down button
-            if(response.is_last_sibling)
+                jQuery(moving_row).insertBefore(target_row);
+            }
+            else // movedown
                 {
-                jQuery('#slideshow_' + response.sibling + '_movedown').prop('disabled', true);
-                }
+                jQuery(moving_row).insertAfter(target_row);
+            }
+
+            // Swap row identifiers
+            jQuery(moving_row).attr("id","slideshow_"+response.sibling);
+            jQuery(target_row).attr("id","slideshow_"+slideshow_row_id);
+            
+            ResetSlideshowButtons();
+
             }
         }, 'json').fail(function(data, textStatus, jqXHR) {
-        styledalert(data.statusText, data.responseJSON.error);
+        styledalert(data.statusText, data.responseText);
     });
 
     return false;
     }
 
-function DeleteSlideshowImage(id)
+function DeleteSlideshowImage(element)
     {
     var post_url  = '<?php echo $manageurl ?>';
+
+    // Extract reference from row identifier r from "slideshow_r"
+    var slideshow_row_id = element.parentElement.parentElement.id.substr(10);
+
     var post_data =
         {
         ajax: true,
         action: 'delete',
-        slideshow_id: id,
+        slideshow_id: slideshow_row_id,
         <?php echo generateAjaxToken("DeleteSlideshowImage"); ?>
         };
 
@@ -407,16 +433,9 @@ function DeleteSlideshowImage(id)
         {
         if(response.success)
             {
-            jQuery('#slideshow_' + id).remove();
+            jQuery('#slideshow_' + slideshow_row_id).remove();
 
-            // Make sure, appropriate buttons are still getting disabled
-            var slideshow_ids = jQuery('div[id*="slideshow_"].Question');
-            slideshow_ids.first().find('button[id*="_moveup"').prop('disabled', true);
-            slideshow_ids.last().find('button[id*="_movedown"').prop('disabled', true);
-            if (slideshow_ids.find('button[id*="_delete"').length==1)
-                {
-                slideshow_ids.find('button[id*="_delete"').prop('disabled', true);
-                }
+            ResetSlideshowButtons();
 
             }
         }, 'json').fail(function(data, textStatus, jqXHR) {
@@ -425,6 +444,24 @@ function DeleteSlideshowImage(id)
 
     return false;
     }
+
+function ResetSlideshowButtons()
+    {
+    // Re-establish move button availability
+    jQuery("[slideMoveUpButton]").prop("disabled",false);
+    jQuery("[slideMoveDownButton]").prop("disabled",false);
+    // Cannot move first row up
+    jQuery("[slideMoveUpButton]:first").prop("disabled",true);
+    // Cannot move last row down
+    jQuery("[slideMoveDownButton]:last").prop("disabled",true);
+
+    // Disable delete button if only one slide present
+    if (jQuery("[slideDeleteButton]").length == 1)
+        {
+        jQuery("[slideDeleteButton]").prop("disabled",true);
+        }
+    }
+
 </script>
 <?php
 include '../../include/footer.php';

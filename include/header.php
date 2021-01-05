@@ -627,7 +627,7 @@ jQuery(document).ready(function()
         var linksContainer = jQuery("#DropdownCaret");
         if (linksContainer.has(e.target).length === 0 && !linksContainer.is(e.target)) 
             {
-            jQuery('#OverFlowLinks').fadeOut();
+            jQuery('#OverFlowLinks').hide();
             }
         });
     });

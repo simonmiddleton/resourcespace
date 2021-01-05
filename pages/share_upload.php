@@ -236,7 +236,4 @@ include "../include/header.php";
 
 </div> <!-- End of BasicsBox -->
 <?php
-
-
-// TODO Show existing upload shares for this collection
 include "../include/footer.php";

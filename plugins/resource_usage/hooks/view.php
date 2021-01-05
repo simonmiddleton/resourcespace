@@ -17,7 +17,7 @@ function HookResource_usageViewCustompanels()
     if(resource_download_allowed($ref, "", $resource["resource_type"]))
         {
         ?>    
-        <p><?php echo LINK_CARET_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>
+        <p><?php echo LINK_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>
         <?php
         }
 

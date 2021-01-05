@@ -19,6 +19,8 @@ if ($k=="" || !$kauth) {include "../../../include/authenticate.php";}
 # Wrap the remote view page with the local header/footer.
 
 $url=getvalescaped("url","");
+$url = str_replace(" ", "%20", $url);
+
 $search=getvalescaped("search","");
 setcookie("search",$search, 0, '', '', false, true);
 

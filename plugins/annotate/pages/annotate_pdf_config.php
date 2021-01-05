@@ -14,7 +14,7 @@ $ref=getval("ref",0,true);
 $col=getval("col",0,true);
 $previewpage=getval("previewpage",1,true);
 
-if ($col!="")
+if ($col!=0)
 	{
 	$is_collection=true;
 	$collection=get_collection($col);
