@@ -28,8 +28,6 @@ $shareoptionsa = array(
 
 $sharea = create_upload_link($collectiona,$shareoptionsa);
 
-print_r($sharea);
-
 $shareoptionsb = array(
     "usergroup" => $usergroup,
     "user"      => $otheruser,

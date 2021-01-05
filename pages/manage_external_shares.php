@@ -122,8 +122,6 @@ $curparams = array(
 
 $url = generateurl($baseurl . "/pages/manage_external_shares.php",$curparams);
 
-
-//TODO  LIMIT DELETION to writeable collections
 $tabledata = array(
     "class" => "ShareTable",
     "headers"=>array(
@@ -180,7 +178,7 @@ for($n=0;$n<$sharecount;$n++)
         $tableshare["access_key"]   = "<a href='" . $keylink . "' target='_blank'>" . $shares[$n]["access_key"] . "<a>";
 
         $tableshare["date"] = nicedate($shares[$n]["date"],true,true,true); 
-        if($shares[$n]["expires"] < date("Y-m-d H:i:s",time()))
+        if($shares[$n]["expires"] != "" && $shares[$n]["expires"] < date("Y-m-d H:i:s",time()))
             {
             $expiredshares++;
             $tableshare["alerticon"] = "fas fa-exclamation-triangle";
@@ -191,13 +189,16 @@ for($n=0;$n<$sharecount;$n++)
 
         $tableshare["tools"] = array();
 
-        $tableshare["tools"][] = array(
+        if(!$colshare || collection_writeable($shares[$n]["collection"]))
+            {
+            $tableshare["tools"][] = array(
             "icon"=>"fa fa-trash",
             "text"=>$lang["action-delete"],
             "url"=>"#",
             "modal"=>false,
             "onclick"=>"delete_access_key(\"" . $shares[$n]["access_key"] . "\",\"" . $shares[$n]["resource"] . "\",\"" . $shares[$n]["collection"] . "\");return false;"
             );
+            }
 
         if(checkperm('a') || $shares[$n]["user"] == $userref)
             {

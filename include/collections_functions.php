@@ -355,7 +355,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
 				
 				#log this
-				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);
+				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
 				}
 			
 			}
@@ -369,7 +369,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 			}
 		
 		// log this
-		collection_log($collection,"a",$resource);
+		collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
@@ -410,7 +410,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 			}
 		
 		// log this
-		collection_log($collection,"r",$resource);
+		collection_log($collection,LOG_CODE_COLLECTION_REMOVED_RESOURCE,$resource);
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
@@ -676,7 +676,7 @@ function delete_collection($collection)
 			}
 		}
 
-    collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
+    collection_log($ref,LOG_CODE_COLLECTION_DELETED_COLLECTION,0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
 
     if($type == COLLECTION_TYPE_FEATURED)
         {
@@ -959,7 +959,7 @@ function add_collection($user,$collection)
 	# Insert row
 	sql_query("insert into user_collection(user,collection) values ('" . escape_check($user) . "','" . escape_check($collection) . "')");
 	#log this
-	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+	collection_log($collection,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
 
@@ -974,7 +974,7 @@ function remove_collection($user,$collection)
 	{
 	sql_query("delete from user_collection where user='" . escape_check($user) . "' and collection='" . escape_check($collection) . "'");
 	#log this
-	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
 /**
@@ -1171,13 +1171,13 @@ function save_collection($ref, $coldata=array())
                 switch($colopt)
                     {
                     case "public";
-                        collection_log($ref, 'A', 0, $colset ? 'public' : 'private');
+                        collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
                     break;    
                     case "allow_changes";
-                        collection_log($ref, 'U', 0,  $colset ? 'true' : 'false' );
+                        collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
                     break; 
                     default;
-                        collection_log($ref, 'e', 0,  $colopt  . " = " . $colset);
+                        collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
                     break;
                     }
                  
@@ -1218,7 +1218,7 @@ function save_collection($ref, $coldata=array())
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
         #log this
-        collection_log($ref,"S",0, join(", ",$ulist));
+        collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
 		
         if($attach_user_smart_groups)
             {
@@ -1251,7 +1251,7 @@ function save_collection($ref, $coldata=array())
                         }
                     }
                 #log this
-                collection_log($ref,"S",0, $groupnames);
+                collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
                 }
             }
         # Send a message to any new attached user
@@ -1502,7 +1502,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 					}
 				
 				#log this
-                collection_log($reflist[$nx1],"S",0, sql_value ("select username as value from user where ref = $urefs[$nx2]",""));
+                collection_log($reflist[$nx1],LOG_CODE_COLLECTION_SHARED_COLLECTION,0, sql_value ("select username as value from user where ref = $urefs[$nx2]",""));
 				}
 			}
 		}
@@ -1567,7 +1567,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			for ($nx2=0;$nx2<count($reflist);$nx2++)
 				{				
 				#log this
-				collection_log($reflist[$nx2],"E",0, $emails[$nx1]);
+				collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
 				}
 			
 			}
@@ -1617,7 +1617,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 					$list.= $htmlbreak . $collection_name . $htmlbreak . $url . $htmlbreak;
 					}
 				#log this
-				collection_log($reflist[$nx2],"E",0, $emails[$nx1]);
+				collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
 				}
 			}
 		//$list.=$htmlbreak;	
@@ -1955,7 +1955,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 				# Insert a new access key entry for this resource/collection.
 				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
                 #log this
-				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);	
+				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);	
 				
 				# Set the flag so a warning appears.
 				$collection_share_warning=true;	
@@ -1979,7 +1979,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 				sql_query("insert into collection_resource(resource,collection,sortorder) values ('$resource','$collection','$n')");
 				
 				#log this
-				collection_log($collection,"a",$resource);
+				collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
 				}
 			}
 		}
@@ -2460,8 +2460,8 @@ function save_collection_resource_comment($resource,$collection,$comment,$rating
 	sql_query("update collection_resource set comment='" . escape_check($comment) . "',rating=" . (($rating!="")?"'" . escape_check($rating) . "'":"null") . ",use_as_theme_thumbnail='" . (getval("use_as_theme_thumbnail","")==""?0:1) . "' where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
 	
 	# log changes
-	if ($comment!=$data[0]['comment']){collection_log($collection,"m",$resource);}
-	if ($rating!=$data[0]['rating']){collection_log($collection,"*",$resource);}
+	if ($comment!=$data[0]['comment']){collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT,$resource);}
+	if ($rating!=$data[0]['rating']){collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE_RATING,$resource);}
 	return true;
 	}
 
@@ -2595,7 +2595,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 		{
 		#delete all existing data in the current collection
 		sql_query("delete from collection_resource where collection='" . escape_check($current) . "'");
-		collection_log($current,"R",0);
+		collection_log($current,LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES,0);
 		}
 	
 	#put all the copied collection records in
@@ -2710,7 +2710,7 @@ function delete_collection_access_key($collection,$access_key)
         }
     sql_query($sql);
 	# log changes
-	collection_log($collection,"t","",$users);
+	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS,"",$users . " (" . $access_key. ")");
 	}
 	
 /**
@@ -2899,7 +2899,7 @@ function remove_all_resources_from_collection($ref){
     collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
     foreach($removed_resources as $removed_resource_id)
         {
-        collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
+        collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
         }
 
     sql_query("DELETE FROM collection_resource WHERE collection = '" . escape_check($ref) . "'");

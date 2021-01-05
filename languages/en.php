@@ -627,6 +627,7 @@ $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to s
 $lang['log-f']="Replaced file";
 $lang['log-X']="Locked resource";
 $lang['log-Y']="Unlocked resource";
+$lang['log-XK']="Deleted external access key";
 $lang['log-EUP']="External share upload";
 
 /* Universal log codes (generic - not for example, resource specific) */
@@ -1337,6 +1338,8 @@ $lang["collectionlog-U"]="Allow users to modify";
 $lang["collectionlog-e"]="Edited"; // Generic edit
 $lang["collectionlog-SEU"]="Shared upload link externally";
 $lang["collectionlog-EEU"]="Edited external upload";
+$lang['collectionlog-XK']="Deleted external access key";
+
 
 $lang["viewuncollectedresources"]="View resources not used in collections";
 

@@ -69,7 +69,6 @@ $internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($us
 if ('' != $deleteaccess && enforcePostRequest($ajax))
     {
     delete_resource_access_key($ref, $deleteaccess);
-    resource_log($ref, LOG_CODE_SYSTEM, '', '', '', str_replace('%access_key', $deleteaccess, $lang['access_key_deleted']));
     }
 
 # Process deletion of custom user access

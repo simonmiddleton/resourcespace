@@ -628,7 +628,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 // Delete the temporary upload_collection
                                 delete_collection($collection);
                                 // Send notification to creator of upload 
-                                // TODO Should this be the actual creator of the share?
                                 external_upload_notify($external_upload, $k, $collection);
                                 $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k,"collection"=>$external_upload));
                                 }

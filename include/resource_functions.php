@@ -5937,7 +5937,9 @@ function get_resource_external_access($resource)
         
 function delete_resource_access_key($resource,$access_key)
     {
+    global $lang;
     sql_query("delete from external_access_keys where access_key='$access_key' and resource='$resource'");
+    resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
 function resource_type_config_override($resource_type)
