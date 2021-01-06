@@ -814,3 +814,14 @@ function api_get_resource_collections($ref)
 
     return $ref_collections;
     }
+
+function api_update_related_resource($ref,$related,$add=true)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    $related = explode(",",$related);
+    return update_related_resource($ref,$related,$add);
+    }
