@@ -683,7 +683,11 @@ function mplus_flip_struct_by_module(array $ramc)
             );
             }
 
-        $flipped_struct[$amc['module_name']]['resources'][$resource_ref] = $amc['field_values'][$amc['rs_uid_field']];
+        // The technical ID key (MPLUS_FIELD_ID - __id) is added after a successful validation to the associated module
+        // configuration ($amc). From this point on, the code will use the __id value. We don't use the one held in the 
+        // mplus_id_field because it might be holding a virtual ID value.
+        $mpid = (isset($amc[MPLUS_FIELD_ID]) ? $amc[MPLUS_FIELD_ID] : $amc['field_values'][$amc['rs_uid_field']]);
+        $flipped_struct[$amc['module_name']]['resources'][$resource_ref] = $mpid;
         }
 
     return $flipped_struct;
