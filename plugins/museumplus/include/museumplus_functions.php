@@ -736,8 +736,8 @@ function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info'
         {
         $json_last_error_msg = json_last_error_msg();
 
-        debug("mplus_log_event: [{$lvl}] {$msg}. This triggered the following JSON error: {$json_last_error_msg}");
-        debug("mplus_log_event: JSON error when \$ctx = " . print_r($ctx, true));
+        debug("[plugin][museumplus] mplus_log_event: [{$lvl}] {$msg}. This triggered the following JSON error: {$json_last_error_msg}");
+        debug("[plugin][museumplus] mplus_log_event: JSON error when \$ctx = " . print_r($ctx, true));
 
         // Log instead the JSON error message
         $json_encoded_ctx = "Please check debug log (if enabled). The context triggered the following JSON error: {$json_last_error_msg}";

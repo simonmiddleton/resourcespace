@@ -128,7 +128,6 @@ function mplus_search(string $module_name, DOMDocument $search)
 */
 function mplus_get_response_xml(array $result)
     {
-    // $xml = new DOMDocument();
     $xml = new DOMDocument('1.0', 'UTF-8');
 
     if($result['headers']['content-type'][0] == 'application/xml')
@@ -139,32 +138,115 @@ function mplus_get_response_xml(array $result)
     return $xml;
     }
 
-#### legacy code from mplus_search(). Might be useful later
-/*
-$result = array();
-foreach($xml->getElementsByTagName('systemField') as $system_field)
-    {
-    foreach($system_field->attributes as $attr)
-        {
-        if($attr->nodeName != 'name' || $attr->nodeValue != '__lastModified')
-            {
-            continue;
-            }
 
-        $value = $system_field->getElementsByTagName('value');
-        $result[$attr->nodeValue] = $value[0]->nodeValue;
-        }
-    }
-foreach($xml->getElementsByTagName('virtualField') as $virtual_field)
-    {
-    foreach($virtual_field->attributes as $attr)
-        {
-        if($attr->nodeName != 'name')
-            {
-            continue;
-            }
-
-        $result[$attr->nodeValue] = $virtual_field->nodeValue;
-        }
-    }
+/**
+* Synchronise (search & import) MuseumPlus module fields to the associated ("linked") resources.
+* 
+* @param  array  $ramc  Valid resources with an associated module configuration. {@see mplus_validate_association()}
+* 
+* @return void|array Returns NULL if sync finished (or had nothing to process) -or- list of errors caught during the 
+*                    validation/sync process (NOTE: validation errors get carried forward). 
 */
+function mplus_sync(array $ramc)
+    {
+    mplus_log_event('Called mplus_sync()', [], 'debug');
+
+    global $lang, $museumplus_api_batch_chunk_size;
+
+    $errors = (isset($ramc['errors']) && is_array($ramc['errors']) ? $ramc['errors'] : []);
+    $module_items_data = [];
+
+    $modules = mplus_flip_struct_by_module($ramc);
+    foreach($modules as $module_name => $mdata)
+        {
+        if(empty($mdata['field_mappings']))
+            {
+            mplus_log_event('mplus_sync(): No field mappings configured for this module!', ['module_name' => $module_name], 'error');
+            $errors[] = str_replace('%name', $module_name, $lang['museumplus_error_module_no_field_maps']);
+            continue;
+            }
+
+        foreach(array_chunk($mdata['resources'], $museumplus_api_batch_chunk_size, true) as $resources_chunk)
+            {
+            $search_xml = mplus_xml_search_by_fieldpath(MPLUS_FIELD_ID, $resources_chunk, $mdata['field_mappings']);
+            $mplus_search = mplus_search($module_name, $search_xml);
+            if(empty($mplus_search))
+                {
+                // Search failed for some reason. Move to the next chunk silently (do not exit process).
+                continue;
+                }
+
+            $mplus_search_xml = mplus_get_response_xml($mplus_search);
+
+            // No module items found (if since last successful validation, the module item has been deleted in MuseumPlus)
+            $module_node = $mplus_search_xml->getElementsByTagName('module')->item(0);
+            if($module_node->hasAttributes() && $module_node->attributes->getNamedItem('totalSize')->value == 0)
+                {
+                mplus_log_event('mplus_sync(): Unable to find searched module items', [], 'error');
+                // We don't send the error to the end user as this should be an exceptional scenario not caused or fixable by them
+                continue;
+                }
+
+            foreach($mplus_search_xml->getElementsByTagName('moduleItem') as $module_item)
+                {
+                $mpid = $module_item->getAttribute('id');
+                if($mpid === '' || !$module_item->hasChildNodes())
+                    {
+                    continue;
+                    }
+
+                foreach($module_item->childNodes as $child_node)
+                    {
+                    if(!in_array($child_node->tagName, ['systemField', 'dataField', 'virtualField']))
+                        {
+                        continue;
+                        }
+
+                    $attr_name = $child_node->getAttribute('name');
+                    if(!in_array($attr_name, array_merge($mdata['field_mappings'], ['__lastModified'])))
+                        {
+                        continue;
+                        }
+
+                    $value = $child_node->getElementsByTagName('value')->item(0);
+                    $module_items_data[$module_name][$mpid][$attr_name] = (!is_null($value) ? $value->nodeValue : '');
+                    }
+                }
+            }
+        }
+
+    // Update resources' metadata fields
+    foreach($ramc as $r_ref => $amc)
+        {
+        if(
+            !is_numeric($r_ref)
+            // Search didn't return results for the MpID on this module
+            || !isset($module_items_data[$amc['module_name']][$amc[MPLUS_FIELD_ID]])
+        )
+            {
+            continue;
+            }
+
+        $item_data = $module_items_data[$amc['module_name']][$amc[MPLUS_FIELD_ID]];
+
+        foreach($amc['field_mappings'] as $fm)
+            {
+            $rtf_ref = $fm['rs_field'];
+            $mapped_mplus_field = $fm['field_name'];
+
+            if(!isset($item_data[$mapped_mplus_field]) || $item_data[$mapped_mplus_field] === '')
+                {
+                continue;
+                }
+
+            update_field($r_ref, $rtf_ref, escape_check($item_data[$mapped_mplus_field]));
+            }
+        }
+
+    if(!empty($errors))
+        {
+        return $errors;
+        }
+
+    return;
+    }

@@ -50,79 +50,25 @@ function HookMuseumplusAllInitialise()
     return;
     }
 
-function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing)
-    {
-    global $lang, $museumplus_mpid_field, $museumplus_resource_types, $museumplus_host, $museumplus_application,
-           $museumplus_api_user, $museumplus_api_pass, $museumplus_rs_saved_mappings, $museumplus_search_mpid_field;
-
-   $resource_data = get_resource_data($resource);
-
-   if(!in_array($resource_data['resource_type'], $museumplus_resource_types))
-        {
-        return;
-        }
-
-    if($museumplus_mpid_field != $field)
-        {
-        return;
-        }
-
-    $mpid = $value; # CAN BE ALPHANUMERIC
-    if(trim($mpid) === '')
-        {
-        return;
-        }
-
-    $conn_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
-    if(empty($conn_data))
-        {
-        debug("MUSEUMPLUS - update_field: {$lang['museumplus_error_bad_conn_data']}");
-        return;
-        }
-
-    $museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
-    $mplus_data = mplus_search($conn_data, $museumplus_rs_mappings, 'Object', $mpid, $museumplus_search_mpid_field);
-
-    foreach($mplus_data as $mplus_field => $field_value)
-        {
-        if(!array_key_exists($mplus_field, $museumplus_rs_mappings))
-            {
-            continue;
-            }
-
-        $rs_field = $museumplus_rs_mappings[$mplus_field];
-
-        update_field($resource, $rs_field, escape_check($field_value));
-        }
-
-    return;
-    }
-
+/* 
+IMPORTANT: DO NOT USE the "update_field" hook! You can potentially end up in a processing loop.
+The function is used in multiple places and won't be able to let the user know there were errors caused by validation/sync.
+In addition, the "museumplus_script.php" can run every minute and pick up any remaining resources left unprocessed.
+function HookMuseumplusAllUpdate_field($resource, $field, $value, $existing) {}
+*/
 
 /**
 * MuseumPlus plugin attaching to the 'aftersaveresourcedata' hook
-* IMPORTANT: aftersaveresourcedata hook is called from both save_resource_data() and save_resource_data_multi()!
+* IMPORTANT: 'aftersaveresourcedata' hook is called from both save_resource_data() and save_resource_data_multi()!
 * 
 * @param int|array $R Generic type for resource ID(s). It will be a resource ref when hook is called from 
-*                     save_resource_data() -or- a list of resource IDs when called from save_resource_data_multi().
-* @param array $added_nodes   List of nodes added. When called from save_resource_data_multi() it is a list of all added nodes.
-* @param array $removed_nodes List of nodes removed. When called from save_resource_data_multi() it is a list of all removed nodes.
+*                     save_resource_data() -OR- a list of resource IDs when called from save_resource_data_multi().
 * 
-* @return boolean|array Returns false to show hook didn't run or list of errors. See hook 'aftersaveresourcedata' in resource_functions.php for more info
+* @return boolean|array Returns FALSE to show hook didn't run or list of errors. See hook 'aftersaveresourcedata' in resource_functions.php for more info
 */
-function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes)
+function HookMuseumplusAllAftersaveresourcedata($R)
     {
-    mplus_log_event(
-        'Called HookMuseumplusAllAftersaveresourcedata()',
-        array(
-            'args' => array(
-                'R' => $R,
-                'added_nodes' => $added_nodes,
-                'removed_nodes' => $removed_nodes,
-            ),
-        ),
-        'debug'
-    );
+    mplus_log_event('Called HookMuseumplusAllAftersaveresourcedata()', ['resources' => $R], 'debug');
 
     if(!(is_numeric($R) || is_array($R)))
         {
@@ -154,33 +100,17 @@ function HookMuseumplusAllAftersaveresourcedata($R, $added_nodes, $removed_nodes
         array('resources' => array_keys($resources))
     );
 
-    $errors = array();
-    global $lang;
-
-
     // STEP 1: Clear (if configured) metadata fields mapped to MuseumPlus fields
+    // TODO: this probably needs to happen under certain conditions at either the validation or sync stage
     mplus_resource_clear_metadata(array_keys($resources));
 
     // STEP 2: validate the MpID for the associated module
     $resources_with_valid_ids = mplus_validate_association($resources, false);
-    if(isset($resources_with_valid_ids['errors']))
-        {
-        // $errors = array_merge($errors, $resources_with_valid_ids['errors']);
-        $validation_errors = $resources_with_valid_ids['errors'];
-        unset($resources_with_valid_ids['errors']);
-        }
-
-    if(empty($resources_with_valid_ids))
-        {
-        return $errors;
-        }
 
     // STEP 3: Sync data from MuseumPlus (if resource has been re-associated with a different module record item)
+    $errors = mplus_sync($resources_with_valid_ids);
 
-
-
-
-    if(!empty($errors))
+    if(is_array($errors) && !empty($errors))
         {
         return $errors;
         }
