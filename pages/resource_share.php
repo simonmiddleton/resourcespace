@@ -116,10 +116,28 @@ if($editing && !$editexternalurl)
             }
         else
             {
-            ?><h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
+            if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+            else {$previous_page_modal = false;}
+            ?>
+            
+            <h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
             <p>
+            <?php
+            if($previous_page_modal)
+                {
+                ?>
+                <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return ModalLoad(this,true);">
+                <?php
+                }
+            else
+                {
+                ?>
                 <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+                <?php
+                }
+            ?>
+
+            <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
                 </a>
             </p><?php
             }

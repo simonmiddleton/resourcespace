@@ -73,14 +73,25 @@ if (isset($resource['is_transcoding']) && $resource['is_transcoding']==1)
 	}
 else
 	{
-		
-if(!$modal)
-		{
-		?>
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
-		<?php
-		}
 ?>
+<div class="BasicsBox"> 
+<?php
+if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+else {$previous_page_modal = false;}
+if(!$modal)
+    {
+    ?>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <?php
+    }
+    elseif ($previous_page_modal)
+    {
+    ?>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <?php
+    }
+?>
+</div>
 
 <div class="BasicsBox"> 
 	
