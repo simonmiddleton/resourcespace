@@ -76,13 +76,29 @@ function HookMuseumplusAllAftersaveresourcedata($R)
         }
     $refs = (is_array($R) ? $R : array($R));
 
+
+    // STEP 1: Determine which resources should be processed
     $batch_resource_data = get_resource_data_batch($refs);
-    // if resources are not in the "Active" state, then no further processing is required
-    $resources = array_keys(array_filter($batch_resource_data, function($r) { return $r['archive'] == 0; }));
-    // resources will get mutated after this call. From this point, resource ID is in the key and the value is the associated module config.
+    // If resources are not in the "Active" state, then no further processing is required
+    $active_resources = array_keys(array_filter($batch_resource_data, function($r) { return $r['archive'] == 0; }));
     // Note: resources for which a module config wasn't found have been dropped from the list as no further processing is needed.
-    $resources = mplus_get_associated_module_conf($resources, true);
-    // if resources have a type not valid for the associated module configuration then no further processing is required
+    $resources = mplus_get_associated_module_conf($active_resources, true);
+    // Filter resources - discard of the ones where the "module name - MpID" combination hasn't change since the last time the 
+    // resource association was validated
+    foreach(mplus_flip_struct_by_module($resources) as $module_name => $mdata)
+        {
+        $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
+        $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
+        foreach(array_keys($mdata['resources']) as $r_ref)
+            {
+            if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
+                {
+                unset($resources[$r_ref]);
+                continue;
+                }
+            }
+        }
+    // If resources have a type not valid for the associated module configuration then no further processing is required
     $resources = array_filter(
         $resources,
         function($cfg, $r) use ($batch_resource_data)
@@ -95,20 +111,11 @@ function HookMuseumplusAllAftersaveresourcedata($R)
         return false;
         }
 
-    mplus_log_event(
-        'Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...',
-        array('resources' => array_keys($resources))
-    );
 
-    // STEP 1: Clear (if configured) metadata fields mapped to MuseumPlus fields
-    // TODO: this probably needs to happen under certain conditions at either the validation or sync stage
+    // STEP 2: Process resources with an associated module configuration
+    mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => array_keys($resources)]);
     mplus_resource_clear_metadata(array_keys($resources));
-
-    // STEP 2: validate the MpID for the associated module
-    $resources_with_valid_ids = mplus_validate_association($resources, false);
-
-    // STEP 3: Sync data from MuseumPlus (if resource has been re-associated with a different module record item)
-    $errors = mplus_sync($resources_with_valid_ids);
+    $errors = mplus_sync(mplus_validate_association($resources, false));
 
     if(is_array($errors) && !empty($errors))
         {

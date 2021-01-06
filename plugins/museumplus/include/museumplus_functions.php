@@ -408,10 +408,10 @@ function mplus_get_cfg_by_module_name(string $n)
 * @param boolean $use_technical_id Force validating using the technical ID (ie __id) fieldPath.
 * 
 * @return array Returns the valid resources that have a valid combination of "module name - MpID (virtual or technical)".
-*               The returned resource associated module configuration will get mutated with:
-*               - an additional "__id" key which will always hold the technical ID of the module item "linked" to that
-*                 resource - always use MPLUS_FIELD_ID constant to find this key;
-*               - an optional "errors" key to hold any errors the end user should be aware of;
+* IMPORTANT: Each returned resource associated module configuration will get mutated with an additional "__id" key 
+*            which will always hold the technical ID of the module item "linked" to that resource - always use
+*            MPLUS_FIELD_ID constant to find this key.
+* An optional "errors" key may be added to the return array to hold any errors the end user should be aware of.
 */
 function mplus_validate_association(array $ramc, bool $use_technical_id)
     {

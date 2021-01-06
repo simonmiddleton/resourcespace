@@ -127,15 +127,15 @@ function mplus_resource_clear_metadata(array $refs)
     {
     mplus_log_event('Called mplus_resource_clear_metadata()', ['refs' => $refs], 'debug');
 
+    global $museumplus_modules_saved_config, $museumplus_clear_field_mappings_on_change;
     $refs = array_filter($refs, 'is_int');
 
-    global $museumplus_modules_saved_config, $museumplus_clear_field_mappings_on_change;
     if(
         empty($refs)
         // No modules configured
         || is_null($museumplus_modules_saved_config) || $museumplus_modules_saved_config === ''
-        // System configured to not clear data on change
-        || $museumplus_clear_field_mappings_on_change == false
+        // System configured to not clear existing (old) MuseumPlus data on change
+        || $museumplus_clear_field_mappings_on_change === false
     )
         {
         return;
@@ -167,7 +167,7 @@ function mplus_resource_clear_metadata(array $refs)
     $sql_joins = '';
     foreach($joins as $join)
         {
-        if(!in_array($join, $resource_type_fields))
+        if(!is_numeric($join) || !in_array($join, $resource_type_fields))
             {
             continue;
             }
