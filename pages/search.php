@@ -688,7 +688,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
             });
         jQuery.ajax({
           type: 'POST',
-          url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true&offset=<?php echo $offset ?>',
+          url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true&offset=<?php echo urlencode($offset) ?>',
           data: {
             order: JSON.stringify(newOrder),
             <?php echo generateAjaxToken('reorder_search'); ?>
