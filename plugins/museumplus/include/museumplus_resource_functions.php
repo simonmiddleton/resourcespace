@@ -181,11 +181,7 @@ function mplus_resource_clear_metadata(array $refs)
         sql_query("UPDATE resource SET {$sql_joins} WHERE ref IN ('{$sql_in_refs}')");
         }
 
-    mplus_log_event('Cleared metadata field values',
-        [
-            'refs' => $refs,
-            'resource_type_fields' => $resource_type_fields,
-        ], 'debug');
+    mplus_log_event('Cleared metadata field values', ['refs' => $refs, 'resource_type_fields' => $resource_type_fields]);
 
     return;
     }
