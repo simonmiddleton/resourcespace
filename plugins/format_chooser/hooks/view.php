@@ -350,7 +350,7 @@ if ($alt_access)
 		<?php } 
 		else if (checkperm("q"))
 		{
-			?><td class="DownloadButton"><a href="<?php echo generateURL($baseurl_short."/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></td></td><?php
+			?><td class="DownloadButton"><a href="<?php echo generateURL($baseurl."/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></td></td><?php
 		}
 		else 
 		{ ?>
