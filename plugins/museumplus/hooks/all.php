@@ -83,8 +83,7 @@ function HookMuseumplusAllAftersaveresourcedata($R)
     $active_resources = array_keys(array_filter($batch_resource_data, function($r) { return $r['archive'] == 0; }));
     // Note: resources for which a module config wasn't found have been dropped from the list as no further processing is needed.
     $resources = mplus_get_associated_module_conf($active_resources, true);
-    // Filter resources - discard of the ones where the "module name - MpID" combination hasn't change since the last time the 
-    // resource association was validated
+    // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
     foreach(mplus_flip_struct_by_module($resources) as $module_name => $mdata)
         {
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
@@ -106,6 +105,19 @@ function HookMuseumplusAllAftersaveresourcedata($R)
             return (isset($batch_resource_data[$r]['resource_type']) && in_array($batch_resource_data[$r]['resource_type'], $cfg['applicable_resource_types']));
             },
         ARRAY_FILTER_USE_BOTH);
+
+
+/*
+TODO; use new function - mplus_resource_get_association_data(array $filter) - and pass extra filters requied for this use case:
+- search only for specific resource IDs
+    $refs = array_filter($refs, 'is_numeric');
+- get only resources that had their "module name - MpID" combination changed with this save:
+    AND r.museumplus_data_md5 <> MD5(CONCAT(r.ref, \'_comb(\', n.`name`, \'-\', rd.`value`, \')\'))
+
+then call 
+$resources = mplus_get_associated_module_conf($active_resources, true);
+*/ 
+
     if(empty($resources))
         {
         return false;

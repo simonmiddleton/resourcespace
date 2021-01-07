@@ -70,7 +70,7 @@ $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
 $page_def[] = config_add_text_input('museumplus_log_directory', $lang['museumplus_log_directory']);
-// $page_def[] = config_add_single_ftype_select('museumplus_integrity_check_field', $lang[''], 420); # not in use until we can reliably get integrity checks of the data from M+
+// $page_def[] = config_add_single_ftype_select('museumplus_integrity_check_field', $lang['museumplus_integrity_check_field'], 420); # not in use until we can reliably get integrity checks of the data from M+
 
 // MuseumPlus - modules configuration
 $page_def[] = config_add_section_header($lang['museumplus_modules_configuration_header']);

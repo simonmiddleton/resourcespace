@@ -1,4 +1,5 @@
 <?php
+// TODO: remove the error control operator. PHP 8 compatibility
 function HookMuseumplusCron_copy_hitcountAddplugincronjob()
     {
     global $lang, $museumplus_enable_script;

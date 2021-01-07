@@ -185,3 +185,84 @@ function mplus_resource_clear_metadata(array $refs)
 
     return;
     }
+
+
+/**
+* Function to retrieve all resources that have their MpID field set to a value
+* and that are within the allowed resource types for an update
+* 
+* @return array
+*/
+function mplus_resource_get_association_data(array $filters)
+    {
+    if(
+        !isset($GLOBALS['museumplus_module_name_field'], $GLOBALS['museumplus_modules_saved_config'])
+        || !(is_numeric($GLOBALS['museumplus_module_name_field']) && $GLOBALS['museumplus_module_name_field'] > 0)
+        || !(is_string($GLOBALS['museumplus_modules_saved_config']) && $GLOBALS['museumplus_modules_saved_config'] !== '')
+    )
+        {
+        return [];
+        }
+
+    $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
+    $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
+
+    // Get filters required at "a per module configuration" level
+    $rs_uid_fields = [];
+    $sql_module_cfg_filter = [];
+    foreach($modules_config as $mcfg)
+        {
+        $rs_uid_field = $mcfg['rs_uid_field'];
+        if(is_numeric($rs_uid_field) && $rs_uid_field > 0 && !in_array($rs_uid_field, $rs_uid_fields))
+            {
+            $rs_uid_fields[] = $rs_uid_field;
+            }
+
+        $module_name = $mcfg['module_name'];
+        $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_numeric');
+
+        if(
+            $module_name !== ''
+            && !empty($applicable_resource_types)
+            && is_numeric($rs_uid_field) && $rs_uid_field > 0
+        )
+            {
+            $sql_module_cfg_filter[] = sprintf(
+                '(n.`name` = \'%s\' AND r.resource_type IN (\'%s\') AND rd.resource_type_field = \'%s\')',
+                $module_name,
+                implode('\', \'', $applicable_resource_types),
+                escape_check($rs_uid_field)
+            );
+            }
+        }
+    if(empty($rs_uid_fields) || empty($sql_module_cfg_filter)) { return []; }
+
+    $sqlq = sprintf('
+            SELECT r.ref,
+                   r.resource_type,
+                   r.archive,
+                   MD5(CONCAT(r.ref, \'_comb(\', n.`name`, \'-\', rd.`value`, \')\')) AS `computed_md5`,
+                   r.museumplus_data_md5,
+                   r.museumplus_technical_id,
+                   n.`name` AS `module`,
+                   rd.`value` AS `mpid_value`,
+                   rd.resource_type_field AS `rs_uid_field`
+              FROM resource AS r
+         LEFT JOIN resource_node AS rn ON r.ref = rn.resource
+        RIGHT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
+         LEFT JOIN resource_data AS rd ON r.ref = rd.resource AND rd.resource_type_field IN (\'%s\')
+             WHERE r.ref > 0
+               AND r.archive = 0
+               AND rd.`value` IS NOT NULL
+               %s # Filters specific to each module configuration (e.g applicable resource types)
+               %s # Additional filters
+        ',
+        escape_check($module_name_field_ref),
+        implode('\', \'', $rs_uid_fields),
+        'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $sql_module_cfg_filter) . PHP_EOL . ')',
+        implode(PHP_EOL, $filters)
+    );
+    $resources = sql_query($sqlq);
+
+    return $resources;
+    }
