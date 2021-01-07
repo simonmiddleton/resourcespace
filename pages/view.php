@@ -1646,7 +1646,7 @@ hook ("resourceactions") ?>
 		}
 	if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))	
 		{ ?>
-		<li><a href="<?php echo $baseurl ?>/pages/metadata_download.php?ref=<?php echo urlencode($ref)?>" onclick="return ModalLoad(this, true);">
+		<li><a href="<?php echo $baseurl ?>/pages/metadata_download.php?ref=<?php echo urlencode($ref)?>&amp;context=<?php if($modal){echo 'Modal';}?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
 		} 
