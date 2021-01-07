@@ -875,10 +875,40 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     // Valid emails? then make it back into an RFC 2822 compliant string
     $email = implode(', ', $valid_emails);
     
+    // Validate all files to attach are valid and copy any that are URLs locally
+    $attachfiles = array();
+    $deletefiles = array();
+    foreach ($files as $filename=>$file)
+        {
+        if (substr($file,0,4)=="http")
+            {
+            $ctx = stream_context_create(array(
+                'http' => array(
+                    'method' => 'POST',
+                    'timeout' => 2,
+                    "ignore_errors" => true,
+                    )
+                ));                                    
+            $filedata = file_get_contents($file, false, $ctx); # File is a URL, not a binary object. Go and fetch the file.
+            $file = get_temp_dir() . "/mail_" . uniqid() . ".bin";
+            file_put_contents($file,$filedata);
+            $deletefiles[]=$file;
+            }
+        elseif(!file_exists($file))
+            {
+            debug("file missing: " . $file);
+            continue;
+            }
+        $attachfiles[$filename] = $file;
+        }
+
+            
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     global $use_phpmailer;
-    if ($use_phpmailer){
-        send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$files); 
+    if ($use_phpmailer)
+        {
+        send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$attachfiles); 
+        cleanup_files($deletefiles);
         return true;
         }
     
@@ -891,7 +921,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 
     $headers = '';
 
-    if (count($files)>0)
+    if (count($attachfiles)>0)
         {
         //add boundary string and mime type specification
         $random_hash = md5(date('r', time()));
@@ -899,34 +929,32 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         
         $body="This is a multi-part message in MIME format." . $eol . "--PHP-mixed-" . $random_hash . $eol;
         $body.="Content-Type: text/plain; charset=\"utf-8\"" . $eol . "Content-Transfer-Encoding: 8bit" . $eol . $eol;
-        $body.=$message. $eol . $eol . $eol;
-        # Attach all the files
-        foreach ($files as $filename=>$file)
+        $body.=$message. $eol . $eol . $eol;        
+        # Attach all the files (paths have already been checked)
+        foreach ($attachfiles as $filename=>$file)
             {
-            if (substr($file,0,4)=="http")
-                {
-                $file=file_get_contents($file); # File is a URL, not a binary object. Go and fetch the file.
-                }
-            
-            $attachment = chunk_split(base64_encode($file));
+            $filedata = file_get_contents($file);
+            $attachment = chunk_split(base64_encode($filedata));
             $body.="--PHP-mixed-" . $random_hash . $eol;
             $body.="Content-Type: application/octet-stream; name=\"" . $filename . "\"" . $eol; 
             $body.="Content-Transfer-Encoding: base64" . $eol;
-            $body.="Content-Disposition: attachment; filename=\"" . $filename . "\"" . $eol . $eol;
+            $body.="Content-Disposition: attachment; filename=\"" . $filename . "\"'" . $eol . $eol;
             $body.=$attachment;
             }
         $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
 
         $message = $body;
+        $disable_quoted_printable_enc = true; // If false then attachment names and utf8 text get corrupted
         }
 
     
     $message.=$eol.$eol.$eol . $email_footer;
     
-    if ($disable_quoted_printable_enc==false){
-    $message=rs_quoted_printable_encode($message);
-    $subject=rs_quoted_printable_encode_subject($subject);
-    }
+    if (!$disable_quoted_printable_enc)
+        {
+        $message=rs_quoted_printable_encode($message);
+        $subject=rs_quoted_printable_encode_subject($subject);
+        }
    
     global $email_from;
     if ($from=="") {$from=$email_from;}
@@ -994,8 +1022,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     
     $headers .= "Date: " . date("r") .  $eol;
     $headers .= "Message-ID: <" . date("YmdHis") . $from . ">" . $eol;
-    #$headers .= "Return-Path: returnpath" . $eol;
-    //$headers .= "Delivered-to: $email" . $eol;
     $headers .= "MIME-Version: 1.0" . $eol;
     $headers .= "X-Mailer: PHP Mail Function" . $eol;
     if (!is_html($message))
@@ -1009,6 +1035,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
     log_mail($email,$subject,$reply_to);
     mail ($email,$subject,$message,$headers);
+    cleanup_files($deletefiles);
     }
 
 /**
@@ -1345,7 +1372,19 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             {
             if (substr($file,0,4)=="http")
                 {
-                $file=file_get_contents($file); # File is a URL, not a binary object. Go and fetch the file.
+                $ctx = stream_context_create(array(
+                    'http' => array(
+                        'method' => 'POST',
+                        'timeout' => 2,
+                        "ignore_errors" => true,
+                        )
+                    ));                                    
+                $file = file_get_contents($file, false, $ctx); # File is a URL, not a binary object. Go and fetch the file.
+                }
+            elseif(!file_exists($file))
+                {
+                debug("file missing: " . $file);
+                continue;
                 }
             
             $mail->AddAttachment($file,$filename);
@@ -1801,8 +1840,6 @@ function clear_process_lock($name)
     unlink(get_temp_dir() . "/process_locks/" . $name);
     return true;
     }
-    
-    
 
 /**
  * Custom function for retrieving a file size. A resolution for PHP's issue with large files and filesize(). 
@@ -2027,6 +2064,88 @@ function run_command($command, $geterrors = false, array $params = array())
     return $output;
     }
 
+/**
+ * Similar to run_command but returns an array with the resulting output (stdout & stderr) fetched concurrently
+ * for improved performance.
+ *
+ * @param  mixed $command   Command to run
+ *
+ * @return array Command output
+ */
+function run_external($command)
+    {
+    global $debug_log;
+    
+    $pipes = array();
+    $output = array();
+    # Pipes for stdin, stdout and stderr
+    $descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("pipe", "w"));
+
+    # Execute the command
+    $process = proc_open($command, $descriptorspec, $pipes);
+
+    # Ensure command returns an external PHP resource
+    if (!is_resource($process))
+        {
+        return false;
+        }
+    
+    # Immediately close the input pipe
+    fclose($pipes[0]);
+    
+    # Set both output streams to non-blocking mode
+    stream_set_blocking($pipes[1], false);
+    stream_set_blocking($pipes[2], false);
+
+    while (true)
+        {
+        $read = array();
+
+        if (!feof($pipes[1]))
+            {
+            $read[] = $pipes[1];
+            }
+
+        if (!feof($pipes[2]))
+            {
+            $read[] = $pipes[2];
+            }
+ 
+        if (!$read)
+            {
+            break;
+            }
+ 
+        $write = NULL;
+        $except = NULL;
+        $ready = stream_select($read, $write, $except, 2);
+ 
+        if ($ready === false)
+            {
+            break;
+            }
+ 
+        foreach ($read as $r)
+            {
+            # Read a line and strip newline and carriage return from the end
+            $line = rtrim(fgets($r, 1024),"\r\n");  
+            $output[] = $line;
+            }
+        }
+ 
+    # Close the output pipes
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    
+    if ($debug_log)
+        {
+        debug("CLI output: ". implode("\n", $output));
+        }
+ 
+    proc_close($process);
+ 
+    return $output;
+    }
 
 /**
  * Display a styledalert() modal error and optionally return the browser to the previous page after 2 seconds
@@ -4354,3 +4473,38 @@ function permission_negative_j(int $ref)
     {
     return checkperm("-j{$ref}");
     }
+
+/**
+ * Delete temporary files
+ *
+ * @param  array $files array of file paths
+ * @return void
+ */
+function cleanup_files($files)
+    {
+    // Clean up any temporary files
+    $GLOBALS["use_error_exception"] = true;
+    foreach($files as $deletefile)
+        {
+        try
+            {
+            unlink($deletefile);
+            }
+        catch(Exception $e)
+            {
+            debug("Unable to delete - file not found: " . $deletefile);
+            }
+        }
+    unset($GLOBALS["use_error_exception"]);
+    }
+
+/**
+ * Validate if value is integer or string integer
+ *
+ * @param  mixed $var - variable to check
+ * @return boolean true if variable resolves to integer value
+ */
+function is_int_loose($var)
+    {
+    return (string)(int)$var === (string)$var;
+     }

@@ -138,7 +138,7 @@ $core_tests = scandir("test_list");
 $core_tests = array_filter($core_tests, function ($string)
     {
     global $specific_tests;
-    if (strpos($string, ".php")===false)
+    if (substr($string,-4,4) != ".php")
         {
         return false;
         }
@@ -162,29 +162,29 @@ $core_tests = array('test_list' => $core_tests);
 # Get a list of plugin tests
 $plugin_tests = array();
 foreach ($inst_plugins as $plugin)
-	{
-	if (file_exists('../plugins/' . $plugin['name'] . '/tests'))
-		{	
-		$plugin_tests['../plugins/' . $plugin['name'] . '/tests'] = scandir('../plugins/' . $plugin['name'] . '/tests');
-		}
-	}
+    {
+    if (file_exists('../plugins/' . $plugin['name'] . '/tests'))
+        {
+        $plugin_tests['../plugins/' . $plugin['name'] . '/tests'] = scandir('../plugins/' . $plugin['name'] . '/tests');
+        }
+    }
 foreach ($plugin_tests as $key => $tests)
-	{
-	$plugin_tests[$key] = array_filter($tests, function ($string)
-		{
-		global $specific_tests;
-		if (strpos($string, ".php")===false)
-			{
-			return false;
-			}
-		if (count($specific_tests)==0)
-			{
-			return true;
-			}
-		return false;
-		});
-	asort($tests);
-	}
+    {
+    $plugin_tests[$key] = array_filter($tests, function ($string)
+        {
+        global $specific_tests;
+        if (substr($string,-4,4) != ".php")
+            {
+            return false;
+            }
+        if (count($specific_tests)==0)
+            {
+            return true;
+            }
+        return false;
+        });
+    asort($tests);
+    }
 	
 $plugin_tests = array_filter($plugin_tests); # Remove empty sub arrays
 
@@ -193,9 +193,9 @@ if (!empty($plugin_tests))
     $tests = array_merge($core_tests, $plugin_tests);	
     }
 else
-	{
-	$tests = $core_tests;	
-	}		
+    {
+    $tests = $core_tests;	
+    }		
 
 # Run tests
 echo "-----\n";ob_flush();

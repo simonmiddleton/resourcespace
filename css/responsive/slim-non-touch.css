@@ -66,7 +66,7 @@ input {
     margin-bottom: 0;
   }
   .HorizontalNav ul {
-    padding: 0em 0;
+    padding: 0 0;
   }
   #Header.slimheader_darken a:link, #Header.slimheader_darken a:visited, #Header.slimheader_darken a:active {
     color: #E1E8F0;

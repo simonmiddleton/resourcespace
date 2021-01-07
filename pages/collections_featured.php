@@ -70,11 +70,9 @@ $rendering_options = array(
     "all_fcs" => $all_fcs,
 );
 
-
 $featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array()) : array());
 usort($featured_collections, "order_featured_collections");
 render_featured_collections($rendering_options, $featured_collections);
-
 
 $smart_fcs_list = array();
 if($parent == 0 && $smart_rtf == 0)

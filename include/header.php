@@ -112,13 +112,8 @@ global $enable_ckeditor;
 if ($enable_ckeditor){?>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script><?php } ?>
 <?php if (!$disable_geocoding)
-    {?>
+    { ?>
     <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-    <?php
-    if ($use_google_maps)
-        {
-        echo "<script src=\"https://maps.google.com/maps/api/js?" . (isset($google_maps_api_key) ? ("key=" . $google_maps_api_key . "&") : "") . "v=3\"></script>\n";
-        } ?>
     <?php
     } ?>
 <?php if (!hook("ajaxcollections")) { ?>
@@ -632,7 +627,7 @@ jQuery(document).ready(function()
         var linksContainer = jQuery("#DropdownCaret");
         if (linksContainer.has(e.target).length === 0 && !linksContainer.is(e.target)) 
             {
-            jQuery('#OverFlowLinks').fadeOut();
+            jQuery('#OverFlowLinks').hide();
             }
         });
     });

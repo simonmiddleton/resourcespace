@@ -153,7 +153,6 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             $resources_fields_data = array();
             }
 
-        $resources_fields_data = json_decode(file_get_contents($cache_data[$n]),true);
         foreach($resources_fields_data as $resource_id => $resource_fields)
             {
             // First column will always be Resource ID

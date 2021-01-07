@@ -2305,7 +2305,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $nodes_to_remove[] = $nodedata["ref"];
                 }
-            $newvalues[] = $value;
+            // Assure no duplication added
+            if(!in_array($value, $newvalues))
+                {
+                $newvalues[] = $value;
+                }
             }
 
         $current_field_nodes = get_resource_nodes($resource,$field);
@@ -6877,7 +6881,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         }
     else
         {
-        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false,true);
+        $uploadstatus = upload_file($ref,$no_exif,false,$autorotate,$file_location,false,false);
         if(!$uploadstatus)
             {
             debug("replace_resource_file - upload_file() failed");

@@ -1009,6 +1009,7 @@ $lang["collection_download_format"] = "Download file format";
 $lang["collection_download_no_tar"] = "Standard archive download";
 $lang["collection_download_use_tar"] = "TAR archive";
 $lang["collection_download_tar_info"] = "TAR files will start downloading instantly. If you do not use this option you may find that your download is limited.";
+$lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
 $lang["collection_download_tar_applink"] = "Can't open TAR files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
 $lang["downloadsize"]="Download size";
 $lang["tagging"]="Tagging";
@@ -2771,6 +2772,7 @@ $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your
 $lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
 $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
+$lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";

@@ -1476,28 +1476,42 @@ function plugin_activate_for_setup($plugin_name)
 		$$name = $value;
 		}
 	}
+
 function register_plugin_language($plugin)
     {
     global $plugins,$language,$pagename,$lang,$applicationname,$customsitetext;
     
-    	# Include language file
-    	$langpath=get_plugin_path($plugin) . "/languages/";
-	
-    	if (file_exists($langpath . "en.php")) {include $langpath . "en.php";}
-    	if ($language!="en")
-    		{
-    		if (substr($language, 2, 1)=='-' && substr($language, 0, 2)!='en')
-    			@include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
-    		@include $langpath . safe_file_name($language) . ".php";
-    		}
-	// If we have custome text created from Manage Content we need to reset this
-	if(isset($customsitetext))
-		{
-		foreach ($customsitetext as $customsitetextname=>$customsitetextentry)
-			{
-			$lang[$customsitetextname] = $customsitetextentry;
-			}
-		}
+    # Include language file
+    $langpath = get_plugin_path($plugin) . "/languages/";
+
+    if (file_exists($langpath . "en.php"))
+        {
+        include $langpath . "en.php";
+        }
+
+    if ($language != "en")
+        {
+        if (substr($language, 2, 1) == '-' && substr($language, 0, 2) != 'en')
+            {
+            if (file_exists($langpath . safe_file_name(substr($language, 0, 2)) .  ".php"))
+                {
+                include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
+                }
+            }
+        if (file_exists($langpath . safe_file_name($language) . ".php"))
+            {
+            include $langpath . safe_file_name($language) . ".php";
+            }
+        }
+
+    // If we have custom text created from Manage Content we need to reset this
+    if(isset($customsitetext))
+        {
+        foreach ($customsitetext as $customsitetextname=>$customsitetextentry)
+            {
+            $lang[$customsitetextname] = $customsitetextentry;
+            }
+        }
     }
     
 function get_plugin_path($plugin,$url=false)

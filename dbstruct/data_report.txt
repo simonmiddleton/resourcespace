@@ -389,3 +389,34 @@ SELECT * FROM
 UNION ALL 
 SELECT * FROM 
 (SELECT 'Newest' AS State, ref 'Resource', ifnull(last_verified,'NEVER') 'Verified' FROM resource WHERE ref>0 AND integrity_fail=0 ORDER BY last_verified DESC LIMIT 1) AS b;"
+20,"Request details","
+SELECT
+    cres.resource 'Resource ID',
+    typ.name 'Resource Type',
+    usreq.username 'User',
+    req.comments 'Comments',
+    req.created 'Date requested',
+    req.reasonapproved 'Reason approved',
+    CASE
+        WHEN req.status = 0 THEN 'Pending'
+        WHEN req.status = 1 THEN 'Approved'
+        WHEN req.status = 2 THEN 'Declined'
+        ELSE 'UNDEFINED'
+    END 'Outcome',
+    usapp.username 'Approved / Declined by'
+
+FROM request req
+
+JOIN collection_resource cres ON req.collection=cres.collection
+
+JOIN resource res ON cres.resource = res.ref
+
+JOIN resource_type typ ON res.resource_type = typ.ref
+
+JOIN user usreq ON req.user = usreq.ref
+
+LEFT OUTER JOIN user usapp ON req.approved_declined_by = usapp.ref
+
+WHERE req.created>=date('[from-y]-[from-m]-[from-d]') AND req.created<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+
+ORDER BY req.created desc;"

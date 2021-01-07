@@ -272,7 +272,7 @@ $languages["sv"]="Svenska"; # Swedish
 # Disable language selection options (Includes Browser Detection for language)
 $disable_languages=false;
 
-# Show the language chooser on the bottom of each page
+# Show the language chooser on the user_home.php page
 $show_language_chooser=true;
 
 # Allow Browser Language Detection
@@ -781,6 +781,8 @@ $descthemesorder=false;
 #Hide advanced search on search bar
 $advancedsearch_disabled = false;
 
+# Display the advanced search as a link in the top navigation
+$advanced_search_nav = false;
 
 # Show Contributed by on Advanced Search (ability to search for resources contributed by a specific user)
 $advanced_search_contributed_by = true;
@@ -2327,7 +2329,7 @@ $upload_methods = array(
 
 # Allow to change the location of the upload folder, so that it is not in the
 # web visible path. Relative and abolute paths are allowed.
-$local_ftp_upload_folder = 'upload/';
+$local_ftp_upload_folder = '';
 
 # Use a file tree display for local folder upload
 $local_upload_file_tree=false;
@@ -2413,12 +2415,8 @@ $use_plugins_manager = true;
 # Allow Plugin Upload
 $enable_plugin_upload = true;
 
-
-# ------------- Geocoding / geolocation -------------
-# Note that a Google Maps API key is no longer required.
-#Disable geocoding features?
+# Disable geocoding features?
 $disable_geocoding = false;
-$use_google_maps = false;
 
 # After obtaining an API key, please set the following config option:
 # $google_maps_api_key = '';
@@ -3312,9 +3310,6 @@ $csv_export_add_original_size_url_column = false;
 
 // Show required field legend on upload
 $show_required_field_label = true;
-
-// Show extra home / about / contact us links in the page footer?
-$bottom_links_bar=false;
 
 # Prevent users without accounts from requesting resources when accessing external shares. If true, external users requesting access will be redirected to the login screen so only recommended if account requests are allowed.
 $prevent_external_requests=false;

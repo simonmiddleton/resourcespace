@@ -68,7 +68,7 @@ input[readonly] {
     border: 3px solid rgba(255, 255, 255, 0);
 }
 .ResourcePanel:hover {
-    box-shadow: 0 1px 10px 0px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
     z-index: 100;
 }
 .ResourcePanel.Selected { border: 3px solid #2E99E6; }
@@ -142,11 +142,10 @@ div.autocomplete ul li {color: #000;}
 .NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
 .NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
-.RecordPanel .Title,  {	border-bottom: 1px solid #BBBBBB;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownload {  background: #fff;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background: transparent;background-color: transparent;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend {background: #fff; border-color: #6D6D6D;}
 .ArchiveResourceTitle, .ResourcePendingSubmissionTitle, .ResourcePendingReviewTitle {color: #888;}
@@ -345,7 +344,7 @@ input:checked + .customFieldLabel, .keywordselected {
 
 .BreadcrumbsBox {color:#FFF;}
 .BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
-.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0em;}
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0;}
 
 .TopInpageNav select {
     background-color: #fff;
@@ -409,7 +408,7 @@ a.ui-button.plupload_button.ui-button-disabled {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar:vertical {width:12px;}
-::-webkit-scrollbar:horizonal {height:12px;}
+::-webkit-scrollbar:horizontal {height:12px;}
 ::-webkit-scrollbar,::-webkit-scrollbar-corner {background:none;}
 ::-webkit-scrollbar-thumb {background:rgba(0,0,0,0.3);border-radius: 6px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.35);border-radius: 6px;}

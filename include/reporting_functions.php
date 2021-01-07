@@ -453,7 +453,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             }
         catch(Exception $e)
             {
-            debug("BANG Unable to delete - file not found: " . $deletefile);
+            debug("Unable to delete - file not found: " . $deletefile);
             }
         }
     unset($GLOBALS["use_error_exception"]);

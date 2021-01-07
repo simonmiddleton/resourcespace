@@ -730,6 +730,8 @@ if ($_FILES)
                                 if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
                                     {
                                     update_resource_type($ref, $resource_type_from_extension);
+                                    // The resource type has been changed so clear the cached value
+                                    $GLOBALS['get_resource_data_cache'] = array();
                                     }
                                 }
 
@@ -966,7 +968,13 @@ if ($_FILES)
 	
 elseif ($upload_no_file && getval("createblank","")!="")
 	{
-    $ref=copy_resource(0-$userref);    
+    $ref=copy_resource(0-$userref); 
+                                
+    if($ref === false)
+        { # If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
+        $ref = create_resource($resource_type, $setarchivestate);
+        }   
+        
 	# Add to collection?
 	if (is_numeric($collection_add))
 		{
@@ -1262,6 +1270,7 @@ var pluploadconfig = {
                                     jQuery.post("<?php echo $baseurl_short; ?>pages/upload_plupload.php",
                                             {
                                             uploaded_refs: resource_keys,
+                                            queue_index: 1,
                                             <?php echo generateAjaxToken("plupload-UploadComplete"); ?>
                                             }
                                         );

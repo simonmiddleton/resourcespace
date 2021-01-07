@@ -41,8 +41,7 @@ if ($delete!="" && enforcePostRequest(getval("ajax", false)))
 	if (count($c)==0)
 		{
 		# No collections to select. Create them a new collection.
-		$name=get_mycollection_name($userref);
-		$usercollection=create_collection ($userref,$name);
+		$usercollection=create_collection ($userref,"Default Collection");
 		set_user_collection($userref,$usercollection);
 		}
 
