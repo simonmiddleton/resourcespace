@@ -21,7 +21,7 @@ if(0 != $access)
     }
 
 
-if(getvalescaped('delete_token', false))
+if(getvalescaped('delete_token', false) && $vimeo_publish_allow_user_accounts)
     {
     delete_vimeo_token($userref);
 
@@ -41,7 +41,7 @@ $vimeo_publish_access_token = get_access_token($vimeo_publish_client_id, $vimeo_
 $vimeo_user_data            = array();
 
 
-// Try uplpoading resource to Vimeo
+// Try uploading resource to Vimeo
 $successfully_uploaded = false;
 if(getvalescaped('upload', false) && enforcePostRequest(false))
     {
@@ -104,7 +104,8 @@ if('' != $error)
     }
 
 // Show which user we will be publishing as...
-if(get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
+
+if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
     {
     ?>
     <div class="Question">
