@@ -3284,7 +3284,7 @@ function render_selected_collection_actions()
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
 
-    render_actions($collection_data, true, false);
+    render_actions($collection_data, true, false,'',array(),true);
 
     $search = $orig_search;
     $result = $orig_result;
