@@ -4,8 +4,8 @@ $lang['museumplus_configuration'] = 'MuseumPlus Configuration';
 $lang['museumplus_api_settings_header'] = 'API details';
 $lang['museumplus_host'] = 'Host';
 $lang['museumplus_application'] = 'Application name';
-$lang['museumplus_api_user'] = $lang['user'];
-$lang['museumplus_api_pass'] = $lang['password'];
+$lang['museumplus_api_user'] = $lang['user'] = "User";
+$lang['museumplus_api_pass'] = $lang['password'] = "Password";
 
 $lang['museumplus_RS_settings_header'] = 'ResourceSpace settings';
 $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus identifier (MpID)';
