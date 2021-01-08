@@ -64,7 +64,7 @@ $page_def[] = config_add_single_ftype_select(
 // Script settings
 $page_def[] = config_add_section_header($lang['museumplus_script_header']);
 $museumplus_script_last_ran = '';
-check_script_last_ran('last_museumplus_import', $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
+check_script_last_ran(MPLUS_LAST_IMPORT, $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
 $script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);

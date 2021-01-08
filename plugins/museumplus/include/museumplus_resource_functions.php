@@ -8,7 +8,7 @@
 */
 function mplus_resource_get_data(array $refs)
     {
-    $r_refs = array_filter($refs, 'is_numeric');
+    $r_refs = array_filter($refs, 'is_int_loose');
     if(empty($r_refs))
         {
         return [];
@@ -167,7 +167,7 @@ function mplus_resource_clear_metadata(array $refs)
     $sql_joins = '';
     foreach($joins as $join)
         {
-        if(!is_numeric($join) || !in_array($join, $resource_type_fields))
+        if(!is_int_loose($join) || !in_array($join, $resource_type_fields))
             {
             continue;
             }
@@ -188,8 +188,10 @@ function mplus_resource_clear_metadata(array $refs)
 
 
 /**
-* Function to retrieve all resources that have their MpID field set to a value
-* and that are within the allowed resource types for an update
+* Get all resources associated with a MuseumPlus module.
+* 
+* @param array $filters Rules to filter results (if applicable). There are "flag" filters (e.g new_and_changed_associations filter)
+*                       and filters that take arguments (e.g byref)
 * 
 * @return array
 */
@@ -197,7 +199,7 @@ function mplus_resource_get_association_data(array $filters)
     {
     if(
         !isset($GLOBALS['museumplus_module_name_field'], $GLOBALS['museumplus_modules_saved_config'])
-        || !(is_numeric($GLOBALS['museumplus_module_name_field']) && $GLOBALS['museumplus_module_name_field'] > 0)
+        || !(is_int_loose($GLOBALS['museumplus_module_name_field']) && $GLOBALS['museumplus_module_name_field'] > 0)
         || !(is_string($GLOBALS['museumplus_modules_saved_config']) && $GLOBALS['museumplus_modules_saved_config'] !== '')
     )
         {
@@ -206,28 +208,31 @@ function mplus_resource_get_association_data(array $filters)
 
     $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
     $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
+    $sql_computed_md5_calc = "MD5(CONCAT(r.ref, '_comb(', n.`name`, '-', rd.`value`, ')'))";
 
-    // Get filters required at "a per module configuration" level
+
+    // Get filters required at a "per module configuration" level.
+    // IMPORTANT: do not continue if the plugin isn't properly configured (ie. this information is missing or corrupt)
     $rs_uid_fields = [];
-    $sql_module_cfg_filter = [];
+    $per_module_cfg_filters = [];
     foreach($modules_config as $mcfg)
         {
         $rs_uid_field = $mcfg['rs_uid_field'];
-        if(is_numeric($rs_uid_field) && $rs_uid_field > 0 && !in_array($rs_uid_field, $rs_uid_fields))
+        if(is_int_loose($rs_uid_field) && $rs_uid_field > 0 && !in_array($rs_uid_field, $rs_uid_fields))
             {
             $rs_uid_fields[] = $rs_uid_field;
             }
 
         $module_name = $mcfg['module_name'];
-        $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_numeric');
+        $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_int_loose');
 
         if(
             $module_name !== ''
             && !empty($applicable_resource_types)
-            && is_numeric($rs_uid_field) && $rs_uid_field > 0
+            && is_int_loose($rs_uid_field) && $rs_uid_field > 0
         )
             {
-            $sql_module_cfg_filter[] = sprintf(
+            $per_module_cfg_filters[] = sprintf(
                 '(n.`name` = \'%s\' AND r.resource_type IN (\'%s\') AND rd.resource_type_field = \'%s\')',
                 $module_name,
                 implode('\', \'', $applicable_resource_types),
@@ -235,18 +240,45 @@ function mplus_resource_get_association_data(array $filters)
             );
             }
         }
-    if(empty($rs_uid_fields) || empty($sql_module_cfg_filter)) { return []; }
+    if(empty($rs_uid_fields) || empty($per_module_cfg_filters)) { return []; }
 
+
+    // Additional filters (as required by caller code)
+    $orderby = [];
+    $additional_filters = [];
+    foreach(mplus_validate_resource_association_filters($filters) as $filter_name => $filter_args)
+        {
+        switch($filter_name)
+            {
+            case 'new_and_changed_associations':
+                $additional_filters[] = "AND (
+                    r.museumplus_data_md5 IS NULL
+                    OR r.museumplus_data_md5 <> {$sql_computed_md5_calc}
+                )
+                ";
+                $orderby[] = 'r.museumplus_data_md5 IS NULL DESC';
+                break;
+
+            case 'byref':
+                $refs = array_filter($filter_args, 'is_int_loose');
+                $additional_filters[] = 'AND r.ref IN (' . implode(', ', $refs) . ')';
+                break;
+            }
+        }
+
+
+    // Build and run SQL
+    $orderby[] = 'r.ref DESC';
     $sqlq = sprintf('
             SELECT r.ref,
                    r.resource_type,
                    r.archive,
-                   MD5(CONCAT(r.ref, \'_comb(\', n.`name`, \'-\', rd.`value`, \')\')) AS `computed_md5`,
+                   %s AS \'computed_md5\',
                    r.museumplus_data_md5,
                    r.museumplus_technical_id,
-                   n.`name` AS `module`,
-                   rd.`value` AS `mpid_value`,
-                   rd.resource_type_field AS `rs_uid_field`
+                   n.`name` AS \'module\',
+                   rd.`value` AS \'mpid_value\',
+                   rd.resource_type_field AS \'rs_uid_field\'
               FROM resource AS r
          LEFT JOIN resource_node AS rn ON r.ref = rn.resource
         RIGHT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
@@ -256,13 +288,15 @@ function mplus_resource_get_association_data(array $filters)
                AND rd.`value` IS NOT NULL
                %s # Filters specific to each module configuration (e.g applicable resource types)
                %s # Additional filters
+         ORDER BY %s
         ',
+        $sql_computed_md5_calc,
         escape_check($module_name_field_ref),
         implode('\', \'', $rs_uid_fields),
-        'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $sql_module_cfg_filter) . PHP_EOL . ')',
-        implode(PHP_EOL, $filters)
+        'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')',
+        implode(PHP_EOL, $additional_filters),
+        implode(', ', $orderby)
     );
-    $resources = sql_query($sqlq);
 
-    return $resources;
+    return array_flip_by_value_key(sql_query($sqlq), 'ref');
     }

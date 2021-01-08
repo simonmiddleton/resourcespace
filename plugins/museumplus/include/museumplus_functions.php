@@ -721,48 +721,31 @@ function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info'
     }
 
 
-
-/*
-#####
-SYNCING data from M+ ---- old code that was in HookMuseumplusAllAdditionalvalcheck()
-USE AS REFERENCE ONLY! (if even needed since the structure has changed)
-#####
-
-
-// Other plugins can modify the field (e.g when MpID field is the original filename without the extension) in which case,
-// code needs to be able to handle this so it will attempt to retrieve it from the database instead.
-$mpid = getvalescaped("field_{$museumplus_mpid_field}", get_data_by_field($ref, $museumplus_mpid_field)); # CAN BE ALPHANUMERIC
-if(trim($mpid) === '')
+/**
+* Validate a list of filter names that can be used by {@see mplus_resource_get_association_data()}.
+* 
+* @param array $f List of filters. Key is the filter name. The value of a filter is any data type required by that particular
+*                 filters' parameter (e.g for "byref" filter, the input is a list of refs => array).
+* 
+* @return array
+*/
+function mplus_validate_resource_association_filters(array $f)
     {
-    return false;
-    }
+    $valid_filters = [];
 
-$museumplus_rs_mappings = plugin_decode_complex_configs($museumplus_rs_saved_mappings);
+    // Key - filter name, Value - data type of the parameter of this filter
+    $allowed_filters = [
+        'new_and_changed_associations' => 'NULL',
+        'byref' => 'array',
+    ];
 
-$conn_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
-if(empty($conn_data))
-    {
-    return $lang['museumplus_error_bad_conn_data'];
-    }
-
-$mplus_data = mplus_search($conn_data, $museumplus_rs_mappings, 'Object', $mpid, $museumplus_search_mpid_field);
-
-update_field($ref, $museumplus_mpid_field, escape_check($mpid));
-
-if(empty($mplus_data))
-    {
-    return str_replace('%mpid', $mpid, $lang['museumplus_error_no_data_found']);
-    }
-
-foreach($mplus_data as $mplus_field => $field_value)
-    {
-    if(!array_key_exists($mplus_field, $museumplus_rs_mappings))
+    foreach($f as $name => $value)
         {
-        continue;
+        if(is_string($name) && isset($allowed_filters[$name]) && $allowed_filters[$name] === gettype($value))
+            {
+            $valid_filters[$name] = $value;
+            }
         }
 
-    $rs_field = $museumplus_rs_mappings[$mplus_field];
-
-    update_field($ref, $rs_field, escape_check($field_value));
+    return $valid_filters;
     }
-*/

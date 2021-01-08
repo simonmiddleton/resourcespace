@@ -110,7 +110,6 @@ function HookMuseumplusAllAftersaveresourcedata($R)
 /*
 TODO; use new function - mplus_resource_get_association_data(array $filter) - and pass extra filters requied for this use case:
 - search only for specific resource IDs
-    $refs = array_filter($refs, 'is_numeric');
 - get only resources that had their "module name - MpID" combination changed with this save:
     AND r.museumplus_data_md5 <> MD5(CONCAT(r.ref, \'_comb(\', n.`name`, \'-\', rd.`value`, \')\'))
 
