@@ -1803,7 +1803,7 @@ function get_default_search_states()
     }
 
 /**
-* Get the required search filter sql for the given ilterfor use in do_search()
+* Get the required search filter sql for the given filter for use in do_search()
 *  
 * @return array
 */

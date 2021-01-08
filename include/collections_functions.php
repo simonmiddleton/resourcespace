@@ -733,14 +733,19 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     if ($keyref!==false) {$keyrefs[]=$keyref;}
                     $keysql .= " JOIN collection_keyword AS k" . $n . " ON k" . $n . ".collection = c.ref AND (k" . $n . ".keyword = '$keyref')";
                     }
-			    //$keysql="or keyword in (" . join (",",$keyrefs) . ")";
 			    }
 			}
         
         global $search_public_collections_ref;
-        if ($search_public_collections_ref && is_numeric($search)){$spcr="or c.ref='" . escape_check($search) . "'";} else {$spcr="";}    
-		//$sql.="and (c.name rlike '%$search%' or u.username rlike '%$search%' or u.fullname rlike '%$search%' $spcr )";
-		}
+        if ($search_public_collections_ref && is_numeric($search))
+            {
+            $spcr="or c.ref='" . escape_check($search) . "'";
+            }
+        else
+            {
+            $spcr="";
+            }    
+        }
 	
 	# Restrict to parent, child and sibling groups?
 	global $public_collections_confine_group,$userref,$usergroup;
@@ -791,10 +796,11 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                          SELECT DISTINCT c.*,
                                 u.username,
                                 u.fullname,
-                                if(c.`type` = %s AND count(DISTINCT cr.resource) = 0, true, false) AS is_featured_collection_category
+                                if(c.`type` = %s AND COUNT(DISTINCT cc.ref)>0, true, false) AS is_featured_collection_category
                                 %s
                            FROM collection AS c
-                      LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                LEFT OUTER JOIN collection AS cc ON c.ref = cc.parent
+                LEFT OUTER JOIN collection_resource AS cr ON c.ref = cr.collection
                 LEFT OUTER JOIN user AS u ON c.user = u.ref
                 LEFT OUTER JOIN collection_keyword AS k ON c.ref = k.collection
                           %s # keysql
@@ -869,14 +875,12 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
             }
         else
             {
-            # The old way - same search as when searching within publich collections.
+            # The old way - same search as when searching within public collections.
             $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
             }
         
-        
-            $condensedcollectionsresults=array();
-            $result=$collections;
-
+        $condensedcollectionsresults=array();
+        $result=$collections;
         }
        
     
