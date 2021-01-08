@@ -4508,3 +4508,45 @@ function is_int_loose($var)
     {
     return (string)(int)$var === (string)$var;
      }
+
+/**
+ * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
+ *
+ * @param  string $ip
+ * @param  string $ip_restrict
+ * @return void
+ */
+function ip_matches($ip, $ip_restrict)
+{
+global $system_login;
+if ($system_login){return true;}	
+
+if (substr($ip_restrict, 0, 1)=='!')
+    return @preg_match('/'.substr($ip_restrict, 1).'/su', $ip);
+
+# Allow multiple IP addresses to be entered, comma separated.
+$i=explode(",",$ip_restrict);
+
+# Loop through all provided ranges
+for ($n=0;$n<count($i);$n++)
+    {
+    $ip_restrict=trim($i[$n]);
+
+    # Match against the IP restriction.
+    $wildcard=strpos($ip_restrict,"*");
+
+    if ($wildcard!==false)
+        {
+        # Wildcard
+        if (substr($ip,0,$wildcard)==substr($ip_restrict,0,$wildcard))
+            return true;
+        }
+    else
+        {
+        # No wildcard, straight match
+        if ($ip==$ip_restrict)
+            return true;
+        }
+    }
+return false;
+}
