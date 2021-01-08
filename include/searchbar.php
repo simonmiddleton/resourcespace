@@ -474,15 +474,21 @@ elseif($restypes=='')
     
     $optionfields=array();
     $rendered_names=array();
+    $rendered_refs=array();
     $has_value=array();
 
     for ($n=0;$n<count($fields);$n++)
         {
         $render=true;
-        if (in_array($fields[$n]["name"],$duplicate_fields) && in_array($fields[$n]["name"],$rendered_names)) {$render=false;} # Render duplicate fields only once.
+        # Render duplicate fields only once.
+        if (in_array($fields[$n]["name"],$duplicate_fields) && in_array($fields[$n]["name"],$rendered_names)) 
+            {
+            $render=false;
+            } 
         if ($render)
             {
             $rendered_names[]=$fields[$n]["name"];
+            $rendered_refs[]=$fields[$n]["ref"];
             
             # Fetch current value
             $value = '';
@@ -502,27 +508,22 @@ elseif($restypes=='')
             render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes);
             }
         }
-    
-    if(!empty($has_value))
-        {
-        ?>
-        <script>
-            jQuery(document).ready(function(){
-                <?php
-                // we need to trigger a change event
-                foreach($has_value as $trigger_field)
-                    {
-                    ?>
-                    jQuery("#field_<?php echo $trigger_field?>").trigger('change');
-                    <?php
-                }
-                ?>
-            });
-        </script>
-        <?php
-        }
-    
     ?>
+
+    <script>
+    // Trigger an initial change event for each rendered field
+    jQuery(document).ready(function(){
+        <?php
+        foreach($rendered_refs as $trigger_field)
+            {
+            ?>
+            jQuery("#field_<?php echo $trigger_field?>").trigger('change');
+            <?php
+        }
+        ?>
+    });
+    </script>
+
     <script type="text/javascript">
     function FilterBasicSearchOptions(clickedfield,resourcetype)
         {
