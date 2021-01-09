@@ -74,9 +74,9 @@ function HookMuseumplusAllAftersaveresourcedata($R)
         {
         return false;
         }
-    $refs = (is_array($R) ? $R : array($R));
+    $refs = (is_array($R) ? $R : [$R]);
 
-
+/*
     // STEP 1: Determine which resources should be processed
     $batch_resource_data = get_resource_data_batch($refs);
     // If resources are not in the "Active" state, then no further processing is required
@@ -105,29 +105,29 @@ function HookMuseumplusAllAftersaveresourcedata($R)
             return (isset($batch_resource_data[$r]['resource_type']) && in_array($batch_resource_data[$r]['resource_type'], $cfg['applicable_resource_types']));
             },
         ARRAY_FILTER_USE_BOTH);
+*/
 
-
-/*
-TODO; use new function - mplus_resource_get_association_data(array $filter) - and pass extra filters requied for this use case:
-- search only for specific resource IDs
-- get only resources that had their "module name - MpID" combination changed with this save:
-    AND r.museumplus_data_md5 <> MD5(CONCAT(r.ref, \'_comb(\', n.`name`, \'-\', rd.`value`, \')\'))
-
-then call 
-$resources = mplus_get_associated_module_conf($active_resources, true);
-*/ 
+    $resources = mplus_resource_get_association_data([
+        'new_and_changed_associations' => null,
+        'byref' => $refs,
+    ]);
 
     if(empty($resources))
         {
         return false;
         }
 
-
+    $refs_list = array_keys($resources);
+    mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => $refs_list]);
+    $ramcs = mplus_get_associated_module_conf($refs_list, true);
+    mplus_resource_clear_metadata($refs_list);
+    $errors = mplus_sync(mplus_validate_association($ramcs, false));
+/*
     // STEP 2: Process resources with an associated module configuration
     mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => array_keys($resources)]);
     mplus_resource_clear_metadata(array_keys($resources));
     $errors = mplus_sync(mplus_validate_association($resources, false));
-
+*/
     if(is_array($errors) && !empty($errors))
         {
         return $errors;
