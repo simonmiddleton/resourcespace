@@ -2936,3 +2936,32 @@ function check_order_by_in_table_joins($order_by)
         exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
         }
     }
+
+/**
+ * Get all search request parameters. Note that this does not escape the
+ * parameters which must be sanitised using escape_check() before using in SQL
+ * or e.g. htmlspecialchars() or urlencode() before rendering on page
+ *
+ * @return array()
+ */
+function get_search_params()
+    {
+    $searchparams = array(
+        "search"        =>"",
+        "restypes"      =>"",
+        "archive"       =>"",
+        "order_by"      =>"",
+        "sort"          =>"",
+        "offset"        =>"",
+        "k"             =>"",
+        "access"        =>"",
+        "foredit"       =>"",
+        "recentdaylimit"=>"",
+        );
+    $requestparams = array();
+    foreach($searchparams as $searchparam => $default)
+        {
+        $requestparams[$searchparam] = getval($searchparam,$default);
+        }
+    return $requestparams;
+    }

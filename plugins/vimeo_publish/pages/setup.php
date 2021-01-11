@@ -2,6 +2,8 @@
 // vimeo_publish setup page
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
+include_once '../include/vimeo_publish_functions.php';
+
 if(!checkperm('a'))
     {
     exit($lang['error-permissiondenied']);
@@ -13,14 +15,8 @@ if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['vimeo_publish_configuration'];
 
-if(getval("vimeo_publish_reset_user","") != "")
-    {
-    // Initialize VIMEO
-    init_vimeo_api($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_callback_url);
-    $vimeo_publish_system_token = get_access_token($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_callback_url);
-    $_POST["vimeo_publish_system_token"] = $vimeo_publish_system_token;
-    $_POST["vimeo_publish_system_state"] = "";
-    }
+use Vimeo\Vimeo;
+use Vimeo\Exceptions\VimeoUploadException;
 
 // Build Insructions from language strings:
 $vimeo_api_instructions = '<div class="Question"><ul>';
@@ -31,8 +27,6 @@ while(isset($lang['vimeo_api_instructions_condition_' . $vimeo_api_instruction_c
     $vimeo_api_instruction_conditions++;
     }
 $vimeo_api_instructions .= '</ul><div class="clearerleft"></div></div>';
-
-
 
 $page_def[] = config_add_html("<p><strong>{$lang['vimeo_publish_base']}:</strong> {$baseurl}<br>");
 $page_def[] = config_add_html("<strong>{$lang['vimeo_publish_callback_url']}:</strong> {$vimeo_callback_url}</p>");
@@ -51,26 +45,23 @@ $page_def[] = config_add_text_input('vimeo_publish_client_secret', $lang['vimeo_
 $page_def[] = config_add_section_header($lang['vimeo_publish_account_options']);
 $page_def[] = config_add_boolean_select("vimeo_publish_allow_user_accounts",$lang["vimeo_publish_allow_user_accounts"]);
 
-$hiddeninputs = "<input type='hidden' id='vimeo_publish_system_token' name='vimeo_publish_system_token' value='" . $vimeo_publish_system_token . "' />";
-$hiddeninputs .= "<input type='hidden' id='vimeo_publish_system_state' name='vimeo_publish_system_state' value='" . $vimeo_publish_system_state . "' />";
-$hiddeninputs = "<input type='hidden' id='vimeo_publish_reset_user' name='vimeo_publish_reset_user' value='' />";
+$page_def[]     = config_add_text_input('vimeo_publish_system_token', "",false,420,false,null,false,true);
 
-$page_def[] = config_add_html($hiddeninputs);
-
+$vimeo_user_data = array();
 if($vimeo_publish_system_token != "" && get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_system_token, $vimeo_user_data))
     {
-    $usertext = $vimeo_user_data['name'] . "(" . ucfirst($vimeo_user_data['account']) . " account - " . formatfilesize($vimeo_user_data['upload_quota_free']) . " free)";
-    $usertext .= "<a href='#' onclick='jQuery(\"#vimeo_publish_system_token\").val();jQuery(\"#vimeo_publish_system_state\").val();return CentralSpacePost(document.getElementById(\"form1\"), false);'>" . $lang['vimeo_publish_delete_token'] . "</a>"; 
+    $usertext = $vimeo_user_data['name'] . " (" . ucfirst($vimeo_user_data['account']) . " account - " . formatfilesize($vimeo_user_data['upload_quota_free']) . " free)";
+    $usertext .= "<br/><a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "fromsetup" => "true")) . "' >" . $lang['vimeo_publish_delete_token'] . "</a>"; 
     }
 else
     {
-    $usertext = "<a href='#' onclick='jQuery(\"#vimeo_publish_reset_user\").val(\"true\");return CentralSpacePost(document.getElementById(\"form1\"), false);'>" . $lang['vimeo_publish_set_account'] . "</a>"; 
+    $usertext = "<a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "fromsetup" => "true")) . "' >" . $lang['vimeo_publish_set_account'] . "</a>"; 
     }
 $userquestion = "<div class='Question'>
         <label>" . $lang['vimeo_publish_publish_as_user'] . "</label>
-        <div class='Fixed'>" . $usertext . "</div>
+        <div id='vimeo_user_details' class='Fixed'>" . $usertext . "</div>
         <div class='clearerleft'></div>
-    </div>'";
+    </div>";
 $page_def[] = config_add_html($userquestion);
 
 // ResourceSpace - metadata mappings
@@ -79,8 +70,6 @@ $page_def[] = config_add_single_ftype_select('vimeo_publish_vimeo_link_field', $
 $page_def[] = config_add_single_ftype_select('vimeo_publish_video_title_field', $lang['vimeo_publish_video_title']);
 $page_def[] = config_add_single_ftype_select('vimeo_publish_video_description_field', $lang['vimeo_publish_video_description']);
 $page_def[] = config_add_multi_rtype_select('vimeo_publish_restypes', $lang['vimeo_publish_resource_types_to_include']);
-
-
 
 
 // Do the page generation ritual -- don't change this section.

@@ -634,7 +634,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
                  config_html($def[1]);
                  break;     
             case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
                 break;
             case 'text_list':
             if (!empty($array_offset)) 
