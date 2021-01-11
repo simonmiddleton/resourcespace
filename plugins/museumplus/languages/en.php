@@ -1,6 +1,6 @@
 <?php
 $lang['museumplus_configuration'] = 'MuseumPlus Configuration';
-$lang['museumplus_push_size'] = 'Tick to push this size to MuseumPlus system (if applicable)';
+$lang['museumplus_top_menu_title'] = 'MuseumPlus: invalid associations';
 
 $lang['museumplus_api_settings_header'] = 'API details';
 $lang['museumplus_host'] = 'Host';
@@ -48,7 +48,6 @@ $lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding f
 $lang["museumplus_field_mappings"] = "MuseumPlus - ResourceSpace field mappings";
 $lang['museumplus_add_mapping'] = 'Add mapping';
 
-$lang['museumplus_top_menu_title'] = 'MuseumPlus: invalid associations';
 
 
 // Errors/ warnings
