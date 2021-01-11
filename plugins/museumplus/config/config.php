@@ -37,6 +37,10 @@ $museumplus_secondary_links_field = 0;
 // IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is boolean
 $museumplus_clear_field_mappings_on_change = (isset($GLOBALS['museumplus_clear_field_mappings_on_change']) && is_bool($GLOBALS['museumplus_clear_field_mappings_on_change']) ? $GLOBALS['museumplus_clear_field_mappings_on_change'] : false);
 
+// Show a custom top navigation menu with a direct link to the special search (!mplus_invalid_assoc)
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php and/or user group config overrides. @type is boolean
+$museumplus_top_nav = (isset($GLOBALS['museumplus_top_nav']) && is_bool($GLOBALS['museumplus_top_nav']) ? $GLOBALS['museumplus_top_nav'] : true);
+
 
 ############################################################
 ### Script settings ########################################
@@ -62,11 +66,3 @@ $museumplus_modules_saved_config = plugin_encode_complex_configs(array(
         'field_mappings' => array(),
     )
 ));
-/*
-TODO: delete once finished. Useful when working out what code to change/remove:
-Configs now under modules:
-- museumplus_search_mpid_field  => mplus_id_field
-- museumplus_mpid_field         => rs_uid_field
-- museumplus_resource_types     => applicable_resource_types
-- museumplus_rs_saved_mappings  => field_mappings (modified where each mapping is an array now as opposed to "module_name=>rs_field_ref" mappings)
-*/

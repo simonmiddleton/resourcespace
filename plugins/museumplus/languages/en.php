@@ -48,6 +48,8 @@ $lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding f
 $lang["museumplus_field_mappings"] = "MuseumPlus - ResourceSpace field mappings";
 $lang['museumplus_add_mapping'] = 'Add mapping';
 
+$lang['museumplus_top_menu_title'] = 'MuseumPlus: invalid associations';
+
 
 // Errors/ warnings
 $lang['museumplus_error_bad_conn_data'] = 'MuseumPlus Connection Data invalid';

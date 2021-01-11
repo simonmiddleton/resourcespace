@@ -110,3 +110,35 @@ function HookMuseumplusAllAftersaveresourcedata($R)
 
     return false;
     }
+
+function HookMuseumplusAllAddspecialsearch($search)
+    {
+    if(substr($search, 0, 20) !== '!mplus_invalid_assoc') 
+        {
+        return false;
+        }
+
+    // @see mplus_validate_association() - this is where we decide if something is invalid
+    return 'SELECT *, museumplus_data_md5, museumplus_technical_id FROM resource WHERE museumplus_data_md5 IS NOT NULL AND museumplus_technical_id IS NULL';
+    }
+
+function HookMuseumplusAllHandleuserref()
+    {
+    if(
+        $GLOBALS['museumplus_top_nav']
+        // Don't show to anonymous users, normally they won't be able to remediate the problem
+        && !(isset($GLOBALS['anonymous_login'], $GLOBALS['username']) && $GLOBALS['username'] == $GLOBALS['anonymous_login'])
+    )
+        {
+        global $lang, $custom_top_nav, $baseurl;
+        $mplus_top_nav = [
+            'title' => $lang['museumplus_top_menu_title'],
+            'link' => "{$baseurl}/pages/search.php?search=%21mplus_invalid_assoc",
+        ];
+        $custom_top_nav[] = $mplus_top_nav;
+        return;
+        }
+
+    return;
+    }
+
