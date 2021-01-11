@@ -687,7 +687,7 @@ $lang["printallforyear"]="Print all statistics for this year";
 # Log in / user account
 $lang["nopassword"]="Click here to apply for an account";
 $lang["forgottenpassword"]="Click here if you have forgotten your password";
-$lang["keepmeloggedin"]="Keep me logged in at this workstation";
+$lang["keepmeloggedin"]="Keep me logged in on this device";
 $lang["columnheader-username"]=$lang["username"]="Username";
 $lang["password"]="Password";
 $lang["login"]="Log in";

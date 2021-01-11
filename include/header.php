@@ -315,6 +315,7 @@ $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
         echo " " . $header_size;
+        echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader' : '';
 ?>">
 
 <?php

@@ -164,7 +164,6 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
 
 hook("postlogout2");
     
-    
 if (getval("langupdate","")!="")
 	{
 	# Update language while remaining on this page.
@@ -173,45 +172,53 @@ if (getval("langupdate","")!="")
 	redirect("login.php?username=" . urlencode(getval("username","")));
 	}
 
-
-
-
 include "include/header.php";
 
 include "include/login_background.php";
 	
+if (!hook("replaceloginform"))
+    {
+    ?>
+    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?><?php if($modal){?>onsubmit="return ModalPost(this,true,true);" <?php } ?>>
+        <input type="hidden" name="langupdate" id="langupdate" value="">  
+        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
+        <input type="hidden" name="modal" value="<?php echo ($modal=="true"?"true":"") ?>">
 
-
-
-if (!hook("replaceloginform")) {
-?>
-
-  <h1><?php echo text("welcomelogin")?></h1>
-  <p><?php echo text(getvalescaped("text","defaultintro"))?></p>
-  <p>
-  <?php if ($allow_account_request) { ?><a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a><?php } ?>
-  <?php if ($allow_password_reset) { ?><br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php } ?>
-  <?php hook("loginformlink") ?> 
-  </p>
-  <?php if ($error!="") { ?><div class="FormIncorrect"><?php echo $error?></div><?php } ?>
-  <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) { ?>AUTOCOMPLETE="OFF"<?php } ?><?php if($modal){?>onsubmit="return ModalPost(this,true,true);" <?php } ?>>
-  <input type="hidden" name="langupdate" id="langupdate" value="">  
-  <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
-  <input type="hidden" name="modal" value="<?php echo ($modal=="true"?"true":"") ?>">
-
-<?php if ($disable_languages==false) { ?>	
-		<div class="Question">
-            <label for="language"><?php echo $lang["language"]?></label>
-			<select id="language" class="stdwidth" name="language" onChange="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
-			<?php reset ($languages); foreach ($languages as $key=>$value) { ?>
-			<option value="<?php echo $key?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo $value?></option>
-			<?php } ?>
-			</select>
-			<div class="clearerleft"> </div>
-		</div> 
-<?php } ?>
+        <?php $header_img_src = get_header_image(); ?>
+        <div>
+            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg"></img>
+        </div>
+        
+        <!--<h1><?php echo text("welcomelogin")?></h1>-->
 
         <div class="Question">
+            <label for="username"><?php echo $lang["username"]?> </label>
+            <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" />
+            <div class="clearerleft"> </div>
+        </div>
+        
+        <div class="Question">
+            <label for="password"><?php echo $lang["password"]?> </label>
+            <input type="password" name="password" id="password" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> />
+             <div id="capswarning"><?php echo $lang["caps-lock-on"]; ?></div>
+            <div class="clearerleft"> </div>
+        </div>
+
+        <?php if ($error!="") { ?><div class="FormIncorrect"><?php echo $error?></div><?php } ?>
+
+        <?php if ($disable_languages==false) { ?>	
+            <div class="Question HalfWidth">
+                <label for="language"><?php echo $lang["language"]?></label>
+                <select id="language" class="stdwidth" name="language" onChange="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
+                <?php reset ($languages); foreach ($languages as $key=>$value) { ?>
+                    <option value="<?php echo $key?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo $value?></option>
+                <?php } ?>
+                </select>
+                <div class="clearerleft"> </div>
+            </div> 
+        <?php } ?>
+
+        <div class="Question HalfWidth">
             <label for="user_local_timezone"><?php echo $lang["local_tz"]; ?></label>
             <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
             <?php
@@ -252,101 +259,96 @@ if (!hook("replaceloginform")) {
             <div class="clearerleft"></div>
         </div>
 
-		<div class="Question">
-			<label for="username"><?php echo $lang["username"]?> </label>
-			<input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>AUTOCOMPLETE="OFF"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" />
-			<div class="clearerleft"> </div>
-		</div>
-		
-		<div class="Question">
-			<label for="password"><?php echo $lang["password"]?> </label>
-			<input type="password" name="password" id="password" class="stdwidth" <?php if (!$login_autocomplete) { ?>AUTOCOMPLETE="OFF"<?php } ?> />
-			 <div id="capswarning"><?php echo $lang["caps-lock-on"]; ?></div>
-			<div class="clearerleft"> </div>
-		</div>
-
-    <?php
-    if ($allow_keep_logged_in) { ?>
-		<div class="Question WideTextQuestion">
-			<label for="remember"><?php echo $lang["keepmeloggedin"]?></label>
-			<input style="margin-top: 0.5em;" name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
-			<div class="clearer"> </div>
-		</div>
-		<?php } ?>
-
 		<div class="QuestionSubmit">
 			<label for="buttons"> </label>			
 			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
 		</div>
+
+        <?php if ($allow_keep_logged_in) { ?>
+            <div class="Question KeepLoggedIn">
+                <label for="remember"><?php echo $lang["keepmeloggedin"]?></label>
+                <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
+                <div class="clearer"> </div>
+            </div>
+        <?php } ?>
+    
+        <p class="LoginLinks">
+        <?php if ($allow_account_request) { ?>
+            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo $lang["nopassword"]?></a>
+        <?php } ?>
+        <?php if ($allow_password_reset) { ?>
+            <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo $lang["forgottenpassword"]?></a>
+        <?php } ?>
+        <?php hook("loginformlink") ?> 
+        </p>
+
 	</form>
 
-<?php
-# Javascript to default the focus to the username box
-?>
-<script type="text/javascript">
-jQuery('#username').focus();
+    <script type="text/javascript">
+    // Default the focus to the username box
+    jQuery('#username').focus();
 
-jQuery(document).ready(function() {
-    /* 
-    * Bind to capslockstate events and update display based on state 
-    */
-    jQuery(window).bind("capsOn", function(event) {
-        if (jQuery("#password:focus").length > 0) {
-            jQuery("#capswarning").show();
-        }
+    jQuery(document).ready(function() {
+        /* 
+        * Bind to capslockstate events and update display based on state 
+        */
+        jQuery(window).bind("capsOn", function(event) {
+            if (jQuery("#password:focus").length > 0) {
+                jQuery("#capswarning").show();
+            }
+        });
+        jQuery(window).bind("capsOff capsUnknown", function(event) {
+            jQuery("#capswarning").hide();
+        });
+        jQuery("#password").bind("focusout", function(event) {
+            jQuery("#capswarning").hide();
+        });
+        jQuery("#password").bind("focusin", function(event) {
+            if (jQuery(window).capslockstate("state") === true) {
+                jQuery("#capswarning").show();
+            }
+        });
+
+        /* 
+        * Initialize the capslockstate plugin.
+        * Monitoring is happening at the window level.
+        */
+        jQuery(window).capslockstate();
+
     });
-    jQuery(window).bind("capsOff capsUnknown", function(event) {
-        jQuery("#capswarning").hide();
-    });
-    jQuery("#password").bind("focusout", function(event) {
-        jQuery("#capswarning").hide();
-    });
-    jQuery("#password").bind("focusin", function(event) {
-        if (jQuery(window).capslockstate("state") === true) {
-            jQuery("#capswarning").show();
-        }
-    });
 
-    /* 
-    * Initialize the capslockstate plugin.
-    * Monitoring is happening at the window level.
-    */
-    jQuery(window).capslockstate();
-
-});
-
-/* Responsive Stylesheet inclusion based upon viewing device */
-if(document.createStyleSheet)
-    {
-    document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
-    }
-else
-    {
-    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-    }
-
-if(!is_touch_device() && jQuery(window).width() <= 1280)
-    {
+    /* Responsive Stylesheet inclusion based upon viewing device */
     if(document.createStyleSheet)
         {
-        document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+        document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
         }
     else
         {
-        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
         }
+
+    if(!is_touch_device() && jQuery(window).width() <= 1280)
+        {
+        if(document.createStyleSheet)
+            {
+            document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+            }
+        else
+            {
+            jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+            }
+        }
+
+    </script>
+
+    <?php
     }
-
-</script>
-
-<?php
-}
 
 hook('afterlogin');
 
 //include_once "./include/footer.php"; AJAX Check Ignores Footer
 //Closing tags as the footer has not been included
-	?>
-	<div> <!-- end of login_box --><?php
+?>
+<div> <!-- end of login_box --><?php
 
 include "include/footer.php";

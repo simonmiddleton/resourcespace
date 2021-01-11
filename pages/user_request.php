@@ -144,9 +144,9 @@ if (!hook("replacemain"))
     if($user_registration_opt_in)
         {
         ?>
-        <div class="Question WideTextQuestion">
-            <label for="login_opt_in"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+        <div class="Question">
             <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
+            <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
             <div class="clearer"></div>
         </div>
         <?php
@@ -294,8 +294,6 @@ $groups=get_registration_selectable_usergroups();
 
 <?php hook("userrequestadditional");?>
 
-<br />
-
 <?php
 if(!hook("replaceantispam"))
 	{
@@ -337,18 +335,17 @@ if(!hook("replaceantispam"))
 	<input type="hidden" name="antispamtime" value="<?php echo $timestamp ?>">
 	<div class="Question">
         <label for="antispam"><?php echo $lang["enterantispamcode"] ?></label> 
-        <input type=text name="antispam" class="stdwidth" value="">
-        
-        
-	<div class="clearerleft"> </div>
+        <div class="clearerleft"> </div>
         <div style="
-            margin:0 0 .1em;
+        margin: 0 0 .1em;
         background: url(data:image/gif;base64,<?php echo base64_encode($imagedata) ?>) top left no-repeat;
-        height:50px;
-        margin-left: 300px;
-        text-indent:1.5em;
+        height: 50px;
+        width: 160px;
+        border-radius: 6px;
+        display: inline-block;
         " id="AntiSpamImage">    
-    </div>
+        </div>
+        <input type=text name="antispam" class="stdwidth" value="">
         
 	<div class="clearerleft"> </div>    	
 	</div>

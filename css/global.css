@@ -252,9 +252,19 @@ div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
 div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
+/* Hide Header on Login page */
+#Header.LoginHeader {display: none !important;}
+
+.LoginHeaderImg {
+    max-width: 400px;
+    max-height: 60px;
+    display: block;
+    margin: 0 auto;
+}
+
 #Footer {clear: both; margin:20px 25px 38px 25px;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
-#FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
+#FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;font-size: 13px;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
 #login_box #Footer {margin: 0 0 10px 0;}
@@ -265,7 +275,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     text-align:left;
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
-#CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
+#CentralSpaceLogin {margin: 100px auto 0;padding:0;width: 600px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;}
@@ -464,7 +474,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
 .Question .InnerLabel {width:90px; margin-top:  0;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
-.WideTextQuestion label { width: 95%; float: right; }
 
 .Question .indent {
     float:left;
@@ -1362,12 +1371,57 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 #CentralSpaceLogin #login_box {
-    margin-bottom: 100px;
-    padding: 10px 15px 0 15px;
-    border-radius: 4px;
+    margin-bottom: 120px;
+    padding: 20px 25px 0 25px;
+    border-radius: 15px;
     position: absolute;
+    box-shadow: 0 1px 10px 1px rgba(0,0,0,0.25);
 }
 
+#login_box #language, #login_box #user_local_tz {
+    width: 250px;
+}
+
+#login_box .Question label {
+    width: 515px;
+}
+
+#login_box .Question.HalfWidth {
+    width: 270px;
+    display: inline-block;
+}
+#login_box .QuestionSubmit {
+    margin-top: 5px;
+    display: inline-block;
+    padding: 1em 0 1em 0;
+}
+#login_box .QuestionSubmit label {
+    display: none;
+}
+
+#login_box .QuestionSubmit input {
+    min-height: 32px;
+    padding: 6px 12px 6px 12px;
+    margin-right: 10px;
+}
+#login_box .KeepLoggedIn {
+    display: inline-block;
+}
+
+#login_box .KeepLoggedIn label {
+    float: unset;
+}
+#login_box #remember {
+    float: left;
+    margin-right: 10px;
+}
+p.LoginLinks {
+    line-height: 30px;
+}
+#login_opt_in {
+    float: left;
+    margin: 3px 10px 3px 0;
+}
 /* Manage External Shares */
 .FormFilter {
     width: 700px;
