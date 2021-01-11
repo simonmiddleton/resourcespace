@@ -63,7 +63,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         return false;
         }
 
-
+/*
     if(!checkperm('a'))
         {
         return false;
@@ -100,7 +100,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         <?php
 
         return true;
-        }
+        }*/
 
     return false;
     }
