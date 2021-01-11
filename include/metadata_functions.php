@@ -320,4 +320,53 @@ function check_view_display_condition($fields,$n,$fields_all)
 		
 		}
 	return $displaycondition;
-	}
+    }
+    
+
+    
+/**
+* updates the value of fieldx field further to a metadata field value update
+* 
+* @param integer $metadata_field_ref - metadata field ref
+
+* @return array
+*/
+function update_fieldx(int $metadata_field_ref)
+    {
+    global $NODE_FIELDS;
+
+    $joins=get_resource_table_joins();  // returns an array of field refs  
+    if($metadata_field_ref > 0 && (in_array($metadata_field_ref,$joins)))
+        {
+
+       
+
+        $fieldinfo = get_resource_type_field($metadata_field_ref);
+        $allresources = sql_array("SELECT ref value from resource where ref>0 order by ref ASC",0);
+        if(in_array($fieldinfo['type'],$NODE_FIELDS))
+                {
+                foreach($allresources as $resource)
+                    {
+                    $resnodes = get_resource_nodes($resource, $metadata_field_ref, true);
+                    $resvals = array_column($resnodes,"name");
+                    $resdata = implode(",",$resvals);
+                    $value = truncate_join_field_value(strip_leading_comma($resdata));
+                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='$resource'");
+                    
+                    }
+                }
+        else
+                {
+                foreach($allresources as $resource)
+                    {
+                    $resdata = get_data_by_field($resource,$metadata_field_ref);
+                    $value = truncate_join_field_value(strip_leading_comma($resdata));
+                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='$resource'");
+                    
+                    }
+                
+                }
+    
+         }
+
+    }
