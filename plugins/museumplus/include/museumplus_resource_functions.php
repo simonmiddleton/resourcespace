@@ -208,12 +208,12 @@ function mplus_resource_get_association_data(array $filters)
 
     $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
     $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
-    $sql_computed_md5_calc = "MD5(CONCAT(r.ref, '_comb(', n.`name`, '-', rd.`value`, ')'))";
 
 
     // Get filters required at a "per module configuration" level.
     // IMPORTANT: do not continue if the plugin isn't properly configured (ie. this information is missing or corrupt)
     $rs_uid_fields = [];
+    $rs_uid_field_joins = '';
     $per_module_cfg_filters = [];
     foreach($modules_config as $mcfg)
         {
@@ -221,24 +221,22 @@ function mplus_resource_get_association_data(array $filters)
         $rs_uid_field = $mcfg['rs_uid_field'];
         $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_int_loose');
 
-        // If we have configuration for Object module, store so we can use it as a fallback module.
-        if($module_name === 'Object' && is_int_loose($rs_uid_field) && $rs_uid_field > 0 && !empty($applicable_resource_types))
-            {
-            $object_cfg = $mcfg;
-            }
-
         if(is_int_loose($rs_uid_field) && $rs_uid_field > 0 && !in_array($rs_uid_field, $rs_uid_fields))
             {
-            $rs_uid_fields[$module_name] = $rs_uid_field;
+            $rs_uid_fields[] = $rs_uid_field;
+            $rs_uid_field_joins .= sprintf('LEFT JOIN resource_data AS rd%1$s ON r.ref = rd%1$s.resource AND rd%1$s.resource_type_field = \'%1$s\'%2$s', $rs_uid_field, PHP_EOL);
             }
+
+        $module_name = $mcfg['module_name'];
+        $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_int_loose');
 
         if($module_name !== '' && !empty($applicable_resource_types) && is_int_loose($rs_uid_field) && $rs_uid_field > 0)
             {
             $per_module_cfg_filters[] = sprintf(
-                '(n.`name` = \'%s\' AND r.resource_type IN (\'%s\') AND rd.resource_type_field = \'%s\')',
+                '(%s = \'%s\' AND r.resource_type IN (\'%s\'))',
+                ($module_name === 'Object' ? 'coalesce(n.`name`, \'Object\')' : 'n.`name`'),
                 $module_name,
-                implode('\', \'', $applicable_resource_types),
-                escape_check($rs_uid_field)
+                implode('\', \'', $applicable_resource_types)
             );
             }
         }
@@ -246,156 +244,38 @@ function mplus_resource_get_association_data(array $filters)
 
 
     // Additional filters (as required by caller code)
-    $orderby = [];
     $additional_filters = [];
-    $pa_no_mpid_additional_filters = [];
-    $pa_obj_default_additional_filters = [];
     foreach(mplus_validate_resource_association_filters($filters) as $filter_name => $filter_args)
         {
         switch($filter_name)
             {
-            case 'new_and_changed_associations':
-                $additional_filters[] = "AND (
-                    r.museumplus_data_md5 IS NULL
-                    OR r.museumplus_data_md5 <> {$sql_computed_md5_calc}
-                )
-                ";
-                $pa_no_mpid_additional_filters[] = "AND (
-                    ram.museumplus_data_md5 IS NULL
-                    OR ram.museumplus_data_md5 <> MD5(CONCAT(ram.ref, '_comb(', ram.module, '-', COALESCE(ram.mpid_value, ''), ')'))
-                )
-                ";
-                $pa_obj_default_additional_filters[] = 'AND (
-                    r.museumplus_data_md5 IS NULL
-                    OR r.museumplus_data_md5 <> ' . str_replace('\', n.`name`', 'Object\'', $sql_computed_md5_calc) . '
-                )
-                ';
-                $orderby[] = 'r.museumplus_data_md5 IS NULL DESC';
-                break;
-
             case 'byref':
                 $refs = array_filter($filter_args, 'is_int_loose');
                 $additional_filters[] = 'AND r.ref IN (' . implode(', ', $refs) . ')';
-                $pa_no_mpid_additional_filters[] = 'AND ram.ref IN (' . implode(', ', $refs) . ')';
                 break;
             }
         }
 
 
-    // Resources with full association (having both the module name and MpID set)
-    $orderby[] = 'r.ref DESC';
+    // Build and run SQL
     $sqlq = sprintf('
-            SELECT r.ref,
-                   r.resource_type,
-                   r.archive,
-                   %s AS computed_md5,
-                   r.museumplus_data_md5,
-                   r.museumplus_technical_id,
-                   n.`name` AS module,
-                   rd.`value` AS mpid_value,
-                   rd.resource_type_field AS rs_uid_field
-              FROM resource AS r
-         LEFT JOIN resource_node AS rn ON r.ref = rn.resource
-        RIGHT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
-         LEFT JOIN resource_data AS rd ON r.ref = rd.resource AND rd.resource_type_field IN (\'%s\')
-             WHERE r.ref > 0
-               AND r.archive = 0
-               AND rd.`value` IS NOT NULL
-               %s # Filters specific to each module configuration (e.g applicable resource types)
-               %s # Additional filters
-          ORDER BY %s
+           SELECT r.ref AS `value`
+             FROM resource AS r
+        LEFT JOIN resource_node AS rn ON r.ref = rn.resource
+        LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
+        %s
+            WHERE r.ref > 0
+              AND r.archive = 0
+              %s # Filters specific to each module configuration (e.g applicable resource types)
+              %s # Additional filters
+        GROUP BY r.ref
+        ORDER BY r.ref DESC
         ',
-        $sql_computed_md5_calc,
         escape_check($module_name_field_ref),
-        implode('\', \'', $rs_uid_fields),
+        $rs_uid_field_joins,
         'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')',
-        implode(PHP_EOL, $additional_filters),
-        implode(', ', $orderby)
+        implode(PHP_EOL, $additional_filters)
     );
-    $result = array_flip_by_value_key(sql_query($sqlq), 'ref');
 
-    // Partial association: resources missing the MpID (the module name is set).
-    $sql_pa_no_mpid_joins = '';
-    $sql_case_mpid_value = '';
-    $sql_case_rs_uid_field = '';
-    foreach($rs_uid_fields as $module_name => $rs_uid_field)
-        {
-        $sql_pa_no_mpid_joins .= sprintf('LEFT JOIN resource_data AS rd%1$s ON r.ref = rd%1$s.resource AND rd%1$s.resource_type_field = \'%1$s\'%2$s', $rs_uid_field, PHP_EOL);
-        $sql_case_mpid_value .= sprintf('WHEN n.`name` = \'%s\' THEN rd%s.`value`%s', $module_name, $rs_uid_field, PHP_EOL);
-        $sql_case_rs_uid_field .= sprintf('WHEN n.`name` = \'%s\' THEN %s%s', $module_name, $rs_uid_field, PHP_EOL);
-        }
-    $sqlq = sprintf('
-        SELECT ram.ref,
-               ram.resource_type,
-               ram.archive,
-               MD5(CONCAT(ram.ref, \'_comb(\', ram.module, \'-\', COALESCE(ram.mpid_value, \'\'), \')\')) AS computed_md5,
-               ram.museumplus_data_md5,
-               ram.museumplus_technical_id,
-               ram.module,
-               ram.mpid_value,
-               ram.rs_uid_field
-          FROM (
-                        SELECT r.ref,
-                               r.resource_type,
-                               r.archive,
-                               r.museumplus_data_md5,
-                               r.museumplus_technical_id,
-                                n.`name` AS module,
-                          CASE
-                               %s
-                           END AS mpid_value,
-                          CASE
-                               %s
-                           END AS rs_uid_field
-                          FROM resource AS r
-                    INNER JOIN resource_node AS rn ON r.ref = rn.resource
-                    INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
-                     %s
-                 ) AS ram
-           WHERE ram.ref > 0
-             AND ram.archive = 0
-             AND ram.mpid_value IS NULL
-             AND ram.rs_uid_field IS NOT NULL
-             %s # Additional filters
-        ORDER BY ram.ref DESC
-        ',
-        $sql_case_mpid_value,
-        $sql_case_rs_uid_field,
-        escape_check($module_name_field_ref),
-        $sql_pa_no_mpid_joins,
-        implode(PHP_EOL, $pa_no_mpid_additional_filters)
-    );
-    $pa_resources_no_mpid = array_flip_by_value_key(sql_query($sqlq), 'ref');
-    $result += $pa_resources_no_mpid;
-
-    // Partial association: resources have only the MpID. Attempt to fallback to the "Object" module configuration
-    if(isset($object_cfg))
-        {
-        $sqlq = sprintf('
-                SELECT r.ref,
-                       r.resource_type,
-                       r.archive,
-                       MD5(CONCAT(r.ref, \'_comb(Object\', \'-\', rd.`value`, \')\')) AS computed_md5,
-                       r.museumplus_data_md5,
-                       r.museumplus_technical_id,
-                       \'Object\' AS module,
-                       rd.`value` AS mpid_value,
-                       rd.resource_type_field AS rs_uid_field
-                  FROM resource AS r
-            INNER JOIN resource_data AS rd ON r.ref = rd.resource AND rd.resource_type_field = \'%s\'
-                 WHERE r.ref > 0
-                   AND r.archive = 0
-                   AND r.resource_type IN (\'%s\')
-                   %s # Additional filters
-             ORDER BY r.ref DESC
-            ',
-            escape_check($object_cfg['rs_uid_field']),
-            implode('\', \'', $object_cfg['applicable_resource_types']),
-            implode(PHP_EOL, $pa_obj_default_additional_filters)
-        );
-        $pa_resources_object_default = array_flip_by_value_key(sql_query($sqlq), 'ref');
-        $result += $pa_resources_object_default;
-        }
-
-    return $result;
+    return sql_array($sqlq);
     }

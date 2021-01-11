@@ -119,12 +119,29 @@ if(is_process_lock(MPLUS_LOCK))
 set_process_lock(MPLUS_LOCK);
 
 
-
 $mplus_resources = mplus_resource_get_association_data($filter);
-logScript('[museumplus] Total resources found: ' . count($mplus_resources), $mplus_log_file);
-$refs_list = array_keys($mplus_resources);
-$ramcs = mplus_get_associated_module_conf($refs_list, true);
-mplus_resource_clear_metadata($refs_list);
+$ramcs = mplus_get_associated_module_conf($mplus_resources, true);
+if(array_key_exists('new_and_changed_associations', $filter))
+    {
+    // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
+    foreach(mplus_flip_struct_by_module($ramcs) as $module_name => $mdata)
+        {
+        $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
+        $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
+        foreach(array_keys($mdata['resources']) as $r_ref)
+            {
+            if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
+                {
+                unset($ramcs[$r_ref]);
+                continue;
+                }
+            }
+        }
+    }
+
+logScript('[museumplus] Total resources found: ' . count($ramcs), $mplus_log_file);
+
+mplus_resource_clear_metadata(array_keys($ramcs));
 $errors = mplus_sync(mplus_validate_association($ramcs, false));
 
 if(is_array($errors) && !empty($errors))

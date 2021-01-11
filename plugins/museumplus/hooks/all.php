@@ -76,15 +76,10 @@ function HookMuseumplusAllAftersaveresourcedata($R)
         }
     $refs = (is_array($R) ? $R : [$R]);
 
-/*
-    // STEP 1: Determine which resources should be processed
-    $batch_resource_data = get_resource_data_batch($refs);
-    // If resources are not in the "Active" state, then no further processing is required
-    $active_resources = array_keys(array_filter($batch_resource_data, function($r) { return $r['archive'] == 0; }));
-    // Note: resources for which a module config wasn't found have been dropped from the list as no further processing is needed.
-    $resources = mplus_get_associated_module_conf($active_resources, true);
+    $resources = mplus_resource_get_association_data(['byref' => $refs]);
+    $ramcs = mplus_get_associated_module_conf($resources, true);
     // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
-    foreach(mplus_flip_struct_by_module($resources) as $module_name => $mdata)
+    foreach(mplus_flip_struct_by_module($ramcs) as $module_name => $mdata)
         {
         $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
         $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
@@ -92,42 +87,22 @@ function HookMuseumplusAllAftersaveresourcedata($R)
             {
             if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
                 {
-                unset($resources[$r_ref]);
+                unset($ramcs[$r_ref]);
                 continue;
                 }
             }
         }
-    // If resources have a type not valid for the associated module configuration then no further processing is required
-    $resources = array_filter(
-        $resources,
-        function($cfg, $r) use ($batch_resource_data)
-            {
-            return (isset($batch_resource_data[$r]['resource_type']) && in_array($batch_resource_data[$r]['resource_type'], $cfg['applicable_resource_types']));
-            },
-        ARRAY_FILTER_USE_BOTH);
-*/
 
-    $resources = mplus_resource_get_association_data([
-        'new_and_changed_associations' => null,
-        'byref' => $refs,
-    ]);
-
-    if(empty($resources))
+    if(empty($ramcs))
         {
         return false;
         }
 
-    $refs_list = array_keys($resources);
+    $refs_list = array_keys($ramcs);
     mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => $refs_list]);
-    $ramcs = mplus_get_associated_module_conf($refs_list, true);
     mplus_resource_clear_metadata($refs_list);
     $errors = mplus_sync(mplus_validate_association($ramcs, false));
-/*
-    // STEP 2: Process resources with an associated module configuration
-    mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => array_keys($resources)]);
-    mplus_resource_clear_metadata(array_keys($resources));
-    $errors = mplus_sync(mplus_validate_association($resources, false));
-*/
+
     if(is_array($errors) && !empty($errors))
         {
         return $errors;
