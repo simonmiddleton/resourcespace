@@ -64,7 +64,7 @@ if (getval("save","")!="")
 
 	if (!empty($missingFields))
 		{
-		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields));
+		$error=$lang["requiredfields"] . '<br><br> ' . i18n_get_translated(implode(', ', $missingFields));
 		}
     # Check the anti-spam time is recent
     elseif(getval("antispamtime",0)<(time()-180) ||  getval("antispamtime",0)>time())
@@ -125,7 +125,7 @@ include "../include/login_background.php";
 
 <form method="post" action="<?php echo $baseurl_short?>pages/user_request.php">  
 
-<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!<?php echo $error_extra?></div><br /><?php } ?>
+<?php if ($error) { ?><div class="FormError"><?php echo $error . ' ' . $error_extra?></div><?php } ?>
 <?php
 if (!hook("replacemain"))
     { /* BEGIN hook Replacemain */ ?>
