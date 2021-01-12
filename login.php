@@ -259,11 +259,6 @@ if (!hook("replaceloginform"))
             <div class="clearerleft"></div>
         </div>
 
-		<div class="QuestionSubmit">
-			<label for="buttons"> </label>			
-			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
-		</div>
-
         <?php if ($allow_keep_logged_in) { ?>
             <div class="Question KeepLoggedIn">
                 <label for="remember"><?php echo $lang["keepmeloggedin"]?></label>
@@ -271,6 +266,12 @@ if (!hook("replaceloginform"))
                 <div class="clearer"> </div>
             </div>
         <?php } ?>
+
+        <div class="QuestionSubmit">
+            <label for="buttons"> </label>          
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
+        </div>
+
     
         <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>

@@ -302,7 +302,7 @@ div.MessageBox a {
 
 /* Login box */
 #login_box {background: rgba(0, 0, 0, 0.45)}
-#login_box .Question {border-bottom: none; padding: 0.7em 0 0 0;}
+#login_box .Question {border-bottom: none; padding: 0.6em 0 0 0;}
 #login_box .QuestionSubmit {background:none; border: none;}
 #login_box .Question .stdwidth {width: 550px; border-radius: 6px; min-height: 32px;}
 #login_box, #login_box h1,  #login_box a {color: #FFF;}

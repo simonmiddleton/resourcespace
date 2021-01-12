@@ -1386,8 +1386,19 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-bottom: 0;
 }
 
-#login_box #language, #login_box #user_local_tz {
-    width: 250px;
+#login_box #language {
+    width: 255px;
+}
+
+#login_box #user_local_tz {
+    width: 273px;
+}
+
+#login_box .Question input[type=text],
+#login_box .Question input[type=password],
+#login_box textarea {
+    background-color: #868686   ;
+    color: white;
 }
 
 #login_box .Question label {
@@ -1395,16 +1406,15 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 #login_box .Question.HalfWidth {
-    width: 270px;
+    width: 272px;
     display: inline-block;
 }
 #login_box .Question.HalfWidth label {
     width: 250px;
 }
 #login_box .QuestionSubmit {
+    float: right;
     margin-top: 5px;
-    display: inline-block;
-    padding: 1em 0 1em 0;
 }
 #login_box .QuestionSubmit label {
     display: none;
@@ -1412,11 +1422,11 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 
 #login_box .QuestionSubmit input {
     min-height: 32px;
-    padding: 6px 12px 6px 12px;
-    margin-right: 10px;
+    padding: 6px 18px;
 }
-#login_box .KeepLoggedIn {
+#login_box .Question.KeepLoggedIn {
     display: inline-block;
+    margin: 12px 0 20px 0;
 }
 
 #login_box .KeepLoggedIn label {
@@ -1425,6 +1435,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 #login_box #remember {
     float: left;
     margin-right: 10px;
+    margin-left: 0;
 }
 p.LoginLinks {
     line-height: 28px;

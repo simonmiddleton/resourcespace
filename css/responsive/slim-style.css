@@ -160,6 +160,9 @@ body {
     .RecordPanel .RecordDownloadSpace .DownloadFileSize {
         font-size: 90%;
     }
+    #login_box .Question.KeepLoggedIn {
+        margin-left: 3px;
+    }
 }
 @media(max-width:700px) {
     .FormHelp {
@@ -848,9 +851,14 @@ body {
     #login_box .Question.HalfWidth,
     #login_box #language,
     #login_box #user_local_tz,
-    #login_box .Question label {
+    #login_box .Question label,
+    #login_box .QuestionSubmit input {
         width: 100%;
-    }   
+    }
+    #login_box .QuestionSubmit {
+        width: 100%;
+        padding: 0 0 10px 0;
+    }
 }
 @media(max-width:400px) {
     .ResourcePanelShell {
