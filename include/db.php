@@ -85,7 +85,7 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 		{
 		# Local cache exists and has not expired. Use this copy.
 		}
-	elseif($remote_config_expiry < time() && function_exists('curl_init'))
+	elseif(function_exists('curl_init'))
 		{
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
