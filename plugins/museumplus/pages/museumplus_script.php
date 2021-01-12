@@ -59,6 +59,7 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
     if(in_array($option_name, array('h', 'help')))
         {
         logScript('[museumplus] To clear the lock after a failed run, pass either the "-c" -or- "--clear-lock" option.', $mplus_log_file);
+        logScript('[museumplus] To filter the resources that should be processed, use the "--filter" option and use the "new_and_changed_associations" filter. This will process resources that have just been assocciated with a module or that had their association changed since the last time they\'ve been validated.', $mplus_log_file);
         exit();
         }
 
