@@ -3,6 +3,7 @@ function HookMuseumplusAllInitialise()
     {
     $mplus_config = get_plugin_config('museumplus');
 
+    // Migrating old plugin configuration (when it was only syncing from the Object module).
     if(
         isset($mplus_config['museumplus_search_mpid_field'])
         && isset($mplus_config['museumplus_mpid_field'])
@@ -31,8 +32,6 @@ function HookMuseumplusAllInitialise()
                 'mplus_id_field' => $mplus_config['museumplus_search_mpid_field'],
                 'rs_uid_field' => $mplus_config['museumplus_mpid_field'],
                 'applicable_resource_types' => $mplus_config['museumplus_resource_types'],
-                'media_sync' => false,
-                'media_sync_df_field' => 0,
                 'field_mappings' => $field_mappings,
             )
         );

@@ -8,8 +8,7 @@ include_once dirname(__DIR__) . '/include/museumplus_search_functions.php';
 ############################################################
 define('MPLUS_LOCK', 'museumplus_import');
 define('MPLUS_LAST_IMPORT', 'last_museumplus_import');
-define('MPLUS_MEDIA_MODULE_NAME', 'Multimedia'); # @see http://docs.zetcom.com/ws/
-define('MPLUS_FIELD_ID', '__id'); # @see http://docs.zetcom.com/ws/
+define('MPLUS_FIELD_ID', '__id'); # This field holds the technical ID of a module item. @see http://docs.zetcom.com/ws/
 
 
 ############################################################
@@ -53,16 +52,14 @@ $museumplus_integrity_check_field = 0; # NOT IN USE until we can reliably get in
 
 
 ############################################################
-### MuseumPlus - ResourceSpace mappings ####################
+### MuseumPlus - ResourceSpace modules setup ###############
 ############################################################
-$museumplus_modules_saved_config = plugin_encode_complex_configs(array(
-    1 => array(
+$museumplus_modules_saved_config = plugin_encode_complex_configs([
+    1 => [
         'module_name' => 'Object',
         'mplus_id_field' => '',
         'rs_uid_field' => 0,
-        'applicable_resource_types' => array(),
-        'media_sync' => false,
-        'media_sync_df_field' => 0,
-        'field_mappings' => array(),
-    )
-));
+        'applicable_resource_types' => [],
+        'field_mappings' => [],
+    ]
+]);

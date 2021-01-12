@@ -43,8 +43,6 @@ $lang["museumplus_mplus_id_field"] = "MuseumPlus ID field name";
 $lang["museumplus_mplus_id_field_helptxt"] = "Leave empty to use the technical ID '__id' (default)";
 $lang["museumplus_rs_uid_field"] = "ResourceSpace UID field";
 $lang["museumplus_applicable_resource_types"] = "Applicable resource type(s)";
-$lang['museumplus_media_sync'] = 'Sync preview sizes with MuseumPlus? You can specify which ones to push from System > Image sizes area';
-$lang['museumplus_media_sync_df_field'] = 'Metadata field used as the deciding factor for syncing resource previews to MuseumPlus (must be a checkbox type with only one option)';
 $lang["museumplus_field_mappings"] = "MuseumPlus - ResourceSpace field mappings";
 $lang['museumplus_add_mapping'] = 'Add mapping';
 

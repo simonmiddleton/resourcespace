@@ -37,8 +37,6 @@ $module_name = getval('module_name', '');
 $mplus_id_field = getval('mplus_id_field', '');
 $rs_uid_field = getval('rs_uid_field', 0, true);
 $applicable_resource_types = getval('applicable_resource_types', array());
-$media_sync = (getval('media_sync', 0, true) == 1);
-$media_sync_df_field = getval('media_sync_df_field', 0, true); # must be a checkbox type with only one option as all we'll check is if the resource will have this field set (e.g a field like 'sync with CMS' : yes)
 $field_mappings = getval('field_mappings', array());
 
 
@@ -63,8 +61,6 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
         'mplus_id_field' => $mplus_id_field,
         'rs_uid_field'  => $rs_uid_field,
         'applicable_resource_types' => $applicable_resource_types,
-        'media_sync' => $media_sync,
-        'media_sync_df_field' => $media_sync_df_field,
         'field_mappings' => $field_mappings,
     );
 
@@ -95,8 +91,6 @@ if($id > 0 && isset($museumplus_modules_config[$id]))
     $mplus_id_field = $record['mplus_id_field'];
     $rs_uid_field = $record['rs_uid_field'];
     $applicable_resource_types = $record['applicable_resource_types'];
-    $media_sync = $record['media_sync'];
-    $media_sync_df_field = $record['media_sync_df_field'];
     $field_mappings = $record['field_mappings'];
     }
 
@@ -144,14 +138,6 @@ if(isset($error))
         $lang["museumplus_applicable_resource_types"],
         $applicable_resource_types,
         420);
-    config_boolean_select('media_sync', $lang['museumplus_media_sync'], $media_sync);
-    render_field_selector_question(
-        $lang["museumplus_media_sync_df_field"],
-        "media_sync_df_field",
-        array(FIELD_TYPE_CHECK_BOX_LIST),
-        "stdwidth",
-        false,
-        $media_sync_df_field);
     ?>
         <div class="Question">
             <label for="buttons"><?php echo $lang["museumplus_field_mappings"]; ?></label>
