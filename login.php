@@ -189,7 +189,7 @@ if (!hook("replaceloginform"))
             <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg"></img>
         </div>
         
-        <!--<h1><?php echo text("welcomelogin")?></h1>-->
+        <h1><?php echo text("welcomelogin")?></h1>
 
         <div class="Question">
             <label for="username"><?php echo $lang["username"]?> </label>
