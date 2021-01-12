@@ -1809,9 +1809,13 @@ function dash_tile_featured_collection_get_resources($c, array $ctx)
     $resources = array();
     foreach(get_featured_collection_resources($collection, $ctx) as $resource_ref)
         {
+		$resource = get_resource_data($resource_ref);
         $resources[] = array(
             "ref" => $resource_ref,
-            "field{$view_title_field}" => get_data_by_field($resource_ref, $view_title_field));
+			"field{$view_title_field}" => get_data_by_field($resource_ref, $view_title_field),
+			"resource_type" => $resource['resource_type'],
+			"file_extension" => $resource['file_extension']);
+
         }
 
     return $resources;
