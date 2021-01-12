@@ -2050,7 +2050,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     debug_function_call("resolve_keyword", func_get_args());
 
     global $quoted_string, $stemming;
-    $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+    $keyword=mb_strcut($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
             
     if(!$quoted_string && $normalize)
         {
