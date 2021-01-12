@@ -2539,10 +2539,10 @@ function get_filter_rules($filterid)
 */       
 function get_filter_rule($ruleid)
     {    
-    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
+    $rule_data = sql_query("SELECT fr.ref, frn.node_condition, group_concat(frn.node) AS nodes, n.resource_type_field FROM filter_rule fr JOIN filter_rule_node frn ON frn.filter_rule=fr.ref join node n on frn.node=n.ref WHERE fr.ref='" . escape_check($ruleid) . "' GROUP BY n.resource_type_field,frn.node_condition"); 
     if(count($rule_data) > 0)
         {
-        return $rule_data[0];
+        return $rule_data;
         }
     return false;
     }

@@ -2839,6 +2839,7 @@ $lang["filter_rules"]               = "Filter rules";
 $lang["filter_rules_none"]          = "There are no rules for this filter";
 $lang["filter_rule_edit"]           = "Edit filter rule";
 $lang["filter_rule_add"]            = "Add filter rule";
+$lang["filter_rule_save"]           = "Save filter rule";
 $lang["filter_rule_edit_text"]      = "Select the conditions that can satisfy this filter rule. Any one of these can be met to satisfy the rule";
 $lang["filter_rule_name"]           = "Filter rule name";
 $lang["filter_condition_label"]     = "Criteria";

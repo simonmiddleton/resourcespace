@@ -261,8 +261,8 @@ include "../../include/header.php";
                                     }
                                     
                                 //exit(print_r($ruleinfo));
-                            
-                                echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "<a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></div></td></tr>";
+                                $rule_edit_url = generateURL($baseurl . "/pages/admin/ajax/admin_filter_rule_edit.php",array("ref"=>$ruleid,"filter"=>$filterid));
+                                echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true,);'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></input></td></tr>";
                                 }
                             }
                             ?>
