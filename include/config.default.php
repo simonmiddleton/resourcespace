@@ -1329,7 +1329,7 @@ $relate_on_upload_default=false;
 #Takes the preview code such as "col","thm"
 $related_resource_preview_size="col";
 
-# Enable the 'keep me logged in at this workstation' option at the login form
+# Enable the 'keep me logged in on this device' option at the login form
 # If the user then selects this, a 100 day expiry time is set on the cookie.
 $allow_keep_logged_in=true;
 #Remember Me Checked By Default

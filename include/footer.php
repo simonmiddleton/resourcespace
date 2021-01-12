@@ -53,7 +53,7 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
         if (!hook("replace_footernavrightbottom"))
         	{
             ?>
-            <div id="FooterNavRightBottom" class="OxColourPale"><?php echo text("footer")?></div>
+            <div id="FooterNavRightBottom"><?php echo text("footer")?></div>
             <?php
         	}
         ?>

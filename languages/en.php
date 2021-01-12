@@ -687,7 +687,7 @@ $lang["printallforyear"]="Print all statistics for this year";
 # Log in / user account
 $lang["nopassword"]="Click here to apply for an account";
 $lang["forgottenpassword"]="Click here if you have forgotten your password";
-$lang["keepmeloggedin"]="Keep me logged in at this workstation";
+$lang["keepmeloggedin"]="Keep me logged in on this device";
 $lang["columnheader-username"]=$lang["username"]="Username";
 $lang["password"]="Password";
 $lang["login"]="Log in";
@@ -2314,7 +2314,7 @@ $lang["home__restrictedtext"]="Please click on the link that you were e-mailed t
 $lang["home__restrictedtitle"]="Welcome to ResourceSpace [ver]";
 $lang["home__welcometext"]="The simple, fast, &amp; free way to organise your digital assets.";
 $lang["home__welcometitle"]="Welcome to ResourceSpace [ver]";
-$lang["login__welcomelogin"]="Welcome to ResourceSpace, please log in...";
+$lang["login__welcomelogin"]="Welcome to ResourceSpace. Please log in.";
 $lang["local_tz"] = "Local time zone";
 $lang["research_request__introtext"]="Our professional researchers are here to assist you in finding the very best resources for your projects. Complete this form as thoroughly as possible so we're able to meet your criteria accurately. <br /><br />A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.  ";
 $lang["resource_email__introtext"]="Quickly share this resource with other users by email. A link is automatically sent out. You can also include any message as part of the email.";

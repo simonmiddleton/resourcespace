@@ -279,7 +279,6 @@ $lang["printallforyear"]="Cetak semua statistik untuk tahun ini";
 # Log in / user account
 $lang["nopassword"]="Klik di sini untuk mendaftarkan akun anda";
 $lang["forgottenpassword"]="Klik di sini bila anda lupa kata sandi anda";
-$lang["keepmeloggedin"]="Keep me logged in at this workstation";
 $lang["username"]="Pengguna";
 $lang["password"]="Kata Sandi";
 $lang["login"]="Masuk";

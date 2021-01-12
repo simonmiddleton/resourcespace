@@ -52,7 +52,7 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
     }
 ?>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <?php hook('extra_meta'); ?>
 
 <title><?php echo htmlspecialchars($applicationname)?></title>
@@ -311,7 +311,8 @@ if(isset($usergroup))
 
 $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
 ?>
-<div id="Header" class="ui-layout-north  <?php
+<div id="Header" class="<?php
+        echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : ' ui-layout-north ';
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
         echo " " . $header_size;
@@ -393,7 +394,7 @@ if (checkPermission_anonymoususer())
         {
     	?>
     	<ul>
-    	<li><a href="<?php echo $baseurl?>/login.php"<?php if($anon_login_modal){?> onClick="return ModalLoad(this,true);" <?php } ?>><?php echo $lang["login"]?></a></li>
+    	<li><a href="<?php echo $baseurl?>/login.php"<?php if($anon_login_modal){?> onClick="return ModalLoad(this,true,true);" <?php } ?>><?php echo $lang["login"]?></a></li>
     	<?php hook("addtoplinksanon");?>
     	<?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["contactus"]?></a></li><?php } ?>
     	</ul>

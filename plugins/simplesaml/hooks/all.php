@@ -456,7 +456,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo  LINK_CARET . $lang['simplesaml_use_sso']; ?></a>
+		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a>
 		<?php
         }
 

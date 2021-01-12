@@ -13,7 +13,7 @@ body, input, textarea, select, h2, h3, h4, h5, h6, .Title, .ListviewTitleStyle, 
 select {font-size:1em; height:1.8rem;}
 
 /*Create Base font for relative sizing*/
-html {height:100%;}
+html {height:100%;-webkit-text-size-adjust: 100%;}
 body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: center; line-height: 1.4;}
 
 .ui-dialog .ui-dialog-buttonpane {text-align: center;}
@@ -109,6 +109,11 @@ button:active, input[type=submit]:active, input[type=button]:active, .RecordPane
     filter: brightness(0.92);
     -moz-filter: brightness(0.92);
     -webkit-filter: brightness(0.92);    
+}
+
+/* Prevent iOS overriding button styling */
+input[type=submit], input[type=button] {
+    -webkit-appearance: none;
 }
 
 span+input {
@@ -252,9 +257,19 @@ div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
 div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
+/* Hide Header on Login page */
+#Header.LoginHeader {display: none !important;}
+
+.LoginHeaderImg {
+    max-width: 400px;
+    max-height: 60px;
+    display: block;
+    margin: 0 auto;
+}
+
 #Footer {clear: both; margin:20px 25px 38px 25px;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
-#FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
+#FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;font-size: 13px;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
 #login_box #Footer {margin: 0 0 10px 0;}
@@ -265,7 +280,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     text-align:left;
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
-#CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
+#CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;}
@@ -464,7 +479,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
 .Question .InnerLabel {width:90px; margin-top:  0;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
-.WideTextQuestion label { width: 95%; float: right; }
 
 .Question .indent {
     float:left;
@@ -1361,13 +1375,90 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     position: relative;
 }
 
-#CentralSpaceLogin #login_box {
-    margin-bottom: 100px;
-    padding: 10px 15px 0 15px;
-    border-radius: 4px;
-    position: absolute;
+#login_box {
+    padding: 20px 25px 5px 25px;
+    border-radius: 15px;
+    box-shadow: 0 1px 10px 1px rgba(0,0,0,0.25);
 }
 
+#login_box h1 {
+    font-size: 18px;
+    padding-bottom: 0;
+}
+
+#login_box #language {
+    width: 255px;
+}
+
+#login_box #user_local_tz {
+    width: 273px;
+}
+
+#login_box .Question input[type=text],
+#login_box .Question input[type=password],
+#login_box textarea {
+    background-color: #868686   ;
+    color: white;
+}
+
+#login_box .Question label {
+    width: 515px;
+}
+
+#login_box .Question.HalfWidth {
+    width: 272px;
+    display: inline-block;
+}
+#login_box .Question.HalfWidth label {
+    width: 250px;
+}
+#login_box .QuestionSubmit {
+    float: right;
+    margin-top: 5px;
+}
+#login_box .QuestionSubmit label {
+    display: none;
+}
+
+#login_box .QuestionSubmit input {
+    min-height: 32px;
+    padding: 6px 18px;
+}
+#login_box .Question.KeepLoggedIn {
+    display: inline-block;
+    margin: 12px 0 20px 0;
+}
+
+#login_box .KeepLoggedIn label {
+    float: unset;
+}
+#login_box #remember {
+    float: left;
+    margin-right: 10px;
+    margin-left: 0;
+}
+p.LoginLinks {
+    line-height: 28px;
+    padding-bottom: 5px;
+}
+#login_opt_in {
+    float: left;
+    margin: 3px 10px 3px 0;
+}
+#modal #login_box {
+    width: 600px;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+#login_box .FormError {
+    color: white;
+    background-color: #ff000030;
+    margin: 0;
+    padding: 5px;
+    border-radius: 6px;
+    border: 2px solid red;
+}
 /* Manage External Shares */
 .FormFilter {
     width: 700px;
