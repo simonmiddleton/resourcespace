@@ -11,7 +11,7 @@
  * @param  string $sort ASC or DESC sort order
  * @param  integer $fetchrows   How many rows to fetch
  * @param  boolean $auto_create Create a default My Collection if one doesn't exist
- * @return void
+ * @return array
  */
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
 	{
@@ -217,7 +217,7 @@ function get_collection($ref)
  *
  * @param  int  $collection   ID of collection being requested
  * 
- * @return void
+ * @return array|boolean
  */
 function get_collection_resources($collection)
     {
@@ -594,7 +594,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
  * Deletes the collection with reference $ref
  *
  * @param  integer $collection
- * @return void
+ * @return boolean|void
  */
 function delete_collection($collection)
 	{

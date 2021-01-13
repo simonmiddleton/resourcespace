@@ -13,7 +13,7 @@
  * Return a private scramble key for this user.
  *
  * @param  integer $user The user ID
- * @return void
+ * @return string|false
  */
 function get_api_key($user)
     {

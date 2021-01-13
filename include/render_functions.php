@@ -2865,7 +2865,9 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
     $attributes = "onclick=\"CentralSpaceLoad('{$upload_here_url}');\"";
 
-    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
+    render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
+
+    return;
     }
 
 /**
@@ -2961,7 +2963,7 @@ function render_browse_bar()
 /**
 * Generates a root row item for the browse bar
 *  
-* @return void
+* @return string  $html
 */    
 function generate_browse_bar_item($id, $text)
 	{
@@ -3204,7 +3206,9 @@ function render_edit_selected_btn()
     $attributes  = " id=\"EditSelectedResourcesBtn\"";
     $attributes .= " onclick=\"ModalLoad('{$batch_edit_url}', true);\"";
 
-    return render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+    render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+
+    return;
     }
 
 
@@ -3222,7 +3226,9 @@ function render_clear_selected_btn()
     $attributes .= " data-csrf-token-identifier=\"{$CSRF_token_identifier}\"";
     $attributes .= " data-csrf-token=\"" . generateCSRFToken($usersession, "clear_selected_btn_{$USER_SELECTION_COLLECTION}") . "\"";
 
-    return render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+    render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+
+    return;
     }
 
 

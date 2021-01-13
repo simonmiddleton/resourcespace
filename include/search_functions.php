@@ -2168,7 +2168,7 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  * @param  string $needle       Text to highlight
  * @param  int  $options        String highlight options - See include/definitions.php
  * @param  string $highlight    Optional custom highlight code
- * @return void
+ * @return string
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {

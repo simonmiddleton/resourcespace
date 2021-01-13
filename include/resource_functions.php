@@ -2717,14 +2717,14 @@ function get_resource_type_field($field)
 /**
  * get_resource_field_data
  *
- * @param  int $ref                 Resource ID
- * @param  bool $multi              Get all fields? False by defautl (only fields that apply to the given resource type)
+ * @param  int  $ref                Resource ID
+ * @param  bool $multi              Get all fields? False by default (only fields that apply to the given resource type)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
- * @param  int $originalref    Original resource ID to get data for. NULL by default
+ * @param  int  $originalref        Original resource ID to get data for. NULL by default
  * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
  * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
  * @param  bool $forcsv             Get data for CSV export (uses \ separator for category tree nodes). FALSE by default
- * @return void
+ * @return array|boolean
  */
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
     {
@@ -3296,7 +3296,7 @@ function get_resource_ref_range($lower,$higher)
 * @param  int    $from            ID of resource
 * @param  mixed  $resource_type   ID of resource type
 * 
-* @return void
+* @return boolean|integer
 */
 function copy_resource($from,$resource_type=-1)
 	{
@@ -7158,7 +7158,7 @@ function copy_hitcount_to_live()
  * @param  string   $extension      File extension of image
  * @param  boolean  $onlyifexists
  * 
- * @return void
+ * @return array    $return
  */
 function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
