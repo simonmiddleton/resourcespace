@@ -591,7 +591,7 @@ function compile_search_actions($top_actions)
             $options[$o]['label']=$lang['savethissearchtocollection'];
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php", $urlparams, array("addsearch" => $search));
             $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category']  = ACTIONGROUP_COLLECTION;
+            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
             $options[$o]['order_by']  = 70;
             $o++;
             }
