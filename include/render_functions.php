@@ -4673,7 +4673,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
-    $message="This system is currently being upgraded by another process." . PHP_EOL;
+    $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
         $upgrade_progress_overall=get_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL);
