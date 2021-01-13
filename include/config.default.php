@@ -3327,7 +3327,7 @@ $watermark_single_image = array(
 # $offline_job_queue. Enable the job_queue functionality that runs resource heavy tasks to be run offline and send notifications once complete. Initially used by video_tracks plugin 
 # If set to true a frequent cron job or scheduled task should be added to run pages/tools/offline_jobs.php 
 # NOTE: This setting may be overridden in certain cirumstances  - e.g. if previews are required at upload time because Google Vision facial recognition is configured with a dependent metadata field
-$offline_job_queue=true;
+$offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
 # Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
