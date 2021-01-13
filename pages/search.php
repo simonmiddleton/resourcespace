@@ -549,32 +549,8 @@ $count_result = (is_array($result) ? count($result) : 0);
 $same_search_param = (trim(strip_leading_comma($search)) === $initial_search_cookie);
 $same_restypes_param = (trim($restypes) === $initial_restypes_cookie);
 $same_archive_param = (trim($archive) === $initial_saved_archive_cookie);
-
-debug("TEST.f: ");
-debug("TEST.f: ");
-debug("TEST.f: Initial 'saved' values were:");
-debug("TEST.f: \$initial_search_cookie: " . gettype($initial_search_cookie) . " = " . json_encode($initial_search_cookie));
-debug("TEST.f: \$initial_restypes_cookie: " . gettype($initial_restypes_cookie) . " = " . json_encode($initial_restypes_cookie));
-debug("TEST.f: \$initial_saved_archive_cookie: " . gettype($initial_saved_archive_cookie) . " = " . json_encode($initial_saved_archive_cookie));
-debug("TEST.f: ");
-debug("TEST.f: Should we log this search?");
-debug("TEST.f: \$old_search: = " . json_encode($old_search));
-debug("TEST.f: \$same_search_param: = " . json_encode($same_search_param));
-debug("TEST.f: \$same_restypes_param: = " . json_encode($same_restypes_param));
-debug("TEST.f: \$same_archive_param: = " . json_encode($same_archive_param));
-
-if(
-    !$old_search
-    && (!$same_search_param || !$same_restypes_param || !$same_archive_param)
-    // && !$paging_request && !$thumbtypechange
-)
+if(!$old_search && (!$same_search_param || !$same_restypes_param || !$same_archive_param))
     {
-    debug("TEST.f: ");
-    debug("TEST.f: Actual search values:");
-    debug("TEST.f: trim(strip_leading_comma($search)): " . gettype(trim(strip_leading_comma($search))) . " = " . json_encode(trim(strip_leading_comma($search))));
-    debug("TEST.f: \$restypes: " . gettype($restypes) . " = " . json_encode($restypes));
-    debug("TEST.f: \$archive: " . gettype($archive) . " = " . json_encode($archive));
-
     log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $count_result);
     }
 
