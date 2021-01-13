@@ -2936,27 +2936,3 @@ function check_order_by_in_table_joins($order_by)
         exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
         }
     }
-
-/**
-* Log search events
-* 
-* @param string  $search         Actual search string {@see do_search()}
-* @param array   $resource_types Resource types filter
-* @param array   $archive_states Archive states filter
-* @param integer $result_count   Search result count
-* 
-* @return void
-*/
-function search_log_event(string $search, array $resource_types, array $archive_states, int $result_count)
-    {
-    global $userref;
-    $q = sprintf(
-        'INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (\'%s\', \'%s\', \'%s\', %s, \'%s\')',
-        escape_check($search),
-        implode(', ', array_filter($resource_types, 'is_int_loose')),
-        implode(', ', array_filter($archive_states, 'is_int_loose')),
-        sql_null_or_val((string) $userref, is_null($userref)),
-        (is_int_loose($result_count) ? escape_check($result_count) : '0')
-    );
-    return sql_query($q);
-    }
