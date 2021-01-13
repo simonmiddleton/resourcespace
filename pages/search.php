@@ -49,6 +49,8 @@ if($k != "" && !$internal_share_access || (isset($anonymous_login) && $username 
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 $collection_add=getvalescaped("collection_add",""); // Need this if redirected here from upload
+$initial_search_cookie = (isset($_COOKIE['search']) ? trim(strip_leading_comma($_COOKIE['search'])) : '');
+$initial_restypes_cookie = (isset($_COOKIE['restypes']) ? trim($_COOKIE['restypes']) : '');
 
 if(false !== strpos($search, TAG_EDITOR_DELIMITER))
     {
@@ -401,7 +403,8 @@ else
 }
 
 # If returning to an old search, restore the page/order by and other non search string parameters
-if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
+$old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
+if ($old_search)
     {
     $offset=getvalescaped("saved_offset",0,true);rs_setcookie('saved_offset', $offset,0,"","",false,false);
     $order_by=getvalescaped("saved_order_by","relevance");
@@ -538,6 +541,20 @@ $hook_result=hook("process_search_results","search",array("result"=>$result,"sea
 if ($hook_result!==false) {$result=$hook_result;}
 
 $count_result = (is_array($result) ? count($result) : 0);
+
+// Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
+// string or resource types or archive states changed. Changing, for example, display or paging don't count as different
+// searches.
+$same_nonempty_search_param = ($search !== '' && trim(strip_leading_comma($search)) === $initial_search_cookie);
+$same_restypes_param = ($restypes !== '' && trim($restypes) === $initial_restypes_cookie);
+if(
+    !$old_search
+    && (!$same_nonempty_search_param || !$same_restypes_param)
+    // && !$paging_request && !$thumbtypechange
+)
+    {
+    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $count_result);
+    }
 
 if ($collectionsearch)
     {

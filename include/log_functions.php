@@ -404,11 +404,15 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "")
 function log_search_event(string $search, array $resource_types, array $archive_states, int $result_count)
     {
     global $userref;
+
+    $resource_types = array_filter($resource_types, 'is_int_loose');
+    $archive_states = array_filter($archive_states, 'is_int_loose');
+
     $q = sprintf(
-        'INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (\'%s\', \'%s\', \'%s\', %s, \'%s\')',
-        escape_check($search),
-        implode(', ', array_filter($resource_types, 'is_int_loose')),
-        implode(', ', array_filter($archive_states, 'is_int_loose')),
+        'INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (%s, %s, %s, %s, \'%s\')',
+        sql_null_or_val($search, $search === ''),
+        sql_null_or_val(implode(', ', $resource_types), empty($resource_types)),
+        sql_null_or_val(implode(', ', $archive_states), empty($archive_states)),
         sql_null_or_val((string) $userref, is_null($userref)),
         (is_int_loose($result_count) ? escape_check($result_count) : '0')
     );
