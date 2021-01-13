@@ -494,7 +494,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0 0 10px 190px;padding: 10px 0 0;}
-.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0 0 25px;text-align: center;padding: 3px 3px 6px;}
+.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 10px 0;text-align: center;padding: 5px; border-radius: 6px;}
 .PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 0 10px; text-align: center; padding: 3px; border-radius:4px; }
 .AutoSaveStatus {font-weight: bold;float:right;padding:6px 0 0;min-width:100px;}
 .PurgeUsersMonths {width:4em;}
@@ -1397,7 +1397,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 #login_box .Question input[type=text],
 #login_box .Question input[type=password],
 #login_box textarea {
-    background-color: #868686   ;
+    background-color: #9a9a9ab8;
     color: white;
 }
 
@@ -1990,7 +1990,6 @@ a.BrowseRefresh{
     float: right;
     margin-bottom: 5px;
 }
-
 
 /* Tile navigation used on top menus */
 
