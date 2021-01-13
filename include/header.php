@@ -576,7 +576,8 @@ if($browse_on && checkperm("s") === true)
     }
         
 echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
-    
+
+hook('afteruicenter');
 
 if (!in_array($pagename, $not_authenticated_pages))
     {

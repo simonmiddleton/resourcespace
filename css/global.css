@@ -1397,7 +1397,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 #login_box .Question input[type=text],
 #login_box .Question input[type=password],
 #login_box textarea {
-    background-color: #9a9a9ab8;
+    background-color: #9a9a9ad9;
     color: white;
 }
 
