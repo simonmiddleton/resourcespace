@@ -37,7 +37,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
         $access_token  = isset($vimeo_details[0]['vimeo_access_token']) ? $vimeo_details[0]['vimeo_access_token'] : '';
         $state         = isset($vimeo_details[0]['vimeo_state']) ? $vimeo_details[0]['vimeo_state'] : '';
         }
-    else
+    elseif(checkperm('a'))
         {
         $access_token  = $vimeo_publish_system_token != "" ? $vimeo_publish_system_token : "";
         $state         = $vimeo_publish_system_state != "" ? $vimeo_publish_system_state : "";
@@ -68,7 +68,9 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
 
         $vimeo_lib = new Vimeo($client_id, $client_secret);
         $authentication_url = $vimeo_lib->buildAuthorizationEndpoint($redirect_uri, 'public upload edit', $state);
+        debug("BANG " . $authentication_url);
         header("Location: " . $authentication_url);
+        exit();
         }
 
     if($state !== $vimeo_state_response)
@@ -88,7 +90,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
             {
             sql_query("UPDATE `user` SET `vimeo_access_token` = '{$access_token}' WHERE `ref` = '{$userref}'");
             }
-        else
+        elseif(checkperm('a'))
             {
             // System wide user, update the config
             $vimeo_publish_config = get_plugin_config("vimeo_publish");
@@ -108,7 +110,7 @@ function delete_vimeo_token($user_ref=0)
         {
         sql_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = '{$user_ref}'");
         }
-    elseif($user_ref==0 && !$vimeo_publish_allow_user_accounts)
+    elseif($user_ref==0 && checkperm('a'))
         {
         // Not user specific, clear system config
         $vimeo_publish_config = get_plugin_config("vimeo_publish");

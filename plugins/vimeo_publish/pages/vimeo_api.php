@@ -3,25 +3,28 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php';
 include_once '../include/vimeo_publish_functions.php';
 
-
 use Vimeo\Vimeo;
 use Vimeo\Exceptions\VimeoUploadException;
 
-
-$ref           = getvalescaped('resource', getvalescaped('vimeo_publish_resource', ''));
-$access        = get_resource_access($ref);
-$resource_data = get_resource_data($ref);
-$error         = '';
-$modal = (getval("modal", "") == "true");
-
-if(0 != $access)
+// May have come from plugin setup page to get or delete a system wide token
+$systemtoken    = getval("systemtoken","") != "" && checkperm('a');
+$ref            = getvalescaped('resource',0, true);
+if(!$systemtoken && $ref > 0)
     {
-    exit($lang['vimeo_publish_access_denied']);
+    $access        = get_resource_access($ref);
+    if(0 != $access)
+        {
+        exit($lang['vimeo_publish_access_denied']);
+        }
+    
+    $resource_data = get_resource_data($ref);
+    $error         = '';
     }
+$modal = (getval("modal", "") == "true");
 
 $publish_params = array();
 $publish_params["resource"]     = $ref;
-$publish_params["fromsetup"]    = getval("fromsetup","");
+$publish_params["systemtoken"]  = $systemtoken;
 $vimeo_publish_url = generateURL($vimeo_callback_url, $publish_params);
 
 if(getval('delete_token','') != '')
@@ -30,7 +33,7 @@ if(getval('delete_token','') != '')
         {
         delete_vimeo_token($userref);
         }
-    else
+    elseif($systemtoken)
         {
         delete_vimeo_token();
         }
@@ -40,9 +43,9 @@ if(getval('delete_token','') != '')
 init_vimeo_api($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
 $vimeo_publish_access_token = get_access_token($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
 $vimeo_user_data            = array();
-if(getval("fromsetup","") != "")
+if($systemtoken)
     {
-    // Just came here to get a token, return to setup page
+    // Just came here to get/delete a token, return to setup page
     redirect(generateURL($baseurl_short . "plugins/vimeo_publish/pages/setup.php"));
     }
 

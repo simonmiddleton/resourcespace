@@ -16,7 +16,7 @@ $lang['vimeo_publish_video_description']         = 'Video description';
 $lang['vimeo_publish_resource_types_to_include'] = 'Select valid video resource types for Vimeo';
 
 $lang['vimeo_publish_publish_as_user'] = 'You will be publishing to Vimeo as: ';
-$lang['vimeo_publish_delete_token']    = 'Use a different Vimeo account (ensure you are logged out of this account first)';
+$lang['vimeo_publish_delete_token']    = 'Use a different Vimeo account (ensure you are logged out of this Vimeo account first)';
 $lang['vimeo_publish_button_text']     = 'Publish';
 $lang['vimeo_publish_legal_warning']   = 'By clicking \'OK\' you certify that you own all rights to the content or that you are authorized by the owner to make the content publicly available on Vimeo and that it otherwise complies with the Vimeo\'s Terms of Service located at https://vimeo.com/terms';
 // $lang[''] = '';

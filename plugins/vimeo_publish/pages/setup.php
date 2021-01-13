@@ -51,11 +51,12 @@ $vimeo_user_data = array();
 if($vimeo_publish_system_token != "" && get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_system_token, $vimeo_user_data))
     {
     $usertext = $vimeo_user_data['name'] . " (" . ucfirst($vimeo_user_data['account']) . " account - " . formatfilesize($vimeo_user_data['upload_quota_free']) . " free)";
-    $usertext .= "<br/><a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "fromsetup" => "true")) . "' >" . $lang['vimeo_publish_delete_token'] . "</a>"; 
+    // Can't use CentralSpaceLoad() here or API call will fail
+    $usertext .= "<br/><a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "systemtoken" => "true")) . "' >" . $lang['vimeo_publish_delete_token'] . "</a>"; 
     }
 else
     {
-    $usertext = "<a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "fromsetup" => "true")) . "' >" . $lang['vimeo_publish_set_account'] . "</a>"; 
+    $usertext = "<a href='" . generateURL($baseurl_short . "plugins/vimeo_publish/pages/vimeo_api.php",array("delete_token" => "true", "systemtoken" => "true")) . "' >" . $lang['vimeo_publish_set_account'] . "</a>"; 
     }
 $userquestion = "<div class='Question'>
         <label>" . $lang['vimeo_publish_publish_as_user'] . "</label>
