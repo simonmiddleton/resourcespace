@@ -153,6 +153,10 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         # Not downloading - output a table
+
+        // Pre-render process: Convert nodes search syntax (e.g @@228 or @@!223) into URLs (alerts the name of the node)
+        // for results that have a column called "search_string"
+        $results = convert_node_search_syntax_to_URL($results, 'search_string');
         $border="";
         if ($add_border) {$border="border=\"1\"";}
         $output="<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";
@@ -202,7 +206,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                         }
                     else
                         {
-                        $output.="<td>" . strip_tags_and_attributes(lang_or_i18n_get_translated($value, "usergroup-"),array("a"),array("href","target")) . "</td>\r\n";
+                        $output.="<td>" . strip_tags_and_attributes(lang_or_i18n_get_translated($value, "usergroup-"),array("a"),array("href","target", 'onclick')) . "</td>\r\n";
                         }
                     }
                 }
