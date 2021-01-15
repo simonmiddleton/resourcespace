@@ -3814,7 +3814,8 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-		$function="Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name);		
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name) : "";	
+        	
 		if (function_exists($function)) 
 			{			
 			$function_list[]=$function;
@@ -3822,7 +3823,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-			$function="Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name);
+			$function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;
