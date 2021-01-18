@@ -167,7 +167,7 @@ function HookTms_linkEditAftersaveresourcedata()
 
     global $ref, $tmsdata, $tmsupdatelist;
 
-    if(is_null($tmsdata))
+    if(is_null($tmsdata) || !is_array($tmsdata))
         {
         return;
         }
