@@ -19,11 +19,7 @@ $browse_on = has_browsebar();
 if ((isset($header_colour_style_override) && $header_colour_style_override != ''))
     {
     ?>
-    #Header
-        {
-        background: <?php echo $header_colour_style_override; ?>;
-        }
-    #OverFlowLinks
+    #Header, #OverFlowLinks, #LoginHeader
         {
         background: <?php echo $header_colour_style_override; ?>;
         }

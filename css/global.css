@@ -1459,6 +1459,9 @@ p.LoginLinks {
     border-radius: 6px;
     border: 2px solid red;
 }
+#LoginHeader {
+    border-radius: 6px;
+}
 /* Manage External Shares */
 .FormFilter {
     width: 700px;
