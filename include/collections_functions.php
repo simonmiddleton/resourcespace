@@ -4024,7 +4024,11 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     {
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
-    generateResourcesMetadataCSV(array_column($result,"ref"), false,false,$csv_file);
+        if(isset($result[0]["ref"]))
+        {
+        $result = array_column($result,"ref");  
+        }
+    generateResourcesMetadataCSV($result, false,false,$csv_file);
     
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
