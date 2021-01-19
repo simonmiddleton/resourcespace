@@ -69,7 +69,7 @@ else
     $sharepwd       = getval("sharepassword","");
     $shareusergroup = getval("usergroup",$usergroup,true);
     $shareexpires   = getval("shareexpires","");
-    $emails         = getval("users","");
+    $share_emails   = getval("share_emails","");
     $editing = false; 
     }
 
@@ -106,9 +106,9 @@ if($submitted)
             "upload"    => 1,
             "message"   => $emailmessage,
             );
-        if(isset($emails) && $emails != "")
+        if(isset($share_emails) && trim($share_emails) != "")
             {
-            $shareoptions["emails"] = trim_array(explode(",",$emails));
+            $shareoptions["emails"] = trim_array(explode(",",$share_emails));
             }
         if($uploadkey != "")
             {
@@ -219,8 +219,8 @@ include "../include/header.php";
                     <div class="clearerleft"> </div>
                     </div>
                     <div class="Question">
-                        <label for="users"><?php echo $lang["upload_share_email_users"]; ?></label>
-                        <?php $userstring=getval("users","");include "../include/user_select.php"; ?>
+                        <label for="share_emails"><?php echo $lang["upload_share_email_users"]; ?></label>
+                        <input name="share_emails" id="share_emails" type="text" class="stdwidth"></input>
                         <div class="clearerleft"> </div>
                     </div>
                 </div>
