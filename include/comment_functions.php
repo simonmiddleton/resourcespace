@@ -116,7 +116,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		return false;
 		}
 		
-	global $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
+	global $baseurl, $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
 	
 	$anonymous_mode = (empty ($username) || $username == $anonymous_login);		// show extra fields if commenting anonymously
 	
@@ -142,6 +142,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		
 		echo<<<EOT
 
+		<script src="${baseurl}/lib/js/tagging.js"></script>
 		<script type="text/javascript">
 		
 			var regexEmail = new RegExp ("${regex_email}");
@@ -191,7 +192,8 @@ EOT;
         echo <<<EOT
 				<input id="comment_form_collection_ref" type="hidden" name="collection_ref" value="${collection_ref}"></input>
 				<input id="comment_form_resource_ref" type="hidden" name="resource_ref" value="${resource_ref}"></input>				
-				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}"></textarea>
+				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}" onkeypress="TaggingProcess(this)"></textarea>
+				
 EOT;
 		
 		if ($anonymous_mode)			
