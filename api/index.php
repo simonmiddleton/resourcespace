@@ -16,6 +16,13 @@ define("API_CALL", true);
 $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
 $query=$_SERVER["QUERY_STRING"];
+$pretty = filter_var(getval('pretty', ''), FILTER_VALIDATE_BOOLEAN); # Should response be prettyfied?
+
+// Parse query string and remove optional params (signature will be incorrect otherwise). For example, pretty JSON is just
+// how the client wants the response back, doesn't need to to be part of the signing key process.
+parse_str($query, $query_params);
+unset($query_params['pretty']);
+$query = http_build_query($query_params);
 
 # Support POST request where 'query' is POSTed and is the full query string.
 if (getval("query","")!="") {$query=getval("query","");}
@@ -37,7 +44,7 @@ if(!$validuser)
 debug("API: set up user '{$user}' signed with '{$sign}'");
 
 # Run the requested query
-echo execute_api_call($query);
+echo execute_api_call($query, $pretty);
 debug("API: finished execute_api_call({$query});");
 
 /*
