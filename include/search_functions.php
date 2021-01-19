@@ -1097,12 +1097,13 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             else
                 {
-                $editable_filter .= " AND 0=1";
+                if ($editable_filter != "")
+                    {
+                    $editable_filter .= " AND ";
+                    }
+                $editable_filter .= " 0=1";
                 }
             }
-        
-
-
 
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
