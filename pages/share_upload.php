@@ -210,7 +210,7 @@ include "../include/header.php";
                 }
             else
                 {?>
-                <h2 class="CollapsibleSectionHead" id="EmailUploadSectionHead"><?php echo $lang["action-email-upload-link"]; ?></h2>
+                <h2 class="CollapsibleSectionHead collapsed" id="EmailUploadSectionHead"><?php echo $lang["action-email-upload-link"]; ?></h2>
 
                 <div class="CollapsibleSection" id="EmailUploadSection" style="display:none;">
                     <div class="Question">
