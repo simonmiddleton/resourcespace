@@ -5600,7 +5600,7 @@ function external_upload_notify($collection, $k, $tempcollection)
     {
     global $applicationname,$baseurl,$lang;
 
-    $upload_share = get_upload_share_details($collection,$k);
+    $upload_share = get_external_shares(array("share_collection"=>$collection,"share_type"=>1, "access_key"=>$k));
     if(!isset($upload_share[0]["user"]))
         {
         debug("external_upload_notify() - unable to find external share details: " . func_get_args());
