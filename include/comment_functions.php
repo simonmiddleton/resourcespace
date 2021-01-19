@@ -192,7 +192,7 @@ EOT;
         echo <<<EOT
 				<input id="comment_form_collection_ref" type="hidden" name="collection_ref" value="${collection_ref}"></input>
 				<input id="comment_form_resource_ref" type="hidden" name="resource_ref" value="${resource_ref}"></input>				
-				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}" onkeypress="TaggingProcess(this)"></textarea>
+				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}" onkeyup="TaggingProcess(this)"></textarea>
 				
 EOT;
 		
