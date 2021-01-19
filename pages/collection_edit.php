@@ -2,7 +2,7 @@
 include "../include/db.php";
 
 include "../include/authenticate.php";
-if(checkperm("b"))
+if(checkperm("b") || $system_read_only)
     {exit ("Permission denied.");}
 
 $ref=getvalescaped("ref","",true);

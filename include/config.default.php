@@ -2478,8 +2478,6 @@ $geo_tile_cache_lifetime = 60*60*24*365;
 # A list of extensions that QLPreview should NOT be used for.
 $qlpreview_exclude_extensions=array("tif","tiff");
 
-
-
 # Log developer debug information to the debug log (filestore/tmp/debug.txt)?
 # As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
 $debug_log=false;
@@ -3716,3 +3714,7 @@ $metadata_export_offline_limit = 10000;// Optional periodic report size paramete
 $report_rows_attachment_limit = 100;
 // Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
 $report_rows_zip_limit = 10000;
+
+// Set sytem-wide read-only system with global permissions mask
+// This also stops all offline jobs with the exception of user downloads and stops ResoureSpace sql query logging ($mysql_log_transactions).
+$system_read_only = false;

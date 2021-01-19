@@ -135,6 +135,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
+// Set system to read only mode
+if(isset($system_read_only) && $system_read_only)
+    {
+    $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
+    $global_permissions="p";
+    $remove_resources_link_on_collection_bar = false;
+    $allow_save_search = false;
+    $mysql_log_transactions=false;
+    $enable_collection_copy = false;
+    }
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.

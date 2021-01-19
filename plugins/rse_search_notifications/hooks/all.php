@@ -4,9 +4,9 @@ include_once __DIR__ . '/../include/search_notifications_functions.php';
 
 function HookRse_search_notificationsAllRender_search_actions_add_option($options)
     {
-    global $lang, $watched_searches_url, $search, $restypes, $archive, $k;
+    global $lang, $watched_searches_url, $search, $restypes, $archive, $k, $system_read_only;
 
-    if($k != '')
+    if($k != '' || $system_read_only)
         {
         return false;
         }

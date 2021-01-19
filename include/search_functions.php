@@ -555,7 +555,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -674,7 +674,7 @@ function compile_search_actions($top_actions)
             $o++;
             }*/
 
-        if($resources_count != 0)
+        if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
