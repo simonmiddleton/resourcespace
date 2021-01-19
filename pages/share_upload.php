@@ -128,7 +128,7 @@ if($submitted)
             $result = create_upload_link($share_collection,$shareoptions);
             if(is_array($result))
                 {
-                $messages[] = $lang["upload_shares_emailed"];
+                $keysgenerated=false;
                 foreach($result as $key=>$sharekey)
                     {
                     if($sharekey === "")
@@ -139,7 +139,12 @@ if($submitted)
                         {
                         $shareurl = $baseurl . "/?c=" . $share_collection . "&k=" . $sharekey;
                         $messages[] = "<a href='" . $shareurl . "'>" . $shareurl  . "</a>" . (isset($shareoptions["emails"][$key]) ? " (" . $shareoptions["emails"][$key] . ")" : "");
+                        $keysgenerated = true;
                         }
+                    }
+                if($keysgenerated)
+                    {
+                    array_unshift($messages,$lang["upload_shares_emailed"]); 
                     }
                 }
             }
