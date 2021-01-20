@@ -1484,6 +1484,23 @@ function copy_resource_type_field_nodes($from, $to)
     // Handle category trees
     if(7 == $type)
         {
+        // Sort array of nodes to put parent item at the top of each branch to make sure each child item can find its parent below.
+        $node_branches = array();
+        foreach($nodes as $node)
+            {
+            if($node['parent'] == "")
+                {
+                $node_branches[] = $node;
+                $next_branch = array();
+                $next_branch[] = get_nodes($from, $node['ref'], true);
+                foreach ($next_branch[0] as $leaf)
+                    {
+                    $node_branches[] = $leaf;
+                    }
+                }
+            }
+        $nodes = $node_branches;
+        
         // array(from_ref => new_ref)
         $processed_nodes = array();
 
