@@ -63,7 +63,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         return false;
         }
 
-/*
+
     if(!checkperm('a'))
         {
         return false;
@@ -78,14 +78,11 @@ function HookMuseumplusViewRenderfield($field, $resource)
             }
 
         $value = highlightkeywords($mpid, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
-
         $mplus_object_url = (is_numeric($mpid) ? mplus_generate_module_record_url($module_name, $mpid) : '');
         ?>
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($field['title']); ?></h3>
-            <p>
-                <a href="<?php echo $baseurl; ?>/plugins/museumplus/pages/museumplus_object_details.php?ref=<?php echo $ref; ?>"><?php echo $value; ?></a>
-            </p>
+            <p><?php echo $value; ?></p>
             <?php
             if($mplus_object_url !== '')
                 {
@@ -100,7 +97,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         <?php
 
         return true;
-        }*/
+        }
 
     return false;
     }
