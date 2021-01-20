@@ -1153,9 +1153,11 @@ $simple_search_pills_view = false;
 
 # $custom_top_nav[0]["title"]="Example Link A";
 # $custom_top_nav[0]["link"]="$baseurl/pages/search.php?search=a";
+# $custom_top_nav[0]['modal']=false;
 #
 # $custom_top_nav[1]["title"]="Example Link B";
 # $custom_top_nav[1]["link"]="$baseurl/pages/search.php?search=b";
+# $custom_top_nav[1]['modal']=true;
 
 
 # Use original filename when downloading a file?
