@@ -609,7 +609,8 @@ switch($csvstep)
             <textarea rows="20" cols="100"><?php 
             foreach ($messages as $message)
                     {
-                    echo $message . PHP_EOL;
+                    echo (strpos($message, "Error") === false) ?  $message : strtoupper($message) ;
+                    echo PHP_EOL;
                     } ?>
             </textarea>
             <div class="clearerleft"> </div>
@@ -638,7 +639,9 @@ switch($csvstep)
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                     <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                    <?php if ($valid_csv) { ?>
                     <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>">
+                    <?php } ?>
                     <div class="clearerleft"> </div>
                 </div>    
             </form>
