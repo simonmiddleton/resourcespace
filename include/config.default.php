@@ -2391,6 +2391,10 @@ $pdf_dynamic_rip=false;
 $site_text_custom_create=false;
 
 # use hit count functionality to track downloads rather than resource views.
+# Notes:-
+#  - This esentially switches the counting method for column hit_count from hits to downloads
+#  - This does not reset the counter, thus if changed mid life of service will result in an amalgamation of hits pre and downloads post config change
+#  - Consider using the superior more accurate $download_summary=true;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
