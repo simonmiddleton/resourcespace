@@ -346,6 +346,7 @@ function test_db(targetEl)
 </script> 
  
 <style type="text/css"> 
+#setup-container {overflow: auto; height: 100%;}
 #wrapper{ margin:0 auto;width:600px; }
  #intro {  margin-bottom: 40px; font-size:100%; background: #F7F7F7; text-align: left; padding: 40px; }
 #introbottom { padding: 10px; clear: both; text-align:center;}
@@ -387,6 +388,7 @@ h2#dbaseconfig{  min-height: 32px;}
 </style> 
 </head>
 <body class="SlimHeader">
+<div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
     	<img src="../gfx/titles/title.svg" id="HeaderImg" />
@@ -1566,5 +1568,6 @@ if (($develmode)&& isset($config_output))
 	</div>
 	<?php 
 	} ?>
+</div>
 </body>
 </html>
