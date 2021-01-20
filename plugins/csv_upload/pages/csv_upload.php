@@ -708,9 +708,9 @@ switch($csvstep)
         if(count($messages) > 0)   
             {
             // If this is a very large CSV we need to limit the output displayed or it may crash the browser
-            if(count($messages) > 100)
+            if(count($messages) > 1000)
                 {
-                $messages = array_slice($messages,0,10);
+                $messages = array_slice($messages,0,1000);
                 echo "<p>" . str_replace("%%LOG_URL%%",$log_url,$lang["csv_upload_full_messages_link"]) . "</p>";
                 }
             ?>
