@@ -609,8 +609,7 @@ switch($csvstep)
             <textarea rows="20" cols="100"><?php 
             foreach ($messages as $message)
                     {
-                    echo (strpos($message, "Error") === false) ?  $message : strtoupper($message) ;
-                    echo PHP_EOL;
+                    echo $message . PHP_EOL;
                     } ?>
             </textarea>
             <div class="clearerleft"> </div>
