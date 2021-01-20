@@ -5,8 +5,10 @@ include $museumplus_rs_root . 'include/db.php';
 include_once $museumplus_rs_root . 'include/resource_functions.php';
 include_once $museumplus_rs_root . 'include/log_functions.php';
 
+logScript('[museumplus] Initiating MuseumPlus script process...');
 $mplus_script_start_time = microtime(true);
 set_time_limit($cron_job_time_limit);
+logScript("[museumplus] Set script maximum execution time to '{$cron_job_time_limit}' seconds");
 
 // Log in the specified directory (new files get created each time)
 $mplus_log_file = null;
@@ -119,9 +121,14 @@ if(is_process_lock(MPLUS_LOCK))
     }
 set_process_lock(MPLUS_LOCK);
 
+logScript('[museumplus] Starting actual process...', $mplus_log_file);
+logScript('[museumplus] IMPORTANT: for debugging issues with the actual process, please refer to the museumplus_log table!', $mplus_log_file);
 
+mplus_log_event('Running from MuseumPlus script...');
 $mplus_resources = mplus_resource_get_association_data($filter);
+logScript('[museumplus] Initial list of resources to be processed: ' . print_r($mplus_resources, true), $mplus_log_file);
 $ramcs = mplus_get_associated_module_conf($mplus_resources, true);
+logScript('[museumplus] Resources with associated module configuration: ' . print_r(array_keys($ramcs), true), $mplus_log_file);
 if(array_key_exists('new_and_changed_associations', $filter))
     {
     // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
@@ -140,10 +147,16 @@ if(array_key_exists('new_and_changed_associations', $filter))
         }
     }
 
-logScript('[museumplus] Total resources found: ' . count($ramcs), $mplus_log_file);
+logScript('[museumplus] Total resources ready to be processed: ' . print_r(array_keys($ramcs), true), $mplus_log_file);
 
+logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);
 mplus_resource_clear_metadata(array_keys($ramcs));
-$errors = mplus_sync(mplus_validate_association($ramcs, false));
+
+$valid_associations = mplus_validate_association($ramcs, false);
+logScript('[museumplus] Resources with a valid module association: ' . print_r(array_keys($valid_associations), true), $mplus_log_file);
+
+logScript('[museumplus] Attempting to sync MuseumPlus data...', $mplus_log_file);
+$errors = mplus_sync($valid_associations);
 
 if(is_array($errors) && !empty($errors))
     {

@@ -240,6 +240,7 @@ function mplus_sync(array $ramc)
                 }
 
             update_field($r_ref, $rtf_ref, escape_check($item_data[$mapped_mplus_field]));
+            mplus_log_event('mplus_sync(): Updated resource metadata field', ['resource' => $r_ref, 'resource_type_field' => $rtf_ref]);
             }
         }
 
