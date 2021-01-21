@@ -3060,7 +3060,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " type ='" . escape_check($type) . "'";
         }
-    if(!checkperm('a'))
+    if(!checkperm('a') && PHP_SAPI != 'cli')
         {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
