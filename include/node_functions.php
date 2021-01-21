@@ -2011,15 +2011,16 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
 
 /**
-* Convert one of the columns whose value is a search string containing nodes (e.g @@228) to a URL that alerts the translated 
-* name of the node
+* Process one of the columns whose value is a search string containing nodes (e.g @@228@229, @@555) and mutate input array
+* by adding a new column (named $column + '_node_name') which will hold the nodes found in the search string and their
+* translated names
 * 
 * @param array  $R      Generic type for array (e.g DB results). Each value is a result row.
 * @param string $column Record column which needs to be checked and its value converted (if applicable)
 * 
 * @return array
 */
-function convert_node_search_syntax_to_URL(array $R, string $column)
+function process_node_search_syntax_to_names(array $R, string $column)
     {
     $all_nodes = [];
     $record_node_buckets = [];
@@ -2059,9 +2060,13 @@ function convert_node_search_syntax_to_URL(array $R, string $column)
 
 
     // Convert the $column value to URL
-    $url_tpl = '<a href="#" onclick="alert(\'%s\');">%s</a>';
+    $new_col_name = "{$column}_node_name";
+    $syntax_desc_tpl = '%s - "%s"<br>';
     foreach($R as $idx => $record)
         {
+        // mutate array - add a new column for all records
+        $R[$idx][$new_col_name] = '';
+
         if(!(is_array($record) && isset($record[$column]) && isset($record_node_buckets[$idx])))
             {
             continue;
@@ -2081,13 +2086,10 @@ function convert_node_search_syntax_to_URL(array $R, string $column)
                         continue;
                         }
 
-                    $url_value = sprintf($url_tpl, $i18l_nodes[$node], "{$prefix}{$node}");
-                    $record[$column] = str_replace("{$prefix}{$node}", $url_value, $record[$column]);
+                    $R[$idx][$new_col_name] .= sprintf($syntax_desc_tpl, "{$prefix}{$node}", $i18l_nodes[$node]);
                     }
                 }
             }
-
-        $R[$idx][$column] = $record[$column];
         }
 
     return $R;
