@@ -1,6 +1,6 @@
 <?php
 include "../include/db.php";
-
+header('Content-Type: application/json');
 include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
