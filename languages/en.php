@@ -2957,4 +2957,4 @@ $lang['csv_export_offline_only']            = "Offline processing must be used w
 $lang["setup_google_vision_settings"]       = "Google Vision settings";
 $lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";
 
-$lang["tagged_notification"]="You have been tagged in a comment.";
+$lang["tagged_notification"]="You have been tagged in a comment: ";

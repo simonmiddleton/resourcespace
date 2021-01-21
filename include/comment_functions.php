@@ -386,6 +386,9 @@ function comments_notify_tagged($comment,$from_user,$resource=null,$collection=n
     	{
 		$tag=substr($tag,1);$tag=trim($tag); // Get just the username.
 		$user=get_user_by_username($tag); // Find the matching user ID
+		// No match but there's an underscore? Try replacing the underscore with a space and search again. Spaces are swapped to underscores when tagging.
+		if ($user===false) {$user=get_user_by_username(str_replace("_"," ",$tag));}
+
 		if ($user>0)
 			{
 			// Notify them.
@@ -395,7 +398,7 @@ function comments_notify_tagged($comment,$from_user,$resource=null,$collection=n
 			$url=$baseurl . "/?" . (is_null($resource)?"c":"r") . "=" . (is_null($resource)?$collection:$resource);
 
 			// Send the message.
-			message_add(array($user),$lang["tagged_notification"],$url,$userref);
+			message_add(array($user),$lang["tagged_notification"] . " " . $comment,$url,$userref);
 			}
 
 		}
