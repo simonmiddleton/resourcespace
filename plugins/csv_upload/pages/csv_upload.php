@@ -605,7 +605,7 @@ switch($csvstep)
         $prelog_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
         $prelog_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
         $csv_set_options["log_file"] = $prelog_file;
-        csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
+        $valid_csv = csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
         echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
         if(count($messages) > 1000)
             {
@@ -646,7 +646,9 @@ switch($csvstep)
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                     <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                   <?php if ($valid_csv) { ?>
                     <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>">
+                   <?php } ?>
                     <div class="clearerleft"> </div>
                 </div>    
             </form>
