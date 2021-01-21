@@ -2056,7 +2056,7 @@ $lang['comments_respond-to-this-comment']="Reply";
 $lang['comments_in-response-to-on']="on";
 $lang['comments_anonymous-user']="Anonymous";
 $lang['comments_submit-button-label']="Submit";
-$lang['comments_body-placeholder']="Add a comment...";
+$lang['comments_body-placeholder']="Add a comment. Use @(username) to tag people.";
 $lang['comments_fullname-placeholder']="Your Name (required)";
 $lang['comments_email-placeholder']="Your E-mail (required)";
 $lang['comments_website-url-placeholder']="Website";
@@ -2956,3 +2956,5 @@ $lang['csv_export_offline_only']            = "Offline processing must be used w
 
 $lang["setup_google_vision_settings"]       = "Google Vision settings";
 $lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";
+
+$lang["tagged_notification"]="You have been tagged in a comment.";

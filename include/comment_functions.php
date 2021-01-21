@@ -97,6 +97,9 @@ function comments_submit()
 				"'${body}'" .							
 			")";
 	sql_query($sql);
+
+	// Notify anyone tagged.
+	comments_notify_tagged($body,$userref,$resource_ref,$collection_ref);
 	}
 
 /**
@@ -362,4 +365,39 @@ EOT;
 			
 		}			
 		if ($level == 1)  echo "</div>";  // end of comments_container
+	}
+
+/**
+ * Notify anyone tagged when a new comment is posted
+ *
+ * @param  string $comment       The comment body
+ * @param  integer $from_user    Who posted the comment
+ * @param  integer $resource     If commenting on a resource, the resource ID
+ * @param  integer $collection   If commenting on a collection, the collection ID
+ *
+ * @return void
+ */
+function comments_notify_tagged($comment,$from_user,$resource=null,$collection=null)
+	{
+	// Find tagged users.
+	$success=preg_match_all("/@.*? /",$comment . " ", $tagged, PREG_PATTERN_ORDER);
+	if (!$success) {return true;} // Nothing to do, return out.
+    foreach ($tagged[0] as $tag)
+    	{
+		$tag=substr($tag,1);$tag=trim($tag); // Get just the username.
+		$user=get_user_by_username($tag); // Find the matching user ID
+		if ($user>0)
+			{
+			// Notify them.
+
+			// Build a URL based on whether this is a resource or collection
+			global $baseurl,$userref,$lang;
+			$url=$baseurl . "/?" . (is_null($resource)?"c":"r") . "=" . (is_null($resource)?$collection:$resource);
+
+			// Send the message.
+			message_add(array($user),$lang["tagged_notification"],$url,$userref);
+			}
+
+		}
+	return true;
 	}
