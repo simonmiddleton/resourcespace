@@ -224,7 +224,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         continue;
         }
     ?>
-    <td><?php echo $lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"]?></td>
+    <td><?php echo htmlspecialchars($lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"])?></td>
 	<td><?php echo htmlspecialchars($log[$n]["title"])?></td>
 	<td><?php
     if($log[$n]["diff"]!=="")
