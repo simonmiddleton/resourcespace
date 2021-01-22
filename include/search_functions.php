@@ -770,7 +770,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null)
+function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -890,9 +890,10 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
             {hook("search_all_workflow_states_filter");}   
-        elseif (count($archive) == 0 || $archive_standard)
+        elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
+            # Defaults are not used if searching smartsearch collection, actual values will be used instead
             if ($sql_filter!="") {$sql_filter.=" AND ";}
             $defaultsearchstates = get_default_search_states();
             if(count($defaultsearchstates) == 0)

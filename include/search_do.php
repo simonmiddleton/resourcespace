@@ -52,7 +52,8 @@ function do_search(
     $return_refs_only = false,
     $editable_only = false,
     $returnsql = false,
-    $access = null
+    $access = null,
+    $smartsearch = false
 )
     {
     debug_function_call("do_search", func_get_args());
@@ -216,7 +217,7 @@ function do_search(
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access);
+    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
     debug("do_search: \$sql_filter = {$sql_filter}");
 
     # Initialise variables.
