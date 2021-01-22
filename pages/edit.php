@@ -104,7 +104,7 @@ if ($upload_review_mode)
         }
     else 
         {
-     //   redirect("pages/search.php?search=!last1000");
+        redirect("pages/search.php?search=!last1000");
         }
     }
 
