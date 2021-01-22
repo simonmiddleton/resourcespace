@@ -44,13 +44,6 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         $valid_coords = false;
         }
 
-    foreach($s as $coord){
-        if (!is_numeric($coord))
-            {
-            $valid_coords = false;
-            }
-    }
-
     if ( count($s)==2  && $valid_coords == true) 
 		{    
         $mapzoom=getvalescaped('map-zoom','');        
