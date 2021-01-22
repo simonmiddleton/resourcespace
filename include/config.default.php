@@ -2222,7 +2222,7 @@ $staticsync_ignore_deletion_states = array(2, 3);
 # It is possible to take path information and map selected parts of the path to metadata fields.
 # For example, if you added a mapping for '/projects/' and specified that the second level should be 'extracted' means that 'ABC' would be extracted as metadata into the specified field if you added a file to '/projects/ABC/'
 # Hence meaningful metadata can be specified by placing the resource files at suitable positions within the static
-# folder heirarchy.
+# folder hierarchy.
 # Use the line below as an example. Repeat this for every mapping you wish to set up
 #	$staticsync_mapfolders[]=array
 #		(

@@ -430,13 +430,13 @@ function ProcessFolder($folder)
                                HAVING count(DISTINCT cr.resource) > 0",
                             COLLECTION_TYPE_FEATURED,
                             sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
-                            escape_check($name)
+                            escape_check(ucwords($name))
                         ),
                         0);
 
                     if($collection == 0)
                         {
-                        $collection = create_collection($userref, $name);
+                        $collection = create_collection($userref, ucwords($name));
                         echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
 
                         $updated_fc_category = save_collection(
@@ -592,7 +592,7 @@ function ProcessFolder($folder)
                                                 {
                                                 $given_value=$value;
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-                                                if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                if(in_array($field_info['type'],array(0,1,4,5,6,8)))
                                                     {
                                                     $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
                                                     $value=append_field_value($field_info,$value,$old_value);
