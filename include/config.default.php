@@ -1153,9 +1153,11 @@ $simple_search_pills_view = false;
 
 # $custom_top_nav[0]["title"]="Example Link A";
 # $custom_top_nav[0]["link"]="$baseurl/pages/search.php?search=a";
+# $custom_top_nav[0]['modal']=false;
 #
 # $custom_top_nav[1]["title"]="Example Link B";
 # $custom_top_nav[1]["link"]="$baseurl/pages/search.php?search=b";
+# $custom_top_nav[1]['modal']=true;
 
 
 # Use original filename when downloading a file?
@@ -2389,6 +2391,10 @@ $pdf_dynamic_rip=false;
 $site_text_custom_create=false;
 
 # use hit count functionality to track downloads rather than resource views.
+# Notes:-
+#  - This esentially switches the counting method for column hit_count from hits to downloads
+#  - This does not reset the counter, thus if changed mid life of service will result in an amalgamation of hits pre and downloads post config change
+#  - Consider using the superior more accurate $download_summary=true;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
@@ -2477,8 +2483,6 @@ $geo_tile_cache_lifetime = 60*60*24*365;
 #
 # A list of extensions that QLPreview should NOT be used for.
 $qlpreview_exclude_extensions=array("tif","tiff");
-
-
 
 # Log developer debug information to the debug log (filestore/tmp/debug.txt)?
 # As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
@@ -3716,3 +3720,7 @@ $metadata_export_offline_limit = 10000;// Optional periodic report size paramete
 $report_rows_attachment_limit = 100;
 // Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
 $report_rows_zip_limit = 10000;
+
+// Set sytem-wide read-only system with global permissions mask
+// This also stops all offline jobs with the exception of user downloads and stops ResoureSpace sql query logging ($mysql_log_transactions).
+$system_read_only = false;

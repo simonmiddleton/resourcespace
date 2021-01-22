@@ -116,7 +116,10 @@ if($delete && isset($tile) && !isset($usertile) && enforcePostRequest(true))
 	exit();
 	}
 
-
+if (!isset($usertile) && !isset($tile))
+    {
+	exit($lang["nodashtilefound"]);
+    }
 
 /* 
  * Generating Tiles 

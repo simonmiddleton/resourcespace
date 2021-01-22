@@ -587,7 +587,7 @@ $lang["match"]="match";
 $lang["matches"]="matches";
 $lang["inthearchive"]="in the archive";
 $lang["nomatchesinthearchive"]="No matches in the archive";
-$lang["savethissearchtocollection"]="Save query to collection";
+$lang["savethissearchtocollection"]="Save search query to collection";
 $lang["mustspecifyonekeyword"]="You must specify at least one search keyword.";
 $lang["hasemailedyouaresource"]="has e-mailed you a resource."; # Suffixed to user name, e.g. Fred has e-mailed you a resource
 $lang["clicktoviewresource"]="Click the link below to view the resource.";
@@ -691,7 +691,7 @@ $lang["keepmeloggedin"]="Keep me logged in on this device";
 $lang["columnheader-username"]=$lang["username"]="Username";
 $lang["password"]="Password";
 $lang["login"]="Log in";
-$lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link above to request a new one.";
+$lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
 $lang["useralreadyexists"]="An account with that e-mail or username already exists, changes not saved";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
@@ -2953,3 +2953,6 @@ $lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME
 $lang["csv_export_file_ready"]              = "Your CSV export is ready";
 $lang["offline_processing_disabled"]        = "Offline job processing is not configured on this system. To enable this please contact your system administrator";
 $lang['csv_export_offline_only']            = "Offline processing must be used when exporting data for more than %%RESOURCE_COUNT%% resources";
+
+$lang["setup_google_vision_settings"]       = "Google Vision settings";
+$lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";

@@ -21,7 +21,7 @@ include_once 'metadata_functions.php';
  * @param  string $file_path                Path to file
  * @param  bool $after_upload_processing    Set to true will create an offline job to process the file
  * @param  bool $deletesource               Delete resource after upload
- * @return void
+ * @return bool
  */
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true)
     {

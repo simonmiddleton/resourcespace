@@ -185,7 +185,7 @@ if (!hook("replaceloginform"))
         <input type="hidden" name="modal" value="<?php echo ($modal=="true"?"true":"") ?>">
 
         <?php $header_img_src = get_header_image(); ?>
-        <div>
+        <div id="LoginHeader">
             <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg"></img>
         </div>
         

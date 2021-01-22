@@ -14,7 +14,7 @@ select {font-size:1em; height:1.8rem;}
 
 /*Create Base font for relative sizing*/
 html {height:100%;-webkit-text-size-adjust: 100%;}
-body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: center; line-height: 1.4;}
+body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: center; line-height: 1.4; overflow: hidden;}
 
 .ui-dialog .ui-dialog-buttonpane {text-align: center;}
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {float: none;}
@@ -189,7 +189,7 @@ select::-ms-expand
 
 /*General layout*/
 
-#Header {padding: 5px 25px 5px 25px;margin:0;margin-bottom:10px;text-align:left;background-image:none;display: block !important;}
+#Header {padding: 5px 25px 5px 25px;margin:0;text-align:left;background-image:none;display: block !important;}
 #TextHeader{font-size:25px;float:left;}
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
@@ -273,6 +273,11 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
 #login_box #Footer {margin: 0 0 10px 0;}
+
+#UICenter {
+    width: calc(100% - 295px - 30px);
+    margin-left: 30px;
+}
 
 #CentralSpaceContainer {
     margin:0 15px 20px;
@@ -372,6 +377,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpace .ChosenDateRangeYear {width:100px !important;}
 
 /*Right Search Box layout*/
+#SearchBarContainer {height: 100%; float: right;}
 #SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
 #SearchBoxPanel {width: inherit;}
 #ResearchBoxPanel {width: 100%;margin-top: 15px;}
@@ -494,7 +500,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0 0 10px 190px;padding: 10px 0 0;}
-.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0 0 25px;text-align: center;padding: 3px 3px 6px;}
+.FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 10px 0;text-align: center;padding: 5px; border-radius: 6px;}
 .PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 0 10px; text-align: center; padding: 3px; border-radius:4px; }
 .AutoSaveStatus {font-weight: bold;float:right;padding:6px 0 0;min-width:100px;}
 .PurgeUsersMonths {width:4em;}
@@ -673,6 +679,7 @@ table.TableArray:not(:first-of-type) {margin-top: 5px;}
 
 .BreadcrumbsBox .HelpLink {
     vertical-align: unset;
+    font-size: 15px;
 }
 
 /* Autocomplete dropdown CSS */
@@ -1397,7 +1404,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 #login_box .Question input[type=text],
 #login_box .Question input[type=password],
 #login_box textarea {
-    background-color: #868686   ;
+    background-color: #9a9a9ad9;
     color: white;
 }
 
@@ -1458,6 +1465,9 @@ p.LoginLinks {
     padding: 5px;
     border-radius: 6px;
     border: 2px solid red;
+}
+#LoginHeader {
+    border-radius: 6px;
 }
 /* Manage External Shares */
 .FormFilter {
@@ -1990,7 +2000,6 @@ a.BrowseRefresh{
     float: right;
     margin-bottom: 5px;
 }
-
 
 /* Tile navigation used on top menus */
 

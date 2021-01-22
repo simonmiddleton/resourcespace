@@ -361,7 +361,7 @@ function update_fieldx(int $metadata_field_ref)
                     {
                     $resdata = get_data_by_field($resource,$metadata_field_ref);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='$resource'");
+                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='" . escape_check($resource) . "'");
                     
                     }
                 

@@ -26,7 +26,7 @@ $editing      = ($editaccess=="") ? false : true;
 $generateurl  = getval("generateurl","") != "";
 $editexternalurl = (getval("editexternalurl","") != "");
 
-$access       = getvalescaped("access","");
+$access       = getvalescaped("access","",true);
 $expires      = getvalescaped("expires","");
 $sharepwd     = getvalescaped('sharepassword', '');
 $backurl      = getvalescaped('backurl', '');

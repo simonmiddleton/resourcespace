@@ -2317,9 +2317,11 @@ function checkPermission_dashmanage()
  */
 function checkPermission_dashcreate()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins;
+	global $managed_home_dash,$unmanaged_home_dash_admins, $system_read_only;
 	return !checkPermission_anonymoususer() 
-			&& 
+            && 
+            !$system_read_only
+            &&
 				(
 					(!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
 				||

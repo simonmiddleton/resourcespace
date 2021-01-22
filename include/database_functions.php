@@ -411,7 +411,7 @@ function db_rollback_transaction($name)
  * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
  * @param  mixed $reconnect
  * @param  mixed $fetch_specific_columns
- * @return void
+ * @return array
  */
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {

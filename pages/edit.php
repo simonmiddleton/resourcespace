@@ -173,7 +173,7 @@ if ($go!="")
         $pos=-1;
         for ($n=0;$n<count($result);$n++)
             {
-            if ($result[$n]["ref"]==$ref) {$pos=$n;}
+            if (isset($result[$n]["ref"]) && $result[$n]["ref"]==$ref) {$pos=$n;}
             }
         if ($pos!=-1)
             {

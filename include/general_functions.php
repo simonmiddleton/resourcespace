@@ -102,7 +102,7 @@ function escape_check($text)
  * just doing $text=str_replace("\\","",$text);	does not undo escape_check
  *
  * @param  mixed $text
- * @return void
+ * @return string
  */
 function unescape($text) 
     {
@@ -256,7 +256,7 @@ function redirect($url)
  * replace multiple spaces with a single space
  *
  * @param  mixed $text
- * @return void
+ * @return string
  */
 function trim_spaces($text)
     {
@@ -3060,7 +3060,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " type ='" . escape_check($type) . "'";
         }
-    if(!checkperm('a'))
+    if(!checkperm('a') && PHP_SAPI != 'cli')
         {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
@@ -3725,7 +3725,7 @@ function get_sysvar($name, $default=false)
  * @param  string $pagename
  * @param  string $params
  * @param  boolean $last_hook_value_wins
- * @return void
+ * @return mixed
  */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
@@ -3814,7 +3814,8 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-		$function="Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name);		
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name) : "";	
+        	
 		if (function_exists($function)) 
 			{			
 			$function_list[]=$function;
@@ -3822,7 +3823,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-			$function="Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name);
+			$function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;
@@ -4064,7 +4065,7 @@ function get_debug_log_dir()
  * @param  string $text
  * @param  mixed $resource_log_resource_ref Update the resource log if resource reference passed.
  * @param  string $resource_log_code    If updating the resource log, the code to use
- * @return void
+ * @return boolean
  */
 function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE_TRANSFORMED)
 	{
@@ -4514,7 +4515,7 @@ function is_int_loose($var)
  *
  * @param  string $ip
  * @param  string $ip_restrict
- * @return void
+ * @return boolean|integer
  */
 function ip_matches($ip, $ip_restrict)
 {

@@ -70,6 +70,18 @@ if($offline_job_queue)
             continue;
             }
 
+        $readonly_jobs = array(
+            "collection_download",
+            "create_download_file",
+            "csv_metadata_export",
+            );
+
+        // Only run essential and non-data affecting jobs in read only mode
+        if($system_read_only && !in_array($offlinejob["type"],$readonly_jobs))
+            {
+            continue;
+            }
+
         $clear_job_process_lock = false;
         if(PHP_SAPI == 'cli' && $clear_lock && in_array($offlinejob['ref'], $jobs))
             {

@@ -1806,16 +1806,17 @@ function dash_tile_featured_collection_get_resources($c, array $ctx)
     $collection_resources = get_collection_resources($collection["ref"]);
     $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
 
-    $resources = array();
-    foreach(get_featured_collection_resources($collection, $ctx) as $resource_ref)
-        {
-		$resource = get_resource_data($resource_ref);
-        $resources[] = array(
-            "ref" => $resource_ref,
-			"field{$view_title_field}" => get_data_by_field($resource_ref, $view_title_field),
-			"resource_type" => $resource['resource_type'],
-			"file_extension" => $resource['file_extension']);
+    $featured_collection_resources = get_featured_collection_resources($collection, $ctx);
+    $featured_collection_resources_data = get_resource_data_batch($featured_collection_resources);
 
+    $resources = array();
+    foreach($featured_collection_resources_data as $resource_data)
+        {
+        $resources[] = array(
+            "ref" => $resource_data['ref'],
+			"field{$view_title_field}" => get_data_by_field($resource_data['ref'], $view_title_field),
+			"resource_type" => $resource_data['resource_type'],
+			"file_extension" => $resource_data['file_extension']);
         }
 
     return $resources;

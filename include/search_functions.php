@@ -555,7 +555,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -591,7 +591,7 @@ function compile_search_actions($top_actions)
             $options[$o]['label']=$lang['savethissearchtocollection'];
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php", $urlparams, array("addsearch" => $search));
             $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category']  = ACTIONGROUP_COLLECTION;
+            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
             $options[$o]['order_by']  = 70;
             $o++;
             }
@@ -674,7 +674,7 @@ function compile_search_actions($top_actions)
             $o++;
             }*/
 
-        if($resources_count != 0)
+        if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
@@ -1097,12 +1097,13 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             else
                 {
-                $editable_filter .= " AND 0=1";
+                if ($editable_filter != "")
+                    {
+                    $editable_filter .= " AND ";
+                    }
+                $editable_filter .= " 0=1";
                 }
             }
-        
-
-
 
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
@@ -2168,7 +2169,7 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  * @param  string $needle       Text to highlight
  * @param  int  $options        String highlight options - See include/definitions.php
  * @param  string $highlight    Optional custom highlight code
- * @return void
+ * @return string
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
