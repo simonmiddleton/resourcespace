@@ -79,6 +79,10 @@ if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!coll
                         <?php echo remove_from_collection_link($ref,$search,"fa fa-minus-circle")?>
                         </a>
                 <?php 
+         
+                // TODO: similar logic here for remove from collection
+
+
                 $showkeycollectout = true;
                 }
         } ?>
@@ -89,15 +93,20 @@ if(!hook('iconcollect') && $pagename!="collections")
     {
     if(!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
-        // Basket mode? - this is for the e-commerce user request modes.
-        if(2 == $userrequestmode || 3 == $userrequestmode)
+        $col_link_class = (2 == $userrequestmode || 3 == $userrequestmode ? ['fa-shopping-cart'] : ['fa-plus-circle']);
+
+        // Hide add to collection icon if resource is already in the collection
+        if(
+            isset($usercollection_resources)
+            && is_array($usercollection_resources)
+            && !empty($usercollection_resources)
+            && in_array($ref, $usercollection_resources)
+        )
             {
-            echo add_to_collection_link($ref, $search, '', '', 'fa fa-shopping-cart') . '</a>';
+            $col_link_class[] = 'DisplayNone';
             }
-        else
-            {
-            echo add_to_collection_link($ref, $search, '', '', 'fa fa-plus-circle') . '</a>';
-            }
+
+        echo add_to_collection_link($ref, $search, '', '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
 
         $showkeycollect = true;
         }

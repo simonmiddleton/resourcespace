@@ -365,6 +365,9 @@ if($use_selection_collection)
         }
     }
 
+// Get usercollection resources - used for checks against the list (e.g is one of the resources found by search in the collection?)
+$usercollection_resources = get_collection_resources($usercollection);
+
 $hiddenfields=getvalescaped("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
