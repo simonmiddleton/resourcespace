@@ -443,7 +443,8 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
-                {               
+                {        
+                if (!isset($plugins[$n])) { continue; }       
                 register_plugin_language($plugins[$n]);
                 }       
             
@@ -593,13 +594,15 @@ function get_site_text($page,$name,$getlanguage,$group)
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {     
+        if (!isset($plugins[$n])) { continue; }          
         register_plugin_language($plugins[$n]);
         }
 
     $language = $getlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {  
+        if (!isset($plugins[$n])) { continue; }             
         register_plugin_language($plugins[$n]);
         }
             

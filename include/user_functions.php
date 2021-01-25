@@ -1648,6 +1648,7 @@ function check_access_key($resources,$key)
                 }
             for ($n=count($plugins)-1;$n>=0;$n--)
                 {
+                if (!isset($plugins[$n])) { continue; }
                 register_plugin_language($plugins[$n]);
                 }
             $emulate_plugins_set=true;                  

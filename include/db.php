@@ -243,6 +243,7 @@ else
 	{
 	for ($n=count($plugins)-1;$n>=0;$n--)
 		{
+        if (!isset($plugins[$n])) { continue; }
 		include_plugin_config($plugins[$n]);
 		}
 	}
@@ -275,6 +276,7 @@ if ($language!="en")
 # Register all plugins
 for ($n=0;$n<count($plugins);$n++)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin($plugins[$n]);
 	hook("afterregisterplugin");
 	}
@@ -282,6 +284,7 @@ for ($n=0;$n<count($plugins);$n++)
 # Register their languages in reverse order
 for ($n=count($plugins)-1;$n>=0;$n--)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin_language($plugins[$n]);
 	}
 
