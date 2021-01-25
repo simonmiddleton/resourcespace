@@ -1024,11 +1024,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
          # save related resources field
-         sql_query("delete from resource_related where resource='$ref' or related='$ref'"); # remove existing related items
+         sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
          # Make sure all submitted values are numeric
-         $ok=array();for ($n=0;$n<count($related);$n++) {if (is_numeric(trim($related[$n]))) {$ok[]=trim($related[$n]);}}
-         if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");} 
+         $to_relate = array_filter($related,"is_int_loose");
+         if(count($to_relate)>0)
+            {
+            update_related_resource($ref,$to_relate,true);
+            }
         }
 
     if ($autosave_field=="")
@@ -5055,7 +5058,11 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
 		{
 		$resourcedata=get_resource_data($resource);		
-		}	
+        }
+    if(!is_array($resourcedata) || count($resourcedata) == 0)
+        {
+        return false;
+        }
 	if ($status==-999) # Archive status may not be passed 
 		{$status=$resourcedata["archive"];}
 		
@@ -5091,9 +5098,9 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         return false;
         } 
-	
+
     $gotmatch=false;
-    
+
     if($search_filter_nodes 
         && strlen(trim($usereditfilter)) > 0
         && !is_numeric($usereditfilter)
@@ -6091,27 +6098,78 @@ function delete_resources_in_collection($collection) {
     }
     
 /**
- * Update related resources - add new related resource or delete existing
+ * Update related resources - add new related resource(s) or delete existing
  *
- * @param  int      $ref       ID of current resource
- * @param  int      $related   ID of resource to link to current resource
- * @param  boolean  $add       Add relationship?
+ * @param  int      $ref        ID of primary resource
+ * @param  int|array  related   Resource ID or array of resource IDs to link to current resource
+ * @param  boolean  $add        Add relationship? If false this will delete the specified relationships
  * 
  * @return boolean
  */
 function update_related_resource($ref,$related,$add=true)
 	{	
-	if (!is_int($ref) || !is_int($related)){return false;}
-	$currentlyrelated=sql_value("select count(resource) value from resource_related where (resource='$ref' and related='$related') or (resource='$related' and related='$ref')",0);  
-	if($currentlyrelated!=0 && !$add)
+    if (!is_int_loose($ref) || (!is_int_loose($related) && !is_array($related)))
+        {
+        return false;
+        }
+    if(is_array($related))
+        {
+        $related = array_filter($related,"is_int_loose");
+        }
+    else
+        {
+        $related = array((int)$related);
+        }
+
+    // Check edit access
+    $access = get_edit_access($ref);
+    if(!$access)
+        {
+        return false;
+        }
+    foreach($related as $relate)
+        {
+        $access = get_edit_access($relate);
+        if(!$access)
+            {
+            return false;
+            }
+        }
+	$currentlyrelated=sql_query("SELECT resource, related 
+                                   FROM resource_related 
+                                  WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
+                                     OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");  
+    
+    // Create array of all related resources
+    $currentlyrelated_arr = array_unique(array_merge(
+        array_column($currentlyrelated,"related"),
+        array_column($currentlyrelated,"resource")
+        ));
+
+    if(count($currentlyrelated_arr) > 0 && !$add)
 		{
-		// Relationship exists and we want to remove
-		sql_query("delete from resource_related where (resource='$ref' and related='$related') or (resource='$related' and related='$ref')");  
+		// Relationships exist and we want to remove
+		sql_query("DELETE FROM resource_related
+                         WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
+                            OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
 		}
-	elseif ($currentlyrelated==0 && $add)
+	else
 		{
-		// Relationship does not exist and we want to add
-		sql_query("insert into resource_related(resource,related) values ('$ref','$related')");
+        $newrelated = array();
+        foreach($related as $torelate)
+            {
+            if(!in_array($torelate, $currentlyrelated_arr) && $torelate != $ref)
+                {
+                $newrelated[] = $torelate;
+                }
+            }
+        if(count($newrelated) > 0)
+            {
+		    sql_query("INSERT INTO resource_related (resource,related)
+                            VALUES ('" . $ref . "','" . 
+                                   implode("'),('" . $ref . "','",$newrelated) .
+                                   "')");
+            }
 		}
 	return true;
 	}

@@ -4510,6 +4510,10 @@ function cleanup_files($files)
  */
 function is_int_loose($var)
     {
+    if(is_array($var))
+        {
+        return false;
+        }
     return (string)(int)$var === (string)$var;
      }
 
