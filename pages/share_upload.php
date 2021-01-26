@@ -191,6 +191,10 @@ include "../include/header.php";
                 {
                 render_dropdown_question($lang["property-user_group"], "usergroup", $validsharegroups, $shareusergroup, " class=\"stdwidth\"");
                 }                
+            else
+                {
+                echo "<input type='hidden' name='usergroup' value='" . htmlspecialchars(isset($upload_link_usergroups) ? $upload_link_usergroups[0] : $usergroup) . "'>";    
+                }
             ?>
             <div class="Question">
                 <label><?php echo $lang["expires"]; ?></label>

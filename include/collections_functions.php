@@ -599,7 +599,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
             $setcolumns[$coloption] = escape_check($extraparams[$coloption]);
             }
         }
-    
+
     $setcolumns["name"]             = escape_check(mb_strcut($name, 0, 100));
     $setcolumns["user"]             = is_numeric($userid) ? $userid : 0;
     $setcolumns["allow_changes"]    = escape_check($allowchanges);
@@ -836,9 +836,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $public_type_filter_sql,
         ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? " OR {$featured_type_filter_sql}" : $featured_type_filter_sql)
     );
-debug("BANG " . $public_type_filter_sql);
 
-debug("BANG " . $type_filter_sql);
     $main_sql = sprintf(
         "SELECT *
            FROM (
@@ -5538,7 +5536,7 @@ function upload_share_active()
 function upload_share_setup(string $key,$shareopts = array())
     {
     debug_function_call("upload_share_setup",func_get_args());
-    global $baseurl, $pagename, $upload_share_active;
+    global $baseurl, $pagename, $upload_share_active, $upload_then_edit;
     global $upload_link_workflow_state, $override_status_default;
 
     $rqdopts = array("collection", "usergroup", "user");
@@ -5554,6 +5552,7 @@ function upload_share_setup(string $key,$shareopts = array())
     emulate_user($user, $usergroup);
     $upload_share_active = upload_share_active();
     $rs_session = get_rs_session_id(true);
+    $upload_then_edit = true;
     
     if(!$upload_share_active || $upload_share_active != $collection)
         {

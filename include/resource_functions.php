@@ -8593,11 +8593,11 @@ function get_external_shares(array $filteropts)
         $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
         }
 
-    if($share_type === 0)
+    if((int)$share_type === 0)
         {
         $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
         }
-    elseif($share_type === 1)
+    elseif((int)$share_type === 1)
         {
         $conditions[] = "eak.upload=1";
         }

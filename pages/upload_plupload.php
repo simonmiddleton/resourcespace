@@ -111,7 +111,7 @@ if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chu
 if($external_upload)
     {
     $rs_session = get_rs_session_id(true);
-    $ci=get_session_collections($rs_session);
+    $ci=get_session_collections($rs_session,$userref,true);
     if (count($ci)==0)
         {
         $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
