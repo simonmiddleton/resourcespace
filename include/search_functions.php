@@ -1618,9 +1618,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($sql_filter_properties != "")
         {
-        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+        if(strpos($sql_join,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
             {
-            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            $sql_join.=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
             }
         if ($sql_filter == "")
             {
