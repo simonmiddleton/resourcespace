@@ -17,9 +17,7 @@ define("API_CALL", true);
 $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
 $authmode=getvalescaped("authmode","userkey");
-$query=$_SERVER["QUERY_STRING"];
-print_r($_POST);
-debug("api BANG " . $authmode);
+$query=$_SERVER["QUERY_STRING"]
 if(trim($query) == "")
     {
     $query = $_POST;

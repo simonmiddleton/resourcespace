@@ -390,7 +390,7 @@ function api_login($username,$password)
     $user=get_user_by_username($username); if ($user===false) {return false;}
     $result = perform_login($username,$password);
     $private_key = get_api_key($user);
-    if ($result['valid'])
+    if ((bool)$result['valid'])
         {
         return hash_hmac("sha256", "{$session_hash}{$private_key}", $scramble_key);
         }

@@ -237,24 +237,3 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
         }
     }
 
-/**
- * login - used for API
- *
- * @param  string $username         Username
- * @param  string $password         Password to validate
- * @return string|false             FALSE if invalid, session API key if valid
- */
-function sdsddlogin($username,$password)
-    {
-    global $username, $password, $session_hash, $scramble_key;
-    exit("HERE " . $password);
-    $result = perform_login();
-    
-    $private_key = get_api_key($user);
-    if ($result['valid'])
-        {
-        return hash_hmac("sha256", "{$session_hash}{$private_key}", $scramble_key);
-        }
-
-    return false;
-    }
