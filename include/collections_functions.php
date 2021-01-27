@@ -2587,7 +2587,7 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
     {
     global $lang;
 
-    return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . "return false;\">";
+    return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . " return false;\">";
 
     }
 
@@ -2595,17 +2595,19 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
 /**
  * Render a "remove from collection" link wherever such a function is shown in the UI
  *
- * @param  integer $resource
- * @param  string $search
- * @param  string $class
+ * @param  integer  $resource
+ * @param  string   $search
+ * @param  string   $class
+ * @param  string   $onclick  Additional onclick code to call before returning false.
+ * 
  * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="")
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '')
     {
     # Generates a HTML link for removing a resource to a collection
     global $lang, $pagename;
 
-    return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');return false;\">";
+    return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\">";
     }
 
 

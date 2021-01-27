@@ -1601,6 +1601,33 @@ if($search_anchors)
     }
     ?>
 <script>
+function toggle_addremove_to_collection_icon(el)
+    {
+    var icon = jQuery(el);
+
+    if(icon.hasClass('addToCollection'))
+        {
+        icon.addClass('DisplayNone');
+        var rfc = icon.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).removeClass('DisplayNone');
+            }
+        }
+    else if(icon.hasClass('removeFromCollection'))
+        {
+        icon.addClass('DisplayNone');
+        var atc = icon.siblings('.addToCollection');
+        if(atc.length > 0)
+            {
+            jQuery(atc[0]).removeClass('DisplayNone');
+            }
+        }
+
+    return;
+    }
+
+
 <?php
 if($use_selection_collection)
     {

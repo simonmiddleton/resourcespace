@@ -81,7 +81,8 @@ if(!checkperm('b') && ($k == '' || $internal_share_access))
         $col_link_class[] = 'DisplayNone';
         }
 
-    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
+    $onlick = 'toggle_addremove_to_collection_icon(this);';
+    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onlick) . '</a>';
     }
     ?>
         
@@ -102,7 +103,8 @@ if(!hook('iconcollect') && $pagename!="collections")
             $col_link_class[] = 'DisplayNone';
             }
 
-        echo add_to_collection_link($ref, $search, '', '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
+        $onlick = 'toggle_addremove_to_collection_icon(this);';
+        echo add_to_collection_link($ref, $search, $onlick, '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
         }
     } # end hook iconcollect
     ?>
