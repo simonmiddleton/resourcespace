@@ -1049,8 +1049,11 @@ function save_collection($ref, $coldata=array())
                 if(isset($colset["thumbnail_selection_method"]))
                     {
                     $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
-
-                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method
+                    }
+                
+                if(isset($colset["thumbnail_selection_method"]) || isset($colset["name"]))
+                    {
+                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method or name
                     $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
                     }
 

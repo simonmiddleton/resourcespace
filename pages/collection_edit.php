@@ -97,6 +97,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
                 }
             }
         }
+    elseif($collection["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
+        {
+        $coldata['featured_collections_changes']['name'] = "";
+        }
 
     if (checkperm("h"))
         {
