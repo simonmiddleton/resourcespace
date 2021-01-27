@@ -1168,34 +1168,7 @@ else
             <?php 
             }
 
-        if($top_nav_upload_type == 'local')
-            {
-            $replace_upload_type = 'plupload';
-            }
-        else 
-            {
-            $replace_upload_type=$top_nav_upload_type;
-            }
-
-        // Allow to upload only if resource is not a data only type
-        if (0 < $ref && !$noupload && !$resource_file_readonly && !$upload_review_mode)
-            {
-            ?>
-            <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php",$urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
-            <?php
-            }
-         if ($resource["file_extension"]!="") 
-            {hook("afterreplacefile");} 
-         else 
-            {hook("afteruploadfile");}
-         if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
-            { ?>
-            <br />
-     <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a><?php } ?>
-     <?php
-     if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode) { ?><br />
-     <a href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a><?php } ?>
-     <?php if ($allow_metadata_revert){?><br />
+     if ($allow_metadata_revert){?><br />
      <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a><?php } ?>
         <?php hook("afterfileoptions"); ?>
      </div>
