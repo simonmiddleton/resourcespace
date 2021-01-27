@@ -1436,14 +1436,6 @@ if($responsive_ui)
     for ($n=0;$n<count($types);$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
     if (is_array($result) && count($result)>0)
         {
-        $showkeypreview = false;
-        $showkeycollect = false;
-        $showkeycollectout = false;
-        $showkeyemail = false;
-        $showkeyedit = false;
-        $showkeystar = false;
-        $showkeycomment = false;
-
         /**
          * If global var $annotate_enabled global == true, then ResourcePanel height is adjusted in thumbs.php.
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
