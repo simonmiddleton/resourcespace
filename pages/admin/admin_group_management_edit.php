@@ -26,8 +26,8 @@ $url_params=
 $new_group_name=getvalescaped("newusergroupname","");
 if ($new_group_name!="" && enforcePostRequest(false))
     {
-    sql_query("insert into usergroup(name,request_mode) values('$new_group_name','1')");
-    $ref=sql_insert_id();
+    $setoptions =array("request_mode" => 1);
+    $ref = save_usergroup($new_group_name, $setoptions);
 
     log_activity(null,LOG_CODE_CREATED,null,'usergroup',null,$ref);
     log_activity(null,LOG_CODE_CREATED,$new_group_name,'usergroup','name',$ref,null,'');
