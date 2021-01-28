@@ -540,19 +540,6 @@ elseif($restypes=='')
         {
         if (resourcetype!=0)
             {
-            // When selecting resource type specific fields, automatically untick all other resource types, because selecting something from this field will never produce resources from the other resource types.
-            
-            // Always untick the Tick All box
-            if (jQuery('#rttickallres')) {jQuery('#rttickallres').prop('checked', false);}
-            <?php
-            # Untick all other resource types.
-            for ($n=0;$n<count($types);$n++)
-                {
-                ?>
-                if (resourcetype!=<?php echo $types[$n]["ref"]?>) {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);} else {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);}
-                <?php
-                }
-                ?>
             // Hide any fields now no longer relevant.  
             HideInapplicableSimpleSearchFields(false);
             }
