@@ -388,6 +388,7 @@ if(
     $_SERVER["REQUEST_METHOD"] === "POST"
     && !isValidCSRFToken($csrf_token, $usersession)
     && !(isset($anonymous_login) && $username == $anonymous_login)
+    && !defined("API_CALL")
 )
     {
     debug("WARNING: CSRF verification failed!");
