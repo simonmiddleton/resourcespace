@@ -14,24 +14,32 @@ debug("API:");
 define("API_CALL", true);
 
 # Get parameters
-$user=getvalescaped("user","");
-$sign=getvalescaped("sign","");
-$authmode=getvalescaped("authmode","userkey");
-$query=$_SERVER["QUERY_STRING"];
-if(trim($query) == "")
+$user       = getvalescaped("user","");
+$sign       = getvalescaped("sign","");
+$authmode   = getvalescaped("authmode","userkey");
+$query      = $_SERVER["QUERY_STRING"];
+
+# Support POST request where 'query' is POSTed and is the full query string.
+if (getval("query","")!="") {$query=getval("query","");}
+
+# If a GET, remove the sign and authmode parameters as these would not have been present when signed on the client.
+if ($_SERVER['REQUEST_METHOD'] === 'GET')
     {
-    $query = $_POST;
+    $strip_params = array("sign","authmode");
+    parse_str($query,$params);
+    foreach($strip_params as $strip_param)
+        {
+        unset($params[$strip_param]);
+        }
+    $query = http_build_query($params);
     }
+
 $validauthmodes = array("userkey", "native", "sessionkey");
 $function = getval("function","");
 if(!in_array($authmode,$validauthmodes))
     {
     $authmode="userkey";
     }
-
-# Support POST request where 'query' is POSTed and is the full query string.
-if (getval("query","")!="") {$query=getval("query","");}
-
 if($function != "login")
     {
     if($authmode == "native")

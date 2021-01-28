@@ -40,14 +40,6 @@ function check_api_key($username,$querystring,$sign,$authmode)
         $querystring = substr($querystring,0,$aj);
         }
 
-    # Sign the querystring ourselves and check it matches.
-    # First remove the sign parameter as this would not have been present when signed on the client.
-    $s=strpos($querystring,"&sign=");
-
-    //if ($s===false || $s+6+strlen($sign)!==strlen($querystring)) {return false;}
-    $querystring=substr($querystring,0,$s);
-
-    # Calculate the expected signature.
     if($authmode == "sessionkey")
         {
         $userkey=get_session_api_key($user);
@@ -56,7 +48,8 @@ function check_api_key($username,$querystring,$sign,$authmode)
         {        
         $userkey=get_api_key($user);
         }
-   
+
+    # Calculate the expected signature and check it matches
     $expected=hash("sha256",$userkey . $querystring);
     return $expected==$sign; 
     }
