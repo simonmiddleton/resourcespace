@@ -19,9 +19,7 @@ function get_api_key($user)
     {
     global $api_scramble_key;
     return hash("sha256", $user . $api_scramble_key);
-    }
-
-    
+    }    
 
 /**
  * Check a query is signed correctly.
@@ -29,35 +27,32 @@ function get_api_key($user)
  * @param  string $username The username of the calling user
  * @param  string $querystring The query being passed to the API
  * @param  string $sign The signature to check
+ * @param  string $authmode The type of key being provided (user key or session key)
  * @return void
  */
-function check_api_key($username,$querystring,$sign)
+function check_api_key($username,$querystring,$sign,$authmode)
     {
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
-    $private_key=get_api_key($user);
-        
     $aj = strpos($querystring,"&ajax=");
     if($aj != false)
         {
         $querystring = substr($querystring,0,$aj);
         }
 
-    # Sign the querystring ourselves and check it matches.
-    # First remove the sign parameter as this would not have been present when signed on the client.
-    $s=strpos($querystring,"&sign=");
+    if($authmode == "sessionkey")
+        {
+        $userkey=get_session_api_key($user);
+        }
+    else
+        {        
+        $userkey=get_api_key($user);
+        }
 
-    if ($s===false || $s+6+strlen($sign)!==strlen($querystring)) {return false;}
-    $querystring=substr($querystring,0,$s);
-
-    # Calculate the expected signature.
-    $expected=hash("sha256",$private_key . $querystring);
-    
-    # Was it what we expected?
-    return $expected==$sign;
+    # Calculate the expected signature and check it matches
+    $expected=hash("sha256",$userkey . $querystring);
+    return $expected==$sign; 
     }
-
-
     
 /**
  * Execute the specified API function.
@@ -358,4 +353,40 @@ function iiif_error($errorcode = 404, $errors = array())
         echo implode("<br />",$errors);
         }
     exit();
+    }
+
+/**
+ * Return the session specific key for the given user.
+ *
+ * @param  integer $user The user ID
+ * @return string
+ */
+function get_session_api_key($user)
+    {
+    global $scramble_key;
+    $private_key = get_api_key($user);
+    $usersession = sql_value("SELECT session value FROM user where ref ='" . $user . "'", "");
+    return hash_hmac("sha256", "{$usersession}{$private_key}", $scramble_key);
+    }
+
+/**
+* API login function
+
+* 
+ * @param  string $username         Username
+ * @param  string $password         Password to validate
+ * @return string|false             FALSE if invalid, session API key if valid
+*/
+function api_login($username,$password)
+    {
+    global $session_hash, $scramble_key;
+    $user=get_user_by_username($username); if ($user===false) {return false;}
+    $result = perform_login($username,$password);
+    $private_key = get_api_key($user);
+    if ((bool)$result['valid'])
+        {
+        return hash_hmac("sha256", "{$session_hash}{$private_key}", $scramble_key);
+        }
+
+    return false;
     }
