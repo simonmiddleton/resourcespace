@@ -386,3 +386,16 @@ $keyboard_navigation_view_all=86;
 $keyboard_navigation_zoom=90;
 # close modal, escape
 $keyboard_navigation_close=27;
+$keyboard_navigation_video_search_backwards=74;
+# play/pause - 'k'
+$keyboard_navigation_video_search_play_pause=75;
+# play forwards - 'l'
+$keyboard_navigation_video_search_forwards=76;
+
+# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
+$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
+
+# Regular expression defining e-mail format
+# Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
+$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
+

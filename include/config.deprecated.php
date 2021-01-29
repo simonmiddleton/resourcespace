@@ -375,3 +375,254 @@ $normalize_keywords=true;
 
 $notify_user_contributed_unsubmitted=false;
 
+# Allow sorting by resource_type on thumbnail views
+$order_by_resource_type=true;
+
+# pager dropdown
+$pager_dropdown=false;
+
+# Should the resources that are in the archive state "User Contributed - Pending Review" (-1) be
+# visible in the main searches (as with resources in the active state)?
+# The resources will not be downloadable, except to the contributer and those with edit capability to the resource.
+$pending_review_visible_to_all=false;
+
+# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
+$pending_submission_prompt_review=true;
+
+# Should the resources that are in the archive state "User Contributed - Pending submission" (-2) be
+# searchable (otherwise users can search only for their own resources pending submission
+$pending_submission_searchable_to_all=false;
+
+# Option that specifically allows the per-page dropdown without needing $display_selector_dropdown=true. This is useful if you'd like to use the display selector icons with per-page dropdowns.
+$perpage_dropdown = true;
+
+# Maximum number of attempts to upload a file chunk before erroring
+$plupload_max_retries=5;
+
+# Plupload settings
+# Specify the supported runtimes and priority
+$plupload_runtimes = 'html5,gears,silverlight,browserplus,html4';
+
+# Keep failed uploads in the queue after uploads have completed
+$plupload_show_failed=true;
+
+# Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
+$plupload_widget=true;
+$plupload_widget_thumbnails=true;
+
+# Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
+$prevent_open_access_on_edit_for_active=false;
+
+# Allow a Preview page for entire collections (for more side to side comparison ability)
+$preview_all=false;
+# Minimize collections frame when visiting preview_all.php
+$preview_all_hide_collections=true;
+
+# Preview All default orientation ("v" for vertical or "h" for horizontal)
+$preview_all_default_orientation="h";
+
+# Show header and footer on resource preview page
+$preview_header_footer=false;
+
+# Allow unique quality settings for each preview size. This will use $imagemagick_quality as a default setting.
+# If you want to adjust the quality settings for internal previews you must also set $internal_preview_sizes_editable=true
+$preview_quality_unique=false;
+
+$psd_transparency_checkerboard=false;
+
+$public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
+
+# A list of extensions that QLPreview should NOT be used for.
+$qlpreview_exclude_extensions=array("tif","tiff");
+
+$random_sort=false;
+
+# Separator to use when rendering date range field values
+$range_separator = " / ";
+
+# Option to limit recent search to resources uploaded in the last X days
+$recent_search_period_select=false;
+$recent_search_period_array=array(1,7,14,60);
+
+#Size of the related resource previews on the resource page. Usually requires some restyling (#RelatedResources .CollectionPanelShell)
+#Takes the preview code such as "col","thm"
+$related_resource_preview_size="col";
+
+# Select the field to display in searchcrumbs for a related search (defaults to filename)
+# If this is set to a different field and the value is empty fallback to filename
+$related_search_searchcrumb_field=51;
+
+# Remove the line that separates collections panel menu from resources
+$remove_collections_vertical_line=false;
+
+# Show/ hide "Remove resources" link from collection bar:
+$remove_resources_link_on_collection_bar = TRUE;
+
+# Display col-size image of resource on replace file page
+$replace_file_resource_preview=true;
+
+# Display resource title on replace file page
+$replace_file_resource_title=true;
+
+# Send confirmation emails to user when request sent or assigned
+$request_senduserupdates=true;
+
+# Option to force users to select a resource type at upload
+$resource_type_force_selection=false;
+
+# Specifies that searching will search all workflow states
+# NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
+# IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
+$search_all_workflow_states=false;
+
+# When returning to search results from the view page via "all" link, bring user to result location of viewed resource?
+$search_anchors=true;
+
+# Highlight last viewed result when using $search_anchors
+$search_anchors_highlight=false;
+
+# Make search filter strict (prevents direct access to view/preview page)
+# Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
+$search_filter_strict=true;
+
+# Set to false to omit results for public collections on numeric searches.
+$search_public_collections_ref=true;
+
+# Show an edit icon/link in the search results.
+$search_results_edit_icon=true;
+
+# whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
+$search_titles_shortnames=false;
+
+# move search and clear buttons to bottom of searchbar
+$searchbar_buttons_at_bottom=true;
+
+# Enable list view option for search screen
+$searchlist=true;
+
+# Option to separate some resource types in searchbar selection boxes
+$separate_resource_types_in_searchbar=Array();
+
+
+# Always create a collection when sharing an individual resource via email
+$share_resource_as_collection=false;
+
+# Add option to include related resources when sharing single resource (creates a new collection)
+$share_resource_include_related=false;
+
+# Enable the 'edit all' function in the collection and search actions dropdowns
+$show_edit_all_link = true;
+
+// Show required field legend on upload
+$show_required_field_label = true;
+
+# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
+$show_upload_log=true;
+
+# Show the link to 'user contributed assets' on the My Contributions page
+# Allows non-admin users to see the assets they have contributed
+$show_user_contributed_resources=true;
+
+# Set this to true in order for the top bar to remain present when scrolling down the page
+$slimheader_fixed_position=false;
+
+# Omit archived resources from get_smart_themes (so if all resources are archived, the header won't show)
+# Generally it's not possible to check for the existence of results based on permissions,
+# but in the case of archived files, an extra join can help narrow the smart theme results to active resources.
+$smart_themes_omit_archived=false;
+
+# Store Resource Refs when uploading, this is useful for other developer tools to hook into the upload.
+$store_uploadedrefs=false;
+
+# Suppress SQL information in the debug log?
+$suppress_sql_log = false;
+
+# display an alert icon next to the team centre link 
+# and the relevant team centre item when there are requests that need managing
+# only affects users with permissions to do this.
+$team_centre_alert_icon = true;
+
+# optional columns in themes collection lists
+$themes_date_column=false;
+$themes_ref_column=false;
+
+# Show only collections that have resources the current user can see?
+$themes_with_resources_only=false;
+
+# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
+$thumbs_previews_via_download=false;
+
+# Normally, image tweaks are only applied to scr size and lower. 
+# If using Magictouch, you may want tweaks like rotation to be applied to the larger images as well.
+# This could require recreating previews to sync up the various image rotations.
+$tweak_all_images=false;
+$tweak_allow_gamma=true;
+
+# Allows Dash Administrators to have their own dash whilst all other users have the managed dash ($managed_home_dash must be on)
+$unmanaged_home_dash_admins = false;
+
+# Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
+$unnormalized_index=false;
+
+#Batch uploads - always upload to Default Collection
+$upload_force_mycollection=false;
+
+# Allow users to skip upload and create resources with no attached file
+$upload_no_file=false;
+
+# Option to allow users to 'lock' metadata fields in upload_then_edit_mode
+$upload_review_lock_metadata = true;
+
+// Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
+// Requires "$upload_then_edit = true;"
+$upload_review_mode_review_by_resourceid = true;
+
+# Use Plugins Manager
+$use_plugins_manager = true;
+
+# Show the fullname of the user who approved the account when editing user
+$user_edit_approved_by=false;
+# Also show the user email address if $user_edit_approved_by=true
+$user_edit_approved_by_email=false;
+
+# Show the fullname of the user who created the account when editing user
+$user_edit_created_by=false;
+# Also show the user email address if $user_edit_created_by=true
+$user_edit_created_by_email=false;
+
+# Allow user to remove their rating.
+$user_rating_remove=true;
+# play backwards (in development) - default 'j'
+$video_playback_backwards=false;
+
+# show video player in thumbs view 
+$video_player_thumbs_view=false;
+
+# use an ffmpeg alternative for search preview playback
+$video_player_thumbs_view_alt=false;
+
+# dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
+$videojs_resolution_selection_dynamicLabel=false;
+
+# Default DPI setting for the view page if no resolution is stored in the db.
+$view_default_dpi=300;
+
+# Height of map in pixels on resource view page
+$view_mapheight=200;
+
+# Set to true if wildcard should also be prepended to the keyword
+$wildcard_always_applied_leading = false;
+
+# Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
+# E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.
+# WARNING - this option could cause search performance issues due to the hugely expanded searches that will be performed.
+# It will also cause some other features to be disabled: related keywords and quoted string support
+$wildcard_always_applied=false;
+
+# Zip files - the contents of the zip file can be imported to a text field on upload.
+# Requires 'unzip' on the command path.
+# If the below is not set, but unzip is available, the archive contents will be written to $extracted_text_field
+#
+# $zip_contents_field=18;
+$zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
+
