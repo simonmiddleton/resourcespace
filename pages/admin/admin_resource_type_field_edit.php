@@ -463,6 +463,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 
 	sql_query($sql);
 	clear_query_cache("schema");
+	clear_query_cache("featured_collections");
 
 	if($sync_field!="" && $sync_field>0)
 		{
