@@ -39,7 +39,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
     if ( $field["display_condition"]!="" 
     && ( !$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition)) ) )
         {
-        # Split the condition into an array of tests (if there are more than one, they are separated by a ";")
+        # Split the display condition of the field being rendered into an array of tests (if there are more than one, they are separated by a ";")
+        # Each test is in the form governing field = governing field value 
+        #   If the field being rendered is itself a governing field then "On Change" code must be generated for the governing field
+        #   If the field being rendered is a governed field then "Checking" code must be generated for each governing field
         $s=explode(";",$field["display_condition"]);
         $condref=0;
         foreach ($s as $condition) # Check each individual test
@@ -99,7 +102,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 				// Certain fixed list types allow for multiple nodes to be passed at the same time
 
                 // Generate a javascript function specific to the field being rendered
-                // This function will be invoked whenever the governing field changes
+                // This function will be invoked whenever any governing field changes
                 if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
 					{
 						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
@@ -110,7 +113,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 								{
 								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "MJB CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
@@ -128,7 +132,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 								{
 								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "MJB DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
@@ -140,25 +145,34 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 							}
                         else
                             {
-                            # Otherwise for a FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
-                            $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
-                            $jquery_selector = "input[name=\"{$checkname}\"]";
-                            if  (
-                                FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type']
-                                ||
-                                (in_array($fields[$cf]['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $fields[$cf]['display_as_dropdown'])
-                                )
-                                {
+                            # Otherwise FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
+                            
+                            # Simple search will always display these types as dropdowns
+                            if ($forsearchbar) {
                                 $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
                                 $jquery_selector = "select[name=\"{$checkname}\"]";
-                                }
+                            }
+                            # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                            else {
+                                # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                                $checkname = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                                # If however its a drop down list then we should be processing select elements
+                                If ($fields[$cf]['display_as_dropdown'] == true)
+                                    {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                    }
+                            } 
                             ?>
                             <script type="text/javascript">
                             jQuery(document).ready(function()
                                 {
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "MJBTEST CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                                     });
                                 });
@@ -174,7 +188,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 							{
 							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
 								{
-                                // Refelect the change of the governing field into the following governed field condition checker
+                                // Reflect the change of the governing field into the following governed field condition checker
                                 checkSearchDisplayCondition<?php echo $field['ref']; ?>();
 								});
 							});
@@ -210,29 +224,42 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
             <?php
-            ############################
-            ### Field type specific
-            ############################
+
+            # Generate the javascript code necessary to condition the rendered field based on value(s) present in the governing field
+
+            # Prepare base name for selector 
+            $checkname = "nodes_searched[{$scriptcondition['field']}]";
+            $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+            # Prepare fallback selector 
+            $jquery_condition_selector = "input[name=\"{$checkname}\"]";
+
             if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
-                $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
 
-                if  (
-                    in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS))
-                    &&
-                    false == $scriptcondition['display_as_dropdown']
-                    )
-                    {
-                    $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
-                    }
+                # Prepare selector for a checkbox list or a radio button or a dropdown list
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS, FIELD_TYPE_DROP_DOWN_LIST))) {
 
-                if((in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $scriptcondition['display_as_dropdown'])
-                    || FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] )
-                    {
-                    $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
+                    # Simple search will always display these types as dropdowns, so search for selected option
+                    if ($forsearchbar) {
+                        $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
                     }
-                    ?>
+                    # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                    else {
+                        # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                        #   so search for checked boxes
+                        $jquery_condition_selector = "input[name=\"{$checkname}\"]:checked:enabled";
+
+                        # If however its a drop down list then we should be searching for selected option
+                        If ($scriptcondition['display_as_dropdown'] == true)
+                            {
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                            }
+                    }                    
+
+                }
+
+                ?>
                 if(!newfield<?php echo $field['ref']; ?>show)
                     {
                     jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
@@ -246,6 +273,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     }
                 <?php
                 }?>
+
                 // If no governing node found then disable this governed field
                 if(!newfield<?php echo $field['ref']; ?>subcheck)
                 {
@@ -325,11 +353,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
         if ((int)$field['field_constraint']==0)
             { 
-			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" 
-                <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"
-                <?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"
-                <?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>>
-            <?php 
+			
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
 		    }
