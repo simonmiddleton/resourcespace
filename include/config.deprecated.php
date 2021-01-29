@@ -219,3 +219,159 @@ $email_errors_address="";
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
 
+# Enable remote apis - MUST ALWAYS BE TRUE now as parts of the UI use the API.
+$enable_remote_apis=true;
+
+$enable_theme_breadcrumbs = true;
+
+# Require email address to be entered when users are submitting collecion feedback
+$feedback_email_required=true;
+
+# Do not create any new snapshots when recreating FFMPEG previews. (This is to aid in migration to mp4 when custom previews have been uploaded)
+$ffmpeg_no_new_snapshots=false;
+
+# Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
+$file_integrity_ignore_states = array();
+
+# Force fields with display templates to obey "order by" numbering.
+$force_display_template_order_by=false;
+# Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
+$force_display_template_orderby=false;
+
+# Show geographical search results in a modal
+$geo_search_modal_results = true;
+
+# A list of upper/lower long/lat bounds, defining areas that will be excluded from geographical search results.
+# Areas are defined using values in the following sequence: southwest lat, southwest long, northeast lat, northeast long
+$geo_search_restrict=array
+	(	
+	# array(50,-3,54,3) # Example omission zone
+	# ,array(-10,-20,-8,-18) # Example omission zone 2
+	# ,array(1,1,2,2) # Example omission zone 3
+    );
+    
+# Set cookies at root (for now, this is implemented for the colourcss cookie to preserve selection between pages/ team/ and plugin pages)
+# probably requires the user to clear cookies.
+$global_cookies=false;
+
+# Simpler search in header, expanding for the full box.
+# Work in progress - in development for larger ResourceSpace 9.0 release. Some functions may not work currently.
+$header_search=false;
+
+#replace header logo with text, application name and description
+$header_text_title=false;
+
+#Batch Uploads, do not display hidden collections
+$hidden_collections_hide_on_upload=false;
+#Batch Uploads, include show/hide hidden collection toggle. Must have $hidden_collections_hide_on_upload=true;
+$hidden_collections_upload_toggle=false;
+
+#collection_public.php - hide 'access' column
+$hide_access_column_public = false;
+#collection_manage.php - hide 'access' column
+$hide_access_column = false;
+
+# Hide "Generate URL" from the collection_share.php page?
+$hide_collection_share_generate_url=false;
+
+# Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
+$hide_failed_reset_text=true;
+
+# Hide "Generate URL" from the resource_share.php page?
+$hide_resource_share_generate_url=false;
+
+# Highlight search keywords when displaying results and resources?
+$highlightkeywords=true;
+
+# embed the target preview profile?
+$icc_preview_profile_embed=false;
+
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr=false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth="8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles=true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
+
+// Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
+$inactive_message_auto_digest_period=7;
+
+# Index the resource type, so searching for the resource type string will work (e.g. if you have a resource of type "photo" then "cat photo" will match even if the resource metadata itself doesn't contain the word 'photo')
+$index_resource_type=true;
+
+# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
+# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
+# easily faked.
+$ip_forwarded_for=false;
+
+# Show friendly error to user instead of 403 if IP not in permitted range.
+$iprestrict_friendlyerror=false;
+
+# By default, keyword relationships are two-way 
+# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
+# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
+# then a search for "tiger" includes "tiger", but does not include "cat" matches.
+$keyword_relationships_one_way=false;
+
+# A list of groups for which the knowledge base will launch on login, until dismissed.
+$launch_kb_on_login_for_groups=array();
+
+# Prevent previews from creating versions that result in the same size?
+# If true pre, thm, and col sizes will not be considered.
+$lean_preview_generation=false;
+
+# Use a file tree display for local folder upload
+$local_upload_file_tree=false;
+
+# if using $collections_compact_style, you may want to remove the contact sheet link from the Manage Collections page
+$manage_collections_contact_sheet_link=true;
+
+# How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
+$max_collection_thumbs=150;
+
+// maximum number of words shown before more/less link is shown (used in resource log)
+$max_words_before_more=30;
+
+#Add full username column in my messages/actions pages
+$messages_actions_fullname = true;
+
+#Option to turn on metadata download in view.php.
+$metadata_download=false;
+
+# Custom logo to use when downloading metadata in PDF format
+$metadata_download_header_title = 'ResourceSpace';
+#$metadata_download_pdf_logo     = '/path/to/logo/location/logo.png';
+$metadata_download_footer_text  = '';
+
+// Ability to default metadata templates to a particular resource ID
+$metadata_template_default_option = 0;
+
+// Force selection of a metadata template
+$metadata_template_mandatory = false;
+
+# Enable multi-lingual free text fields
+# By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
+# the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
+$multilingual_text_fields=false;
+
+# Hide mycontributions link from regular users
+$mycontributions_userlink=true;
+
+# Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
+$mysql_force_strict_mode = false;
+
+# If true, it does not remove the backslash from DB queries, and doesn't do any special processing.
+# to them. Unless you need to store '\' in your fields, you can safely keep the default.
+$mysql_verbatim_queries = false;
+
+# Normalize keywords when indexing and searching? Having this set to true means that various character encodings of e.g. diacritics will be standardised when indexing and searching. Requires internationalization functions (PHP versions >5.3). For example, there are several different ways of encoding "é" (e acute) and this will ensure that a standard form of "é" will always be used.
+$normalize_keywords=true;
+
+
+$notify_user_contributed_unsubmitted=false;
+

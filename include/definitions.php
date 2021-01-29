@@ -365,3 +365,24 @@ define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
+
+# Keyboard control codes
+# Previous/next resource: left/right arrows
+$keyboard_navigation_prev=37;
+$keyboard_navigation_next=39;
+# add resource to collection, 'a'
+$keyboard_navigation_add_resource=65;
+# previous page in document preview, ','
+$keyboard_navigation_prev_page=188;
+# next page in document preview, '.'
+$keyboard_navigation_next_page=190;
+# view all results, '/'
+$keyboard_navigation_all_results=191;
+# toggle thumbnails in collections frame, 't'
+$keyboard_navigation_toggle_thumbnails=84;
+# view all resources from current collection, 'v'
+$keyboard_navigation_view_all=86;
+# zoom to/from preview, default 'z'
+$keyboard_navigation_zoom=90;
+# close modal, escape
+$keyboard_navigation_close=27;
