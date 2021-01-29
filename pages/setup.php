@@ -149,6 +149,7 @@ $storagedir=""; # This variable is used in the language files.
 include '../include/config.default.php';
 $defaultlanguage = get_post('defaultlanguage');
 $lang = set_language($defaultlanguage);
+$google_vision_enable=get_post_bool('google_vision_enable');
 
 
 /* Process AJAX request to check password */
@@ -345,6 +346,7 @@ function test_db(targetEl)
 </script> 
  
 <style type="text/css"> 
+#setup-container {overflow: auto; height: 100%;}
 #wrapper{ margin:0 auto;width:600px; }
  #intro {  margin-bottom: 40px; font-size:100%; background: #F7F7F7; text-align: left; padding: 40px; }
 #introbottom { padding: 10px; clear: both; text-align:center;}
@@ -386,6 +388,7 @@ h2#dbaseconfig{  min-height: 32px;}
 </style> 
 </head>
 <body class="SlimHeader">
+<div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
     	<img src="../gfx/titles/title.svg" id="HeaderImg" />
@@ -964,7 +967,6 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
             }
         }
         
-        $google_vision_enable=getval('google_vision_enable','') != "";
         if($google_vision_enable)
             {
             $google_vision_api_key= getvalescaped('google_vision_key','');
@@ -1196,18 +1198,18 @@ else
                 include $langpath . "en.php";
                 }
 
-            if ($lang != "en")
+            if ($defaultlanguage != "en")
                 {
-                if (substr($lang, 2, 1) == '-' && substr($lang, 0, 2) != 'en')
+                if (substr($defaultlanguage, 2, 1) == '-' && substr($defaultlanguage, 0, 2) != 'en')
                     {
-                    if (file_exists($langpath . safe_file_name(substr($lang, 0, 2)) .  ".php"))
+                    if (file_exists($langpath . safe_file_name(substr($defaultlanguage, 0, 2)) .  ".php"))
                         {
-                        include $langpath . safe_file_name(substr($lang, 0, 2)) . ".php";
+                        include $langpath . safe_file_name(substr($defaultlanguage, 0, 2)) . ".php";
                         }
                     }
-                if (file_exists($langpath . safe_file_name($lang) . ".php"))
+                if (file_exists($langpath . safe_file_name($defaultlanguage) . ".php"))
                     {
-                    include $langpath . safe_file_name($lang) . ".php";
+                    include $langpath . safe_file_name($defaultlanguage) . ".php";
                     }
                 }
 	      	}
@@ -1516,7 +1518,7 @@ else
                 <div id="plugin_google_vision_settings">
                     <div class="configitem">
                         <label for="google_vision_key"><?php echo $lang["google_vision_api_key"] . ":"; ?></label>
-                        <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo (isset($google_vision_key)) ? htmlspecialchars($google_vision_key) : "";?>" />
+                        <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo htmlspecialchars(get_post('google_vision_key')); ?>" />
                     </div>
                 </div>
             </div>
@@ -1566,5 +1568,6 @@ if (($develmode)&& isset($config_output))
 	</div>
 	<?php 
 	} ?>
+</div>
 </body>
 </html>

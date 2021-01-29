@@ -365,3 +365,37 @@ define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
+
+# Keyboard control codes
+# Previous/next resource: left/right arrows
+$keyboard_navigation_prev=37;
+$keyboard_navigation_next=39;
+# add resource to collection, 'a'
+$keyboard_navigation_add_resource=65;
+# previous page in document preview, ','
+$keyboard_navigation_prev_page=188;
+# next page in document preview, '.'
+$keyboard_navigation_next_page=190;
+# view all results, '/'
+$keyboard_navigation_all_results=191;
+# toggle thumbnails in collections frame, 't'
+$keyboard_navigation_toggle_thumbnails=84;
+# view all resources from current collection, 'v'
+$keyboard_navigation_view_all=86;
+# zoom to/from preview, default 'z'
+$keyboard_navigation_zoom=90;
+# close modal, escape
+$keyboard_navigation_close=27;
+$keyboard_navigation_video_search_backwards=74;
+# play/pause - 'k'
+$keyboard_navigation_video_search_play_pause=75;
+# play forwards - 'l'
+$keyboard_navigation_video_search_forwards=76;
+
+# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
+$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
+
+# Regular expression defining e-mail format
+# Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
+$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
+

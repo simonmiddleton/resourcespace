@@ -420,3 +420,10 @@ LEFT OUTER JOIN user usapp ON req.approved_declined_by = usapp.ref
 WHERE req.created>=date('[from-y]-[from-m]-[from-d]') AND req.created<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 
 ORDER BY req.created desc;"
+21,"Searches with no results", "
+  SELECT logged, `user`, search_string, resource_types, archive_states, result_count
+    FROM search_log AS sl
+   WHERE sl.result_count = 0
+     AND sl.logged >= date('[from-y]-[from-m]-[from-d]')
+     AND sl.logged <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
+ORDER BY ref DESC;"

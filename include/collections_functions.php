@@ -1049,8 +1049,11 @@ function save_collection($ref, $coldata=array())
                 if(isset($colset["thumbnail_selection_method"]))
                     {
                     $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
-
-                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method
+                    }
+                
+                if(isset($colset["thumbnail_selection_method"]) || isset($colset["name"]))
+                    {
+                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method or name
                     $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
                     }
 
@@ -2998,7 +3001,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes;
+           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
+           $system_read_only;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3254,7 +3258,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Edit Collection
-    if((($userref == $collection_data['user']) || (checkperm('h')))  && ($k == '' || $internal_share_access)) 
+    if((($userref == $collection_data['user']) || (checkperm('h')))  && ($k == '' || $internal_share_access) && !$system_read_only) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit.php",$urlparams);
         $options[$o]['value']='edit_collection';
@@ -3315,7 +3319,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
-    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate())
+    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only)
         {
         $tileparams = array(
             "create"            =>"true",
@@ -3478,7 +3482,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 260;
         $o++;
 
-        if(!checkperm('b'))
+        if(!checkperm('b') && !$system_read_only)
             {
             // Hide Collection
             $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
@@ -4024,7 +4028,11 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     {
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
-    generateResourcesMetadataCSV(array_column($result,"ref"), false,false,$csv_file);
+        if(isset($result[0]["ref"]))
+        {
+        $result = array_column($result,"ref");  
+        }
+    generateResourcesMetadataCSV($result, false,false,$csv_file);
     
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
@@ -4801,7 +4809,8 @@ function get_featured_collection_ref_by_name(string $name, $parent)
 */
 function allow_collection_share(array $c)
     {
-    global $allow_share, $manage_collections_share_link, $k, $internal_share_access, $restricted_share;
+    global $allow_share, $manage_collections_share_link, $k, $internal_share_access,
+    $restricted_share, $system_read_only, $system_read_only;
 
     if(!isset($GLOBALS["count_result"]))
         {
@@ -4816,6 +4825,7 @@ function allow_collection_share(array $c)
 
     if(
         $allow_share
+        && !$system_read_only
         && $manage_collections_share_link
         && $collection_resources > 0
         && ($k == "" || $internal_share_access)

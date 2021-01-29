@@ -443,7 +443,8 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
-                {               
+                {        
+                if (!isset($plugins[$n])) { continue; }       
                 register_plugin_language($plugins[$n]);
                 }       
             
@@ -593,13 +594,15 @@ function get_site_text($page,$name,$getlanguage,$group)
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {     
+        if (!isset($plugins[$n])) { continue; }          
         register_plugin_language($plugins[$n]);
         }
 
     $language = $getlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {  
+        if (!isset($plugins[$n])) { continue; }             
         register_plugin_language($plugins[$n]);
         }
             
@@ -3060,7 +3063,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " type ='" . escape_check($type) . "'";
         }
-    if(!checkperm('a'))
+    if(!checkperm('a') && PHP_SAPI != 'cli')
         {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
@@ -4507,6 +4510,10 @@ function cleanup_files($files)
  */
 function is_int_loose($var)
     {
+    if(is_array($var))
+        {
+        return false;
+        }
     return (string)(int)$var === (string)$var;
      }
 

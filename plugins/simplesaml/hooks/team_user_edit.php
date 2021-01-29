@@ -17,7 +17,7 @@ function HookSimplesamlTeam_user_editAdditionaluserfields()
         return;
         }
 
-    $custom_attributes = json_decode($custom_attributes);
+    $custom_attributes = json_decode($custom_attributes,true);
 
     if(0 == count($custom_attributes))
         {

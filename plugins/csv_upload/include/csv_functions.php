@@ -12,7 +12,7 @@ include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
  * @param  array $csv_set_options   Array of CSV processsing options, includes CSV column to metadata field mappings
  * @param  int $max_error_count     Maximum number of fatal errors to accept before aborting
  * @param  bool $processcsv         Process data? If false data will be checked without making changes
- * @return void 
+ * @return boolean 
  */
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set_options,$max_error_count=100,$processcsv=false)
 	{

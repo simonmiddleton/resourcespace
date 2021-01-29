@@ -311,6 +311,8 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 
 $types=get_resource_types();
 
+$simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
+
 if (!$basic_simple_search)
     {
     
@@ -319,7 +321,7 @@ if (!$basic_simple_search)
     
     ?>
     <input type="hidden" name="resetrestypes" value="yes">
-    <div id="searchbarrt" <?php hook("searchbarrtdiv");?>>
+    <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
     <?php if ($searchbar_selectall) { ?>
     <script type="text/javascript"> 
     function resetTickAll(){
@@ -505,7 +507,7 @@ elseif($restypes=='')
                 $has_value[]=$fields[$n]['ref'];
                 }
 
-            render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes);
+            render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes, false, $simpleSearchFieldsAreHidden);
             }
         }
     ?>
@@ -513,18 +515,27 @@ elseif($restypes=='')
     <script>
     // Trigger an initial change event for each rendered field
     jQuery(document).ready(function(){
+        simpleSearchFieldsAreHidden = <?php if($simpleSearchFieldsAreHidden) { echo "true"; } else { echo "false"; } ?>;
+        // If simple search fields are hidden there is no need to trigger initial change events
+        if (!simpleSearchFieldsAreHidden) {
+            TriggerChangesForRenderedFields();
+        }
+    });
+    </script>
+
+    <script type="text/javascript">
+
+    function TriggerChangesForRenderedFields() {
         <?php
         foreach($rendered_refs as $trigger_field)
             {
             ?>
             jQuery("#field_<?php echo $trigger_field?>").trigger('change');
             <?php
-        }
+            }
         ?>
-    });
-    </script>
+    }
 
-    <script type="text/javascript">
     function FilterBasicSearchOptions(clickedfield,resourcetype)
         {
         if (resourcetype!=0)
@@ -690,12 +701,10 @@ elseif($restypes=='')
             }
         ?>
         }   
-    jQuery(document).ready(function () {    
-        HideInapplicableSimpleSearchFields();
-    })
     </script>
         
-    <div id="basicdate" class="SearchItem"><?php if ($simple_search_date) 
+    <div id="basicdate" class="SearchItem"<?php if ($simpleSearchFieldsAreHidden) {?> style="display:none;"<?php } ?>>
+            <?php if ($simple_search_date) 
             {
                 ?>  
     

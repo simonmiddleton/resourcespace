@@ -1648,6 +1648,7 @@ function check_access_key($resources,$key)
                 }
             for ($n=count($plugins)-1;$n>=0;$n--)
                 {
+                if (!isset($plugins[$n])) { continue; }
                 register_plugin_language($plugins[$n]);
                 }
             $emulate_plugins_set=true;                  
@@ -2317,9 +2318,11 @@ function checkPermission_dashmanage()
  */
 function checkPermission_dashcreate()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins;
+	global $managed_home_dash,$unmanaged_home_dash_admins, $system_read_only;
 	return !checkPermission_anonymoususer() 
-			&& 
+            && 
+            !$system_read_only
+            &&
 				(
 					(!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
 				||
@@ -2386,4 +2389,74 @@ function internal_share_access()
     {
     global $k, $external_share_view_as_internal, $is_authenticated;
     return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    }
+
+/**
+ * Save or create usergroup
+ *
+ * @param  int              $ref    Group ref. Set to 0 to create a new group
+ * @param  array            $groupoptions array of options to set for group in the form array("columnname" => $value)
+ * 
+ * @return mixed bool|int   True to indicate existing group has been updated or ID of newly created group
+ */
+function save_usergroup($ref,$groupoptions)
+    {
+    $validcolumns = array(
+        "name",
+        "permissions",
+        "parent",
+        "search_filter",
+        "search_filter_id",
+        "edit_filter",
+        "edit_filter_id",
+        "derestrict_filter",
+        "derestrict_filter_id",
+        "resource_defaults",
+        "config_options",
+        "welcome_message",
+        "ip_restrict",
+        "request_mode",
+        "allow_registration_selection",
+        "inherit_flags",
+        "download_limit",
+        "download_log_days"
+        );
+
+    $sqlcols = array();
+    $sqlvals = array();
+    $n=0;
+    foreach ($validcolumns as $column)
+        {
+        if(isset($groupoptions[$column]))
+            {
+            $sqlcols[$n] = $column;
+            $sqlvals[$n] = escape_check($groupoptions[$column]);
+            $n++;
+            }
+        }
+
+    if($ref > 0)
+        {
+        $sqlsetvals = array();
+        for($n=0;$n<count($sqlcols);$n++)
+            {
+            $sqlsetvals[] = $sqlcols[$n] . "='" . $sqlvals[$n] . "'";
+            }
+        $sql = "UPDATE usergroup SET " . implode(",",$sqlsetvals) . " WHERE ref=" . (int)$ref;
+        sql_query($sql);
+        return true;
+        }
+    else
+        {
+        $sqlsetvals = array();
+        for($n=0;$n<count($sqlcols);$n++)
+            {
+            $sqlsetvals[] = $sqlcols[$n] . "='" . $sqlvals[$n] . "'";
+            }
+        $sql = "INSERT INTO usergroup (" . implode(",",$sqlcols) . ") VALUES ('" . implode("','",$sqlvals) . "')";
+        sql_query($sql);
+        $newgroup = sql_insert_id();
+        return $newgroup;
+        }
+    return false;
     }

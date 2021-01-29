@@ -555,7 +555,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -674,7 +674,7 @@ function compile_search_actions($top_actions)
             $o++;
             }*/
 
-        if($resources_count != 0)
+        if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
@@ -770,7 +770,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null)
+function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -890,9 +890,10 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
             {hook("search_all_workflow_states_filter");}   
-        elseif (count($archive) == 0 || $archive_standard)
+        elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
+            # Defaults are not used if searching smartsearch collection, actual values will be used instead
             if ($sql_filter!="") {$sql_filter.=" AND ";}
             $defaultsearchstates = get_default_search_states();
             if(count($defaultsearchstates) == 0)
@@ -1617,9 +1618,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($sql_filter_properties != "")
         {
-        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+        if(strpos($sql_join,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
             {
-            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            $sql_join.=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
             }
         if ($sql_filter == "")
             {

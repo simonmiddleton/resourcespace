@@ -1380,6 +1380,7 @@ function get_plugin_css(){
 	$plugincss="";
 	for ($n=count($plugins)-1;$n>=0;$n--)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	$csspath=get_plugin_path($plugins[$n]) . "/css/style.css";
 	if (file_exists($csspath))
 		{

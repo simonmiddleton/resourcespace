@@ -52,6 +52,8 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
 if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
+if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
+
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
@@ -135,6 +137,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
+// Set system to read only mode
+if(isset($system_read_only) && $system_read_only)
+    {
+    $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
+    $global_permissions="p";
+    $remove_resources_link_on_collection_bar = false;
+    $allow_save_search = false;
+    $mysql_log_transactions=false;
+    $enable_collection_copy = false;
+    }
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
@@ -233,6 +245,7 @@ else
 	{
 	for ($n=count($plugins)-1;$n>=0;$n--)
 		{
+        if (!isset($plugins[$n])) { continue; }
 		include_plugin_config($plugins[$n]);
 		}
 	}
@@ -265,6 +278,7 @@ if ($language!="en")
 # Register all plugins
 for ($n=0;$n<count($plugins);$n++)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin($plugins[$n]);
 	hook("afterregisterplugin");
 	}
@@ -272,6 +286,7 @@ for ($n=0;$n<count($plugins);$n++)
 # Register their languages in reverse order
 for ($n=count($plugins)-1;$n>=0;$n--)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin_language($plugins[$n]);
 	}
 

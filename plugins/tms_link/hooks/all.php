@@ -66,9 +66,12 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
     global $tms_link_object_id_field,$tms_link_resource_types,$lang,$tms_link_field_mappings_saved;
 
     $resdata = get_resource_data($resource);
-    if(!in_array($resdata["resource_type"], $tms_link_resource_types))
+    foreach(tms_link_get_modules_mappings() as $module_uid => $module)
         {
-        return false;
+        if(!in_array($resdata['resource_type'], $module['applicable_resource_types']))
+            {
+            return false;
+            }
         }
 	
 	if($resource < 0 || !tms_link_is_rs_uid_field($field))

@@ -13,7 +13,11 @@ include "../../include/api_functions.php";
 $backurl=getval("backurl","");
 $modal=(getval("modal","")=="true");
 $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref","",true) . "&backurl=" . urlencode($backurl);
-if (!checkperm("u")) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
+if (!checkperm("u"))
+    {
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
 
 $ref=getvalescaped("ref","",true);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
@@ -81,11 +85,9 @@ if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login
 
 if (!checkperm_user_edit($user))
 	{
-	if(!$modal){redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
-	else
-		{echo $lang["error-permissiondenied"];}
-	exit;
-}
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
 
 include "../../include/header.php";
 

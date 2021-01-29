@@ -130,8 +130,8 @@ foreach ($fieldrefs as $fieldref)
                 }
                 
             foreach ($exiftool_tags as  $exiftool_tag) 
-                {	
-                $command = $exiftool_fullpath . " -s -s -s -" . $exiftool_tag . " " . escapeshellarg($image);
+                {
+                $command = $exiftool_fullpath . " -s -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -" . $exiftool_tag . " " . escapeshellarg($image);
                 echo $command . PHP_EOL;
                 $value = iptc_return_utf8(trim(run_command($command)));
                 
