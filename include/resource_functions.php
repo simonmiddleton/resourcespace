@@ -8302,7 +8302,7 @@ function get_workflow_states()
 */
 function delete_resource_type_field($ref)
     {
-    global $lang, $corefields;
+    global $lang, $corefields, $core_field_refs;
 
     if('cli' != php_sapi_name() && !checkperm('a'))
         {
@@ -8322,12 +8322,26 @@ function delete_resource_type_field($ref)
             }
         }
 
+    // Prevent deleting a "core" field required by other parts of the system (e.g plugins)
+    $core_field_scopes = [];
+    foreach($core_field_refs as $scope => $core_refs)
+        {
+        if(in_array($ref, $core_refs) && !in_array($scope, $core_field_scopes))
+            {
+            $core_field_scopes[] = $scope;
+            }
+        }
+
     if(count($fieldvars) > 0)
         {
         return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
         }
+    else if(!empty($core_field_scopes))
+        {
+        return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
+        }
 
-    
+
     $fieldinfo = get_resource_type_field($ref);
 
     $ref = escape_check($ref);

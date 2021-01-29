@@ -1212,3 +1212,33 @@ function config_register_core_fieldvars($source="BASE", $varnames=array())
             }
         }
     }
+
+
+/**
+* Used to block deletion of 'core' fields.
+* 
+* @param string $source What part (e.g plugin) relies on this list of metadata fields
+* @param array  $refs   List of metadata field IDs to prevent being deleted
+*/
+function config_register_core_field_refs(string $source, array $refs)
+    {
+    global $core_field_refs;
+
+    $source = trim($source);
+    $source = ($source !== '' ? $source : 'BASE');
+
+    if(!isset($core_field_refs[$source]))
+        {
+        $core_field_refs[$source] = [];
+        }
+
+    foreach($refs as $ref)
+        {
+        if(is_int_loose($ref) && $ref > 0)
+            {
+            $core_field_refs[$source][] = $ref;
+            }
+        }
+
+    return;
+    }

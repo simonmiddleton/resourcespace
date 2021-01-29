@@ -46,6 +46,40 @@ function HookMuseumplusAllInitialise()
         set_plugin_config('museumplus', $mplus_config);
         }
 
+
+    $core_fields = [];
+    $all_field_mappings_refs = [];
+    foreach($mplus_config as $cfg_name => $cfg_value)
+        {
+        // Base plugin config options
+        if(in_array($cfg_name, ['museumplus_module_name_field', 'museumplus_secondary_links_field']))
+            {
+            $core_fields[] = $cfg_value;
+            }
+
+        // Module setup config options
+        if($cfg_name === 'museumplus_modules_saved_config')
+            {
+            foreach(plugin_decode_complex_configs($cfg_value) as $module_cfg)
+                {
+                $core_fields[] = $module_cfg['rs_uid_field'];
+
+                $field_mappings_refs = array_column($module_cfg['field_mappings'], 'rs_field');
+                $core_fields = array_merge($core_fields, $field_mappings_refs);
+                $all_field_mappings_refs = array_merge($all_field_mappings_refs, $field_mappings_refs);
+                }
+            }
+        }
+    $core_fields = array_values(array_unique($core_fields));
+    $all_field_mappings_refs = array_values(array_unique($all_field_mappings_refs));
+
+    // Mark as core any plugin config option that relies on a metadata field to prevent them from being deleted if the plugin is in use.
+    config_register_core_field_refs('museumplus', $core_fields);
+
+    // Modify the global permissions of the user and deny edit access to the modules' mapped fields. Users should never have to
+    // edit those manually. In addition, this avoids edit conflicts since the process will update the mapped fields of a module
+    $GLOBALS['global_permissions'] .= implode(',', array_map(function($v) { return "F{$v}"; }, $all_field_mappings_refs));
+
     return;
     }
 
