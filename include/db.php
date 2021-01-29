@@ -52,6 +52,8 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
 if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
+if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
+
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
