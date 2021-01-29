@@ -78,7 +78,33 @@ function HookMuseumplusViewRenderfield($field, $resource)
             }
 
         $value = highlightkeywords($mpid, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
-        $mplus_object_url = (is_numeric($mpid) ? mplus_generate_module_record_url($module_name, $mpid) : '');
+
+        // mplus_object_url is only generated when we have the technical ID. If the value of the association is a virtual ID (ie non-numeric)
+        // RS will use the technical ID retrieved during validation if validation succeeded.
+        $mplus_object_url = '';
+        if(!is_numeric($mpid))
+            {
+            $computed_md5 = mplus_compute_data_md5([$resource['ref'] => $mpid], $module_name);
+            $mplus_resource_validation_data = mplus_resource_get_data([$resource['ref']]);
+
+            foreach($mplus_resource_validation_data as $mplus_resource_data)
+                {
+                if(
+                    $resource['ref'] == $mplus_resource_data['ref']
+                    && $computed_md5[$resource['ref']] === $mplus_resource_data['museumplus_data_md5']
+                    && $mplus_resource_data['museumplus_data_md5'] !== ''
+                    && $mplus_resource_data['museumplus_technical_id'] !== ''
+                )
+                    {
+                    $mplus_object_url = mplus_generate_module_record_url($module_name, $mplus_resource_data['museumplus_technical_id']);
+                    break;
+                    }
+                }
+            }
+        else
+            {
+            $mplus_object_url = mplus_generate_module_record_url($module_name, $mpid);
+            }
         ?>
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($field['title']); ?></h3>
