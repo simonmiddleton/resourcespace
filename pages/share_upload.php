@@ -193,7 +193,7 @@ include "../include/header.php";
                 }                
             else
                 {
-                echo "<input type='hidden' name='usergroup' value='" . htmlspecialchars(isset($upload_link_usergroups) ? $upload_link_usergroups[0] : $usergroup) . "'>";    
+                echo "<input type='hidden' name='usergroup' value='" . htmlspecialchars(isset($upload_link_usergroups[0]) ? $upload_link_usergroups[0] : $usergroup) . "'>";    
                 }
             ?>
             <div class="Question">
