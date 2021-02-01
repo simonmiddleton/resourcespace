@@ -68,7 +68,6 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
 
         $vimeo_lib = new Vimeo($client_id, $client_secret);
         $authentication_url = $vimeo_lib->buildAuthorizationEndpoint($redirect_uri, 'public upload edit', $state);
-        debug("BANG " . $authentication_url);
         header("Location: " . $authentication_url);
         exit();
         }

@@ -39,6 +39,11 @@ if(getval('delete_token','') != '')
         }
     }
 
+if(!$systemtoken && !$vimeo_publish_allow_user_accounts && trim($vimeo_publish_system_token)=="")
+    {
+    exit($lang['vimeo_publish_not_configured'] . "<a href=\"{$baseurl}/plugins/vimeo_publish/pages/setup.php\">$baseurl/plugins/vimeo_publish/pages/setup.php</a>");
+    }
+
 // Initialize VIMEO
 init_vimeo_api($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
 $vimeo_publish_access_token = get_access_token($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
@@ -51,7 +56,7 @@ if($systemtoken)
 
 // Try uploading resource to Vimeo
 $successfully_uploaded = false;
-if(getvalescaped('upload', false) && enforcePostRequest(false))
+if(getvalescaped('upload', '') !=  '' && enforcePostRequest(false))
     {
     $video_id   = '';
     $file_path  = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, false, '', -1);
@@ -67,7 +72,6 @@ if(getvalescaped('upload', false) && enforcePostRequest(false))
         $successfully_uploaded = true;
         }
     }
-
 
 if(0 < $vimeo_publish_vimeo_link_field)
     {
@@ -124,7 +128,7 @@ if('' != $error)
 
 // Show which user we will be publishing as...
 
-if(get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
+if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
     {
     ?>
     <div class="Question">
