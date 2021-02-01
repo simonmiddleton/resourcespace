@@ -2460,3 +2460,109 @@ function save_usergroup($ref,$groupoptions)
         }
     return false;
     }
+
+
+function set_user_profile($user_ref,$profile_text,$image_path)
+    {
+    global $storagedir,$imagemagick_path, $scramble_key, $config_windows;
+# Check for presence of filestore/user_profiles directory - if it doesn't exist, create it.
+    if (!is_dir($storagedir.'/user_profiles'))
+        {
+        mkdir($storagedir.'/user_profiles',0777);
+        }
+
+# If $image_path is not empty and file is JPEG, take the path to the temp file, pass to imagemagick for convert to 200 x 200px, rename to userref_hash(scramblekey plus fullname CANT USE NAME - USER CHANGING NAME WOULD BREAK) of user, user ref, unlink temp file.
+    # Locate imagemagick.
+    
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath == false) 
+        {
+        debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); 
+        return false;
+        }
+    
+    if ($image_path != "" && file_exists($image_path))
+        {
+        # Work out the extension
+	    $extension = explode(".",$image_path);
+        $extension = trim(strtolower($extension[count($extension)-1]));
+        if ($extension != 'jpg' && $extension != 'jpeg')
+            {
+            return false;
+            }
+        
+        # Create profile image filename 
+        $profile_image_name = md5($scramble_key . $user_ref. date("Ymd")) . "." .$extension;
+        $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+        
+        # Create profile image
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . 
+        " -resize " . '200'. "x" . '200' . " " . escapeshellarg($profile_image_path);
+        $output = run_command($command);
+
+        # Store reference to user image
+        sql_query("update user set profile_image = '$profile_image_name' where ref = '$user_ref'");
+
+        # Remove temp file
+        if (file_exists($profile_image_path))
+            {
+        unlink($image_path);
+            }
+        }
+
+# Update user to set user.profile = $profile_text and user.profile_image = $profile_image_name if set by the above.
+    sql_query("update user set profile_text = '" . escape_check($profile_text) . "' where ref = '$user_ref'");
+        
+# Returns boolean - form to display an error message if false returned (will require lang string - "Unable to process image. Check the file specified is of type JPEG")
+    return true;
+    }
+
+
+function delete_profile_image($user_ref)
+    {
+    # Get image name from the user.profile_image using user ref and unlink the file.
+    # Set user.profile_image to blank.
+    global $storagedir;
+
+    $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+    $path_to_file = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+
+    if (file_exists($path_to_file))
+        {
+        unlink($path_to_file);
+        }
+    
+    sql_query("update user set profile_image = '' where ref = '$user_ref'");
+    }
+    
+
+function get_profile_image($user_ref,$as_icon = false)
+    {
+    global $storagedir, $baseurl;
+    # Return user.profile_image from the database and add to filestore/user_profiles/ path to give the path to the file. This would be used to display the image elsewhere. If $user_ref contains an array of user references, run an in statement instead, returning an array of user ref: profile image path. An array of results may be preferable for performance loading view page vs multiple queries for one result at a time. 
+    if (is_dir($storagedir.'/user_profiles'))
+        {
+        $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+        if ($profile_image_name != "" && $as_icon)
+            {
+            $icon = "<img src=".$baseurl . '/filestore/user_profiles' . '/' . $profile_image_name." alt='Profile icon' style='width:40px; height:40px; border-radius:40px'>";
+            return $icon;
+            }
+            elseif ($profile_image_name != "")
+            {
+            return $baseurl . '/filestore/user_profiles' . '/' . $profile_image_name;
+            }
+            else
+            {
+            return "";
+            }
+        }
+    return false;    
+    }
+
+
+function get_profile_text($user_ref)
+    {
+    # Return user.profile based on user ref. The quote doesn't ask for this but it seems likely we will want some way to pull back this value from the database to display somewhere else. Will also be needed for reload of the page.
+    return sql_value("select profile_text value from user where ref = '$user_ref'","");
+    }

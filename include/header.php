@@ -430,6 +430,7 @@ else
 	<?php if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d"))) { ?><li class="HeaderLink UploadButton"><a href="<?php echo $baseurl; if ($upload_then_edit) { ?>/pages/upload_plupload.php<?php } else { ?>/pages/edit.php?ref=-<?php echo @$userref?>&amp;uploader=<?php echo $top_nav_upload_type; } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]?></a></li><?php } ?>    
         
     <?php
+    $user_profile_image = get_profile_image($userref,true);
     if(!hook('replaceheaderfullnamelink'))
         {
         ?>
@@ -445,9 +446,17 @@ else
                 }
             else
                 {
-                ?>
-                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
-                <?php
+                if ($user_profile_image != "")
+                    {
+                    echo $user_profile_image ?><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
+                    else
+                    {
+                    ?>
+                    <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
                 }
             ?> 
             </a>
