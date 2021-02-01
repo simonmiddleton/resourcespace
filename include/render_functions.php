@@ -933,7 +933,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 if($two_line)
                     {
                     ?>
-                    <br />
+                   <br/>
                     <?php
                     }
                     ?>
@@ -3297,6 +3297,8 @@ function render_selected_collection_actions()
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
            $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
 
+    
+
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
@@ -3345,7 +3347,15 @@ function render_selected_collection_actions()
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
 
-    render_actions($collection_data, true, false,'',array(),true);
+    if (getvalescaped("clear_selection_collection", "") == "no")
+        {
+        render_actions($collection_data, true, false,'');
+        }
+    else 
+        {
+        render_actions($collection_data, true, false,'',array(),true);
+        }
+    
 
     $search = $orig_search;
     $result = $orig_result;
