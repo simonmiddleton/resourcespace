@@ -55,15 +55,14 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
                 {
                 # If the field being processed is referenced in the current test 
-                #   and if the field being processed is global or it matches the resource tupe of the field being rendered 
-                if ($s[0]==$fields[$cf]["name"] 
-                    && ($fields[$cf]["resource_type"]==0 || $fields[$cf]["resource_type"]==$field["resource_type"]) ) 
+                if ($s[0]==$fields[$cf]["name"]) 
                     {
                     # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
                     # The script conditions array contains an entry for each governing field
                     $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
                     # Get the node references of the governing field
@@ -73,8 +72,12 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
+					$scriptconditions[$condref]['validtext'] = array();
 					foreach($validvalues as $validvalue)
 						{
+                        # The validtext array is for checking input values instead of their corresponding node references
+                        $scriptconditions[$condref]['validtext'][] = strtolower($validvalue);
+
                         # Convert the value name into a node entry if it is a valid node within the governing field
 						$found_validvalue = get_node_by_name($scriptconditionnodes, $validvalue);
 
@@ -114,7 +117,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "MJB CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
@@ -126,19 +129,41 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 							}
 						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
 							{
+                            if ($forsearchbar) {
+                                $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
 							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+                                jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                                    {
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND DYNAMKKD-INPUT CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+
+                                    // jquery this.val is the text, not a node
+
+
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    });
+                                });
+							</script>
+							<?php
+                            }
+                            else { # Advanced search
+                            ?>
 							<script>
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "MJB DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
 							</script>
 							<?php
+                            }
 
 							// Move on to the next field now
 							continue;
@@ -172,7 +197,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "MJBTEST CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                                     });
                                 });
@@ -202,9 +227,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             } # check next condition
 
         ?>
+        <?php echo "<!-- CHECK CONDITIONS FOR GOVERNED FIELD ".$field['name']." [".$field['ref']."] -->" ;?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
+        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)   
 			{
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
@@ -224,6 +250,20 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
             <?php
+            if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                if ($forsearchbar)
+                    if(!$simple_search_show_dynamic_as_dropdown) {
+                    ?>
+                        // When a dynamic keyword list is rendered as regular input field on simple search, the valid values to check against are the text values (not nodes) 
+                        fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['validtext']); ?>;
+                    <?php
+                    }
+                }
+            ?>
+
+            <?php echo "// CHECK IF GOVERNING ".$scriptcondition['name']." [".$scriptcondition['field']."] VALUE(S) ENABLE DISPLAY";?>
+
+            <?php
 
             # Generate the javascript code necessary to condition the rendered field based on value(s) present in the governing field
 
@@ -233,10 +273,16 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 
             # Prepare fallback selector 
             $jquery_condition_selector = "input[name=\"{$checkname}\"]";
+            $jquery_selector_suffix="";
 
             if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-
+                # Append additional brackets rendered on category tree and dynamic keyword list hidden inputs
+                // if (($scriptcondition['type'] == FIELD_TYPE_CATEGORY_TREE) || ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) {
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) ) {
+                    $jquery_condition_selector = "input[name=\"{$checkname}[]\"]";
+                }
+                
                 # Prepare selector for a checkbox list or a radio button or a dropdown list
                 if (in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS, FIELD_TYPE_DROP_DOWN_LIST))) {
 
@@ -258,6 +304,18 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     }                    
 
                 }
+
+                # Prepare selector for unusual dynamic keyword list configurations
+                if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                    if ($forsearchbar)
+                        if($simple_search_show_dynamic_as_dropdown) {
+                            # Prepare selector for a dynamic keyword list configured to display as a dropdown list on simple search
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                        } else {
+                            # Prepare selector for a dynamic keyword list rendered as regular input field
+                            $jquery_condition_selector = "input[name=\"field_{$scriptcondition['name']}\"]";
+                        }
+                    }
 
                 ?>
                 if(!newfield<?php echo $field['ref']; ?>show)
@@ -344,13 +402,14 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 
     //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
 
-    # Generate 
+    # Generate markup for field
     switch ($field["type"]) {
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
+        # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             { 
 			
