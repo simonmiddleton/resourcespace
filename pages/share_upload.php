@@ -32,7 +32,7 @@ $emailmessage       = getval("message","");
 $messages           = array();
 if($uploadkey != "")
     {
-    $shareinfo      = get_external_shares(array("share_collection"=>$share_collection, "access_key"=>$uploadkey));
+    $shareinfo      = get_external_shares(array("share_collection"=>$share_collection, "access_key"=>$uploadkey, "share_type"=>1));
     if(isset($shareinfo[0]))
         {
         $shareinfo  = $shareinfo[0];
@@ -117,6 +117,8 @@ if($submitted)
             if($result)
                 {
                 $messages[] = $lang["saved"];
+                $shareurl = $baseurl . "/?c=" . $share_collection . "&k=" . $uploadkey;
+                $messages[] = "<a href='" . $shareurl . "'>" . $shareurl  . "</a>";
                 }
             else
                 {
