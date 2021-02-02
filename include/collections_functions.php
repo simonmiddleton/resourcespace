@@ -3176,15 +3176,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if(!$top_actions && checkperm('s') && $pagename === 'collections')
             {
-            // Manage My Collections
-            $data_attribute['url'] = $baseurl_short . 'pages/collection_manage.php';
-            $options[$o]['value']='manage_collections';
-            $options[$o]['label']=$lang['managemycollections'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_COLLECTION;
-            $options[$o]['order_by'] = 60;
-            $o++;
-
             // Collection feedback
             if(isset($collection_data['request_feedback']) && $collection_data['request_feedback'])
                 {
