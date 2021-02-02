@@ -10,14 +10,18 @@ $saved_user_data    = $userdata;
 $saved_userref      = $userref;
 $saved_perms        = $userpermissions;
 $userpermissions    = array("s","g","j*");
+// Command line args are used by staticsync so need to save them
+$savedargv= $argv;
+$savedargc= $argc;
 
 // Set up staticsync to use a folder and make sure it exists.
 $syncdir=$storagedir . "/staticsync/";
-if (!file_exists($syncdir))
+if (file_exists($syncdir))
     {
-    mkdir($syncdir);
+    rcRmdir($syncdir);
     }
 
+mkdir($syncdir);
 // Set up test path
 $test_path=$syncdir . "test_folder/featured/";
 if (!file_exists($test_path))
@@ -98,11 +102,14 @@ file_put_contents($altsuffixpath . "alt_suffix_primary_odd.txt","TEST_ALT_SUFFIX
 file_put_contents($altsuffixpath . "alt_suffix_primary_side.txt","TEST_ALT_SUFFIX_SIDE");
 
 // Run staticsync, but hold back the output (has to be an include not a PHP exec so the above test config is used)
-ob_start();
 $argv=array();
 $argc=0;
+ob_flush();
+ob_start();
+$staticsync_suppress_output=true;
 include (dirname(__FILE__) . "/../../pages/tools/staticsync.php");
 ob_clean();
+ob_start();
 
 // Test A: check the file has gone
 if (file_exists($test_path . "teststatic.jpg"))
@@ -216,6 +223,8 @@ if(!is_array($alts_k)
 $userref            = $saved_userref;
 $userpermissions    = $saved_perms;
 $userdata           = $saved_user_data;
+$argv = $savedargv;
+$argc = $savedargc;
 
 return true;
 
