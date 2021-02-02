@@ -33,11 +33,16 @@ if (getval("save", "") != "" && enforcePostRequest(false))  //check is enforcepo
             }
         else
             {
-            error_alert($lang["error_not_jpeg"]);
+            error_alert($lang["error_not_jpeg"],true);
             exit();
             }
         }
-    set_user_profile($userref,$profile_text,$image_path);
+    $result = set_user_profile($userref,$profile_text,$image_path);
+    if ($result === false)
+        {
+        error_alert($lang["error_upload_failed"]);
+        exit();
+        }
     }
 
 if (getval("delete", "") != "" && enforcePostRequest(false))  //check is enforcepostrequest needed
@@ -49,7 +54,7 @@ $profile_text = get_profile_text($userref);
 $profile_image = get_profile_image($userref);
 
 include "../../include/header.php";
-?>
+?><meta http-equiv="Cache-control" content="no-cache">
 
 <div class="BasicsBox">
 
@@ -69,7 +74,7 @@ include "../../include/header.php";
 
   <div class="Question">
   <label><?php echo $lang["profile_image"] ?></label>
-  <input type="file" accept ="jpg,jpeg" name="profile_image" size="20">
+  <input type="file" accept ="image/jpg, image/jpeg" name="profile_image" size="20">
   <div class="clearerleft"> </div>
   </div>
 
@@ -86,7 +91,7 @@ if ($profile_image != "")
   </p></p>
   <div class="Question">
   <label><?php echo $lang["current_profile"] ?></label>
-  <img src="<?php echo $profile_image ?>" alt="Current profile image" height="200">
+  <img src="<?php echo $profile_image ?>" alt="Current profile image">
   <div class="clearerleft"> </div>
   </div>
 
