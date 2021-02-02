@@ -3826,7 +3826,7 @@ function has_browsebar()
     {
     global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
     return isset($username)
-    && !in_array($pagename, $not_authenticated_pages)
+    && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
     && ('' == $k || $internal_share_access)
     && $browse_bar;
     //   && false == $loginterms ?
