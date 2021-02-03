@@ -158,7 +158,7 @@ if($k == "" && $smart_rtf == 0)
         }
     }
 ?>
-</div> <!-- End of BasicsBox FeaturedSimpleLinks -->
+</div><!-- End of BasicsBox FeaturedSimpleLinks -->
 <script>
 jQuery(document).ready(function ()
     {

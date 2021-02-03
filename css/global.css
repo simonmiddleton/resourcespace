@@ -1362,6 +1362,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 .FeaturedSimpleTile.FullWidth { height: 40px; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleLink { width: 85%; }
 .FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 { background-color: unset; }
+.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="count_resources"] { padding: 3px 5px; border-radius: 8px; font-size: 0.85em; background-color: #2E99E6; }
 .FeaturedSimpleTile.FullWidth .ListTools .ActionsContainer select { margin: 5px 5px; }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents { background-color: rgba(0,0,0,0.4); }
 .FeaturedCallToActionTile.FullWidth .FeaturedSimpleTileContents h2 span { font-size: larger; }

@@ -891,6 +891,7 @@ $lang["unauthorized"] = "Unauthorized";
 $lang["warning_duplicate_shortname_fields"] = "There is already a resource type field with the same shortname. Please make it unique!";
 $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
+$lang["counting_resources"] = "counting resources...";
 
 # Pager
 $lang["next"]="Next";
