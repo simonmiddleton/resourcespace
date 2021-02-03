@@ -2583,12 +2583,11 @@ $lang["action_continue_editing"]="Continue editing";
 $lang["action-addrow"]="Add row";
 
 /* User profile */
-$lang['profile'] = "Profile";
+$lang['profile'] = "My Profile";
 $lang['profile_introtext'] = "Through this page you can enter your profile information and upload a profile image in JPG / JPEG format.";
 $lang['profile_bio'] = "Profile / Bio";
 $lang['profile_image'] = "Profile image";
 $lang['no_profile_image'] = "Profile image not set";
-$lang['profile'] = "Profile";
 $lang['delete_current'] = "Delete profile image";
 $lang['current_profile'] = "Current profile image";
 $lang['error_not_jpeg'] = "The selected file is not in jpg / jpeg format.";

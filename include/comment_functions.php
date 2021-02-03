@@ -238,21 +238,18 @@ EOT;
    
 			echo "<div class='CommentEntryInfoContainer'>";			
 			echo "<div class='CommentEntryInfo'>";
+			if ($comment['profile_image'] != "" && $anonymous_mode != true)
+			    {
+				echo "<div><img src='" . get_profile_image("",$comment['profile_image']). "' id='CommentProfileImage'></div>";
+			    }
 			echo "<div class='CommentEntryInfoCommenter'>";						
 			
 
 			if (empty($comment['name'])) $comment['name'] = $comment['username'];
 			if (!hook("commentername", "all",array("ref"=>$comment["ref"])))
-
-			if ($comment['profile_image'] != "" && $anonymous_mode != true)
-			    {
-				echo "<div class='CommentEntryInfoCommenterName'>"  . "<img src='" . get_profile_image("",$comment['profile_image']). "' id='CommentProfileImage'>". "&nbsp" . htmlspecialchars($comment['name']) . "</div>";
-			    }
-			else
-			    {
-			    echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";		
-				}
-				
+			
+			echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";		
+			
 			if ($comments_show_anonymous_email_address && !empty($comment['email']))
 				{
 				echo "<div class='CommentEntryInfoCommenterEmail'>" . htmlspecialchars ($comment['email']) . "</div>";
@@ -260,7 +257,8 @@ EOT;
 			if  (!empty ($comment['website_url']))
 				{
 				echo "<div class='CommentEntryInfoCommenterWebsite'>" . htmlspecialchars ($comment['website_url']) . "</div>";
-				}								
+				}			
+									
 			echo "</div>";			
 
 

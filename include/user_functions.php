@@ -2520,10 +2520,9 @@ function set_user_profile($user_ref,$profile_text,$image_path)
             }
         }
 
-    # Update user to set user.profile = $profile_text and user.profile_image = $profile_image_name if set by the above.
+    # Update user to set user.profile
     sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '$user_ref'");
-        
-    # Returns boolean - form to display an error message if false returned (will require lang string - "Unable to process image. Check the file specified is of type JPEG")
+
     return true;
     }
 
@@ -2557,7 +2556,7 @@ function delete_profile_image($user_ref)
  * Generate the url to the user's profile image. Fetch the url by the user's id or by the profile image filename. 
  *
  * @param  int     $user_ref   User id of the user who's profile image is requested.
- * @param  string  $by_image   The filename of the profile image to fetch having been collected from the db, user.profile_image separately
+ * @param  string  $by_image   The filename of the profile image to fetch having been collected from the db separately: user.profile_image 
  * 
  * @return string     The url to the user's profile image if available or blank if not set.
  */
@@ -2590,7 +2589,7 @@ function get_profile_image($user_ref = "", $by_image = "")
     }
 
 /**
- * Return user profile based for a defined user. 
+ * Return user profile for a defined user. 
  *
  * @param  int     $user_ref   User id to fetch profile details for.
  * 
