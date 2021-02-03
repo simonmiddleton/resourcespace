@@ -264,8 +264,7 @@ function mplus_resource_get_association_data(array $filters)
         LEFT JOIN resource_node AS rn ON r.ref = rn.resource
         LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
         %s
-            WHERE r.ref > 0
-              AND r.archive = 0
+            WHERE r.archive = 0
               %s # Filters specific to each module configuration (e.g applicable resource types)
               %s # Additional filters
         GROUP BY r.ref

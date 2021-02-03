@@ -152,7 +152,7 @@ function HookMuseumplusAllAddspecialsearch($search)
         }
 
     // @see mplus_validate_association() - this is where we decide if something is invalid
-    return 'SELECT *, museumplus_data_md5, museumplus_technical_id FROM resource WHERE museumplus_data_md5 IS NOT NULL AND museumplus_technical_id IS NULL';
+    return 'SELECT *, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref > 0 AND museumplus_data_md5 IS NOT NULL AND museumplus_technical_id IS NULL';
     }
 
 function HookMuseumplusAllHandleuserref()
