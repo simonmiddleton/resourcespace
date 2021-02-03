@@ -99,7 +99,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     if($resource_type_field !== false)
         {
         // We go one level at a time so we don't need it to search recursively even if this is a FIELD_TYPE_CATEGORY_TREE
-        $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent);
+        $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent, $resource_type_field);
         $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
             {
             return array(

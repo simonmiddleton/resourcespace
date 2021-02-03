@@ -1291,9 +1291,10 @@ function get_smart_theme_headers()
  * @param  integer $field
  * @param  boolean $is_category_tree
  * @param  integer $parent
- * @return void
+ * @param  array   $field_meta - resource type field metadata
+ * @return array
  */
-function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
+function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array $field_meta = array())
     {
     global $smart_themes_omit_archived;
 
@@ -1307,6 +1308,12 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         }
 
     $nodes = get_nodes($field, ((0 == $parent) ? null : $parent), $recursive);
+
+    if(isset($field_meta['automatic_nodes_ordering']) && (bool) $field_meta['automatic_nodes_ordering'])
+                {
+                $nodes = reorder_nodes($nodes);
+                $nodes = array_values($nodes); // reindex nodes array
+                }
 
     if(0 === count($nodes))
         {
