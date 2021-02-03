@@ -1,6 +1,6 @@
 <?php
 include "../../include/db.php";
-include "../../include/authenticate.php";  //FIX CSRF ERROR
+include "../../include/authenticate.php";
 include_once '../../include/config_functions.php';
 include_once "../../include/user_functions.php";
 include_once "../../include/general_functions.php";
@@ -14,7 +14,7 @@ if (isset($anonymous_login) && ($anonymous_login == $username))
 
 global $userref;
 
-if (getval("save", "") != "" && enforcePostRequest(false))  //check is enforcepostrequest needed
+if (getval("save", "") != "" && enforcePostRequest(false))
     {
     $image_path = "";
     $profile_text = getval("profile_bio", "");
@@ -45,7 +45,7 @@ if (getval("save", "") != "" && enforcePostRequest(false))  //check is enforcepo
         }
     }
 
-if (getval("delete", "") != "" && enforcePostRequest(false))  //check is enforcepostrequest needed
+if (getval("delete", "") != "" && enforcePostRequest(false))
     {
     delete_profile_image($userref);
     }
@@ -56,13 +56,27 @@ $profile_image = get_profile_image($userref);
 include "../../include/header.php";
 ?><meta http-equiv="Cache-control" content="no-cache">
 
+<script>
+function checkFileType(image_supplied)
+{
+    var image = image_supplied.profile_image.value;
+    var pos = image.lastIndexOf(".");
+    var ext = image.toLowerCase().substr(pos);
+    if (image == "") return true;
+    var ext_types = [".jpg", ".jpeg"];
+    if (image != "" && ext_types.includes(ext)) return true;
+    document.getElementById("profile_image_validate").innerHTML = "<?php echo $lang["error_not_jpeg"]; ?>";
+    return false;
+}
+</script>
+
 <div class="BasicsBox">
 
   <h1><?php echo $lang["profile"]?></h1>
   <p><?php echo $lang["profile_introtext"];?>&nbsp;<?php render_help_link('user/profile'); ?></p>
   </p>
 
-  <form method="post" action="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" enctype="multipart/form-data">
+  <form method="post" action="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" enctype="multipart/form-data" onsubmit=" return checkFileType(this);">
 
   <?php generateFormToken("user_profile_edit"); ?>
 
@@ -75,6 +89,7 @@ include "../../include/header.php";
   <div class="Question">
   <label><?php echo $lang["profile_image"] ?></label>
   <input type="file" accept ="image/jpg, image/jpeg" name="profile_image" size="20">
+  <div id = "profile_image_validate" style="font-size:10;color:red;"></div>
   <div class="clearerleft"> </div>
   </div>
 

@@ -525,6 +525,7 @@ function save_user($ref)
     // Save user details, data is taken from the submitted form.
     if('' != getval('deleteme', ''))
         {
+        delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '{$ref}'");
 
         include_once dirname(__FILE__) ."/dash_functions.php";
@@ -2498,12 +2499,15 @@ function set_user_profile($user_ref,$profile_text,$image_path)
             return false;
             }
         
+        # Remove previous profile image.
+        delete_profile_image($user_ref);
+
         # Create profile image filename .
-        $profile_image_name = md5($scramble_key . $user_ref. date("Ymd")) . "." .$extension;
+        $profile_image_name = md5($scramble_key . $user_ref . time()) . "." .$extension;
         $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
         
         # Create profile image - cropped to square from centre.
-        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
         $output = run_command($command);
 
         # Store reference to user image.
@@ -2535,14 +2539,18 @@ function delete_profile_image($user_ref)
     global $storagedir;
 
     $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
-    $path_to_file = $storagedir . '/user_profiles' . '/' . $profile_image_name;
-
-    if (file_exists($path_to_file))
-        {
-        unlink($path_to_file);
-        }
     
-    sql_query("update user set profile_image = '' where ref = '$user_ref'");
+    if ($profile_image_name != "")
+        {
+        $path_to_file = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+
+        if (file_exists($path_to_file))
+            {
+            unlink($path_to_file);
+            }
+    
+        sql_query("update user set profile_image = '' where ref = '$user_ref'");
+        }
     }
     
 /**
