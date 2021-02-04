@@ -825,3 +825,11 @@ function api_update_related_resource($ref,$related,$add=true)
     $related = explode(",",$related);
     return update_related_resource($ref,$related,$add);
     }
+
+function api_get_users($find="")
+    {
+    // Forward to the internal function - with "usepermissions" locked to TRUE.
+    // Return specific columns only as there's sensitive information in the others such as password/session key.
+    $return=array();
+    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
+    }

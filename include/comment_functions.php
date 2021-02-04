@@ -97,6 +97,9 @@ function comments_submit()
 				"'${body}'" .							
 			")";
 	sql_query($sql);
+
+	// Notify anyone tagged.
+	comments_notify_tagged($body,$userref,$resource_ref,$collection_ref);
 	}
 
 /**
@@ -116,7 +119,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		return false;
 		}
 		
-	global $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
+	global $baseurl, $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
 	
 	$anonymous_mode = (empty ($username) || $username == $anonymous_login);		// show extra fields if commenting anonymously
 	
@@ -142,6 +145,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		
 		echo<<<EOT
 
+		<script src="${baseurl}/lib/js/tagging.js"></script>
 		<script type="text/javascript">
 		
 			var regexEmail = new RegExp ("${regex_email}");
@@ -191,7 +195,8 @@ EOT;
         echo <<<EOT
 				<input id="comment_form_collection_ref" type="hidden" name="collection_ref" value="${collection_ref}"></input>
 				<input id="comment_form_resource_ref" type="hidden" name="resource_ref" value="${resource_ref}"></input>				
-				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}"></textarea>
+				<textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="${comments_max_characters}" placeholder="${lang['comments_body-placeholder']}" onkeyup="TaggingProcess(this)"></textarea>
+				
 EOT;
 		
 		if ($anonymous_mode)			
@@ -360,4 +365,42 @@ EOT;
 			
 		}			
 		if ($level == 1)  echo "</div>";  // end of comments_container
+	}
+
+/**
+ * Notify anyone tagged when a new comment is posted
+ *
+ * @param  string $comment       The comment body
+ * @param  integer $from_user    Who posted the comment
+ * @param  integer $resource     If commenting on a resource, the resource ID
+ * @param  integer $collection   If commenting on a collection, the collection ID
+ *
+ * @return void
+ */
+function comments_notify_tagged($comment,$from_user,$resource=null,$collection=null)
+	{
+	// Find tagged users.
+	$success=preg_match_all("/@.*? /",$comment . " ", $tagged, PREG_PATTERN_ORDER);
+	if (!$success) {return true;} // Nothing to do, return out.
+    foreach ($tagged[0] as $tag)
+    	{
+		$tag=substr($tag,1);$tag=trim($tag); // Get just the username.
+		$user=get_user_by_username($tag); // Find the matching user ID
+		// No match but there's an underscore? Try replacing the underscore with a space and search again. Spaces are swapped to underscores when tagging.
+		if ($user===false) {$user=get_user_by_username(str_replace("_"," ",$tag));}
+
+		if ($user>0)
+			{
+			// Notify them.
+
+			// Build a URL based on whether this is a resource or collection
+			global $baseurl,$userref,$lang;
+			$url=$baseurl . "/?" . (is_null($resource)?"c":"r") . "=" . (is_null($resource)?$collection:$resource);
+
+			// Send the message.
+			message_add(array($user),$lang["tagged_notification"] . " " . $comment,$url,$userref);
+			}
+
+		}
+	return true;
 	}
