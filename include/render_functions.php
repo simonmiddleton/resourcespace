@@ -4349,8 +4349,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
 * 
 * @param array $ctx    Context data to allow caller code to decide rendering requirements
 * @param array $items  List of items to render (featured collection category, actual collection or smart collection)
-* 
-* @return void
 */
 function render_featured_collections(array $ctx, array $items)
     {
@@ -4435,6 +4433,10 @@ function render_featured_collections(array $ctx, array $items)
         if($is_featured_collection && collection_writeable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_edit;
+            }
+        if($is_featured_collection)
+            {
+            $render_ctx['show_resources_count'] = true;
             }
 
 
@@ -4538,6 +4540,7 @@ function render_featured_collection(array $ctx, array $fc)
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+    $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
@@ -4557,7 +4560,7 @@ function render_featured_collection(array $ctx, array $fc)
     $html_contents_h2_style = array();
     if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
         {
-        $html_contents_h2 .= " <div class=\"NewFlag\">{$lang['newflag']}</div>";
+        $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', htmlspecialchars($lang['newflag']));
         }
     if($full_width)
         {
@@ -4565,7 +4568,14 @@ function render_featured_collection(array $ctx, array $fc)
         $html_contents_h2_style[] = "max-width: unset;";
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
-        $html_contents_h2 .= sprintf(' <span data-tag="count_resources">%s</span>', htmlspecialchars($lang['counting_resources']));
+        
+        if($show_resources_count)
+            {
+            $html_contents_h2 .= sprintf(
+                ' <span data-tag="resources_count" data-fc-ref="%s">%s</span>',
+                htmlspecialchars($fc['ref']),
+                htmlspecialchars($lang['counting_resources']));
+            }
         }
 
 
