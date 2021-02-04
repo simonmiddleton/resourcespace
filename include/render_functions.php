@@ -4569,7 +4569,7 @@ function render_featured_collection(array $ctx, array $fc)
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
         
-        if($show_resources_count)
+        if($show_resources_count && !$is_smart_featured_collection)
             {
             $html_contents_h2 .= sprintf(
                 ' <span data-tag="resources_count" data-fc-ref="%s">%s</span>',

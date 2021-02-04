@@ -365,6 +365,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}
@@ -406,6 +407,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}

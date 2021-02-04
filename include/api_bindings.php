@@ -825,3 +825,15 @@ function api_update_related_resource($ref,$related,$add=true)
     $related = explode(",",$related);
     return update_related_resource($ref,$related,$add);
     }
+
+function api_get_collections_resource_count($refs)
+    {
+    if(checkperm('b'))
+        {
+        return [];
+        }
+
+    $cols = array_filter(explode(',', $refs), 'collection_readable');
+
+    return get_collections_resource_count($cols);
+    }
