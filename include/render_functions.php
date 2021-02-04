@@ -130,7 +130,13 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
 							{
                             if ($forsearchbar) {
-                                $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
+                                if ($simple_search_show_dynamic_as_dropdown) {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                }
+                                else {
+                                    $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
+                                }
 							?>
 							<script>
 							jQuery(document).ready(function()
@@ -138,11 +144,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND DYNAMKKD-INPUT CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
-
-                                    // jquery this.val is the text, not a node
-
-
+                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                                     });
                                 });
