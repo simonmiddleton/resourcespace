@@ -2950,10 +2950,14 @@ function check_order_by_in_table_joins($order_by)
 function get_collections_resource_count(array $refs)
     {
     $return = [];
-    $refs = array_filter($refs, 'is_int_loose');
 
     foreach($refs as $ref)
         {
+        if(!(is_int_loose($ref) && $ref > 0))
+            {
+            continue;
+            }
+
         $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
         $resources = sql_query($sql, 'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
         $return[$ref] = count($resources);

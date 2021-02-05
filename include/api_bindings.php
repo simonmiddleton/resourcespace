@@ -826,7 +826,7 @@ function api_update_related_resource($ref,$related,$add=true)
     return update_related_resource($ref,$related,$add);
     }
 
-function api_get_collections_resource_count($refs)
+function api_get_collections_resource_count(string $refs)
     {
     if(checkperm('b'))
         {
