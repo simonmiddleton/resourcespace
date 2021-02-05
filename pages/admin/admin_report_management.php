@@ -95,7 +95,7 @@ function addColumnHeader($orderName, $labelKey)
             $edit_url_extra = ($order_by == "name" ? $edit_url_extra : array_merge($edit_url_extra, array("orderby" => $order_by)));
             $edit_url = generateURL("{$baseurl_short}pages/admin/admin_report_management_edit.php", array("ref" => $report["ref"]), $edit_url_extra);
 			$view_url="{$baseurl_short}pages/team/team_report.php?report={$report['ref']}&backurl=" . urlencode($url);
-            $a_href = (db_use_multiple_connection_modes() || $execution_lockout ? $view_url : $edit_url);
+            $a_href = (!(!db_use_multiple_connection_modes() && $execution_lockout) ? $edit_url : $view_url);
             ?>
             <tr>
 				<td>
