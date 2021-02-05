@@ -763,7 +763,7 @@ function email_reset_link($email,$newuser=false)
 function auto_create_user_account($hash="")
     {
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash;
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -904,10 +904,8 @@ function auto_create_user_account($hash="")
         $templatevars['userrequestcustom']=strip_tags($customContents);
         $templatevars['linktouser']="$baseurl?u=$new";
 
-        $message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
         
-        $notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
-       
+        
        // Need to global the usergroup so that we can find the appropriate admins
        global $usergroup;
        $approval_notify_users=get_notification_users("USER_ADMIN"); 
@@ -918,20 +916,37 @@ function auto_create_user_account($hash="")
             get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
             if(!$send_message){continue;} 
             
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications);    
+            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications); 
+            
+            // get preferred language for approval_notify_user
+            $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
+
+            # Include language file
+            $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
+            if(file_exists($messagelangfile))
+                {
+                include $messagelangfile;
+                }
+
             if($send_email && $approval_notify_user["email"]!="")
                 {
+                $message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
                 send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
                 }        
             else
                 {
-                $message_users[]=$approval_notify_user["ref"];
+                $notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
+                message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+          
                 }
             }
-        if (count($message_users)>0)
+
+        // set language back to cookie setting
+        $language = setLanguage();
+        $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        if(file_exists($langfile))
             {
-            // Send a message with long timeout (30 days)
-            message_add($message_users,$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+            include $langfile;
             }
         }
 
@@ -948,7 +963,7 @@ function email_user_request()
     {
     // E-mails the submitted user request form to the team.
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in;
+           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$defaultlanguage;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -961,10 +976,7 @@ function email_user_request()
         $user_registration_opt_in_message .= "\n\n{$lang["user_registration_opt_in_message"]}";
         }
 
-    // Build a message
-    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
-
+    
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();
 
@@ -979,8 +991,21 @@ function email_user_request()
 
         get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
 
+        // get preferred language for approval_notify_user
+        $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
+
+        # Include language file
+        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
+        if(file_exists($messagelangfile))
+            {
+            include $messagelangfile;
+            }
+        
         if($send_email && '' != $approval_notify_user['email'])
             {
+            // Build a message
+            $message = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
+       
             send_mail(
                 $approval_notify_user['email'],
                 "{$applicationname}: {$lang['requestuserlogin']} - {$name}",
@@ -993,14 +1018,17 @@ function email_user_request()
             }
         else
             {
-            $message_users[] = $approval_notify_user['ref'];
+            $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
+
+            message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
             }
         }
-
-    if(0 < count($message_users))
+    // set language back to cookie setting
+    $language = setLanguage();
+    $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+    if(file_exists($langfile))
         {
-        // Send a message with long timeout (30 days)
-        message_add($message_users, $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
+        include $langfile;
         }
 
     // Send a confirmation e-mail to requester
@@ -2100,7 +2128,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
             {
             case "USER_ADMIN";
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
