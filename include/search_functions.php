@@ -2945,7 +2945,8 @@ function check_order_by_in_table_joins($order_by)
 * 
 * @param array $refs List of collection IDs
 * 
-* @return array Returns table of collections and their total resource count (taking into account access controls)
+* @return array Returns table of collections and their total resource count (taking into account access controls). Please
+*               note that the returned array might NOT contain keys for all the input IDs (e.g validation failed).
 */
 function get_collections_resource_count(array $refs)
     {
@@ -2959,6 +2960,11 @@ function get_collections_resource_count(array $refs)
             }
 
         $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
+        if(!(is_string($sql) && trim($sql) !== ''))
+            {
+            continue;
+            }
+
         $resources = sql_query($sql, 'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
         $return[$ref] = count($resources);
         }
