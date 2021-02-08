@@ -129,7 +129,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 	
 	// set 'name' to either user.fullname, comment.fullname or default 'Anonymous'
 	
-	$sql = 	"select c.ref thisref, c.ref_parent, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, parent.created 'responseToDateTime', " .			
+	$sql = 	"select c.ref thisref, c.ref_parent, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, u.profile_image, parent.created 'responseToDateTime', " .			
 			"IFNULL(IFNULL(c.fullname, u.fullname), '" . $lang['comments_anonymous-user'] . "') 'name' ," .  			
 			"IFNULL(IFNULL(parent.fullname, uparent.fullname), '" . $lang['comments_anonymous-user'] . "') 'responseToName' " .  			
 			"from comment c left join (user u) on (c.user_ref = u.ref) left join (comment parent) on (c.ref_parent = parent.ref) left join (user uparent) on (parent.user_ref = uparent.ref) ";		
@@ -243,10 +243,16 @@ EOT;
    
 			echo "<div class='CommentEntryInfoContainer'>";			
 			echo "<div class='CommentEntryInfo'>";
+			if ($comment['profile_image'] != "" && $anonymous_mode != true)
+			    {
+				echo "<div><img src='" . get_profile_image("",$comment['profile_image']). "' id='CommentProfileImage'></div>";
+			    }
 			echo "<div class='CommentEntryInfoCommenter'>";						
 			
+
 			if (empty($comment['name'])) $comment['name'] = $comment['username'];
 			if (!hook("commentername", "all",array("ref"=>$comment["ref"])))
+			
 			echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";		
 			
 			if ($comments_show_anonymous_email_address && !empty($comment['email']))
@@ -256,9 +262,11 @@ EOT;
 			if  (!empty ($comment['website_url']))
 				{
 				echo "<div class='CommentEntryInfoCommenterWebsite'>" . htmlspecialchars ($comment['website_url']) . "</div>";
-				}								
+				}			
+									
 			echo "</div>";			
-			
+
+
 			echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";			
 			if ($comment['responseToDateTime']!="")
 				{

@@ -525,6 +525,7 @@ function save_user($ref)
     // Save user details, data is taken from the submitted form.
     if('' != getval('deleteme', ''))
         {
+        delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '{$ref}'");
 
         include_once dirname(__FILE__) ."/dash_functions.php";
@@ -2487,4 +2488,142 @@ function save_usergroup($ref,$groupoptions)
         return $newgroup;
         }
     return false;
+    }
+
+/**
+ * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
+ *
+ * @param  int     $user_ref         User id of user who's profile is being set.
+ * @param  string  $profile_text     User entered profile description text (bio).
+ * @param  string  $image_path       Path to temp file created if user chose to upload a profile image.
+ * 
+ * @return boolean     If an error is encountered saving the profile image return will be false.
+ */
+function set_user_profile($user_ref,$profile_text,$image_path)
+    {
+    global $storagedir,$imagemagick_path, $scramble_key, $config_windows;
+    
+    # Check for presence of filestore/user_profiles directory - if it doesn't exist, create it.
+    if (!is_dir($storagedir.'/user_profiles'))
+        {
+        mkdir($storagedir.'/user_profiles',0777);
+        }
+
+    # Locate imagemagick.
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath == false) 
+        {
+        debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); 
+        return false;
+        }
+    
+    if ($image_path != "" && file_exists($image_path))
+        {
+        # Work out the extension.
+	    $extension = explode(".",$image_path);
+        $extension = trim(strtolower($extension[count($extension)-1]));
+        if ($extension != 'jpg' && $extension != 'jpeg')
+            {
+            return false;
+            }
+        
+        # Remove previous profile image.
+        delete_profile_image($user_ref);
+
+        # Create profile image filename .
+        $profile_image_name = md5($scramble_key . $user_ref . time()) . "." .$extension;
+        $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+        
+        # Create profile image - cropped to square from centre.
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
+        $output = run_command($command);
+
+        # Store reference to user image.
+        sql_query("update user set profile_image = '$profile_image_name' where ref = '$user_ref'");
+
+        # Remove temp file.
+        if (file_exists($profile_image_path))
+            {
+            unlink($image_path);
+            }
+        }
+
+    # Update user to set user.profile
+    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '$user_ref'");
+
+    return true;
+    }
+
+/**
+ * Delete a user's profile image. This will first remove the file and then update the db to clear the existing value.
+ *
+ * @param  mixed  $user_ref   User id of the user who's profile image is to be deleted.
+ * 
+ * @return void
+ */
+function delete_profile_image($user_ref)
+    {
+    global $storagedir;
+
+    $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+    
+    if ($profile_image_name != "")
+        {
+        $path_to_file = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+
+        if (file_exists($path_to_file))
+            {
+            unlink($path_to_file);
+            }
+    
+        sql_query("update user set profile_image = '' where ref = '$user_ref'");
+        }
+    }
+    
+/**
+ * Generate the url to the user's profile image. Fetch the url by the user's id or by the profile image filename. 
+ *
+ * @param  int     $user_ref   User id of the user who's profile image is requested.
+ * @param  string  $by_image   The filename of the profile image to fetch having been collected from the db separately: user.profile_image 
+ * 
+ * @return string     The url to the user's profile image if available or blank if not set.
+ */
+function get_profile_image($user_ref = "", $by_image = "")
+    {
+    global $storagedir, $baseurl;
+
+    if (is_dir($storagedir.'/user_profiles'))
+        {
+        # Only check the db if the profile image name has not been provided.
+        if ($by_image == "" && $user_ref != "")
+            {
+            $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+            }
+        else
+            {
+            $profile_image_name = $by_image;
+            }
+
+        if ($profile_image_name != "")
+            {
+            return $baseurl . '/filestore/user_profiles' . '/' . $profile_image_name;
+            }
+        else
+            {
+            return "";
+            }
+        }
+    return "";    
+    }
+
+/**
+ * Return user profile for a defined user. 
+ *
+ * @param  int     $user_ref   User id to fetch profile details for.
+ * 
+ * @return string     Profile details for the requested user.
+ */
+function get_profile_text($user_ref)
+    {
+    return sql_value("select profile_text value from user where ref = '$user_ref'","");
     }

@@ -2582,6 +2582,17 @@ $lang["action_submit_review"]="Submit for review";
 $lang["action_continue_editing"]="Continue editing";
 $lang["action-addrow"]="Add row";
 
+/* User profile */
+$lang['profile'] = "My Profile";
+$lang['profile_introtext'] = "Through this page you can enter your profile information and upload a profile image in JPG / JPEG format.";
+$lang['profile_bio'] = "Profile / Bio";
+$lang['profile_image'] = "Profile image";
+$lang['no_profile_image'] = "Profile image not set";
+$lang['delete_current'] = "Delete profile image";
+$lang['current_profile'] = "Current profile image";
+$lang['error_not_jpeg'] = "The selected file is not in jpg / jpeg format.";
+$lang['error_upload_failed'] = "An error occurred while uploading the file.";
+
 /* Messaging */
 $lang["seen"]="Seen";
 $lang["from"]="From";
