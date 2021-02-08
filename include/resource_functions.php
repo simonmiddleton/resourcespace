@@ -2272,11 +2272,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $newvalues_translated,
                 function (&$value, $index)
                     {
-                    $value = i18n_get_translated($value);
+                    $value = mb_strtolower(i18n_get_translated($value));
                     }
             );
             // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-            if (in_array(i18n_get_translated($nodedata["name"]), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
+            if (in_array(mb_strtolower(i18n_get_translated($nodedata["name"])), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
                 {
                 $nodes_to_add[] = $nodedata["ref"];
                 // We need to add all parent nodes for category trees
@@ -2286,9 +2286,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
                         {
                         $nodes_to_add[]=$parent_node_ref;
-                        if (!in_array(i18n_get_translated($parent_node_name), $newvalues_translated))
+                        if (!in_array(mb_strtolower(i18n_get_translated($parent_node_name)), $newvalues_translated))
                             {
-                            $value = $parent_node_name . "," . $value;    
+                            $value = $parent_node_name . "," . $value; 
                             }
                         }
                     }

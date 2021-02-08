@@ -68,7 +68,7 @@ switch ($type)
             $collectiondata = get_collection($collection);  
             }
 
-        render_actions($collectiondata, true, false);
+        render_actions($collectiondata, true, false, "", $result, true);
         break;
 
     case "resource":

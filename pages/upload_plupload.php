@@ -86,16 +86,25 @@ if($resource_type == "")
 # Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
 resource_type_config_override($resource_type);
 
+$hidden_collection = false;
 # Create a new collection?
 if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == $chunks-1)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
-	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
+	if ($collectionname=="")
+        {
+        $collectionname = "Upload " . date("YmdHis"); # Do not translate this string, the collection name is translated when displayed!
+        $hidden_collection = true;
+        } 
 	$collection_add=create_collection($userref,$collectionname);
 	if (getval("public",'0') == 1)
 		{
 		collection_set_public($collection_add);
 		}
+    if ($hidden_collection)
+        {
+        show_hide_collection($collection_add, false, $userref);
+        }
 	}
 if ($upload_then_edit && $replace == "" && $replace_resource == "")
     {
