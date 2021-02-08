@@ -1604,6 +1604,7 @@ if($search_anchors)
 function toggle_addremove_to_collection_icon(el)
     {
     var icon = jQuery(el);
+    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref'));
 
     if(icon.hasClass('addToCollection'))
         {
@@ -1616,11 +1617,16 @@ function toggle_addremove_to_collection_icon(el)
         }
     else if(icon.hasClass('removeFromCollection'))
         {
-        icon.addClass('DisplayNone');
-        var atc = icon.siblings('.addToCollection');
+        var atc = resource_shell.find('div.ResourcePanelIcons > a.addToCollection');
         if(atc.length > 0)
             {
             jQuery(atc[0]).removeClass('DisplayNone');
+            }
+
+        var rfc = atc.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).addClass('DisplayNone');
             }
         }
 
