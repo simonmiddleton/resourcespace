@@ -1335,6 +1335,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 default:
                     var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
                     var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
+                    var option_no_ajax = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('no-ajax');
 
                     // If action option has a defined data-callback attribute, then we can call it
                     // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
@@ -1347,7 +1348,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     // If action option has a defined data-url attribute, then we can CentralSpaceLoad it
                     if(typeof option_url !== "undefined")
                         {
-                        CentralSpaceLoad(option_url, true);
+                        if (typeof option_no_ajax == "undefined")
+                            {
+                            CentralSpaceLoad(option_url, true);
+                            }
+                        else
+                            {
+                            window.location.href = option_url;
+                            }
                         }
     
                     break;
