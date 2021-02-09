@@ -3874,6 +3874,7 @@ function createTempFile($path, $uniqid, $filename)
 */
 function stripMetadata($file_path)
     {
+    debug_function_call('stripMetadata', func_get_args());
     $exiftool_fullpath = get_utility_path('exiftool');
 
     if($exiftool_fullpath === false)
@@ -3901,6 +3902,7 @@ function stripMetadata($file_path)
 
 function write_metadata($path, $ref, $uniqid="")
 	{
+    debug_function_call('write_metadata', func_get_args());
 	// copys the file to tmp and runs exiftool on it	
 	// uniqid tells the tmp file to be placed in an isolated folder within tmp
 	global $exiftool_remove_existing, $storagedir, $exiftool_write, $exiftool_write_option, $exiftool_no_process, $mysql_charset, $exiftool_write_omit_utf8_conversion;
@@ -3915,18 +3917,21 @@ function write_metadata($path, $ref, $uniqid="")
     # Check if an attempt to write the metadata shall be performed.
 	if(false != $exiftool_fullpath && $exiftool_write && $exiftool_write_option && !in_array($extension, $exiftool_no_process))
 		{
+        debug("[write_metadata()][ref={$ref}] Attempting to write metadata...");
         // Trust Exiftool's list of writable formats 
         $writable_formats = run_command("{$exiftool_fullpath} -listwf");
         $writable_formats = str_replace("\n", "", $writable_formats);
         $writable_formats_array = explode(" ", $writable_formats);
         if(!in_array(strtoupper($extension), $writable_formats_array))
             {
+            debug("[write_metadata()][ref={$ref}] Extension '{$extension}' not in writable_formats_array - " . json_encode($writable_formats_array));
             return false;
             }
 
 		$tmpfile = createTempFile($path, $uniqid, '');
 		if($tmpfile === false)
             {
+            debug("[write_metadata()][ref={$ref}] Unable to create temp file!");
             return false;
             }
 
@@ -3938,6 +3943,7 @@ function write_metadata($path, $ref, $uniqid="")
         if($exiftool_remove_existing)
             {
             $command = stripMetadata(null) . ' ';
+            debug("[write_metadata()][ref={$ref}] Removing existing metadata. Command: ". json_encode($command));
             }
 
         $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
@@ -4025,8 +4031,8 @@ function write_metadata($path, $ref, $uniqid="")
 	                            {
                                 $keyword = trim($keyword);
 	                            if ($keyword != "")
-	                            	{    
-									debug("write_metadata - writing keyword:" . $keyword);
+	                            	{
+                                    debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
 									$writtenfields[$group_tag].="," . $keyword;
 										 
 									# Convert the data to UTF-8 if not already.
@@ -4043,8 +4049,8 @@ function write_metadata($path, $ref, $uniqid="")
                             // The new value is blank or already included in what is being written, skip to next group tag
                             continue 2; # @see https://www.php.net/manual/en/control-structures.continue.php note
                             }                               
-                        $writtenfields[$group_tag]=$writevalue;                          
-                        debug ("write_metadata - updating tag " . $group_tag);
+                        $writtenfields[$group_tag]=$writevalue;
+                        debug("[write_metadata()][ref={$ref}] Updating tag '{$group_tag}' with value '{$writevalue}'");
                         # Write as is, convert the data to UTF-8 if not already.
                         
                         global $strip_rich_field_tags;
@@ -4070,6 +4076,7 @@ function write_metadata($path, $ref, $uniqid="")
        }
     else
         {
+        debug("[write_metadata()][ref={$ref}] Did not perform - write metadata!");
         return false;
         }
     }
