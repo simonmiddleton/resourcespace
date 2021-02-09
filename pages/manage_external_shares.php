@@ -42,7 +42,7 @@ if($delete_access_key != "" && enforcePostRequest($ajax))
         'success' => false
     );
 
-    if($deleteresource != "")
+    if($deleteresource != "" && $deleteresource != "-")
         {
         delete_resource_access_key($deleteresource, $delete_access_key);
         $response['success'] = true;
