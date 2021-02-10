@@ -1126,7 +1126,7 @@ else
 					$success = is_writable($storagedir);
 					if ($success===false)
 						{
-						$result = $lang["status-warning"] . ": " . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
+						$result = $lang["status-warning"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
 						$pass = false;
 						}
 					else

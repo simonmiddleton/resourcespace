@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 # User functions
 # Functions to create, edit and generally deal with user accounts
 
@@ -525,6 +529,7 @@ function save_user($ref)
     // Save user details, data is taken from the submitted form.
     if('' != getval('deleteme', ''))
         {
+        delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '{$ref}'");
 
         include_once dirname(__FILE__) ."/dash_functions.php";
@@ -763,7 +768,7 @@ function email_reset_link($email,$newuser=false)
 function auto_create_user_account($hash="")
     {
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash;
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -904,35 +909,51 @@ function auto_create_user_account($hash="")
         $templatevars['userrequestcustom']=strip_tags($customContents);
         $templatevars['linktouser']="$baseurl?u=$new";
 
-        $message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
-        
-        $notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
-       
-       // Need to global the usergroup so that we can find the appropriate admins
-       global $usergroup;
-       $approval_notify_users=get_notification_users("USER_ADMIN"); 
-       $message_users=array();
-       global $user_pref_user_management_notifications, $email_user_notifications;
-       foreach($approval_notify_users as $approval_notify_user)
+        // Need to global the usergroup so that we can find the appropriate admins
+        global $usergroup;
+        $approval_notify_users=get_notification_users("USER_ADMIN"); 
+        $message_users=array();
+        global $user_pref_user_management_notifications, $email_user_notifications;
+
+        // get array of preferred languages for notify users
+        $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
+        // get array of language strings for selected languages
+        $language_strings_all = get_languages_notify_users($languages_approval_notify_users);  
+         
+        foreach($approval_notify_users as $approval_notify_user)
             {
             get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
             if(!$send_message){continue;} 
             
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications);    
+            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications); 
+            
+            // get preferred language for approval_notify_user
+            $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
+
+            // get preferred language for approval_notify_user
+            $lang_pref = $language_strings_all[$message_language];
+
             if($send_email && $approval_notify_user["email"]!="")
                 {
-                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
+                $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
+                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
                 }        
             else
                 {
-                $message_users[]=$approval_notify_user["ref"];
+                $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
+                message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+          
                 }
             }
-        if (count($message_users)>0)
-            {
-            // Send a message with long timeout (30 days)
-            message_add($message_users,$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
-            }
+
+             // set language back to cookie setting
+          $language = setLanguage();
+          $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+          if(file_exists($langfile))
+              {
+              include $langfile;
+              }
+      
         }
 
     return true;
@@ -948,7 +969,7 @@ function email_user_request()
     {
     // E-mails the submitted user request form to the team.
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in;
+           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$defaultlanguage;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -961,12 +982,14 @@ function email_user_request()
         $user_registration_opt_in_message .= "\n\n{$lang["user_registration_opt_in_message"]}";
         }
 
-    // Build a message
-    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
-
+    
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();
+
+    // get array of preferred languages for notify users
+    $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
+    // get array of language strings for selected languages
+    $language_strings_all = get_languages_notify_users($languages_approval_notify_users);    
 
     foreach($approval_notify_users as $approval_notify_user)
         {
@@ -979,11 +1002,20 @@ function email_user_request()
 
         get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
 
+        // get preferred language for approval_notify_user
+        $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
+
+        // get preferred language for approval_notify_user
+        $lang_pref = $language_strings_all[$message_language];
+
         if($send_email && '' != $approval_notify_user['email'])
             {
+            // Build a message
+            $message = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
+       
             send_mail(
                 $approval_notify_user['email'],
-                "{$applicationname}: {$lang['requestuserlogin']} - {$name}",
+                "{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",
                 $message,
                 '',
                 $user_email,
@@ -993,14 +1025,17 @@ function email_user_request()
             }
         else
             {
-            $message_users[] = $approval_notify_user['ref'];
+            $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
+
+            message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
             }
         }
-
-    if(0 < count($message_users))
+    // set language back to cookie setting
+    $language = setLanguage();
+    $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+    if(file_exists($langfile))
         {
-        // Send a message with long timeout (30 days)
-        message_add($message_users, $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
+        include $langfile;
         }
 
     // Send a confirmation e-mail to requester
@@ -2100,7 +2135,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
             {
             case "USER_ADMIN";
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
@@ -2459,4 +2494,184 @@ function save_usergroup($ref,$groupoptions)
         return $newgroup;
         }
     return false;
+    }
+
+
+ 
+/**
+ * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
+ *
+ * @param  int     $user_ref         User id of user who's profile is being set.
+ * @param  string  $profile_text     User entered profile description text (bio).
+ * @param  string  $image_path       Path to temp file created if user chose to upload a profile image.
+ * 
+ * @return boolean     If an error is encountered saving the profile image return will be false.
+ */
+function set_user_profile($user_ref,$profile_text,$image_path)
+    {
+    global $storagedir,$imagemagick_path, $scramble_key, $config_windows;
+    
+    # Check for presence of filestore/user_profiles directory - if it doesn't exist, create it.
+    if (!is_dir($storagedir.'/user_profiles'))
+        {
+        mkdir($storagedir.'/user_profiles',0777);
+        }
+
+    # Locate imagemagick.
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath == false) 
+        {
+        debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); 
+        return false;
+        }
+    
+    if ($image_path != "" && file_exists($image_path))
+        {
+        # Work out the extension.
+	    $extension = explode(".",$image_path);
+        $extension = trim(strtolower($extension[count($extension)-1]));
+        if ($extension != 'jpg' && $extension != 'jpeg')
+            {
+            return false;
+            }
+        
+        # Remove previous profile image.
+        delete_profile_image($user_ref);
+
+        # Create profile image filename .
+        $profile_image_name = md5($scramble_key . $user_ref . time()) . "." .$extension;
+        $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+        
+        # Create profile image - cropped to square from centre.
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
+        $output = run_command($command);
+
+        # Store reference to user image.
+        sql_query("update user set profile_image = '$profile_image_name' where ref = '$user_ref'");
+
+        # Remove temp file.
+        if (file_exists($profile_image_path))
+            {
+            unlink($image_path);
+            }
+        }
+
+    # Update user to set user.profile
+    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '$user_ref'");
+
+    return true;
+    }
+
+/**
+ * Delete a user's profile image. This will first remove the file and then update the db to clear the existing value.
+ *
+ * @param  mixed  $user_ref   User id of the user who's profile image is to be deleted.
+ * 
+ * @return void
+ */
+function delete_profile_image($user_ref)
+    {
+    global $storagedir;
+
+    $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+    
+    if ($profile_image_name != "")
+        {
+        $path_to_file = $storagedir . '/user_profiles' . '/' . $profile_image_name;
+
+        if (file_exists($path_to_file))
+            {
+            unlink($path_to_file);
+            }
+    
+        sql_query("update user set profile_image = '' where ref = '$user_ref'");
+        }
+    }
+    
+/**
+ * Generate the url to the user's profile image. Fetch the url by the user's id or by the profile image filename. 
+ *
+ * @param  int     $user_ref   User id of the user who's profile image is requested.
+ * @param  string  $by_image   The filename of the profile image to fetch having been collected from the db separately: user.profile_image 
+ * 
+ * @return string     The url to the user's profile image if available or blank if not set.
+ */
+function get_profile_image($user_ref = "", $by_image = "")
+    {
+    global $storagedir, $baseurl;
+
+    if (is_dir($storagedir.'/user_profiles'))
+        {
+        # Only check the db if the profile image name has not been provided.
+        if ($by_image == "" && $user_ref != "")
+            {
+            $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+            }
+        else
+            {
+            $profile_image_name = $by_image;
+            }
+
+        if ($profile_image_name != "")
+            {
+            return $baseurl . '/filestore/user_profiles' . '/' . $profile_image_name;
+            }
+        else
+            {
+            return "";
+            }
+        }
+    return "";    
+    }
+
+/**
+ * Return user profile for a defined user. 
+ *
+ * @param  int     $user_ref   User id to fetch profile details for.
+ * 
+ * @return string     Profile details for the requested user.
+ */
+function get_profile_text($user_ref)
+    {
+    return sql_value("select profile_text value from user where ref = '$user_ref'","");
+    }
+
+
+/**
+* load language files for all users that need to be notified into an array - use for message and email notification
+* load in default language strings first and then overwrite with preferred language strings
+*
+* @param  array $languages - array of language strings
+* @return array $language_strings_all
+* */
+
+
+function get_languages_notify_users(array $languages = array())
+    {
+    global $applicationname,$defaultlanguage;
+    
+    $language_strings_all = array();
+       
+        // load language files into array for each language
+    foreach($languages as $language)
+        {
+        $lang = array();
+
+        // load default values
+        $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+        include $defaultlangfile;
+
+        // load preferred language, overwriting default values where preferred language strings exist
+        $message_language = $language != "" ? $language : $defaultlanguage;
+        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
+        include $messagelangfile;
+        $language_strings_all[$message_language] = $lang; // append $lang array 
+        }     
+
+    // load default language
+    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+    include $defaultlangfile;
+    $language_strings_all[] = $lang; // append $lang array 
+
+    return $language_strings_all;
     }

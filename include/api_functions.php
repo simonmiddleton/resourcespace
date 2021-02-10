@@ -30,7 +30,7 @@ function get_api_key($user)
  * @param  string $authmode The type of key being provided (user key or session key)
  * @return void
  */
-function check_api_key($username,$querystring,$sign,$authmode)
+function check_api_key($username,$querystring,$sign,$authmode="userkey")
     {
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}

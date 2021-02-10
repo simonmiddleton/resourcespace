@@ -17,6 +17,8 @@ $introtext=text("introtext");
 	<div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
 	<ul>
 	
+    <li><a href="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-circle"></i><br /><?php echo $lang["profile"]?></a></li>
+	
 	<?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
         <li><a href="<?php echo $baseurl_short?>pages/user/user_change_password.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-key"></i><br /><?php echo $lang["changeyourpassword"]?></a></li>
         <?php } ?>

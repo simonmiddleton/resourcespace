@@ -605,19 +605,25 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             {
                             $ref=copy_resource(0-$userref);
                             $urlparams["ref"] = $ref;
+                            $hidden_collection = false;
                             // Create new collection if necessary
                             if($collection_add=="new") 
                                 {
                                 if($uploadparams["entercolname"] == "")
                                     {
                                     $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    $hidden_collection = true;
                                     }
-                                $collection_add = create_collection($userref,$uploadparams["entercolname"]);    
+                                $collection_add = create_collection($userref,$uploadparams["entercolname"]);
                                 }
                             if(is_numeric($collection_add))
                                 {
                                 add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                                 set_user_collection($userref, $collection_add);
+                                if ($hidden_collection)
+                                    {
+                                    show_hide_collection($collection_add, false, $userref);
+                                    }
                                 }
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();

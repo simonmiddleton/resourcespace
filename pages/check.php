@@ -115,14 +115,14 @@ if (ResolveKB($upload_max_filesize)<(100*1024)) {$result=$lang["status-warning"]
 
 # Check write access to filestore
 $success=is_writable($storagedir);
-if ($success===false) {$result=$lang["status-fail"] . ": " . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}
-?><tr><td colspan="2"><?php echo $lang["writeaccesstofilestore"] ?></td><td><b><?php echo $result?></b></td></tr><?php
+if ($success===false) {$result=$lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}
+?><tr><td colspan="2"><?php echo $lang["writeaccesstofilestore"] . $storagedir ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check write access to homeanim (if transform plugin is installed)
 if (in_array("transform",$plugins)){
 $success=is_writable(dirname(__FILE__) . "/../".$homeanim_folder);
-if ($success===false) {$result=$lang["status-fail"] . ": " . $lang["nowriteaccesstohomeanim"];} else {$result=$lang["status-ok"];}
-?><tr><td colspan="2"><?php echo $lang["writeaccesstohomeanim"] ?></td><td><b><?php echo $result?></b></td></tr>
+if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . $lang["nowriteaccesstohomeanim"];} else {$result=$lang["status-ok"];}
+?><tr><td colspan="2"><?php echo $lang["writeaccesstohomeanim"] . $homeanim_folder ?></td><td><b><?php echo $result?></b></td></tr>
 <?php } 
 
 # Check filestore folder browseability

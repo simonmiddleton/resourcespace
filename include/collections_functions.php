@@ -1291,9 +1291,10 @@ function get_smart_theme_headers()
  * @param  integer $field
  * @param  boolean $is_category_tree
  * @param  integer $parent
- * @return void
+ * @param  array   $field_meta - resource type field metadata
+ * @return array
  */
-function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
+function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array $field_meta = array())
     {
     global $smart_themes_omit_archived;
 
@@ -1307,6 +1308,12 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         }
 
     $nodes = get_nodes($field, ((0 == $parent) ? null : $parent), $recursive);
+
+    if(isset($field_meta['automatic_nodes_ordering']) && (bool) $field_meta['automatic_nodes_ordering'])
+                {
+                $nodes = reorder_nodes($nodes);
+                $nodes = array_values($nodes); // reindex nodes array
+                }
 
     if(0 === count($nodes))
         {
@@ -3176,15 +3183,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if(!$top_actions && checkperm('s') && $pagename === 'collections')
             {
-            // Manage My Collections
-            $data_attribute['url'] = $baseurl_short . 'pages/collection_manage.php';
-            $options[$o]['value']='manage_collections';
-            $options[$o]['label']=$lang['managemycollections'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_COLLECTION;
-            $options[$o]['order_by'] = 60;
-            $o++;
-
             // Collection feedback
             if(isset($collection_data['request_feedback']) && $collection_data['request_feedback'])
                 {
