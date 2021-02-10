@@ -826,6 +826,18 @@ function api_update_related_resource($ref,$related,$add=true)
     return update_related_resource($ref,$related,$add);
     }
 
+function api_get_collections_resource_count(string $refs)
+    {
+    if(checkperm('b'))
+        {
+        return [];
+        }
+
+    $cols = array_filter(explode(',', $refs), 'collection_readable');
+
+    return get_collections_resource_count($cols);
+    }
+
 function api_get_users($find="")
     {
     // Forward to the internal function - with "usepermissions" locked to TRUE.

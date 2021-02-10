@@ -365,6 +365,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}
@@ -406,6 +407,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}
@@ -895,7 +897,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
  * @param  integer  $user         ID of user
  * @param  integer  $collection   ID of collection
  * 
- * @return void
+ * @return boolean
  */
 function add_collection($user,$collection)
 	{
@@ -903,13 +905,13 @@ function add_collection($user,$collection)
 	global $anonymous_login,$username,$anonymous_user_session_collection;
  	if (isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
 		{return false;}
-	
-	# Remove any existing collection first
+
 	remove_collection($user,$collection);
-	# Insert row
 	sql_query("insert into user_collection(user,collection) values ('" . escape_check($user) . "','" . escape_check($collection) . "')");
-	#log this
+    clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+
+    return true;
 	}
 
 
@@ -918,12 +920,11 @@ function add_collection($user,$collection)
  *
  * @param  integer $user
  * @param  integer $collection
- * @return void
  */
 function remove_collection($user,$collection)
 	{
 	sql_query("delete from user_collection where user='" . escape_check($user) . "' and collection='" . escape_check($collection) . "'");
-	#log this
+    clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
