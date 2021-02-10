@@ -292,25 +292,35 @@ function setup_user($userdata)
  * @param  string $approvalstate
  * @param  boolean $returnsql
  * @param  string $selectcolumns
+ * @param  boolean $selectcolumns    Denotes $find must be an exact username
  * @return array  Matching user records 
  */
-function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
+function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
     global $usergroup, $U_perm_strict;
 
     $sql = "";
-    $find=strtolower($find);
+    $find=escape_check(strtolower($find));
     if ($group != 0 && (string)(int)$group == (string)$group) {$sql = "where usergroup IN ($group)";}
-    if (strlen($find)>1)
-      {
-      if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-      $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
-      }
-    if (strlen($find)==1)
-      {
-      if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-      $sql .= "LOWER(username) like '$find%'";
-      }
+    if ($exact_username_match)
+        {
+        # $find is an exact username
+        if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+        $sql .= "LOWER(username)='$find'";
+        }
+    else    
+        {
+        if (strlen($find)>1)
+            {
+            if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+            $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
+            }
+            if (strlen($find)==1)
+            {
+            if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+            $sql .= "LOWER(username) like '$find%'";
+            }
+        }
     if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict)))
         {
         # Only return users in children groups to the user's group
@@ -2614,7 +2624,7 @@ function get_profile_image($user_ref = "", $by_image = "")
 
         if ($profile_image_name != "")
             {
-            return $baseurl . '/filestore/user_profiles' . '/' . $profile_image_name;
+            return $baseurl . '/filestore/user_profiles/' . $profile_image_name;
             }
         else
             {
