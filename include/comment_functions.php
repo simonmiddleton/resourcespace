@@ -193,7 +193,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		
 			function submitForm(obj) {				
 				jQuery.post(
-					'ajax/comments_handler.php?ref={$ref}&collection_mode={$collection_mode}',
+					'${baseurl}/pages/ajax/comments_handler.php?ref={$ref}&collection_mode={$collection_mode}',
 					jQuery(obj).serialize(),
 					function(data)
 					{
