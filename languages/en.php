@@ -297,6 +297,7 @@ $lang["inclusive"]="(inclusive)";
 $lang["pluginssetup"]="Plugins";
 $lang["pluginmanager"]="Plugins";
 $lang["users"]="Users";
+$lang['system_tabs'] = "Tabs";
 
 # Admin - Bulk E-mails
 $lang["emailrecipients"]="E-mail recipient(s)";
