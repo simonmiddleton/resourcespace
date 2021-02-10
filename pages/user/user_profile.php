@@ -21,20 +21,6 @@ $profile_image = get_profile_image($user);
 include "../../include/header.php";
 ?><meta http-equiv="Cache-control" content="no-cache">
 
-<script>
-function checkFileType(image_supplied)
-{
-    var image = image_supplied.profile_image.value;
-    var pos = image.lastIndexOf(".");
-    var ext = image.toLowerCase().substr(pos);
-    if (image == "") return true;
-    var ext_types = [".jpg", ".jpeg"];
-    if (image != "" && ext_types.includes(ext)) return true;
-    document.getElementById("profile_image_validate").innerHTML = "<?php echo $lang["error_not_jpeg"]; ?>";
-    return false;
-}
-</script>
-
 <div class="BasicsBox">
 
   <h1><?php echo htmlspecialchars($userdetails["fullname"]) ?></h1>
