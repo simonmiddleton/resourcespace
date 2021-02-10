@@ -103,6 +103,23 @@ function comments_submit()
 	}
 
 /**
+ * Parse a comment and replace and add links to any user tags
+ *
+ * @param  string  $text                 The input text e.g. the body of the comment
+ *
+ * @return void
+ */
+function comments_tags_to_links($text)
+	{
+	global $baseurl_short;
+    $text=preg_replace('/@(\S+)/s', '<a href="' . $baseurl_short . 'pages/user/user_profile.php?username=$1">@$1</a>', $text);
+
+	return $text;
+	}
+
+
+
+/**
  * Display all comments for a resource or collection
  *
  * @param  integer $ref                 The reference of the resource, collection or the comment (if called from itself recursively)
@@ -293,7 +310,7 @@ EOT;
 			}
 			else
 				{
-				echo htmlspecialchars ($comment['body']);
+				echo comments_tags_to_links(htmlspecialchars ($comment['body']));
 				}
 			echo "</div>";			
 			
