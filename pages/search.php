@@ -365,6 +365,9 @@ if($use_selection_collection)
         }
     }
 
+// Get usercollection resources - used for checks against the list (e.g is one of the resources found by search in the collection?)
+$usercollection_resources = get_collection_resources($usercollection);
+
 $hiddenfields=getvalescaped("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
@@ -1433,14 +1436,6 @@ if($responsive_ui)
     for ($n=0;$n<count($types);$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
     if (is_array($result) && count($result)>0)
         {
-        $showkeypreview = false;
-        $showkeycollect = false;
-        $showkeycollectout = false;
-        $showkeyemail = false;
-        $showkeyedit = false;
-        $showkeystar = false;
-        $showkeycomment = false;
-
         /**
          * If global var $annotate_enabled global == true, then ResourcePanel height is adjusted in thumbs.php.
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
@@ -1606,6 +1601,39 @@ if($search_anchors)
     }
     ?>
 <script>
+function toggle_addremove_to_collection_icon(el)
+    {
+    var icon = jQuery(el);
+    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref'));
+
+    if(icon.hasClass('addToCollection'))
+        {
+        icon.addClass('DisplayNone');
+        var rfc = icon.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).removeClass('DisplayNone');
+            }
+        }
+    else if(icon.hasClass('removeFromCollection'))
+        {
+        var atc = resource_shell.find('div.ResourcePanelIcons > a.addToCollection');
+        if(atc.length > 0)
+            {
+            jQuery(atc[0]).removeClass('DisplayNone');
+            }
+
+        var rfc = atc.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).addClass('DisplayNone');
+            }
+        }
+
+    return;
+    }
+
+
 <?php
 if($use_selection_collection)
     {
