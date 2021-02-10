@@ -37,7 +37,7 @@ function checkFileType(image_supplied)
 
 <div class="BasicsBox">
 
-  <h1><?php echo $userdetails["fullname"] ?></h1>
+  <h1><?php echo htmlspecialchars($userdetails["fullname"]) ?></h1>
 
   <?php if ($profile_image) { ?><p><img src="<?php echo $profile_image ?>" alt="Current profile image"></p><?php } ?>
 
