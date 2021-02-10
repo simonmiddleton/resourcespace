@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 # User functions
 # Functions to create, edit and generally deal with user accounts
 
@@ -905,14 +909,18 @@ function auto_create_user_account($hash="")
         $templatevars['userrequestcustom']=strip_tags($customContents);
         $templatevars['linktouser']="$baseurl?u=$new";
 
-        
-        
-       // Need to global the usergroup so that we can find the appropriate admins
-       global $usergroup;
-       $approval_notify_users=get_notification_users("USER_ADMIN"); 
-       $message_users=array();
-       global $user_pref_user_management_notifications, $email_user_notifications;
-       foreach($approval_notify_users as $approval_notify_user)
+        // Need to global the usergroup so that we can find the appropriate admins
+        global $usergroup;
+        $approval_notify_users=get_notification_users("USER_ADMIN"); 
+        $message_users=array();
+        global $user_pref_user_management_notifications, $email_user_notifications;
+
+        // get array of preferred languages for notify users
+        $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
+        // get array of language strings for selected languages
+        $language_strings_all = get_languages_notify_users($languages_approval_notify_users);  
+         
+        foreach($approval_notify_users as $approval_notify_user)
             {
             get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
             if(!$send_message){continue;} 
@@ -922,33 +930,30 @@ function auto_create_user_account($hash="")
             // get preferred language for approval_notify_user
             $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
 
-            # Include language file
-            $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
-            if(file_exists($messagelangfile))
-                {
-                include $messagelangfile;
-                }
+            // get preferred language for approval_notify_user
+            $lang_pref = $language_strings_all[$message_language];
 
             if($send_email && $approval_notify_user["email"]!="")
                 {
-                $message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
-                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
+                $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
+                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
                 }        
             else
                 {
-                $notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
+                $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
                 message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
           
                 }
             }
 
-        // set language back to cookie setting
-        $language = setLanguage();
-        $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
-        if(file_exists($langfile))
-            {
-            include $langfile;
-            }
+             // set language back to cookie setting
+          $language = setLanguage();
+          $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+          if(file_exists($langfile))
+              {
+              include $langfile;
+              }
+      
         }
 
     return true;
@@ -981,6 +986,11 @@ function email_user_request()
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();
 
+    // get array of preferred languages for notify users
+    $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
+    // get array of language strings for selected languages
+    $language_strings_all = get_languages_notify_users($languages_approval_notify_users);    
+
     foreach($approval_notify_users as $approval_notify_user)
         {
         get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
@@ -995,21 +1005,17 @@ function email_user_request()
         // get preferred language for approval_notify_user
         $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
 
-        # Include language file
-        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
-        if(file_exists($messagelangfile))
-            {
-            include $messagelangfile;
-            }
-        
+        // get preferred language for approval_notify_user
+        $lang_pref = $language_strings_all[$message_language];
+
         if($send_email && '' != $approval_notify_user['email'])
             {
             // Build a message
-            $message = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
+            $message = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
        
             send_mail(
                 $approval_notify_user['email'],
-                "{$applicationname}: {$lang['requestuserlogin']} - {$name}",
+                "{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",
                 $message,
                 '',
                 $user_email,
@@ -1019,7 +1025,7 @@ function email_user_request()
             }
         else
             {
-            $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
+            $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
 
             message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
             }
@@ -2490,6 +2496,8 @@ function save_usergroup($ref,$groupoptions)
     return false;
     }
 
+
+ 
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
  *
@@ -2626,4 +2634,44 @@ function get_profile_image($user_ref = "", $by_image = "")
 function get_profile_text($user_ref)
     {
     return sql_value("select profile_text value from user where ref = '$user_ref'","");
+    }
+
+
+/**
+* load language files for all users that need to be notified into an array - use for message and email notification
+* load in default language strings first and then overwrite with preferred language strings
+*
+* @param  array $languages - array of language strings
+* @return array $language_strings_all
+* */
+
+
+function get_languages_notify_users(array $languages = array())
+    {
+    global $applicationname,$defaultlanguage;
+    
+    $language_strings_all = array();
+       
+        // load language files into array for each language
+    foreach($languages as $language)
+        {
+        $lang = array();
+
+        // load default values
+        $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+        include $defaultlangfile;
+
+        // load preferred language, overwriting default values where preferred language strings exist
+        $message_language = $language != "" ? $language : $defaultlanguage;
+        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
+        include $messagelangfile;
+        $language_strings_all[$message_language] = $lang; // append $lang array 
+        }     
+
+    // load default language
+    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+    include $defaultlangfile;
+    $language_strings_all[] = $lang; // append $lang array 
+
+    return $language_strings_all;
     }
