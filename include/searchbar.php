@@ -187,6 +187,9 @@ $found_month="";if (isset($set_fields["basicmonth"])) {$found_month=$set_fields[
 $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basicday"];}
 
 ?>
+<script>
+var categoryTreeChecksArray = [];
+</script>
 <div id="SearchBox" <?php
     if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
         {

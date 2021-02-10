@@ -21,6 +21,9 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
     node_field_options_override($field);
 	
 	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
+?>
+<!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
+<?php
 
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
@@ -110,20 +113,27 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 					{
 						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
 							{
-							?>
-							<script>
+                            ?>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
+                            var wto;
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
-                                    // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
-									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+                                    // Debounce multiple events fired by the category tree
+                                    clearTimeout(wto);
+                                    wto=setTimeout(function() {
+                                        // Reflect the change of the governing field into the following governed field condition checker
+                                        console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref'] ?>");
+                                        for (i = 0; i<categoryTreeChecksArray.length; i++) {
+                                            categoryTreeChecksArray[i]();
+                                        }
+                                    }, 200);
 									});
 								});
 							</script>
 							<?php
-
 							// Move on to the next field now
 							continue;
 							}
@@ -138,14 +148,15 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                     $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
                                 }
 							?>
-							<script>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
 							jQuery(document).ready(function()
 								{
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
                                     console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
-                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
 							</script>
@@ -153,14 +164,15 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             }
                             else { # Advanced search
                             ?>
-							<script>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
                                     // Reflect the change of the governing field into the following governed field condition checker
                                     console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
-									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>();
 									});
 								});
 							</script>
@@ -193,6 +205,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                     }
                             } 
                             ?>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
                             <script type="text/javascript">
                             jQuery(document).ready(function()
                                 {
@@ -200,7 +213,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
                                     console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
-                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
                             </script>
@@ -210,7 +223,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 					else
 						{ # Not one of the FIXED_LIST_FIELD_TYPES
 						?>
-						<script type="text/javascript">
+                        <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+                        <script type="text/javascript">
 						jQuery(document).ready(function()
 							{
 							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
@@ -229,26 +243,33 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             } # check next condition
 
         ?>
-        <?php echo "<!-- CHECK CONDITIONS FOR GOVERNED FIELD ".$field['name']." [".$field['ref']."] -->" ;?>
+        <?php echo "<!-- CHECK CONDITIONS FOR GOVERNED FIELD ".$field['name']." [".$field['ref']."] -->";
+        $function_has_category_tree_check=false;
+        ?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)   
+        checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery(idname<?php echo $field['ref']; ?>).css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
-			newfield<?php echo $field['ref']; ?>show   = false;
-            newfield<?php echo $field['ref']; ?>provisional = true;
+           
+            // Assume visible by default
+            field<?php echo $field['ref']; ?>visibility = true;
 
             <?php
 			foreach($scriptconditions as $scriptcondition)
 				{
+                echo "// Checking values on field ".$scriptcondition['field']."\n";
                 # Example of $scriptconditions: [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}] 
-			?>
-            
-            newfield<?php echo $field['ref']; ?>subcheck = false;
+                if ($scriptcondition['type'] == FIELD_TYPE_CATEGORY_TREE) {
+                    $function_has_category_tree_check=true;
+                }
+            ?>
+
+            field<?php echo $field['ref']; ?>valuefound = false;
             fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
             <?php
@@ -280,7 +301,6 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 # Append additional brackets rendered on category tree and dynamic keyword list hidden inputs
-                // if (($scriptcondition['type'] == FIELD_TYPE_CATEGORY_TREE) || ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) {
                 if (in_array($scriptcondition['type'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) ) {
                     $jquery_condition_selector = "input[name=\"{$checkname}[]\"]";
                 }
@@ -320,40 +340,45 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     }
 
                 ?>
-                if(!newfield<?php echo $field['ref']; ?>show)
-                    {
                     jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                    {
+                        if(<?php echo $js_conditional_statement; ?>)
                         {
-                            if(<?php echo $js_conditional_statement; ?>)
-                            {
-                            // The governing node is in the list of qualifying node(s) which enable this governed field
-                            newfield<?php echo $field['ref']; ?>subcheck = true;
-                            }
-                        });
-                    }
+                        // The governing node is in the list of qualifying node(s) which enable this governed field
+                        field<?php echo $field['ref']; ?>valuefound = true;
+                        }
+                    });
+
                 <?php
                 }?>
 
                 // If no governing node found then disable this governed field
-                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                if(!field<?php echo $field['ref']; ?>valuefound)
                 {
-                newfield<?php echo $field['ref']; ?>provisional = false;
+                field<?php echo $field['ref']; ?>visibility = false;
                 }
+
             <?php
+                echo "// End of checking values on field ".$scriptcondition['field']."\n\n            ";
                 }
             ?>
+
                 // If the governed field is enabled then set it to display
-                if(newfield<?php echo $field['ref']; ?>provisional)
+                if(field<?php echo $field['ref']; ?>visibility)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
 
                 // If the governed field display state has changed then enact the change by sliding
-                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                if ( newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status )
                     {
+                    console.log("IDNAME " + idname<?php echo $field['ref']; ?>);
+                    console.log("   FIELD <?php echo $field['ref']; ?> STATUS '" + field<?php echo $field['ref']; ?>status+"'");
+                    console.log("NEWFIELD <?php echo $field['ref']; ?> STATUS '" + newfield<?php echo $field['ref']; ?>status+"'");
                     // Toggle the display state between "block" and "none", clearing any incomplete actions in the process
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
+                        console.log("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
                         jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
                         });
                     
@@ -368,6 +393,15 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         }
                     }
         }
+
+        <?php 
+        if ($function_has_category_tree_check) {
+        ?>
+        categoryTreeChecksArray.push(checkSearchDisplayCondition<?php echo $field["ref"];?>);
+        <?php
+        }
+        ?>
+
         </script>
     	<?php
     	if($forsearchbar)
@@ -820,6 +854,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
     ?>
     <div class="clearerleft"> </div>
     </div>
+    <!-- ------------------------------------------------ -->
     <?php
     } # End of render_search_field
 
@@ -3726,12 +3761,12 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
-            // Get current display status
+            // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
-            // Assume field will not be displayed
             newfield<?php echo $field['ref']; ?>status = 'none';
-            newfield<?php echo $field['ref']; ?>show   = false;
-            newfield<?php echo $field['ref']; ?>provisional = true;
+
+            // Assume visible by default
+            field<?php echo $field['ref']; ?>visibility = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
                 {
@@ -3739,8 +3774,10 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
                 */
                 ?>
-                newfield<?php echo $field['ref']; ?>subcheck = false;
+
+                field<?php echo $field['ref']; ?>valuefound = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                
                 <?php
                 ############################
                 ### Field type specific
@@ -3765,29 +3802,27 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
                         }
                     ?>
-                    if(!newfield<?php echo $field['ref']; ?>show)
-                        {
                         jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
                             {
                             if(<?php echo $js_conditional_statement; ?>)
                                 {
-                                newfield<?php echo $field['ref']; ?>subcheck = true;
+                                field<?php echo $field['ref']; ?>valuefound = true;
                                 }
                             });
-                        }
+
                     <?php
                     }
                 ?>
-                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                if(!field<?php echo $field['ref']; ?>valuefound)
                     {
-                    newfield<?php echo $field['ref']; ?>provisional = false;
+                    field<?php echo $field['ref']; ?>visibility = false;
                     }
                 <?php
                 }
                 ?>
 
                 // Is field to be displayed
-                if(newfield<?php echo $field['ref']; ?>provisional)
+                if(field<?php echo $field['ref']; ?>visibility)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
