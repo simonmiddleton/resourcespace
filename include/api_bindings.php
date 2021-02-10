@@ -814,3 +814,34 @@ function api_get_resource_collections($ref)
 
     return $ref_collections;
     }
+
+function api_update_related_resource($ref,$related,$add=true)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    $related = explode(",",$related);
+    return update_related_resource($ref,$related,$add);
+    }
+
+function api_get_collections_resource_count(string $refs)
+    {
+    if(checkperm('b'))
+        {
+        return [];
+        }
+
+    $cols = array_filter(explode(',', $refs), 'collection_readable');
+
+    return get_collections_resource_count($cols);
+    }
+
+function api_get_users($find="")
+    {
+    // Forward to the internal function - with "usepermissions" locked to TRUE.
+    // Return specific columns only as there's sensitive information in the others such as password/session key.
+    $return=array();
+    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
+    }

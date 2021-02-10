@@ -9,17 +9,18 @@
 /**
  * Retrieve a user-submitted parameter from the browser, via post/get/cookies in that order.
  *
- * @param  string $val              The parameter name
- * @param  string $default          A default value to return if no matching parameter was found
- * @param  boolean $force_numeric   Ensure a number is returned
+ * @param  string $val            The parameter name
+ * @param  string $default        A default value to return if no matching parameter was found
+ * @param  boolean $validate_int  Validate value is a loose integer
+ * 
  * @return string
  */
-function getval($val,$default,$force_numeric=false)
+function getval($val,$default,$validate_int=false)
     {
     # return a value from POST, GET or COOKIE (in that order), or $default if none set
-    if (array_key_exists($val,$_POST)) {return ($force_numeric && !is_numeric($_POST[$val])?$default:$_POST[$val]);}
-    if (array_key_exists($val,$_GET)) {return ($force_numeric && !is_numeric($_GET[$val])?$default:$_GET[$val]);}
-    if (array_key_exists($val,$_COOKIE)) {return ($force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val]);}
+    if (array_key_exists($val,$_POST)) {return ($validate_int && !is_int_loose($_POST[$val])?$default:$_POST[$val]);}
+    if (array_key_exists($val,$_GET)) {return ($validate_int && !is_int_loose($_GET[$val])?$default:$_GET[$val]);}
+    if (array_key_exists($val,$_COOKIE)) {return ($validate_int && !is_int_loose($_COOKIE[$val])?$default:$_COOKIE[$val]);}
     return $default;
     }
 
@@ -28,16 +29,15 @@ function getval($val,$default,$force_numeric=false)
 * 
 * It should not be relied upon for XSS. Sanitising output should be done when needed by developer
 * 
-* @param string        $val
-* @param string|array  $default        The fallback value if not found
-* @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
-*                                      the function will return the default value
+* @param string  $val
+* @param string  $default      The fallback value if not found or validation fails
+* @param boolean $validate_int Validate value is a loose integer
 * 
-* @return string|array
+* @return string
 */
-function getvalescaped($val, $default, $force_numeric = false)
+function getvalescaped($val, $default, $validate_int = false)
     {
-    $value = getval($val, $default, $force_numeric);
+    $value = getval($val, $default, $validate_int);
 
     if(is_array($value))
         {
@@ -443,7 +443,8 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
-                {               
+                {        
+                if (!isset($plugins[$n])) { continue; }       
                 register_plugin_language($plugins[$n]);
                 }       
             
@@ -593,13 +594,15 @@ function get_site_text($page,$name,$getlanguage,$group)
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {     
+        if (!isset($plugins[$n])) { continue; }          
         register_plugin_language($plugins[$n]);
         }
 
     $language = $getlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {               
+        {  
+        if (!isset($plugins[$n])) { continue; }             
         register_plugin_language($plugins[$n]);
         }
             
@@ -4507,6 +4510,10 @@ function cleanup_files($files)
  */
 function is_int_loose($var)
     {
+    if(is_array($var))
+        {
+        return false;
+        }
     return (string)(int)$var === (string)$var;
      }
 

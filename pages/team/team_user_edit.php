@@ -323,6 +323,20 @@ if ($user_edit_created_by)
 <div class="Fixed"><?php echo resolve_user_agent($user["last_browser"],true)?></div>
 <div class="clearerleft"> </div></div>
 
+<div class="Question"><label><?php echo $lang["profile_image"]?></label>
+<?php
+$profile_image = get_profile_image($ref);
+if ($profile_image != "")
+    {
+    ?> <div class="Fixed"> <img src="<?php echo $profile_image ?>" alt="Current profile image"></div> <?php   
+    }
+else
+    {
+    ?> <div class="Fixed"><?php echo $lang["no_profile_image"] ?></div> <?php
+    }
+?>
+<div class="clearerleft"> </div></div>
+
 <?php if ($enable_remote_apis) { ?>
 <div class="Question"><label><?php echo $lang["private-api-key"] ?></label>
 <div class="Fixed"><?php echo get_api_key($user["ref"]) ?></div>

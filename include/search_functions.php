@@ -1618,9 +1618,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($sql_filter_properties != "")
         {
-        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+        if(strpos($sql_join,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
             {
-            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            $sql_join.=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
             }
         if ($sql_filter == "")
             {
@@ -2937,4 +2937,37 @@ function check_order_by_in_table_joins($order_by)
         {
         exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
         }
+    }
+
+
+/**
+* Get collection total resource count for a list of collections
+* 
+* @param array $refs List of collection IDs
+* 
+* @return array Returns table of collections and their total resource count (taking into account access controls). Please
+*               note that the returned array might NOT contain keys for all the input IDs (e.g validation failed).
+*/
+function get_collections_resource_count(array $refs)
+    {
+    $return = [];
+
+    foreach($refs as $ref)
+        {
+        if(!(is_int_loose($ref) && $ref > 0))
+            {
+            continue;
+            }
+
+        $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
+        if(!(is_string($sql) && trim($sql) !== ''))
+            {
+            continue;
+            }
+
+        $resources = sql_query($sql, 'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
+        $return[$ref] = count($resources);
+        }
+
+    return $return;
     }

@@ -1126,7 +1126,7 @@ else
 					$success = is_writable($storagedir);
 					if ($success===false)
 						{
-						$result = $lang["status-warning"] . ": " . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
+						$result = $lang["status-warning"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
 						$pass = false;
 						}
 					else
@@ -1518,7 +1518,7 @@ else
                 <div id="plugin_google_vision_settings">
                     <div class="configitem">
                         <label for="google_vision_key"><?php echo $lang["google_vision_api_key"] . ":"; ?></label>
-                        <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo (isset($google_vision_key)) ? htmlspecialchars($google_vision_key) : "";?>" />
+                        <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo htmlspecialchars(get_post('google_vision_key')); ?>" />
                     </div>
                 </div>
             </div>

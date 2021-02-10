@@ -39,7 +39,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
     if ( $field["display_condition"]!="" 
     && ( !$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition)) ) )
         {
-        # Split the condition into an array of tests (if there are more than one, they are separated by a ";")
+        # Split the display condition of the field being rendered into an array of tests (if there are more than one, they are separated by a ";")
+        # Each test is in the form governing field = governing field value 
+        #   If the field being rendered is itself a governing field then "On Change" code must be generated for the governing field
+        #   If the field being rendered is a governed field then "Checking" code must be generated for each governing field
         $s=explode(";",$field["display_condition"]);
         $condref=0;
         foreach ($s as $condition) # Check each individual test
@@ -52,15 +55,14 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
                 {
                 # If the field being processed is referenced in the current test 
-                #   and if the field being processed is global or it matches the resource tupe of the field being rendered 
-                if ($s[0]==$fields[$cf]["name"] 
-                    && ($fields[$cf]["resource_type"]==0 || $fields[$cf]["resource_type"]==$field["resource_type"]) ) 
+                if ($s[0]==$fields[$cf]["name"]) 
                     {
                     # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
                     # The script conditions array contains an entry for each governing field
                     $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
                     # Get the node references of the governing field
@@ -70,8 +72,12 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
+					$scriptconditions[$condref]['validtext'] = array();
 					foreach($validvalues as $validvalue)
 						{
+                        # The validtext array is for checking input values instead of their corresponding node references
+                        $scriptconditions[$condref]['validtext'][] = strtolower($validvalue);
+
                         # Convert the value name into a node entry if it is a valid node within the governing field
 						$found_validvalue = get_node_by_name($scriptconditionnodes, $validvalue);
 
@@ -99,7 +105,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 				// Certain fixed list types allow for multiple nodes to be passed at the same time
 
                 // Generate a javascript function specific to the field being rendered
-                // This function will be invoked whenever the governing field changes
+                // This function will be invoked whenever any governing field changes
                 if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
 					{
 						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
@@ -110,7 +116,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 								{
 								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
@@ -122,43 +129,77 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 							}
 						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
 							{
+                            if ($forsearchbar) {
+                                if ($simple_search_show_dynamic_as_dropdown) {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                }
+                                else {
+                                    $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
+                                }
 							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+                                jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                                    {
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    });
+                                });
+							</script>
+							<?php
+                            }
+                            else { # Advanced search
+                            ?>
 							<script>
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
 									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
 							</script>
 							<?php
+                            }
 
 							// Move on to the next field now
 							continue;
 							}
                         else
                             {
-                            # Otherwise for a FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
-                            $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
-                            $jquery_selector = "input[name=\"{$checkname}\"]";
-                            if  (
-                                FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type']
-                                ||
-                                (in_array($fields[$cf]['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $fields[$cf]['display_as_dropdown'])
-                                )
-                                {
+                            # Otherwise FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
+                            
+                            # Simple search will always display these types as dropdowns
+                            if ($forsearchbar) {
                                 $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
                                 $jquery_selector = "select[name=\"{$checkname}\"]";
-                                }
+                            }
+                            # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                            else {
+                                # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                                $checkname = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                                # If however its a drop down list then we should be processing select elements
+                                If ($fields[$cf]['display_as_dropdown'] == true)
+                                    {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                    }
+                            } 
                             ?>
                             <script type="text/javascript">
                             jQuery(document).ready(function()
                                 {
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
-                                    // Refelect the change of the governing field into the following governed field condition checker
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                                     });
                                 });
@@ -174,7 +215,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 							{
 							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
 								{
-                                // Refelect the change of the governing field into the following governed field condition checker
+                                // Reflect the change of the governing field into the following governed field condition checker
                                 checkSearchDisplayCondition<?php echo $field['ref']; ?>();
 								});
 							});
@@ -188,9 +229,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             } # check next condition
 
         ?>
+        <?php echo "<!-- CHECK CONDITIONS FOR GOVERNED FIELD ".$field['name']." [".$field['ref']."] -->" ;?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
+        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)   
 			{
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
@@ -210,29 +252,74 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
             <?php
-            ############################
-            ### Field type specific
-            ############################
+            if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                if ($forsearchbar)
+                    if(!$simple_search_show_dynamic_as_dropdown) {
+                    ?>
+                        // When a dynamic keyword list is rendered as regular input field on simple search, the valid values to check against are the text values (not nodes) 
+                        fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['validtext']); ?>;
+                    <?php
+                    }
+                }
+            ?>
+
+            <?php echo "// CHECK IF GOVERNING ".$scriptcondition['name']." [".$scriptcondition['field']."] VALUE(S) ENABLE DISPLAY";?>
+
+            <?php
+
+            # Generate the javascript code necessary to condition the rendered field based on value(s) present in the governing field
+
+            # Prepare base name for selector 
+            $checkname = "nodes_searched[{$scriptcondition['field']}]";
+            $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+            # Prepare fallback selector 
+            $jquery_condition_selector = "input[name=\"{$checkname}\"]";
+            $jquery_selector_suffix="";
+
             if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
-                $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+                # Append additional brackets rendered on category tree and dynamic keyword list hidden inputs
+                // if (($scriptcondition['type'] == FIELD_TYPE_CATEGORY_TREE) || ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) {
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) ) {
+                    $jquery_condition_selector = "input[name=\"{$checkname}[]\"]";
+                }
+                
+                # Prepare selector for a checkbox list or a radio button or a dropdown list
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS, FIELD_TYPE_DROP_DOWN_LIST))) {
 
-                if  (
-                    in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS))
-                    &&
-                    false == $scriptcondition['display_as_dropdown']
-                    )
-                    {
-                    $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
+                    # Simple search will always display these types as dropdowns, so search for selected option
+                    if ($forsearchbar) {
+                        $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                    }
+                    # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                    else {
+                        # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                        #   so search for checked boxes
+                        $jquery_condition_selector = "input[name=\"{$checkname}\"]:checked:enabled";
+
+                        # If however its a drop down list then we should be searching for selected option
+                        If ($scriptcondition['display_as_dropdown'] == true)
+                            {
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                            }
+                    }                    
+
+                }
+
+                # Prepare selector for unusual dynamic keyword list configurations
+                if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                    if ($forsearchbar)
+                        if($simple_search_show_dynamic_as_dropdown) {
+                            # Prepare selector for a dynamic keyword list configured to display as a dropdown list on simple search
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                        } else {
+                            # Prepare selector for a dynamic keyword list rendered as regular input field
+                            $jquery_condition_selector = "input[name=\"field_{$scriptcondition['name']}\"]";
+                        }
                     }
 
-                if((in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $scriptcondition['display_as_dropdown'])
-                    || FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] )
-                    {
-                    $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
-                    }
-                    ?>
+                ?>
                 if(!newfield<?php echo $field['ref']; ?>show)
                     {
                     jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
@@ -246,6 +333,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     }
                 <?php
                 }?>
+
                 // If no governing node found then disable this governed field
                 if(!newfield<?php echo $field['ref']; ?>subcheck)
                 {
@@ -316,13 +404,14 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 
     //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
 
-    # Generate 
+    # Generate markup for field
     switch ($field["type"]) {
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
+        # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             { 
 			
@@ -905,7 +994,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 if($two_line)
                     {
                     ?>
-                    <br />
+                   <br/>
                     <?php
                     }
                     ?>
@@ -1246,6 +1335,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 default:
                     var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
                     var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
+                    var option_no_ajax = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('no-ajax');
 
                     // If action option has a defined data-callback attribute, then we can call it
                     // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
@@ -1258,7 +1348,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     // If action option has a defined data-url attribute, then we can CentralSpaceLoad it
                     if(typeof option_url !== "undefined")
                         {
-                        CentralSpaceLoad(option_url, true);
+                        if (typeof option_no_ajax == "undefined")
+                            {
+                            CentralSpaceLoad(option_url, true);
+                            }
+                        else
+                            {
+                            window.location.href = option_url;
+                            }
                         }
     
                     break;
@@ -3269,6 +3366,8 @@ function render_selected_collection_actions()
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
            $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
 
+    
+
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
@@ -3317,7 +3416,15 @@ function render_selected_collection_actions()
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
 
-    render_actions($collection_data, true, false,'',array(),true);
+    if (getvalescaped("clear_selection_collection", "") == "no")
+        {
+        render_actions($collection_data, true, false,'');
+        }
+    else 
+        {
+        render_actions($collection_data, true, false,'',array(),true);
+        }
+    
 
     $search = $orig_search;
     $result = $orig_result;
@@ -3729,7 +3836,7 @@ function has_browsebar()
     {
     global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
     return isset($username)
-    && !in_array($pagename, $not_authenticated_pages)
+    && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
     && ('' == $k || $internal_share_access)
     && $browse_bar;
     //   && false == $loginterms ?
@@ -4252,8 +4359,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
 * 
 * @param array $ctx    Context data to allow caller code to decide rendering requirements
 * @param array $items  List of items to render (featured collection category, actual collection or smart collection)
-* 
-* @return void
 */
 function render_featured_collections(array $ctx, array $items)
     {
@@ -4338,6 +4443,10 @@ function render_featured_collections(array $ctx, array $items)
         if($is_featured_collection && collection_writeable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_edit;
+            }
+        if($is_featured_collection)
+            {
+            $render_ctx['show_resources_count'] = true;
             }
 
 
@@ -4441,6 +4550,7 @@ function render_featured_collection(array $ctx, array $fc)
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+    $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
@@ -4458,16 +4568,24 @@ function render_featured_collection(array $ctx, array $fc)
             
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+        {
+        $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', htmlspecialchars($lang['newflag']));
+        }
     if($full_width)
         {
         $html_container_class[] = "FullWidth";
         $html_contents_h2_style[] = "max-width: unset;";
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
-        }
-    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
-        {
-        $html_contents_h2 .= " <div class=\"NewFlag\">{$lang['newflag']}</div>";
+        
+        if($show_resources_count && !$is_smart_featured_collection)
+            {
+            $html_contents_h2 .= sprintf(
+                ' <span data-tag="resources_count" data-fc-ref="%s">%s</span>',
+                htmlspecialchars($fc['ref']),
+                htmlspecialchars($lang['counting_resources']));
+            }
         }
 
 
@@ -4556,7 +4674,7 @@ function render_featured_collection(array $ctx, array $fc)
         <div class="ListTools">
             <div class="ActionsContainer">
                 <select id="<?php echo $action_selection_id; ?>" onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);">
-                    <option><?php echo $lang["actions-select"]; ?></option>
+                    <option><?php echo htmlspecialchars($lang["actions-select"]); ?></option>
                 </select>
             </div>
             <script>

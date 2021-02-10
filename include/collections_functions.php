@@ -365,6 +365,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}
@@ -406,6 +407,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 
 		// Clear theme image cache
 		clear_query_cache("themeimage");
+        clear_query_cache('col_total_ref_count_w_perm');
 
 		return true;
 		}
@@ -895,7 +897,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
  * @param  integer  $user         ID of user
  * @param  integer  $collection   ID of collection
  * 
- * @return void
+ * @return boolean
  */
 function add_collection($user,$collection)
 	{
@@ -903,13 +905,13 @@ function add_collection($user,$collection)
 	global $anonymous_login,$username,$anonymous_user_session_collection;
  	if (isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
 		{return false;}
-	
-	# Remove any existing collection first
+
 	remove_collection($user,$collection);
-	# Insert row
 	sql_query("insert into user_collection(user,collection) values ('" . escape_check($user) . "','" . escape_check($collection) . "')");
-	#log this
+    clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+
+    return true;
 	}
 
 
@@ -918,12 +920,11 @@ function add_collection($user,$collection)
  *
  * @param  integer $user
  * @param  integer $collection
- * @return void
  */
 function remove_collection($user,$collection)
 	{
 	sql_query("delete from user_collection where user='" . escape_check($user) . "' and collection='" . escape_check($collection) . "'");
-	#log this
+    clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
@@ -1049,8 +1050,11 @@ function save_collection($ref, $coldata=array())
                 if(isset($colset["thumbnail_selection_method"]))
                     {
                     $sqlset["thumbnail_selection_method"] = $colset["thumbnail_selection_method"];
-
-                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method
+                    }
+                
+                if(isset($colset["thumbnail_selection_method"]) || isset($colset["name"]))
+                    {
+                    // Prevent the parent from being changed if user only modified the thumbnail_selection_method or name
                     $sqlset["parent"] = (!isset($colset["update_parent"]) ? $oldcoldata["parent"] : $sqlset["parent"]);
                     }
 
@@ -1288,9 +1292,10 @@ function get_smart_theme_headers()
  * @param  integer $field
  * @param  boolean $is_category_tree
  * @param  integer $parent
- * @return void
+ * @param  array   $field_meta - resource type field metadata
+ * @return array
  */
-function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
+function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array $field_meta = array())
     {
     global $smart_themes_omit_archived;
 
@@ -1304,6 +1309,12 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         }
 
     $nodes = get_nodes($field, ((0 == $parent) ? null : $parent), $recursive);
+
+    if(isset($field_meta['automatic_nodes_ordering']) && (bool) $field_meta['automatic_nodes_ordering'])
+                {
+                $nodes = reorder_nodes($nodes);
+                $nodes = array_values($nodes); // reindex nodes array
+                }
 
     if(0 === count($nodes))
         {
@@ -3175,15 +3186,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if(!$top_actions && checkperm('s') && $pagename === 'collections')
             {
-            // Manage My Collections
-            $data_attribute['url'] = $baseurl_short . 'pages/collection_manage.php';
-            $options[$o]['value']='manage_collections';
-            $options[$o]['label']=$lang['managemycollections'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_COLLECTION;
-            $options[$o]['order_by'] = 60;
-            $o++;
-
             // Collection feedback
             if(isset($collection_data['request_feedback']) && $collection_data['request_feedback'])
                 {

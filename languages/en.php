@@ -891,6 +891,7 @@ $lang["unauthorized"] = "Unauthorized";
 $lang["warning_duplicate_shortname_fields"] = "There is already a resource type field with the same shortname. Please make it unique!";
 $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
+$lang["counting_resources"] = "counting resources...";
 
 # Pager
 $lang["next"]="Next";
@@ -1697,12 +1698,12 @@ $lang["close"]="Close";
 $lang["repeatinstallationcheck"]="Repeat installation check";
 $lang["shouldbeversion"]="should be ? or greater"; # E.g. "should be 4.4 or greater"
 $lang["phpinivalue"]="PHP.INI value for '?'"; # E.g. "PHP.INI value for 'memory_limit'"
-$lang["writeaccesstofilestore"]="Write access to $storagedir";
-$lang["nowriteaccesstofilestore"]="$storagedir not writable";
+$lang["writeaccesstofilestore"]="Write access to ";
+$lang["nowriteaccesstofilestore"]=" not writable";
 $lang["writeaccesstoplugins"]="Write access to /plugins";
 $lang["nowriteaccesstoplugins"]="/plugins folder not writable";
-$lang["writeaccesstohomeanim"]="Write access to $homeanim_folder";
-$lang["nowriteaccesstohomeanim"]="$homeanim_folder not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
+$lang["writeaccesstohomeanim"]="Write access to ";
+$lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
 $lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable; remove 'Indexes' from Apache 'Options' list.";
 $lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
@@ -2058,7 +2059,7 @@ $lang['comments_respond-to-this-comment']="Reply";
 $lang['comments_in-response-to-on']="on";
 $lang['comments_anonymous-user']="Anonymous";
 $lang['comments_submit-button-label']="Submit";
-$lang['comments_body-placeholder']="Add a comment...";
+$lang['comments_body-placeholder']="Add a comment. Use @(username) to tag people.";
 $lang['comments_fullname-placeholder']="Your Name (required)";
 $lang['comments_email-placeholder']="Your E-mail (required)";
 $lang['comments_website-url-placeholder']="Website";
@@ -2582,6 +2583,17 @@ $lang["action_submit_review"]="Submit for review";
 $lang["action_continue_editing"]="Continue editing";
 $lang["action-addrow"]="Add row";
 
+/* User profile */
+$lang['profile'] = "My Profile";
+$lang['profile_introtext'] = "Through this page you can enter your profile information and upload a profile image in JPG / JPEG format.";
+$lang['profile_bio'] = "Profile / Bio";
+$lang['profile_image'] = "Profile image";
+$lang['no_profile_image'] = "Profile image not set";
+$lang['delete_current'] = "Delete profile image";
+$lang['current_profile'] = "Current profile image";
+$lang['error_not_jpeg'] = "The selected file is not in jpg / jpeg format.";
+$lang['error_upload_failed'] = "An error occurred while uploading the file.";
+
 /* Messaging */
 $lang["seen"]="Seen";
 $lang["from"]="From";
@@ -2958,3 +2970,5 @@ $lang['csv_export_offline_only']            = "Offline processing must be used w
 
 $lang["setup_google_vision_settings"]       = "Google Vision settings";
 $lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";
+
+$lang["tagged_notification"]="You have been tagged in a comment: ";
