@@ -209,6 +209,8 @@ select::-ms-expand
 .RecordBox {margin: 10px 20px 10px 0;}
 h2#CollectionsPanelHeader {display:none;}
 
+#UserProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
+
 /* Header size variants */
 .HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
 .HeaderSmall #HeaderImg{max-height:40px;}
@@ -821,6 +823,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentEntryInfoContainer {width: 100%;}
 .CommentEntryInfo { width: 100%;}
 .CommentEntryInfoCommenterName { font-weight: bolder; }
+#CommentProfileImage { float:left; width:40px; height:40px; border-radius:40px; margin-right:10px}
 .CommentEntryInfoCommenterEmail { font-size: 0.75em;}
 .CommentEntryInfoCommenterWebsite{ font-size: 0.75em;}
 .CommentEntryInfoDetails { display: table-cell; font-size: 0.75em;}
@@ -839,6 +842,8 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentFormSubmit{margin-top: 5px; margin-bottom: 5px;}
 .CommentFormBody {width: 600px; height: 60px; font-size: 1em;}
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
+.TaggingHint {cursor: hand;display:block;width:588px;padding:5px;}
+.TaggingHint::before {content: "\f02b  ";   font: normal normal normal 14px "Font Awesome 5 Free";font-weight: 600;}
 
 .collectionscompactstylespacer {height:25px;}
 

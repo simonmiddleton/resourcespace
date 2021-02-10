@@ -214,6 +214,8 @@ div.autocomplete ul li {color: #000;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
 
 .CommentBody { color: #000000}
+.TaggingHint {background-color: white; border-bottom: 1px solid rgba(0,0,0,0.25); border-left: 1px solid rgba(0,0,0,0.25); border-right: 1px solid rgba(0,0,0,0.25);}
+.TaggingHint:hover {background-color:#EEE;text-decoration:none;color:black;}
 
 /* Dash Tiles */
 #dash_tile_bin.ui-state-hover {

@@ -355,6 +355,8 @@ if(!hook('replace_header_text_logo'))
 		}
 	}
 
+$user_profile_image = get_profile_image($userref,false);
+
 // Responsive
 if($responsive_ui)
     {
@@ -364,8 +366,15 @@ if($responsive_ui)
         <div id="HeaderButtons" style="display:none;">
             <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
-                <span class="fa fa-fw fa-lg fa-user"></span>
-            </a>
+                <?php if ($user_profile_image != "")
+                    {
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon'  id='UserProfileImage'> <?php
+                    }
+                else
+                    {
+                    ?><span class="fa fa-fw fa-lg fa-user"></span> <?php
+                    }
+                ?></a>
             <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText"><?php echo $lang["responsive_main_menu"]; ?></span>
                 <span class="fa fa-fw fa-lg fa-bars"></span>
@@ -430,6 +439,7 @@ else
 	<?php if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d"))) { ?><li class="HeaderLink UploadButton"><a href="<?php echo $baseurl; if ($upload_then_edit) { ?>/pages/upload_plupload.php<?php } else { ?>/pages/edit.php?ref=-<?php echo @$userref?>&amp;uploader=<?php echo $top_nav_upload_type; } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]?></a></li><?php } ?>    
         
     <?php
+    
     if(!hook('replaceheaderfullnamelink'))
         {
         ?>
@@ -438,16 +448,33 @@ else
             <?php
 			if (isset($header_include_username) && $header_include_username)
                 {
-                ?>
-                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
-                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
-                <?php
+                if ($user_profile_image != "")
+                    {                    
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' id='UserProfileImage'> &nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                    <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                    <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
                 }
             else
                 {
-                ?>
-                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
-                <?php
+                if ($user_profile_image != "")
+                    {
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon'  id='UserProfileImage'> <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    <?php
+                    }
                 }
             ?> 
             </a>
