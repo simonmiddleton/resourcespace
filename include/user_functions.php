@@ -540,7 +540,7 @@ function save_user($ref)
     if('' != getval('deleteme', ''))
         {
         delete_profile_image($ref);
-        sql_query("DELETE FROM user WHERE ref = '{$ref}'");
+        sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
 
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
@@ -2557,7 +2557,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         $output = run_command($command);
 
         # Store reference to user image.
-        sql_query("update user set profile_image = '$profile_image_name' where ref = '$user_ref'");
+        sql_query("update user set profile_image = '$profile_image_name' where ref = '" . escape_check($user_ref) . "'");
 
         # Remove temp file.
         if (file_exists($profile_image_path))
@@ -2567,7 +2567,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         }
 
     # Update user to set user.profile
-    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '$user_ref'");
+    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '" . escape_check($user_ref) . "'");
 
     return true;
     }
@@ -2583,7 +2583,7 @@ function delete_profile_image($user_ref)
     {
     global $storagedir;
 
-    $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+    $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
     
     if ($profile_image_name != "")
         {
@@ -2594,7 +2594,7 @@ function delete_profile_image($user_ref)
             unlink($path_to_file);
             }
     
-        sql_query("update user set profile_image = '' where ref = '$user_ref'");
+        sql_query("update user set profile_image = '' where ref = '" . escape_check($user_ref) . "'");
         }
     }
     
@@ -2615,7 +2615,7 @@ function get_profile_image($user_ref = "", $by_image = "")
         # Only check the db if the profile image name has not been provided.
         if ($by_image == "" && $user_ref != "")
             {
-            $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+            $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
             }
         else
             {
@@ -2643,7 +2643,7 @@ function get_profile_image($user_ref = "", $by_image = "")
  */
 function get_profile_text($user_ref)
     {
-    return sql_value("select profile_text value from user where ref = '$user_ref'","");
+    return sql_value("select profile_text value from user where ref = '" . escape_check($user_ref) . "'","");
     }
 
 
