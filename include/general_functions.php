@@ -3102,7 +3102,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " user ='" . escape_check($user) . "'";
         }
-    else
+    elseif(PHP_SAPI != "CLI" && isset($userref))
         {
         $condition[] = " user ='" . $userref . "'";
         }
