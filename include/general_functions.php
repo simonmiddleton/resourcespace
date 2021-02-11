@@ -3135,7 +3135,17 @@ function job_queue_run_job($job, $clear_process_lock)
     //$job["job_data"] = escape_check($job["job_data"]);
 
     $job_data=json_decode($job["job_data"], true);
+
     $jobuser = $job["user"];
+    if (!isset($jobuser) || $jobuser == 0 || $jobuser == "")
+        {
+        $logmessage = " - Job could not be run as no user was supplied #{$jobref}" . PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
+        job_queue_update($jobref,$job_data,STATUS_ERROR);
+        return;
+        }
+
     $jobuserdata = get_user($jobuser);
     setup_user($jobuserdata);
     $job_success_text=$job["success_text"];
