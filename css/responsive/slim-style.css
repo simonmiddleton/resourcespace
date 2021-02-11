@@ -232,6 +232,7 @@ body {
 #HeaderButtons {
     display:none;
 }
+
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
@@ -571,7 +572,16 @@ body {
         text-align: center;
         float: none;
     }
-
+    #Header {
+        position: relative !important;
+        height: auto !important;
+    }
+}
+@media(max-width:1100px) {
+    #FooterThemes img {
+        width:20px;
+        height:20px;
+    }
     #SearchBarContainer {
         position: relative !important;
         height: auto !important;
@@ -591,17 +601,6 @@ body {
         top:0 !important;
         margin-left: 1% !important;
         margin-right: 1% !important;
-    }
-
-    #Header {
-        position: relative !important;
-        height: auto !important;
-    }
-}
-@media(max-width:1100px) {
-    #FooterThemes img {
-        width:20px;
-        height:20px;
     }
 }
 @media(max-width:390px) {
