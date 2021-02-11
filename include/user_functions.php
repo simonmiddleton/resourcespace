@@ -2597,7 +2597,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         delete_profile_image($user_ref);
 
         # Create profile image filename .
-        $profile_image_name = md5($scramble_key . $user_ref . time()) . "." .$extension;
+        $profile_image_name = $user_ref . "_" . md5($scramble_key . $user_ref . time()) . "." .$extension;
         $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
         
         # Create profile image - cropped to square from centre.
