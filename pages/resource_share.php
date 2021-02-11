@@ -17,19 +17,42 @@ $starsearch   = getvalescaped("starsearch", "");
 $default_sort_direction = (substr($order_by,0,5) == "field") ? "ASC" : "DESC";
 $sort         = getval("sort", $default_sort_direction);
 $ajax         = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
-$modal = (getval("modal", "") == "true");
+$modal        = (getval("modal", "") == "true");
+$backurl      = getvalescaped('backurl', '');
 
 # Check if editing existing external share
 $editaccess   = getvalescaped("editaccess", "");
-$editing      = ($editaccess=="") ? false : true;
+$deleteaccess = getvalescaped('deleteaccess', '');
+$editing      = ($editaccess != "" && $deleteaccess == "") ? true : false;
 
-$generateurl  = getval("generateurl","") != "";
 $editexternalurl = (getval("editexternalurl","") != "");
+$generateurl  = getval("generateurl","") != "";
 
-$access       = getvalescaped("access","",true);
-$expires      = getvalescaped("expires","");
-$sharepwd     = getvalescaped('sharepassword', '');
-$backurl      = getvalescaped('backurl', '');
+// Share options
+if($editing)
+    {
+    $shareinfo      = get_external_shares(array("share_resource"=>$ref, "access_key"=>$editaccess));
+    if(isset($shareinfo[0]))
+        {
+        $shareinfo  = $shareinfo[0];
+        }
+    else
+        {
+        error_alert($lang["error_invalid_key"],true);
+        exit();        
+        }
+    $expires        = getvalescaped("expires",$shareinfo["expires"]);
+    $access         = getval("access",$shareinfo["access"], true);	
+    $group          = getval("usergroup",$shareinfo["usergroup"],true);
+    $sharepwd       = getvalescaped('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
+    }
+else
+    {
+    $expires        = getvalescaped("expires","");
+    $access         = getval("access",-1, true);	
+    $group          = getval("usergroup",0,true);
+    $sharepwd       = getvalescaped('sharepassword', '');
+    }
 
 $minaccess=get_resource_access($ref);
 
@@ -43,11 +66,9 @@ if (!can_share_resource($ref,$minaccess))
 $internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
         
 # Process deletion of access keys
-$deleteaccess = getvalescaped('deleteaccess', '');
 if ('' != $deleteaccess && enforcePostRequest($ajax))
     {
     delete_resource_access_key($ref, $deleteaccess);
-    resource_log($ref, LOG_CODE_SYSTEM, '', '', '', str_replace('%access_key', $deleteaccess, $lang['access_key_deleted']));
     }
 
 # Process deletion of custom user access
@@ -126,9 +147,8 @@ if($editing && !$editexternalurl)
         ?>
     </div>
         <form method="post" id="resourceshareform" action="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>">
-            <input type="hidden" name="ref" id="ref" value="<?php echo htmlspecialchars($ref) ?>">
-            <input type="hidden" name="generateurl" id="generateurl" value="<?php echo $generateurl ? "true" :"" ?> ">
             <input type="hidden" name="deleteaccess" id="deleteaccess" value="">
+            <input type="hidden" name="generateurl" id="generateurl" value="">
             <input type="hidden" name="editaccess" id="editaccess" value="<?php echo htmlspecialchars($editaccess)?>">
             <input type="hidden" name="editexpiration" id="editexpiration" value="">
             <input type="hidden" name="editgroup" id="editgroup" value="">
@@ -163,14 +183,21 @@ if($editing && !$editexternalurl)
                     <?php
                     }
 
-                if (($editing || (getval("deleteaccess","") == "")))
+                if ($deleteaccess == "" && !$internal_share_only)
                     {
-                    if (($access=="" || ($editing && !$editexternalurl)) && !$internal_share_only)
+                    if (!($editexternalurl || $generateurl))
                         {
                         ?>                    
                         <p><?php if (!$editing || $editexternalurl){ echo $lang["selectgenerateurlexternal"]; } ?></p>
                         <?php
-                        render_share_options(false, $ref);
+                        $shareoptions = array(
+                            "password"          => ($sharepwd != "" ? true : false),
+                            "editaccesslevel"   => $access,
+                            "editexpiration"    => $expires,
+                            "editgroup"         => $group,
+                            );
+
+                        render_share_options($shareoptions);
                         ?>
                         <div class="QuestionSubmit" s]]>
                             <label>&nbsp;</label>
@@ -186,14 +213,14 @@ if($editing && !$editexternalurl)
                             else
                                 { ?>
                                 <input name="generateurl" type="button" value="&nbsp;&nbsp;<?php echo $lang["generateexternalurl"]?>&nbsp;&nbsp;"
-                                onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'), true);">
+                                onclick="document.getElementById('generateurl').value = '<?php echo $lang["save"]; ?>';return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php 
                                 }
                             ?>
                         </div>
                         <?php
                         }
-                    else if('' == getvalescaped('editaccess', '') && !$internal_share_only)
+                    if($generateurl && $access > -1 && !$internal_share_only && enforcePostRequest(false))
                         {
                         // Access has been selected. Generate a new URL.
                         $generated_access_key = '';
@@ -226,7 +253,7 @@ if($editing && !$editexternalurl)
                         }
 
                     # Process editing of external share
-                    if ($editexternalurl)
+                    if ($editexternalurl && $access > -1 && enforcePostRequest(false))
                         {
                         $editsuccess = edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
                         if($editsuccess)
@@ -320,15 +347,28 @@ if($editing && !$editexternalurl)
                                 <?php 
                                 if ($collection_share)
                                     {
+                                    $editlink = generateurl($baseurl . "/pages/collection_share.php", 
+                                        array(
+                                            "ref"               => $key["collection"],
+                                            "editaccess"        => $key["access_key"],
+                                        ));
+                                    
+                                    $viewlink = generateurl($baseurl . "/", array("c"=> $key["collection"]));
                                     ?>
-                                    <a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $key["collection"] ?>"><?php echo LINK_CARET ?><?php echo $lang["viewcollection"]?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["view"]?></a>
                                     <?php
                                     }
                                 else
                                     {
+                                    $editlink = generateurl($baseurl . "/pages/resource_share.php", 
+                                        array(
+                                            "ref"               => $ref,
+                                            "editaccess"        => $key["access_key"],
+                                        ));
                                     ?>
                                     <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"] ?>');"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>      
-                                    <a href="#" onClick="return resourceShareEditShare(<?php echo "'{$key["access_key"]}', '{$key["expires"]}', '{$key["access"]}', '{$key["usergroup"]}'" ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
                                     <?php
                                     }
                                     ?>
@@ -350,14 +390,6 @@ if($editing && !$editexternalurl)
 			            document.getElementById('deleteaccess').value = access_key;
                         <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'),true);
 			        }
-			        return false;
-			    }
-			    function resourceShareEditShare(access_key, expires, access, user_group) {
-			        document.getElementById('editaccess').value = access_key;
-			        document.getElementById('editexpiration').value = expires;
-			        document.getElementById('editaccesslevel').value = access;
-			        document.getElementById('editgroup').value = user_group;
-			        <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'),true);
 			        return false;
 			    }
 				function resourceShareDeleteUserCustomAccess(user) {

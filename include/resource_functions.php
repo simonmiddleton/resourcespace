@@ -467,12 +467,12 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$index_contributed_by;
+    global $always_record_resource_creator,$index_contributed_by, $k;
 
     if(!is_numeric($archive))
-    {
-    return false;   
-    }
+        {
+        return false;   
+        }
 
     $alltypes=get_resource_types();    
     if(!in_array($resource_type,array_column($alltypes,"ref")))
@@ -521,8 +521,13 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	add_keyword_mappings($insert, $insert, -1);
 
 	# Log this			
-	daily_stat("Create resource",$insert);
-	resource_log($insert, LOG_CODE_CREATED, 0);
+    daily_stat("Create resource",$insert);
+
+    resource_log($insert, LOG_CODE_CREATED, 0);
+    if(upload_share_active())
+        {
+        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
+        }
 	
 	# Also index contributed by field, unless disabled
 	if ($index_contributed_by)
@@ -2220,7 +2225,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if(count($fieldoptiontranslations) < 2)
                 {
                 $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
-                debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
+                //debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
                 }
             else
                 {
@@ -3516,13 +3521,8 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
             // do not do a diff, just dump out whole new value (this is so we can cleanly append transform output)
             case LOG_CODE_TRANSFORMED:
-                $diff = $tovalue;
-                break;
-
             case LOG_CODE_NODE_REVERT:
-                $diff = $tovalue;
-                break;
-
+            case LOG_CODE_EXTERNAL_UPLOAD:
             case LOG_CODE_CREATED:
                 $diff = $tovalue;
                 break;
@@ -3617,7 +3617,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.purchase_size,
                         ps.name AS size,
                         r.access_key,
-                        ekeys_u.fullname AS shared_by{$extrafields}
+                        ekeys_u.fullname AS shared_by {$extrafields}
                    FROM resource_log AS r 
         LEFT OUTER JOIN user AS u ON u.ref = r.user
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
@@ -4956,8 +4956,8 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	if ($key==""){return false;}
 	# Update the expiration and acccess
 	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
-	hook('edit_resource_external_access','',array($key,$access,$expires,$group));
-	return true;
+    hook('edit_resource_external_access','',array($key,$access,$expires,$group));
+    return true;
 	}
 
 /**
@@ -5096,6 +5096,13 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
+
+    # Cannot edit if accessing upload share and resource not in the collection associated witrh their session
+    $external_upload = upload_share_active();
+    if($external_upload && !in_array($resource,get_collection_resources($external_upload)))
+        {
+        return false;
+        }
 
     # Cannot edit if pending status (<0) and neither admin ('t') nor created by currentuser 
     #             and does not have force edit access to the resource type
@@ -5944,7 +5951,9 @@ function get_resource_external_access($resource)
         
 function delete_resource_access_key($resource,$access_key)
     {
+    global $lang;
     sql_query("delete from external_access_keys where access_key='$access_key' and resource='$resource'");
+    resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
 function resource_type_config_override($resource_type)
@@ -8575,3 +8584,127 @@ function get_resource_lock_message($lockuser)
         }
     }
 
+/**
+ * Get details of external shares
+ *
+ * @param  array $filteropts    Array of options to filter shares returned
+ *                              "share_group"       - (int) Usergroup ref 'shared as'
+ *                              "share_user"        - (int) user ID of share creator
+ *                              "share_order_by"    - (string) order by column 
+ *                              "share_sort"        - (string) sortorder (ASC or DESC)
+ *                              "share_type"        - (int) 0=view, 1=upload
+ *                              "share_collection"  - (int) Collection ID
+ *                              "share_resource"    - (int) Resource ID
+ *                              "access_key"        - (string) Access key
+ * @return array
+ */
+function get_external_shares(array $filteropts)
+    {
+    global $userref;
+
+    $validfilterops = array(
+        "share_group",
+        "share_user",
+        "share_order_by",
+        "share_sort",
+        "share_type",
+        "share_collection",
+        "share_resource",
+        "access_key",
+    );
+    foreach($validfilterops as $validfilterop)
+        {
+        if(isset($filteropts[$validfilterop]))
+            {
+            $$validfilterop = $filteropts[$validfilterop];
+            }
+        else
+            {
+            $$validfilterop = NULL;
+            }
+        }
+
+    $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key", "upload");
+    if(!in_array($share_order_by, $valid_orderby))
+        {
+        $share_order_by = "expires";
+        }
+    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
+
+    $conditions = array();
+    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
+        )
+        {
+        $conditions[] = "eak.user ='" . (int)$share_user . "'";
+        }
+    elseif(!checkperm('a'))
+        {
+        $usercondition = "eak.user ='" . (int)$userref . "'";
+        if(checkperm("ex"))
+            {
+            // Can also see shares that never expire
+            $usercondition = " (expires ='' OR expires IS NULL OR " . $usercondition . ")";
+            }
+        $conditions[] =$usercondition;
+        }
+
+    if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
+        {
+        $conditions[] = "eak.usergroup ='" . (int)$share_group . "'";
+        }
+    
+    if(!is_null($access_key))
+        {
+        $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
+        }
+
+    if((int)$share_type === 0)
+        {
+        $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
+        }
+    elseif((int)$share_type === 1)
+        {
+        $conditions[] = "eak.upload=1";
+        }
+    if((int)$share_collection > 0)
+        {
+        $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
+        }
+    if((int)$share_resource > 0)
+        {
+        $conditions[] = "eak.resource ='" . (int)$share_resource . "'";
+        }
+
+    $conditional_sql="";
+    if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
+
+    $external_access_keys_query = 
+        "SELECT access_key,
+                ifnull(collection,'-') collection,
+                CASE 
+                    WHEN collection IS NULL THEN resource
+                    ELSE '-'
+                END AS 'resource',
+                user,
+                eak.email,
+                min(date) date,
+                MAX(date) maxdate,
+                max(lastused) lastused,
+                eak.access,
+                eak.expires,
+                eak.usergroup,
+                eak.password_hash,
+                eak.upload,
+                ug.name sharedas,
+                u.fullname,
+                u.username
+           FROM external_access_keys eak
+      LEFT JOIN user u ON u.ref=eak.user 
+      LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
+                $conditional_sql .
+     " GROUP BY access_key, collection
+       ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
+
+    $external_shares = sql_query($external_access_keys_query);
+    return $external_shares;
+    }

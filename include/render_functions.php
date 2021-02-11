@@ -1559,24 +1559,24 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
-	?>
-	<div class="<?php echo implode(" ", $div_class); ?>">
-		<label><?php echo $label; ?></label>
-		<select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
-		<?php
-		foreach ($options as $optionvalue=>$optiontext)
-			{
-			?>
-			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
-			<?php
-			}
-		?>
-		</select>
+    ?>
+    <div class="<?php echo implode(" ", $div_class); ?>">
+        <label for="<?php echo $inputname?>"><?php echo $label; ?></label>
+        <select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+        <?php
+        foreach ($options as $optionvalue=>$optiontext)
+            {
+            ?>
+            <option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+            <?php
+            }
+        ?>
+        </select>
         <div class="clearerleft"></div>
-	</div>
-	<?php
+    </div>
+    <?php
     return;
-	}
+    }
 
 /**
 * Render a table row (tr) for a single access key
@@ -2744,26 +2744,46 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
     return array($width, $height, $margin);
     }
 
-
-
 /**
-* Render the share options (used on collection_share.php and resource_share.php)
-* 
-* @return void
-*/
-function render_share_options($collectionshare=true, $ref=0, $emailing=false)
+ * Render the share options (used on collection_share.php and resource_share.php)
+ *
+ * @param  array $shareopts     Array of share options. If not set will use the old getval() methods
+ *                  "password" bool             Has a password been set for this share? (password will not actually be displayed)
+ *                  "editaccesslevel" int       Current access level of share
+ *                  "editexpiration" string     Current expiration date
+ *                  "editgroup" int             ID of existing share group
+ * @return void
+ */
+function render_share_options($shareopts=array())
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
-    
-    if(!hook('replaceemailaccessselector')): ?>
+    global $lang, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
+    $validshareops = array(
+        "password",
+        "editaccesslevel",
+        "editexpiration",
+        "editgroup",
+        );
+    foreach($validshareops as $validshareop)
+        {
+        if(isset($shareopts[$validshareop]))
+            {
+            $$validshareop = $shareopts[$validshareop];
+            }
+        else
+            {
+            $$validshareop = getval($validshareop,'');
+            }
+        }
+    if(!hook('replaceemailaccessselector'))
+        {?>
         <div class="Question" id="question_access">
-            <label for="archive"><?php echo ($emailing ? $lang["externalselectresourceaccess"] : $lang["access"]) ?></label>
+            <label for="archive"><?php echo $lang["access"] ?></label>
             <select class="stdwidth" name="access" id="access">
             <?php
             # List available access levels. The highest level must be the minimum user access level.
             for ($n=$minaccess;$n<=1;$n++) 
                 { 
-                $selected = getvalescaped("editaccesslevel","") == $n;
+                $selected = $editaccesslevel == $n;
                 ?>
                 <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
                 <?php 
@@ -2771,14 +2791,14 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 ?>
             </select>
             <div class="clearerleft"> </div>
-        </div>
-    <?php endif; #hook replaceemailaccessselector
+        </div><?php
+        } #hook replaceemailaccessselector
     
     if(!hook('replaceemailexpiryselector'))
         {
         ?>
         <div class="Question">
-            <label><?php echo ($emailing ? $lang["externalselectresourceexpires"] : $lang["expires"]) ?></label>
+            <label><?php echo $lang["expires"] ?></label>
             <select name="expires" class="stdwidth">
             <?php 
             if($resource_share_expire_never) 
@@ -2789,7 +2809,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
-                $selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
+                $selected   = (substr($editexpiration,0,10) == $ymd_date);
                 $date_text  = nicedate($ymd_date,false,true);
                 $option_class = '';
                 $day_date = date('D', $date);
@@ -2812,7 +2832,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         # for this share (the default is to use the current user's user group).
         ?>
         <div class="Question">
-            <label for="groupselect"><?php echo ($emailing ? $lang["externalshare_using_permissions_from_user_group"] : $lang["share_using_permissions_from_user_group"]) ?></label>
+            <label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"]; ?></label>
             <select id="groupselect" name="usergroup" class="stdwidth">
             <?php $grouplist = get_usergroups(true);
             foreach ($grouplist as $group)
@@ -2822,7 +2842,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                     continue;
                     }
 
-                $selected = getval("editgroup","") == $group["ref"] || (getval("editgroup","") == "" && $usergroup == $group["ref"]);
+                $selected = $editgroup == $group["ref"] || ($editgroup == "" && $usergroup == $group["ref"]);
                 ?>
                 <option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
                 <?php
@@ -2839,12 +2859,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         <input type="hidden" name="usergroup" value="<?php echo $usergroup; ?>">
         <?php
         }
-        ?>
-        <div class="Question">
-            <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
-        </div>
-        <?php
+        render_share_password_question(!$password);
         hook("additionalresourceshare");
         ?>
     <?php        
@@ -4928,6 +4943,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - current page
  *  - total pages
  * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - If "rowid" is specified this wil be used as the id attribute for the <tr> element
  *  - An additional 'tools' element can be included to add custom action icons
  *  - "class" - FontAwesome class to use for icon
  *  - "text" - title attribute
@@ -4957,11 +4973,25 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 function render_table($tabledata)
     {
     ?>
-    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
+    <div class="TablePagerHolder"><?php
+    if(isset($tabledata["pager"]))
+        {
+        $pageroptions = array(
+            "curpage" => $tabledata["pager"]["current"],
+            "totalpages" => $tabledata["pager"]["total"],
+            "per_page" => isset($tabledata["pager"]["per_page"]) ? $tabledata["pager"]["per_page"] : $default_perpage,
+            "break" => isset($tabledata["pager"]["break"]) ? $tabledata["pager"]["break"] : true,
+            "scrolltotop" => isset($tabledata["pager"]["scrolltotop"]) ? $tabledata["pager"]["scrolltotop"] : true,
+            "url" => $tabledata["defaulturl"],
+            "url_params" => $tabledata["params"],
+            );
+        pager(true, true,$pageroptions);
+        }?>
+    </div><?php
 
-    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
-    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
-    echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
+    echo "<tbody><tr class='ListviewTitleStyle'>\n";
     echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
@@ -4985,17 +5015,18 @@ function render_table($tabledata)
         
         echo "</th>";
         }
-    echo "</tr>"; // End of table header row
+    echo "</tr>\n"; // End of table header row
 
     if(count($tabledata["data"]) == 0)
         {
-        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>\n";
         }
     else
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            echo "<tr>";
+            $rowid = isset($rowdata["rowid"]) ? " id = '" . $rowdata["rowid"]  . "'" : "";
+            echo "<tr" . $rowid . ">";
 
             if(isset($rowdata['alerticon']))
                 {
@@ -5031,16 +5062,16 @@ function render_table($tabledata)
                         }
                     else
                         {
-                        echo htmlspecialchars($rowdata[$header]);
+                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) ? strip_tags_and_attributes($rowdata[$header], array("a"), array("href", "target")) : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
                     }
                 else
                     {
-                    echo "<td></td>";
+                    echo "<td></td>\n";
                     }
                 }
-            echo "</tr>";
+            echo "</tr>\n";
             }
         }
     echo "</tbody>";
@@ -5097,4 +5128,76 @@ function render_top_page_error_style(string $err_msg)
 
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
     return;
+    }
+
+function render_workflow_state_question($current=null, $checkaccess=true)
+    {
+    global $additional_archive_states, $lang;
+    $statusoptions = array();
+    for ($n=-2;$n<=3;$n++)
+        {
+        if (!$checkaccess || checkperm("e" . $n) || $n==$current)
+            {
+            $statusoptions[$n] =  isset($lang["status" . $n]) ?  $lang["status" . $n] : $n;
+            }
+        }
+    foreach ($additional_archive_states as $additional_archive_state)
+        {
+        if (!$checkaccess || checkperm("e" . $additional_archive_state) || $additional_archive_state==$current)
+            {
+            $statusoptions[$additional_archive_state] =  isset($lang["status" . $additional_archive_state]) ?  $lang["status" . $additional_archive_state] : $additional_archive_state;
+            }
+        }
+    
+    render_dropdown_question($lang["status"], "share_status", $statusoptions, $current, " class=\"stdWidth\"");
+    }
+
+function render_share_password_question($blank=true)
+    {
+    global $lang;
+    ?>
+    <div class="Question">
+    <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+    <input type="password" id="sharepassword" name="sharepassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
+    <script>
+
+    function togglePassword(pwdelement)
+        {
+        input = jQuery('#' + pwdelement);
+        if (input.attr("type") == "password")
+            {
+            input.attr("type", "text");
+            }
+        else
+            {
+            input.attr("type", "password");
+            }
+        }
+    var passInput="";
+    var passState="(unchanged)";
+    var passHistory="";
+    function pclick(id) 
+        {
+        // Set to password mode
+        document.getElementById(id).type="password";
+        document.getElementById(id).value=passState;
+        document.getElementById(id).select();
+        }
+    function pblur(id) 
+        {
+        // Copy keyed input other than bracketed placeholders to hidden password
+        passInput = document.getElementById(id).value;
+        if(passInput!="(unchanged)" && passInput!="(changed)") 
+            {
+            document.getElementById("sharepassword").value=passInput; 
+            passState="(changed)";
+            }
+        // Return to text mode showing the appropriate bracketed placeholder
+        document.getElementById(id).value=passState;
+        document.getElementById(id).type="text";
+        }
+    </script>
+    </div>
+    <?php
     }

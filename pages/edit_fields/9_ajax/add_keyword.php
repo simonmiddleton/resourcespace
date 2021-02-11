@@ -1,8 +1,16 @@
 <?php
 include dirname(__FILE__) . '/../../../include/db.php';
-include dirname(__FILE__) . '/../../../include/authenticate.php';
-include_once dirname(__FILE__) . '/../../../include/resource_functions.php';
-include_once dirname(__FILE__) . '/../../../include/node_functions.php';
+
+$k = getval('k','');
+$upload_collection = upload_share_active();
+if ($k=="" || !check_access_key_collection($upload_collection,$k))
+    {
+    include dirname(__FILE__) . '/../../../include/authenticate.php';
+    if (! (checkperm("c") || checkperm("d")))
+        {
+        exit ("Permission denied.");
+        }
+    }
 
 $field   = getvalescaped('field', '');
 $keyword = getvalescaped('keyword', '');

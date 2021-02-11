@@ -109,6 +109,8 @@ define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
 define ('LOG_CODE_UNLOCKED',            'Y');
+define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
+define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
 define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
@@ -126,6 +128,8 @@ define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
 define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
 define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
 define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',        'Z');
+define ('LOG_CODE_COLLECTION_SHARED_UPLOAD',                'SEU');
+define ('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE',            'EEU');
 
 
 // validates LOG_CODE is legal
@@ -320,6 +324,9 @@ define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then ed
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
 define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
 define("COLLECTION_TYPE_PUBLIC",    4); # public collections
+define("COLLECTION_SHARE_UPLOAD",   5); # public collections
+
+
 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "no_image" => 0,
     "most_popular_image" => 1,

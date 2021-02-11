@@ -343,12 +343,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         $has_image=",has_image=0";
         }
-    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='" . escape_check($ref) . "'");
+    sql_query("UPDATE resource SET file_extension='$extension',preview_extension='jpg',file_modified=NOW() $has_image WHERE ref='" . escape_check($ref) . "'");
     
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
-        sql_query("delete from resource_dimensions where resource='" . escape_check($ref) . "'");
+        sql_query("DELETE FROM resource_dimensions WHERE resource='" . escape_check($ref) . "'");
         
         # get file metadata 
         if(!$no_exif) 

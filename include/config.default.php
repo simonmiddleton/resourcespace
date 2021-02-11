@@ -3080,3 +3080,9 @@ $report_rows_zip_limit = 10000;
 // Set sytem-wide read-only system with global permissions mask
 // This also stops all offline jobs with the exception of user downloads and stops ResoureSpace sql query logging ($mysql_log_transactions).
 $system_read_only = false;
+
+// External upload options
+// Optional array of usergroup ids that external collection upload links can be 'shared as' in order to limit metadata field and resource type visibility etc.
+$upload_link_usergroups = array();
+// Workflow state that will be set for all resources uploaded using the share link
+$upload_link_workflow_state = -1;
