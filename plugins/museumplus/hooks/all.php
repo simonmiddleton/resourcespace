@@ -175,3 +175,8 @@ function HookMuseumplusAllHandleuserref()
     return;
     }
 
+function HookMuseumplusAllAfternewresource($to)
+    {
+    HookMuseumplusAllAftersaveresourcedata($to);
+    return;
+    }
