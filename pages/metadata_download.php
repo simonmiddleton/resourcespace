@@ -38,10 +38,26 @@ $download           = getval('download', '') != '';
 $download_file_type = getval('fileType_option', '');
 $language           = getval('language', 'en');
 $language           = resolve_pdf_language();
+$curpos             = getvalescaped("curpos","");
 $modal              = (getval("modal", "") == "true");
 
 $data_only          = 'true' === trim(getval('data_only', ''));
 $pdf_template       = getvalescaped('pdf_template', '');
+
+$urlparams = array(
+    'resource' => $ref,
+    'ref' => $ref,
+    'search' => $search,
+    'order_by' => $order_by,
+    'offset' => $offset,
+    'restypes' => $restypes,
+    'starsearch' => $starsearch,
+    'archive' => $archive,
+    'default_sort_direction' => $default_sort_direction,
+    'sort' => $sort,
+    'curpos' => $curpos,
+    "modal" => ($modal ? "true" : "")
+);
 
 // Process text file download
 if ($download && $download_file_type == 'text')
@@ -193,13 +209,13 @@ include "../include/header.php";
     if(!$modal)
         {
         ?>
-        <p><a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&archive=<?php echo urlencode($archive); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
         <?php
         }
-        elseif ($previous_page_modal)
+    elseif ($previous_page_modal)
         {
         ?>
-        <p><a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&offset=<?php echo urlencode($offset); ?>&order_by=<?php echo urlencode($order_by); ?>&sort=<?php echo urlencode($sort); ?>&archive=<?php echo urlencode($archive); ?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
         <?php
         }
      

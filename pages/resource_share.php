@@ -73,6 +73,14 @@ if (isset($show_error))
     }
 
 $query_string = 'ref=' . urlencode($ref) . '&search=' . urlencode($search) . '&offset=' . urlencode($offset) . '&order_by=' . urlencode($order_by) . '&sort=' .urlencode($sort) . '&archive=' . urlencode($archive);
+$urlparams    = array(
+    'ref'      => $ref,
+    'search'   => $search,
+    'offset'   => $offset,
+    'order_by' => $order_by,
+    'sort'     => $sort,
+    'archive'  => $archive
+);
 
 $page_header = $lang["share-resource"]; 
 if($editing && !$editexternalurl)
@@ -126,13 +134,13 @@ if($editing && !$editexternalurl)
             if($previous_page_modal)
                 {
                 ?>
-                <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return ModalLoad(this,true);">
+                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return ModalLoad(this,true);">
                 <?php
                 }
             else
                 {
                 ?>
-                <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);">
+                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
                 <?php
                 }
             ?>
