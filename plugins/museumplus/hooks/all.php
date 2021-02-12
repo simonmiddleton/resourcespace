@@ -2,6 +2,7 @@
 function HookMuseumplusAllInitialise()
     {
     $mplus_config = get_plugin_config('museumplus');
+    $mplus_config = (is_null($mplus_config) ? [] : $mplus_config);
 
     // Migrating old plugin configuration (when it was only syncing from the Object module).
     if(
