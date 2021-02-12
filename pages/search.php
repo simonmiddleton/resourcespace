@@ -6,7 +6,6 @@ if($annotate_enabled)
     include_once '../include/annotation_functions.php';
     }
 
-
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $s = explode(" ",getvalescaped("search",""));
 $k = getvalescaped("k","");
@@ -143,6 +142,7 @@ switch ($display)
     case "xlthumbs":            
     case "thumbs": 
     case "strip":
+    case 'map':
         
     default:
         $display_fields = $thumbs_display_fields;  
@@ -156,7 +156,8 @@ $n=0;
 foreach ($display_fields as $display_field)
     {
     # Find field in selected list
-    for ($m=0;$m<count($all_field_info);$m++)
+    $all_field_info_count = count($all_field_info);
+    for ($m=0;$m<$all_field_info_count;$m++)
         {
         if ($all_field_info[$m]["ref"]==$display_field)
             {
@@ -168,7 +169,7 @@ foreach ($display_fields as $display_field)
             $df[$n]['name']=$field_info['name'];
             $df[$n]['title']=$field_info['title'];
             $df[$n]['value_filter']=$field_info['value_filter'];
-            $n++;
+            ++$n;
             }
         }
     }
@@ -180,14 +181,15 @@ $sf=array();
 foreach ($sort_fields as $sort_field)
     {
     # Find field in selected list
-    for ($m=0;$m<count($all_field_info);$m++)
+    $all_field_info_count = count($all_field_info);
+    for ($m=0;$m<$all_field_info_count;$m++)
         {
         if ($all_field_info[$m]["ref"]==$sort_field)
             { 
             $field_info=$all_field_info[$m];
             $sf[$n]['ref']=$sort_field;
             $sf[$n]['title']=$field_info['title'];
-            $n++;
+            ++$n;
             }
         }
     }
@@ -314,7 +316,6 @@ if($resetlockedfields)
     rs_setcookie('lockedfields', '',0,"","",false,false);
     }
 
-
 $jumpcount=0;
 
 if (getvalescaped('recentdaylimit', '', true)!="") //set for recent search, don't set cookie
@@ -378,7 +379,6 @@ else
     reset($_POST);reset($_GET);foreach (array_merge($_GET, $_POST) as $key=>$value)
 
         {
-        
         $hiddenfields=Array();
         if ($key=="rttickall" && $value=="on"){$restypes="";break;} 
         if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
@@ -586,7 +586,6 @@ if ($allow_reorder && $display!="list")
 
 include ("../include/search_title_processing.php");
 
-    
 # Special case: numeric searches (resource ID) and one result: redirect immediately to the resource view.
 if ((($config_search_for_number && is_numeric($search)) || $searchresourceid > 0) && is_array($result) && count($result)==1)
     {
@@ -993,13 +992,12 @@ if($responsive_ui)
         ?>
         <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
         <?php   
-        if($display_selector_dropdowns)
-            {
-            ?>
+        if($display_selector_dropdowns && $display != 'map')
+            { ?>
             <select style="width:auto" id="displaysize" name="displaysize" onchange="CentralSpaceLoad(this.value,true);">
-            <?php if ($xlthumbs==true) { ?><option <?php if ($display=="xlthumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>"><?php echo $lang["xlthumbs"]?></option><?php } ?>
-            <option <?php if ($display=="thumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>"><?php echo $lang["largethumbs"]?></option>
-            <?php if ($searchlist==true) { ?><option <?php if ($display=="list"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>"><?php echo $lang["list"]?></option><?php } ?>
+            <?php if ($xlthumbs==true) { ?><option <?php if ($display=='xlthumbs'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'xlthumbs')) ?>"><?php echo $lang['xlthumbs']?></option><?php } ?>
+            <option <?php if ($display=='thumbs'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'thumbs')) ?>"><?php echo $lang['largethumbs']?></option>
+            <?php if ($searchlist==true) { ?><option <?php if ($display=='list'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'list')) ?>"><?php echo $lang['list']?></option><?php } ?>
             </select>
             <?php
             }
@@ -1060,8 +1058,23 @@ if($responsive_ui)
                     <?php
                     }
                 }
+            
+            if (!$disable_geocoding)
+                {
+                if($display == 'map')
+                    { ?>
+                    <span class="fas fa-map" style="font-size:23px;"></span><?php
+                    }
+                else
+                    { ?>
+                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo $lang['maptitle'] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <span class="far fa-map" style="font-size:23px;"></span>
+                    </a>
+                    <?php
+                    }
+                }
     
-                hook('adddisplaymode');
+            hook('adddisplaymode');
             }
         else
             {
@@ -1070,6 +1083,17 @@ if($responsive_ui)
             <?php if ($display=="strip") { ?><span class="Selected"><?php echo $lang["striptitle"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["striptitle"]?></a><?php } ?>&nbsp; |&nbsp;
             <?php if ($display=="list") { ?> <span class="Selected"><?php echo $lang["list"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list"]?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
             <?php
+            if(!$disable_geocoding)
+                {
+                if ($display == 'map')
+                    { ?>
+                    <span class="Selected"><?php echo $lang['maptitle']?></span><?php
+                    }
+                else
+                    { ?>
+                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="return window.location.reload(); CentralSpaceLoad(this);"><?php echo $lang['maptitle']?></a><?php
+                    }
+                }
             }
         ?>
         </div>
@@ -1078,7 +1102,8 @@ if($responsive_ui)
     if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
     <div class="InpageNavLeftBlock">
         <select style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
-        <?php for($n=0;$n<count($recent_search_period_array);$n++){
+        <?php $recent_search_period_array_count = count($recent_search_period_array);
+        for($n=0;$n<$recent_search_period_array_count;$n++){
             if ($display_selector_dropdowns){?>
                 <option <?php if ($daylimit==$recent_search_period_array[$n]){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>"><?php echo str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]); ?></option>
             <?php } ?>
@@ -1130,7 +1155,8 @@ if($responsive_ui)
         $orderFields['modified'] = $lang['modified'];
 
         # Add thumbs_display_fields to sort order links for thumbs views
-        for ($x=0;$x<count($sf);$x++)
+        $sf_count = count($sf);
+        for ($x=0;$x<$sf_count;$x++)
             {
             if (!isset($metadata_template_title_field)){$metadata_template_title_field=false;}
             if ($sf[$x]['ref']!=$metadata_template_title_field)
@@ -1143,7 +1169,7 @@ if($responsive_ui)
         if ($modifiedFields)
             $orderFields = $modifiedFields;
 
-        if (!hook('sortordercontainer'))
+        if (!hook('sortordercontainer') && $display != 'map')
             {
             ?>
             <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
@@ -1167,7 +1193,8 @@ if($responsive_ui)
             <div class="InpageNavLeftBlock">
                 <select id="resultsdisplay" style="width:auto" name="resultsdisplay" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
             <?php
-            for($n = 0; $n < count($results_display_array); $n++)
+            $results_display_array_count = count($results_display_array);
+            for($n = 0; $n < $results_display_array_count; $n++)
                 {
                 if($display_selector_dropdowns || $perpage_dropdown)
                     {
@@ -1218,7 +1245,8 @@ if($responsive_ui)
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
         <div class="InpageNavLeftBlock">
         <?php 
-        for($n=0;$n<count($results_display_array);$n++){?>
+        $results_display_array_count = count($results_display_array);
+        for($n=0;$n<$results_display_array_count;$n++){?>
         <?php if ($per_page==$results_display_array[$n]){?><span class="Selected"><?php echo urlencode($results_display_array[$n])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo urlencode($results_display_array[$n])?></a><?php } ?><?php if ($n>-1&&$n<count($results_display_array)-1){?>&nbsp;|<?php } ?>
         <?php } ?>
         </div>
@@ -1227,7 +1255,8 @@ if($responsive_ui)
         if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
         <div class="InpageNavLeftBlock">
         <?php 
-        for($n=0;$n<count($recent_search_period_array);$n++){
+        $recent_search_period_array_count = count($recent_search_period_array);
+        for($n=0;$n<$recent_search_period_array_count;$n++){
             if ($daylimit==$recent_search_period_array[$n]){?><span class="Selected"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?> </span>&nbsp;|&nbsp;<?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?></a>&nbsp;|&nbsp;<?php } 
             }
         if ($daylimit==""){?><span class="Selected"><?php echo $lang["all"] ?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>"")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["all"]?></a><?php } 
@@ -1383,7 +1412,8 @@ if($responsive_ui)
         <?php if ($use_selection_collection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
         <?php } # end hook listcheckboxesheader 
 
-        for ($x=0;$x<count($df);$x++)
+        $df_count = count($df);
+        for ($x=0;$x<$df_count;$x++)
             {?>
             <?php if ($order_by=="field".$df[$x]['ref']) {?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'],"sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($df[$x]['title'])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($df[$x]['title'])?></a></td><?php } ?>
             <?php }
@@ -1407,11 +1437,50 @@ if($responsive_ui)
     if ($search_includes_resources) {
 
     hook('searchresources');
-    
+
+    // Determine geolocation parameters for map search view.
+    if (!$disable_geocoding)
+        {
+        global $marker_metadata_field, $use_watermark;
+
+        // Loop through search results.
+        $result_count = count($result);
+        for ($n = 0; $n < $result_count; $n++)
+            {
+            if(!is_array($result[$n]))
+                {
+                // TODO - Resolve for maps - temporary fix to prevent errors when results are padded
+                continue;
+                }
+            // Get resource data for resources returned by the current search.
+            $geo = $result[$n]['ref'];
+            $geomark = get_resource_data($geo, $cache = false);
+            $geomark['preview_path'] = get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+            // Get custom metadata field value.
+            if (isset($marker_metadata_field))
+                {
+                $geomark2 = sql_query("SELECT value FROM resource_data WHERE resource = $geo AND resource_type_field = $marker_metadata_field");
+                }
+            else
+                {
+                $geomark2[0]['value'] = '';
+                }
+
+            // Check for resources without geolocation or invalid coordinates and skip those.
+            if ($geomark['geo_lat'] >= -90 && $geomark['geo_lat'] <= 90 && $geomark['geo_long'] >= -180 && $geomark['geo_long'] <= 180)
+                {
+                // Create array of geolocation parameters.
+                $geomarker[] = "[{$geomark['geo_long']}, {$geomark['geo_lat']}, {$geomark['ref']}, {$geomark['resource_type']}, {$geomark2[0]['value']}]";
+                $preview_paths[] = $geomark['preview_path'];
+                }
+            }
+        }
+
     # work out common keywords among the results
     if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
         {
-        for ($n=0;$n<count($result);$n++)
+        $result_count = count($result);
+        for ($n=0;$n<$result_count;$n++)
             {
             if ($result[$n]["ref"]) {$refs[]=$result[$n]["ref"];} # add this to a list of results, for query refining later
             }
@@ -1419,7 +1488,8 @@ if($responsive_ui)
         if (count($suggest)>0)
             {
             ?><p><?php echo $lang["torefineyourresults"]?>: <?php
-            for ($n=0;$n<count($suggest);$n++)
+            $suggest_count = count($suggest);
+            for ($n=0;$n<$suggest_count;$n++)
                 {
                 if ($n>0) {echo ", ";}
                 ?><a  href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo  urlencode(strip_tags($suggest[$n])) ?>" onClick="return CentralSpaceLoad(this);"><?php echo stripslashes($suggest[$n])?></a><?php
@@ -1430,7 +1500,8 @@ if($responsive_ui)
         
     $rtypes=array();
     if (!isset($types)){$types=get_resource_types();}
-    for ($n=0;$n<count($types);$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
+    $types_count = count($types);
+    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
     if (is_array($result) && count($result)>0)
         {
         $showkeypreview = false;
@@ -1522,10 +1593,10 @@ if($responsive_ui)
                 include "search_views/list.php";
                 }
 
-            if ($display=="stripes")
+             if ($display == 'map')
                 {
-                # ----------------  Stripes view -------------------
-                include "search_views/stripes.php";
+                # ----Map view----
+                include_once 'search_views/map.php';
                 }
 
             hook('customdisplaymode');
@@ -1553,11 +1624,10 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-if(!$modal)
+if($display != 'map' || !$modal)
     {
     if(!hook('bottomnavigation'))
-        {
-        ?>
+        { ?>
         <!--Bottom Navigation - Archive, Saved Search plus Collection-->
         <div class="BottomInpageNav">
             <?php hook('add_bottom_in_page_nav_left'); ?>
@@ -1575,9 +1645,8 @@ if(!$modal)
 
 hook("endofsearchpage");
 
-if($search_anchors)
-    {
-    ?>
+if($search_anchors && $display != 'map')
+    { ?>
     <script>
     place     = '<?php echo getvalescaped("place", ""); ?>';
     display   = '<?php echo $display; ?>';

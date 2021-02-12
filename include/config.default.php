@@ -35,11 +35,9 @@
  *    https://yoururl.com/pages/tools/fix_resource_field_column.php?field=8");
 */
 
-
 /* ---------------------------------------------------
 BASIC PARAMETERS
 ------------------------------------------------------ */
-
 #######################################
 ################################ MySQL:
 #######################################
@@ -2414,88 +2412,307 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-
 # Use Plugins Manager
 $use_plugins_manager = true;
 
 # Allow Plugin Upload
 $enable_plugin_upload = true;
 
-# Disable geocoding features?
-$disable_geocoding = false;
+// GEOLOCATION MAP CONFIGURATION------------
+    // Disable maps and geocoding features?
+    $disable_geocoding = false;
 
-# After obtaining an API key, please set the following config option:
-# $google_maps_api_key = '';
+    // Hide map location panel by default (a link to show it will be displayed instead)?
+    $hide_geolocation_panel = false;
 
-#Enable geolocating multiple assets on a map that are part of a collection
-$geo_locate_collection = false;
+    // Show map search results in a modal?
+    $geo_search_modal_results = false;
 
-# OpenLayers: The default center and zoom for the map view when searching or selecting a new location. This is a world view.
-# For example, to specify the USA use: #$geolocation_default_bounds="-10494743.596017,4508852.6025659,4";
-# For example, to specify Utah, use $geolocation_default_bounds="-12328577.96607,4828961.5663655,6";
-$geolocation_default_bounds="-3.058839178216e-9,2690583.3951564,2";
+    // Enable geolocating multiple resources on a map that are part of a collection?
+    $geo_locate_collection = true;
 
-# The layers to make available. The first is the default.
-$geo_layers="osm";
-# To enable Google layers, use:
-# $geo_layers="osm, gmap, gsat, gphy";
+    // Geolocate collection preview image size.
+    $geolocate_image_size = 'pre'; // Use 'thm' or 'pre' for thumbnail and preview image size, respectively.
 
-# Height of map in pixels on resource view page
-$view_mapheight=200;
+    // OpenLayers default center and zoom for the map view when selecting a new location, as a world view.
+    // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
+    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
 
-# Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-$geo_tile_caching=true;
+    // Enable Google Maps for OpenLayers basemaps? If true, must also set $google_maps_api_key.
+    $use_google_maps = false;
+    # $google_maps_api_key = '';
 
-# Optional path to tile cache directory
-#$geo_tile_cache_directory="";
+    // OpenLayers basemap layers to make available, the first is the default.
+    //$geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
 
-# A list of upper/lower long/lat bounds, defining areas that will be excluded from geographical search results.
-# Areas are defined using values in the following sequence: southwest lat, southwest long, northeast lat, northeast long
-$geo_search_restrict=array
-	(	
-	# array(50,-3,54,3) # Example omission zone
-	# ,array(-10,-20,-8,-18) # Example omission zone 2
-	# ,array(1,1,2,2) # Example omission zone 3
-	);
+    $geo_leaflet_maps_sources = false;
 
-# Add OpenLayers configuration options to this variable to overwrite all other options. 
-$geo_override_options = "";
 
-// Only high level tiles are included by default. If you require higher resolution tiles 
-// you need permitted access to a full tile server, or you can set up your own. 
-// See https://wiki.openstreetmap.org/wiki/Tile_servers for more information
-// If no servers are available then your zoom ability will be limited
+    // Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl).
+    $geo_tile_caching = true;
 
-$geo_tile_servers = array();
-//$geo_tile_servers[] = 'a.tile.sometileserver.org';
-//$geo_tile_servers[] = 'b.tile.sometileserver.org';
-//$geo_tile_servers[] = 'c.tile.sometileserver.org';
+    // Optional path to OpenLayers tile cache directory.
+    # $geo_tile_cache_directory = '';
+    
+    // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
+    // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
+    // information. If no servers are available, then your zoom ability will be limited.
+    $geo_tile_servers = array();
+    //$geo_tile_servers[] = 'a.tile.sometileserver.org';
+    //$geo_tile_servers[] = 'b.tile.sometileserver.org';
+    //$geo_tile_servers[] = 'c.tile.sometileserver.org';
 
-// How long will tiles be cached? Set to one year by default
-// Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
-$geo_tile_cache_lifetime = 60*60*24*365;
+    // $geo_tile_servers['OpenStreetMap'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'a.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
+
+/*
+     
+         var osm_mapnik = L.tileLayer.provider('OpenStreetMap.Mapnik', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 19,
+             attribution: osm_attribute
+         });
+ 
+         var osm_de = L.tileLayer.provider('OpenStreetMap.DE', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 18,
+             attribution: osm_attribute
+         });
+ 
+         var osm_fr_attribute = '&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
+         var osm_fr = L.tileLayer.provider('OpenStreetMap.France', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 20,
+             attribution: osm_fr_attribute
+         });
+ 
+         var osm_ch = L.tileLayer.provider('OpenStreetMap.CH', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 18,
+             attribution: osm_attribute
+         });
+ 
+         var osm_bzh = L.tileLayer.provider('OpenStreetMap.BZH', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 19,
+             attribution: osm_attribute
+         });
+ 
+         var osm_hot = L.tileLayer.provider('OpenStreetMap.HOT', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 19,
+             attribution: osm_attribute
+         });
+ 
+         var osm_hikebike = L.tileLayer.provider('HikeBike.HikeBike', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 19,
+             attribution: osm_attribute
+         });
+ 
+         var osm_mtb = L.tileLayer.provider('MtbMap', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             attribution: osm_attribute
+         });
+ 
+         var osm_otm_attribute = 'Map data: &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: &copy; <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)';
+         var osm_otm = L.tileLayer.provider('OpenTopoMap', {
+             useCache: '<?php echo $map_default_cache;?>',
+             detectRetina: '<?php echo $map_retina;?>',
+             maxZoom: 17,
+             attribution: osm_otm_attribute
+         }); ";
+
+
+*/
+    // How long will tiles be cached? Set to one year by default
+    // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+    $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
+
+    // Add OpenLayers configuration options to this variable to overwrite all other options.
+    $geo_override_options = "";
+
+    // Leaflet default map center EPSG:3857 Web Mercator (WGS84) latitude and longitude in decimal degrees and zoom level.
+    $map_centerview = '[40.66, -111.44], 12';
+
+    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
+    $geo_search_restrict = array(
+        # array(50,-3,54,3)      // Example omission zone 1.
+        # ,array(-10,-20,-8,-18) // Example omission zone 2.
+        # ,array(1,1,2,2)        // Example omission zone 3.
+    );
+
+    // Map height in pixels on the Resource View page.
+    $view_mapheight = 350;
+
+    // Map height in pixels on the Geographic/Map Search page.
+    $mapsearch_mapheight = 625;
+
+    // Map height in pixels on the Resource Edit page.
+    $mapedit_mapheight = 625;
+
+    // Leaflet: Use zoom slidebar instead of standard +/- buttons?
+    $map_zoomslider = true;
+
+    // Leaflet: Show zoom history navigation bar?
+    $map_zoomnavbar = true;
+
+    // Leaflet: Show a KML overlay on the map?
+    $map_kml = false;
+    $map_kml_file = ''; # Place KML file in ../filestore/system/, example: overlay.kml
+
+    // Leaflet: Cache map layer tiles in the browser (recommended to reduce tile server load)?
+    $map_default_cache = true; # Default basemap?
+    $map_layer_cache = true; # All basemaps?
+
+    // Leaflet: Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
+    $map_retina = false;
+
+    // Leaflet default basemap.
+    $map_default = 'OpenStreetMap.Mapnik'; # Options: 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
+
+    // Leaflet: show resource thumbnail marker popup, instead of resource ID tooltip?
+    $marker_resource_preview = true;
+
+    // Leaflet: available marker colors and the order they will be used.
+    $marker_colors = array(
+            0 => 'Unset',
+            1 => 'Blue',
+            2 => 'Red',
+            3 => 'Green',
+            4 => 'Orange',
+            5 => 'Yellow',
+            6 => 'Black',
+            7 => 'Grey',
+            8 => 'Violet'
+            );
+
+    // Default Leaflet marker color options based on resource type (0 = Blue, 1 = Red, 2 = Green, 3 = Orange, 4 = Yellow, 5 = Black, 6 = Gray, and 7 = Violet).
+    $marker_color1 = 0; # Photo resource type.
+    $marker_color2 = 1; # Document resource type.
+    $marker_color3 = 2; # Video resource type.
+    $marker_color4 = 3; # Audio resource type.
+    $marker_color5 = 4; # User added resource type 1.
+    $marker_color6 = 5; # User added resource type 2.
+    $marker_color7 = 6; # User added resource type 3.
+    $marker_color8 = 7; # User added resource type 4.
+
+    // Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
+    # $marker_metadata_field = 85; # Example is fieldID 85.
+    $lang['custom_metadata_markers'] = ''; # Custom metadata field map legend header text.
+
+    // Array of minimum and maximum numeric values for the markers on the map up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
+    $marker_metadata_array = [
+        ['min' => 1935, 'max' => 1939], # Marker 1
+        ['min' => 1940, 'max' => 1949], # Marker 2
+        ['min' => 1950, 'max' => 1959], # Marker 3
+        ['min' => 1960, 'max' => 1969], # Marker 4
+        ['min' => 1970, 'max' => 1979], # Marker 5
+        ['min' => 1980, 'max' => 1989], # Marker 6
+        ['min' => 1990, 'max' => 1999], # Marker 7
+        ['min' => 2000, 'max' => 2010]  # Marker 8
+    ];
+
+    // Resource metadata field integer ID containing polygon footprint location string, blank '' if not used.  String in (latitude, longitude) coordinate pairs separated by a comma: (40.75,-111.51), (40.75,-111.49), (40.73,-111.49), (40.73,-111.51) or using braces [].  String can also contain a fifth pair that closes the polygon and equal to the first pair.
+    # $map_polygon_field = 84;
+
+    // LEAFLET PROVIDERS AVAILABLE FREE WORLDWIDE BASEMAPS
+        // Enabled OpenStreetMap (OSM) basemap layers.
+        $map_osm = true; # Standard, mapnik
+        $map_osmde = false; # Germany
+        $map_osmfr = false; # France
+        $map_osmch = false; # Switzerland
+        $map_osmbzh = false; # BZH
+        $map_osmhot = false; # Humanitarian
+        $map_osmmtb = false; # Mountain bike map
+        $map_osmhikebike = false; # Hike and bike map
+        $map_otm = true; # OpenTopoMap
+        $map_omsroads = false; # OpenMapSurfer roads
+
+        // Enabled Stamen basemap layers.
+        $map_stamentoner = false; # Toner
+        $map_stamentonerlt = false; # Toner light
+        $map_stamentonerback = false; # Toner background
+        $map_stamenterrain = false; # Terrian
+        $map_stamenterrainback = false; # Terrian background
+        $map_stamenrelief = false; # Relief
+        $map_stamenwatercolor = false; # Watercolor
+
+        // Enabled Hydda basemap layers.
+        $map_hyddafull = false; # Full
+        $map_hyddabase = false; # Base
+
+        // Enabled NASA Global Imagery Browse Services (GIBS) basemap layers.
+        $map_nasagibscolor = false; # MODIS-TERRA true color
+        $map_nasagibsfalsecolor = false; # MODIS-TERRA bands 3, 6, and 7 false color
+        $map_nasagibsnight = false; # Earth at night 2012
+
+    // LEAFLET PROVIDERS AVAILABLE FREE LIMITED COVERAGE BASEMAPS
+        // Enabled U.S. Geological Survey basemap layers, United States coverage only.
+        $map_usgstopo = true;
+        $map_usgsimagery = true;
+        $map_usgsimagerytopo = true;
+
+    // LEAFLET PROVIDERS AVAILABLE WORLDWIDE BASEMAPS (REGISTRATION REQUIRED)
+        // Enabled ESRI basemap layers, no API code required.
+        $map_esristreet = true; # WorldStreetMap
+        $map_esridelorme = true; # Delorme
+        $map_esritopo = true; # World topographic
+        $map_esriimagery = true; # World imagery
+        $map_esriterrain = true; # World terrain
+        $map_esrirelief = true; # World shaded relief
+        $map_esriphysical = true; # World physical
+        $map_esriocean = false; # Ocean basemap
+        $map_esrinatgeo = true; # National Geographic
+        $map_esrigray = false; # World gray canvas
+
+        // Enabled Thunderforest basemap layers, API code required.
+        $map_tfapi = '';
+        $map_tfocm = false; # OpenCycleMap
+        $map_tftransport = false; # Transport
+        $map_tftransportdark = false; # Transport dark
+        $map_tflandscape = false; # Landscape
+        $map_tfoutdoors = false; # Outdoors
+        $map_tfpioneer = false; # Pioneer
+        $map_tfmobileatlas = false; # Mobile atlas
+        $map_tfneighbourhood = false; # Neighbourhood
+
+        // Enabled Mapbox basemap layers, ID and access token required.
+        $map_mapbox = false;
+        $map_mapboxid = '';
+        $map_mapboxtoken = '';
+        $map_mapboxattribution = '';
 
 # QuickLook previews (Mac Only)
 # If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
 # This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
-#
 # $qlpreview_path="/usr/bin";
-#
-# A list of extensions that QLPreview should NOT be used for.
-$qlpreview_exclude_extensions=array("tif","tiff");
 
-# Log developer debug information to the debug log (filestore/tmp/debug.txt)?
-# As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
+// A list of extensions that QuickLook previews should NOT be used for.
+$qlpreview_exclude_extensions = array("tif","tiff");
+
+// Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
-# Optional extended debugging information from backtrace (records pagename and calling functions)
-# debug_extended_info = true;
+// Optional extended debugging information from backtrace (records pagename and calling functions).
+$debug_extended_info = false;
 
-# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access to both the file and the containing folder by web service account
-#$debug_log_location="d:/logs/resourcespace.log";
-#$debug_log_location="/var/log/resourcespace/resourcespace.log";
+// Optional debug log location. Used to specify a full path to debug file and ensure folder permissions allow write access to both the file and the containing folder by web service account.
+# $debug_log_location = "d:/logs/resourcespace.log";
+# $debug_log_location = "/var/log/resourcespace/resourcespace.log";
 
-# Suppress SQL information in the debug log?
+// Suppress SQL information in the debug log?
 $suppress_sql_log = false;
 
 # Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
@@ -2986,11 +3203,9 @@ $usage_comment_blank=false;
 # Option to add a link to the resource view page that allows a user to email the $email_notify address about the resource
 $resource_contact_link=false;
 
-# Hide geolocation panel by default (a link to show it will be displayed instead)
-$hide_geolocation_panel=false;
-
 # Option to move the welcome text into the Home Picture Panel. Stops text from falling behind other panels.
 $welcome_text_picturepanel=false;
+
 # Hide Welcome Text
 $no_welcometext = false;
 
@@ -3156,8 +3371,8 @@ $purge_temp_folder_age=0;
 # If it is set to 1 the link will also be valid all the next day
 $password_reset_link_expiry =1;
 
-# Show the resource view in a modal when accessed from search results.
-$resource_view_modal=true;
+# Show the resource view in a modal when accessed from search results?
+$resource_view_modal = false;
 
 # Option to show other standard pages e.g. resource requests in a modal
 $modal_default=false;
@@ -3171,9 +3386,6 @@ $resource_view_use_pre = false;
 # Use the larger layout on the view page for landscape images, smaller layout for portrait images.
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
-
-# Show geographical search results in a modal
-$geo_search_modal_results = true;
 
 # Show an edit icon/link in the search results.
 $search_results_edit_icon=true;

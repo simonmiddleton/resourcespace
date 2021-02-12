@@ -20,6 +20,7 @@ $name                  = getvalescaped('name', '');
 $config_options        = getvalescaped('config_options', '');
 $allowed_extensions    = getvalescaped('allowed_extensions', '');
 $tab                   = getvalescaped('tab', '');
+$colour                = getvalescaped('colour', '');
 $push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
 $inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
 
@@ -55,7 +56,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
                allowed_extensions = '{$allowed_extensions}',
                tab_name = '{$tab}',
                push_metadata = '{$push_metadata}',
-               inherit_global_fields = '{$inherit_global_fields}'
+               inherit_global_fields = '{$inherit_global_fields}',
+               colour = '{$colour}'
          WHERE ref = '$ref'
      ");
      clear_query_cache("schema");
@@ -125,7 +127,8 @@ $restypedata=sql_query ("
              allowed_extensions,
              tab_name,
              push_metadata,
-             inherit_global_fields
+             inherit_global_fields,
+             colour
         FROM resource_type
        WHERE ref = '{$ref}'
     ORDER BY `name`
@@ -287,6 +290,11 @@ else
 	</div>
 	<div class="clearerleft"> </div>
     </div>
+
+    <?php
+    $marker_colors[0] = $lang["select"];
+    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$marker_colors,$restypedata["colour"]);
+    ?>
     
         <div class="Question">
     <label><?php echo $lang["property-push_metadata"]?></label>

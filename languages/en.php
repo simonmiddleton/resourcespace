@@ -1,7 +1,5 @@
 <?php
-# English
-# Language File for ResourceSpace
-# -------
+# English Language File for ResourceSpace
 # Note: when translating to a new language, preserve the original case if possible.
 
 # User group names (for the default user groups)
@@ -239,15 +237,15 @@ $lang["anymonth"]="Any month";
 $lang["anyday"]="Any day";
 $lang["anycountry"]="Any country";
 $lang["resultsdisplay"]="Results display";
-$lang["xlthumbs"]="X-large";
+$lang['xlthumbs'] = 'X-large';
 $lang["xlthumbstitle"]="Extra large thumbnails";
-$lang["largethumbs"]="Large";
+$lang['largethumbs'] = 'Large';
 $lang["largethumbstitle"]="Large thumbnails";
 $lang["smallthumbs"]="Small";
 $lang["smallthumbstitle"]="Small thumbnails";
 $lang["strip"]="Strip";
 $lang["striptitle"]="Strip view";
-$lang["list"]="List";
+$lang['list'] = 'List';
 $lang["listtitle"]="List view";
 $lang["perpage"]="per page";
 $lang["perpage_option"]="? per page";
@@ -414,8 +412,8 @@ $lang["toggle"]="Toggle";
 $lang["resize"]="Resize";
 $lang["contactsheet"]="Contact sheet";
 $lang["mycollection"]="Default Collection";
-$lang["geolocatecollection"]="Geolocate collection";
-$lang["geoemptycollection"]="You provided an empty collection. Please add assets and try again.";
+$lang['geolocatecollection'] = 'Geolocate collection';
+$lang['geoemptycollection'] = 'You provided an empty collection. Please add assets and try again.';
 $lang["editresearchrequests"]="Edit research requests";
 $lang["research"]="Research";
 $lang["savedsearch"]="Saved search";
@@ -661,7 +659,7 @@ $lang["backtoresourceview"]="Back to resource view";
 $lang["backtoshareresource"]="Back to share resource";
 $lang["backtosharecollection"]="Back to share collection";
 $lang["continuetoresourceview"]="Continue to resource view";
-$lang["backtogeolocatecollection"]="Back to geolocate collection";
+$lang['backtogeolocatecollection'] = 'Back to geolocate collection';
 
 # Resource status
 $lang["status"]="Status";
@@ -792,6 +790,7 @@ $lang["name"]="Name";
 $lang["action"]="Action";
 $lang["treeobjecttype-field"]=$lang["field"]="Field";
 $lang["save"]="Save";
+$lang["save-return"] = "Save & Return";
 $lang["revert"]="Revert";
 $lang['continue'] = 'Continue';
 $lang["cancel"]="Cancel";
@@ -1476,23 +1475,112 @@ $lang['plugins-configvar'] = 'Sets configuration variable: $%cvn'; //%cvn is rep
 $lang['plugins-search-plugin-placeholder'] = 'Search plugins';
 $lang['plugins-disabled-plugin-message'] = 'Disabled in configuration';
 
-#Location Data
-$lang['location-title'] = 'Location data';
+// Location Data
+$lang['location-title'] = 'Location Data';
 $lang['location-add'] = 'Add location';
 $lang['location-edit'] = 'Edit location';
 $lang['location-details'] = 'Use "Drag mode" to switch between pin positioning and panning. Use zoom controls to zoom in and out. Click Save to save pin position and zoom level.';
-$lang['location-help'] = 'If entering coordinates manually, please use the Decimal Degrees format, e.g. 32.30642,-122.61458.';
-$lang['location-validation-error'] = 'Incorrect coordinate values entered.';
-$lang['location-missing'] = 'The following resources lack geolocation data and are not displayed:';
-$lang['location-noneselected']="No location selected";
-$lang['location-noneselected']="No location data";
+$lang['location-missing'] = "The following resources lack geolocation data and are not displayed on the map below.  Click on 'Add location' to edit the geolocation data for each resource listed in this table.";
+$lang['maps-disabled'] = 'Maps disabled.';
+$lang['mapadd-introtext'] = 'Pan and zoom to the map view of interest for this resource, then click the Add Marker button below the zoom control on the map left and click the map location where the resource is located.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
+$lang['mapadd2-introtext'] = 'The blue marker indicates the location for the resource which can be moved by dragging.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
+$lang['location-noneselected']='No location selected';
+$lang['location-noneselected']='No location data';
 $lang['location'] = 'Location';
 $lang['mapzoom'] = 'Map zoom';
-$lang['openstreetmap'] = "OpenStreetMap";
-$lang['google_terrain'] = "Google terrain";
-$lang['google_default_map'] = "Google default map";
-$lang['google_satellite'] = "Google satellite";
-$lang["markers"] = "Markers";
+$lang['openstreetmap'] = 'OpenStreetMap';
+$lang['google_terrain'] = 'Google terrain';
+$lang['google_default_map'] = 'Google default map';
+$lang['google_satellite'] = 'Google satellite';
+$lang['marker'] = 'Marker';
+$lang['markers'] = 'Markers';
+$lang['map_configuration'] = 'Search Results Map';
+$lang['map_introtext1'] = 'The map below shows resources from the search result that have a geolocation associated with them. The marker color is set to the resource type or a custom metadata field (key below the map). When markers would overprint other markers, green-colored clustering is used with a number indicating the number of clustered markers, zoom-in or double click a cluster.  Click on an individual marker to load a popup for that resource showing a preview image.  Click the preview image to load a window for that resource.  Hover over an individual marker for the geocoordinates.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
+$lang['search_map_introtext'] = 'Pan and zoom to the map view of interest or search for a location using the upper right search button, then draw a blue box on the map by dragging to select a search area for resources with a geolocation that lie within the box.  To search for a specific location or geographic feature name, use the upper right search button.  Change the basemap using the upper right map layers button.  Save the map to a PNG file using the lower left map button.';
+$lang['edit_map_introtext'] = "Pan and zoom to the map view of interest, then click on the map to locate the resource location marker.  Save the most recent geolocation using the Save button and then click 'Back to resource edit or geolocate collection' to return.  To search for a specific location or geographic feature name, use the upper right search button.  Change the basemap using the upper right map layers button.  Save the map to a PNG file using the lower left map button.";
+$lang['mapview'] = 'Map';
+$lang['maptitle'] = 'Map view';
+$lang['mapemptysearch'] = 'No search results.';
+$lang['map_print_title'] = 'Search Results Map';
+$lang['leaflet_mapdownload'] = 'Map Download';
+$lang['geolocate_collection_map_text'] = 'The map below shows resources from this collection that have a geolocation associated with them. The marker color is set to the resource type or a custom metadata field (key below the map). When markers would overprint other markers, green-colored clustering is used with a number indicating the number of clustered markers, zoom-in or double click a cluster.  Click on an individual marker to load a popup for that resource showing a preview image.  Click the preview image to load a window for that resource.  Hover over an individual marker for the geocoordinates.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
+$lang['location-validation-error'] = "Invalid location specified";
+$lang['resource_type_marker_colour'] = "Map marker colour";
+
+// Search map options.
+$lang['map_options'] = 'Search Map Options';
+$lang['legend_text'] = 'Resource Types:';
+$lang['map_download'] = 'Download map as a PNG file, select a size to the right';
+
+// OpenSteetMap basemap group.
+$lang['map_osm_group'] = 'OpenStreetMap (OSM)';
+$lang['map_osm'] = 'Default';
+$lang['map_osmde'] = 'German Style';
+$lang['map_osmfrance'] = 'OSM France';
+$lang['map_osmch'] = 'OSM Switzerland';
+$lang['map_osmbzh'] = 'OSM Luxembourg';
+$lang['map_osmhot'] = 'Humanitarian';
+$lang['map_osmmtb'] = 'Mountain Bike Map of Europe';
+$lang['map_osmhikebike'] = 'Hike & Bike Map';
+$lang['map_otm'] = 'OSM Topographic';
+
+// Thunderforest basemap group.
+$lang['map_tf_group'] = 'Thunderforest';
+$lang['map_tfapi'] = 'API Code';
+$lang['map_tfocm'] = 'OpenCycleMap (OCM)';
+$lang['map_tftransport'] = 'Transport';
+$lang['map_tftransportdark'] = 'Transport Dark';
+$lang['map_tflandscape'] = 'Landscape';
+$lang['map_tfoutdoors'] = 'Outdoors';
+$lang['map_tfpioneer'] = 'Pioneer';
+$lang['map_tfmobileatlas'] = 'Mobile Atlas';
+$lang['map_tfneighbourhood'] = 'Neighbourhood';
+
+// Hydda basemap group.
+$lang['map_hydda_group'] = 'Hydda';
+$lang['map_hyddafull'] = 'Default Map';
+$lang['map_hyddabase'] = 'Base';
+
+// Stamen basemap group.
+$lang['map_stamen_group'] = 'Stamen';
+$lang['map_stamentoner'] = 'Toner';
+$lang['map_stamentonerlt'] = 'Toner Light';
+$lang['map_stamentonerback'] = 'Toner Background';
+$lang['map_stamenterrain'] = 'Terrain';
+$lang['map_stamenterrainback'] = 'Terrain Background';
+$lang['map_stamenrelief'] = 'Relief';
+$lang['map_stamenwatercolor'] = 'Watercolor';
+
+// ESRI basemap group.
+$lang['map_esri_group'] = 'ESRI';
+$lang['map_esristreet'] = 'Streets';
+$lang['map_esridelorme'] = 'DeLorme';
+$lang['map_esritopo'] = 'Topographic';
+$lang['map_esriimagery'] = 'Imagery';
+$lang['map_esriterrain'] = 'Terrain';
+$lang['map_esrirelief'] = 'Shaded Relief';
+$lang['map_esriphysical'] = 'Physical';
+$lang['map_esriocean'] = 'Ocean';
+$lang['map_esrinatgeo'] = 'National Geographic';
+$lang['map_esrigray'] = 'Gray Canvas';
+
+// NASA GIBS basemap group.
+$lang['map_nasagibs_group'] = 'NASA GIBS';
+$lang['map_nasagibscolor'] = 'Modis/Terra Color Imagery';
+$lang['map_nasagibsfalsecolor'] = 'Modis/Terra False Color Imagery';
+$lang['map_nasagibsnight'] = 'Night Imagery';
+
+// Mapbox basemap group.
+$lang['map_mapbox_group'] = 'Mapbox';
+$lang['map_mapboxid'] = 'ID';
+$lang['map_mapboxtoken'] = 'Access Token';
+$lang['map_mapbox'] = 'Default Map';
+
+// U.S. Geological Survey The National Map group.
+$lang['map_usgstnm_group'] = 'The National Map';
+$lang['map_usgstopo'] = 'US Topographic';
+$lang['map_usgsimagery'] = 'US Imagery';
+$lang['map_usgsimagerytopo'] = 'US Imagery & Topographic';
 
 $lang["publiccollections"]="Public collections";
 $lang["viewmygroupsonly"]="View my groups only";
@@ -1808,13 +1896,13 @@ $lang["ticktodeletethisresearchrequest"]="Tick to delete this request";
 
 $lang["done"]="Done.";
 
-$lang["latlong"]="Lat / long";
-$lang["geographicsearch"]="Geographic search";
-$lang["geographicsearchmissing"]="Geographic search criteria missing";
-$lang["geographicsearchresults"]="Geographic search results";
-
-$lang["geographicsearch_help"]="Drag to select a search area.";
+$lang['latlong'] = 'Lat / long';
+$lang['geographicsearch'] = 'Geographic search';
+$lang['geographicsearchresults'] = 'Geographic search results';
+$lang['geographicsearchmissing'] = 'Geographic search criteria missing';
+$lang['geographicsearch_help'] = 'Drag to select a search area.';
 $lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server. Please check your \$geo_tile_servers configuration setting";
+
 $lang["purge"]="Purge";
 $lang["purgeuserstitle"]="Purge users";
 $lang["purgeusers"]="Purge users";
@@ -1827,10 +1915,10 @@ $lang["purgeusersnousers"]="There are no users to purge.";
 $lang["editallresourcetypewarning"]="Warning: changing the resource type will delete any resource type specific metadata currently stored for the selected resources.";
 $lang["editresourcetypewarning"]="Warning: changing the resource type will delete any resource type specific metadata currently stored for this resource.";
 
-$lang["geodragmode"]="Drag mode";
-$lang["geodragmodearea"]="position pin";
-$lang["geodragmodeareaselect"]="select search area";
-$lang["geodragmodepan"]="pan";
+$lang['geodragmode'] = 'Drag mode';
+$lang['geodragmodearea'] = 'position pin';
+$lang['geodragmodeareaselect'] = 'select search area';
+$lang['geodragmodepan'] = 'pan';
 
 $lang["substituted_original"] = "substituted original";
 $lang["use_original_if_size"] = "Use original if selected size is unavailable?";
@@ -2092,8 +2180,8 @@ $lang["collection_share_status_warning"]="Warning - this collection has resource
 $lang["contactadmin"]="Contact administrator";
 $lang["contactadminintro"]="Please enter your message and click 'Send'.";
 $lang["contactadminemailtext"]=" has emailed you about a resource";
-$lang["showgeolocationpanel"]="Show location information";
-$lang["hidegeolocationpanel"]="Hide location information";
+$lang['showgeolocationpanel'] = 'Show location information';
+$lang['hidegeolocationpanel'] = 'Hide location information';
 $lang["download_usage_option_blocked"]="This usage option is not available. Please check with your administrator";
 
 $lang["tagcloudtext"]="With which metadata terms have people been tagging resources? The more a term has been used, the larger it appears in the cloud.<br /><br />You may also click on any term below to execute the search.";
@@ -2877,6 +2965,7 @@ $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignore
 $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
+
 $lang["error_saveorigalternative"]      = "Error saving original as alternative file";   
 
 $lang["start"]                          = "Start";
