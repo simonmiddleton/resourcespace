@@ -430,7 +430,12 @@ else if($edit)
 		$tile_nostyle = true;
 		}
 
-	#Only show freetext field if tile style is not analytics
+	if (!isset($tile_style)) 
+		{
+		$tile_style = "";
+		}
+		
+	# Show freetext field if the tile style is not analytics
 	if ($tile_style != 'analytics') 
     	{
     	$freetext = empty($tile["txt"])? "true" : $tile["txt"];
