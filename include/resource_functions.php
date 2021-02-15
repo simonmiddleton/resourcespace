@@ -3751,7 +3751,7 @@ function get_themes_by_resource($ref)
     );
 
     $results = sql_query($sql);
-    $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, i18n_get_translated($item["name"])); };
+    $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, strip_prefix_chars(i18n_get_translated($item["name"]),"*")); };
 
     foreach($results as $i => $col)
         {
