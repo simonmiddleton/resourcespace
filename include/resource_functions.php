@@ -8643,7 +8643,7 @@ function get_external_shares(array $filteropts)
         if(checkperm("ex"))
             {
             // Can also see shares that never expire
-            $usercondition = " (expires ='' OR expires IS NULL OR " . $usercondition . ")";
+            $usercondition = " (expires IS NULL OR " . $usercondition . ")";
             }
         $conditions[] =$usercondition;
         }
