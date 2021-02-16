@@ -1145,7 +1145,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
     foreach($choices as $statekey => $statename)
         {
         echo '<span id="archivestate' . $statekey . '"><input type="checkbox" value="'. $statekey . '" name="' . $name . '[]" id="' . $name . $statekey . '" ' 
-            . (in_array($statekey,$current)?' checked="checked"':'') . '> '. $statename . '<br /></span>';
+            . (isset($current) && $current!='' && in_array($statekey,$current)?' checked="checked"':'') . '> '. $statename . '<br /></span>';
         }
 ?>
     </fieldset>
