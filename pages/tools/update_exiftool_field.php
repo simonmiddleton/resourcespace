@@ -135,6 +135,12 @@ foreach ($fieldrefs as $fieldref)
                 echo $command . PHP_EOL;
                 $value = iptc_return_utf8(trim(run_command($command)));
                 
+                if ($value == "-")
+                    {
+                    # exiftool returned hyphen for unset tag.
+                    $value = "";
+                    }
+
                 $plugin="../../plugins/exiftool_filter_" . $name . ".php";
                 if ($exiftool_filter!="")
                     {
