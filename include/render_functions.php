@@ -4659,7 +4659,7 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
-    $html_actions_style = array();
+    $html_actions_style = ['display: none;'];
     if(count($tools) > 3)
         {
         $html_actions_style[] = "height: 43px;";
@@ -4692,7 +4692,7 @@ function render_featured_collection(array $ctx, array $fc)
     if(!empty($tools))
         {
         ?>
-        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone" style="<?php echo implode(" ", $html_actions_style); ?>">
+        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions" style="<?php echo implode(" ", $html_actions_style); ?>">
         <?php
         foreach($tools as $tool)
             {
