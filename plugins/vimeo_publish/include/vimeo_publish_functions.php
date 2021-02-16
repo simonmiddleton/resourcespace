@@ -37,7 +37,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
         $access_token  = isset($vimeo_details[0]['vimeo_access_token']) ? $vimeo_details[0]['vimeo_access_token'] : '';
         $state         = isset($vimeo_details[0]['vimeo_state']) ? $vimeo_details[0]['vimeo_state'] : '';
         }
-    elseif(checkperm('a'))
+    else
         {
         $access_token  = $vimeo_publish_system_token != "" ? $vimeo_publish_system_token : "";
         $state         = $vimeo_publish_system_state != "" ? $vimeo_publish_system_state : "";
