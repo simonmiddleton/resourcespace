@@ -814,8 +814,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 		$sql.=" and u.usergroup in ('" . join ("','",$groups) . "')";
 		}
 
-    $filter_by_user = ($search_user_collections ? "AND c.user = '" . escape_check($userref) . "'" : "");
-
     // Add extra elements to the SELECT statement if needed
     $select_extra = "";
     if($include_resources)
@@ -825,6 +823,10 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
     // Filter by type (public/featured collections)
     $public_type_filter_sql = "c.`type` = " . COLLECTION_TYPE_PUBLIC;
+    if($search_user_collections)
+        {
+        $public_type_filter_sql = sprintf('(c.`type` = %s OR c.user = \'%s\')', COLLECTION_TYPE_PUBLIC, escape_check($userref));
+        }
     $featured_type_filter_sql = sprintf(
         "(c.`type` = %s %s)",
         COLLECTION_TYPE_FEATURED,
@@ -844,6 +846,16 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? " OR {$featured_type_filter_sql}" : $featured_type_filter_sql)
     );
 
+    $where_clause_osql = 'col.`type` = ' . COLLECTION_TYPE_PUBLIC;
+    if($search_user_collections)
+        {
+        $where_clause_osql = sprintf('col.`type` IN (%s, %s)', COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC);
+        }
+    if($featured_type_filter_sql !== '')
+        {
+        $where_clause_osql .= ' OR (col.`type` = ' . COLLECTION_TYPE_FEATURED . ' AND col.is_featured_collection_category = false)';
+        }
+
     $main_sql = sprintf(
         "SELECT *
            FROM (
@@ -862,14 +874,15 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                             %s
                        GROUP BY c.ref
                        ORDER BY %s
-           ) AS pfcs
-          WHERE (pfcs.`type` = 4 OR (pfcs.`type` = 3 AND pfcs.is_featured_collection_category = false))",
+           ) AS col
+          WHERE %s",
         COLLECTION_TYPE_FEATURED,
         $select_extra,
         $keysql,
         $type_filter_sql,
-        $filter_by_user . $sql, # extra filters
-        "{$order_by} {$sort}"
+        $sql, # extra filters
+        "{$order_by} {$sort}",
+        $where_clause_osql
     );
 
     return sql_query($main_sql, '', $fetchrows);
