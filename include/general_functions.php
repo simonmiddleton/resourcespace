@@ -1559,7 +1559,7 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
  */
 function pager($break=true,$scrolltotop=true,$options=array())
     {
-    global $curpage,$lang,$pagename;
+    global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
     $validoptions = array(
         "curpage",
         "url",
@@ -1582,6 +1582,15 @@ function pager($break=true,$scrolltotop=true,$options=array())
     $modal  = ('true' == getval('modal', ''));
     $scroll =  $scrolltotop ? "true" : "false"; 
     $jumpcount++;
+
+    // If pager URL includes query string params, remove them and store in $url_params array
+    if(!isset($url_params) && strpos($url,"?") !== false)
+        {
+        $urlparts = explode("?",$url);
+        parse_str($urlparts[1],$url_params);
+        $url = $urlparts[0];
+        }
+
     if(!hook("replace_pager")){
         if ($totalpages!=0 && $totalpages!=1){?>     
             <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
