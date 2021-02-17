@@ -213,7 +213,6 @@ function mplus_resource_get_association_data(array $filters)
     // Get filters required at a "per module configuration" level.
     // IMPORTANT: do not continue if the plugin isn't properly configured (ie. this information is missing or corrupt)
     $rs_uid_fields = [];
-    $rs_uid_field_joins = '';
     $per_module_cfg_filters = [];
     foreach($modules_config as $mcfg)
         {
@@ -224,11 +223,7 @@ function mplus_resource_get_association_data(array $filters)
         if(is_int_loose($rs_uid_field) && $rs_uid_field > 0 && !in_array($rs_uid_field, $rs_uid_fields))
             {
             $rs_uid_fields[] = $rs_uid_field;
-            $rs_uid_field_joins .= sprintf('LEFT JOIN resource_data AS rd%1$s ON r.ref = rd%1$s.resource AND rd%1$s.resource_type_field = \'%1$s\'%2$s', $rs_uid_field, PHP_EOL);
             }
-
-        $module_name = $mcfg['module_name'];
-        $applicable_resource_types = array_filter($mcfg['applicable_resource_types'], 'is_int_loose');
 
         if($module_name !== '' && !empty($applicable_resource_types) && is_int_loose($rs_uid_field) && $rs_uid_field > 0)
             {
@@ -263,7 +258,6 @@ function mplus_resource_get_association_data(array $filters)
              FROM resource AS r
         LEFT JOIN resource_node AS rn ON r.ref = rn.resource
         LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
-        %s
             WHERE r.archive = 0
               %s # Filters specific to each module configuration (e.g applicable resource types)
               %s # Additional filters
@@ -271,7 +265,6 @@ function mplus_resource_get_association_data(array $filters)
         ORDER BY r.ref DESC
         ',
         escape_check($module_name_field_ref),
-        $rs_uid_field_joins,
         'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')',
         implode(PHP_EOL, $additional_filters)
     );

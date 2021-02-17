@@ -126,42 +126,54 @@ logScript('[museumplus] IMPORTANT: for debugging issues with the actual process,
 
 mplus_log_event('Running from MuseumPlus script...');
 $mplus_resources = mplus_resource_get_association_data($filter);
-logScript('[museumplus] Initial list of resources to be processed: ' . print_r($mplus_resources, true), $mplus_log_file);
-$ramcs = mplus_get_associated_module_conf($mplus_resources, true);
-logScript('[museumplus] Resources with associated module configuration: ' . print_r(array_keys($ramcs), true), $mplus_log_file);
-if(array_key_exists('new_and_changed_associations', $filter))
+logScript('[museumplus] Initial total of resources to be processed: ' . count($mplus_resources), $mplus_log_file);
+
+
+
+$batch_no = 0;
+foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
     {
-    // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
-    foreach(mplus_flip_struct_by_module($ramcs) as $module_name => $mdata)
+    logScript(sprintf('[museumplus] Started processing batch #%s - %s resources', ++$batch_no, count($mplus_resource_refs)), $mplus_log_file);
+    logScript('[museumplus] Resources to check for associated module configuration: ' . implode(',', $mplus_resource_refs), $mplus_log_file);
+    $ramcs = mplus_get_associated_module_conf($mplus_resource_refs, true);
+    // logScript('[museumplus] Resources with associated module configuration: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
+
+    if(array_key_exists('new_and_changed_associations', $filter))
         {
-        $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
-        $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
-        foreach(array_keys($mdata['resources']) as $r_ref)
+        // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
+        foreach(mplus_flip_struct_by_module($ramcs) as $module_name => $mdata)
             {
-            if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
+            $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
+            $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
+            foreach(array_keys($mdata['resources']) as $r_ref)
                 {
-                unset($ramcs[$r_ref]);
-                continue;
+                if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
+                    {
+                    logScript('[museumplus] No change to the "module name - MpID" combination for resource #' . $r_ref, $mplus_log_file);
+                    unset($ramcs[$r_ref]);
+                    continue;
+                    }
                 }
             }
         }
+    // logScript('[museumplus] Resources ready to be processed: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
+    logScript('[museumplus] Total resources ready to be processed: ' . count(array_keys($ramcs)), $mplus_log_file);
+
+    logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);
+    mplus_resource_clear_metadata(array_keys($ramcs));
+
+    $valid_associations = mplus_validate_association($ramcs, false);
+    logScript('[museumplus] Total resources with a valid module association: ' . count(array_keys($valid_associations)), $mplus_log_file);
+
+    logScript('[museumplus] Attempting to sync MuseumPlus data...', $mplus_log_file);
+    $errors = mplus_sync($valid_associations);
+
+    if(is_array($errors) && !empty($errors))
+        {
+        logScript('[museumplus][error] Batch processed with errors: ' . PHP_EOL . implode(PHP_EOL . ' - ', $errors), $mplus_log_file);
+        }
     }
 
-logScript('[museumplus] Total resources ready to be processed: ' . print_r(array_keys($ramcs), true), $mplus_log_file);
-
-logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);
-mplus_resource_clear_metadata(array_keys($ramcs));
-
-$valid_associations = mplus_validate_association($ramcs, false);
-logScript('[museumplus] Resources with a valid module association: ' . print_r(array_keys($valid_associations), true), $mplus_log_file);
-
-logScript('[museumplus] Attempting to sync MuseumPlus data...', $mplus_log_file);
-$errors = mplus_sync($valid_associations);
-
-if(is_array($errors) && !empty($errors))
-    {
-    logScript('[museumplus][error] Process finished with errors: ' . PHP_EOL . implode(PHP_EOL . ' - ', $errors), $mplus_log_file);
-    }
 
 
 logScript("[museumplus] ", $mplus_log_file);
