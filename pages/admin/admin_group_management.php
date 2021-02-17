@@ -71,7 +71,8 @@ $per_page=15;
 $results=count($groups);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
-$url="admin_group_management.php?find=" . $find . "&" . ($order_by ? "orderby={$order_by}" : "");
+$url="admin_group_management.php";
+$url_params = array("find"=>$find,"orderby"=>$order_by);
 
 function addColumnHeader($orderName, $labelKey)
 {
@@ -181,7 +182,12 @@ function addColumnHeader($orderName, $labelKey)
 			}
 ?>		</table>
 	</div>
-	<div class="BottomInpageNav"><?php pager(false); ?></div>
+	<div class="BottomInpageNav">
+	<?php 
+	$url="admin_group_management.php";
+	$url_params = array("find"=>$find,"orderby"=>$order_by);
+	pager(false); 
+	?></div>
 </div>		<!-- end of BasicsBox -->
 
 <div class="BasicsBox">
