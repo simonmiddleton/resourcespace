@@ -336,7 +336,6 @@ function test_db(targetEl)
             $('#al-testconn').hide();
         },
         error: function(){
-            alert('<?php echo $lang["setup-mysqltestfailed"] ?>');
             $('#mysqlserver').addClass('warn');
             db_user.addClass('warn');
             db_pass.addClass('warn');
