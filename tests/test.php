@@ -126,10 +126,13 @@ if (!file_exists($storagedir))
     mkdir($storagedir);
     }
 $storagedir .= '/rs_test';
-if (!file_exists($storagedir))
+if (file_exists($storagedir))
     {
-    mkdir($storagedir);
+    // Clean up any old test directory
+    rcRmdir($storagedir);
     }
+
+mkdir($storagedir);
 $storageurl .= '/rs_test';
 echo "Filestore is now at $storagedir\n";
 
@@ -242,4 +245,5 @@ if(array_search('noteardown',$argv)===false)
     {
     # Remove database
     sql_query("drop database `$mysql_db`");
+    rcRmdir($storagedir);
     }

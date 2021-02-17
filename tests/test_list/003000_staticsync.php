@@ -36,6 +36,9 @@ $theme_category_levels=20;
 $staticsync_ingest=true;
 $staticsync_autotheme = true;
 
+// Disable unoconv previews as this is not being tested here and failures can interrupt test
+unset($unoconv_path);
+
 // Create file to sync
 copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_path . "teststatic.jpg");
 
