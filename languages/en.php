@@ -2342,6 +2342,7 @@ $lang["team_research__introtext"]="Organise and manage 'Research Requests'. <br 
 $lang["team_resource__introtext"]="Add individual resources or batch upload resources. To edit individual resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen.";
 $lang["team_stats__introtext"]="Charts are generated on demand based on live data. Tick the box to print all charts for your selected year.";
 $lang["team_user__introtext"]="Use this section to add, remove and modify users.";
+$lang['team_user__confirm-deletion'] = "Are you sure you want to delete permanently this user?";
 $lang["terms__introtext"]="Before you proceed you must accept the terms and conditions.\n\n";
 $lang["terms__terms"]="Your terms and conditions go here.";
 $lang["themes__findpublic"]="Public collections are collections of resources that have been shared by other users.";
