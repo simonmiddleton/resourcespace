@@ -741,12 +741,6 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
 */
 function api_get_data_by_field($ref, $field)
     {
-    // Security: Check for numeric input values; otherwise, return FALSE.
-    if(!is_numeric($ref) || !is_numeric($field))
-        {
-        return false;
-        }
-
     // Security: Check resource access, if not accessible to user, return FALSE.
     $access = get_resource_access($ref);
     if($access == 2 || $access == RESOURCE_ACCESS_INVALID_REQUEST)
