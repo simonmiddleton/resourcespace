@@ -610,7 +610,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         echo $plugin_page_frontm;
         }
 ?>
-        <form id="form1" name="form1" method="post" action="">
+        <form id="form1" name="form1" method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
     <?php
     generateFormToken("form1");
 
@@ -634,7 +634,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
                  config_html($def[1]);
                  break;     
             case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
                 break;
             case 'text_list':
             if (!empty($array_offset)) 
@@ -1374,7 +1374,8 @@ function config_custom_select($name, $label, $available, $value)
     config_single_select($name, $label, $value, $available, false);
     }
 
-function get_plugin_css(){
+function get_plugin_css()
+    {
 	global $plugins,$baseurl,$language,$css_reload_key;
 
 	$plugincss="";
@@ -1388,20 +1389,19 @@ function get_plugin_css(){
 		';
 		}	
 
-	# Allow language specific CSS files
-	$csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
-	if (file_exists($csspath))
-		{
-		$plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
-		';
-		}
-	
-	# additional plugin css functionality
-	$plugincss.=hook('moreplugincss','',array($plugins, $n));
+        # Allow language specific CSS files
+        $csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
+        if (file_exists($csspath))
+            {
+            $plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+            }
         
-	}
+        # additional plugin css functionality
+        $plugincss.=hook('moreplugincss','',array($plugins, $n));
+            
+        }
 	return $plugincss;
-}
+    }
 /*
 Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
 
@@ -1433,7 +1433,7 @@ function plugin_activate_for_setup($plugin_name)
 
 	
 
-    function include_plugin_config($plugin_name,$config="",$config_json="")
+function include_plugin_config($plugin_name,$config="",$config_json="")
     {
     global $mysql_charset;
     

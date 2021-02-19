@@ -2982,3 +2982,32 @@ function get_collections_resource_count(array $refs)
 
     return $return;
     }
+
+/**
+ * Get all search request parameters. Note that this does not escape the
+ * parameters which must be sanitised using escape_check() before using in SQL
+ * or e.g. htmlspecialchars() or urlencode() before rendering on page
+ *
+ * @return array()
+ */
+function get_search_params()
+    {
+    $searchparams = array(
+        "search"        =>"",
+        "restypes"      =>"",
+        "archive"       =>"",
+        "order_by"      =>"",
+        "sort"          =>"",
+        "offset"        =>"",
+        "k"             =>"",
+        "access"        =>"",
+        "foredit"       =>"",
+        "recentdaylimit"=>"",
+        );
+    $requestparams = array();
+    foreach($searchparams as $searchparam => $default)
+        {
+        $requestparams[$searchparam] = getval($searchparam,$default);
+        }
+    return $requestparams;
+    }

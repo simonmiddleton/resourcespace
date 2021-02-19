@@ -867,12 +867,13 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
       case "restore":
 		delete_previews($resource);
         sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
-        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > $preview_generate_max_file_size))        
+        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
+        (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
-        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            else if((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
             {
             $create_previews_job_data = array(
                 'resource' => $ref,
