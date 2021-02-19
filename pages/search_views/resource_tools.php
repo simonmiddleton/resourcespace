@@ -74,7 +74,6 @@ if(!checkperm('b') && ($k == '' || $internal_share_access))
     if(
         isset($usercollection_resources)
         && is_array($usercollection_resources)
-        && !empty($usercollection_resources)
         && !in_array($ref, $usercollection_resources)
     )
         {
@@ -96,7 +95,6 @@ if(!hook('iconcollect') && $pagename!="collections")
         if(
             isset($usercollection_resources)
             && is_array($usercollection_resources)
-            && !empty($usercollection_resources)
             && in_array($ref, $usercollection_resources)
         )
             {
