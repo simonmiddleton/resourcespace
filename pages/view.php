@@ -1644,11 +1644,19 @@ hook ("resourceactions") ?>
             $replace_upload_type=$top_nav_upload_type;
             }
 
-        if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref))
+        if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
             { ?>
             <li>
                 <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return ModalLoad(this,true);">
-                    <i class='fa fa-fw fa-file-import'></i>&nbsp;<?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?>
+                    <?php if ($resource["file_extension"] != "")
+                        { ?>
+                        <i class='fa fa-fw fa-file-import'></i>&nbsp;<?php echo $lang["replacefile"];
+                        }
+                    else
+                        { ?>
+                        <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo $lang["uploadafile"];
+                        }
+                    ?>
                 </a>
             </li>
             <?php

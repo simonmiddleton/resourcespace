@@ -65,7 +65,7 @@ if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
 	$status=upload_preview($ref);
     if($status !== false)
         {
-        redirect(generateurl($baseurl . "/pages/edit.php", $urlparams));
+        redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
         exit();
         }
     $error = true;
