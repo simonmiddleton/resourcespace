@@ -587,7 +587,7 @@ $lang["match"]="match";
 $lang["matches"]="matches";
 $lang["inthearchive"]="in the archive";
 $lang["nomatchesinthearchive"]="No matches in the archive";
-$lang["savethissearchtocollection"]="Save query to collection";
+$lang["savethissearchtocollection"]="Save search query to collection";
 $lang["mustspecifyonekeyword"]="You must specify at least one search keyword.";
 $lang["hasemailedyouaresource"]="has e-mailed you a resource."; # Suffixed to user name, e.g. Fred has e-mailed you a resource
 $lang["clicktoviewresource"]="Click the link below to view the resource.";
@@ -627,6 +627,8 @@ $lang['log-deleted_all'] = 'All resources of this collection deleted (moved to s
 $lang['log-f']="Replaced file";
 $lang['log-X']="Locked resource";
 $lang['log-Y']="Unlocked resource";
+$lang['log-XK']="Deleted external access key";
+$lang['log-EUP']="External share upload";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -687,11 +689,11 @@ $lang["printallforyear"]="Print all statistics for this year";
 # Log in / user account
 $lang["nopassword"]="Click here to apply for an account";
 $lang["forgottenpassword"]="Click here if you have forgotten your password";
-$lang["keepmeloggedin"]="Keep me logged in at this workstation";
+$lang["keepmeloggedin"]="Keep me logged in on this device";
 $lang["columnheader-username"]=$lang["username"]="Username";
 $lang["password"]="Password";
 $lang["login"]="Log in";
-$lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link above to request a new one.";
+$lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
 $lang["useralreadyexists"]="An account with that e-mail or username already exists, changes not saved";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
@@ -891,6 +893,7 @@ $lang["unauthorized"] = "Unauthorized";
 $lang["warning_duplicate_shortname_fields"] = "There is already a resource type field with the same shortname. Please make it unique!";
 $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
+$lang["counting_resources"] = "counting resources...";
 
 # Pager
 $lang["next"]="Next";
@@ -1334,6 +1337,10 @@ $lang["collectionlog-A"]="Changed access to "; // +notes field
 $lang["collectionlog-Z"]="Collection downloaded";
 $lang["collectionlog-U"]="Allow users to modify";
 $lang["collectionlog-e"]="Edited"; // Generic edit
+$lang["collectionlog-SEU"]="Shared upload link externally";
+$lang["collectionlog-EEU"]="Edited external upload";
+$lang['collectionlog-XK']="Deleted external access key";
+
 
 $lang["viewuncollectedresources"]="View resources not used in collections";
 
@@ -1480,7 +1487,9 @@ $lang['plugins-disabled-plugin-message'] = 'Disabled in configuration';
 $lang['location-title'] = 'Location data';
 $lang['location-add'] = 'Add location';
 $lang['location-edit'] = 'Edit location';
-$lang['location-details'] = 'Use "Drag mode" to switch between pin positioning and panning. Use zoom controls to zoom in and out. Click Save to save pin position and zoom level.<br/> If entering coordinates manually, please use the Decimal Degrees format, e.g. 32.30642,-122.61458.';
+$lang['location-details'] = 'Use "Drag mode" to switch between pin positioning and panning. Use zoom controls to zoom in and out. Click Save to save pin position and zoom level.';
+$lang['location-help'] = 'If entering coordinates manually, please use the Decimal Degrees format, e.g. 32.30642,-122.61458.';
+$lang['location-validation-error'] = 'Incorrect coordinate values entered.';
 $lang['location-missing'] = 'The following resources lack geolocation data and are not displayed:';
 $lang['location-noneselected']="No location selected";
 $lang['location-noneselected']="No location data";
@@ -1588,7 +1597,7 @@ $lang["yourbasketisempty"]="Your basket is empty.";
 $lang["yourbasketcontains-1"]="Your basket contains 1 item.";
 $lang["yourbasketcontains-2"]="Your basket contains %qty items."; # %qty will be replaced, e.g. Your basket contains 3 items.
 $lang["buy"]="Buy";
-$lang["buyitemaddedtocollection"]="This resource has been added to your basket. You can purchase all the items in your basket by clicking \'Buy Now\' below.";
+$lang["buyitemaddedtocollection"]="This resource has been added to your basket. You can purchase all the items in your basket by clicking 'Buy Now' below.";
 $lang["buynowintro"]="Please select the sizes you require.";
 $lang["nodownloadsavailable"]="Sorry, there are no downloads available for this resource.";
 $lang["proceedtocheckout"]="Proceed to checkout";
@@ -1695,12 +1704,12 @@ $lang["close"]="Close";
 $lang["repeatinstallationcheck"]="Repeat installation check";
 $lang["shouldbeversion"]="should be ? or greater"; # E.g. "should be 4.4 or greater"
 $lang["phpinivalue"]="PHP.INI value for '?'"; # E.g. "PHP.INI value for 'memory_limit'"
-$lang["writeaccesstofilestore"]="Write access to $storagedir";
-$lang["nowriteaccesstofilestore"]="$storagedir not writable";
+$lang["writeaccesstofilestore"]="Write access to ";
+$lang["nowriteaccesstofilestore"]=" not writable";
 $lang["writeaccesstoplugins"]="Write access to /plugins";
 $lang["nowriteaccesstoplugins"]="/plugins folder not writable";
-$lang["writeaccesstohomeanim"]="Write access to $homeanim_folder";
-$lang["nowriteaccesstohomeanim"]="$homeanim_folder not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
+$lang["writeaccesstohomeanim"]="Write access to ";
+$lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
 $lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable; remove 'Indexes' from Apache 'Options' list.";
 $lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
@@ -2056,7 +2065,7 @@ $lang['comments_respond-to-this-comment']="Reply";
 $lang['comments_in-response-to-on']="on";
 $lang['comments_anonymous-user']="Anonymous";
 $lang['comments_submit-button-label']="Submit";
-$lang['comments_body-placeholder']="Add a comment...";
+$lang['comments_body-placeholder']="Add a comment. Use @(username) to tag people.";
 $lang['comments_fullname-placeholder']="Your Name (required)";
 $lang['comments_email-placeholder']="Your E-mail (required)";
 $lang['comments_website-url-placeholder']="Website";
@@ -2315,7 +2324,7 @@ $lang["home__restrictedtext"]="Please click on the link that you were e-mailed t
 $lang["home__restrictedtitle"]="Welcome to ResourceSpace [ver]";
 $lang["home__welcometext"]="The simple, fast, &amp; free way to organise your digital assets.";
 $lang["home__welcometitle"]="Welcome to ResourceSpace [ver]";
-$lang["login__welcomelogin"]="Welcome to ResourceSpace, please log in...";
+$lang["login__welcomelogin"]="Welcome to ResourceSpace. Please log in.";
 $lang["local_tz"] = "Local time zone";
 $lang["research_request__introtext"]="Our professional researchers are here to assist you in finding the very best resources for your projects. Complete this form as thoroughly as possible so we're able to meet your criteria accurately. <br /><br />A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.  ";
 $lang["resource_email__introtext"]="Quickly share this resource with other users by email. A link is automatically sent out. You can also include any message as part of the email.";
@@ -2334,6 +2343,7 @@ $lang["team_research__introtext"]="Organise and manage 'Research Requests'. <br 
 $lang["team_resource__introtext"]="Add individual resources or batch upload resources. To edit individual resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen.";
 $lang["team_stats__introtext"]="Charts are generated on demand based on live data. Tick the box to print all charts for your selected year.";
 $lang["team_user__introtext"]="Use this section to add, remove and modify users.";
+$lang['team_user__confirm-deletion'] = "Are you sure you want to delete permanently this user?";
 $lang["terms__introtext"]="Before you proceed you must accept the terms and conditions.\n\n";
 $lang["terms__terms"]="Your terms and conditions go here.";
 $lang["themes__findpublic"]="Public collections are collections of resources that have been shared by other users.";
@@ -2580,6 +2590,17 @@ $lang["submit_dialog_text"]="The uploaded resources are now in the pending submi
 $lang["action_submit_review"]="Submit for review";
 $lang["action_continue_editing"]="Continue editing";
 $lang["action-addrow"]="Add row";
+
+/* User profile */
+$lang['profile'] = "My Profile";
+$lang['profile_introtext'] = "Through this page you can enter your profile information and upload a profile image in JPG / JPEG format.";
+$lang['profile_bio'] = "Profile / Bio";
+$lang['profile_image'] = "Profile image";
+$lang['no_profile_image'] = "Profile image not set";
+$lang['delete_current'] = "Delete profile image";
+$lang['current_profile'] = "Current profile image";
+$lang['error_not_jpeg'] = "The selected file is not in jpg / jpeg format.";
+$lang['error_upload_failed'] = "An error occurred while uploading the file.";
 
 /* Messaging */
 $lang["seen"]="Seen";
@@ -2840,6 +2861,7 @@ $lang["filter_rules"]               = "Filter rules";
 $lang["filter_rules_none"]          = "There are no rules for this filter";
 $lang["filter_rule_edit"]           = "Edit filter rule";
 $lang["filter_rule_add"]            = "Add filter rule";
+$lang["filter_rule_save"]           = "Save filter rule";
 $lang["filter_rule_edit_text"]      = "Select the conditions that can satisfy this filter rule. Any one of these can be met to satisfy the rule";
 $lang["filter_rule_name"]           = "Filter rule name";
 $lang["filter_condition_label"]     = "Criteria";
@@ -2876,7 +2898,6 @@ $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
 $lang["error_saveorigalternative"]      = "Error saving original as alternative file";   
-
 $lang["start"]                          = "Start";
 
 # File integrity checks
@@ -2886,24 +2907,24 @@ $lang["file_integrity_fail_search"]         = "File integrity failures";
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["team_resource_integrity_fail"]       = "View suspect resources";
 $lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";
-$lang["collection_description"]         = "Description";
-$lang["collection_copy_resources"]      = "Copy collection resources";
-$lang["collection_actiontype_1"]        = "Resources";
-$lang["collection_actiontype_2"]        = "Collection";
-$lang["collection_actiontype_3"]        = "Edit";
-$lang["collection_actiontype_4"]        = "Share";
-$lang["collection_actiontype_5"]        = "Research";
-$lang["collection_actiontype_6"]        = "Advanced";
-$lang["collection_actiontype_999"]      = "Other";
+$lang["collection_description"]             = "Description";
+$lang["collection_copy_resources"]          = "Copy collection resources";
+$lang["collection_actiontype_1"]            = "Resources";
+$lang["collection_actiontype_2"]            = "Collection";
+$lang["collection_actiontype_3"]            = "Edit";
+$lang["collection_actiontype_4"]            = "Share";
+$lang["collection_actiontype_5"]            = "Research";
+$lang["collection_actiontype_6"]            = "Advanced";
+$lang["collection_actiontype_999"]          = "Other";
 
 # Date checks
 # %row% row number if in csv or similar, %date% field data, %field% field name
-$lang["unknown_date_format_error"]         = "Error: %row% '%date%' in [%field%] invalid yyyy-mm-dd hh:mm format (partials allowed e.g. no time, day or month)";
+$lang["unknown_date_format_error"]          = "Error: %row% '%date%' in [%field%] invalid yyyy-mm-dd hh:mm format (partials allowed e.g. no time, day or month)";
 # %row% row number if in csv or similar, %date% field data, %field% field name, %parts% an imploded array of parts that are invalid
-$lang["date_format_error"]                 = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
+$lang["date_format_error"]                  = "Error: %row% '%date%' in [%field%] invalid entry into the %parts% part(s)";
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
-$lang["invalid_date_error2"]                 = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
+$lang["invalid_date_error2"]                = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
@@ -2926,7 +2947,7 @@ $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "The file posted has not been found";
 $lang["error-theme-missing"]                = "Featured collection missing or has not been specified.";
 $lang["system_config_search_engines"]       = "Search engines";
-$lang["search_engine_noindex"] = "Request that search engines don't index this site";
+$lang["search_engine_noindex"]              = "Request that search engines don't index this site";
 $lang["search_engine_noindex_external_shares"] = "Request that search engines do not index external shares";
 
 $lang["job_details"]                        = "Job details";
@@ -2953,3 +2974,47 @@ $lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME
 $lang["csv_export_file_ready"]              = "Your CSV export is ready";
 $lang["offline_processing_disabled"]        = "Offline job processing is not configured on this system. To enable this please contact your system administrator";
 $lang['csv_export_offline_only']            = "Offline processing must be used when exporting data for more than %%RESOURCE_COUNT%% resources";
+
+$lang["setup_google_vision_settings"]       = "Google Vision settings";
+$lang["setup_google_vision_enable"]         = "Enable Google Vision plugin?";
+
+$lang["tagged_notification"]="You have been tagged in a comment: ";
+
+// Share upload link
+$lang["action-share-upload-link"]           = "Share upload link";
+$lang["action-email-upload-link"]           = "Email link directly";
+$lang["title-upload-link-create"]           = "Create external upload link";
+$lang["permission_share_upload_link"]       = "Can create external collection  upload links";
+$lang["button-upload-link-create"]          = "Create link";
+$lang["title-upload-link-edit"]             = "Edit external upload link";
+$lang["warning-upload-link"]                = "WARNING: creating an external upload URL will allow anyone who obtains the link to upload files";
+$lang["warning-upload-instructions"]        = "Please set the required upload link options";
+$lang["upload_share_email_users"]           = "E-mail to users<br><br>Type each e-mail address, separated by a comma";
+$lang["upload_share_email_subject"]         = "You've been sent an upload link from ";
+$lang["upload_share_email_text"]            = " has sent you a link to upload files to ";
+$lang["upload_share_email_password"]        = "Use this password to access the link";
+$lang["upload_share_email_clicklink"]       = "Please click the link below to start uploading";
+$lang["upload_share_email_template"]        = "<br />\n[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> \n[lang_message] : [message]<br /><br />\n[lang_upload_share_email_clicklink]<br />\n<br />\n[link]\n<br />\n<br />\n[passwordtext]";
+$lang["upload_share_complete"]              = "Thank you for uploading. Please click the button below to upload more resources";
+$lang["error_invalid_usergroup"]            = "Invalid usergroup";
+$lang["error_invalid_date"]                 = "Invalid date";
+$lang["error_invalid_key"]                  = "Invalid key";
+$lang["error_invalid_email"]                = "Invalid email address";
+$lang["upload_shares_emailed"]              = "The shares have been created and the following URLs are now active";
+$lang["error_no_resources_edit"]            = "No resources found to edit. If you have just uploaded files please report this error.";
+$lang["password_unchanged"]                 = "(unchanged)";
+$lang["notify_upload_share_new"]            = "Resources have been uploaded to your shared collection";
+$lang["notify_upload_share_new_subject"]    = "New external uploads";
+$lang["all__emailnotifyuploadsharenew"]     = "<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["my_shares"]                          = "My shares";
+$lang["manage_shares_title"]                = "External shares";
+$lang["share_purge_text"]                   = "Delete expired shares";
+$lang["shares_purged_message"]              = "Deleted %%DELETEDCOUNT%% shares";
+$lang["share_confirm_purge"]                = "Are you sure you want to delete all expired shares?";
+$lang["external_shares_view_existing"]      = "View existing upload shares for this collection.";
+$lang["share_user"]                         = "Shared by";
+$lang["share_usergroup"]                    = "Shared as";
+$lang["share_type"]                         = "Share type";
+$lang["share_type_view"]                    = "View";
+$lang["share_type_upload"]                  = "Upload";
+$lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";

@@ -52,6 +52,8 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
 if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
+if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
+
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
@@ -62,8 +64,13 @@ error_reporting($config_error_reporting);
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
+debug('[db.php] Remote config support...');
+debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config_url)));
+debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
+debug('[db.php] getenv("RESOURCESPACE_URL") != "") = ' . json_encode(getenv("RESOURCESPACE_URL") != ""));
 if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
 	{
+    debug("[db.php] \$remote_config_url = {$remote_config_url}");
 	sql_connect(); # Connect a little earlier
 	if(isset($_SERVER['HTTP_HOST']))
 		{
@@ -76,16 +83,19 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 		$host=getenv("RESOURCESPACE_URL");
 		}
 	$hostmd=md5($host);
+    debug("[db.php] \$host = {$host}");
+    debug("[db.php] \$hostmd = {$hostmd}");
 
 	# Look for configuration for this host (supports multiple hosts)
 	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
 	$remote_config=get_sysvar($remote_config_sysvar);
-        $remote_config_expiry = get_sysvar("remote_config-exp" .  $hostmd,0);
+    $remote_config_expiry = get_sysvar("remote_config-exp" .  $hostmd,0);
 	if ($remote_config!==false && $remote_config_expiry>time() && !isset($_GET["reload_remote_config"]))
 		{
 		# Local cache exists and has not expired. Use this copy.
+        debug("[db.php] Using local cached version of remote config. \$remote_config_expiry = {$remote_config_expiry}");
 		}
-	elseif($remote_config_expiry < time() && function_exists('curl_init'))
+	elseif(function_exists('curl_init'))
 		{
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
@@ -115,6 +125,7 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
                 {
                 # Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
                 # Do nothing; proceed with old config and try again later.
+                debug('[db.php][warn] Validation of returned remote config failed');
                 }
 			}
 		else
@@ -122,7 +133,7 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 			# The attempt to fetch the remote configuration failed.
 			# Do nothing; the cached copy will be used and we will try again later.
             $errortext = curl_strerror(curl_errno($ch));
-            debug("Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
+            debug("[db.php][warn] Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
             }
         curl_close($ch);
 
@@ -135,6 +146,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
+// Set system to read only mode
+if(isset($system_read_only) && $system_read_only)
+    {
+    $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
+    $global_permissions="p";
+    $remove_resources_link_on_collection_bar = false;
+    $allow_save_search = false;
+    $mysql_log_transactions=false;
+    $enable_collection_copy = false;
+    }
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
@@ -233,6 +254,7 @@ else
 	{
 	for ($n=count($plugins)-1;$n>=0;$n--)
 		{
+        if (!isset($plugins[$n])) { continue; }
 		include_plugin_config($plugins[$n]);
 		}
 	}
@@ -265,6 +287,7 @@ if ($language!="en")
 # Register all plugins
 for ($n=0;$n<count($plugins);$n++)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin($plugins[$n]);
 	hook("afterregisterplugin");
 	}
@@ -272,6 +295,7 @@ for ($n=0;$n<count($plugins);$n++)
 # Register their languages in reverse order
 for ($n=count($plugins)-1;$n>=0;$n--)
 	{
+    if (!isset($plugins[$n])) { continue; }
 	register_plugin_language($plugins[$n]);
 	}
 

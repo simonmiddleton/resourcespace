@@ -411,7 +411,7 @@ function db_rollback_transaction($name)
  * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
  * @param  mixed $reconnect
  * @param  mixed $fetch_specific_columns
- * @return void
+ * @return array
  */
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
@@ -434,6 +434,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
                     {
                     if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
                         {
+                        debug("[sql_query] returning cached data (source: {$cache_file})");
                         db_clear_connection_mode();
                         return $cachedata["results"];
                         }

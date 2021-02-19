@@ -1,8 +1,8 @@
 <?php
 /* -------- Category Tree ------------------- */ 
-global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window,
-$category_tree_open, $is_search, $cat_tree_singlebranch, $category_tree_add_parents,
-$category_tree_remove_children;
+global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window;
+global$category_tree_open, $is_search, $cat_tree_singlebranch, $category_tree_add_parents,
+$category_tree_remove_children, $k;
 
 $is_search      = (isset($is_search) ? $is_search : false);
 $forsearchbar   = (isset($forsearchbar) ? $forsearchbar : false);
@@ -142,7 +142,8 @@ echo $hidden_input_elements;
                             ajax           : true,
                             node_ref       : node.id,
                             field          : <?php echo $field['ref']; ?>,
-                            selected_nodes : <?php echo json_encode($selected_nodes); ?>
+                            selected_nodes : <?php echo json_encode($selected_nodes); ?>,
+                            k : '<?php echo htmlspecialchars($k); ?>',
                             };
                     }
             },

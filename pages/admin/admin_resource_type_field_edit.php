@@ -463,6 +463,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 
 	sql_query($sql);
 	clear_query_cache("schema");
+	clear_query_cache("featured_collections");
 
 	if($sync_field!="" && $sync_field>0)
 		{
@@ -539,7 +540,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=sql_query("select ref, name from resource_type", "schema");
+$resource_types=sql_query("select ref, name from resource_type order by order_by,ref", "schema");
 foreach($resource_types as $resource_type)
 	{
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];

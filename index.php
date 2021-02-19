@@ -90,8 +90,13 @@ if(getval('dr', '') != '')
 	$dr = getvalescaped('dr', '');
 
 	$topurl = 'pages/team/team_report.php?delete=' . $dr;
+    }
+    
+if (getval("upload","") != "")
+	{
+    # Redirect to upload page
+    $topurl = get_upload_url($c,$k);
 	}
-
 
 # Redirect.
 redirect($topurl);

@@ -8,13 +8,6 @@ input[type="checkbox"] {
    -o-transform: scale(1);
    height:auto;
 }
-input[type="submit"], input[type="button"], button {
-   height:auto;
-   padding: 5px;
-   box-shadow: 1px 1px 8px -2px;
-   border:0;
-   margin:5px;
-}
 input {
    display: inline-block;
    height: auto;

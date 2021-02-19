@@ -99,7 +99,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     if($resource_type_field !== false)
         {
         // We go one level at a time so we don't need it to search recursively even if this is a FIELD_TYPE_CATEGORY_TREE
-        $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent);
+        $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent, $resource_type_field);
         $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
             {
             return array(
@@ -158,7 +158,7 @@ if($k == "" && $smart_rtf == 0)
         }
     }
 ?>
-</div> <!-- End of BasicsBox FeaturedSimpleLinks -->
+</div><!-- End of BasicsBox FeaturedSimpleLinks -->
 <script>
 jQuery(document).ready(function ()
     {
@@ -173,6 +173,27 @@ jQuery(document).ready(function ()
         tileid=jQuery(this).attr('id').substring(19);
         jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
         });
+
+    // Get and update display for total resource count for each of the rendered featured collections (@see render_featured_collection() for more info)
+    var fcs_waiting_total = jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"]');
+    var fc_refs = [];
+    fcs_waiting_total.each(function(i, v) { fc_refs.push(jQuery(v).data('fc-ref')); });
+    if(fc_refs.length > 0)
+        {
+        api('get_collections_resource_count', {'refs': fc_refs.join(',')}, function(response)
+            {
+            var lang_resource = '<?php echo htmlspecialchars($lang['youfoundresource']); ?>';
+            var lang_resources = '<?php echo htmlspecialchars($lang['youfoundresources']); ?>';
+
+            Object.keys(response).forEach(function(k)
+                {
+                var total_count = response[k];
+                jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"][data-fc-ref="' + k + '"]')
+                    .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
+                });
+
+            });
+        }
     });
 </script>
 <?php

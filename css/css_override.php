@@ -6,7 +6,7 @@
 */
 
 include_once "../include/db.php";
-
+if(trim(getval('k', '')) === '') { include '../include/authenticate.php'; }
 
 header("Content-type: text/css");
 
@@ -19,11 +19,7 @@ $browse_on = has_browsebar();
 if ((isset($header_colour_style_override) && $header_colour_style_override != ''))
     {
     ?>
-    #Header
-        {
-        background: <?php echo $header_colour_style_override; ?>;
-        }
-    #OverFlowLinks
+    #Header, #OverFlowLinks, #LoginHeader
         {
         background: <?php echo $header_colour_style_override; ?>;
         }

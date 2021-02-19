@@ -741,12 +741,6 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
 */
 function api_get_data_by_field($ref, $field)
     {
-    // Security: Check for numeric input values; otherwise, return FALSE.
-    if(!is_numeric($ref) || !is_numeric($field))
-        {
-        return false;
-        }
-
     // Security: Check resource access, if not accessible to user, return FALSE.
     $access = get_resource_access($ref);
     if($access == 2 || $access == RESOURCE_ACCESS_INVALID_REQUEST)
@@ -813,4 +807,35 @@ function api_get_resource_collections($ref)
         }
 
     return $ref_collections;
+    }
+
+function api_update_related_resource($ref,$related,$add=true)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    $related = explode(",",$related);
+    return update_related_resource($ref,$related,$add);
+    }
+
+function api_get_collections_resource_count(string $refs)
+    {
+    if(checkperm('b'))
+        {
+        return [];
+        }
+
+    $cols = array_filter(explode(',', $refs), 'collection_readable');
+
+    return get_collections_resource_count($cols);
+    }
+
+function api_get_users($find="")
+    {
+    // Forward to the internal function - with "usepermissions" locked to TRUE.
+    // Return specific columns only as there's sensitive information in the others such as password/session key.
+    $return=array();
+    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
     }

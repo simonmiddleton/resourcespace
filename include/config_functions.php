@@ -380,7 +380,7 @@ function config_add_html($content)
  *          field. Defaulted to false.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false)
+function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden = false)
     {
     global $lang;
 
@@ -391,7 +391,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         }
     ?>
 
-    <div class="Question" id="question_<?php echo $name; ?>">
+    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
     <?php
     if($autosave)

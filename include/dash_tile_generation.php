@@ -301,6 +301,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 				if(($previewresource["thumb_width"]*0.7)>=$previewresource["thumb_height"])
 					{
 					$ratio = $previewresource["thumb_height"] / $tile_height;
+					if ($ratio == 0){$ratio = 1;} // attempt fit if 'thumb_height' is 0
 					$width = $previewresource["thumb_width"] / $ratio;
 					if($width<$tile_width){echo "width='100%' ";}
 					else {echo "height='100%' ";}
@@ -308,6 +309,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 				else
 					{
 					$ratio = $previewresource["thumb_width"] / $tile_width;
+					if ($ratio == 0){$ratio = 1;} // attempt fit if 'thumb_width' is 0
 					$height = $previewresource["thumb_height"] / $ratio;
 					if($height<$tile_height){echo "height='100%' ";}
 					else {echo "width='100%' ";}
