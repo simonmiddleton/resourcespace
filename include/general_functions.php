@@ -4463,8 +4463,10 @@ function trim_filename(string $s)
 /**
 * Flip array keys to use one of the keys of the values it contains. All elements (ie values) of the array must contain 
 * the key (ie. they are arrays). Helper function to greatly increase search performance on huge PHP arrays.
+* Normal use is: array_flip_by_value_key($huge_array, 'ref');
 * 
-* IMPORTANT: make sure that for the key you use all elements have a unique value set.
+* 
+* IMPORTANT: make sure that for the key you intend to use all elements will have a unique value set.
 * 
 * Example: Result after calling array_flip_by_value_key($nodes, 'ref');
 *     [20382] => Array

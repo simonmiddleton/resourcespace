@@ -1184,7 +1184,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
 	
-    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
+    // Plugins can do extra actions once all fields have been saved and return errors back if needed
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields));
+    if(is_array($plg_errors) && !empty($plg_errors))
+        {
+        $errors = array_merge($errors, $plg_errors);
+        }
 
 	if (count($errors)==0) {return true;} else {return $errors;}
 	}
@@ -1924,8 +1929,14 @@ function save_resource_data_multi($collection,$editsearch = array())
 		}
 
 	hook("saveextraresourcedata","",array($list));
-	
-    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
+
+    // Plugins can do extra actions once all fields have been saved and return errors back if needed.
+    // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
+    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', array()));
+    if(is_array($plg_errors) && !empty($plg_errors))
+        {
+        $errors = array_merge($errors, $plg_errors);
+        }
 
     if (count($errors)==0) {return true;} else {return $errors;}
     
@@ -2909,9 +2920,9 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
 /**
  * get_resource_field_data_batch - Get all resource data for the given resources
- * Used by CSV metadata export. 
  * 
  * Returns a multidimensional array with resource IDs as top level keys, then fields (order determined by $ord_by setting) 
+ * IMPORTANT: This differs from get_resource_field_data() in that only fields containing data will be returned.
  * 
  * e.g. 
  * Array
@@ -2930,7 +2941,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
  *              [type] => 1))
  *              ....
  * 
- * This differs from get_resource_field_data() in that only fields containing data will be returned.
  *
  * @param array $resources (either an array of resource ids or an array returned from search results)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
@@ -3064,7 +3074,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     if (empty($fields))
         {
-        return false;
+        return array();
         }
     // Convert to array with resource ID as index
     $res=0;
@@ -8366,7 +8376,7 @@ function get_workflow_states()
 */
 function delete_resource_type_field($ref)
     {
-    global $lang, $corefields;
+    global $lang, $corefields, $core_field_refs;
 
     if('cli' != php_sapi_name() && !checkperm('a'))
         {
@@ -8386,12 +8396,26 @@ function delete_resource_type_field($ref)
             }
         }
 
+    // Prevent deleting a "core" field required by other parts of the system (e.g plugins)
+    $core_field_scopes = [];
+    foreach($core_field_refs as $scope => $core_refs)
+        {
+        if(in_array($ref, $core_refs) && !in_array($scope, $core_field_scopes))
+            {
+            $core_field_scopes[] = $scope;
+            }
+        }
+
     if(count($fieldvars) > 0)
         {
         return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
         }
+    else if(!empty($core_field_scopes))
+        {
+        return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
+        }
 
-    
+
     $fieldinfo = get_resource_type_field($ref);
 
     $ref = escape_check($ref);

@@ -1111,3 +1111,24 @@ function sql_null_or_val(string $v, bool $cond)
     {
     return ($cond ? "NULL" : "'" . escape_check($v) . "'");
     }
+
+
+/**
+* Query helper to ensure code honours the database schema constraints on text columns.
+* IMPORTANT: please use where appropriate! In some cases, truncating may mean losing useful information (e.g contextual data),
+*            in which case changing the column type may be a better option.
+* 
+* @param string  $v   String value that may require truncating
+* @param integer $len Desired length (limit as imposed by the database schema). {@see https://www.resourcespace.com/knowledge-base/developers/database_schema}
+* 
+* @return string
+*/
+function sql_truncate_text_val(string $v, int $len)
+    {
+    if(mb_strlen($v) > $len)
+        {
+        $truncated_sql_val = mb_strcut($v, 0, $len);
+        }
+
+    return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
+    }
