@@ -380,7 +380,11 @@ if ($user_edit_approved_by && $user["approved"]==1)
 	}
 ?>
 
-<div class="Question"><label><?php echo $lang["ticktodelete"]?></label><input name="deleteme" type="checkbox"  value="yes"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label><?php echo $lang['ticktodelete']; ?></label>
+    <input type="checkbox" name="deleteme" value="yes" onclick="return confirm_delete_user(this);">
+    <div class="clearerleft"></div>
+</div>
 <?php hook("additionaluserlinks");?>
 
 <div class="Question">
@@ -406,7 +410,16 @@ if ($user_edit_approved_by && $user["approved"]==1)
 </div>
 </form>
 </div>
+<script>
+function confirm_delete_user(el)
+    {
+    if(jQuery(el).is(':checked') === false)
+        {
+        return true;
+        }
 
+    return confirm('<?php echo htmlspecialchars($lang['team_user__confirm-deletion']); ?>');
+    }
+</script>
 <?php		
 include "../../include/footer.php";
-?>
