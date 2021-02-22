@@ -102,7 +102,7 @@ function escape_check($text)
  * just doing $text=str_replace("\\","",$text);	does not undo escape_check
  *
  * @param  mixed $text
- * @return string
+ * @return void
  */
 function unescape($text) 
     {
@@ -256,7 +256,7 @@ function redirect($url)
  * replace multiple spaces with a single space
  *
  * @param  mixed $text
- * @return string
+ * @return void
  */
 function trim_spaces($text)
     {
@@ -443,8 +443,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
-                {        
-                if (!isset($plugins[$n])) { continue; }       
+                {               
                 register_plugin_language($plugins[$n]);
                 }       
             
@@ -594,15 +593,13 @@ function get_site_text($page,$name,$getlanguage,$group)
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {     
-        if (!isset($plugins[$n])) { continue; }          
+        {               
         register_plugin_language($plugins[$n]);
         }
 
     $language = $getlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {  
-        if (!isset($plugins[$n])) { continue; }             
+        {               
         register_plugin_language($plugins[$n]);
         }
             
@@ -1547,78 +1544,42 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
 /**
  * A generic pager function used by many display lists in ResourceSpace.
  * 
- * Requires the following globals to be set or passed inb the $options array
+ * Requires the following globals to be set
  * $url         - Current page url
  * $curpage     - Current page
  * $totalpages  - Total number of pages
  *
  * @param  boolean $break
  * @param  boolean $scrolltotop
- * @param  array   $options - array of options to use instead of globals
  * @return void
  */
-function pager($break=true,$scrolltotop=true,$options=array())
+function pager($break=true,$scrolltotop=true)
     {
     global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
-    $validoptions = array(
-        "curpage",
-        "url",
-        "url_params",
-        "totalpages",
-        "offset",
-        "per_page",
-        "jumpcount",
-        "pager_dropdown",
-    );
-    foreach($validoptions as $validoption)
-        {
-        global $$validoption;
-        if(isset($options[$validoption]))
-            {
-            $$validoption = $options[$validoption];
-            }        
-        }
 
     $modal  = ('true' == getval('modal', ''));
     $scroll =  $scrolltotop ? "true" : "false"; 
     $jumpcount++;
-
-    // If pager URL includes query string params, remove them and store in $url_params array
-    if(!isset($url_params) && strpos($url,"?") !== false)
-        {
-        $urlparts = explode("?",$url);
-        parse_str($urlparts[1],$url_params);
-        $url = $urlparts[0];
-        }
-
     if(!hook("replace_pager")){
         if ($totalpages!=0 && $totalpages!=1){?>     
-            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
-            <?php if ($pager_dropdown)
-                {
+            <?php if ($pager_dropdown){
                 $id=rand();?>
-                <select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
+                <select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
                 <?php for ($n=1;$n<$totalpages+1;$n++){?>
                     <option value='<?php echo $n?>' <?php if ($n==$curpage){?>selected<?php } ?>><?php echo $n?></option>
                 <?php } ?>
-                </select><?php
-                }
-            else
-                {?>
-                <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
+                </select>
+            <?php } else { ?>
+
+                <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
             &nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
             
-                <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a><?php
-                } ?>
+                <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
+            <?php } ?>
 
-            &nbsp;&nbsp;<?php
-            if ($curpage<$totalpages)
-                {
-                ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
-                }?>
-            <i aria-hidden="true" class="fa fa-arrow-right"></i>
-            <?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
+            &nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
             </span>
             
         <?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>
@@ -3099,7 +3060,7 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         {
         $condition[] = " type ='" . escape_check($type) . "'";
         }
-    if(!checkperm('a') && PHP_SAPI != 'cli')
+    if(!checkperm('a'))
         {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
@@ -3110,10 +3071,6 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
     if($user!="" && (int)$user > 0 && ($user == $userref || checkperm_user_edit($user)))
         {
         $condition[] = " user ='" . escape_check($user) . "'";
-        }
-    elseif(PHP_SAPI != "CLI" && isset($userref))
-        {
-        $condition[] = " user ='" . $userref . "'";
         }
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
@@ -3175,17 +3132,7 @@ function job_queue_run_job($job, $clear_process_lock)
     //$job["job_data"] = escape_check($job["job_data"]);
 
     $job_data=json_decode($job["job_data"], true);
-
     $jobuser = $job["user"];
-    if (!isset($jobuser) || $jobuser == 0 || $jobuser == "")
-        {
-        $logmessage = " - Job could not be run as no user was supplied #{$jobref}" . PHP_EOL;
-        echo $logmessage;
-        debug($logmessage);
-        job_queue_update($jobref,$job_data,STATUS_ERROR);
-        return;
-        }
-
     $jobuserdata = get_user($jobuser);
     setup_user($jobuserdata);
     $job_success_text=$job["success_text"];
@@ -3778,7 +3725,7 @@ function get_sysvar($name, $default=false)
  * @param  string $pagename
  * @param  string $params
  * @param  boolean $last_hook_value_wins
- * @return mixed
+ * @return void
  */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
@@ -3867,8 +3814,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-        $function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name) : "";	
-        	
+		$function="Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name);		
 		if (function_exists($function)) 
 			{			
 			$function_list[]=$function;
@@ -3876,7 +3822,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-			$function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
+			$function="Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name);
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;
@@ -3918,7 +3864,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
     $is_html = ($html != strip_tags($html));
-    
+
     $allowed_tags = array_merge($permitted_html_tags, $tags);
     $allowed_attributes = array_merge($permitted_html_attributes, $attributes);
 
@@ -4118,7 +4064,7 @@ function get_debug_log_dir()
  * @param  string $text
  * @param  mixed $resource_log_resource_ref Update the resource log if resource reference passed.
  * @param  string $resource_log_code    If updating the resource log, the code to use
- * @return boolean
+ * @return void
  */
 function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE_TRANSFORMED)
 	{
@@ -4298,16 +4244,12 @@ function pagename()
  */
 function text($name)
 	{
-	global $pagename,$lang;
+	global $site_text,$pagename,$language,$languages,$usergroup,$lang;
 
 	$key=$pagename . "__" . $name;	
-    if (array_key_exists($key,$lang))
-        {return $lang[$key];}
-    else if(array_key_exists("all__" . $name,$lang))
-        {return $lang["all__" . $name];}
-    else if(array_key_exists($name,$lang))
-        {return $lang[$name];}	
-
+	if (array_key_exists($key,$lang)) {return $lang[$key];}
+	else if(array_key_exists("all__" . $name,$lang)) {return $lang["all__" . $name];}
+	
 	return "";
 	}
     
@@ -4463,10 +4405,8 @@ function trim_filename(string $s)
 /**
 * Flip array keys to use one of the keys of the values it contains. All elements (ie values) of the array must contain 
 * the key (ie. they are arrays). Helper function to greatly increase search performance on huge PHP arrays.
-* Normal use is: array_flip_by_value_key($huge_array, 'ref');
 * 
-* 
-* IMPORTANT: make sure that for the key you intend to use all elements will have a unique value set.
+* IMPORTANT: make sure that for the key you use all elements have a unique value set.
 * 
 * Example: Result after calling array_flip_by_value_key($nodes, 'ref');
 *     [20382] => Array
@@ -4566,51 +4506,5 @@ function cleanup_files($files)
  */
 function is_int_loose($var)
     {
-    if(is_array($var))
-        {
-        return false;
-        }
     return (string)(int)$var === (string)$var;
      }
-
-/**
- * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
- *
- * @param  string $ip
- * @param  string $ip_restrict
- * @return boolean|integer
- */
-function ip_matches($ip, $ip_restrict)
-{
-global $system_login;
-if ($system_login){return true;}	
-
-if (substr($ip_restrict, 0, 1)=='!')
-    return @preg_match('/'.substr($ip_restrict, 1).'/su', $ip);
-
-# Allow multiple IP addresses to be entered, comma separated.
-$i=explode(",",$ip_restrict);
-
-# Loop through all provided ranges
-for ($n=0;$n<count($i);$n++)
-    {
-    $ip_restrict=trim($i[$n]);
-
-    # Match against the IP restriction.
-    $wildcard=strpos($ip_restrict,"*");
-
-    if ($wildcard!==false)
-        {
-        # Wildcard
-        if (substr($ip,0,$wildcard)==substr($ip_restrict,0,$wildcard))
-            return true;
-        }
-    else
-        {
-        # No wildcard, straight match
-        if ($ip==$ip_restrict)
-            return true;
-        }
-    }
-return false;
-}

@@ -600,25 +600,17 @@ switch($csvstep)
         // Test file processing
         // Ensure connection does not get dropped
         set_time_limit(0);
+        echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
         $meta=meta_get_map();
         $messages=array();
-        $prelog_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
-        $prelog_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
-        $csv_set_options["log_file"] = $prelog_file;
-        $valid_csv = csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
-        echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
-        if(count($messages) > 1000)
-            {
-            $messages = array_slice($messages,0,1000);
-            echo "<p>" . str_replace("%%LOG_URL%%",$prelog_url,$lang["csv_upload_full_messages_link"]) . "</p>";
-            }
+        csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
         ?>
         <div class="BasicsBox">
-            <textarea rows="20" cols="100"><?php
+            <textarea rows="20" cols="100"><?php 
             foreach ($messages as $message)
-                {
-                echo $message . PHP_EOL;
-                } ?>
+                    {
+                    echo $message . PHP_EOL;
+                    } ?>
             </textarea>
             <div class="clearerleft"> </div>
         </div>
@@ -646,9 +638,7 @@ switch($csvstep)
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                     <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
-                   <?php if ($valid_csv) { ?>
                     <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>">
-                   <?php } ?>
                     <div class="clearerleft"> </div>
                 </div>    
             </form>
@@ -701,20 +691,10 @@ switch($csvstep)
             $messages=array();
             // Processing immediately. Ensure connection does not get dropped
             set_time_limit(0);
-            $log_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
-            $log_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
-            $csv_set_options["log_file"] = $log_file;
             csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options,0,true);
             }
-
         if(count($messages) > 0)   
             {
-            // If this is a very large CSV we need to limit the output displayed or it may crash the browser
-            if(count($messages) > 1000)
-                {
-                $messages = array_slice($messages,0,1000);
-                echo "<p>" . str_replace("%%LOG_URL%%",$log_url,$lang["csv_upload_full_messages_link"]) . "</p>";
-                }
             ?>
             <div class="BasicsBox">
                 <textarea rows="20" cols="100"><?php

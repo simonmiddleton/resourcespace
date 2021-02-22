@@ -110,12 +110,11 @@ if (getval("submit","")=="")
 	<?php
 	}
 else
-    {
-    # ----------------------------------- Show the PayPal integration instead ------------------------------------
-    $pricing_discounted=$pricing; # Copy the pricing, which may be group specific
-    # Reinclude the config so that $pricing is now the default, and we can work out group discounts
-    $pricing = $GLOBALS['system_wide_config_options']["pricing"];
-
+	{
+	# ----------------------------------- Show the PayPal integration instead ------------------------------------
+	$pricing_discounted=$pricing; # Copy the pricing, which may be group specific
+	include "../include/config.php"; # Reinclude the config so that $pricing is now the default, and we can work out group discounts
+	
 	$resources=do_search("!collection" . $usercollection);
 	$n=1;
 	$paypal="";

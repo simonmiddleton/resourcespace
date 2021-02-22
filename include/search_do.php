@@ -52,8 +52,7 @@ function do_search(
     $return_refs_only = false,
     $editable_only = false,
     $returnsql = false,
-    $access = null,
-    $smartsearch = false
+    $access = null
 )
     {
     debug_function_call("do_search", func_get_args());
@@ -217,7 +216,7 @@ function do_search(
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
+    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access);
     debug("do_search: \$sql_filter = {$sql_filter}");
 
     # Initialise variables.
@@ -1535,7 +1534,7 @@ function do_search(
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
-   $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
+   $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only);
     if ($special_results!==false)
         {
         return $special_results;

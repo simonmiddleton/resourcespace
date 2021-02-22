@@ -8,19 +8,10 @@
  */
 
     
-function perform_login($loginuser="",$loginpass="")
+function perform_login()
 	{
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
     $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
-
-    if(trim($loginpass) != "")
-        {
-        $password = trim($loginpass); 
-        }
-    if(trim($loginuser) != "")
-        {
-        $username = trim($loginuser); 
-        }
 
     if ((strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
 		{
@@ -30,7 +21,8 @@ function perform_login($loginuser="",$loginpass="")
 	if (strlen($password)!=64)
 		{
 		# Provided password is not a hash, so generate a hash.
-		$password_hash=hash('sha256', md5("RS" . $username . $password));				
+		//$password_hash=md5("RS" . $username . $password);
+		$password_hash=hash('sha256', md5("RS" . $username . $password));						
 		}
 	else
 		{
@@ -241,4 +233,3 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
         rs_setcookie("colour_theme", $userpreferences["colour_theme"],100, "/", "", substr($baseurl,0,5)=="https", true);
         }
     }
-

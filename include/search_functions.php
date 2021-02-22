@@ -555,7 +555,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -591,7 +591,7 @@ function compile_search_actions($top_actions)
             $options[$o]['label']=$lang['savethissearchtocollection'];
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php", $urlparams, array("addsearch" => $search));
             $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+            $options[$o]['category']  = ACTIONGROUP_COLLECTION;
             $options[$o]['order_by']  = 70;
             $o++;
             }
@@ -674,7 +674,7 @@ function compile_search_actions($top_actions)
             $o++;
             }*/
 
-        if($resources_count != 0 && !$system_read_only)
+        if($resources_count != 0)
             {
                 $extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
@@ -770,7 +770,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
+function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -854,7 +854,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     # append resource type restrictions based on 'T' permission 
     # look for all 'T' permissions and append to the SQL filter.
     $rtfilter=array();
-    
     for ($n=0;$n<count($userpermissions);$n++)
         {
         if (substr($userpermissions[$n],0,1)=="T")
@@ -891,10 +890,9 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
             {hook("search_all_workflow_states_filter");}   
-        elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
+        elseif (count($archive) == 0 || $archive_standard)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
-            # Defaults are not used if searching smartsearch collection, actual values will be used instead
             if ($sql_filter!="") {$sql_filter.=" AND ";}
             $defaultsearchstates = get_default_search_states();
             if(count($defaultsearchstates) == 0)
@@ -1099,13 +1097,12 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             else
                 {
-                if ($editable_filter != "")
-                    {
-                    $editable_filter .= " AND ";
-                    }
-                $editable_filter .= " 0=1";
+                $editable_filter .= " AND 0=1";
                 }
             }
+        
+
+
 
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
@@ -1130,7 +1127,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES, $lang, $k;
+    global $FIXED_LIST_FIELD_TYPES, $lang;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1150,16 +1147,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $last=explode(",",$search);
         $last=str_replace("!last","",$last[0]);
 
-        # !Last must be followed by an integer. SQL injection filter.
-        if (ctype_digit($last))
-            {
-            $last=(int)$last;
-            } 
-            else
-            {
-            $last=1000;
-            $search="!last1000";
-            }
+        
+        if (!is_int($last)) {$last=1000;$search="!last1000";} # 'Last' must be an integer. SQL injection filter.
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
@@ -1276,10 +1265,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        $upload_share_active = upload_share_active();
-        $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
-
-        if(validate_collection_parent($collection)=="" || (checkperm("j*")) || (checkperm("j" . validate_collection_parent($collection))))            {
+        if(in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) || featured_collection_check_access_control($collection))
+            {
             if(!collection_readable($collection))
                 {
                 return array();
@@ -1629,9 +1616,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($sql_filter_properties != "")
         {
-        if(strpos($sql_join,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+        if(strpos($sql_join,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
             {
-            $sql_join.=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
+            $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
             }
         if ($sql_filter == "")
             {
@@ -1816,7 +1803,7 @@ function get_default_search_states()
     }
 
 /**
-* Get the required search filter sql for the given filter for use in do_search()
+* Get the required search filter sql for the given ilterfor use in do_search()
 *  
 * @return array
 */
@@ -2063,7 +2050,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     debug_function_call("resolve_keyword", func_get_args());
 
     global $quoted_string, $stemming;
-    $keyword=mb_strcut($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+    $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
             
     if(!$quoted_string && $normalize)
         {
@@ -2181,7 +2168,7 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  * @param  string $needle       Text to highlight
  * @param  int  $options        String highlight options - See include/definitions.php
  * @param  string $highlight    Optional custom highlight code
- * @return string
+ * @return void
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
@@ -2552,10 +2539,10 @@ function get_filter_rules($filterid)
 */       
 function get_filter_rule($ruleid)
     {    
-    $rule_data = sql_query("SELECT fr.ref, frn.node_condition, group_concat(frn.node) AS nodes, n.resource_type_field FROM filter_rule fr JOIN filter_rule_node frn ON frn.filter_rule=fr.ref join node n on frn.node=n.ref WHERE fr.ref='" . escape_check($ruleid) . "' GROUP BY n.resource_type_field,frn.node_condition"); 
+    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
     if(count($rule_data) > 0)
         {
-        return $rule_data;
+        return $rule_data[0];
         }
     return false;
     }
@@ -2948,66 +2935,4 @@ function check_order_by_in_table_joins($order_by)
         {
         exit($lang['error_invalid_input'] . ":- <pre>order_by : " . htmlspecialchars($order_by) . "</pre>");
         }
-    }
-
-
-/**
-* Get collection total resource count for a list of collections
-* 
-* @param array $refs List of collection IDs
-* 
-* @return array Returns table of collections and their total resource count (taking into account access controls). Please
-*               note that the returned array might NOT contain keys for all the input IDs (e.g validation failed).
-*/
-function get_collections_resource_count(array $refs)
-    {
-    $return = [];
-
-    foreach($refs as $ref)
-        {
-        if(!(is_int_loose($ref) && $ref > 0))
-            {
-            continue;
-            }
-
-        $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
-        if(!(is_string($sql) && trim($sql) !== ''))
-            {
-            continue;
-            }
-
-        $resources = sql_query($sql, 'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
-        $return[$ref] = count($resources);
-        }
-
-    return $return;
-    }
-
-/**
- * Get all search request parameters. Note that this does not escape the
- * parameters which must be sanitised using escape_check() before using in SQL
- * or e.g. htmlspecialchars() or urlencode() before rendering on page
- *
- * @return array()
- */
-function get_search_params()
-    {
-    $searchparams = array(
-        "search"        =>"",
-        "restypes"      =>"",
-        "archive"       =>"",
-        "order_by"      =>"",
-        "sort"          =>"",
-        "offset"        =>"",
-        "k"             =>"",
-        "access"        =>"",
-        "foredit"       =>"",
-        "recentdaylimit"=>"",
-        );
-    $requestparams = array();
-    foreach($searchparams as $searchparam => $default)
-        {
-        $requestparams[$searchparam] = getval($searchparam,$default);
-        }
-    return $requestparams;
     }

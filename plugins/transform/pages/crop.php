@@ -95,7 +95,7 @@ if (!file_exists($crop_pre_file))
 	//exit($crop_pre_file);
 	if(!generate_transform_preview($ref,$crop_pre_file))
         {
-        error_alert($lang["transform_preview_gen_error"]);
+        die("Error generating transform preview.");
         }
     }
 # Locate imagemagick.

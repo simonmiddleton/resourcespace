@@ -41,11 +41,6 @@ function generate_transform_preview($ref, $destpath)
     $command .= " \"$transformsourcepath\"[0] +matte -flatten $colorspace1 -geometry 450 $colorspace2 \"$destpath\"";
     run_command($command);
     
-    if(!file_exists($destpath))
-        {
-        return false;
-        }
-
     // while we're here, clean up any old files still hanging around
     $parentfolder = dirname($destpath);
     $foldercontents = new DirectoryIterator($parentfolder);

@@ -2,7 +2,7 @@
 include "../include/db.php";
 
 include "../include/authenticate.php";
-if(checkperm("b") || $system_read_only)
+if(checkperm("b"))
     {exit ("Permission denied.");}
 
 $ref=getvalescaped("ref","",true);
@@ -96,10 +96,6 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
                 $coldata['bg_img_resource_ref'] = 0;
                 }
             }
-        }
-    elseif($collection["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
-        {
-        $coldata['featured_collections_changes']['name'] = "";
         }
 
     if (checkperm("h"))

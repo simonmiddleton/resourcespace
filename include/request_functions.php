@@ -927,9 +927,7 @@ function email_resource_request($ref,$details)
     if (isset($resourcedata["field" . $view_title_field])){
     $templatevars["title"]=$resourcedata["field" . $view_title_field];}
     $templatevars['username']=$username . " (" . $useremail . ")";
-    $templatevars['formfullname']=getval("fullname","");
     $templatevars['formemail']=getval("email","");
-    $templatevars['formtelephone']=getval("contact","");
     $templatevars['url']=$baseurl."/?r=".$ref;
     $templatevars["requesturl"]=$templatevars['url'];
     
@@ -983,9 +981,7 @@ function email_resource_request($ref,$details)
     
     $message=$lang["user_made_request"] . "<br /><br />";
     $message.= isset($username)? $lang["username"] . ": " . $username . " (" . $useremail . ")<br />":"";
-    $message.= (!empty($templatevars["formfullname"]))? $lang["fullname"].": ".$templatevars["formfullname"]."<br />":"";
-    $message.= (!empty($templatevars["formemail"]))? $lang["email"].": ".$templatevars["formemail"]."<br />":"";
-    $message.= (!empty($templatevars["formtelephone"]))? $lang["contacttelephone"].": ".$templatevars["formtelephone"]."<br />":"";
+    $message.= (!empty($templatevars["formemail"]))? $lang["email"].":".$templatevars["formemail"]."<br />":"";
     $notification_message = $message . $adddetails . $c ; 
     $message.= $adddetails. $c . "<br /><br />" . $lang["clicktoviewresource"] . "<br />". $templatevars['url'];
     

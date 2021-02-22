@@ -109,8 +109,6 @@ define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
 define ('LOG_CODE_UNLOCKED',            'Y');
-define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
-define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
 define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
@@ -128,8 +126,6 @@ define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
 define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
 define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
 define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',        'Z');
-define ('LOG_CODE_COLLECTION_SHARED_UPLOAD',                'SEU');
-define ('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE',            'EEU');
 
 
 // validates LOG_CODE is legal
@@ -280,10 +276,6 @@ define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
 
-
-// Global variable that contains variable names that reference metadata fields considered to be core to ResourceSpace 
-// and shouldn't be deleted. Plugins can register their own with config_register_core_fieldvars()
-// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_fieldvars().
 $corefields = array(
     "BASE" => array(
         'filename_field',
@@ -319,11 +311,6 @@ $corefields = array(
         )
     );
 
-// Similar to $corefields but holds list of field refs we want the system to prevent from deleting. Mostly plugins will want
-// to register these IF the plugin is configured to use certain metadata fields.
-// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_field_refs().
-$core_field_refs = [];
-
 
 // ----------------------------------------------
 // COLLECTIONS
@@ -333,9 +320,6 @@ define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then ed
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
 define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
 define("COLLECTION_TYPE_PUBLIC",    4); # public collections
-define("COLLECTION_SHARE_UPLOAD",   5); # public collections
-
-
 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "no_image" => 0,
     "most_popular_image" => 1,
@@ -380,38 +364,4 @@ define('STR_HIGHLIGHT_SIMPLE', 1);
 define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
-
-
-# Keyboard control codes
-# Previous/next resource: left/right arrows
-$keyboard_navigation_prev=37;
-$keyboard_navigation_next=39;
-# add resource to collection, 'a'
-$keyboard_navigation_add_resource=65;
-# previous page in document preview, ','
-$keyboard_navigation_prev_page=188;
-# next page in document preview, '.'
-$keyboard_navigation_next_page=190;
-# view all results, '/'
-$keyboard_navigation_all_results=191;
-# toggle thumbnails in collections frame, 't'
-$keyboard_navigation_toggle_thumbnails=84;
-# view all resources from current collection, 'v'
-$keyboard_navigation_view_all=86;
-# zoom to/from preview, default 'z'
-$keyboard_navigation_zoom=90;
-# close modal, escape
-$keyboard_navigation_close=27;
-$keyboard_navigation_video_search_backwards=74;
-# play/pause - 'k'
-$keyboard_navigation_video_search_play_pause=75;
-# play forwards - 'l'
-$keyboard_navigation_video_search_forwards=76;
-
-# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
-$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
-
-# Regular expression defining e-mail format
-# Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
-$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
 

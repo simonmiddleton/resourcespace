@@ -42,9 +42,6 @@ function HookImage_banksAllSearchfiltertop()
         function toggleUnwantedElementsFromSimpleSearch(selector)
             {
             var selected_option = selector.val();
-            
-            SetCookie("image_bank_provider_id",selected_option);
-            
             var siblings = jQuery("#SearchImageBanksItem")
                 .siblings()
                 .not("#ssearchbox")
@@ -59,9 +56,6 @@ function HookImage_banksAllSearchfiltertop()
                 if(typeof search_show == 'undefined' || search_show)
                     {
                     siblings.show();
-                    
-                    TriggerChangesForRenderedFields();
-
                     }
                 return;
                 }
@@ -71,6 +65,9 @@ function HookImage_banksAllSearchfiltertop()
             return;
             }
 
+        jQuery(document).ready(function() {
+            toggleUnwantedElementsFromSimpleSearch(jQuery("#SearchImageBanks"));
+        });
         </script>
         <div class="clearerleft"></div>
     </div>
@@ -112,9 +109,3 @@ function HookImage_banksAllClearsearchcookies()
     $clear_function .= "SetCookie('image_bank_provider_id','');";
     return true;
     }
-
-function HookImage_banksAllSimplesearchfieldsarehidden()
-{
-$hib_simpleSearchFieldsAreHidden = ( getval("image_bank_provider_id",0, true) > 0 );
-return $hib_simpleSearchFieldsAreHidden;
-}  

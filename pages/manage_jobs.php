@@ -79,7 +79,7 @@ $tabledata = array(
 
     "defaulturl"=>$baseurl . "/pages/manage_jobs.php",
     "params"=>$curparams,
-    "pager"=>array("current"=>$curpage,"total"=>$totalpages, "per_page"=>$per_page, "break" =>false),
+    "pager"=>array("current"=>$curpage,"total"=>$totalpages),
     "data"=>array()
     );
 
@@ -94,7 +94,7 @@ for($n=0;$n<$jobcount;$n++)
         $endedjobs++;
         }    
 
-    if($n >= $offset && ($n < $offset + $per_page))
+    if($n >= $offset && $offset + $per_page)
         {
         $tablejob =array();
         $tablejob["ref"] = $jobs[$n]["ref"];

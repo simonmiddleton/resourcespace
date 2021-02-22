@@ -6,7 +6,6 @@ include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
-include_once "../include/login_functions.php";
 include "../include/header.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}

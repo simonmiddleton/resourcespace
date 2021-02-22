@@ -149,7 +149,6 @@ $storagedir=""; # This variable is used in the language files.
 include '../include/config.default.php';
 $defaultlanguage = get_post('defaultlanguage');
 $lang = set_language($defaultlanguage);
-$google_vision_enable=get_post_bool('google_vision_enable');
 
 
 /* Process AJAX request to check password */
@@ -336,6 +335,7 @@ function test_db(targetEl)
             $('#al-testconn').hide();
         },
         error: function(){
+            alert('<?php echo $lang["setup-mysqltestfailed"] ?>');
             $('#mysqlserver').addClass('warn');
             db_user.addClass('warn');
             db_pass.addClass('warn');
@@ -345,7 +345,6 @@ function test_db(targetEl)
 </script> 
  
 <style type="text/css"> 
-#setup-container {overflow: auto; height: 100%;}
 #wrapper{ margin:0 auto;width:600px; }
  #intro {  margin-bottom: 40px; font-size:100%; background: #F7F7F7; text-align: left; padding: 40px; }
 #introbottom { padding: 10px; clear: both; text-align:center;}
@@ -387,7 +386,6 @@ h2#dbaseconfig{  min-height: 32px;}
 </style> 
 </head>
 <body class="SlimHeader">
-<div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
     	<img src="../gfx/titles/title.svg" id="HeaderImg" />
@@ -965,17 +963,6 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
             trigger_error("Unable to copy image from '{$from_file}' to '{$to_file}' for slideshow #{$new_slideshow_image}");
             }
         }
-        
-        if($google_vision_enable)
-            {
-            $google_vision_api_key= getvalescaped('google_vision_key','');
-
-            // Activate and get default config
-            activate_plugin("google_vision");
-            $plugin_config  = get_plugin_config("google_vision");
-            $plugin_config["google_vision_api_key"] = $google_vision_api_key;
-            set_plugin_config("google_vision",$plugin_config);
-            }
 
     // Create user
     
@@ -1125,7 +1112,7 @@ else
 					$success = is_writable($storagedir);
 					if ($success===false)
 						{
-						$result = $lang["status-warning"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
+						$result = $lang["status-warning"] . ": " . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
 						$pass = false;
 						}
 					else
@@ -1168,49 +1155,27 @@ else
 	include "../include/plugin_functions.php";
 	$plugins_dir = dirname(__FILE__)."/../plugins/";
 	# Build an array of available plugins.
-    $dirh = opendir($plugins_dir);
-    $plugins_avail = array();
+	$dirh = opendir($plugins_dir);
+	$plugins_avail = array();
 
-    while (false !== ($file = readdir($dirh))) 
-        {
-        if (is_dir($plugins_dir.$file)&&$file[0]!='.')
-            {
-            # Look for a <pluginname>.yaml file.
-            $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
-            if(isset($plugin_yaml["category"]) 
-                    && $plugin_yaml["category"]=="structural"
-                    && isset($plugin_yaml["info_url"])
-                    && isset($plugin_yaml["setup_desc"])
-                    && isset($plugin_yaml["name"])
-                )
-                {
-                foreach ($plugin_yaml as $key=>$value)
-                    {
-                    $plugins_avail[$file][$key] = $value ;
-                    }
-                }  
-             # Include all plugin language files
-            $langpath = $plugins_dir . $file . "/languages/";
-
-            if (file_exists($langpath . "en.php"))
-                {
-                include $langpath . "en.php";
-                }
-
-            if ($defaultlanguage != "en")
-                {
-                if (substr($defaultlanguage, 2, 1) == '-' && substr($defaultlanguage, 0, 2) != 'en')
-                    {
-                    if (file_exists($langpath . safe_file_name(substr($defaultlanguage, 0, 2)) .  ".php"))
-                        {
-                        include $langpath . safe_file_name(substr($defaultlanguage, 0, 2)) . ".php";
-                        }
-                    }
-                if (file_exists($langpath . safe_file_name($defaultlanguage) . ".php"))
-                    {
-                    include $langpath . safe_file_name($defaultlanguage) . ".php";
-                    }
-                }
+	while (false !== ($file = readdir($dirh))) 
+	   {
+	   if (is_dir($plugins_dir.$file)&&$file[0]!='.')
+	      	{
+	        # Look for a <pluginname>.yaml file.
+	        $plugin_yaml = get_plugin_yaml($plugins_dir.$file.'/'.$file.'.yaml', false);
+	        if(isset($plugin_yaml["category"]) 
+	         		&& $plugin_yaml["category"]=="structural"
+	         		&& isset($plugin_yaml["info_url"])
+	         		&& isset($plugin_yaml["setup_desc"])
+	         		&& isset($plugin_yaml["name"])
+	         	)
+	         	{
+	         	foreach ($plugin_yaml as $key=>$value)
+		            {
+		            $plugins_avail[$file][$key] = $value ;
+		            }
+	         	}    
 	      	}
 	   }
 	closedir($dirh);
@@ -1460,103 +1425,67 @@ else
 			</p>
 
 
-            <h2><?php echo $lang["setup-smtp-settings"]; ?></h2>
-            <div class="advsection" id="smtpsettings">
-                <div class="configitem">
-                    <label for="use_smtp"><?php echo $lang["usesmtp"] . ":"; ?></label>
-                    <input id="use_smtp" name="use_smtp" type="checkbox"  <?php echo $use_smtp?"checked":"";?>/>
-                    <a class="iflink" href="#if-usesmtp">?</a>
-                    <p class="iteminfo" id="if-usesmtp"><?php echo $lang["setup-if-usesmtp"];?></p>
-                </div>
-                <div id="use-SMTP-settings">
-                    <div class="configitem">
-                        <label for="smtp_secure"><?php echo $lang["smtpsecure"] . ":"; ?></label>
-                        <input id="smtp_secure" name="smtp_secure" type="text" value="<?php echo $smtp_secure;?>" />
-                        <a class="iflink" href="#if-smtpsecure">?</a>
-                        <p class="iteminfo" id="if-smtpsecure"><?php echo $lang["setup-if-smtpsecure"];?></p>
-                    </div>
-                    <div class="configitem">
-                        <label for="smtp_host"><?php echo $lang["smtphost"] . ":"; ?></label>
-                        <input id="smtp_host" name="smtp_host" type="text" value="<?php echo $smtp_host;?>"/>
-                        <a class="iflink" href="#if-smtphost">?</a>
-                        <p class="iteminfo" id="if-smtphost"><?php echo $lang["setup-if-smtphost"];?></p>
-                    </div>
-                    <div class="configitem">
-                        <label for="smtp_port"><?php echo $lang["smtpport"] . ":"; ?></label>
-                        <input id="smtp_port" name="smtp_port" type="text" value="<?php echo $smtp_port;?>"/>
-                        <a class="iflink" href="#if-smtpport">?</a>
-                        <p class="iteminfo" id="if-smtpport"><?php echo $lang["setup-if-smtpport"];?></p>
-                    </div>
-                    <div class="configitem">
-                        <label for="smtp_auth"><?php echo $lang["smtpauth"] . ":"; ?></label>
-                        <input id="smtp_auth" name="smtp_auth" type="checkbox" checked />
-                        <a class="iflink" href="#if-smtpauth">?</a>
-                        <p class="iteminfo" id="if-smtpauth"><?php echo $lang["setup-if-smtpauth"];?></p>
-                    </div>
-                    <div class="configitem">
-                        <label for="smtp_username"><?php echo $lang["smtpusername"] . ":"; ?></label>
-                        <input id="smtp_username" name="smtp_username" type="text" value="<?php echo $smtp_username;?>"/>
-                        <a class="iflink" href="#if-smtpusername">?</a>
-                        <p class="iteminfo" id="if-smtpusername"><?php echo $lang["setup-if-smtpusername"];?></p>
-                    </div>
-                    <div class="configitem">
-                        <label for="smtp_password"><?php echo $lang["smtppassword"] . ":"; ?></label>
-                        <input id="smtp_password" name="smtp_password" type="password" value="<?php echo $smtp_password;?>"/>
-                        <a class="iflink" href="#if-smtppassword">?</a>
-                        <p class="iteminfo" id="if-smtppassword"><?php echo $lang["setup-if-smtppassword"];?></p>
-                    </div>
-                </div>
-            </div>
-            <h2><?php echo $lang["pluginssetup"]; ?></h2>
-            <div class="advsection" id="plugin_settings">
-                <div class="configitem">
-                    <label for="google_vision_enable"><?php echo $lang["setup_google_vision_enable"]; ?></label>
-                    <input id="google_vision_enable" name="google_vision_enable" type="checkbox"  <?php echo $google_vision_enable ? "checked" : "";?>/>
-                    <a class="iflink" href="https://www.resourcespace.com/knowledge-base/plugins/google-vision" target="_blank">?</a>
-                </div>
-                <div id="plugin_google_vision_settings">
-                    <div class="configitem">
-                        <label for="google_vision_key"><?php echo $lang["google_vision_api_key"] . ":"; ?></label>
-                        <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo htmlspecialchars(get_post('google_vision_key')); ?>" />
-                    </div>
-                </div>
-            </div>
+			<h2><?php echo $lang["setup-smtp-settings"]; ?></h2>
+			<div class="advsection" id="smtpsettings">
+				<div class="configitem">
+					<label for="use_smtp"><?php echo $lang["usesmtp"] . ":"; ?></label>
+					<input id="use_smtp" name="use_smtp" type="checkbox"  <?php echo $use_smtp?"checked":"";?>/>
+					<a class="iflink" href="#if-usesmtp">?</a>
+					<p class="iteminfo" id="if-usesmtp"><?php echo $lang["setup-if-usesmtp"];?></p>
+				</div>
+				<div id="use-SMTP-settings">
+					<div class="configitem">
+						<label for="smtp_secure"><?php echo $lang["smtpsecure"] . ":"; ?></label>
+						<input id="smtp_secure" name="smtp_secure" type="text" value="<?php echo $smtp_secure;?>" />
+						<a class="iflink" href="#if-smtpsecure">?</a>
+						<p class="iteminfo" id="if-smtpsecure"><?php echo $lang["setup-if-smtpsecure"];?></p>
+					</div>
+					<div class="configitem">
+						<label for="smtp_host"><?php echo $lang["smtphost"] . ":"; ?></label>
+						<input id="smtp_host" name="smtp_host" type="text" value="<?php echo $smtp_host;?>"/>
+						<a class="iflink" href="#if-smtphost">?</a>
+						<p class="iteminfo" id="if-smtphost"><?php echo $lang["setup-if-smtphost"];?></p>
+					</div>
+					<div class="configitem">
+						<label for="smtp_port"><?php echo $lang["smtpport"] . ":"; ?></label>
+						<input id="smtp_port" name="smtp_port" type="text" value="<?php echo $smtp_port;?>"/>
+						<a class="iflink" href="#if-smtpport">?</a>
+						<p class="iteminfo" id="if-smtpport"><?php echo $lang["setup-if-smtpport"];?></p>
+					</div>
+					<div class="configitem">
+						<label for="smtp_auth"><?php echo $lang["smtpauth"] . ":"; ?></label>
+						<input id="smtp_auth" name="smtp_auth" type="checkbox" checked />
+						<a class="iflink" href="#if-smtpauth">?</a>
+						<p class="iteminfo" id="if-smtpauth"><?php echo $lang["setup-if-smtpauth"];?></p>
+					</div>
+					<div class="configitem">
+						<label for="smtp_username"><?php echo $lang["smtpusername"] . ":"; ?></label>
+						<input id="smtp_username" name="smtp_username" type="text" value="<?php echo $smtp_username;?>"/>
+						<a class="iflink" href="#if-smtpusername">?</a>
+						<p class="iteminfo" id="if-smtpusername"><?php echo $lang["setup-if-smtpusername"];?></p>
+					</div>
+					<div class="configitem">
+						<label for="smtp_password"><?php echo $lang["smtppassword"] . ":"; ?></label>
+						<input id="smtp_password" name="smtp_password" type="password" value="<?php echo $smtp_password;?>"/>
+						<a class="iflink" href="#if-smtppassword">?</a>
+						<p class="iteminfo" id="if-smtppassword"><?php echo $lang["setup-if-smtppassword"];?></p>
+					</div>
+				</div>
+			</div>
 		<input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
 	</div>
 </form>
 <script>
-    jQuery("#use_smtp").click(function()
-        {
-        if(jQuery(this).prop("checked"))
-            {
-            jQuery("#use-SMTP-settings").show(300);
-            }
-        else
-            {
-            jQuery("#use-SMTP-settings").hide(300);
-            }
-        });
-    if(!jQuery("#use_smtp").prop("checked"))
-        {
-        jQuery("#use-SMTP-settings").hide();
-        }
-    jQuery("#google_vision_enable").click(function()
-        {
-        if(jQuery(this).prop("checked"))
-            {
-            jQuery("#plugin_google_vision_settings").show(300);
-            }
-        else
-            {
-            jQuery("#plugin_google_vision_settings").hide(300);
-            }
-        });
-    if(!jQuery("#google_vision_enable").prop("checked"))
-        {
-        jQuery("#plugin_google_vision_settings").hide();
-        }
-
-
+	jQuery("#use_smtp").click(function(){
+		if(jQuery(this).prop("checked")) {
+			jQuery("#use-SMTP-settings").show(300);
+		} else {
+			jQuery("#use-SMTP-settings").hide(300);
+		}
+	});
+	if(!jQuery("#use_smtp").prop("checked")) {
+		jQuery("#use-SMTP-settings").hide();
+	}
 </script>
 <?php }
 if (($develmode)&& isset($config_output))
@@ -1567,6 +1496,5 @@ if (($develmode)&& isset($config_output))
 	</div>
 	<?php 
 	} ?>
-</div>
 </body>
 </html>

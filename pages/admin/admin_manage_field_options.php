@@ -66,9 +66,6 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         // thus this will be checked upon saving the data. If order_by is null / empty string, then we will use the current value
         set_node($node_ref, $field, $option_name, $option_parent, $option_new_index);
 
-        // update value of corresponding fieldx
-        update_fieldx($field); 
-        
         echo json_encode($response);
         exit();
         }

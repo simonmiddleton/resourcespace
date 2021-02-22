@@ -76,7 +76,7 @@ if(!isset($thumbs))
     }
 
 # Basket mode? - this is for the e-commerce user request modes.
-if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3))
+if ($userrequestmode==2 || $userrequestmode==3)
 	{
 	# Enable basket
 	$basket=true;	
@@ -700,7 +700,7 @@ $feedback=$cinfo["request_feedback"];
 
 # E-commerce functionality. Work out total price, if $basket_stores_size is enabled so that they've already selected a suitable size.
 $totalprice=0;
-if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
+if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	{
 	foreach ($result as $resource)
 		{

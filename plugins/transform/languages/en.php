@@ -57,7 +57,6 @@ $lang['resources_transformed_successfully-1']="1 resource transformed successful
 $lang['resources_transformed_successfully-2']="%qty resources transformed successfully."; # %qty will be replaced with the quantity of transformed resources
 $lang['errors-1']="1 error.";
 $lang['errors-2']="%qty errors."; # %qty will be replaced with the quantity of errors
-$lang["transform_preview_gen_error"] = "Error generating transform preview.";
 
 $lang['transform_configuration']="Transform Configuration";
 $lang['cropper_debug']="Cropper Debug";

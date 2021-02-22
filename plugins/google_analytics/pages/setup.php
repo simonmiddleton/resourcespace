@@ -13,7 +13,6 @@ $page_heading = 'Google Analytics Key Configuration';
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 $page_def[] = config_add_text_list_input('google_analytics_key','Google Analytics Key');
-$page_def[] = config_add_text_input('google_analytics_verification_code', $lang['google_analytics_verification_code'], false, 300);
 
 
 // Do the page generation ritual
@@ -21,3 +20,6 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading);
 include '../../../include/footer.php';
+
+
+

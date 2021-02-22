@@ -21,11 +21,11 @@ include_once 'metadata_functions.php';
  * @param  string $file_path                Path to file
  * @param  bool $after_upload_processing    Set to true will create an offline job to process the file
  * @param  bool $deletesource               Delete resource after upload
- * @return bool
+ * @return void
  */
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false, $deletesource=true)
     {
-    debug_function_call('upload_file', func_get_args());
+    debug("upload_file(ref = $ref, no_exif = " . ($no_exif ? "TRUE" : "FALSE")  . ",revert = " . ($revert ? "TRUE" : "FALSE")  . ", autorotate = " . ($autorotate ? "TRUE" : "FALSE")  . ", file_path = $file_path, after_upload_processing = " . ($after_upload_processing ? "TRUE" : "FALSE")  . ")");
 
     global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;    
     global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
@@ -343,22 +343,20 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         $has_image=",has_image=0";
         }
-    sql_query("UPDATE resource SET file_extension='$extension',preview_extension='jpg',file_modified=NOW() $has_image WHERE ref='" . escape_check($ref) . "'");
+    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='" . escape_check($ref) . "'");
     
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
-        sql_query("DELETE FROM resource_dimensions WHERE resource='" . escape_check($ref) . "'");
+        sql_query("delete from resource_dimensions where resource='" . escape_check($ref) . "'");
         
         # get file metadata 
         if(!$no_exif) 
             {
-            debug("[upload_file()][ref={$ref}] Extracting embedded metadata...");
             extract_exif_comment($ref,$extension);
             }
         else
             {        
-            debug("[upload_file()][ref={$ref}] Not extracting embedded metadata!");
             if($merge_filename_with_title && isset($processfile))
                 {
                 $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
@@ -574,15 +572,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
 function extract_exif_comment($ref,$extension="")
     {
-    debug_function_call('extract_exif_comment', func_get_args());
     # Extract the EXIF comment from either the ImageDescription field or the UserComment
     # Also parse IPTC headers and insert
     # EXIF headers
     $exifoption=getval("no_exif",""); // This may have been set to a non-standard value if allowing per field selection
-    debug("[extract_exif_comment()][ref={$ref}] POSTED no_exif = " . json_encode($exifoption));
     if($exifoption=="yes"){$exifoption="no";} // Sounds odd but previously was no_exif so logic reversed                        
     if($exifoption==""){$exifoption="yes";}
-    debug("[extract_exif_comment()][ref={$ref}] exifoption = " . json_encode($exifoption));
     
     $image=get_resource_path($ref,true,"",false,$extension);
     if (!file_exists($image)) {return false;}
@@ -594,7 +589,6 @@ function extract_exif_comment($ref,$extension="")
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
         {
-        debug("[extract_exif_comment()][ref={$ref}] Extension valid for ExifTool processing");
         $resource=get_resource_data($ref);
         hook("beforeexiftoolextraction");
         
@@ -698,7 +692,7 @@ function extract_exif_comment($ref,$extension="")
                     $metadata[$tagname] = escape_check($value);
                     $metadata[$groupname . ":" . $tagname] = escape_check($value);
 
-                    debug("[extract_exif_comment()][ref={$ref}] Extracted field '{$groupname}:{$tagname}', value = {$value}");
+                    debug("Exiftool: extracted field '$groupname:$tagname', value is '".$value."'");
                     }
                 }
             }
@@ -732,7 +726,6 @@ function extract_exif_comment($ref,$extension="")
         $exif_updated_fields=array();
         for($i=0;$i< count($read_from);$i++)
             {
-            debug("[extract_exif_comment()][ref={$ref}] Looking up metadata field #{$read_from[$i]['ref']} exiftool mappings...");
             $field=explode(",",$read_from[$i]['exiftool_field']);
             foreach ($field as $subfield)
                 {
@@ -741,7 +734,6 @@ function extract_exif_comment($ref,$extension="")
                     {
                     $read=true;
                     $value=$metadata[$subfield];
-                    debug("[extract_exif_comment()][ref={$ref}] Found embedded field mapping for '{$subfield}' with value '{$value}'");
                     
                     # Dropdown box or checkbox list?
                     if (in_array($read_from[$i]["type"],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
@@ -774,7 +766,6 @@ function extract_exif_comment($ref,$extension="")
                         if (file_exists($plugin)) {include $plugin;}
         
                         $exiffieldoption=$exifoption;
-                        debug("[extract_exif_comment()][ref={$ref}] exiffieldoption = " . json_encode($exiffieldoption));
                         
                         if($exifoption=="custom"  || (isset($embedded_data_user_select_fields)  && in_array($read_from[$i]['ref'],$embedded_data_user_select_fields)))
                             {                                   
@@ -858,11 +849,7 @@ function extract_exif_comment($ref,$extension="")
                                 }
                             }
                             
-                            if(isset($newval))
-                                {
-                                update_field($ref,$read_from[$i]['ref'],$newval);
-                                debug("[extract_exif_comment()][ref={$ref}] Updated field #{$read_from[$i]['ref']} with value '{$newval}'");
-                                }
+                            if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
                             $exif_updated_fields[]=$read_from[$i]['ref'];
                             
                             
@@ -875,7 +862,7 @@ function extract_exif_comment($ref,$extension="")
 
                     }   
                     else {
-                        debug("[extract_exif_comment()][ref={$ref}] Unable to find embedded field mapping for subfield '{$subfield}'");
+
                         // Process if no embedded title is found:
                         global $merge_filename_with_title, $merge_filename_with_title_default, $lang, $view_title_field;
                         if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
@@ -980,7 +967,7 @@ function extract_exif_comment($ref,$extension="")
         # Exiftool is not installed. As a fallback we grab some predefined basic fields using the PHP function
         # exif_read_data()
         #       
-        debug("[extract_exif_comment()][ref={$ref}] ExifTool not installed, trying exif_read_data()...");
+        
         if (function_exists("exif_read_data") && !in_array($extension,$exiftool_no_process))
             {
             $data=exif_read_data($image);
@@ -1154,19 +1141,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize)
         {
         $filesize = filesize_unlimited($file)/(1024*1024);# Get filesize in MB
-        if ($filesize>$preview_generate_max_file_size && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $ref,
-                'thumbonly' => false,
-                'extension' => $extension
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-            return false;
-            }
+        if ($filesize>$preview_generate_max_file_size) {return false;}
         }
     
     # Locate imagemagick.

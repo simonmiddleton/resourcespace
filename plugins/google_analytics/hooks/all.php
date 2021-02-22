@@ -23,18 +23,3 @@ ga('send','pageview');
 
 <?php
 }
-
-
-function HookGoogle_analyticsAllExtra_meta()
-    {
-    global $google_analytics_verification_code;
-
-    if($google_analytics_verification_code == '')
-        {
-        return;
-        }
-    ?>
-    <meta name="google-site-verification" content="<?php echo htmlspecialchars($google_analytics_verification_code); ?>" />
-    <?php
-    return;
-    }

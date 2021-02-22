@@ -153,9 +153,6 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         # Not downloading - output a table
-
-        // Pre-render process: Process nodes search syntax (e.g @@228 or @@!223) and add a new column that contains the node list and their names
-        $results = process_node_search_syntax_to_names($results, 'search_string');
         $border="";
         if ($add_border) {$border="border=\"1\"";}
         $output="<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";

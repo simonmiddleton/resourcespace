@@ -4,7 +4,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-if ((!db_use_multiple_connection_modes() && $execution_lockout) || !checkperm("a"))
+if ($execution_lockout || !checkperm("a"))
 	{
 	exit ("Permission denied.");
 	}

@@ -1,62 +1,49 @@
 <?php
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
+include_once '../../../include/resource_functions.php';
 include_once '../include/vimeo_publish_functions.php';
+
 
 use Vimeo\Vimeo;
 use Vimeo\Exceptions\VimeoUploadException;
 
-// May have come from plugin setup page to get or delete a system wide token
-$systemtoken    = getval("systemtoken","") != "" && checkperm('a');
-$ref            = getvalescaped('resource',0, true);
-if(!$systemtoken && $ref > 0)
-    {
-    $access        = get_resource_access($ref);
-    if(0 != $access)
-        {
-        exit($lang['vimeo_publish_access_denied']);
-        }
-    
-    $resource_data = get_resource_data($ref);
-    $error         = '';
-    }
-$modal = (getval("modal", "") == "true");
 
-$publish_params = array();
-$publish_params["resource"]     = $ref;
-$publish_params["systemtoken"]  = $systemtoken;
-$vimeo_publish_url = generateURL($vimeo_callback_url, $publish_params);
+$ref           = getvalescaped('resource', getvalescaped('vimeo_publish_resource', ''));
+$access        = get_resource_access($ref);
+$resource_data = get_resource_data($ref);
+$error         = '';
 
-if(getval('delete_token','') != '')
+
+if(0 != $access)
     {
-    if($vimeo_publish_allow_user_accounts)
-        {
-        delete_vimeo_token($userref);
-        }
-    elseif($systemtoken)
-        {
-        delete_vimeo_token();
-        }
+    exit($lang['vimeo_publish_access_denied']);
     }
 
-if(!$systemtoken && !$vimeo_publish_allow_user_accounts && trim($vimeo_publish_system_token)=="")
+
+if(getvalescaped('delete_token', false))
     {
-    exit($lang['vimeo_publish_not_configured'] . "<a href=\"{$baseurl}/plugins/vimeo_publish/pages/setup.php\">$baseurl/plugins/vimeo_publish/pages/setup.php</a>");
+    delete_vimeo_token($userref);
+
+    // Delete cookie
+    rs_setcookie('vimeo_publish_resource', $ref, -1, 'plugins/vimeo_publish/pages/');
+    }
+
+// Store resource ID in a cookie while we authenticate to not lose it
+if('' != $ref)
+    {
+    rs_setcookie('vimeo_publish_resource', $ref, 1, 'plugins/vimeo_publish/pages/');
     }
 
 // Initialize VIMEO
-init_vimeo_api($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
-$vimeo_publish_access_token = get_access_token($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_url);
+init_vimeo_api($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_callback_url);
+$vimeo_publish_access_token = get_access_token($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_callback_url);
 $vimeo_user_data            = array();
-if($systemtoken)
-    {
-    // Just came here to get/delete a token, return to setup page
-    redirect(generateURL($baseurl_short . "plugins/vimeo_publish/pages/setup.php"));
-    }
 
-// Try uploading resource to Vimeo
+
+// Try uplpoading resource to Vimeo
 $successfully_uploaded = false;
-if(getvalescaped('upload', '') !=  '' && enforcePostRequest(false))
+if(getvalescaped('upload', false) && enforcePostRequest(false))
     {
     $video_id   = '';
     $file_path  = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, false, '', -1);
@@ -72,6 +59,7 @@ if(getvalescaped('upload', '') !=  '' && enforcePostRequest(false))
         $successfully_uploaded = true;
         }
     }
+
 
 if(0 < $vimeo_publish_vimeo_link_field)
     {
@@ -99,21 +87,10 @@ if(0 < $vimeo_publish_video_description_field)
     $default_video_description = get_data_by_field($ref, $vimeo_publish_video_description_field);
     }
 
+
 include '../../../include/header.php';
-
-$params= get_search_params();
-$params["ref"] = $ref;
 ?>
-
-<div class="BasicsBox">
-    <div class="RecordHeader">
-        <h1><?php echo $lang["vimeo_publish_resource_tool_link"]; ?></h1>
-        <p>
-            <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $params); ?>" onClick="return CentralSpaceLoad(this,true);">
-                <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
-            </a>
-        </p>
-    </div>
+<a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a></p>
 
 <?php
 if('' != $error)
@@ -127,21 +104,14 @@ if('' != $error)
     }
 
 // Show which user we will be publishing as...
-
-if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
+if(get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $vimeo_user_data))
     {
     ?>
     <div class="Question">
         <p><?php echo $lang['vimeo_publish_publish_as_user']; ?><a href="<?php echo $vimeo_user_data['link']; ?>" target="_blank"><strong><?php echo $vimeo_user_data['name']; ?></strong> (<?php echo ucfirst($vimeo_user_data['account']); ?> account - <?php echo formatfilesize($vimeo_user_data['upload_quota_free']); ?> free)</a></p>
-        <?php
-        if($vimeo_publish_allow_user_accounts)
-            {
-            ?>
-            <p>
-                <a href="<?php echo $vimeo_callback_url; ?>?resource=<?php echo $ref; ?>&delete_token=true">&gt;&nbsp;<?php echo $lang['vimeo_publish_delete_token']; ?></a>
-            </p>
-            <?php
-            }?>
+        <p>
+            <a href="<?php echo $vimeo_callback_url; ?>?resource=<?php echo $ref; ?>&delete_token=true">&gt;&nbsp;<?php echo $lang['vimeo_publish_delete_token']; ?></a>
+        </p>
     </div>
     <?php
     }
@@ -178,6 +148,5 @@ if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id
         }
     </script>
 </form>
-</div> <!-- End of BasicsBox -->
 <?php
 include '../../../include/footer.php';

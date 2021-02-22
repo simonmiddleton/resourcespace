@@ -31,9 +31,15 @@ body {
 }
 
 @media(max-width:1200px) {
-    
+
     #UICenter{
+        margin-bottom: 161px !important;
         height: auto !important;
+    }
+
+    #UICenter.NoSearch{
+        max-height: calc(100% - 60px);
+        min-height: calc(100% - 60px);
     }
 
     #CollectionDiv {
@@ -53,8 +59,14 @@ body {
         height: 100% !important;
         overflow: scroll !important;
     }
+        
+    #CentralSpaceLogin #login_box {
+        width:100%;
+        padding-left: 5px;
+        padding-right: 5px;        
+    }
     
-    .Question .stdwidth, .stdwidth {
+    .Question .stdwidth, .stdwidth, #login_box .Question .stdwidth, #login_box {
         width:100%;
     }
     
@@ -105,6 +117,8 @@ body {
         -moz-transform: scale(1.5); /* FF */
         -webkit-transform: scale(1.5); /* Safari and Chrome */
         -o-transform: scale(1.5); /* Opera */
+        margin-left: 4px;
+        margin-top: 10px;
         height:auto;
     }
     input[type="radio"] {
@@ -120,6 +134,11 @@ body {
         font-size: 1em;
     }
     input[type="submit"], input[type="button"], button {
+        height:35px;
+        padding: 3px 16px;
+        box-shadow: 1px 1px 8px -2px;
+        border:0;
+        margin:5px;
         cursor:pointer;
     }
     input[type="submit"]:hover, input[type="button"]:hover, button:hover {
@@ -160,13 +179,13 @@ body {
     .RecordPanel .RecordDownloadSpace .DownloadFileSize {
         font-size: 90%;
     }
-    #login_box .Question.KeepLoggedIn {
-        margin-left: 3px;
-    }
 }
 @media(max-width:700px) {
     .FormHelp {
         margin:0 0 10px 0;
+    }
+    .Question {
+        overflow: scroll;
     }
     .FormWide .Question .FormHelp {
         margin:0 0 10px 0;
@@ -184,10 +203,28 @@ body {
     .CategoryBox {
         width:100%;
     }
+
+    body {
+        background-image: none !important;
+    }
 }
 /* Login Forms */
+@media(max-width:1100px) { 
+    #CentralSpaceLogin .Question label {
+        width:300px;
+    }
 }
 @media(max-width:750px) {
+    #CentralSpaceLogin {
+        width:94%;
+        margin-left:3%;
+        margin-right: 3%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        padding:0;
+        top:0;
+        transform:translateY(0); 
+    }
     #AntiSpamImage {
         margin-left: 0 !important;
     }
@@ -232,7 +269,6 @@ body {
 #HeaderButtons {
     display:none;
 }
-
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
@@ -572,16 +608,7 @@ body {
         text-align: center;
         float: none;
     }
-    #Header {
-        position: relative !important;
-        height: auto !important;
-    }
-}
-@media(max-width:1100px) {
-    #FooterThemes img {
-        width:20px;
-        height:20px;
-    }
+
     #SearchBarContainer {
         position: relative !important;
         height: auto !important;
@@ -601,6 +628,17 @@ body {
         top:0 !important;
         margin-left: 1% !important;
         margin-right: 1% !important;
+    }
+
+    #Header {
+        position: relative !important;
+        height: auto !important;
+    }
+}
+@media(max-width:1100px) {
+    #FooterThemes img {
+        width:20px;
+        height:20px;
     }
 }
 @media(max-width:390px) {
@@ -835,28 +873,6 @@ body {
     }
     #Responsive_ResultDisplayOptions {
         width: 100%;
-    }
-    #CentralSpaceLogin {
-        margin: 0;
-        width: unset;
-    }
-    #login_box .Question .stdwidth,
-    .LoginHeaderImg {
-        max-width: 100%;
-    }
-    #CentralSpaceLogin #login_box {
-        padding: 15px;
-    }
-    #login_box .Question.HalfWidth,
-    #login_box #language,
-    #login_box #user_local_tz,
-    #login_box .Question label,
-    #login_box .QuestionSubmit input {
-        width: 100%;
-    }
-    #login_box .QuestionSubmit {
-        width: 100%;
-        padding: 0 0 10px 0;
     }
 }
 @media(max-width:400px) {

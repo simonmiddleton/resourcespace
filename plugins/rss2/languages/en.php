@@ -5,8 +5,8 @@
 #
 #
 $lang["rss_setup_heading"]="RSS2 Configuration";
-$lang["rss_fields"]="RSS fields:";
-$lang["rss_ttl"]="RSS TTL:";
+$lang["rss_fields"]="rss_fields:";
+$lang["rss_ttl"]="rss_ttl:";
 $lang["rss_show_field_titles"]="Show field Titles";
 $lang["new_content_rss_feed"]="New content RSS feed";
 $lang["subject"]="Subject";

@@ -467,12 +467,12 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$index_contributed_by, $k;
+    global $always_record_resource_creator,$index_contributed_by;
 
     if(!is_numeric($archive))
-        {
-        return false;   
-        }
+    {
+    return false;   
+    }
 
     $alltypes=get_resource_types();    
     if(!in_array($resource_type,array_column($alltypes,"ref")))
@@ -521,13 +521,8 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	add_keyword_mappings($insert, $insert, -1);
 
 	# Log this			
-    daily_stat("Create resource",$insert);
-
-    resource_log($insert, LOG_CODE_CREATED, 0);
-    if(upload_share_active())
-        {
-        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
-        }
+	daily_stat("Create resource",$insert);
+	resource_log($insert, LOG_CODE_CREATED, 0);
 	
 	# Also index contributed by field, unless disabled
 	if ($index_contributed_by)
@@ -1029,14 +1024,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
          # save related resources field
-         sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
+         sql_query("delete from resource_related where resource='$ref' or related='$ref'"); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
          # Make sure all submitted values are numeric
-         $to_relate = array_filter($related,"is_int_loose");
-         if(count($to_relate)>0)
-            {
-            update_related_resource($ref,$to_relate,true);
-            }
+         $ok=array();for ($n=0;$n<count($related);$n++) {if (is_numeric(trim($related[$n]))) {$ok[]=trim($related[$n]);}}
+         if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");} 
         }
 
     if ($autosave_field=="")
@@ -1184,12 +1176,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
 	
-    // Plugins can do extra actions once all fields have been saved and return errors back if needed
-    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields));
-    if(is_array($plg_errors) && !empty($plg_errors))
-        {
-        $errors = array_merge($errors, $plg_errors);
-        }
+    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
 
 	if (count($errors)==0) {return true;} else {return $errors;}
 	}
@@ -1929,14 +1916,8 @@ function save_resource_data_multi($collection,$editsearch = array())
 		}
 
 	hook("saveextraresourcedata","",array($list));
-
-    // Plugins can do extra actions once all fields have been saved and return errors back if needed.
-    // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
-    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', array()));
-    if(is_array($plg_errors) && !empty($plg_errors))
-        {
-        $errors = array_merge($errors, $plg_errors);
-        }
+	
+    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
 
     if (count($errors)==0) {return true;} else {return $errors;}
     
@@ -2236,7 +2217,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if(count($fieldoptiontranslations) < 2)
                 {
                 $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
-                //debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
+                debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
                 }
             else
                 {
@@ -2288,11 +2269,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $newvalues_translated,
                 function (&$value, $index)
                     {
-                    $value = mb_strtolower(i18n_get_translated($value));
+                    $value = i18n_get_translated($value);
                     }
             );
             // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-            if (in_array(mb_strtolower(i18n_get_translated($nodedata["name"])), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
+            if (in_array(i18n_get_translated($nodedata["name"]), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
                 {
                 $nodes_to_add[] = $nodedata["ref"];
                 // We need to add all parent nodes for category trees
@@ -2302,9 +2283,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
                         {
                         $nodes_to_add[]=$parent_node_ref;
-                        if (!in_array(mb_strtolower(i18n_get_translated($parent_node_name)), $newvalues_translated))
+                        if (!in_array(i18n_get_translated($parent_node_name), $newvalues_translated))
                             {
-                            $value = $parent_node_name . "," . $value; 
+                            $value = $parent_node_name . "," . $value;    
                             }
                         }
                     }
@@ -2736,14 +2717,14 @@ function get_resource_type_field($field)
 /**
  * get_resource_field_data
  *
- * @param  int  $ref                Resource ID
- * @param  bool $multi              Get all fields? False by default (only fields that apply to the given resource type)
+ * @param  int $ref                 Resource ID
+ * @param  bool $multi              Get all fields? False by defautl (only fields that apply to the given resource type)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
- * @param  int  $originalref        Original resource ID to get data for. NULL by default
+ * @param  int $originalref    Original resource ID to get data for. NULL by default
  * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
  * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
  * @param  bool $forcsv             Get data for CSV export (uses \ separator for category tree nodes). FALSE by default
- * @return array|boolean
+ * @return void
  */
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
     {
@@ -2920,9 +2901,9 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
 /**
  * get_resource_field_data_batch - Get all resource data for the given resources
+ * Used by CSV metadata export. 
  * 
  * Returns a multidimensional array with resource IDs as top level keys, then fields (order determined by $ord_by setting) 
- * IMPORTANT: This differs from get_resource_field_data() in that only fields containing data will be returned.
  * 
  * e.g. 
  * Array
@@ -2941,6 +2922,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
  *              [type] => 1))
  *              ....
  * 
+ * This differs from get_resource_field_data() in that only fields containing data will be returned.
  *
  * @param array $resources (either an array of resource ids or an array returned from search results)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
@@ -3074,7 +3056,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     if (empty($fields))
         {
-        return array();
+        return false;
         }
     // Convert to array with resource ID as index
     $res=0;
@@ -3314,7 +3296,7 @@ function get_resource_ref_range($lower,$higher)
 * @param  int    $from            ID of resource
 * @param  mixed  $resource_type   ID of resource type
 * 
-* @return boolean|integer
+* @return void
 */
 function copy_resource($from,$resource_type=-1)
 	{
@@ -3531,8 +3513,13 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
             // do not do a diff, just dump out whole new value (this is so we can cleanly append transform output)
             case LOG_CODE_TRANSFORMED:
+                $diff = $tovalue;
+                break;
+
             case LOG_CODE_NODE_REVERT:
-            case LOG_CODE_EXTERNAL_UPLOAD:
+                $diff = $tovalue;
+                break;
+
             case LOG_CODE_CREATED:
                 $diff = $tovalue;
                 break;
@@ -3627,7 +3614,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.purchase_size,
                         ps.name AS size,
                         r.access_key,
-                        ekeys_u.fullname AS shared_by {$extrafields}
+                        ekeys_u.fullname AS shared_by{$extrafields}
                    FROM resource_log AS r 
         LEFT OUTER JOIN user AS u ON u.ref = r.user
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
@@ -3761,7 +3748,7 @@ function get_themes_by_resource($ref)
     );
 
     $results = sql_query($sql);
-    $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, strip_prefix_chars(i18n_get_translated($item["name"]),"*")); };
+    $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, i18n_get_translated($item["name"])); };
 
     foreach($results as $i => $col)
         {
@@ -3884,7 +3871,6 @@ function createTempFile($path, $uniqid, $filename)
 */
 function stripMetadata($file_path)
     {
-    debug_function_call('stripMetadata', func_get_args());
     $exiftool_fullpath = get_utility_path('exiftool');
 
     if($exiftool_fullpath === false)
@@ -3912,7 +3898,6 @@ function stripMetadata($file_path)
 
 function write_metadata($path, $ref, $uniqid="")
 	{
-    debug_function_call('write_metadata', func_get_args());
 	// copys the file to tmp and runs exiftool on it	
 	// uniqid tells the tmp file to be placed in an isolated folder within tmp
 	global $exiftool_remove_existing, $storagedir, $exiftool_write, $exiftool_write_option, $exiftool_no_process, $mysql_charset, $exiftool_write_omit_utf8_conversion;
@@ -3927,21 +3912,18 @@ function write_metadata($path, $ref, $uniqid="")
     # Check if an attempt to write the metadata shall be performed.
 	if(false != $exiftool_fullpath && $exiftool_write && $exiftool_write_option && !in_array($extension, $exiftool_no_process))
 		{
-        debug("[write_metadata()][ref={$ref}] Attempting to write metadata...");
         // Trust Exiftool's list of writable formats 
         $writable_formats = run_command("{$exiftool_fullpath} -listwf");
         $writable_formats = str_replace("\n", "", $writable_formats);
         $writable_formats_array = explode(" ", $writable_formats);
         if(!in_array(strtoupper($extension), $writable_formats_array))
             {
-            debug("[write_metadata()][ref={$ref}] Extension '{$extension}' not in writable_formats_array - " . json_encode($writable_formats_array));
             return false;
             }
 
 		$tmpfile = createTempFile($path, $uniqid, '');
 		if($tmpfile === false)
             {
-            debug("[write_metadata()][ref={$ref}] Unable to create temp file!");
             return false;
             }
 
@@ -3953,7 +3935,6 @@ function write_metadata($path, $ref, $uniqid="")
         if($exiftool_remove_existing)
             {
             $command = stripMetadata(null) . ' ';
-            debug("[write_metadata()][ref={$ref}] Removing existing metadata. Command: ". json_encode($command));
             }
 
         $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
@@ -4041,8 +4022,8 @@ function write_metadata($path, $ref, $uniqid="")
 	                            {
                                 $keyword = trim($keyword);
 	                            if ($keyword != "")
-	                            	{
-                                    debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
+	                            	{    
+									debug("write_metadata - writing keyword:" . $keyword);
 									$writtenfields[$group_tag].="," . $keyword;
 										 
 									# Convert the data to UTF-8 if not already.
@@ -4059,8 +4040,8 @@ function write_metadata($path, $ref, $uniqid="")
                             // The new value is blank or already included in what is being written, skip to next group tag
                             continue 2; # @see https://www.php.net/manual/en/control-structures.continue.php note
                             }                               
-                        $writtenfields[$group_tag]=$writevalue;
-                        debug("[write_metadata()][ref={$ref}] Updating tag '{$group_tag}' with value '{$writevalue}'");
+                        $writtenfields[$group_tag]=$writevalue;                          
+                        debug ("write_metadata - updating tag " . $group_tag);
                         # Write as is, convert the data to UTF-8 if not already.
                         
                         global $strip_rich_field_tags;
@@ -4086,7 +4067,6 @@ function write_metadata($path, $ref, $uniqid="")
        }
     else
         {
-        debug("[write_metadata()][ref={$ref}] Did not perform - write metadata!");
         return false;
         }
     }
@@ -4966,8 +4946,8 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	if ($key==""){return false;}
 	# Update the expiration and acccess
 	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
-    hook('edit_resource_external_access','',array($key,$access,$expires,$group));
-    return true;
+	hook('edit_resource_external_access','',array($key,$access,$expires,$group));
+	return true;
 	}
 
 /**
@@ -5075,11 +5055,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
 		{
 		$resourcedata=get_resource_data($resource);		
-        }
-    if(!is_array($resourcedata) || count($resourcedata) == 0)
-        {
-        return false;
-        }
+		}	
 	if ($status==-999) # Archive status may not be passed 
 		{$status=$resourcedata["archive"];}
 		
@@ -5107,13 +5083,6 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
 
-    # Cannot edit if accessing upload share and resource not in the collection associated witrh their session
-    $external_upload = upload_share_active();
-    if($external_upload && !in_array($resource,get_collection_resources($external_upload)))
-        {
-        return false;
-        }
-
     # Cannot edit if pending status (<0) and neither admin ('t') nor created by currentuser 
     #             and does not have force edit access to the resource type
     if (    $status<0 && !( checkperm("t") || $resourcedata['created_by'] == $userref ) 
@@ -5122,9 +5091,9 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         return false;
         } 
-
+	
     $gotmatch=false;
-
+    
     if($search_filter_nodes 
         && strlen(trim($usereditfilter)) > 0
         && !is_numeric($usereditfilter)
@@ -5961,9 +5930,7 @@ function get_resource_external_access($resource)
         
 function delete_resource_access_key($resource,$access_key)
     {
-    global $lang;
     sql_query("delete from external_access_keys where access_key='$access_key' and resource='$resource'");
-    resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
 function resource_type_config_override($resource_type)
@@ -6124,78 +6091,27 @@ function delete_resources_in_collection($collection) {
     }
     
 /**
- * Update related resources - add new related resource(s) or delete existing
+ * Update related resources - add new related resource or delete existing
  *
- * @param  int      $ref        ID of primary resource
- * @param  int|array  related   Resource ID or array of resource IDs to link to current resource
- * @param  boolean  $add        Add relationship? If false this will delete the specified relationships
+ * @param  int      $ref       ID of current resource
+ * @param  int      $related   ID of resource to link to current resource
+ * @param  boolean  $add       Add relationship?
  * 
  * @return boolean
  */
 function update_related_resource($ref,$related,$add=true)
 	{	
-    if (!is_int_loose($ref) || (!is_int_loose($related) && !is_array($related)))
-        {
-        return false;
-        }
-    if(is_array($related))
-        {
-        $related = array_filter($related,"is_int_loose");
-        }
-    else
-        {
-        $related = array((int)$related);
-        }
-
-    // Check edit access
-    $access = get_edit_access($ref);
-    if(!$access)
-        {
-        return false;
-        }
-    foreach($related as $relate)
-        {
-        $access = get_edit_access($relate);
-        if(!$access)
-            {
-            return false;
-            }
-        }
-	$currentlyrelated=sql_query("SELECT resource, related 
-                                   FROM resource_related 
-                                  WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
-                                     OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");  
-    
-    // Create array of all related resources
-    $currentlyrelated_arr = array_unique(array_merge(
-        array_column($currentlyrelated,"related"),
-        array_column($currentlyrelated,"resource")
-        ));
-
-    if(count($currentlyrelated_arr) > 0 && !$add)
+	if (!is_int($ref) || !is_int($related)){return false;}
+	$currentlyrelated=sql_value("select count(resource) value from resource_related where (resource='$ref' and related='$related') or (resource='$related' and related='$ref')",0);  
+	if($currentlyrelated!=0 && !$add)
 		{
-		// Relationships exist and we want to remove
-		sql_query("DELETE FROM resource_related
-                         WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
-                            OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
+		// Relationship exists and we want to remove
+		sql_query("delete from resource_related where (resource='$ref' and related='$related') or (resource='$related' and related='$ref')");  
 		}
-	else
+	elseif ($currentlyrelated==0 && $add)
 		{
-        $newrelated = array();
-        foreach($related as $torelate)
-            {
-            if(!in_array($torelate, $currentlyrelated_arr) && $torelate != $ref)
-                {
-                $newrelated[] = $torelate;
-                }
-            }
-        if(count($newrelated) > 0)
-            {
-		    sql_query("INSERT INTO resource_related (resource,related)
-                            VALUES ('" . $ref . "','" . 
-                                   implode("'),('" . $ref . "','",$newrelated) .
-                                   "')");
-            }
+		// Relationship does not exist and we want to add
+		sql_query("insert into resource_related(resource,related) values ('$ref','$related')");
 		}
 	return true;
 	}
@@ -7242,7 +7158,7 @@ function copy_hitcount_to_live()
  * @param  string   $extension      File extension of image
  * @param  boolean  $onlyifexists
  * 
- * @return array    $return
+ * @return void
  */
 function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
@@ -8376,7 +8292,7 @@ function get_workflow_states()
 */
 function delete_resource_type_field($ref)
     {
-    global $lang, $corefields, $core_field_refs;
+    global $lang, $corefields;
 
     if('cli' != php_sapi_name() && !checkperm('a'))
         {
@@ -8396,26 +8312,12 @@ function delete_resource_type_field($ref)
             }
         }
 
-    // Prevent deleting a "core" field required by other parts of the system (e.g plugins)
-    $core_field_scopes = [];
-    foreach($core_field_refs as $scope => $core_refs)
-        {
-        if(in_array($ref, $core_refs) && !in_array($scope, $core_field_scopes))
-            {
-            $core_field_scopes[] = $scope;
-            }
-        }
-
     if(count($fieldvars) > 0)
         {
         return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
         }
-    else if(!empty($core_field_scopes))
-        {
-        return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
-        }
 
-
+    
     $fieldinfo = get_resource_type_field($ref);
 
     $ref = escape_check($ref);
@@ -8608,127 +8510,3 @@ function get_resource_lock_message($lockuser)
         }
     }
 
-/**
- * Get details of external shares
- *
- * @param  array $filteropts    Array of options to filter shares returned
- *                              "share_group"       - (int) Usergroup ref 'shared as'
- *                              "share_user"        - (int) user ID of share creator
- *                              "share_order_by"    - (string) order by column 
- *                              "share_sort"        - (string) sortorder (ASC or DESC)
- *                              "share_type"        - (int) 0=view, 1=upload
- *                              "share_collection"  - (int) Collection ID
- *                              "share_resource"    - (int) Resource ID
- *                              "access_key"        - (string) Access key
- * @return array
- */
-function get_external_shares(array $filteropts)
-    {
-    global $userref;
-
-    $validfilterops = array(
-        "share_group",
-        "share_user",
-        "share_order_by",
-        "share_sort",
-        "share_type",
-        "share_collection",
-        "share_resource",
-        "access_key",
-    );
-    foreach($validfilterops as $validfilterop)
-        {
-        if(isset($filteropts[$validfilterop]))
-            {
-            $$validfilterop = $filteropts[$validfilterop];
-            }
-        else
-            {
-            $$validfilterop = NULL;
-            }
-        }
-
-    $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key", "upload");
-    if(!in_array($share_order_by, $valid_orderby))
-        {
-        $share_order_by = "expires";
-        }
-    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
-
-    $conditions = array();
-    if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
-        )
-        {
-        $conditions[] = "eak.user ='" . (int)$share_user . "'";
-        }
-    elseif(!checkperm('a'))
-        {
-        $usercondition = "eak.user ='" . (int)$userref . "'";
-        if(checkperm("ex"))
-            {
-            // Can also see shares that never expire
-            $usercondition = " (expires IS NULL OR " . $usercondition . ")";
-            }
-        $conditions[] =$usercondition;
-        }
-
-    if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
-        {
-        $conditions[] = "eak.usergroup ='" . (int)$share_group . "'";
-        }
-    
-    if(!is_null($access_key))
-        {
-        $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
-        }
-
-    if((int)$share_type === 0)
-        {
-        $conditions[] = "(eak.upload=0 OR eak.upload IS NULL)";
-        }
-    elseif((int)$share_type === 1)
-        {
-        $conditions[] = "eak.upload=1";
-        }
-    if((int)$share_collection > 0)
-        {
-        $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
-        }
-    if((int)$share_resource > 0)
-        {
-        $conditions[] = "eak.resource ='" . (int)$share_resource . "'";
-        }
-
-    $conditional_sql="";
-    if (count($conditions)>0){$conditional_sql=" WHERE " . implode(" AND ",$conditions);}
-
-    $external_access_keys_query = 
-        "SELECT access_key,
-                ifnull(collection,'-') collection,
-                CASE 
-                    WHEN collection IS NULL THEN resource
-                    ELSE '-'
-                END AS 'resource',
-                user,
-                eak.email,
-                min(date) date,
-                MAX(date) maxdate,
-                max(lastused) lastused,
-                eak.access,
-                eak.expires,
-                eak.usergroup,
-                eak.password_hash,
-                eak.upload,
-                ug.name sharedas,
-                u.fullname,
-                u.username
-           FROM external_access_keys eak
-      LEFT JOIN user u ON u.ref=eak.user 
-      LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
-                $conditional_sql .
-     " GROUP BY access_key, collection
-       ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
-
-    $external_shares = sql_query($external_access_keys_query);
-    return $external_shares;
-    }

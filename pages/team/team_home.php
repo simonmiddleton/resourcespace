@@ -122,10 +122,10 @@ include "../../include/header.php";
         }
 
     // Manage external shares
-    if(checkperm('ex') || checkperm('a'))
+    if(checkperm('ex'))
         {
         ?>
-        <li><a href="<?php echo $baseurl_short; ?>pages/manage_external_shares.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-share-alt"></i><br /><?php echo $lang['manage_external_shares']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_external_shares.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-share-alt"></i><br /><?php echo $lang['manage_external_shares']; ?></a></li>
         <?php
         }
         ?>

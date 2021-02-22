@@ -411,7 +411,7 @@ function db_rollback_transaction($name)
  * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
  * @param  mixed $reconnect
  * @param  mixed $fetch_specific_columns
- * @return array
+ * @return void
  */
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
@@ -434,7 +434,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
                     {
                     if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
                         {
-                        debug("[sql_query] returning cached data (source: {$cache_file})");
                         db_clear_connection_mode();
                         return $cachedata["results"];
                         }
@@ -1110,25 +1109,4 @@ function sql_is_null_or_eq_val(string $v, bool $cond)
 function sql_null_or_val(string $v, bool $cond)
     {
     return ($cond ? "NULL" : "'" . escape_check($v) . "'");
-    }
-
-
-/**
-* Query helper to ensure code honours the database schema constraints on text columns.
-* IMPORTANT: please use where appropriate! In some cases, truncating may mean losing useful information (e.g contextual data),
-*            in which case changing the column type may be a better option.
-* 
-* @param string  $v   String value that may require truncating
-* @param integer $len Desired length (limit as imposed by the database schema). {@see https://www.resourcespace.com/knowledge-base/developers/database_schema}
-* 
-* @return string
-*/
-function sql_truncate_text_val(string $v, int $len)
-    {
-    if(mb_strlen($v) > $len)
-        {
-        $truncated_sql_val = mb_strcut($v, 0, $len);
-        }
-
-    return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
     }

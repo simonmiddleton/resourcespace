@@ -99,12 +99,9 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                         $csv_field_headers[$restypefield["ref"]] = $restypefield['title'];
                         }
                     // Check if the resource has a value for this field in the data retrieved
-                    if(isset($fullresdata[$resource]))
-                        {
-                        $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource], 'ref'));
-                        $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource][$resdataidx]["value"] : "";
-                        $resources_fields_data[$resource][$restypefield['ref']] = $fieldvalue;
-                        }
+                    $resdataidx =array_search($restypefield["ref"], array_column($fullresdata[$resource], 'ref'));
+                    $fieldvalue = ($resdataidx !== false) ? $fullresdata[$resource][$resdataidx]["value"] : "";
+                    $resources_fields_data[$resource][$restypefield['ref']] = $fieldvalue;
                     }
                 }
 

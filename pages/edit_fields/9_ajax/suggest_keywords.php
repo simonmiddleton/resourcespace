@@ -1,11 +1,8 @@
 <?php
 include dirname(__FILE__) . '/../../../include/db.php';
-$k = getvalescaped('k','');
-$upload_collection = getval('upload_share_active',''); 
-if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
-    {
-    include dirname(__FILE__) . '/../../../include/authenticate.php';
-    }
+include dirname(__FILE__) . '/../../../include/authenticate.php';
+include_once dirname(__FILE__) . '/../../../include/node_functions.php';
+
 $field    = getvalescaped('field', '');
 $keyword  = getvalescaped('term', '');
 $readonly = ('' != getval('readonly', '') ? true : false);

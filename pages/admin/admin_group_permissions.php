@@ -257,7 +257,6 @@ DrawOption("n", $lang["can_tag_resources_using_speed_tagging"]);
 
 DrawOption("b", $lang["enable_bottom_collection_bar"], true);
 DrawOption("h", $lang["can_publish_collections_as_themes"],false,true);
-DrawOption("exup", $lang["permission_share_upload_link"],false,true);
 if(in_array('h', $permissions))
 	{
 	DrawOption('hdta', $lang['manage_all_dash_h'], true, false);

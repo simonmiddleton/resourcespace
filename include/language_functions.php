@@ -8,7 +8,7 @@
  * @param  string $text
  * @param  string $mixedprefix
  * @param  string $suffix
- * @return string
+ * @return void
  */
 function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
     {
@@ -35,7 +35,7 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
  * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
  *
  * @param  string $text
- * @return string
+ * @return void
  */
 function i18n_get_translated($text)
     {
@@ -78,7 +78,7 @@ function i18n_get_translated($text)
  *
  * @param  mixed $mixedcollection
  * @param  string $index
- * @return string
+ * @return void
  */
 function i18n_get_collection_name($mixedcollection, $index="name")
     {
@@ -148,7 +148,7 @@ function i18n_get_collection_name($mixedcollection, $index="name")
  * For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
  *
  * @param  string $text The text to process
- * @return string
+ * @return void
  */
 function i18n_get_indexable($text)
     {
@@ -192,7 +192,7 @@ function i18n_get_indexable($text)
  * "fr"->"French translation"
  *
  * @param  string $value A string in the language format
- * @return array
+ * @return void
  */
 function i18n_get_translations($value)
     {
@@ -240,7 +240,7 @@ function i18n_get_translations($value)
  * @param  mixed $subject
  * @param  mixed $question_mark
  * @param  string $separator
- * @return string
+ * @return void
  */
 function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $subject, $question_mark = false, $separator = ", ")
     {
@@ -302,7 +302,7 @@ function str_replace_formatted_placeholder($mixedplaceholder, $mixedreplace, $su
  * string, evaluates it as PHP code, and uses the result for replacing the search string.  
  *
  * @param  mixed $string
- * @return string|array|null
+ * @return void
  */
 function ucfirstletter($string)
     {
@@ -325,7 +325,7 @@ function ucfirstletter_callback($matches){
  * Normalize the text if function available
  *
  * @param  string $keyword
- * @return string
+ * @return void
  */
 function normalize_keyword($keyword)
 	{

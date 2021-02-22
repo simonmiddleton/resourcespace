@@ -26,8 +26,8 @@ $url_params=
 $new_group_name=getvalescaped("newusergroupname","");
 if ($new_group_name!="" && enforcePostRequest(false))
     {
-    $setoptions =array("request_mode" => 1);
-    $ref = save_usergroup($new_group_name, $setoptions);
+    sql_query("insert into usergroup(name,request_mode) values('$new_group_name','1')");
+    $ref=sql_insert_id();
 
     log_activity(null,LOG_CODE_CREATED,null,'usergroup',null,$ref);
     log_activity(null,LOG_CODE_CREATED,$new_group_name,'usergroup','name',$ref,null,'');
@@ -428,7 +428,34 @@ include "../../include/header.php";
                 <textarea name="config_options" id="configOptionsBox" class="stdwidth" rows="12" cols="50"><?php echo $record['config_options']; ?></textarea>
                 <div class="clearerleft"></div>
             </div>
-          </div>
+            <?php
+    if (
+        isset($system_architect_user_names) &&
+        is_array($system_architect_user_names) &&
+        in_array($userfullname,$system_architect_user_names)
+    )
+        {
+        ?><label></label>
+            <select id="configOverrideSelector" class="stdwidth" onchange="document.getElementById('FormHelpConfigOverride').innerHTML=
+                this.options[this.selectedIndex].value ? this.options[this.selectedIndex].value : '<?php echo $lang["fieldhelp-no_config_override_help"]; ?>'
+            ">
+                <option value="<?php echo $lang["fieldhelp-add_to_config_override"]; ?>"></option>
+                <?php dump_config_default_options(); ?>
+            </select>
+            <div class="clearerleft"></div>
+
+            <div class="FormHelp">
+                <div class="FormHelpInner" id="FormHelpConfigOverride" readonly="true"><?php echo $lang['fieldhelp-add_to_config_override']; ?></div>
+            </div>
+
+            <label></label>
+            <input type="button" class="stdwidth" onclick="document.getElementById('configOptionsBox').innerHTML+= document.getElementById('configOverrideSelector').options[document.getElementById('configOverrideSelector').selectedIndex].label;" value="<?php
+            echo $lang['fieldtitle-add_to_config_override'];
+            ?>"></input>
+            <div class="clearerleft"></div>
+<?php
+        }
+?>      </div>
         <?php } ?>
 
         <div class="Question">
