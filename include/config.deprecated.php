@@ -401,7 +401,7 @@ $plupload_max_retries=5;
 
 # Plupload settings
 # Specify the supported runtimes and priority
-$plupload_runtimes = 'html5,gears,silverlight,browserplus,html4';
+$plupload_runtimes = 'html5,gears,silverlight,html4';
 
 # Keep failed uploads in the queue after uploads have completed
 $plupload_show_failed=true;
