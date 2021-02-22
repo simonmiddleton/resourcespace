@@ -24,8 +24,23 @@ $modal=(getval("modal","")=="true");
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
+$curpos=getvalescaped("curpos","");
 
 $error="";
+
+$urlparams= array(
+    'resource' => $ref,
+    'ref' => $ref,
+    'search' => $search,
+    'order_by' => $order_by,
+    'offset' => $offset,
+    'restypes' => $restypes,
+    'archive' => $archive,
+    'default_sort_direction' => $default_sort_direction,
+    'sort' => $sort,
+    'curpos' => $curpos,
+    "modal" => ($modal ? "true" : "")
+);
 
 # Not allowed to edit this resource? They shouldn't have been able to get here.
 if (!get_edit_access($ref,$resource["archive"],false,$resource)) {exit ("Permission denied.");}
@@ -73,14 +88,25 @@ if (isset($resource['is_transcoding']) && $resource['is_transcoding']==1)
 	}
 else
 	{
-		
-if(!$modal)
-		{
-		?>
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
-		<?php
-		}
 ?>
+<div class="BasicsBox"> 
+<?php
+if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+else {$previous_page_modal = false;}
+if(!$modal)
+    {
+    ?>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <?php
+    }
+    elseif ($previous_page_modal)
+    {
+    ?>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <?php
+    }
+?>
+</div>
 
 <div class="BasicsBox"> 
 	
