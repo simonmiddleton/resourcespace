@@ -1,7 +1,7 @@
 <?php
 include_once(__DIR__ . '/../../include/db.php');
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
-
+$debug_log=true;
 // Create the Featured collections tree
 $fc_cat_1 = create_collection($userref, "FC 1");
 save_collection($fc_cat_1, array("featured_collections_changes" => array("update_parent" => 0, "force_featured_collection_type" => true)));

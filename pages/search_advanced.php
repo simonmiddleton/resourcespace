@@ -376,6 +376,7 @@ jQuery(document).ready(function()
 <input type="hidden" name="countonly" id="countonly" value="">
 
 <script type="text/javascript">
+var categoryTreeChecksArray = [];
 var updating=false;
 function UpdateResultCount()
 	{

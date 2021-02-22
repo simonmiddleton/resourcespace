@@ -4,6 +4,7 @@ include "../../../include/db.php";
 include "../../../include/authenticate.php";
 
 $ruleid = getval("ref","");
+$filterid = getval("filter",0,true);
 
 if (!checkperm("a") || !(((string)(int)$ruleid == (string)$ruleid) || $ruleid == "new"))
 	{
@@ -21,7 +22,6 @@ if($ruleid != "new")
 else
     {
     $filter_rule = array();
-    $filterid = getval("filter",0,true);
     }
 
     
@@ -43,6 +43,54 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
     <input type="hidden" name="filter" value="<?php echo $filterid; ?>" />
     <input type="hidden" name="filter_rule_data" id="filter_rule_data" value="" />
     <?php generateFormToken("filter_rule_edit"); ?>
+
+    <?php
+    if ($ruleid != "new")
+        {
+        foreach($filter_rule as $filter_line)
+        {
+        ?>
+        <div class="Question filter_rule_question">
+        <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
+            <option value='0' ><?php echo $lang["select"] ?></option>
+            <?php
+            
+            foreach($allfields as $field)
+                {
+                if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+                    {
+                    ?><option value="<?php echo $field["ref"];?>" <?php if($field["ref"]==$filter_line["resource_type_field"]){echo "selected";}?> ><?php echo $field["title"]; ?></option>
+                    <?php
+                    }
+                }
+            ?>
+        </select>
+
+        <select name="filter_rule_node_condition[]" class="filter_rule_node_condition" id="filter_rule_node_condition" style="width:150px">
+            <option value="0" <?php if($filter_line['node_condition']==0){echo 'selected';}?> ><?php echo $lang["filter_is_not_in"]; ?></option>
+            <option value="1" <?php if($filter_line['node_condition']==1){echo 'selected';}?> ><?php echo $lang["filter_is_in"]; ?></option>
+        </select>
+        
+        <select name='filter_rule_nodes[]' class='filter_rule_nodes' multiple='multiple' size='7' style='width:420px'>
+            <?php 
+            $field_options = get_field_options($filter_line["resource_type_field"],true);
+            
+            foreach($field_options as $option)
+                {
+                ?>
+                <option value='<?php echo $option['ref'];?>' <?php if(in_array($option["ref"],explode(',',$filter_line["nodes"]))){echo "selected";}?>><?php echo $option["name"] ?></option>
+                <?php
+                }
+                ?>
+        </select>
+        
+    </div>
+        <?php
+        }
+    }
+    else
+    {
+    ?>
 
     <div class="Question filter_rule_question">
         <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
@@ -68,7 +116,9 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         </select>
         
     </div>
-
+    <?php
+    }
+    ?>
     <div class="Question">
         <label for="conditionadd"></label>
         <a href="#" onclick="return addFilterRuleItem();return false;" ><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;Add condition</a>
@@ -78,7 +128,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 
     <div class="Question">
         <label for="ruleadd"></label>
-        <input name="ruleadd" type="submit" value="&nbsp;&nbsp;<?php echo $lang["filter_rule_add"]; ?>&nbsp;&nbsp;">
+        <input name="ruleadd" type="submit" value="&nbsp;&nbsp;<?php if($ruleid!="new"){echo $lang["filter_rule_save"];}else{echo $lang["filter_rule_add"];} ?>&nbsp;&nbsp;">
     <div class="clearerleft"></div>
     </div>
 
@@ -95,6 +145,9 @@ function addFilterRuleItem()
     lastrow = jQuery('.filter_rule_question').last();
     newq = lastrow.clone();
     console.log(lastrow.attr('row'));
+    newq.children('#filter_rule_field').val(0);
+    newq.children('.filter_rule_node_condition').val(0);
+    newq.children('.filter_rule_nodes').val('');
     lastrow.after(newq);
     jQuery('.filter_rule_nodes').chosen('');
     }

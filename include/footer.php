@@ -53,7 +53,7 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
         if (!hook("replace_footernavrightbottom"))
         	{
             ?>
-            <div id="FooterNavRightBottom" class="OxColourPale"><?php echo text("footer")?></div>
+            <div id="FooterNavRightBottom"><?php echo text("footer")?></div>
             <?php
         	}
         ?>
@@ -570,7 +570,7 @@ if (getval("ajax","") == "")
 		var responsive_hide;
 		var responsive_newpage = true;
 		
-		if(jQuery(window).width() <= 1200)
+		if(jQuery(window).width() <= 1100)
 			{
 			jQuery('.ResponsiveViewFullSite').css('display', 'block');
 			SetCookie("browse_show","hide");

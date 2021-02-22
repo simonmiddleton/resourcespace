@@ -360,7 +360,7 @@ if ($search_titles)
 		}
 	elseif (substr($search,0,4)=="!geo")
 		{
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!geo'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["geographicsearchresults"].'</a>'.$searchcrumbs.'</div></div> ';
+		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=' . getvalescaped("search", "!geo"). '" onClick="return CentralSpaceLoad(this,true);">'.$lang["geographicsearchresults"].'</a>'.$searchcrumbs.'</div></div> ';
         }
     elseif (substr($search,0,14)=="!contributions")
         {

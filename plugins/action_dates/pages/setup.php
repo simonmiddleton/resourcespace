@@ -63,7 +63,10 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     set_plugin_config("action_dates",$action_dates_config);
     }
     
-    
+if (getval('upload','')!=''){return handle_rsc_upload($plugin_name);}
+
+if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
+
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 $page_def[] = config_add_section_header($lang['action_dates_deletesettings']);
 $page_def[] = config_add_single_ftype_select('action_dates_deletefield',$lang['action_dates_delete'],420,false,$DATE_FIELD_TYPES);
@@ -190,6 +193,27 @@ function addActionDatesExtraRow() {
 
 $page_def[] = config_add_html($page_def_extra);
 
+// Need to store the updated values to GLOBALS so that the latest values are shown
+foreach ($page_def as $def)
+    {
+    $array_offset=array();
+    if(preg_match("/\[[\"|']?\w+[\"|']?\]/",$def[1],$array_offset))
+        {
+        $array=preg_replace("/\[[\"|']?\w+[\"|']?\]/","",$def[1]);
+        preg_match("/[\"|']?\w+[\"|']?/",$array_offset[0],$array_offset);
+        }
+    if(!empty($array_offset))
+        {
+        $curr_post=getval($array,"");
+        if($curr_post==""){continue;} //Ignore if Array already handled or blank
+        foreach($curr_post as $key => $val)
+            {
+            $config[$array][$key] = explode(',', $val);
+            $GLOBALS[$array][$key] = explode(',', $val);
+            }
+        unset($_POST[$array]); //Unset once array has been handled to prevent duplicate changes
+        }
+    }
 
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);

@@ -41,9 +41,9 @@ function HookCookies_notificationAllHandleuserref()
     }
 
 
-function HookCookies_notificationAllResponsiveheader()
+function HookCookies_notificationAllAfteruicenter()
     {
-    global $baseurl, $lang, $is_authenticated, $header_size;
+    global $baseurl, $lang, $is_authenticated;
 
     $accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
 
@@ -52,7 +52,6 @@ function HookCookies_notificationAllResponsiveheader()
         {
         return;
         }
-   // $header_size = intval($header_size) + 60;
     ?>
     <div id="CookiesUseWrapper">
         <p id="CookieUseMessage"><?php echo $lang['cookies_notification_use_cookies_message']; ?></p>

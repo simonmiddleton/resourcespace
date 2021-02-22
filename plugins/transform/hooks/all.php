@@ -39,6 +39,7 @@ function HookTransformAllRender_actions_add_collection_option($top_actions,$opti
         $annotate_option = array(
             "value" => "transform",
             "label" => $lang["transform"],
+            "category" => ACTIONGROUP_EDIT,
             "data_attr" => array(
                 "url" => generateURL(
                     "{$baseurl}/plugins/transform/pages/collection_transform.php",

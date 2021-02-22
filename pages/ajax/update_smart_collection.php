@@ -25,7 +25,7 @@ if (isset($smartsearch[0]['search']))
 	 	
 	$startTime = microtime(true);
 	global $smartsearch_accessoverride;
-	$results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch']);
+	$results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
 	//$startTime = microtime(true); 
 	# results is a list of the current search without any restrictions
 	# we need to compare against the current collection contents to minimize inserts and deletions

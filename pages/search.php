@@ -49,6 +49,9 @@ if($k != "" && !$internal_share_access || (isset($anonymous_login) && $username 
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 $collection_add=getvalescaped("collection_add",""); // Need this if redirected here from upload
+$initial_search_cookie = (isset($_COOKIE['search']) ? trim(strip_leading_comma($_COOKIE['search'])) : '');
+$initial_restypes_cookie = (isset($_COOKIE['restypes']) ? trim($_COOKIE['restypes']) : '');
+$initial_saved_archive_cookie = (isset($_COOKIE['saved_archive']) ? trim($_COOKIE['saved_archive']) : '');
 
 if(false !== strpos($search, TAG_EDITOR_DELIMITER))
     {
@@ -362,6 +365,9 @@ if($use_selection_collection)
         }
     }
 
+// Get usercollection resources - used for checks against the list (e.g is one of the resources found by search in the collection?)
+$usercollection_resources = get_collection_resources($usercollection);
+
 $hiddenfields=getvalescaped("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
@@ -401,7 +407,8 @@ else
 }
 
 # If returning to an old search, restore the page/order by and other non search string parameters
-if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
+$old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
+if ($old_search)
     {
     $offset=getvalescaped("saved_offset",0,true);rs_setcookie('saved_offset', $offset,0,"","",false,false);
     $order_by=getvalescaped("saved_order_by","relevance");
@@ -538,6 +545,17 @@ $hook_result=hook("process_search_results","search",array("result"=>$result,"sea
 if ($hook_result!==false) {$result=$hook_result;}
 
 $count_result = (is_array($result) ? count($result) : 0);
+
+// Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
+// string or resource types or archive states changed. Changing, for example, display or paging don't count as different
+// searches.
+$same_search_param = (trim(strip_leading_comma($search)) === $initial_search_cookie);
+$same_restypes_param = (trim($restypes) === $initial_restypes_cookie);
+$same_archive_param = (trim($archive) === $initial_saved_archive_cookie);
+if(!$old_search && (!$same_search_param || !$same_restypes_param || !$same_archive_param))
+    {
+    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $count_result);
+    }
 
 if ($collectionsearch)
     {
@@ -688,7 +706,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
             });
         jQuery.ajax({
           type: 'POST',
-          url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true',
+          url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true&offset=<?php echo urlencode($offset) ?>',
           data: {
             order: JSON.stringify(newOrder),
             <?php echo generateAjaxToken('reorder_search'); ?>
@@ -1418,14 +1436,6 @@ if($responsive_ui)
     for ($n=0;$n<count($types);$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
     if (is_array($result) && count($result)>0)
         {
-        $showkeypreview = false;
-        $showkeycollect = false;
-        $showkeycollectout = false;
-        $showkeyemail = false;
-        $showkeyedit = false;
-        $showkeystar = false;
-        $showkeycomment = false;
-
         /**
          * If global var $annotate_enabled global == true, then ResourcePanel height is adjusted in thumbs.php.
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
@@ -1591,6 +1601,39 @@ if($search_anchors)
     }
     ?>
 <script>
+function toggle_addremove_to_collection_icon(el)
+    {
+    var icon = jQuery(el);
+    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref'));
+
+    if(icon.hasClass('addToCollection'))
+        {
+        icon.addClass('DisplayNone');
+        var rfc = icon.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).removeClass('DisplayNone');
+            }
+        }
+    else if(icon.hasClass('removeFromCollection'))
+        {
+        var atc = resource_shell.find('div.ResourcePanelIcons > a.addToCollection');
+        if(atc.length > 0)
+            {
+            jQuery(atc[0]).removeClass('DisplayNone');
+            }
+
+        var rfc = atc.siblings('.removeFromCollection');
+        if(rfc.length > 0)
+            {
+            jQuery(rfc[0]).addClass('DisplayNone');
+            }
+        }
+
+    return;
+    }
+
+
 <?php
 if($use_selection_collection)
     {

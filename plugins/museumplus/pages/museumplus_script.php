@@ -1,60 +1,93 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    http_response_code(401);
-    exit('Access denied');
-    }
+if(PHP_SAPI != 'cli') { exit('Access denied'); }
+$museumplus_rs_root = dirname(__FILE__) . '/../../../';
+include $museumplus_rs_root . 'include/db.php';
+include_once $museumplus_rs_root . 'include/resource_functions.php';
+include_once $museumplus_rs_root . 'include/log_functions.php';
 
-include dirname(__FILE__) . '/../../../include/db.php';
-include_once dirname(__FILE__) . '/../../../include/resource_functions.php';
-include_once dirname(__FILE__) . '/../../../include/log_functions.php';
-
+logScript('[museumplus] Initiating MuseumPlus script process...');
+$mplus_script_start_time = microtime(true);
 set_time_limit($cron_job_time_limit);
+logScript("[museumplus] Set script maximum execution time to '{$cron_job_time_limit}' seconds");
 
-// Init script logging (if set)
-global $museumplus_log_directory;
+// Log in the specified directory (new files get created each time)
 $mplus_log_file = null;
 if('' != trim($museumplus_log_directory))
     {
-    if(!is_dir($museumplus_log_directory))
-        {
-        @mkdir($museumplus_log_directory, 0755, true);
+    $museumplus_script_log_path = sprintf('%s%smplus_script_log_%s.log', $museumplus_log_directory, DIRECTORY_SEPARATOR, date('Y_m_d-H_i'));
+    $museumplus_enable_script_log = false;
 
-        if(!is_dir($museumplus_log_directory))
-            {
-            logScript("MuseumPlus: Unable to create log directory: '{$museumplus_log_directory}'");
-            return false;
-            }
+    if(is_dir($museumplus_log_directory))
+        {
+        $museumplus_enable_script_log = true;
+        }
+    else if(mkdir($museumplus_log_directory, 0755, true))
+        {
+        $museumplus_enable_script_log = true;
+        logScript("[museumplus] Created log directory: '{$museumplus_log_directory}'");
+        }
+    else
+        {
+        logScript("[museumplus][warn] Unable to create log directory: '{$museumplus_log_directory}'");
         }
 
-    // Cleaning up old files is up to the cron_copy_hitcount hook to do
-
-    // New log file
-    $mplus_log_file = fopen($museumplus_log_directory . DIRECTORY_SEPARATOR . 'mplus_script_log_' . date('Y_m_d-H_i') . '.log', 'ab');
+    if($museumplus_enable_script_log)
+        {
+        $mplus_log_file = fopen($museumplus_script_log_path, 'ab');
+        if($mplus_log_file === false)
+            {
+            logScript("[museumplus][warn] Unable to create log file: '{$museumplus_script_log_path}'");
+            }
+        else
+            {
+            logScript("[museumplus] Logging script events in file: '{$museumplus_script_log_path}'");
+            }
+        }
+    // Cleaning up old log files is done by the cron_copy_hitcount hook!
     }
-
 
 // Script options @see https://www.php.net/manual/en/function.getopt.php
 $mplus_short_options = 'hc';
 $mplus_long_options  = array(
     'help',
     'clear-lock',
+    'filter:',
 );
+
+// Script options defaults (if applicable)
+$filter = [];
 foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $option_value)
     {
     if(in_array($option_name, array('h', 'help')))
         {
-        logScript('To clear the lock after a failed run, pass in "-c" or "--clear-lock"', $mplus_log_file);
+        logScript('[museumplus] To clear the lock after a failed run, pass either the "-c" -or- "--clear-lock" option.', $mplus_log_file);
+        logScript('[museumplus] To filter the resources that should be processed, use the "--filter" option and use the "new_and_changed_associations" filter. This will process resources that have just been assocciated with a module or that had their association changed since the last time they\'ve been validated.', $mplus_log_file);
         exit();
         }
 
     if(in_array($option_name, array('c', 'clear-lock')))
         {
-        if(is_process_lock(MPLUS_LOCK))
+        if(is_process_lock(MPLUS_LOCK) && clear_process_lock(MPLUS_LOCK))
             {
-            logScript('Clearing lock...', $mplus_log_file);
-            clear_process_lock(MPLUS_LOCK);
+            logScript('[museumplus] Process lock removed!', $mplus_log_file);
             }
+        else if(!is_process_lock(MPLUS_LOCK))
+            {
+            logScript('[museumplus][warn] No process lock found! Please remove the "-c" -or- "--clear-lock" option.', $mplus_log_file);
+            }
+        else
+            {
+            logScript('[museumplus][error] Unable to clear process lock!', $mplus_log_file);
+            }
+        }
+
+    if($option_name === 'filter')
+        {
+        $raw_options = (is_array($option_value) ? $option_value : [$option_value]);
+        $raw_filter = array_flip($raw_options);
+        array_walk($raw_filter, function(&$v, $i) { $v = null; }); # convert to the correct struct of a "flag" filter
+        $filter = mplus_validate_resource_association_filters($raw_filter);
+        logScript('[museumplus] Additional valid filters: ' . implode(', ', array_keys($filter)), $mplus_log_file);
         }
     }
 
@@ -65,112 +98,87 @@ foreach($notify_users as $notify_user)
     {
     get_config_option($notify_user['ref'], 'user_pref_show_notifications', $show_notifications);
     get_config_option($notify_user['ref'], 'user_pref_system_management_notifications', $sys_mgmt_notifications);
-
-    if(!$show_notifications || !$sys_mgmt_notifications)
-        {
-        continue;
-        }
-
+    if(!$show_notifications || !$sys_mgmt_notifications) { continue; }
     $message_users[] = $notify_user['ref'];
     }
 
-$connection_data = mplus_generate_connection_data($museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass);
-if(empty($connection_data))
-    {
-    mplus_notify($message_users, $lang['museumplus_error_bad_conn_data']);
-    exit(1);
-    }
-
-// Check when this script was last run - do it now in case of permanent process locks
+// Check when this script was last run
 $museumplus_script_last_ran = '';
-if(!check_script_last_ran(MPLUS_LAST_IMPORT, $museumplus_script_failure_notify_days, $museumplus_script_last_ran))
+$museumplus_check_script_last_run = check_script_last_ran(MPLUS_LAST_IMPORT, $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
+logScript("[museumplus] Script last ran: {$museumplus_script_last_ran}", $mplus_log_file);
+if(!$museumplus_check_script_last_run)
     {
-    mplus_notify(
-        $message_users,
-        str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_warning_script_not_completed']));
+    mplus_notify($message_users, str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_warning_script_not_completed']));
     }
 
 // Check for a process lock
 if(is_process_lock(MPLUS_LOCK)) 
     {
-    logScript('MuseumPlus script lock is in place. Deferring...', $mplus_log_file);
-    logScript('To clear the lock after a failed run use --clear-lock flag.', $mplus_log_file);
-
+    logScript('[museumplus][error] Script lock is in place. Deferring...', $mplus_log_file);
+    logScript('[museumplus] To clear the lock after a failed run, pass either the "-c" -or- "--clear-lock" option.', $mplus_log_file);
     mplus_notify($message_users, $lang['museumplus_error_script_failed']);
-
     exit(1);
     }
 set_process_lock(MPLUS_LOCK);
 
-// So far all checks are ok, proceed...
-$mplus_script_start_time = microtime(true);
-$mplus_resources         = get_museumplus_resources();
+logScript('[museumplus] Starting actual process...', $mplus_log_file);
+logScript('[museumplus] IMPORTANT: for debugging issues with the actual process, please refer to the museumplus_log table!', $mplus_log_file);
 
-$museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+mplus_log_event('Running from MuseumPlus script...');
+$mplus_resources = mplus_resource_get_association_data($filter);
+logScript('[museumplus] Initial total of resources to be processed: ' . count($mplus_resources), $mplus_log_file);
 
-logScript('Retrieving data from MuseumPlus...', $mplus_log_file);
-foreach($mplus_resources as $mplus_resource)
+
+
+$batch_no = 0;
+foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
     {
-    if(trim($mplus_resource['mpid']) === '')
+    logScript(sprintf('[museumplus] Started processing batch #%s - %s resources', ++$batch_no, count($mplus_resource_refs)), $mplus_log_file);
+    logScript('[museumplus] Resources to check for associated module configuration: ' . implode(',', $mplus_resource_refs), $mplus_log_file);
+    $ramcs = mplus_get_associated_module_conf($mplus_resource_refs, true);
+    // logScript('[museumplus] Resources with associated module configuration: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
+
+    if(array_key_exists('new_and_changed_associations', $filter))
         {
-        continue;
-        }
-
-    logScript("", $mplus_log_file);
-    logScript("Checking resource #{$mplus_resource['resource']} with MpID '{$mplus_resource['mpid']}'", $mplus_log_file);
-
-    $mplus_data = mplus_search($connection_data, $museumplus_rs_mappings, 'Object', $mplus_resource['mpid'], $museumplus_search_mpid_field);
-    if(empty($mplus_data))
-        {
-        logScript('No data found! Skipped.', $mplus_log_file);
-        continue;
-        }
-
-    $existing_resource_data = array_values(
-        array_filter(
-            get_resource_field_data($mplus_resource['resource'], false, false),
-            function($value) use ($museumplus_rs_mappings)
-                {
-                return in_array($value['ref'], array_unique(array_values($museumplus_rs_mappings)));
-                }));
-
-    foreach($museumplus_rs_mappings as $mplus_field => $rs_field)
-        {
-        if(!array_key_exists($mplus_field, $mplus_data))
+        // Filter resources - discard of the ones where the "module name - MpID" combination hasn't changed since resource association was last validated
+        foreach(mplus_flip_struct_by_module($ramcs) as $module_name => $mdata)
             {
-            continue;
-            }
-
-
-        $existing_field_value = null;
-        $existing_field_index = array_search($rs_field, array_column($existing_resource_data, 'ref'));
-        if($existing_field_index !== false)
-            {
-            $existing_field_value = $existing_resource_data[$existing_field_index]['value'];
-            }
-
-        if(!is_null($existing_field_value) && $existing_field_value == $mplus_data[$mplus_field])
+            $computed_md5s = mplus_compute_data_md5($mdata['resources'], $module_name);
+            $resources_md5s = array_column(mplus_resource_get_data(array_keys($mdata['resources'])), 'museumplus_data_md5', 'ref');
+            foreach(array_keys($mdata['resources']) as $r_ref)
                 {
-                continue;
+                if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
+                    {
+                    logScript('[museumplus] No change to the "module name - MpID" combination for resource #' . $r_ref, $mplus_log_file);
+                    unset($ramcs[$r_ref]);
+                    continue;
+                    }
                 }
-
-        $update_errors = array();
-        if(!update_field($mplus_resource['resource'], $rs_field, $mplus_data[$mplus_field], $update_errors))
-            {
-            logScript("Failed to update field #{$rs_field} with the following value '{$mplus_data[$mplus_field]}'", $mplus_log_file);
-            logScript("Reason(s): " . implode(', ', $update_errors), $mplus_log_file);
-            continue;
             }
+        }
+    // logScript('[museumplus] Resources ready to be processed: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
+    logScript('[museumplus] Total resources ready to be processed: ' . count(array_keys($ramcs)), $mplus_log_file);
 
-        logScript("Successfully updated field #{$rs_field} with '{$mplus_data[$mplus_field]}'", $mplus_log_file);
+    logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);
+    mplus_resource_clear_metadata(array_keys($ramcs));
+
+    $valid_associations = mplus_validate_association($ramcs, false);
+    logScript('[museumplus] Total resources with a valid module association: ' . count(array_keys($valid_associations)), $mplus_log_file);
+
+    logScript('[museumplus] Attempting to sync MuseumPlus data...', $mplus_log_file);
+    $errors = mplus_sync($valid_associations);
+
+    if(is_array($errors) && !empty($errors))
+        {
+        logScript('[museumplus][error] Batch processed with errors: ' . PHP_EOL . implode(PHP_EOL . ' - ', $errors), $mplus_log_file);
         }
     }
 
-logScript("", $mplus_log_file);
-logScript(sprintf("MuseumPlus script completed in %01.2f seconds.", microtime(true) - $mplus_script_start_time), $mplus_log_file);
-if ($mplus_log_file != null)
-    {
-    fclose($mplus_log_file);
-    }
-sql_query("UPDATE sysvars SET `value` = NOW() WHERE `name` = '" . MPLUS_LAST_IMPORT . "'");
+
+
+logScript("[museumplus] ", $mplus_log_file);
+logScript(sprintf("[museumplus] Script completed in %01.2f seconds.", microtime(true) - $mplus_script_start_time), $mplus_log_file);
+sql_query("DELETE FROM sysvars WHERE name = '" . MPLUS_LAST_IMPORT . "'");
+sql_query("INSERT INTO sysvars VALUES('" . MPLUS_LAST_IMPORT . "', NOW())");
+if($mplus_log_file !== null) { fclose($mplus_log_file); }
 clear_process_lock(MPLUS_LOCK);

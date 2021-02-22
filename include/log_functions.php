@@ -390,3 +390,31 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "")
     // Nothing to log
     return false;
     }
+
+/**
+* Log search events
+* 
+* @param string  $search         Actual search string {@see do_search()}
+* @param array   $resource_types Resource types filter
+* @param array   $archive_states Archive states filter
+* @param integer $result_count   Search result count
+* 
+* @return void
+*/
+function log_search_event(string $search, array $resource_types, array $archive_states, int $result_count)
+    {
+    global $userref;
+
+    $resource_types = array_filter($resource_types, 'is_int_loose');
+    $archive_states = array_filter($archive_states, 'is_int_loose');
+
+    $q = sprintf(
+        'INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (%s, %s, %s, %s, \'%s\')',
+        sql_null_or_val($search, $search === ''),
+        sql_null_or_val(implode(', ', $resource_types), empty($resource_types)),
+        sql_null_or_val(implode(', ', $archive_states), empty($archive_states)),
+        sql_null_or_val((string) $userref, is_null($userref)),
+        (is_int_loose($result_count) ? escape_check($result_count) : '0')
+    );
+    return sql_query($q);
+    }

@@ -13,7 +13,11 @@ include "../../include/api_functions.php";
 $backurl=getval("backurl","");
 $modal=(getval("modal","")=="true");
 $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref","",true) . "&backurl=" . urlencode($backurl);
-if (!checkperm("u")) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
+if (!checkperm("u"))
+    {
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
 
 $ref=getvalescaped("ref","",true);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
@@ -81,11 +85,9 @@ if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login
 
 if (!checkperm_user_edit($user))
 	{
-	if(!$modal){redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
-	else
-		{echo $lang["error-permissiondenied"];}
-	exit;
-}
+    error_alert($lang["error-permissiondenied"],true);
+    exit();
+    }
 
 include "../../include/header.php";
 
@@ -321,6 +323,20 @@ if ($user_edit_created_by)
 <div class="Fixed"><?php echo resolve_user_agent($user["last_browser"],true)?></div>
 <div class="clearerleft"> </div></div>
 
+<div class="Question"><label><?php echo $lang["profile_image"]?></label>
+<?php
+$profile_image = get_profile_image($ref);
+if ($profile_image != "")
+    {
+    ?> <div class="Fixed"> <img src="<?php echo $profile_image ?>" alt="Current profile image"></div> <?php   
+    }
+else
+    {
+    ?> <div class="Fixed"><?php echo $lang["no_profile_image"] ?></div> <?php
+    }
+?>
+<div class="clearerleft"> </div></div>
+
 <?php if ($enable_remote_apis) { ?>
 <div class="Question"><label><?php echo $lang["private-api-key"] ?></label>
 <div class="Fixed"><?php echo get_api_key($user["ref"]) ?></div>
@@ -364,7 +380,11 @@ if ($user_edit_approved_by && $user["approved"]==1)
 	}
 ?>
 
-<div class="Question"><label><?php echo $lang["ticktodelete"]?></label><input name="deleteme" type="checkbox"  value="yes"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label><?php echo $lang['ticktodelete']; ?></label>
+    <input type="checkbox" name="deleteme" value="yes" onclick="return confirm_delete_user(this);">
+    <div class="clearerleft"></div>
+</div>
 <?php hook("additionaluserlinks");?>
 
 <div class="Question">
@@ -390,7 +410,16 @@ if ($user_edit_approved_by && $user["approved"]==1)
 </div>
 </form>
 </div>
+<script>
+function confirm_delete_user(el)
+    {
+    if(jQuery(el).is(':checked') === false)
+        {
+        return true;
+        }
 
+    return confirm('<?php echo htmlspecialchars($lang['team_user__confirm-deletion']); ?>');
+    }
+</script>
 <?php		
 include "../../include/footer.php";
-?>

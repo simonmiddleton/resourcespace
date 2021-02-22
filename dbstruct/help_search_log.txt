@@ -1,0 +1,8 @@
+Search log. Log every search made by the system.
+ref,int(11),NO,PRI,,
+search_string,mediumtext,YES,,, Actual search string
+resource_types,mediumtext,YES,,, Resource types filter
+archive_states,mediumtext,YES,,, Archive states filter
+logged,datetime,YES,,,
+user,int(11),YES,,, User executing the search
+result_count,int(11),YES,,, Result count

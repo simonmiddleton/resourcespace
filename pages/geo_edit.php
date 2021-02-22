@@ -25,10 +25,26 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource)) {exit ("Permiss
 ?>
 <?php
 
+$valid_coords = true;
+
 if (isset($_POST['submit']) && enforcePostRequest(false))
     {
     $s=explode(",",getvalescaped('geo-loc',''));
-    if (count($s)==2) 
+    
+    $lat = isset($s[0]) ? $s[0]: "";
+    $lng = isset($s[1]) ? $s[1]: "";
+
+    if (!is_numeric($lat) || $lat < -90 || $lat > 90)
+        {
+        $valid_coords = false;
+        }
+
+    if (!is_numeric($lng) || $lng < -180 || $lng > 180)
+        {
+        $valid_coords = false;
+        }
+
+    if ( count($s)==2  && $valid_coords == true) 
 		{    
         $mapzoom=getvalescaped('map-zoom','');        
 		if ($mapzoom>=2 && $mapzoom<=21)
@@ -54,6 +70,9 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 
  ?>
+  <?php
+echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-validation-error']  . " " . $lang['location-help'] . "</p>" : "";
+?>
 
 <div class="RecordBox">
 <div class="RecordPanel">
@@ -171,10 +190,12 @@ jQuery('#UICenter').scroll(function() {
     <?php } ?>
 
   </script>  
+
 <?php
 hook("rendermapfooter");
 ?>
-<p><?php echo $lang['location-details']; ?></p>
+<p><?php echo $lang['location-details'] . "<br/>" .  $lang['location-help'] ?></p>
+
 <form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php">
     <?php generateFormToken("map-form"); ?>
 <input name="ref" type="hidden" value="<?php echo $ref; ?>" />
@@ -186,6 +207,8 @@ hook("rendermapfooter");
 <?php hook("renderlocationextras"); ?>
 <input name="submit" type="submit" value="<?php echo $lang['save']; ?>" />
 </form>
+
+
 
 </div>
 
