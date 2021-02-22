@@ -1154,23 +1154,12 @@ else
         if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
         } 
    elseif ($ref>0)
-      {
-      if (!hook('replacebacklink') && !$upload_review_mode) 
         {
-        if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
-        else {$previous_page_modal = false;}
-        if(!$modal)
+        if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
             {?>
             <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
             <?php
             }
-        elseif ($previous_page_modal)
-            {
-            ?>
-            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-            <?php
-            }
-        }
         if (!hook("replaceeditheader")) 
             { ?>
             <div class="RecordHeader">
