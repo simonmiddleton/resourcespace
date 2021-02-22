@@ -12,6 +12,7 @@ if (!checkperm("a"))
 
 // Plugins add their own size properties (return is an array where index is the column name and value the value for that column - getval())
 $plg_cols = hook('get_size_extra_columns');
+$plg_cols = (!is_array($plg_cols)) ? array() : $plg_cols;
 $plg_cols_str = (is_array($plg_cols) && !empty($plg_cols)? ', ' . implode(', ', array_keys($plg_cols)) : '');
 
 $find=getval("find","");
