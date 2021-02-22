@@ -13,8 +13,17 @@ include(dirname(__FILE__)."/rssfeed.php");
 $user=base64_decode(getvalescaped("user",""));
 $sign=getvalescaped("sign","");
 
+# Remove the sign and authmode parameters as these would not have been present when signed on the client.
+$strip_params = array("sign","authmode");
+parse_str($_SERVER["QUERY_STRING"],$params);
+foreach($strip_params as $strip_param)
+    {
+    unset($params[$strip_param]);
+    }
+$query = urldecode(http_build_query($params));
+
 # Authenticate based on the provided signature.
-if (!check_api_key($user,$_SERVER["QUERY_STRING"],$sign))
+if (!check_api_key($user,$query,$sign))
 	{
 	header("HTTP/1.0 403 Forbidden.");
 	echo "HTTP/1.0 403 Forbidden.";
@@ -149,12 +158,12 @@ for ($n=0;$n<count($result);$n++)
 	
 	// 2007-12-12 23:32:43
 	// 0123456789012345678
-    $year = substr($creation_date, 0, 4);
-    $month = substr($creation_date, 5, 2);
-    $day = substr($creation_date, 8, 2);
-    $hour = substr($creation_date, 11, 2);
-    $min = substr($creation_date, 14, 2);
-    $sec = substr($creation_date, 17, 2);
+    $year = (int)substr($creation_date, 0, 4);
+    $month = (int)substr($creation_date, 5, 2);
+    $day = (int)substr($creation_date, 8, 2);
+    $hour = (int)substr($creation_date, 11, 2);
+    $min = (int)substr($creation_date, 14, 2);
+    $sec = (int)substr($creation_date, 17, 2);
     $pubdate = date('D, d M Y H:i:s +0100', mktime($hour, $min, $sec, $month, $day, $year));
 		
 	$url = $baseurl."/pages/view.php?ref=".$ref;

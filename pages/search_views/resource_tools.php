@@ -13,7 +13,6 @@ if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook
                                 title="<?php echo $lang["action-editmetadata"]?>"
                         ></a>
                 <?php
-                $showkeyedit = true;
                 }
         } ?>	
           
@@ -32,7 +31,6 @@ if($k=="" || $internal_share_access)
                         ></a>
                 </span>
                 <?php 
-                $showkeycomment = true;
                 } 
         } 
 hook("largesearchicon");
@@ -50,7 +48,6 @@ if (!hook("replacefullscreenpreviewicon"))
                                 title="<?php echo $lang["fullscreenpreview"]?>"
                         ></a>
                 <?php 
-                $showkeypreview = true;
                 }
         } /* end hook replacefullscreenpreviewicon */?>
 
@@ -66,22 +63,27 @@ if(!hook("iconemail"))
                                 title="<?php echo $lang["share-resource"]?>"
                         ></a>
                 <?php 
-                $showkeyemail = true;
                 }
         } ?>
         
 <!-- Remove from collection icon -->
 <?php 
-if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access)))
+if(!checkperm('b') && ($k == '' || $internal_share_access))
+    {
+    $col_link_class = ['fa-minus-circle'];
+    if(
+        isset($usercollection_resources)
+        && is_array($usercollection_resources)
+        && !in_array($ref, $usercollection_resources)
+    )
         {
-        if ($pagename=="collections" || trim($search)=="!collection".$usercollection)
-                { ?>
-                        <?php echo remove_from_collection_link($ref,$search,"fa fa-minus-circle")?>
-                        </a>
-                <?php 
-                $showkeycollectout = true;
-                }
-        } ?>
+        $col_link_class[] = 'DisplayNone';
+        }
+
+    $onclick = 'toggle_addremove_to_collection_icon(this);';
+    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onclick) . '</a>';
+    }
+    ?>
         
 <!-- Add to collection icon -->
 <?php
@@ -89,17 +91,18 @@ if(!hook('iconcollect') && $pagename!="collections")
     {
     if(!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
-        // Basket mode? - this is for the e-commerce user request modes.
-        if(2 == $userrequestmode || 3 == $userrequestmode)
+        $col_link_class = (2 == $userrequestmode || 3 == $userrequestmode ? ['fa-shopping-cart'] : ['fa-plus-circle']);
+        if(
+            isset($usercollection_resources)
+            && is_array($usercollection_resources)
+            && in_array($ref, $usercollection_resources)
+        )
             {
-            echo add_to_collection_link($ref, $search, '', '', 'fa fa-shopping-cart') . '</a>';
-            }
-        else
-            {
-            echo add_to_collection_link($ref, $search, '', '', 'fa fa-plus-circle') . '</a>';
+            $col_link_class[] = 'DisplayNone';
             }
 
-        $showkeycollect = true;
+        $onclick = 'toggle_addremove_to_collection_icon(this);';
+        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
         }
     } # end hook iconcollect
     ?>

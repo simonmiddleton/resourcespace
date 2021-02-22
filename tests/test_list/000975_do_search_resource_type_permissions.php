@@ -387,5 +387,5 @@ if (!is_array($results) || count($results)!=3 || !match_values(array_column($res
     return false;
 }
 
-$saved_userref = $userref;
+$userref = $saved_userref;
 $userpermissions = $savedpermissions;

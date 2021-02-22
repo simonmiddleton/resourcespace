@@ -16,12 +16,15 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
+function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
     {
     node_field_options_override($field);
 	
 	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
-    
+?>
+<!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
+<?php
+
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
       
@@ -30,126 +33,204 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 
     $scriptconditions=array();
         
-    #Check if field has a display condition set
+    # Assume the field being rendered should be displayed
     $displaycondition=true;
-    if ($field["display_condition"]!="" && (!$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition))))
+
+    # If the field being rendered has a display condition
+    #  For advanced search, always check the display condition
+    #  For simple search, only check the display condition if the field is included in the simple_search_display_condition config array 
+    if ( $field["display_condition"]!="" 
+    && ( !$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition)) ) )
         {
+        # Split the display condition of the field being rendered into an array of tests (if there are more than one, they are separated by a ";")
+        # Each test is in the form governing field = governing field value 
+        #   If the field being rendered is itself a governing field then "On Change" code must be generated for the governing field
+        #   If the field being rendered is a governed field then "Checking" code must be generated for each governing field
         $s=explode(";",$field["display_condition"]);
         $condref=0;
-        foreach ($s as $condition) # Check each condition
+        foreach ($s as $condition) # Check each individual test
             {
+            # Assume that the current test does not need to be checked
             $displayconditioncheck=false;
             $s=explode("=",$condition);
+            # Process each field to see if it is being referenced in the current test
             global $fields;
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
                 {
-                if ($s[0]==$fields[$cf]["name"] && ($fields[$cf]["resource_type"]==0 || $fields[$cf]["resource_type"]==$field["resource_type"])) # this field needs to be checked
+                # If the field being processed is referenced in the current test 
+                if ($s[0]==$fields[$cf]["name"]) 
                     {
+                    # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
+                    # The script conditions array contains an entry for each governing field
                     $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
+                    # Get the node references of the governing field
 					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
                     
                     $checkvalues=$s[1];
+                    # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
+					$scriptconditions[$condref]['validtext'] = array();
 					foreach($validvalues as $validvalue)
 						{
+                        # The validtext array is for checking input values instead of their corresponding node references
+                        $scriptconditions[$condref]['validtext'][] = strtolower($validvalue);
+
+                        # Convert the value name into a node entry if it is a valid node within the governing field
 						$found_validvalue = get_node_by_name($scriptconditionnodes, $validvalue);
 
+                        # If there is a node which corresponds to that value name then append its node reference to a list of valid nodes
 						if(0 != count($found_validvalue))
 							{
 							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
-
+                            
+                            # Is the node present in search result list of nodes
                             if(in_array($found_validvalue['ref'],$searched_nodes))
                                 {
-                                // Found a valid value
+                                # Value being tested is present in the searched nodes array
                                 $displayconditioncheck = true;
                                 }
                             }
                         }
 				
-
+                    # Suppress this field if none of the nodes (of the values) in the test match the searched nodes array
                     if (!$displayconditioncheck)
                         {
-                        $displaycondition=false;
+                        $displaycondition=false; # Do not render field
                         }
 
 					
-					// Certain fixed list types allow for multiple nodes to be passed at the same time
-					if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
-						{
+				// Certain fixed list types allow for multiple nodes to be passed at the same time
+
+                // Generate a javascript function specific to the field being rendered
+                // This function will be invoked whenever any governing field changes
+                if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+					{
 						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
 							{
-							?>
-							<script>
+                            ?>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
+                            var wto;
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
-									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+                                    // Debounce multiple events fired by the category tree
+                                    clearTimeout(wto);
+                                    wto=setTimeout(function() {
+                                        // Reflect the change of the governing field into the following governed field condition checker
+                                        console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref'] ?>");
+                                        for (i = 0; i<categoryTreeChecksArray.length; i++) {
+                                            categoryTreeChecksArray[i]();
+                                        }
+                                    }, 200);
 									});
 								});
 							</script>
 							<?php
-
 							// Move on to the next field now
 							continue;
 							}
 						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
 							{
+                            if ($forsearchbar) {
+                                if ($simple_search_show_dynamic_as_dropdown) {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                }
+                                else {
+                                    $jquery_selector = "input[name=\"field_{$fields[$cf]["name"]}\"]";
+                                }
 							?>
-							<script>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
+							jQuery(document).ready(function()
+								{
+                                jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                                    {
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>();
+                                    });
+                                });
+							</script>
+							<?php
+                            }
+                            else { # Advanced search
+                            ?>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+							<script type="text/javascript">
 							jQuery(document).ready(function()
 								{
 								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
-									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>();
 									});
 								});
 							</script>
 							<?php
+                            }
 
 							// Move on to the next field now
 							continue;
 							}
                         else
                             {
-                            $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
-                            $jquery_selector = "input[name=\"{$checkname}\"]";
-                            if  (
-                                FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type']
-                                ||
-                                (in_array($fields[$cf]['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $fields[$cf]['display_as_dropdown'])
-                                )
-                                {
+                            # Otherwise FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
+                            
+                            # Simple search will always display these types as dropdowns
+                            if ($forsearchbar) {
                                 $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
                                 $jquery_selector = "select[name=\"{$checkname}\"]";
-                                }
+                            }
+                            # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                            else {
+                                # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                                $checkname = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                                # If however its a drop down list then we should be processing select elements
+                                If ($fields[$cf]['display_as_dropdown'] == true)
+                                    {
+                                    $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                    $jquery_selector = "select[name=\"{$checkname}\"]";
+                                    }
+                            } 
                             ?>
+                            <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
                             <script type="text/javascript">
                             jQuery(document).ready(function()
                                 {
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
-                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    // Reflect the change of the governing field into the following governed field condition checker
+                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
                             </script>
                             <?php
                             }
-						}
+						} 
 					else
-						{
+						{ # Not one of the FIXED_LIST_FIELD_TYPES
 						?>
-						<script type="text/javascript">
+                        <!-- SETUP HANDLER FOR GOVERNOR=<?php echo $fields[$cf]['ref']; ?> GOVERNED=<?php echo $field['ref']; ?>-->
+                        <script type="text/javascript">
 						jQuery(document).ready(function()
 							{
 							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
 								{
-								checkSearchDisplayCondition<?php echo $field['ref']; ?>();
+                                // Reflect the change of the governing field into the following governed field condition checker
+                                checkSearchDisplayCondition<?php echo $field['ref']; ?>();
 								});
 							});
 						</script>
@@ -162,90 +243,146 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             } # check next condition
 
         ?>
+        <?php echo "<!-- CHECK CONDITIONS FOR GOVERNED FIELD ".$field['name']." [".$field['ref']."] -->";
+        $function_has_category_tree_check=false;
+        ?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
+        checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
+            // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
+            // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery(idname<?php echo $field['ref']; ?>).css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
-			newfield<?php echo $field['ref']; ?>show   = false;
-            newfield<?php echo $field['ref']; ?>provisional = true;
+           
+            // Assume visible by default
+            field<?php echo $field['ref']; ?>visibility = true;
+
             <?php
 			foreach($scriptconditions as $scriptcondition)
 				{
-                /*
-                Example of $scriptcondition:
-                Array
-                    (
-                    [field] => 73
-                    [type] => 2
-                    [valid] => Array
-                        (
-                            [0] => 267
-                            [1] => 266
-                        )
-                    )
-                */
-				?>
-                newfield<?php echo $field['ref']; ?>subcheck = false;
-                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
-				<?php
-                ############################
-                ### Field type specific
-                ############################
-                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
-                    {
-                    $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
-                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
-
-                    if  (
-                        in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS))
-                        &&
-                        false == $scriptcondition['display_as_dropdown']
-                        )
-                        {
-                        $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
-                        }
-
-                    if((in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS)) && true == $scriptcondition['display_as_dropdown'])
-                        || FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] )
-                        {
-                        $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
-                        }
-						?>
-                    if(!newfield<?php echo $field['ref']; ?>show)
-                        {
-                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
-                            {
-							 if(<?php echo $js_conditional_statement; ?>)
-                                {
-                                newfield<?php echo $field['ref']; ?>subcheck = true;
-                                }
-                            });
-                        }
-                    <?php
-                    }?>
-                if(!newfield<?php echo $field['ref']; ?>subcheck)
-                    {
-                    newfield<?php echo $field['ref']; ?>provisional = false;
-                    }
-                <?php
+                echo "// Checking values on field ".$scriptcondition['field']."\n";
+                # Example of $scriptconditions: [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}] 
+                if ($scriptcondition['type'] == FIELD_TYPE_CATEGORY_TREE) {
+                    $function_has_category_tree_check=true;
                 }
-                ?>
+            ?>
 
-                if(newfield<?php echo $field['ref']; ?>provisional)
+            field<?php echo $field['ref']; ?>valuefound = false;
+            fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+
+            <?php
+            if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                if ($forsearchbar)
+                    if(!$simple_search_show_dynamic_as_dropdown) {
+                    ?>
+                        // When a dynamic keyword list is rendered as regular input field on simple search, the valid values to check against are the text values (not nodes) 
+                        fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['validtext']); ?>;
+                    <?php
+                    }
+                }
+            ?>
+
+            <?php echo "// CHECK IF GOVERNING ".$scriptcondition['name']." [".$scriptcondition['field']."] VALUE(S) ENABLE DISPLAY";?>
+
+            <?php
+
+            # Generate the javascript code necessary to condition the rendered field based on value(s) present in the governing field
+
+            # Prepare base name for selector 
+            $checkname = "nodes_searched[{$scriptcondition['field']}]";
+            $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+            # Prepare fallback selector 
+            $jquery_condition_selector = "input[name=\"{$checkname}\"]";
+            $jquery_selector_suffix="";
+
+            if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                # Append additional brackets rendered on category tree and dynamic keyword list hidden inputs
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) ) {
+                    $jquery_condition_selector = "input[name=\"{$checkname}[]\"]";
+                }
+                
+                # Prepare selector for a checkbox list or a radio button or a dropdown list
+                if (in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS, FIELD_TYPE_DROP_DOWN_LIST))) {
+
+                    # Simple search will always display these types as dropdowns, so search for selected option
+                    if ($forsearchbar) {
+                        $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                    }
+                    # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
+                    else {
+                        # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
+                        #   so search for checked boxes
+                        $jquery_condition_selector = "input[name=\"{$checkname}\"]:checked:enabled";
+
+                        # If however its a drop down list then we should be searching for selected option
+                        If ($scriptcondition['display_as_dropdown'] == true)
+                            {
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                            }
+                    }                    
+
+                }
+
+                # Prepare selector for unusual dynamic keyword list configurations
+                if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                    if ($forsearchbar)
+                        if($simple_search_show_dynamic_as_dropdown) {
+                            # Prepare selector for a dynamic keyword list configured to display as a dropdown list on simple search
+                            $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
+                        } else {
+                            # Prepare selector for a dynamic keyword list rendered as regular input field
+                            $jquery_condition_selector = "input[name=\"field_{$scriptcondition['name']}\"]";
+                        }
+                    }
+
+                ?>
+                    jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                    {
+                        if(<?php echo $js_conditional_statement; ?>)
+                        {
+                        // The governing node is in the list of qualifying node(s) which enable this governed field
+                        field<?php echo $field['ref']; ?>valuefound = true;
+                        }
+                    });
+
+                <?php
+                }?>
+
+                // If no governing node found then disable this governed field
+                if(!field<?php echo $field['ref']; ?>valuefound)
+                {
+                field<?php echo $field['ref']; ?>visibility = false;
+                }
+
+            <?php
+                echo "// End of checking values on field ".$scriptcondition['field']."\n\n            ";
+                }
+            ?>
+
+                // If the governed field is enabled then set it to display
+                if(field<?php echo $field['ref']; ?>visibility)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
 
-                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                // If the governed field display state has changed then enact the change by sliding
+                if ( newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status )
                     {
+                    console.log("IDNAME " + idname<?php echo $field['ref']; ?>);
+                    console.log("   FIELD <?php echo $field['ref']; ?> STATUS '" + field<?php echo $field['ref']; ?>status+"'");
+                    console.log("NEWFIELD <?php echo $field['ref']; ?> STATUS '" + newfield<?php echo $field['ref']; ?>status+"'");
+                    // Toggle the display state between "block" and "none", clearing any incomplete actions in the process
                     jQuery(idname<?php echo $field['ref']; ?>).slideToggle(function()
                         {
+                        console.log("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
                         jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
                         });
-
+                    
+                    // Adjust the border accordingly
                     if(jQuery(idname<?php echo $field['ref']; ?>).css('display') == 'block')
                         {
                         jQuery(idname<?php echo $field['ref']; ?>).css('border-top', '');
@@ -256,6 +393,15 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         }
                     }
         }
+
+        <?php 
+        if ($function_has_category_tree_check) {
+        ?>
+        categoryTreeChecksArray.push(checkSearchDisplayCondition<?php echo $field["ref"];?>);
+        <?php
+        }
+        ?>
+
         </script>
     	<?php
     	if($forsearchbar)
@@ -283,7 +429,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"]) >= 1){ echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?><br/>
+        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"]) >= 1){ echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?><br/>
         
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -292,16 +438,18 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
 
     //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
 
+    # Generate markup for field
     switch ($field["type"]) {
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
+        # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             { 
 			
-			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
 		    }
@@ -384,7 +532,9 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
                 ?>
-                <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
+                <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>"
+                    <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
+                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
                 foreach($field['nodes'] as $node)
@@ -449,7 +599,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                         $node = $field['nodes'][$node_index_to_be_reshuffled];
                                         ?>
                                         <td valign=middle>
-                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                                         </td>
                                         <td valign=middle>
                                             <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -491,7 +641,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             {
                             ?>
                             <td valign=middle>
-                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                             </td>
                             <td valign=middle>
                                 <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -700,12 +850,13 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         	</script>
             <?php
         break;
-        }
+        } ## END CASE
     ?>
     <div class="clearerleft"> </div>
     </div>
+    <!-- ------------------------------------------------ -->
     <?php
-    }
+    } # End of render_search_field
 
 /**
 * Renders sort order functionality as a dropdown box
@@ -878,7 +1029,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 if($two_line)
                     {
                     ?>
-                    <br />
+                   <br/>
                     <?php
                     }
                     ?>
@@ -1219,6 +1370,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 default:
                     var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
                     var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
+                    var option_no_ajax = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('no-ajax');
 
                     // If action option has a defined data-callback attribute, then we can call it
                     // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
@@ -1231,7 +1383,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     // If action option has a defined data-url attribute, then we can CentralSpaceLoad it
                     if(typeof option_url !== "undefined")
                         {
-                        CentralSpaceLoad(option_url, true);
+                        if (typeof option_no_ajax == "undefined")
+                            {
+                            CentralSpaceLoad(option_url, true);
+                            }
+                        else
+                            {
+                            window.location.href = option_url;
+                            }
                         }
     
                     break;
@@ -1400,24 +1559,24 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
-	?>
-	<div class="<?php echo implode(" ", $div_class); ?>">
-		<label><?php echo $label; ?></label>
-		<select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
-		<?php
-		foreach ($options as $optionvalue=>$optiontext)
-			{
-			?>
-			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
-			<?php
-			}
-		?>
-		</select>
+    ?>
+    <div class="<?php echo implode(" ", $div_class); ?>">
+        <label for="<?php echo $inputname?>"><?php echo $label; ?></label>
+        <select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+        <?php
+        foreach ($options as $optionvalue=>$optiontext)
+            {
+            ?>
+            <option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+            <?php
+            }
+        ?>
+        </select>
         <div class="clearerleft"></div>
-	</div>
-	<?php
+    </div>
+    <?php
     return;
-	}
+    }
 
 /**
 * Render a table row (tr) for a single access key
@@ -2350,6 +2509,9 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
             // search_title_processing.php is building spans with different class names. We need to allow HTML in link titles.
             $title = get_inner_html_from_tag(strip_tags_and_attributes($links[$i]['title']), "p");
 
+            // remove leading * used for featured collection sorting.
+            $title = strip_prefix_chars($title,"*");
+
             if(0 < $i)
                 {
                 echo LINK_CHEVRON_RIGHT;
@@ -2585,26 +2747,46 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
     return array($width, $height, $margin);
     }
 
-
-
 /**
-* Render the share options (used on collection_share.php and resource_share.php)
-* 
-* @return void
-*/
-function render_share_options($collectionshare=true, $ref=0, $emailing=false)
+ * Render the share options (used on collection_share.php and resource_share.php)
+ *
+ * @param  array $shareopts     Array of share options. If not set will use the old getval() methods
+ *                  "password" bool             Has a password been set for this share? (password will not actually be displayed)
+ *                  "editaccesslevel" int       Current access level of share
+ *                  "editexpiration" string     Current expiration date
+ *                  "editgroup" int             ID of existing share group
+ * @return void
+ */
+function render_share_options($shareopts=array())
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
-    
-    if(!hook('replaceemailaccessselector')): ?>
+    global $lang, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
+    $validshareops = array(
+        "password",
+        "editaccesslevel",
+        "editexpiration",
+        "editgroup",
+        );
+    foreach($validshareops as $validshareop)
+        {
+        if(isset($shareopts[$validshareop]))
+            {
+            $$validshareop = $shareopts[$validshareop];
+            }
+        else
+            {
+            $$validshareop = getval($validshareop,'');
+            }
+        }
+    if(!hook('replaceemailaccessselector'))
+        {?>
         <div class="Question" id="question_access">
-            <label for="archive"><?php echo ($emailing ? $lang["externalselectresourceaccess"] : $lang["access"]) ?></label>
+            <label for="archive"><?php echo $lang["access"] ?></label>
             <select class="stdwidth" name="access" id="access">
             <?php
             # List available access levels. The highest level must be the minimum user access level.
             for ($n=$minaccess;$n<=1;$n++) 
                 { 
-                $selected = getvalescaped("editaccesslevel","") == $n;
+                $selected = $editaccesslevel == $n;
                 ?>
                 <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
                 <?php 
@@ -2612,14 +2794,14 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 ?>
             </select>
             <div class="clearerleft"> </div>
-        </div>
-    <?php endif; #hook replaceemailaccessselector
+        </div><?php
+        } #hook replaceemailaccessselector
     
     if(!hook('replaceemailexpiryselector'))
         {
         ?>
         <div class="Question">
-            <label><?php echo ($emailing ? $lang["externalselectresourceexpires"] : $lang["expires"]) ?></label>
+            <label><?php echo $lang["expires"] ?></label>
             <select name="expires" class="stdwidth">
             <?php 
             if($resource_share_expire_never) 
@@ -2630,7 +2812,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
-                $selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
+                $selected   = (substr($editexpiration,0,10) == $ymd_date);
                 $date_text  = nicedate($ymd_date,false,true);
                 $option_class = '';
                 $day_date = date('D', $date);
@@ -2653,7 +2835,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         # for this share (the default is to use the current user's user group).
         ?>
         <div class="Question">
-            <label for="groupselect"><?php echo ($emailing ? $lang["externalshare_using_permissions_from_user_group"] : $lang["share_using_permissions_from_user_group"]) ?></label>
+            <label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"]; ?></label>
             <select id="groupselect" name="usergroup" class="stdwidth">
             <?php $grouplist = get_usergroups(true);
             foreach ($grouplist as $group)
@@ -2663,7 +2845,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
                     continue;
                     }
 
-                $selected = getval("editgroup","") == $group["ref"] || (getval("editgroup","") == "" && $usergroup == $group["ref"]);
+                $selected = $editgroup == $group["ref"] || ($editgroup == "" && $usergroup == $group["ref"]);
                 ?>
                 <option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
                 <?php
@@ -2680,12 +2862,7 @@ function render_share_options($collectionshare=true, $ref=0, $emailing=false)
         <input type="hidden" name="usergroup" value="<?php echo $usergroup; ?>">
         <?php
         }
-        ?>
-        <div class="Question">
-            <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
-        </div>
-        <?php
+        render_share_password_question(!$password);
         hook("additionalresourceshare");
         ?>
     <?php        
@@ -2865,7 +3042,9 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
     $attributes = "onclick=\"CentralSpaceLoad('{$upload_here_url}');\"";
 
-    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
+    render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
+
+    return;
     }
 
 /**
@@ -2961,7 +3140,7 @@ function render_browse_bar()
 /**
 * Generates a root row item for the browse bar
 *  
-* @return void
+* @return string  $html
 */    
 function generate_browse_bar_item($id, $text)
 	{
@@ -3204,7 +3383,9 @@ function render_edit_selected_btn()
     $attributes  = " id=\"EditSelectedResourcesBtn\"";
     $attributes .= " onclick=\"ModalLoad('{$batch_edit_url}', true);\"";
 
-    return render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+    render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
+
+    return;
     }
 
 
@@ -3222,7 +3403,9 @@ function render_clear_selected_btn()
     $attributes .= " data-csrf-token-identifier=\"{$CSRF_token_identifier}\"";
     $attributes .= " data-csrf-token=\"" . generateCSRFToken($usersession, "clear_selected_btn_{$USER_SELECTION_COLLECTION}") . "\"";
 
-    return render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+    render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
+
+    return;
     }
 
 
@@ -3235,6 +3418,8 @@ function render_selected_collection_actions()
     {
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
            $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
+
+    
 
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
@@ -3284,7 +3469,15 @@ function render_selected_collection_actions()
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
 
-    render_actions($collection_data, true, false);
+    if (getvalescaped("clear_selection_collection", "") == "no")
+        {
+        render_actions($collection_data, true, false,'');
+        }
+    else 
+        {
+        render_actions($collection_data, true, false,'',array(),true);
+        }
+    
 
     $search = $orig_search;
     $result = $orig_result;
@@ -3586,31 +3779,23 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
-            // Get current display status
+            // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
-            // Assume field will not be displayed
             newfield<?php echo $field['ref']; ?>status = 'none';
-            newfield<?php echo $field['ref']; ?>show   = false;
-            newfield<?php echo $field['ref']; ?>provisional = true;
+
+            // Assume visible by default
+            field<?php echo $field['ref']; ?>visibility = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
                 {
-                /*
-                Example of $scriptcondition:
-                Array
-                    (
-                    [field] => 73
-                    [type] => 2
-                    [valid] => Array
-                        (
-                            [0] => 267
-                            [1] => 266
-                        )
-                    )
+                /* Example of $scriptconditions:
+                    [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
                 */
                 ?>
-                newfield<?php echo $field['ref']; ?>subcheck = false;
+
+                field<?php echo $field['ref']; ?>valuefound = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                
                 <?php
                 ############################
                 ### Field type specific
@@ -3635,29 +3820,27 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
                         }
                     ?>
-                    if(!newfield<?php echo $field['ref']; ?>show)
-                        {
                         jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
                             {
                             if(<?php echo $js_conditional_statement; ?>)
                                 {
-                                newfield<?php echo $field['ref']; ?>subcheck = true;
+                                field<?php echo $field['ref']; ?>valuefound = true;
                                 }
                             });
-                        }
+
                     <?php
                     }
                 ?>
-                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                if(!field<?php echo $field['ref']; ?>valuefound)
                     {
-                    newfield<?php echo $field['ref']; ?>provisional = false;
+                    field<?php echo $field['ref']; ?>visibility = false;
                     }
                 <?php
                 }
                 ?>
 
                 // Is field to be displayed
-                if(newfield<?php echo $field['ref']; ?>provisional)
+                if(field<?php echo $field['ref']; ?>visibility)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
@@ -3706,7 +3889,7 @@ function has_browsebar()
     {
     global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
     return isset($username)
-    && !in_array($pagename, $not_authenticated_pages)
+    && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
     && ('' == $k || $internal_share_access)
     && $browse_bar;
     //   && false == $loginterms ?
@@ -4229,8 +4412,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
 * 
 * @param array $ctx    Context data to allow caller code to decide rendering requirements
 * @param array $items  List of items to render (featured collection category, actual collection or smart collection)
-* 
-* @return void
 */
 function render_featured_collections(array $ctx, array $items)
     {
@@ -4315,6 +4496,10 @@ function render_featured_collections(array $ctx, array $items)
         if($is_featured_collection && collection_writeable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_edit;
+            }
+        if($is_featured_collection)
+            {
+            $render_ctx['show_resources_count'] = true;
             }
 
 
@@ -4418,6 +4603,7 @@ function render_featured_collection(array $ctx, array $fc)
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
+    $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
@@ -4435,16 +4621,24 @@ function render_featured_collection(array $ctx, array $fc)
             
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+        {
+        $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', htmlspecialchars($lang['newflag']));
+        }
     if($full_width)
         {
         $html_container_class[] = "FullWidth";
         $html_contents_h2_style[] = "max-width: unset;";
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
-        }
-    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
-        {
-        $html_contents_h2 .= " <div class=\"NewFlag\">{$lang['newflag']}</div>";
+        
+        if($show_resources_count && !$is_smart_featured_collection)
+            {
+            $html_contents_h2 .= sprintf(
+                ' <span data-tag="resources_count" data-fc-ref="%s">%s</span>',
+                htmlspecialchars($fc['ref']),
+                htmlspecialchars($lang['counting_resources']));
+            }
         }
 
 
@@ -4465,7 +4659,7 @@ function render_featured_collection(array $ctx, array $fc)
 
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
-    $html_actions_style = array();
+    $html_actions_style = ['display: none;'];
     if(count($tools) > 3)
         {
         $html_actions_style[] = "height: 43px;";
@@ -4498,7 +4692,7 @@ function render_featured_collection(array $ctx, array $fc)
     if(!empty($tools))
         {
         ?>
-        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions DisplayNone" style="<?php echo implode(" ", $html_actions_style); ?>">
+        <div id="FeaturedSimpleTileActions_<?php echo md5($fc['ref']); ?>" class="FeaturedSimpleTileActions" style="<?php echo implode(" ", $html_actions_style); ?>">
         <?php
         foreach($tools as $tool)
             {
@@ -4533,7 +4727,7 @@ function render_featured_collection(array $ctx, array $fc)
         <div class="ListTools">
             <div class="ActionsContainer">
                 <select id="<?php echo $action_selection_id; ?>" onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);">
-                    <option><?php echo $lang["actions-select"]; ?></option>
+                    <option><?php echo htmlspecialchars($lang["actions-select"]); ?></option>
                 </select>
             </div>
             <script>
@@ -4667,7 +4861,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
-    $message="This system is currently being upgraded by another process." . PHP_EOL;
+    $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
         $upgrade_progress_overall=get_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL);
@@ -4752,6 +4946,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - current page
  *  - total pages
  * "data"          - Array of data to display in table, using header identifers as indexes
+ *  - If "rowid" is specified this wil be used as the id attribute for the <tr> element
  *  - An additional 'tools' element can be included to add custom action icons
  *  - "class" - FontAwesome class to use for icon
  *  - "text" - title attribute
@@ -4781,11 +4976,25 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 function render_table($tabledata)
     {
     ?>
-    <div class="TablePagerHolder"><?php pager(true); ?></div><?php
+    <div class="TablePagerHolder"><?php
+    if(isset($tabledata["pager"]))
+        {
+        $pageroptions = array(
+            "curpage" => $tabledata["pager"]["current"],
+            "totalpages" => $tabledata["pager"]["total"],
+            "per_page" => isset($tabledata["pager"]["per_page"]) ? $tabledata["pager"]["per_page"] : $default_perpage,
+            "break" => isset($tabledata["pager"]["break"]) ? $tabledata["pager"]["break"] : true,
+            "scrolltotop" => isset($tabledata["pager"]["scrolltotop"]) ? $tabledata["pager"]["scrolltotop"] : true,
+            "url" => $tabledata["defaulturl"],
+            "url_params" => $tabledata["params"],
+            );
+        pager(true, true,$pageroptions);
+        }?>
+    </div><?php
 
-    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>";
-    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>";
-    echo "<tbody><tr class='ListviewTitleStyle'>";
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
+    echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
+    echo "<tbody><tr class='ListviewTitleStyle'>\n";
     echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
@@ -4809,17 +5018,18 @@ function render_table($tabledata)
         
         echo "</th>";
         }
-    echo "</tr>"; // End of table header row
+    echo "</tr>\n"; // End of table header row
 
     if(count($tabledata["data"]) == 0)
         {
-        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>";
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>\n";
         }
     else
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            echo "<tr>";
+            $rowid = isset($rowdata["rowid"]) ? " id = '" . $rowdata["rowid"]  . "'" : "";
+            echo "<tr" . $rowid . ">";
 
             if(isset($rowdata['alerticon']))
                 {
@@ -4855,16 +5065,16 @@ function render_table($tabledata)
                         }
                     else
                         {
-                        echo htmlspecialchars($rowdata[$header]);
+                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) ? strip_tags_and_attributes($rowdata[$header], array("a"), array("href", "target")) : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
                     }
                 else
                     {
-                    echo "<td></td>";
+                    echo "<td></td>\n";
                     }
                 }
-            echo "</tr>";
+            echo "</tr>\n";
             }
         }
     echo "</tbody>";
@@ -4921,4 +5131,124 @@ function render_top_page_error_style(string $err_msg)
 
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
     return;
+    }
+
+
+/**
+* Render a FormHelper. These are used in forms, to provide extra information to the user to a question.
+* 
+* @param string $txt Help text
+* @param string $id  Div ID
+* @param array  $ctx Contextual data
+*/
+function render_question_form_helper(string $txt, string $id, array $ctx)
+    {
+    $txt = trim($txt);
+    $id = trim($id);
+
+    if($txt === '' || $id === '')
+        {
+        return;
+        }
+
+    $ctx_class = (isset($ctx['class']) && is_array($ctx['class']) ? $ctx['class'] : array());
+    $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
+
+
+    $class = htmlspecialchars(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', htmlspecialchars($ctx_style)) : '');
+    ?>
+    <div id="help_<?php echo htmlspecialchars($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+        <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render an HTML hidden input
+* 
+* @param string $name  Input name
+* @param string $value Input value
+*/
+function render_hidden_input(string $name, string $value)
+    {
+    ?>
+    <input type="hidden" name="<?php echo htmlspecialchars($name); ?>" value="<?php echo htmlspecialchars($value); ?>">
+    <?php
+    return;
+    }
+
+
+function render_workflow_state_question($current=null, $checkaccess=true)
+    {
+    global $additional_archive_states, $lang;
+    $statusoptions = array();
+    for ($n=-2;$n<=3;$n++)
+        {
+        if (!$checkaccess || checkperm("e" . $n) || $n==$current)
+            {
+            $statusoptions[$n] =  isset($lang["status" . $n]) ?  $lang["status" . $n] : $n;
+            }
+        }
+    foreach ($additional_archive_states as $additional_archive_state)
+        {
+        if (!$checkaccess || checkperm("e" . $additional_archive_state) || $additional_archive_state==$current)
+            {
+            $statusoptions[$additional_archive_state] =  isset($lang["status" . $additional_archive_state]) ?  $lang["status" . $additional_archive_state] : $additional_archive_state;
+            }
+        }
+    
+    render_dropdown_question($lang["status"], "share_status", $statusoptions, $current, " class=\"stdWidth\"");
+    }
+
+function render_share_password_question($blank=true)
+    {
+    global $lang;
+    ?>
+    <div class="Question">
+    <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+    <input type="password" id="sharepassword" name="sharepassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
+    <script>
+
+    function togglePassword(pwdelement)
+        {
+        input = jQuery('#' + pwdelement);
+        if (input.attr("type") == "password")
+            {
+            input.attr("type", "text");
+            }
+        else
+            {
+            input.attr("type", "password");
+            }
+        }
+    var passInput="";
+    var passState="(unchanged)";
+    var passHistory="";
+    function pclick(id) 
+        {
+        // Set to password mode
+        document.getElementById(id).type="password";
+        document.getElementById(id).value=passState;
+        document.getElementById(id).select();
+        }
+    function pblur(id) 
+        {
+        // Copy keyed input other than bracketed placeholders to hidden password
+        passInput = document.getElementById(id).value;
+        if(passInput!="(unchanged)" && passInput!="(changed)") 
+            {
+            document.getElementById("sharepassword").value=passInput; 
+            passState="(changed)";
+            }
+        // Return to text mode showing the appropriate bracketed placeholder
+        document.getElementById(id).value=passState;
+        document.getElementById(id).type="text";
+        }
+    </script>
+    </div>
+    <?php
     }

@@ -57,13 +57,6 @@ $mysql_db          = 'resourcespace';
 # IMPORTANT: no trailing slash
 $mysql_bin_path = '/usr/bin';
 
-# Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
-$mysql_force_strict_mode = false;
-
-# If true, it does not remove the backslash from DB queries, and doesn't do any special processing.
-# to them. Unless you need to store '\' in your fields, you can safely keep the default.
-$mysql_verbatim_queries = false;
-
 # Ability to record important DB transactions (e.g. INSERT, UPDATE, DELETE) in a sql file to allow replaying of changes since DB was last backed.
 # You may schedule cron jobs to delete this sql log file and perform a mysqldump of the database at the same time.
 # Note that there is no built in database backup, you need to take care of this yourself!
@@ -91,13 +84,6 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
-# Indicates which users can update very low level configuration options for example debug_log.
-$system_architect_user_names = array('admin');		// Warning: this is for experienced technical users, typically ResourceSpace providers.
-
-$spider_password="TBTT6FD"; # The password required for spider.php - IMPORTANT - randomise this for each new installation. Your resources will be readable by anyone that knows this password.
-$spider_usergroup=2; # The user group that will be used to access the resource list for the spider index.
-$spider_access=array(0,1); # Which access level(s) are required when producing the index (0=Open, 1=Restricted, 2=Confidential/Hidden).
-
 $email_from_user=true; #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
@@ -119,11 +105,6 @@ $query_cache_expires_minutes=30;
 # The level of PHP error reporting to use. By default, hide warnings.
 $config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE;
 
-# Enable work-arounds required when installed on Microsoft Windows systems
-$config_windows=false;
-
-# Server charset (needed when dealing with filenames in some situations, e.g. at collection download).
-#$server_charset = ''; # E.g. 'UTF-8', 'ISO-8859-1' or 'Windows-1252'.
 
 # ---- Paths to various external utilities ----
 
@@ -206,9 +187,6 @@ $applicationname="ResourceSpace"; # The name of your implementation / installati
 $applicationdesc=""; # Subtitle (i18n translated) if $header_text_title=true;
 $header_favicon="gfx/interface/favicon.png";
 
-#replace header logo with text, application name and description
-$header_text_title=false;
-
 # Is the logo a link to the home page?
 $header_link=true;
 
@@ -219,9 +197,6 @@ $header_size="HeaderMid";
 $header_include_username=false;
 
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
-
-# Set this to true in order for the top bar to remain present when scrolling down the page
-$slimheader_fixed_position=false;
 
 $linkedheaderimgsrc="";
 ###### END SLIM HEADER #######
@@ -342,36 +317,15 @@ $tile_styles['ftxt']  = array('ftxt');
 $tile_styles['conf']  = array('blank');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
-# Place the default dash (tiles set for all_users) on the home page for anonymous users with none of the drag 'n' drop functionality.
-$anonymous_default_dash=true;
 # use shadows on all tile content (Built in support for transparent tiles)
 $dash_tile_shadows=false;
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
 # Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
-# Allows Dash Administrators to have their own dash whilst all other users have the managed dash ($managed_home_dash must be on)
-$unmanaged_home_dash_admins = false;
-
-/*
-* Dash tile color picker/ selector
-* If $dash_tile_colour = true and there are no colour options, a colour picker (jsColor) will be used instead
-* Example of colour options array:
-* $dash_tile_colour_options = array('0A8A0E' => 'green', '0C118A' => 'blue');
-*/
-$dash_tile_colour         = true;
-$dash_tile_colour_options = array();
-/* End Dash Config Options */
-
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
 
-# Disk Usage Warnings - require running check_disk_usage.php
-# Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
-#$disk_quota_notification_limit_percent_warning=90;
-# interval in hours to wait before sending another percent warning 
-#$disk_quota_notification_interval=24;
-$disk_quota_notification_email='';
 
 # GB of disk space left before uploads are disabled.
 # This causes disk space to be checked before each upload attempt
@@ -404,9 +358,6 @@ $exif_date=12;
 # If exiftool is installed, you can optionally enable the metadata report available on the View page. 
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
 $metadata_report=false;
-
-# Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
-$allow_metadata_revert=false;
 
 # Use Exiftool to attempt to extract specified resolution and unit information from files (ex. Adobe files) upon upload.
 $exiftool_resolution_calc=false;
@@ -499,10 +450,6 @@ $imagemagick_quality=90; # JPEG quality (0=worst quality/lowest filesize, 100=be
 # e.g. $lang['image_quality_10'] = "";
 $image_quality_presets = array(100,92,80,50,40);
 
-# Allow unique quality settings for each preview size. This will use $imagemagick_quality as a default setting.
-# If you want to adjust the quality settings for internal previews you must also set $internal_preview_sizes_editable=true
-$preview_quality_unique=false;
-
 # Allow editing of internal sizes? This will require additional updates to css settings!
 $internal_preview_sizes_editable=false;
 
@@ -563,8 +510,6 @@ $videojs_resolution_selection[1]["name"]="standard";
 # The default resolution when using resolution selection. Must use the same
 # Use label from preferred $ffmpeg_hls_streams entry or value as one of the "label" settings from $videojs_resolution_selection. This will be ignored (i.e. set to 'Auto') if $video_preview_hls_support is enabled.
 $videojs_resolution_selection_default_res='HD';
-# dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
-$videojs_resolution_selection_dynamicLabel=false;
 
 # Create a standard preview video for ffmpeg compatible files? 
 /* Examples of preview options to convert to different types (don't forget to set the extension as well):
@@ -695,14 +640,8 @@ $originals_separate_storage_ffmpegalts_as_previews=false;
 # Allow users to request accounts?
 $allow_account_request=true;
 
-# Send a confirmation e-mail to requester
-$account_request_send_confirmation_email_to_requester = true;
-
 # Should the system allow users to request new passwords via the login screen?
 $allow_password_reset=true;
-
-# Highlight search keywords when displaying results and resources?
-$highlightkeywords=true;
 
 # Search on day in addition to month/year?
 $searchbyday=false;
@@ -738,7 +677,6 @@ $simple_search_date=true;
 # Enable sorting resources in other ways:
 $colour_sort=true;
 $popularity_sort=true;
-$random_sort=false;
 
 # What is the default sort order?
 # Options are date, colour, relevance, popularity, country
@@ -816,13 +754,6 @@ $research_link=true;
 # Display a Themes link in Top Navigation if Themes is enabled
 $themes_navlink = true;
 
-# display an alert icon next to the team centre link 
-# and the relevant team centre item when there are requests that need managing
-# only affects users with permissions to do this.
-$team_centre_alert_icon = true;
-
-# Hide mycontributions link from regular users
-$mycontributions_userlink=true;
 # Display a 'My Contributions' link in the top navigation for admin (permission C)
 $mycontributions_link = false;
 
@@ -838,8 +769,7 @@ $terms_login=false;
 $thumbs_default="show";
 #  Automatically show thumbs when you change collection (only if default is show)
 $autoshow_thumbs = false;
-# How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
-$max_collection_thumbs=150;
+
 # Show an Empty Collection link which will empty the collection of resources (not delete them)
 $emptycollection = false;
 
@@ -870,9 +800,6 @@ $orderbyrating=false;
 # You also have to uncomment and set $collection_download_settings for it to work.
 # (And don't forget to set $archiver_path etc. in the path section.)
 $collection_download = false;
-
-# Option to replace the collection actions dropdown with a simple 'download' link if collection_download is enabled
-$collection_download_only = false;
 
 # The total size, in bytes, of the collection download possible PRIOR to zipping. Prevents users attempting very large downloads.
 $collection_download_max_size = 1024 * 1024 * 1024; # default 1GB.
@@ -947,9 +874,6 @@ $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_not
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
 
-# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
-$disabled_plugins_message = "";
-
 # Uncomment and set the next line to allow anonymous access. 
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
 # Note that collections will be shared among all anonymous users - it's therefore usually best to turn off all collections functionality for the anonymous user.
@@ -968,18 +892,12 @@ $disabled_plugins_message = "";
 # EXPERIMENTAL - use with caution!
 # $anonymous_autouser_group=2;
 
-# When anonymous access is on, show login in a modal.
-$anon_login_modal=false;
-
 $anonymous_user_session_collection=true;
 
 
 
 # Enable collection commenting and ranking
 $collection_commenting = false;
-
-# Add the collections footer
-$collections_footer = true;
 
 # Footer text applied to all e-mails (blank by default)
 $email_footer="";
@@ -1104,9 +1022,6 @@ $columns_select = '
 # Show related themes and public collections panel on Resource View page.
 $show_related_themes=true;
 
-# Multi-lingual support for e-mails. Try switching this to true if e-mail links aren't working and ASCII characters alone are required (e.g. in the US).
-$disable_quoted_printable_enc=false;
-
 # Watermarking - generate watermark images for 'internal' (thumb/preview) images.
 # Groups with the 'w' permission will see these watermarks when access is 'restricted'.
 # Uncomment and set to the location of a watermark graphic.
@@ -1127,15 +1042,8 @@ $watermark_open_search=false;
 # Set to 'true' to make the simple search bar more basic, with just the single search box.
 $basic_simple_search=false;
 
-# Simpler search in header, expanding for the full box.
-# Work in progress - in development for larger ResourceSpace 9.0 release. Some functions may not work currently.
-$header_search=false;
-
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
-
-# move search and clear buttons to bottom of searchbar
-$searchbar_buttons_at_bottom=true;
 
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
@@ -1153,9 +1061,11 @@ $simple_search_pills_view = false;
 
 # $custom_top_nav[0]["title"]="Example Link A";
 # $custom_top_nav[0]["link"]="$baseurl/pages/search.php?search=a";
+# $custom_top_nav[0]['modal']=false;
 #
 # $custom_top_nav[1]["title"]="Example Link B";
 # $custom_top_nav[1]["link"]="$baseurl/pages/search.php?search=b";
+# $custom_top_nav[1]['modal']=true;
 
 
 # Use original filename when downloading a file?
@@ -1192,9 +1102,6 @@ $file_upload_block_duplicates=false;
 # recommended if files are large, since the checksums can take time
 $file_checksums_offline = true;
 
-# Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
-$file_integrity_ignore_states = array();
-
 # $file_integrity_verify_window - set server time window that the file integrity check script can run in.
 # This can be resource intensive when checking checksums for a large number of resources.
 # Examples: -
@@ -1210,14 +1117,7 @@ $default_group=2;
 # You may wish to disable this if you are using metadata based access control (search filter on the user group)
 $custom_access=true;
 
-# Set the Default Level for Custom Access. 
-# This will only work for resources that haven't been set to custom previously, otherwise they will show their previously set values.
-/*
-	0 - Open
-	1 - Restricted
-	2 - Confidential
-*/
-$default_customaccess=2;
+
 
 # How are numeric searches handled?
 #
@@ -1232,9 +1132,6 @@ $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
 $allow_share=true;
-
-# Always create a collection when sharing an individual resource via email
-$share_resource_as_collection=false;
 
 # Use a custom stylesheet when sharing externally.
 # Note: $custom_stylesheet_external_share_path can be set anywhere inside websites' root folder.
@@ -1263,9 +1160,6 @@ $edit_access_for_contributor=false;
 # For users that have edit access to main states (e.g Active), make sure edit access is granted only for resources contributed by that user
 $edit_only_own_contributions = false;
 
-# Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
-$prevent_open_access_on_edit_for_active=false;
-
 # Auto-completion of search (quick search only)
 $autocomplete_search=true;
 $autocomplete_search_items=15;
@@ -1291,28 +1185,9 @@ $upload_add_to_new_collection_opt=true;
 $upload_do_not_add_to_new_collection_opt=true;
 # Batch Uploads, require that a collection name is entered, to override the Upload<timestamp> default behavior
 $upload_collection_name_required=false;
-#Batch uploads - always upload to Default Collection
-$upload_force_mycollection=false;
-#Batch Uploads, do not display hidden collections
-$hidden_collections_hide_on_upload=false;
-#Batch Uploads, include show/hide hidden collection toggle. Must have $hidden_collections_hide_on_upload=true;
-$hidden_collections_upload_toggle=false;
 
 # When batch uploading, enable the 'copy resource data from existing resource' feature
 $enable_copy_data_from=true;
-
-# Show clear button on the upload page
-$clearbutton_on_upload=true;
-
-# Show clear button on the edit page
-$clearbutton_on_edit=true;
-
-# Store Resource Refs when uploading, this is useful for other developer tools to hook into the upload.
-$store_uploadedrefs=false;
-
-# Always record the name of the resource creator for new records.
-# If false, will only record when a resource is submitted into a provisional status.
-$always_record_resource_creator = true;
 
 # Enable the 'related resources' field when editing resources.
 $enable_related_resources=true;
@@ -1325,19 +1200,11 @@ $relate_on_upload=false;
 # Option to make relating all resources at upload the default option if $relate_on_upload is set
 $relate_on_upload_default=false;
 
-#Size of the related resource previews on the resource page. Usually requires some restyling (#RelatedResources .CollectionPanelShell)
-#Takes the preview code such as "col","thm"
-$related_resource_preview_size="col";
-
-# Enable the 'keep me logged in at this workstation' option at the login form
+# Enable the 'keep me logged in on this device' option at the login form
 # If the user then selects this, a 100 day expiry time is set on the cookie.
 $allow_keep_logged_in=true;
 #Remember Me Checked By Default
 $remember_me_checked = true;
-
-# Show the link to 'user contributed assets' on the My Contributions page
-# Allows non-admin users to see the assets they have contributed
-$show_user_contributed_resources=true;
 
 # Show the contact us link?
 $contact_link=true;
@@ -1383,14 +1250,8 @@ $show_extension_in_search=false;
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
 
-# Should the category tree status window be shown?
-$category_tree_show_status_window=true;
-
 # Should searches using the category tree use AND for hierarchical keys?
 $category_tree_search_use_and=false;
-
-# Option to force single branch selection in category tree selection 
-$cat_tree_singlebranch=false;
 
 # Force selection of parent nodes when selecting a sub node? 
 # If set to false then each node should be unique to avoid possible corruption when exporting/importing data
@@ -1448,23 +1309,9 @@ $date_d_m_y=true;
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
 
-# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
-# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
-# easily faked.
-$ip_forwarded_for=false;
-
 # When extracting text from documents (e.g. HTML, DOC, TXT, PDF) which field is used for the actual content?
 # Comment out the line to prevent extraction of text content
 $extracted_text_field=72;
-
-# Should the resources that are in the archive state "User Contributed - Pending Review" (-1) be
-# visible in the main searches (as with resources in the active state)?
-# The resources will not be downloadable, except to the contributer and those with edit capability to the resource.
-$pending_review_visible_to_all=false;
-
-# Should the resources that are in the archive state "User Contributed - Pending submission" (-2) be
-# searchable (otherwise users can search only for their own resources pending submission
-$pending_submission_searchable_to_all=false;
 
 # Enable user rating of resources
 # Users can rate resources using a star ratings system on the resource view page.
@@ -1476,9 +1323,6 @@ $user_rating=false;
 # of the themes page. Note that, if turned off, it will still be possible for administrators to set collections
 # as public as this is how themes are published.
 $enable_public_collections=true;
-
-# Hide owner in list of public collections
-$collection_public_hide_owner=true;
 
 # Custom User Registration Fields
 # -------------------------------
@@ -1507,15 +1351,6 @@ $collection_public_hide_owner=true;
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
-# Show the fullname of the user who created the account when editing user
-$user_edit_created_by=false;
-# Also show the user email address if $user_edit_created_by=true
-$user_edit_created_by_email=false;
-# Show the fullname of the user who approved the account when editing user
-$user_edit_approved_by=false;
-# Also show the user email address if $user_edit_approved_by=true
-$user_edit_approved_by_email=false;
-
 # Custom Resource/Collection Request Fields
 # -----------------------------------------
 # Additional custom fields that are collected and e-mailed when new resources or collections are requested.
@@ -1535,7 +1370,6 @@ $user_edit_approved_by_email=false;
 # Send an e-mail to the address set at $email_notify above when user contributed
 # resources are submitted (status changes from "User Contributed - Pending Submission" to "User Contributed - Pending Review").
 $notify_user_contributed_submitted=true;
-$notify_user_contributed_unsubmitted=false;
 
 # When requesting feedback, allow the user to select resources (e.g. pick preferred photos from a photo shoot).
 $feedback_resource_select=false;
@@ -1547,22 +1381,6 @@ $feedback_resource_select=false;
 # This is useful when dealing with very large files that may place a drain on system resources - for example 100MB+ Adobe Photoshop files will take a great deal of cpu/memory for ImageMagick to process and it may be better to skip the automatic preview in this case and add a preview JPEG manually using the "Upload a preview image" function on the resource edit page.
 # The value is in MB.
 # $preview_generate_max_file_size=100;
-
-# Prevent previews from creating versions that result in the same size?
-# If true pre, thm, and col sizes will not be considered.
-$lean_preview_generation=false;
-
-# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
-$imagemagick_mpr=false;
-
-# Set the depth to be passed to mpr command.
-$imagemagick_mpr_depth="8";
-
-# Should colour profiles be preserved?
-$imagemagick_mpr_preserve_profiles=true;
-
-# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
-$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
 
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
@@ -1633,9 +1451,6 @@ $cron_job_time_limit = 1800;
 # Should the automatically produced video preview file be available as a separate download?
 $flv_preview_downloadable=false;
 
-# What is the default value for the user select box, for example when e-mailing resources?
-$default_user_select="";
-
 # When multiple dropdowns are used on the simple search box, should selecting something from one or more dropdowns
 # limit the options available in the other dropdowns automatically? This adds a performance penalty so is off by default.
 $simple_search_dropdown_filtering=false;
@@ -1656,10 +1471,6 @@ $clear_button_unchecks_collections=true;
 $index_collection_titles = true;
 $index_collection_creator = true; 
 
-# Default home page (when not using themes as the home page).
-# You can set other pages, for example search results, as the home page e.g.
-# $default_home_page="search.php?search=example";
-$default_home_page="home.php";
 
 # Configures separators to use when splitting keywords (in other words - characters to treat as white space)
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
@@ -1667,10 +1478,6 @@ $default_home_page="home.php";
 # Note: leave non breaking space in
 $config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
-# trim characters - will be removed from the beginning or end of the string, but not the middle
-# when indexing. Format for this argument is as described in PHP trim() documentation.
-# leave blank for no extra trimming.
-$config_trimchars="";
 
 # Resource field verbatim keyword regex
 # Using the index value of [resource field], specifies regex criteria for adding verbatim strings to keywords.
@@ -1714,10 +1521,6 @@ $auto_approve_domains=array();
 # Note: user_account_auto_creation needs to be true.
 $user_account_fullname_create=false;
 
-# Show an error when someone tries to request an account with an email already in the system.
-# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
-$account_email_exists_note=true;
-
 # Display a larger preview image on the edit page?
 $edit_large_preview=true;
 
@@ -1727,27 +1530,8 @@ $order_by_resource_id=false;
 # Enable find similar search?
 $enable_find_similar=true;
 
-##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
-##  If blank, uses $baseurl 
-$email_url_save_user = ""; //emaillogindetails
-
-# edit.php - disable links to upload preview and manage alternative files
-$disable_upload_preview = false;
-$disable_alternative_files = false;
-
-#collection_public.php - hide 'access' column
-$hide_access_column_public = false;
-#collection_manage.php - hide 'access' column
-$hide_access_column = false;
-
-# Enable the 'edit all' function in the collection and search actions dropdowns
-$show_edit_all_link = true;
-
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
-
-# add a prefix to all collection refs, to distinguish them from resource refs
-$collection_prefix = "";
 
 # Allow multiple collections to be e-mailed at once
 $email_multi_collections = false;
@@ -1784,17 +1568,10 @@ $xl_search_results_title_wordwrap=100;
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields=array(12); # ** SEE NOTE (1)
 
-# Enable list view option for search screen
-$searchlist=true;
 # List Display Fields: array of fields to display on the list view
 $list_display_fields=array(8,3,12); # ** SEE NOTE (1)
 $list_search_results_title_trim=25;
 
-# When returning to search results from the view page via "all" link, bring user to result location of viewed resource?
-$search_anchors=true;
-
-# Highlight last viewed result when using $search_anchors
-$search_anchors_highlight=false;
 
 # Related Resource title trim: set to 0 to disable
 $related_resources_title_trim=15;
@@ -1843,13 +1620,6 @@ $top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, l
 # You can set the following line to ''  to disable chunking. May resolve issues with flash uploader.
 $plupload_chunk_size='5mb';
 
-# Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
-$plupload_widget=true;
-$plupload_widget_thumbnails=true;
-
-# Allow users to delete resources?
-# (Can also be controlled on a more granular level with the "D" restrictive permission.)
-$allow_resource_deletion = true;
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
@@ -1871,13 +1641,6 @@ $delete_requires_password=false;
 
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
-
-# Zip files - the contents of the zip file can be imported to a text field on upload.
-# Requires 'unzip' on the command path.
-# If the below is not set, but unzip is available, the archive contents will be written to $extracted_text_field
-#
-# $zip_contents_field=18;
-$zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
 
 # List of extensions that can be processed by ffmpeg.
 # Mostly video files.
@@ -1957,11 +1720,6 @@ $alternative_file_previews_batch=true;
 # Overrides required permission of F*
 $custompermshowfile=false;
 
-# Display resource title on alternative file management page
-$alternative_file_resource_title=true;
-# Display resource title on replace file page
-$replace_file_resource_title=true;
-
 # enable support for storing an alternative type for each alternate file
 # to activate, enter the array of support types below. Note that the 
 # first value will be the default
@@ -1973,8 +1731,6 @@ $alt_types_organize=false;
 
 # Display col-size image of resource on alternative file management page
 $alternative_file_resource_preview=true;
-# Display col-size image of resource on replace file page
-$replace_file_resource_preview=true;
 
 # For alternative file previews... enable a thumbnail mouseover to see the preview image?
 $alternative_file_previews_mouseover=false;
@@ -1985,8 +1741,6 @@ $public_collections_confine_group=false;
 
 # Show public collections in the top nav?
 $public_collections_top_nav=false;
-
-$enable_theme_breadcrumbs = true;
 
 # Show collection name below breadcrumbs?  
 $show_collection_name = false;
@@ -2005,12 +1759,6 @@ $themes_category_navigate_levels=false;
 # If a theme header contains a single collection, allow the title to be a direct link to the collection.
 # Drilling down is still possible via the >Expand tool, which replaces >Select when a deeper level exists
 $themes_single_collection_shortcut=false;
-# Show only collections that have resources the current user can see?
-$themes_with_resources_only=false;
-
-# optional columns in themes collection lists
-$themes_date_column=false;
-$themes_ref_column=false;
 
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;
@@ -2027,10 +1775,6 @@ $public_collections_exclude_themes=true;
 
 # Show a download summary on the resource view page.
 $download_summary=false;
-
-# Ability to alter collection frame height/width
-$collection_frame_divider_height=3;
-$collection_frame_height=153;
 
 # Ability to hide error messages
 $show_error_messages=true;
@@ -2093,8 +1837,6 @@ $reporting_periods_default=array(7,30,100,365);
 
 # For checkbox list searching, perform logical AND instead of OR when ticking multiple boxes.
 $checkbox_and = false;
-# For dynamic keyword list searching, perform logical AND instead of OR when selecting multiple options.
-$dynamic_keyword_and = false;
 
 # For dynamic keyword list suggestions, use logic 'contains' instead of 'starts with'.
 $dynamic_keyword_suggest_contains=false;
@@ -2151,8 +1893,6 @@ $pricing["hpr"]=30; # (hpr is usually the original file download)
 $currency_symbol="&pound;";
 $payment_address="payment.address@goes.here"; // you must enable Instant Payment Notifications in your Paypal Account Settings.
 $payment_currency="GBP";
-# Should the "Add to basket" function appear on the download sizes, so the size of the file required is selected earlier and stored in the basket? This means the total price can appear in the basket.
-$basket_stores_size=true; 
 $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 
 # Ability to set a field which will store 'Portrait' or 'Landscape' depending on image dimensions
@@ -2308,12 +2048,6 @@ $tabs_on_edit=false;
 # Show additional clear and 'show results' buttons at top of advanced search page
 $advanced_search_buttons_top=false;
 
-
-# Enable multi-lingual free text fields
-# By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
-# the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
-$multilingual_text_fields=false;
-
 # Allow to selectively disable upload methods.
 # Controls are :
 # - single_upload            : Enable / disable "Add Single Resource"
@@ -2330,9 +2064,6 @@ $upload_methods = array(
 # Allow to change the location of the upload folder, so that it is not in the
 # web visible path. Relative and abolute paths are allowed.
 $local_ftp_upload_folder = '';
-
-# Use a file tree display for local folder upload
-$local_upload_file_tree=false;
 
 # Hide links to other uploader
 $hide_uploadertryother = false;
@@ -2360,18 +2091,8 @@ $sort_relations_by_restype=false;
 # When using the "View these resources as a result set" link, show the original resource in search result?
 $related_search_show_self=false;
 
-# Select the field to display in searchcrumbs for a related search (defaults to filename)
-# If this is set to a different field and the value is empty fallback to filename
-$related_search_searchcrumb_field=51;
-
-# Allow the addition of 'saved searches' to collections. 
-$allow_save_search=true;
-
 # Use the collection name in the downloaded zip filename when downloading collections as a zip file?
 $use_collection_name_in_zip_name=false;
-
-# Default DPI setting for the view page if no resolution is stored in the db.
-$view_default_dpi=300;
 
 # PDF/EPS base ripping quality in DPI. Note, higher values might greatly increase the resource usage
 # on preview generation (see $pdf_dynamic_rip on how to avoid that)
@@ -2389,6 +2110,10 @@ $pdf_dynamic_rip=false;
 $site_text_custom_create=false;
 
 # use hit count functionality to track downloads rather than resource views.
+# Notes:-
+#  - This esentially switches the counting method for column hit_count from hits to downloads
+#  - This does not reset the counter, thus if changed mid life of service will result in an amalgamation of hits pre and downloads post config change
+#  - Consider using the superior more accurate $download_summary=true;
 $resource_hit_count_on_downloads=false;
 $show_hitcount=false;
 
@@ -2407,10 +2132,6 @@ $use_phpmailer=false;
 #  - This also works for normal uploads (through web browser)
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
-
-
-# Use Plugins Manager
-$use_plugins_manager = true;
 
 # Allow Plugin Upload
 $enable_plugin_upload = true;
@@ -2434,23 +2155,12 @@ $geo_layers="osm";
 # To enable Google layers, use:
 # $geo_layers="osm, gmap, gsat, gphy";
 
-# Height of map in pixels on resource view page
-$view_mapheight=200;
-
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
 $geo_tile_caching=true;
 
 # Optional path to tile cache directory
 #$geo_tile_cache_directory="";
 
-# A list of upper/lower long/lat bounds, defining areas that will be excluded from geographical search results.
-# Areas are defined using values in the following sequence: southwest lat, southwest long, northeast lat, northeast long
-$geo_search_restrict=array
-	(	
-	# array(50,-3,54,3) # Example omission zone
-	# ,array(-10,-20,-8,-18) # Example omission zone 2
-	# ,array(1,1,2,2) # Example omission zone 3
-	);
 
 # Add OpenLayers configuration options to this variable to overwrite all other options. 
 $geo_override_options = "";
@@ -2469,17 +2179,6 @@ $geo_tile_servers = array();
 // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
 $geo_tile_cache_lifetime = 60*60*24*365;
 
-# QuickLook previews (Mac Only)
-# If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
-# This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
-#
-# $qlpreview_path="/usr/bin";
-#
-# A list of extensions that QLPreview should NOT be used for.
-$qlpreview_exclude_extensions=array("tif","tiff");
-
-
-
 # Log developer debug information to the debug log (filestore/tmp/debug.txt)?
 # As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
 $debug_log=false;
@@ -2491,28 +2190,6 @@ $debug_log=false;
 #$debug_log_location="d:/logs/resourcespace.log";
 #$debug_log_location="/var/log/resourcespace/resourcespace.log";
 
-# Suppress SQL information in the debug log?
-$suppress_sql_log = false;
-
-# Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
-# Metadata templates can be selected on the resource edit screen to pre-fill fields.
-# The intention is that you will create a new resource type named "Metadata Template" and enter its ID below.
-# This resource type can be hidden from view if necessary, using the restrictive resource type permission.
-#
-# Metadata template resources act a little differently in that they have editable fields for all resource types. This is so they can be used with any 
-# resource type, e.g. if you complete the photo fields then these will be copied when using this template for a photo resource.
-# 
-# $metadata_template_resource_type=5;
-#
-# The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
-# $metadata_template_title_field=10; # ** SEE NOTE (1)
-
-// Ability to default metadata templates to a particular resource ID
-$metadata_template_default_option = 0;
-
-// Force selection of a metadata template
-$metadata_template_mandatory = false;
-
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
 
@@ -2520,11 +2197,7 @@ $view_resource_collections=false;
 $search_titles=true;
 # whether all/additional keywords should be displayed in search titles (ex. "Recent 1000 / pdf")
 $search_titles_searchcrumbs=false;
-# whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
-$search_titles_shortnames=false;
 
-# if using $collections_compact_style, you may want to remove the contact sheet link from the Manage Collections page
-$manage_collections_contact_sheet_link=true;
 # Other collections management link switches:
 $manage_collections_remove_link=true;
 $manage_collections_share_link=true;
@@ -2538,20 +2211,11 @@ $allow_smart_collections=false;
 # This may not be appropriate for usergroups that depend on live updates in workflows based on smart collections.
 $smart_collections_async=false;
 
-# Allow a Preview page for entire collections (for more side to side comparison ability)
-$preview_all=false;
-# Minimize collections frame when visiting preview_all.php
-$preview_all_hide_collections=true;
-
-# Don't display the link to toggle thumbnails in collection frame
-$disable_collection_toggle=false;
 
 # Allow each user only one rating per resource (can be edited). Note this will remove all accumlated ratings/weighting on newly rated items.
 $user_rating_only_once = true;
 # if user_rating_only_once, allow a log view of user's ratings (link is in the rating count on the View page):
 $user_rating_stats = true;
-# Allow user to remove their rating.
-$user_rating_remove=true;
 
 # Allow a user to CC oneself when sending resources or collections.
 $cc_me=false;
@@ -2562,38 +2226,15 @@ $list_recipients=false;
 # How many keywords should be included in the search when a single keyword expands via a wildcard. Setting this too high may cause performance issues.
 $wildcard_expand_limit=50;
 
-# Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
-# E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.
-# WARNING - this option could cause search performance issues due to the hugely expanded searches that will be performed.
-# It will also cause some other features to be disabled: related keywords and quoted string support
-$wildcard_always_applied=false;
-
-# Set to true if wildcard should also be prepended to the keyword
-$wildcard_always_applied_leading = false;
-
-
-
-# "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
-$U_perm_strict=false;
-
-# enable remote apis (if using API, RSS2, or other plugins that allow remote authentication via an api key)
-$enable_remote_apis=true;
+# Default scramble key (never used as a new one is written to config.php during system install)
 $api_scramble_key="abcdef123";
 
 # Allow users capable of deleting a full collection (of resources) to do so from the Collection Manage page.
 $collection_purge=false;
 
-# Set cookies at root (for now, this is implemented for the colourcss cookie to preserve selection between pages/ team/ and plugin pages)
-# probably requires the user to clear cookies.
-$global_cookies=false;
-
-# Set to true to see the download iframe for debugging purposes.
-$debug_direct_download=false; 
-
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
 $camera_autorotation = false;
-$camera_autorotation_checked = true;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 
@@ -2606,34 +2247,13 @@ $camera_autorotation_gm = false;
 
 # show the title of the resource being viewed in the browser title bar
 $show_resource_title_in_titlebar = false;
-# When displaying title of the resource, set the following to true if you want to show Upload resources or Edit resource when on edit page:
-$distinguish_uploads_from_edits=false;
 
-# add direct link to original file for each image size
-$direct_link_previews = false;
 
-# SECURITY WARNING: The next two options will  effectively allow anyone
-# to download any resource without logging in. Be careful!!!!
-// allow direct resource downloads without authentication
-$direct_download_noauth = false;
-// make preview direct links go directly to filestore rather than through download.php
-// (note that filestore must be served through the web server for this to work.)
-$direct_link_previews_filestore = false;
-
-$psd_transparency_checkerboard=false;
 // checkerboard for gif and png with transparency
 $transparency_background = "gfx/images/transparency.gif";
 
-# Omit archived resources from get_smart_themes (so if all resources are archived, the header won't show)
-# Generally it's not possible to check for the existence of results based on permissions,
-# but in the case of archived files, an extra join can help narrow the smart theme results to active resources.
-$smart_themes_omit_archived=false;
-
 # Remove archived resources from collections results unless user has e2 permission (admins).
 $collections_omit_archived=false;
-
-# Set to false to omit results for public collections on numeric searches.
-$search_public_collections_ref=true;
 
 # Set path to Calibre to allow ebook conversion to PDF.
 # $calibre_path="/usr/bin";
@@ -2659,30 +2279,8 @@ $icc_extraction = false;
 # but will not be embedded
 $icc_preview_profile = 'sRGB_IEC61966-2-1_black_scaled.icc';
 
-# embed the target preview profile?
-$icc_preview_profile_embed=false;
-
 # additional options for profile conversion during preview generation
 $icc_preview_options = '-intent perceptual -black-point-compensation';
-
-# add user and access information to collection results in the collections panel dropdown
-# this extends the width of the dropdown and is intended to be used with $collections_compact_style
-# but should also be compatible with the traditional collections tools menu.
-$collection_dropdown_user_access_mode=false;
-
-# show mp3 player in xlarge thumbs view (if $mp3_player=true)
-$mp3_player_xlarge_view=true;
-
-# show mp3 player in thumbs view (if $mp3_player=true)
-$mp3_player_thumbs_view=false;
-
-# show video player in thumbs view 
-$video_player_thumbs_view=false;
-
-
-# use an ffmpeg alternative for search preview playback
-$video_player_thumbs_view_alt=false;
-#$video_player_thumbs_view_alt_name='searchprev';
 
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
@@ -2693,16 +2291,6 @@ $video_preview_play_hover=false; // preview.php and preview_all.php
 $keyboard_navigation_video_search=false;
 $keyboard_navigation_video_view=false;
 $keyboard_navigation_video_preview=false;
-# play backwards (in development) - default 'j'
-$video_playback_backwards=false;
-$keyboard_navigation_video_search_backwards=74;
-# play/pause - default 'k'
-$keyboard_navigation_video_search_play_pause=75;
-# play forwards - default 'l'
-$keyboard_navigation_video_search_forwards=76;
-
-# pager dropdown
-$pager_dropdown=false;
 
 # Use an external SMTP server for outgoing emails (e.g. Gmail).
 # Requires $use_phpmailer.
@@ -2727,9 +2315,6 @@ $smtp_debug_lvl = 2;
 
 $sharing_userlists=false; // enable users to save/select predefined lists of users/groups when sharing collections and resources.
 
-$attach_user_smart_groups=true; //enable user attach to include 'smart group option', different from the default "users in group" method (which will still be available)
-$public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
-
 $enable_ckeditor = true;
 $ckeditor_toolbars="'Styles', 'Bold', 'Italic', 'Underline','FontSize', 'RemoveFormat', 'TextColor','BGColor'";
 $ckeditor_content_toolbars="
@@ -2748,26 +2333,10 @@ $edit_autosave=true;
 # use_refine_searchstring can improve search string parsing. disabled by Dan due to an issue I was unable to replicate. (tom)  
 $use_refine_searchstring=false;
 
-# By default, keyword relationships are two-way 
-# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
-# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
-# then a search for "tiger" includes "tiger", but does not include "cat" matches.
-$keyword_relationships_one_way=false;
-
 $show_searchitemsdiskusage=true;
 
 # If set, which field will cause warnings to appear when approving requests containing these resources?
 #$warn_field_request_approval=115;
-
-# Normally, image tweaks are only applied to scr size and lower. 
-# If using Magictouch, you may want tweaks like rotation to be applied to the larger images as well.
-# This could require recreating previews to sync up the various image rotations.
-$tweak_all_images=false;
-$tweak_allow_gamma=true;
-
-# experimental email notification of php errors to $email_notify. 
-$email_errors=false;
-$email_errors_address="";
 
 # Experimental performance enhancement - two pass mode for search results.
 # The first query returns only the necessary number of results for the current search results display
@@ -2781,28 +2350,8 @@ $use_order_by_tab_view=false;
 # Allows for themes with a taller header than standard to still be fully visible in System Setup. 
 $admin_header_height=120;
 
-# Remove the line that separates collections panel menu from resources
-$remove_collections_vertical_line=false;
-
-# Make dropdown selectors for Display and Results Display menus
-$display_selector_dropdowns=false;
-
-# Option that specifically allows the per-page dropdown without needing $display_selector_dropdown=true. This is useful if you'd like to use the display selector icons with per-page dropdowns.
-$perpage_dropdown = true;
-
 # Display link to request log on view page
 $display_request_log_link=false;
-
-# Show friendly error to user instead of 403 if IP not in permitted range.
-$iprestrict_friendlyerror=false;
-
-# Make search filter strict (prevents direct access to view/preview page)
-# Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
-$search_filter_strict=true;
-
-# Plupload settings
-# Specify the supported runtimes and priority
-$plupload_runtimes = 'html5,gears,silverlight,browserplus,flash,html4';
 
 # Start uploads as soon as files are added to the queue?
 $plupload_autostart=false;
@@ -2810,47 +2359,15 @@ $plupload_autostart=false;
 # Clear the queue after uploads have completed
 $plupload_clearqueue=true;
 
-# Keep failed uploads in the queue after uploads have completed
-$plupload_show_failed=true;
-
-# Maximum number of attempts to upload a file chunk before erroring
-$plupload_max_retries=5;
-
-# Send confirmation emails to user when request sent or assigned
-$request_senduserupdates=true;
-
-# Allow users to create new collections. Set to false to prevent creation of new collections.
-$collection_allow_creation=true;
-
 # Allow Dates to be set within Date Ranges: Ensure to allow By Date to be used in Advanced Search if required.
 $daterange_search=false;
 
 # Keyboard navigation allows using left and right arrows to browse through resources in view/search/preview modes
 $keyboard_navigation = true;
-
-# Keyboard control codes
-# Previous/next resource, default: left/right arrows
-$keyboard_navigation_prev=37;
-$keyboard_navigation_next=39;
 $keyboard_navigation_pages_use_alt=false;
-# add resource to collection, default 'a'
-$keyboard_navigation_add_resource=65;
-# previous page in document preview, default ','
-$keyboard_navigation_prev_page=188;
-# next page in document preview, default '.'
-$keyboard_navigation_next_page=190;
-# view all results, default '/'
-$keyboard_navigation_all_results=191;
-# toggle thumbnails in collections frame, default 't'
-$keyboard_navigation_toggle_thumbnails=84;
-# view all resources from current collection, default 'v'
-$keyboard_navigation_view_all=86;
-# zoom to/from preview, default 'z'
-$keyboard_navigation_zoom=90;
-# close modal, defaut escape
-$keyboard_navigation_close=27;
 # with $keyboard_scroll_jump on arrow keys jump from picture to picture in preview_all mode (horizontal only)
 $keyboard_scroll_jump=false;
+
 
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;
@@ -2865,17 +2382,8 @@ $download_id_only_with_size = false;
 # Index the 'contributed by' field?
 $index_contributed_by=false;
 
-# Index the resource type, so searching for the resource type string will work (e.g. if you have a resource of type "photo" then "cat photo" will match even if the resource metadata itself doesn't contain the word 'photo')
-$index_resource_type=true;
-
 # Use CKEditor for site content?
 $site_text_use_ckeditor=false;
-
-# Preview All default orientation ("v" for vertical or "h" for horizontal)
-$preview_all_default_orientation="h";
-
-# Allow sorting by resource_type on thumbnail views
-$order_by_resource_type=true;
 
 # Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top=false;
@@ -2885,10 +2393,6 @@ $always_email_from_user=false;
 
 # option to always cc admin on emails from the logged in user
 $always_email_copy_admin=false;
-
-# Option to limit recent search to resources uploaded in the last X days
-$recent_search_period_select=false;
-$recent_search_period_array=array(1,7,14,60);
 
 #Option for recent link to use recent X days instead of recent X resources
 $recent_search_by_days=false;
@@ -2902,19 +2406,12 @@ $download_chunk_size=(2 << 20);
 #what to search for in advanced search by default - "Global", "Collections" or resource type id (e.g. 1 for photo in default installation, can be comma separated to enable multiple selections
 $default_advanced_search_mode="Global";
 
-#Option to turn on metadata download in view.php.
-$metadata_download=false;
 
-# Custom logo to use when downloading metadata in PDF format
-$metadata_download_header_title = 'ResourceSpace';
-#$metadata_download_pdf_logo     = '/path/to/logo/location/logo.png';
-$metadata_download_footer_text  = '';
-
-# settings for commenting on resources - currently enabled for new systems only.
-$comments_resource_enable=false;				# allow users to make comments on resources
+# Settings for commenting on resources
+$comments_resource_enable=true;				# allow users to make comments on resources
 $comments_flat_view=false;						# by default, show in a threaded (indented view)
 $comments_responses_max_level=10 ;				# maximum number of nested comments / threads
-$comments_max_characters=200;					# maximum number of characters for a comment
+$comments_max_characters=2000;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
@@ -2922,8 +2419,6 @@ $comments_view_panel_show_marker=true;			# show an asterisk by the comment view 
 
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
-
-$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	# currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
 
 $do_not_add_to_new_collection_default=false;  # will set "do not add to a collection" as the default option for upload option
 $no_metadata_read_default=false; // If set to true and $metadata_read is false then metadata will be imported by default
@@ -2961,9 +2456,6 @@ $additional_archive_states=array();
 # Option to use CTRL + S on edit page to save data
 $ctrls_to_save=false;
 
-# Option to separate some resource types in searchbar selection boxes
-$separate_resource_types_in_searchbar=Array();
-
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;
 
@@ -2993,8 +2485,6 @@ $no_welcometext = false;
 #Show a specified metadata field below the resource preview image on the view page. Useful for photo captions. 
 #$display_field_below_preview=18;
 
-# Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
-$force_display_template_orderby=false;
 
 # Optional setting to override the default $email_notify address for resource request email notifications, applies to specified resource types
 # e.g. for photo (resource type 1 by default)
@@ -3007,35 +2497,14 @@ $resource_type_request_emails_and_email_notify = false;
 # Set this to true to prevent possible issues with IE and download.php. Found an issue with a stray pragma: no-cache header that seemed to be added by SAML SSO solution.
 $download_no_session_cache_limiter=false;
 
-
-# Specifies that searching will search all workflow states
-# NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
-# IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
-$search_all_workflow_states=false;
-
-# Require email address to be entered when users are submitting collecion feedback
-$feedback_email_required=true;
-
 # Option to show only existing shares that have been shared by the user when sharing resources (not collections)
 $resource_share_filter_collections=false;
-
-# Do not create any new snapshots when recreating FFMPEG previews. (This is to aid in migration to mp4 when custom previews have been uploaded)
-$ffmpeg_no_new_snapshots=false;
 
 # Set the following to false to disable permission checking before showing edit_all link in collection bar and on Manage my collections page, useful as this can be a performance hit if there are many resources in collections
 $edit_all_checkperms=false;
 
-# Force fields with display templates to obey "order by" numbering.
-$force_display_template_order_by=false;
-
 # Option to turn off email sharing.
 $email_sharing=true;
-
-# Hide "Generate URL" from the collection_share.php page?
-$hide_collection_share_generate_url=false;
-
-# Hide "Generate URL" from the resource_share.php page?
-$hide_resource_share_generate_url=false;
 
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
@@ -3045,24 +2514,9 @@ $resource_share_expire_never=true; #Allow the 'Never' option.
 $collection_share_expire_days=150; #Maximum number of days allowed for the share 
 $collection_share_expire_never=true; #Allow the 'Never' option.
 
-# Pop-out Collection Bar Upon Collection Interaction such as "Select Collection"
-$collection_bar_popout=false;
-
-# Add option to include related resources when sharing single resource (creates a new collection)
-$share_resource_include_related=false;
-
-# Allow users to skip upload and create resources with no attached file
-$upload_no_file=false;
-
-# Normalize keywords when indexing and searching? Having this set to true means that various character encodings of e.g. diacritics will be standardised when indexing and searching. Requires internationalization functions (PHP versions >5.3). For example, there are several different ways of encoding "é" (e acute) and this will ensure that a standard form of "é" will always be used.
-$normalize_keywords=true;
-
 # Having keywords_remove_diacritics set to true means that diacritics will be removed for indexing e.g. 'zwälf' is indexed as 'zwalf', 'café' is indexed as 'cafe'.
 # The actual data is not changed, this only affects searching and indexing
 $keywords_remove_diacritics=false;
-
-# Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
-$unnormalized_index=false;
 
 # Show tabbed panels in view. Metadata, Location, Comments are grouped in tabs, Related Collection, Related Galleries and Related Resources, Search for Similar are grouped too
 $view_panels=false;
@@ -3085,9 +2539,6 @@ $related_type_upload_link=true;
 # Array of preview sizes to always create. This is especially helpful if your preview size is small than the "thm" size.
 $always_make_previews=array();
 
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
-
 #Display User Ref on the User Edit Page in the header? Example Output: Edit User 12
 $display_useredit_ref=false;
 
@@ -3106,9 +2557,6 @@ $send_collection_to_admin = FALSE;
 
 # Set to true if you want to share internally a collection which is not private
 $ignore_collection_access = FALSE;
-
-# Show/ hide "Remove resources" link from collection bar:
-$remove_resources_link_on_collection_bar = TRUE;
 
 # Show group filter and user search at top of team_user.php
 $team_user_filter_top=false;
@@ -3130,12 +2578,6 @@ $body_classes = array();
 # downloaded the resource in the last X days will be sent an email notifying them that there has been a change with a link to the resource view page
 # Set to 0 to disable this functionality;
 $notify_on_resource_change_days=0;
-
-# Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
-$hide_failed_reset_text=true;
-
-# Show and allow to remove custom access for users when editing a resource
-$delete_resource_custom_access = false;
 
 # Enable this option to display a system down message to all users
 $system_down_redirect = false;
@@ -3168,18 +2610,6 @@ $resource_view_use_pre = false;
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
 
-# Show geographical search results in a modal
-$geo_search_modal_results = true;
-
-# Show an edit icon/link in the search results.
-$search_results_edit_icon=true;
-
-# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
-$pending_submission_prompt_review=true;
-
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
-
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
 
@@ -3195,35 +2625,16 @@ $custom_access_overrides_search_filter=false;
 # When requesting a resource or resources, is the "reason for request" field mandatory?
 $resource_request_reason_required=true;
 
-# Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
-$chosen_dropdowns=false;
-
-# The number of options that must be present before including seach capability.
-$chosen_dropdowns_threshold_main=10;
-$chosen_dropdowns_threshold_simplesearch=10;
-
-# Use the 'chosen' library for rendering dropdowns in the collection bar.
-$chosen_dropdowns_collection=false;
-
-# The number of options that must be present before including seach capability for collection bar dropdowns.
-$chosen_dropdowns_threshold_collection=10;
-
 # Allow ResourceSpace to upload multiple times the same file in a row
 # Set to true only if you want RS to create duplicates when client is losing
 # connection with the server and tries again to send the last chunk
 $plupload_allow_duplicates_in_a_row = false;
-
-# Show header and footer on resource preview page
-$preview_header_footer=false;
 
 # Create all preview sizes at the full target size if image is smaller (except for HPR as this would result in massive images)
 $previews_allow_enlarge=false;
 
 # Option to use a random static image from the available slideshow images. Requires slideshow_big=true;
 $static_slideshow_image=false;
-
-#Add full username column in my messages/actions pages
-$messages_actions_fullname = true;
 
 #Add usergroup column in my messages/actions area
 $messages_actions_usergroup = false;
@@ -3253,9 +2664,6 @@ $execution_lockout=false;
 # Load help page in a modal?
 $help_modal=true;
 
-// maximum number of words shown before more/less link is shown (used in resource log)
-$max_words_before_more=30;
-
 # User preference - if set to false, hide the notification popups for new messages
 $user_pref_show_notifications=true;
 
@@ -3264,8 +2672,6 @@ $user_pref_daily_digest=false;
 # Option to set the messages as read once the email is sent
 $user_pref_daily_digest_mark_read=true;
 
-// Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
-$inactive_message_auto_digest_period=7;
 // Accompanying user preference option
 $user_pref_inactive_digest = false;
 
@@ -3308,9 +2714,6 @@ $external_share_groups_config_options=false;
 // CSV Download - add original URL column
 $csv_export_add_original_size_url_column = false;
 
-// Show required field legend on upload
-$show_required_field_label = true;
-
 # Prevent users without accounts from requesting resources when accessing external shares. If true, external users requesting access will be redirected to the login screen so only recommended if account requests are allowed.
 $prevent_external_requests=false;
 
@@ -3330,11 +2733,7 @@ $watermark_single_image = array(
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
-# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
-$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
 
-# Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
-$download_file_lifetime=14;
 
 # $replace_resource_preserve_option - Option to keep original resource files as alternatives when replacing resource
 $replace_resource_preserve_option=false;
@@ -3347,19 +2746,9 @@ $replace_batch_existing = false;
 # When searching collections, return results based on the metadata of the resources inside also
 $collection_search_includes_resource_metadata=false;
 
-# Specify field references for fields that you do not wish the blank default entry to appear for, so the first keyword node is selected by default.
-# e.g. array(3,12);
-$default_to_first_node_for_fields=array();
-
-# A list of groups for which the knowledge base will launch on login, until dismissed.
-$launch_kb_on_login_for_groups=array();
-
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
-
-# Option to hide the collection bar (hidden, not minimised) if it has no resources in it
-$collection_bar_hide_empty=false;
 
 # Should the alternative files be visible to restricted users (they must still request access to download however)
 $alt_files_visible_when_restricted=true;
@@ -3367,9 +2756,6 @@ $alt_files_visible_when_restricted=true;
 # Option to prevent resource types specified in array from being added to collections. Will not affect existing resources in collections
 # e.g. $collection_block_restypes=array(3,4);
 $collection_block_restypes=array();
-
-# Option to remove all resources from the current collection once it has been requested
-$collection_empty_on_submit=false;
 
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
@@ -3410,9 +2796,6 @@ $actions_approve_hide_groups=""; // Groups to exclude from notifications
 # Option to show action links e.g. user requests, resource requests in a modal
 $actions_modal=true;
 
-# Separator to use when rendering date range field values
-$range_separator = " / ";
-
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
 
@@ -3431,16 +2814,9 @@ $resource_type_extension_mapping         = array(
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
-# Option to allow users to 'lock' metadata fields in upload_then_edit_mode
-$upload_review_lock_metadata = true;
-
 # New upload mode that focuses on getting files into the filestore, then working off a queue for further processing (metadata extract, preview creation, etc).
 # requires $offline_job_queue=true;
 $upload_then_process=false;
-
-// Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
-// Requires "$upload_then_edit = true;"
-$upload_review_mode_review_by_resourceid = true;
 
 # Uncomment and set to an archive state where $upload_then_process files are stored before processing.
 # It is strongly recommended that a unique archive state be created to handle this
@@ -3456,12 +2832,6 @@ $annotate_enabled = false;
 
 // Specify which fields can be used to bind to annotations
 $annotate_fields = array();
-
-// The user can see existing annotations in read-only mode
-$annotate_read_only = false;
-
-// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
-$annotate_crud_anonymous = false;
 
 
 #######################################
@@ -3558,9 +2928,6 @@ $edit_contributed_by = false;
 
 # Option to use decimal (KB, MB, GB in multiples of 1000) vs. binary (KiB, MiB, GiB, TiB in multiples of 1024)
 $byte_prefix_mode_decimal=true;
-
-# Option to force users to select a resource type at upload
-$resource_type_force_selection=false;
 
 // Social media share buttons
 $social_media_links = array("facebook", "twitter", "linkedin");
@@ -3667,14 +3034,9 @@ $search_filter_nodes = true;
 $browse_bar = true;
 // Show workflow (archive) states in browse bar?
 $browse_bar_workflow=true;
-// Default browse bar width;
-$browse_default_width = 295;
 
 // Batch replace from local folder
 $batch_replace_local_folder = "/upload";
-
-// Display help links on pages
-$contextual_help_links=true;
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.
@@ -3683,8 +3045,6 @@ $contextual_help_links=true;
 $filestore_evenspread=false;
 $filestore_migrate=false;
 
-// Option to have the front end show pop up error when and invalid date value or format is entered e.g. 31-02-2020 or bad partial dates, this configuration could be removed once a more subtle way of erroring this is found.
-$date_validator=false;
 
 // Set $system_download_config=true if you want to allow admin users to download the config.php file, user and configuration data from your server, optionally including resource data
 // Most data will be obfuscated unless you set $system_download_config_force_obfuscation = false
@@ -3716,3 +3076,13 @@ $metadata_export_offline_limit = 10000;// Optional periodic report size paramete
 $report_rows_attachment_limit = 100;
 // Maximum number of rows in an emailed report before the attachment will be compressed into a zip file
 $report_rows_zip_limit = 10000;
+
+// Set sytem-wide read-only system with global permissions mask
+// This also stops all offline jobs with the exception of user downloads and stops ResoureSpace sql query logging ($mysql_log_transactions).
+$system_read_only = false;
+
+// External upload options
+// Optional array of usergroup ids that external collection upload links can be 'shared as' in order to limit metadata field and resource type visibility etc.
+$upload_link_usergroups = array();
+// Workflow state that will be set for all resources uploaded using the share link
+$upload_link_workflow_state = -1;

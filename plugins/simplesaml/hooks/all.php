@@ -168,7 +168,9 @@ function HookSimplesamlAllProvideusercredentials()
             elseif(getval("ajax","") != "")
                 {
                 // Ajax loads can't be redirected. Need a full reload if session has timed out
-                $reload_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $_SERVER["REQUEST_URL"];
+                $url_alt = isset($_SERVER["HTTP_HOST"]) ?  $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"] : $baseurl;
+
+                $reload_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $url_alt;
                 debug("simplesaml: ajax request - reloading page " . $reload_url);
                 ?>
                 <script>
@@ -456,7 +458,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo  LINK_CARET . $lang['simplesaml_use_sso']; ?></a>
+		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a>
 		<?php
         }
 

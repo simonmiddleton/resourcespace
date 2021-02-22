@@ -187,6 +187,9 @@ $found_month="";if (isset($set_fields["basicmonth"])) {$found_month=$set_fields[
 $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basicday"];}
 
 ?>
+<script>
+var categoryTreeChecksArray = [];
+</script>
 <div id="SearchBox" <?php
     if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
         {
@@ -311,6 +314,8 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 
 $types=get_resource_types();
 
+$simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
+
 if (!$basic_simple_search)
     {
     
@@ -319,7 +324,7 @@ if (!$basic_simple_search)
     
     ?>
     <input type="hidden" name="resetrestypes" value="yes">
-    <div id="searchbarrt" <?php hook("searchbarrtdiv");?>>
+    <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
     <?php if ($searchbar_selectall) { ?>
     <script type="text/javascript"> 
     function resetTickAll(){
@@ -474,15 +479,21 @@ elseif($restypes=='')
     
     $optionfields=array();
     $rendered_names=array();
+    $rendered_refs=array();
     $has_value=array();
 
     for ($n=0;$n<count($fields);$n++)
         {
         $render=true;
-        if (in_array($fields[$n]["name"],$duplicate_fields) && in_array($fields[$n]["name"],$rendered_names)) {$render=false;} # Render duplicate fields only once.
+        # Render duplicate fields only once.
+        if (in_array($fields[$n]["name"],$duplicate_fields) && in_array($fields[$n]["name"],$rendered_names)) 
+            {
+            $render=false;
+            } 
         if ($render)
             {
             $rendered_names[]=$fields[$n]["name"];
+            $rendered_refs[]=$fields[$n]["ref"];
             
             # Fetch current value
             $value = '';
@@ -499,31 +510,35 @@ elseif($restypes=='')
                 $has_value[]=$fields[$n]['ref'];
                 }
 
-            render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes);
+            render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes, false, $simpleSearchFieldsAreHidden);
             }
         }
-    
-    if(!empty($has_value))
-        {
-        ?>
-        <script>
-            jQuery(document).ready(function(){
-                <?php
-                // we need to trigger a change event
-                foreach($has_value as $trigger_field)
-                    {
-                    ?>
-                    jQuery("#field_<?php echo $trigger_field?>").trigger('change');
-                    <?php
-                }
-                ?>
-            });
-        </script>
-        <?php
-        }
-    
     ?>
+
+    <script>
+    // Trigger an initial change event for each rendered field
+    jQuery(document).ready(function(){
+        simpleSearchFieldsAreHidden = <?php if($simpleSearchFieldsAreHidden) { echo "true"; } else { echo "false"; } ?>;
+        // If simple search fields are hidden there is no need to trigger initial change events
+        if (!simpleSearchFieldsAreHidden) {
+            TriggerChangesForRenderedFields();
+        }
+    });
+    </script>
+
     <script type="text/javascript">
+
+    function TriggerChangesForRenderedFields() {
+        <?php
+        foreach($rendered_refs as $trigger_field)
+            {
+            ?>
+            jQuery("#field_<?php echo $trigger_field?>").trigger('change');
+            <?php
+            }
+        ?>
+    }
+
     function FilterBasicSearchOptions(clickedfield,resourcetype)
         {
         if (resourcetype!=0)
@@ -689,12 +704,10 @@ elseif($restypes=='')
             }
         ?>
         }   
-    jQuery(document).ready(function () {    
-        HideInapplicableSimpleSearchFields();
-    })
     </script>
         
-    <div id="basicdate" class="SearchItem"><?php if ($simple_search_date) 
+    <div id="basicdate" class="SearchItem"<?php if ($simpleSearchFieldsAreHidden) {?> style="display:none;"<?php } ?>>
+            <?php if ($simple_search_date) 
             {
                 ?>  
     
