@@ -4163,7 +4163,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         {
         echo "<a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
         echo "title='" .  $lock_details . "'";
-        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
+        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>&nbsp;";
         if($resource_locked)
             {
             $locktext = (checkperm("a") || ($lockuser == $userref)) ? $lang["action_unlock"] : $lang["status_locked"];

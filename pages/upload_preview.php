@@ -65,7 +65,7 @@ if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
 	$status=upload_preview($ref);
     if($status !== false)
         {
-        redirect(generateurl($baseurl . "/pages/edit.php", $urlparams));
+        redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
         exit();
         }
     $error = true;
@@ -113,7 +113,7 @@ function check(filename) {
 <input name="save" type="submit" onclick="if (!check(this.form.userfile.value)){document.getElementById('invalid').style.display='block';return false;}else {document.getElementById('invalid').style.display='none';}" value="&nbsp;&nbsp;<?php echo $lang["upload_file"]?>&nbsp;&nbsp;" />
 </div>
 
-<p><a onClick="return CentralSpaceLoad(this,true);" href="edit.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a></p>
+<p><a onClick="return ModalLoad(this,true);" href="view.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 
 </form>
 </div>

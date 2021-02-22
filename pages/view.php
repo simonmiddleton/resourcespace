@@ -409,14 +409,14 @@ function updateResourceLock(resource,lockstatus)
             jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
             if(lockstatus==1)
                 {               
-                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_unlock"] ;?>');
+                jQuery('#lock_link_' + resource).html('&nbsp;<?php echo $lang["action_unlock"] ;?>');
                 jQuery('#lock_link_' + resource).attr("title","<?php echo $lang["status_locked_self"]; ?>");
                 lockmessage[resource] = '<?php echo $lang["status_locked_self"]; ?>';
                 jQuery('#lock_details_link').show();
                 }
             else
                 {
-                jQuery('#lock_link_' + resource).html('<?php echo $lang["action_lock"] ;?>');
+                jQuery('#lock_link_' + resource).html('&nbsp;<?php echo $lang["action_lock"] ;?>');
                 lockmessage[resource] = '';
                 jQuery('#lock_details_link').hide();
                 // Timeout added as title resists removal if cursor is hovering as it is removed
@@ -1552,7 +1552,7 @@ hook ("resourceactions") ?>
 	 	{ ?>
 		<li>
 		<a href="<?php echo $baseurl ?>/pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
-		<?php echo "<i class='fa fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
+		<?php echo "<i class='fa fa -fw fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
 		</a>
 		</li>
 		<?php 
@@ -1565,7 +1565,7 @@ hook ("resourceactions") ?>
 		<li>
 			<?php 
 			echo add_to_collection_link($ref,$search);
-			echo "<i class='fa fa-plus-circle'></i>&nbsp;" .$lang["action-addtocollection"];
+			echo "<i class='fa fa-fw fa-plus-circle'></i>&nbsp;" .$lang["action-addtocollection"];
 			?>
 			</a>
 		</li>
@@ -1576,7 +1576,7 @@ hook ("resourceactions") ?>
 			<li>
 			<?php 
 			echo remove_from_collection_link($ref,$search);
-			echo "<i class='fa fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
+			echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
 			</a>
 			</li>
 			<?php 
@@ -1586,7 +1586,7 @@ hook ("resourceactions") ?>
 		{ 
 		?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/resource_share.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-		<?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . $lang["share"];?>
+		<?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["share"];?>
 		</a></li>
 		<?php 
 		hook('aftersharelink', '', array($ref, $search, $offset, $order_by, $sort, $archive));
@@ -1596,11 +1596,11 @@ hook ("resourceactions") ?>
         echo "<li>";
         if($resource_locked && $resource['lock_user'] != $userref)
             {
-            echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</div>";
+            echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</div>";
             }
         else
             {
-            echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</a>";
+            echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</a>";
             }
         echo "</li>";
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
@@ -1609,11 +1609,11 @@ hook ("resourceactions") ?>
             echo "<li>";
             if($resource_locked && $resource['lock_user'] != $userref)
                 {
-                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</div>";
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</div>";
                 }
             else
                 {
-                echo "<a id='delete_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-trash'></i>&nbsp;" . $deletetext . "</a>";
+                echo "<a id='delete_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</a>";
                 }
             echo "</li>";
             }
@@ -1622,17 +1622,65 @@ hook ("resourceactions") ?>
             echo "<li>";
             if($resource_locked && $resource['lock_user'] != $userref)
                 {
-                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</div>";
+                echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</div>";
                 }
             else
                 {
-                echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a>";
+                echo "<a id='alternative_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/alternative_files.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"] . "</a>";
                 }
             echo "</li>";
             }
 
         // Show the lock/unlock links only if edit access
         render_resource_lock_link($ref,$resource['lock_user'], true);
+
+        // Show the replace file link
+        if($top_nav_upload_type == 'local')
+            {
+            $replace_upload_type = 'plupload';
+            }
+        else 
+            {
+            $replace_upload_type=$top_nav_upload_type;
+            }
+
+        if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
+            { ?>
+            <li>
+                <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return ModalLoad(this,true);">
+                    <?php if ($resource["file_extension"] != "")
+                        { ?>
+                        <i class='fa fa-fw fa-file-import'></i>&nbsp;<?php echo $lang["replacefile"];
+                        }
+                    else
+                        { ?>
+                        <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo $lang["uploadafile"];
+                        }
+                    ?>
+                </a>
+            </li>
+            <?php
+            }
+
+         if ($resource["file_extension"]!="") 
+            {
+            hook("afterreplacefile");
+            } 
+         else 
+            {
+            hook("afteruploadfile");
+            }
+
+        // Show the upload preview link
+        if (!$disable_upload_preview && !resource_file_readonly($ref))
+            { ?>
+            <li>
+                <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
+                    <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo $lang["uploadpreview"]?>
+                </a>
+            </li>
+            <?php
+            }
 		} 
 	// At least one field should be visible to the user otherwise it makes no sense in using this feature
 	$can_see_fields_individually = false;
@@ -1647,19 +1695,19 @@ hook ("resourceactions") ?>
 	if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))	
 		{ ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
+		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
 		} 
 	if (checkperm('v')) 
 		{ ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["log"]?>
+		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 
 		{ ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["requestlog"]?>
+		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}
 
@@ -1668,7 +1716,7 @@ hook ("resourceactions") ?>
         $find_in_pdf_url = generateURL("{$baseurl}/pages/search_text_in_pdf.php", array( 'ref' => $ref));
         ?>
         <li>
-            <a href="<?php echo $find_in_pdf_url; ?>" onclick="return ModalLoad(this, true, true);"><i class='fa fa-search'></i>&nbsp;<?php echo $lang['findtextinpdf']; ?></a>
+            <a href="<?php echo $find_in_pdf_url; ?>" onclick="return ModalLoad(this, true, true);"><i class='fa fa-fw fa-search'></i>&nbsp;<?php echo $lang['findtextinpdf']; ?></a>
         </li>
         <?php 
         }
