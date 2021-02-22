@@ -1914,7 +1914,16 @@ function compute_node_branch_path(array $nodes, int $id)
         $id = $node_parent;
         if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
             {
-            return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+            # Check the nodes found before returning cached value to handle multiple branches containing the same node e.g. resource in multiple collections.
+            $available_nodes = array();
+            foreach ($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id] as $node_available)
+                {
+                $available_nodes[]=$node_available['ref'];
+                }
+            if (in_array($path[0]['ref'],$available_nodes))
+                {
+                return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+                }
             }
 
         $found_node_index = array_search($id, array_column($nodes, 'ref'));
