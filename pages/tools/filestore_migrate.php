@@ -28,6 +28,7 @@ $redistribute_mode = $filestore_migrate;
 function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mode)
     {
     global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir;
+    global $storagedir, $scramble_key_unknown, $storagedirold;
     echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
 	$resource_data=get_resource_data($ref);
     $pagecount=get_page_count($resource_data,$alternative);
@@ -48,8 +49,53 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
                 $scramble_key_saved = $scramble_key;
                 $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
                 }        
-                
-            $path = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+            if(!isset($scramble_key_unknown) || !$scramble_key_unknown)
+                {
+                $path = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+                }
+            else
+                {
+                $path = isset($storagedirold) ? $storagedirold : $storagedir;
+                $residlen  = strlen($ref);
+                for ($i=0; $i<$residlen; $i++)
+                    {
+                    $path .= "/" . $ref[$i];
+                    }
+                    
+                $pathcands = glob($path . "*");
+//exit(print_r($sizes));
+                debug("BANG " . $ref  . ", path: " . $path . " path cands: " . print_r($pathcands,true));
+                if(count($pathcands)==1)
+                    {
+                    // Found directory
+                    $path = $pathcands[0] . "/";
+                    }
+                if($sizes[$m]["id"] =="" && $sizes[$m]["extension"] == $extension)
+                    {
+                    $filecands = glob($path . $ref . "_hpr*" . $sizes[$m]["extension"]);
+                    }
+                elseif($sizes[$m]["id"] =="hpr")
+                    {
+                    $filecands = array();
+                    //glob($path . $ref . "_hpr*" . $sizes[$m]["extension"]);
+                    }
+                else
+                    {
+                    $filecands = glob($path . $ref . "_" . $sizes[$m]["id"] . "*" . $sizes[$m]["extension"]);
+                    }
+
+                debug("BANG " . $ref  . ", path: " . $path . " file cands: " .print_r($filecands,true));
+                if(count($filecands)==1)
+                    {
+                    // Found file
+                    $path = $filecands[0];
+                    }
+                else
+                    {
+                    continue;
+                    }
+                }
+            
             echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
             echo " - Checking old path: " . $path . PHP_EOL;
             if (file_exists($path) && !($sizes[$m]["id"] == "" && strpos($path, $syncdir)!==false))
@@ -98,7 +144,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
 
 set_time_limit(0);
 
-$resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
+$resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref=119500 ORDER BY ref DESC");
 $migratedfiles = 0;
 $totalresources = count($resources);
 for ($n=0;$n<$totalresources;$n++)

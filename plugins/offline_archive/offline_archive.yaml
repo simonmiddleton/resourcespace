@@ -1,0 +1,6 @@
+name    : offline_archive
+author  : Montala Ltd.
+version : 1.0
+desc    : Enables the relocation of achived files to an offline location
+config_url: /plugins/offline_archive/pages/setup.php
+disable_group_select: 1
