@@ -634,9 +634,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             else
                                 {
                                 $url = generateURL($baseurl . "/pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
-                                }                                
+                                }
                             ?>
-                            <script>CentralSpaceLoad('<?php echo urlencode($url); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
                             <?php
                             exit();
                             }
