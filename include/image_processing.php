@@ -1102,7 +1102,7 @@ function iptc_return_utf8($text)
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
-    global $previews_allow_enlarge;
+    global $previews_allow_enlarge, $offline_job_queue;
 
     # Used to preemptively create folder
     get_resource_path($ref,true,"pre",true);
@@ -1154,17 +1154,21 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize)
         {
         $filesize = filesize_unlimited($file)/(1024*1024);# Get filesize in MB
-        if ($filesize>$preview_generate_max_file_size && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $ref,
-                'thumbonly' => false,
-                'extension' => $extension
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
+        if ($filesize>$preview_generate_max_file_size)
+            { 
+            if ($offline_job_queue)
+                {
+                $create_previews_job_data = array(
+                    'resource' => $ref,
+                    'thumbonly' => false,
+                    'extension' => $extension
+                );
+                $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
+                $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
 
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text); 
+                }
+
             return false;
             }
         }
