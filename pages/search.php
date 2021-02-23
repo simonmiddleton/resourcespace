@@ -37,6 +37,8 @@ if ($k=="" || $internal_share_access)
             $usercollection=$user['current_collection'];
             }
         }
+    // Get usercollection resources - used for checks against the list (e.g is one of the resources found by search in the collection?)
+    $usercollection_resources = get_collection_resources($usercollection);
     }
 
 // Disable checkboxes for external users.
@@ -364,9 +366,6 @@ if($use_selection_collection)
         $selection_collection_resources_count = count($selection_collection_resources);
         }
     }
-
-// Get usercollection resources - used for checks against the list (e.g is one of the resources found by search in the collection?)
-$usercollection_resources = get_collection_resources($usercollection);
 
 $hiddenfields=getvalescaped("hiddenfields","");
 
