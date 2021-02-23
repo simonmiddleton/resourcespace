@@ -2,10 +2,12 @@
 include_once dirname(__FILE__) . "/../../include/db.php";
 include_once dirname(__FILE__) . "/../../include/image_processing.php";
 
-$cli_short_options = 'h';
+$cli_short_options = 'hc';
 $cli_long_options  = array(
     'help',
-    'send-notifications'
+    'send-notifications',
+    'suppress-output',
+    'clearlock'
 );
 
 $sapi_type = php_sapi_name();
@@ -14,21 +16,35 @@ if (substr($sapi_type, 0, 3) != 'cli')
     exit("Command line execution only.");
     }
 
-$send_notification = false;
+$send_notification  = false;
+$suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;
 
 // CLI options check
 foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
     if(in_array($option_name, array('h', 'help')))
         {
-        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notifiaction please run php staticsync.php --send-notifications' . PHP_EOL;
+        echo "To clear the lock after a failed run, ";
+        echo "pass in '--clearlock'" . PHP_EOL;
+        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notification please run php staticsync.php --send-notifications' . PHP_EOL;
         exit(1);
+        }
+    if (in_array($option_name, array('clearlock', 'c')) )
+        {
+        if (is_process_lock("staticsync") )
+            {
+            clear_process_lock("staticsync");
+            }
         }
 
     if('send-notifications' == $option_name)
         {
         $send_notification = true;
         }
+    if('suppress-output' == $option_name)
+        {
+        $suppress_output = true;
+        }    
     }
 
 if(isset($staticsync_userref))
@@ -41,28 +57,12 @@ if(isset($staticsync_userref))
     }
 
 ob_end_clean();
-set_time_limit(60*60*40);
-
-if ($argc == 2)
+if($suppress_output)
     {
-    if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
-        {
-        echo "To clear the lock after a failed run, ";
-        echo "pass in '--clearlock', '-clearlock', '-c' or '--c'." . PHP_EOL;
-        exit("Bye!");
-        }
-    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
-        {
-        if ( is_process_lock("staticsync") )
-            {
-            clear_process_lock("staticsync");
-            }
-        }
-    else
-        {
-        exit("Unknown argv: " . $argv[1]);
-        }
-    } 
+    ob_start();
+    }
+
+set_time_limit(60*60*40);
 
 # Check for a process lock
 if (is_process_lock("staticsync")) 
@@ -205,6 +205,11 @@ function ProcessFolder($folder)
     $collection = 0;
     $treeprocessed=false;
     
+    if(!file_exists($folder))
+        {
+        echo "Sync folder does not exist: " . $folder . PHP_EOL;
+        return false;
+        }
     echo "Processing Folder: " . $folder . PHP_EOL;
     
     # List all files in this folder.
@@ -430,13 +435,13 @@ function ProcessFolder($folder)
                                HAVING count(DISTINCT cr.resource) > 0",
                             COLLECTION_TYPE_FEATURED,
                             sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
-                            escape_check($name)
+                            escape_check(ucwords($name))
                         ),
                         0);
 
                     if($collection == 0)
                         {
-                        $collection = create_collection($userref, $name);
+                        $collection = create_collection($userref, ucwords($name));
                         echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
 
                         $updated_fc_category = save_collection(
@@ -592,7 +597,7 @@ function ProcessFolder($folder)
                                                 {
                                                 $given_value=$value;
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-                                                if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                if(in_array($field_info['type'],array(0,1,4,5,6,8)))
                                                     {
                                                     $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
                                                     $value=append_field_value($field_info,$value,$old_value);
@@ -1122,6 +1127,11 @@ if(count($errors) > 0)
     }
         
 echo "...Complete" . PHP_EOL;
+
+if($suppress_output)
+    {
+    ob_clean();
+    }
 
 sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 
