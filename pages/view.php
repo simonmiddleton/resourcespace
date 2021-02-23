@@ -730,7 +730,7 @@ else if(1 == $resource['has_image'])
         $hide_real_filepath = $hide_real_filepath_initial;
 
         $previewimagelink = generateURL(
-            "{$baseurl}/lib/pdfjs-2.4.456/web/viewer.php",
+            "{$baseurl}/lib/pdfjs/web/viewer.php",
             $urlparams,
             array(
                 'ref'  => $ref,
