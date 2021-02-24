@@ -26,8 +26,8 @@ $url_params=
 $new_group_name=getvalescaped("newusergroupname","");
 if ($new_group_name!="" && enforcePostRequest(false))
     {
-    $setoptions =array("request_mode" => 1);
-    $ref = save_usergroup($new_group_name, $setoptions);
+    $setoptions =array("request_mode" => 1, "name" => $new_group_name);
+    $ref = save_usergroup(0, $setoptions);
 
     log_activity(null,LOG_CODE_CREATED,null,'usergroup',null,$ref);
     log_activity(null,LOG_CODE_CREATED,$new_group_name,'usergroup','name',$ref,null,'');
