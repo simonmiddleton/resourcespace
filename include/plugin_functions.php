@@ -456,7 +456,7 @@ function display_rsc_upload($upload_status)
   <br />
   <h2><?php echo $lang['plugins-upload-title']?></h2>
   <?php if ($upload_status!='') echo '<p>' . $upload_status . '</p>'?>
-  <form id="form2" enctype="multipart/form-data" name="form2" method="post" action="">
+  <form id="form2" enctype="multipart/form-data" name="form2" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     <div class="Question">
       <?php generateFormToken("form2"); ?>
       <input type="hidden" name="MAX_FILE_SIZE" value="32768" />
@@ -610,7 +610,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         echo $plugin_page_frontm;
         }
 ?>
-        <form id="form1" name="form1" method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+        <form id="form1" name="form1" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     <?php
     generateFormToken("form1");
 
