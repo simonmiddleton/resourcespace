@@ -3673,12 +3673,15 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
                 urlencode($user_mycollection)
             );
             
-            $options[$o]['value'] = 'hide_collection';
-            $options[$o]['label'] = $lang['hide_collection'];
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
-            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
-            $options[$o]['order_by']  = 270;
-            $o++;
+            if ($pagename != "load_actions")
+                {
+                $options[$o]['value'] = 'hide_collection';
+                $options[$o]['label'] = $lang['hide_collection'];
+                $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
+                $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+                $options[$o]['order_by']  = 270;
+                $o++;
+                }
         }
         }
         
