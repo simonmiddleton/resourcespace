@@ -1191,7 +1191,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         $errors = array_merge($errors, $plg_errors);
         }
 
-	if (count($errors)==0) {return true;} else {return $errors;}
+	if (count($errors)==0) {daily_stat("Resource edit", $ref); return true;} else {return $errors;}
 	}
 	
 
@@ -1320,6 +1320,9 @@ function save_resource_data_multi($collection,$editsearch = array())
     // set up arays to add to all resources to make query more efficient when only appending or removing options
     $all_nodes_to_add    = array();
     $all_nodes_to_remove = array();
+
+    $successfully_edited_resources = array();
+
 	for ($n=0;$n<count($fields);$n++)
 		{
 		if('' != getval('editthis_field_' . $fields[$n]['ref'], '') || hook('save_resource_data_multi_field_decision', '', array($fields[$n]['ref'])))
@@ -1378,7 +1381,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     {
                     $ref            = $list[$m];
                     $value_changed  = false;
-                    
+
                     $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);                    
                     debug('Current nodes: ' . implode(',',$current_field_nodes));
 
@@ -1398,6 +1401,8 @@ function save_resource_data_multi($collection,$editsearch = array())
 						{
 						$existing_nodes_value = '';
 						$new_nodes_val        = '';
+
+                        $successfully_edited_resources[] = $ref;
 
 						// Build new value:
 						foreach($new_nodes as $new_node)
@@ -1510,6 +1515,12 @@ function save_resource_data_multi($collection,$editsearch = array())
                         {
                         // Log this change, nodes will actually be added later
                         log_node_changes($ref,$added_nodes,$removed_nodes);
+
+                        foreach ($list as $key => $ref) 
+                            {
+                            $successfully_edited_resources[] = $ref;
+                            }
+                            
                         $val = $newval;
                         # If this is a 'joined' field it still needs to add it to the resource column
                         $joins=get_resource_table_joins();
@@ -1697,7 +1708,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                         # This value is different from the value we have on record.                        
                         # Write this edit to the log.
                         resource_log($ref,LOG_CODE_MULTI_EDITED,$fields[$n]["ref"],"",$existing,$val);
-            
+                        $successfully_edited_resources[] = $ref;
+
                         # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                         if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
                     
@@ -1793,6 +1805,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             if(0 < count($ok))
                 {
                 sql_query("INSERT INTO resource_related(resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$ok) . ")");
+                $successfully_edited_resources[] = $ref;
                 }
             }
         }
@@ -1811,7 +1824,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                 {
                 $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
                 $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching
-                
+                $successfully_edited_resources[] = $ref;
+
                 $set_archive_state_hook = hook("save_resource_data_multi_set_archive_state", "", array($ref, $oldarchive));
                 if($set_archive_state_hook !== false && is_numeric($set_archive_state_hook))
                     {
@@ -1836,8 +1850,14 @@ function save_resource_data_multi($collection,$editsearch = array())
 		{
 		if (count($list)>0)
 			{
+            $successfully_edited_resources[] = $ref;
 			sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
 			}
+
+        foreach ($list as $key => $ref) 
+            {
+            $successfully_edited_resources[] = $ref;
+            }
 		}
 	
 	# Also update access level
@@ -1854,6 +1874,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $olduser=get_user($created_by,true);
                 $newuser=get_user($new_created_by,true);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
+                $successfully_edited_resources[] = $ref;
                 }
             }
         }    
@@ -1875,6 +1896,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     delete_resource_custom_access_usergroups($ref);
                     }
 				resource_log($ref,LOG_CODE_ACCESS_CHANGED,0,"",$oldaccess,$access);
+                $successfully_edited_resources[] = $ref;
 				}
 			
 			# For access level 3 (custom) - also save custom permissions
@@ -1889,6 +1911,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 			{
 			$ref=$list[$m];
 			update_resource_type($ref,getvalescaped("resource_type",""));
+            $successfully_edited_resources[] = $ref;
 			}
 		}
 		
@@ -1908,6 +1931,11 @@ function save_resource_data_multi($collection,$editsearch = array())
 				{
 				sql_query("update resource set geo_lat=null,geo_long=null where ref in (" . join(",",$list) . ")");
 				}
+
+            foreach ($list as $key => $ref) 
+                {
+                $successfully_edited_resources[] = $ref;
+                }
 			}
 		}
 
@@ -1925,6 +1953,11 @@ function save_resource_data_multi($collection,$editsearch = array())
 				{
 				sql_query("update resource set mapzoom=null where ref in (" . join(",",$list) . ")");
 				}
+
+            foreach ($list as $key => $ref) 
+                {
+                $successfully_edited_resources[] = $ref;
+                }
 			}
 		}
 
@@ -1936,6 +1969,16 @@ function save_resource_data_multi($collection,$editsearch = array())
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);
+        }
+
+    if(!empty($successfully_edited_resources))
+        {
+        $successfully_edited_resources = array_unique($successfully_edited_resources);
+
+        foreach ($successfully_edited_resources as $key => $ref) 
+            {
+            daily_stat("Resource edit", $ref);
+            }            
         }
 
     if (count($errors)==0) {return true;} else {return $errors;}

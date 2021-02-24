@@ -500,8 +500,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
                 {
-                # Log this
-                daily_stat("Resource edit",$ref);
                 if ($upload_review_mode)
                     {
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
