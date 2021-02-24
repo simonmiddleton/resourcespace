@@ -214,10 +214,12 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 */
 function annotationEditable(array $annotation)
     {
+    debug('[annotations][annotationEditable] Checking annotation is editable...');
     global $userref, $annotate_read_only, $annotate_crud_anonymous;
 
     if($annotate_read_only)
         {
+        debug('[annotations][annotationEditable][info] read-only annotation! System is configured with annotate_read_only = true');
         return false;
         }
 
@@ -315,8 +317,10 @@ function createAnnotation(array $annotation)
 
     if(!annotationEditable($annotation))
         {
+        debug('[annotations][createAnnotation][warn] annotation not editable');
         return false;
         }
+    debug('[annotations][createAnnotation] attempting to create annotation...');
 
     // Annotorious annotation
     $x      = escape_check($annotation['shapes'][0]['geometry']['x']);
@@ -335,19 +339,22 @@ function createAnnotation(array $annotation)
     sql_query($query);
 
     $annotation_ref = sql_insert_id();
+    debug('[annotations][createAnnotation] annotation_ref = ' . json_encode($annotation_ref));
 
     if(0 == $annotation_ref)
         {
+        debug('[annotations][createAnnotation][warn] Unable to create annotation');
         return false;
         }
 
-    // Prepare tags before association by adding new nodes to 
-    // dynamic keywords list (if permissions allow it)
+    // Prepare tags before association by adding new nodes to dynamic keywords list (if permissions allow it)
     $prepared_tags = prepareTags($tags);
+    debug('[annotations][createAnnotation] prepared_tags = ' . json_encode($prepared_tags));
 
     // Add any tags associated with it
     if(0 < count($tags))
         {
+        debug('[annotations][createAnnotation] associating annotation node with resource #' . $resource);
         addAnnotationNodes($annotation_ref, $prepared_tags);
         add_resource_nodes($resource, array_column($prepared_tags, 'ref'), false);
         }
@@ -449,6 +456,7 @@ function updateAnnotation(array $annotation)
 */
 function addAnnotationNodes($annotation_ref, array $nodes)
     {
+    debug(sprintf('[annotations][addAnnotationNodes] Called function with annotation_ref = %s and nodes = %s', $annotation_ref, json_encode($nodes)));
     if(0 === count($nodes))
         {
         return false;

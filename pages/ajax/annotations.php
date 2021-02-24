@@ -38,8 +38,11 @@ if('get_resource_annotations' == $action)
 // Create new annotation
 if('create' == $action && 0 < $resource)
     {
+    debug('[annotations][annotations.php] Request to create new annotation...');
+    debug('[annotations][annotations.php] annotation object is ' . json_encode($annotation));
     if(0 === count($annotation))
         {
+        debug('[annotations][annotations.php][error] No annotation object');
         $return['error'] = array(
             'status' => 400,
             'title'  => 'Bad Request',
@@ -50,9 +53,11 @@ if('create' == $action && 0 < $resource)
         }
 
     $annotation_id = createAnnotation($annotation);
+    debug('[annotations][annotations.php] annotation_id = ' . json_encode($annotation_id));
 
     if(false === $annotation_id)
         {
+        debug('[annotations][annotations.php][error] No annotation_id!');
         $return['error'] = array(
             'status' => 500,
             'title'  => 'Internal Server Error',
