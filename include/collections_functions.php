@@ -1142,7 +1142,7 @@ function save_collection($ref, $coldata=array())
 
                 continue;
                 }
-            if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
+            if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt] && $colopt != "users")
                 {
                 $sqlset[$colopt] = $colset;
                 }
@@ -1213,7 +1213,7 @@ function save_collection($ref, $coldata=array())
 	index_collection($ref);
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-	if (isset($coldata["users"]) && $coldata["users"]!="")
+	if (isset($coldata["users"]))
         {
         $old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
         $new_attached_users=array();
