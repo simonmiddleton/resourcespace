@@ -1770,12 +1770,13 @@ if(     ($replace_resource != ''
             <?php
             }
         }
-
+    ?>
+    </form>
+    </div><!-- End of UploadOptionsSection -->
+    <?php
     } // End of upload options
 hook('plupload_before_status');
 if ($status!="") { ?><?php echo $status?><?php } ?>
-</form>
-</div><!-- End of UploadOptionsSection -->
 </div>
 
 <?php 
