@@ -478,7 +478,9 @@ function collection_writeable($collection)
         // Collection has been shared but is not public AND user is either attached or in attached group
         || ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
         // System admin
-        || checkperm("a");
+        || checkperm("a")
+        // Adding to active upload_share
+        || upload_share_active() == $collection;
     return $writable;
 
     }
