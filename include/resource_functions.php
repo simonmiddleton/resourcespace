@@ -3426,7 +3426,7 @@ function copy_resource($from,$resource_type=-1)
 		}
 
 	# Now copy all data
-	copyResourceDataValues($from,$to);
+	copyResourceDataValues($from,$to,$resource_type);
 	
     # Copy nodes
     copy_resource_nodes($from,$to);
@@ -6444,7 +6444,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 * 
 * @return void
 */    
-function copyResourceDataValues($from, $to)
+function copyResourceDataValues($from, $to, $resource_type = "")
     {
     $from            = escape_check($from);    
     $to              = escape_check($to);
@@ -6457,6 +6457,14 @@ function copyResourceDataValues($from, $to)
         $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
         $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
         }
+    
+    $resource_type_sql = "AND (rtf.resource_type = r.resource_type OR rtf.resource_type = 999 OR rtf.resource_type = 0)";
+    // Don't consider resource types if saving metadata template as fields from all types should be copied.
+    global $metadata_template_resource_type;
+    if (isset($metadata_template_resource_type) && $resource_type==$metadata_template_resource_type)
+        {
+        $resource_type_sql = "";
+        }
 
     sql_query("
         INSERT INTO resource_data(resource, resource_type_field, value)
@@ -6466,11 +6474,7 @@ function copyResourceDataValues($from, $to)
                FROM resource_data AS rd
                JOIN resource AS r ON rd.resource = r.ref
                JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
-                    AND (
-                            rtf.resource_type = r.resource_type
-                            OR rtf.resource_type = 999
-                            OR rtf.resource_type = 0
-                        )
+               {$resource_type_sql}
               WHERE rd.resource = '{$from}'
                 {$omit_fields_sql}
     ");

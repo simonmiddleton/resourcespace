@@ -665,7 +665,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // If noupload is set - create resource without uploading stage
                         if (getval("noupload","") != "")
                             {
-                            $ref=copy_resource(0-$userref);
+                            $ref=copy_resource(0-$userref,$resource_type);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
                             // Create new collection if necessary
