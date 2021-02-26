@@ -2870,8 +2870,22 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $fields = sql_query($fieldsSQL);
 
+    # Build an array of valid types and only return fields of this type. Translate field titles. 
+    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
+
+    # Support archive and global.
+    $validtypes[] = 0;
+    $validtypes[] = 999;
+
     // Add category tree values, reflecting tree structure
-    $tree_fields = get_resource_type_fields(array('0',$rtype),"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    $tree_resource_types = array('0',$rtype);
+    if ($multi)
+        {
+        // All resource types checked as this is a metadata template.
+        $tree_resource_types = $validtypes;
+        }
+
+    $tree_fields = get_resource_type_fields($tree_resource_types,"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     foreach($tree_fields as $tree_field)
         {
         $addfield= $tree_field;
@@ -2905,13 +2919,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
-
-    # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
-
-    # Support archive and global.
-    $validtypes[] = 0;
-    $validtypes[] = 999;
 
     // Resource types can be configured to not have global fields in which case we only present the user fields valid for
     // this resource type
