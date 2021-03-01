@@ -684,6 +684,17 @@ if ($research!="")
 	else
 		{
 		set_user_collection($userref,$col);
+		# Add research request collection for collection bar actions and name fields.
+		$cinfo = get_collection($col);
+		$collection_refs = array();
+		foreach ($list as $col_ref)
+		    {
+		    $collection_refs[] = $col_ref["ref"];
+		    }
+		if (!in_array($col,$collection_refs))
+		    {
+		    $list[] = $cinfo;
+		    }
 		}
 	hook("postresearch");
 	}
