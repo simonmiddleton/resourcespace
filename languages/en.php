@@ -455,7 +455,7 @@ $lang["background_most_popular_images"] = "Most popular %n images";
 $lang["background_manual_selection"] = "Choose an image";
 $lang["background_manual_selection_resource_label"] = "Background image - resource ID";
 $lang["share_fc_warning"] = "Please note that when sharing a featured collection category only featured collections that contain resources will be externally shared.";
-$lang["featured_collection_root_category"] = "(root level)";
+$lang["featured_collection_root_category"] = "(top level)";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";
