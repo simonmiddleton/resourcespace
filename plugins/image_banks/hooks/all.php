@@ -61,7 +61,7 @@ function HookImage_banksAllSearchfiltertop()
                     siblings.each(function()
 						{
                         qid = this.id.substring(13);
-                        if(!clearhiddenfields.includes(qid))
+                        if(typeof clearhiddenfields == "object" && !clearhiddenfields.includes(qid))
                             {
                             jQuery(this).show();
                             }

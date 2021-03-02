@@ -251,10 +251,19 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         <?php 
         if(!$displaycondition && $forsearchbar)
             {
-            // Add to array to make sure hidden when form is cleared
-            echo "clearhiddenfields.push('" . $field["ref"] . "');";
-            }
-        ?>
+            // Create or add to array of fields to hide when clearing search
+            ?>
+            if(typeof clearhiddenfields == "object")
+                {
+                clearhiddenfields.push('<?php echo $field["ref"]; ?>');
+                }
+            else
+                {
+                clearhiddenfields = new Array('<?php echo $field["ref"]; ?>');
+                }
+            <?php
+            }?>
+
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
             // Check the node passed in from the changed governing field

@@ -328,9 +328,6 @@ if (!$basic_simple_search)
     <?php if ($searchbar_selectall) { ?>
     <script type="text/javascript"> 
 
-    // Create array of fields to hide when clearing 
-    var clearhiddenfields = new Array;
-
     function resetTickAll(){
         var checkcount=0;
         // set tickall to false, then check if it should be set to true.
