@@ -4878,7 +4878,7 @@ function get_resource_access($resource)
 	// We need to check for custom access either when access is set to be custom or
 	// when the user group has restricted access to all resource types or specific resource types
 	// are restricted
-    if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type))
+    if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type) || checkperm("rws{$resourcedata['archive']}"))
         {
         if ($passthru=="no")
             {
