@@ -565,10 +565,11 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 
 function ajax_download(download_offline, tar)
 	{
+    console.debug('ajax_download(download_offline = %o, tar = %o)', download_offline, tar);
     var ifrm = document.getElementById('downloadiframe');
     ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
 
-    if(download_offline)
+    if(download_offline && !tar)
         {
         styledalert('<?php echo $lang['collection_download']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
         document.getElementById('downloadbuttondiv').style.display='none';
