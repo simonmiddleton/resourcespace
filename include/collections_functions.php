@@ -3900,27 +3900,10 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
 	$basename_minus_extension=remove_extension($pathparts['basename']);
 
-    $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
-
-  
-    
-    // check if a file has already been processed with this name
-    if(in_array($filename, $filenames))
-        {
-        $path_parts = pathinfo($filename);
-        if(isset($path_parts['extension']) && isset($path_parts['filename']))
-            {
-            $filename_ext = $path_parts['extension'];
-            $filename_wo  = $path_parts['filename'];
-
-            // Run through function to guarantee unique filename
-            $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
-            }
-        }
-    
-    // Add the filename to the array so it can be checked in the next loop
-    $filenames[] = $filename;
-
+    $fs=explode("/",$filename);
+    $filename=$fs[count($fs)-1]; 
+    set_unique_filename($filename,$filenames);
+   
     # Copy to tmp (if exiftool failed) or rename this file
     # this is for extra efficiency to reduce copying and disk usage
     

@@ -4614,3 +4614,28 @@ for ($n=0;$n<count($i);$n++)
     }
 return false;
 }
+
+/**
+ * Ensures filename is unique in $filenames array and adds resulting filename to the array
+ *
+ * @param  string $filename     Requested filename to be added. Passed by reference
+ * @param  array $filenames     Array of filenames already in use. Passed by reference
+ * @return string               New filename 
+ */
+function set_unique_filename(&$filename,&$filenames)
+    {
+    global $lang;
+    if(in_array($filename,$filenames))
+        {
+        $path_parts = pathinfo($filename);
+        if(isset($path_parts['extension']) && isset($path_parts['filename']))
+            {
+            $filename_ext = $path_parts['extension'];
+            $filename_wo  = $path_parts['filename'];
+            // Run through function to guarantee unique filename
+            $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
+            }
+        }
+    $filenames[] = $filename; 
+    return $filename;
+    }
