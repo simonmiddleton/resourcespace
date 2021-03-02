@@ -302,13 +302,7 @@ $lang["resources_uploaded-n"]="%done% Ressourcen erfolgreich hochgeladen."; # %d
 $lang["resources_failed-0"]="0 Ressourcen fehlgeschlagen.";
 $lang["resources_failed-1"]="1 Ressource fehlgeschlagen.";
 $lang["resources_failed-n"]="%done% Ressourcen fehlgeschlagen."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Einrichtung des FTP-Servers";
-$lang["ftpserver"]="FTP-Server";
-$lang["ftpusername"]="FTP-Benutzername";
-$lang["ftppassword"]="FTP-Password";
-$lang["ftpfolder"]="FTP-Verzeichnis";
 $lang["connect"]="Verbinden";
-$lang["uselocalupload"]="ODER: Verwenden Sie das lokale 'upload'-Verzeichnis anstelle des FTP-Servers.";
 
 # User contributions
 $lang["contributenewresource"]="Neue Ressource einreichen";
@@ -863,9 +857,7 @@ $lang["warningexpiredtext"]="Warnung! Diese Ressource hat das Ablaufdatum übers
 $lang["warningexpiredok"]="&gt; Ressourcen-Download aktivieren";
 $lang["userrequestcomment"]="Kommentar";
 $lang["addresourcebatchbrowser"]="Ressourcen hinzufügen - Im Browser";
-$lang["addresourcebatchbrowserjava"]="Ressourcen hinzufügen - Im Browser (Java, alte Version)";
 
-$lang["addresourcebatchftp"]="Ressourcen hinzufügen - FTP";
 $lang["replaceresourcebatch"]="Ressourcen ersetzen";
 $lang["editmode"]="Bearbeitungsmodus";
 $lang["replacealltext"]="Alle Texte ersetzen";
@@ -995,7 +987,6 @@ $lang["hidealllanguages"]="Alle Sprachen verstecken";
 $lang["clicktologinasthisuser"]="Als dieser Benutzer anmelden";
 $lang["addkeyword"]="Stichwort hinzufügen";
 $lang["selectedresources"]="Ausgewählte Ressourcen";
-$lang["addresourcebatchlocalfolder"]="Ressourcen hinzufügen - aus Upload Ordner";
 $lang["phpextensions"]="PHP Extensions";
 
 # Setup Script
@@ -1081,8 +1072,6 @@ $lang["setup-storage_directory"]="Storage Verzeichnis";
 $lang["setup-if_storagedirectory"]="In welchem Verzeichnis sollen die Dateien abgelegt werden. Kann absolut sein (/var/www/blah/blah) oder relativ zur RS Installation. HINWEIS: Kein / am Ende.";
 $lang["setup-storage_url"]="Storage URL";
 $lang["setup-if_storageurl"]="Wie kann per HTTP auf das Storage Verzeichnis zugegriffen werden? Kann absolut sein (http://files.example.com) oder relativ zur RS Installation. HINWEIS: Kein / am Ende.";
-$lang["setup-ftp_settings"]="FTP Einstellungen";
-$lang["setup-if_ftpserver"]="Nur notwendig, wenn Sie planen, die FTP Upload Funktion zu nutzen.";
 $lang["design-options"]="Design Optionen";
 $lang["use-slim-theme"]="SlimHeader Design verwenden";
 $lang["setup-if_slimtheme"]="SlimHeader Design verwenden für einen schmaleren Header mit verlinktem Logo.";
@@ -1623,12 +1612,8 @@ $lang["error-collectionnotfound"]="Kollektion nicht gefunden.";
 
 $lang["header-upload-subtitle"] = "Schritt %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Lokaler Upload Ordner";
-$lang["ftp_upload_path"] = "FTP Ordner";
 $lang["foldercontent"] = "Ordnerinhalt";
 $lang["intro-local_upload"] = "Wählen Sie eine oder mehrere Dateien vom lokalen Upload Ordner aus und klicken Sie auf <b>Upload</b>. Nachdem die Dateien hochgeladen sind, können Sie aus dem Upload Ordner gelöscht werden.";
-$lang["intro-ftp_upload"] = "Wählen Sie eine oder mehrere Dateien vom FTP Ordner aus und klicken Sie <b>Upload</b> an.";
-$lang["intro-java_upload"] = "Klicken Sie auf <b>Durchsuchen</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Upload</b> an.";
-$lang["intro-java_upload-replace_resource"] = "Klicken Sie auf <b>Durchsuchen</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Upload</b> an.";
 $lang["intro-single_upload"] = "Klicken Sie auf <b>Durchsuchen</b>, um eine Datei auszuwählen, und klicken Sie dann <b>Upload</b> an.";
 $lang["intro-plupload"] = "Klicken Sie auf <b>+ Dateien</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Hochladen</b> an.";
 $lang["intro-plupload_dragdrop"] = "Ziehen Sie oder Klicken Sie <b>+ Dateien</b>, um eine oder mehrere Dateien auszuwählen, und klicken Sie dann <b>Hochladen</b> an.";
@@ -1957,9 +1942,6 @@ $lang["resource_request__introtext"]="Die Ressource, die Sie herunterladen möch
 $lang["search_advanced__introtext"]="<strong>Suchtipp</strong><br />\nJeder Bereich, den Sie nicht ausfüllen / anklicken, liefert alle Ergebnisse aus dem Bereich.";
 $lang["tag__introtext"]="Verbessern Sie die Suchergebnisse, indem Sie Ressourcen taggen. Sagen Sie, was Sie sehen, getrennt durch Leerzeichen oder Komma... z.B.: Hund, Haus, Ball, Geburtstag, Kuchen. Geben Sie den vollen Namen von Personen in Fotos und die Ort der Aufnahme an, wenn bekannt.";
 $lang["team_archive__introtext"]="Um einzelne Ressourcen im Archiv zu bearbeiten, suchen Sie einfach nach den Ressourcen und klicken auf \"bearbeiten\" unter \"Ressourcen-Werkzeuge\". Alle Ressourcen, die archiviert werden sollen, werden in der Liste \"Archivierung noch nicht erledigt\" angezeigt. Von dieser Liste aus können Sie weitere Informationen ergänzen und die Ressource ins Archiv verschieben.";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_copy__introtext"]="Geben Sie die ID der Ressource ein, die Sie kopieren möchten. Nur die Metadaten der Ressource werden kopiert – hochgeladene Dateien werden nicht kopiert.";
 $lang["team_home__introtext"]="Willkommen in der Administration. Bitte benutzen Sie die untenstehenden Links, um die Ressourcen zu verwalten, auf Ressourcenanfragen zu antworten, Themen zu verwalten und die Systemeinstellungen zu bearbeiten.";
 $lang["team_report__introtext"]="Bitte wählen Sie einen Bericht und einen Zeitraum. Der Bericht kann in Microsoft Excel oder einer anderen Tabellenkalkulation geöffnet werden.";

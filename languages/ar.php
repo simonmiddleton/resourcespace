@@ -93,13 +93,7 @@ $lang["uploadinprogress"]=" تحميل والتحجيم في التقدم ";
 $lang["donotmoveaway"]=" هام : لا تبحر بعيدا عن هذه الصفحة حتى اكتمال التحميل! ";
 $lang["pleaseselectfiles"]=" يرجى اختيار واحد أو أكثر لإيداع الملفات. ";
 $lang["uploadcomplete"]=" تحميل كامل ";
-$lang["specifyftpserver"]=" تحديد البعيد خادم بروتوكول نقل الملفات ";
-$lang["ftpserver"]=" خادم بروتوكول نقل الملفات ";
-$lang["ftpusername"]=" بروتوكول نقل الملفات المستخدم ";
-$lang["ftppassword"]=" بروتوكول نقل الملفات كلمة السر ";
-$lang["ftpfolder"]=" بروتوكول نقل الملفات مجلد ";
 $lang["connect"]=" الاتصال ";
-$lang["uselocalupload"]=" أو : استخدام المحلي 'تحميل' المجلد بدلا من بعيد خادم بروتوكول نقل الملفات ";
 
 # User contributions
 $lang["contributenewresource"]=" تساهم الموارد الجديدة ";
@@ -492,9 +486,7 @@ $lang["warningexpiredtext"]=" تحذير! هذا المورد قد تجاوز ت
 $lang["warningexpiredok"]=" > تمكين الموارد تنزيل ";
 $lang["userrequestcomment"]=" التعليق ";
 $lang["addresourcebatchbrowser"]=" إضافة الموارد الدفعية -- في المستعرض (فلاش) ";
-$lang["addresourcebatchbrowserjava"]=" إضافة الموارد الدفعية -- في المستعرض (جافا -- أوصت) ";
 
-$lang["addresourcebatchftp"]=" إضافة الموارد الدفعية -- إحضار من خادم بروتوكول نقل الملفات ";
 $lang["replaceresourcebatch"]=" استبدال الموارد الدفعية ";
 $lang["editmode"]=" وضع التحرير ";
 $lang["replacealltext"]=" استبدال كل نص / والخيار (ليالي ";
@@ -630,7 +622,6 @@ $lang["noattachedusers"]=" لم تعلق المستخدمين. ";
 $lang["confirmdeleteaccess"]=" هل أنت متأكد من أنك تريد حذف هذا المفتاح الوصول؟ المستخدمين الذين منحوا الوصول باستخدام هذا المفتاح لن يكون قادرا على الوصول إلى هذه المجموعة. ";
 $lang["noexternalsharing"]=" أي تقاسم الخارجية. ";
 $lang["sharedcollectionaddwarning"]=" تحذير : هذه المجموعة قد تم تبادلها مع المستخدمين الخارجيين. المورد أضفتها الآن أتيحت لهؤلاء المستخدمين. انقر فوق 'سهم' لإدارة الوصول الخارجي لهذه المجموعة. ";
-$lang["addresourcebatchlocalfolder"]=" إضافة الموارد الدفعية -- إحضار من مجلد تحميل المحلية ";
 # Setup Script
 $lang["setup-alreadyconfigured"]=" ResourceSpace التثبيت الخاص بك تم تكوينه مسبقا. إلى تكوين ، قد تشمل حذف <pre>/ config.php </ قبل> ونقطة المتصفح إلى هذه الصفحة مرة أخرى. ";
 $lang["setup-successheader"]=" تهانينا! ";
@@ -773,8 +764,6 @@ $lang["new_resource"]=" مورد جديد ";
 
 $lang["invalidextension_mustbe"]=" صالح التمديد ، يجب أن تكون ";
 $lang["allowedextensions"]=" ملحقات مسموح ";
-
-$lang["alternativebatchupload"]=" تحميل الملفات دفعة بديلة (جافا) ";
 
 $lang["confirmdeletefieldoption"]=" هل أنت متأكد من أنك تريد حذف هذا الخيار الميدان؟ ";
 

@@ -253,13 +253,6 @@ $show_language_chooser=true;
 # Allow Browser Language Detection
 $browser_language=true;
 
-# FTP settings for batch upload
-# Only necessary if you plan to use the FTP upload feature.
-$ftp_server="my.ftp.server";
-$ftp_username="my_username";
-$ftp_password="my_password";
-$ftp_defaultfolder="temp/";
-
 # Can users change passwords?
 $allow_password_change=true;
 
@@ -2052,18 +2045,10 @@ $advanced_search_buttons_top=false;
 # Controls are :
 # - single_upload            : Enable / disable "Add Single Resource"
 # - in_browser_upload        : Enable / disable "Add Resource Batch - In Browser"
-# - fetch_from_ftp           : Enable / disable "Add Resource Batch - Fetch from FTP server"
-# - fetch_from_local_folder  : Enable / disable "Add Resource Batch - Fetch from local upload folder"
 $upload_methods = array(
 		'single_upload' => true,
-		'in_browser_upload' => true,
-		'fetch_from_ftp' => true,
-		'fetch_from_local_folder' => true,
+		'in_browser_upload' => true
 	);
-
-# Allow to change the location of the upload folder, so that it is not in the
-# web visible path. Relative and abolute paths are allowed.
-$local_ftp_upload_folder = '';
 
 # Hide links to other uploader
 $hide_uploadertryother = false;

@@ -57,7 +57,6 @@ else
     }
     
 $collection_add = getvalescaped('collection_add', '');
-$local = getvalescaped("local","");
 if($embedded_data_user_select)
   {
   $no_exif=getval("exif_option","");
@@ -72,7 +71,6 @@ $uploadparams = array();
 $uploadparams["relateto"] = getval("relateto","");
 $uploadparams["redirecturl"] =  getval("redirecturl","");
 $uploadparams["collection_add"] =  $collection_add;
-$uploadparams["local"] =  $local;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
@@ -691,14 +689,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             exit();
                             }
                         redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
-                        }
-                    elseif (getval("local","") != "" || $uploader == "local")// Test if fetching resource from local upload folder.
-                        {
-                        redirect(generateURL($baseurl_short . "pages/team/team_batch_select.php",array_merge($urlparams,$uploadparams), array("use_local"=>"yes")) . hook("addtouploadurl"));
-                        }
-                    elseif ($uploader == "ftp")
-                        {
-                        redirect(generateURL($baseurl_short . "pages/team/team_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     else
                         {
@@ -1328,16 +1318,6 @@ else
                 {
                 $titleh1 = $lang["addresource"]; # Add Single Resource
                 }
-            }
-        elseif ($uploader == "ftp")
-            {
-            # Add Resource Batch - Fetch from FTP server
-            $titleh1 = $lang["addresourcebatchftp"];
-            }
-        elseif ((getval("local","")!="")||($uploader == "local"))
-            {
-            # Add Resource Batch - Fetch from local upload folder
-            $titleh1 = $lang["addresourcebatchlocalfolder"];
             }
         else
             {
@@ -2275,7 +2255,6 @@ if(!hook('replacesubmitbuttons'))
 hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBox -->
-<?php if($uploader == 'ftp') { print '<input type="hidden" name="uploader" value="ftp" />'; } ?>
 </form>
 
 <script>

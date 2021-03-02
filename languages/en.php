@@ -334,11 +334,6 @@ $lang["resources_uploaded-n"]="%done% resources uploaded OK."; # %done% will be 
 $lang["resources_failed-0"]="0 resources failed.";
 $lang["resources_failed-1"]="1 resource failed.";
 $lang["resources_failed-n"]="%done% resources failed."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Specify remote FTP server";
-$lang["ftpserver"]="FTP server";
-$lang["ftpusername"]="FTP username";
-$lang["ftppassword"]="FTP password";
-$lang["ftpfolder"]="FTP folder";
 $lang["usesmtp"]="Use an SMTP Server for email sending / receiving";
 $lang["smtpsecure"]="SMTP Secure";
 $lang["smtphost"]="SMTP Host";
@@ -349,7 +344,6 @@ $lang["smtppassword"]="SMTP Password";
 
 
 $lang["connect"]="Connect";
-$lang["uselocalupload"]="OR: Use local 'upload' folder instead of remote FTP server";
 
 # User contributions
 $lang["contributenewresource"]="Contribute new resource";
@@ -1044,9 +1038,7 @@ $lang["warningexpiredtext"]="Warning! This resource has exceeded the expiry date
 $lang["warningexpiredok"]="&gt; Enable resource download";
 $lang["userrequestcomment"]="Comment";
 $lang["addresourcebatchbrowser"]="Upload resources";
-$lang["addresourcebatchbrowserjava"]="Add resource batch - in browser  - Java (legacy) ";
 
-$lang["addresourcebatchftp"]="Add resource batch - fetch from FTP server";
 $lang["replaceresourcebatch"]="Replace resource batch";
 $lang["editmode"]="Edit mode";
 $lang["replacealltext"]="Replace all text / option(s)";
@@ -1197,7 +1189,6 @@ $lang["clicktologinasthisuser"]="Click to log in as this user";
 $lang["clicktoviewlog"]="Click to view log";
 $lang["addkeyword"]="Add keyword";
 $lang["selectedresources"]="Selected resources";
-$lang["addresourcebatchlocalfolder"]="Add resource batch - fetch from local upload folder";
 $lang["phpextensions"]="PHP extensions";
 
 # Setup Script
@@ -1292,8 +1283,6 @@ $lang["setup-storage_directory"]="Storage directory";
 $lang["setup-if_storagedirectory"]="Where to put the media files. Can be absolute (/var/www/blah/blah) or relative to the installation. NOTE: No trailing slash.";
 $lang["setup-storage_url"]="Storage URL";
 $lang["setup-if_storageurl"]="Where the storagedir is available. Can be absolute (http://files.example.com) or relative to the installation. NOTE: No trailing slash.";
-$lang["setup-ftp_settings"]="FTP settings";
-$lang["setup-if_ftpserver"]="Only necessary if you plan to use the FTP upload feature.";
 $lang["setup-smtp-settings"]="SMTP Settings";
 $lang["setup-if-usesmtp"]="Use an external SMTP server for outgoing emails (e.g. Gmail). Uses PHPMailer";
 $lang["setup-if-smtpsecure"]="'', 'tls' or 'ssl'. For Gmail, 'tls' or 'ssl' is required.";
@@ -1404,7 +1393,6 @@ $lang["allowedextensions"]="Allowed extensions";
 $lang["allowedextensions-extensions"]="Allowed extensions: %EXTENSIONS"; # Use %EXTENSIONS, %extensions or %Extensions as a placeholder. The placeholder will be replaced with the filename extensions, using the same case. E.g. "Allowed Extensions: %EXTENSIONS" -> "Allowed Extensions: JPG, PNG"
 
 $lang["alternativebatchupload"]="Upload alternative files";
-$lang["alternativelocalupload"]="Upload alternative files - fetch from local upload folder";
 
 $lang["confirmdeletefieldoption"]="Are you sure you wish to DELETE this field option?";
 
@@ -1889,12 +1877,8 @@ $lang["error-collection-unreadable"] = "Your user doesn't have read access to co
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Local upload folder";
-$lang["ftp_upload_path"] = "FTP folder";
 $lang["foldercontent"] = "Folder content";
 $lang["intro-local_upload"] = "Select one or more files from the local upload folder and click  'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
-$lang["intro-ftp_upload"] = "Select one or more files from the FTP folder and click  'Upload'.";
-$lang["intro-java_upload"] = "Click  'Browse' to locate one or more files and then click  'Upload'.";
-$lang["intro-java_upload-replace_resource"] = "Click  'Browse' to locate a file and then click  'Upload'.";
 $lang["intro-single_upload"] = "Click  'Browse' to locate a file and then click  'Upload'.";
 $lang["intro-plupload"] = "Click 'Add files' to locate one or more files and then click 'Start upload'.";
 $lang["intro-plupload_dragdrop"] = "Drag and drop or click 'Add files' to locate one or more files and then click 'Start upload'.";
@@ -2332,9 +2316,6 @@ $lang["resource_request__introtext"]="Your request is almost complete. Please in
 $lang["search_advanced__introtext"]="<strong>Search Tip</strong><br />Any section that you leave blank, or unticked will include ALL those terms in the search. For example, if you leave all the country boxes empty, the search will return results from all those countries. If you select only 'Africa' then the results will ONLY contain resources from 'Africa'. ";
 $lang["tag__introtext"]="Help to improve search results by tagging resources. Say what you see, separated by spaces or commas... for example: dog, house, ball, birthday cake. Enter the full name of anyone visible in the photo and the location the photo was taken if known.";
 $lang["team_archive__introtext"]="To edit individual archive resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen. All resources that are ready to be archived are listed Resources Pending list. From this list it is possible to add further information and transfer the resource record into the archive. ";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_content__introtext"]="";
 $lang["team_copy__introtext"]="Enter the ID of the resource you would like to copy. Only the resource data will be copied - any uploaded file will not be copied.";
 $lang["team_home__introtext"]="Welcome to the admin area. Use the links below to administer resources, respond to resource requests, manage featured collections and alter system settings.";

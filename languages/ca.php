@@ -85,13 +85,7 @@ $lang["donotmoveaway"]="IMPORTANT! No surtis d'aquesta pàgina fins que la càrr
 $lang["pleaseselectfiles"]="Si us plau, sel·lecciona un o més arxius per carregar.";
 $lang["upload_failed_for_path"]="La càrrega no ha finalitzat per %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Càrrega completa";
-$lang["specifyftpserver"]="Especifica servidor FTP";
-$lang["ftpserver"]="Servidor FTP";
-$lang["ftpusername"]="Nom d'usuario FTP";
-$lang["ftppassword"]="Contrasenya FTP";
-$lang["ftpfolder"]="Carpeta FTP";
 $lang["connect"]="Connectar";
-$lang["uselocalupload"]="o realitza una càrrega local enlloc d'un servidor FTP remot";
 
 # User contributions 
 $lang["contributenewresource"]="Carregar nous materials";
@@ -453,7 +447,6 @@ $lang["warningexpiredtext"]="Atenció! Aquest material ha excedit la data de cad
 $lang["warningexpiredok"]="&gt; Habilitar descàrrega de material";
 $lang["userrequestcomment"]="Comentari";
 $lang["addresourcebatchbrowser"]="Ajuntar lot de materials - Cercar (recomenat)";
-$lang["addresourcebatchftp"]="Adjuntar lot de materials - FTP";
 $lang["replaceresourcebatch"]="Canviar lot de materials";
 $lang["editmode"]="Mode Edició";
 $lang["replacealltext"]="Canviar todo el texto";

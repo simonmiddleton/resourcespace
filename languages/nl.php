@@ -91,13 +91,7 @@ $lang["donotmoveaway"]="BELANGRIJK! Sluit deze pagina niet, wacht met verdere ha
 $lang["pleaseselectfiles"]="Selecteer ŽŽn of meerdere bestanden om toe te voegen";
 $lang["upload_failed_for_path"]="Toevoegen is mislukt voor %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Toevoegen gereed";
-$lang["specifyftpserver"]="Specificeer de externe FTP-server";
-$lang["ftpserver"]="FTP server";
-$lang["ftpusername"]="FTP gebruiker";
-$lang["ftppassword"]="FTP wachtwoord";
-$lang["ftpfolder"]="FTP map";
 $lang["connect"]="Verbind";
-$lang["uselocalupload"]="OF: gebruik de lokale upload map van deze server.";
 
 # User contributions
 $lang["contributenewresource"]="Voeg nieuw materiaal toe";
@@ -472,7 +466,6 @@ $lang["warningexpiredtext"]="Waarschuwing! Dit materiaal is verlopen. U moet op 
 $lang["warningexpiredok"]="&gt; Materiaal downloaden activeren";
 $lang["userrequestcomment"]="Opmerking";
 $lang["addresourcebatchbrowser"]="Voeg materiaal toe (bulk) - In Browser (aanbevolen)";
-$lang["addresourcebatchftp"]="Voeg materiaal toe (bulk) - FTP";
 $lang["replaceresourcebatch"]="Vervang materialen (bulk)";
 $lang["editmode"]="Bewerkmodus";
 $lang["replacealltext"]="Vervang alle tekst";

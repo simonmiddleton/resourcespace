@@ -330,11 +330,6 @@ $lang["resources_uploaded-n"]="%done% úspešne nahraných zdrojov."; # %done% w
 $lang["resources_failed-0"]="Všetky zdroje boli nahrané v poriadku.";
 $lang["resources_failed-1"]="1 zdroj sa nepodarilo nahrať.";
 $lang["resources_failed-n"]="Nahrávanie %done% zdrojov zlyhalo."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Parametre pripojenia na vzdialený FTP server ";
-$lang["ftpserver"]="Adresa FTP servera";
-$lang["ftpusername"]="Používateľské meno";
-$lang["ftppassword"]="Heslo";
-$lang["ftpfolder"]="Cesta k priečinku s dátami na FTP serveri";
 $lang["usesmtp"]="Na odosielanie a prijímanie e-mailov použiť server SMTP";
 $lang["smtpsecure"]="Zabezpečenie SMTP";
 $lang["smtphost"]="Adresa SMTP servera";
@@ -345,7 +340,6 @@ $lang["smtppassword"]="Heslo";
 
 
 $lang["connect"]="Pripojiť";
-$lang["uselocalupload"]="ALEBO: Namiesto vzdialeného servera FTP použite lokálny priečinok na nahrávanie.Viď parameter local_ftp_upload_folder.";
 
 # User contributions
 $lang["contributenewresource"]="Prispejte novým zdrojom";
@@ -1008,9 +1002,7 @@ $lang["warningexpiredtext"]="Upozornenie! Platnosť zdroja vypršala. Pre obnove
 $lang["warningexpiredok"]="&gt; Povoliť sťahovanie";
 $lang["userrequestcomment"]="Komentár";
 $lang["addresourcebatchbrowser"]="Nahrať zdroje znalostí";
-$lang["addresourcebatchbrowserjava"]="Pridanie zdroje v dávke - použitím webového prehľiadača a Java (staršie)";
 
-$lang["addresourcebatchftp"]="Pridanie súboru zdrojov - načítaním z FTP servera";
 $lang["replaceresourcebatch"]="Nahrať súbor zdrojov";
 $lang["editmode"]="Režim úprav";
 $lang["replacealltext"]="Nahradiť celý text / možnosti";
@@ -1154,7 +1146,6 @@ $lang["clicktologinasthisuser"]="Kliknutím sa prihlásite ako tento používate
 $lang["clicktoviewlog"]="Kliknutím zobrazíte log";
 $lang["addkeyword"]="Pridajte kľúčové slovo";
 $lang["selectedresources"]="Vybrané zdroje";
-$lang["addresourcebatchlocalfolder"]="Pridať súbor zdrojov - načítaním z lokálneho priečinka";
 $lang["phpextensions"]="PHP rozšírenia";
 
 # Setup Script
@@ -1246,8 +1237,6 @@ $lang["setup-storage_directory"]="Adresár úložiska";
 $lang["setup-if_storagedirectory"]="Kam umiestniť súbory médií. Môže to byť absolútne cesty (napr. /var/www/bla/bla) alebo cesty relatívne k inštalácii. POZNÁMKA: Bez koncových /.";
 $lang["setup-storage_url"]="URL úložiska";
 $lang["setup-if_storageurl"]="Kde sa nachádza úložisko. URL Môže byť absolútne (http://files.example.com) alebo relatívne k inštalácii. POZNÁMKA: Bez lomeno na konci.";
-$lang["setup-ftp_settings"]="Nastavenia FTP";
-$lang["setup-if_ftpserver"]="Potrebné iba v prípade, že plánujete použiť funkciu nahrávania z FTP.";
 $lang["setup-smtp-settings"]="Nastavenia SMTP";
 $lang["setup-if-usesmtp"]="Na odchádzajúce e-maily (napr. Gmail) použije externý server SMTP. Používa PHPMailer";
 $lang["setup-if-smtpsecure"]="'', 'tls' alebo 'ssl'. Pre službu Gmail je potrebné zadať reťazec „tls“ alebo „ssl“.";
@@ -1353,8 +1342,6 @@ $lang["invalidextension_mustbe-extensions"]="Neplatná typ súboru, musí byť %
 $lang["allowedextensions"]="Povolené typy súborov";
 $lang["allowedextensions-extensions"]="Povolené typy: %EXTENSIONS"; # Use %EXTENSIONS, %extensions or %Extensions as a placeholder. The placeholder will be replaced with the filename extensions, using the same case. E.g. "Povolené rozšírenia:% ROZŠÍRENIA " -> " Povolené rozšírenia: JPG, PNG"
 
-$lang["alternativebatchupload"]="Nahrajte alternatívne súbory";
-$lang["alternativelocalupload"]="Nahrať alternatívne súbory - načítať z miestneho priečinka na odovzdanie";
 
 $lang["confirmdeletefieldoption"]="Naozaj chcete odstrániť túto voľbu poľa?";
 
@@ -1828,12 +1815,8 @@ $lang["error-failed-to-move"] = "Nepodarilo sa presunúť";
 $lang["no-options-available"]="Nie sú k dispozícii žiadne možnosti";
 $lang["header-upload-subtitle"] = "Krok %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Priečinok miestneho nahrávania";
-$lang["ftp_upload_path"] = "FTP priečinok";
 $lang["foldercontent"] = "Obsah priečinka";
 $lang["intro-local_upload"] = "Vyberte jeden alebo viac súborov z lokálneho priečinka na odovzdanie a kliknite na „Nahrať“. Po nahraní súborov ich môžete odstrániť z priečinka na odovzdanie.";
-$lang["intro-ftp_upload"] = "Vyberte jeden alebo viac súborov z priečinka FTP a kliknite na „Nahrať“.";
-$lang["intro-java_upload"] = "Kliknutím na „Prehľadávať“ vyhľadajte jeden alebo viac súborov a potom kliknite na „Nahrať“.";
-$lang["intro-java_upload-replace_resource"] = "Kliknite na „Prehľadávať“ a vyhľadajte súbor a potom kliknite na „Nahrať“.";
 $lang["intro-single_upload"] = "Kliknite na „Prehľadávať“ a vyhľadajte súbor a potom kliknite na „Nahrať“.";
 $lang["intro-plupload"] = "Kliknutím na „Pridať súbory“ vyhľadajte jeden alebo viac súborov a potom kliknite na „Spustiť nahrávanie“.";
 $lang["intro-plupload_dragdrop"] = "Presuňte súbory myšou alebo kliknite na „Pridať súbory“, vyhľadajte jeden alebo viac súborov a potom kliknite na „Spustiť nahrávanie“.";
@@ -2258,9 +2241,6 @@ $lang["resource_request__introtext"]="Vaša žiadosť je takmer kompletná. Uve�
 $lang["search_advanced__introtext"]="<strong>Tip na vyhľadávanie</strong><br />Každá časť, ktorú necháte prázdnu alebo neoznačenú, zahrnie VŠETKY dané možnosti do vyhľadávania. Napríklad, ak nešpecifikujete krajinu, vyhľadávanie vráti výsledky zo všetkých krajín. Ak vyberiete iba „Afrika“, výsledky budú obsahovať LEN zdroje z „Afriky“.";
 $lang["tag__introtext"]="Pomôžte vylepšiť výsledky vyhľadávania označovaním zdrojov. Povedzte čo vidíte, oddelené medzerami alebo čiarkami... napríklad: pes, dom, lopta, auto. Zadajte celé meno kohokoľvek viditeľného na fotografii a miesto, kde bola fotografia nasnímaná, ak je Vám známe.";
 $lang["team_archive__introtext"]="Ak chcete upraviť jednotlivé archívne zdroje, jednoducho vyhľadajte prostriedok a kliknite na tlačidlo Upraviť na paneli „Nástroj zdrojov“ na obrazovke prostriedkov. Zoznam všetkých zdrojov, ktoré sú pripravené na archiváciu, je uvedený v zozname Čakajúce prostriedky. Z tohto zoznamu je možné pridať ďalšie informácie a preniesť záznam prostriedku do archívu.";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_content__introtext"]="";
 $lang["team_copy__introtext"]="Zadajte ID prostriedku, ktorý chcete skopírovať. Skopírujú sa iba údaje o zdroji - žiadny odovzdaný súbor sa neskopíruje.";
 $lang["team_home__introtext"]="Vitajte v oblasti správy systému. Pomocou nižšie uvedených odkazov môžete spravovať zdroje, odpovedať na žiadosti o zdroje, spravovať vybrané kolekcie a meniť nastavenia systému.";

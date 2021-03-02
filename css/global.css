@@ -1513,8 +1513,6 @@ form.FormFilter button.ClearButton {
     margin: -2px ;
 }
 
-UL.jqueryFileTree A:hover {font-weight:bold;}
-
 .CollectBack .CollectionResourceRemove, .CollectBack .CollectionResourceRemove:hover {text-decoration:none;}
 
 .JumpPanel input

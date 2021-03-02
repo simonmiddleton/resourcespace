@@ -91,13 +91,7 @@ $lang["uploadinprogress"]="アップロードとサイズ変更進行中";
 $lang["donotmoveaway"]="重要: アップロード完了まで本ページから去らないでください!";
 $lang["pleaseselectfiles"]="アップロードするファイルを1つ以上選択してください。";
 $lang["uploadcomplete"]="アップロード完了";
-$lang["specifyftpserver"]="リモート FTPサーバ指定";
-$lang["ftpserver"]="FTPサーバ";
-$lang["ftpusername"]="FTPユーザ名";
-$lang["ftppassword"]="FTPパスワード";
-$lang["ftpfolder"]="FTPフォルダー";
 $lang["connect"]="接続";
-$lang["uselocalupload"]="もしくは: リモート FTPサーバの代わりにローカルの'upload'フォルダーを使用";
 
 # User contributions
 $lang["contributenewresource"]="新規りソースの投稿";
@@ -481,9 +475,7 @@ $lang["warningexpiredtext"]="警告!このリソースは有効期限を超え�
 $lang["warningexpiredok"]="&gt; リソースのダウンロード有効化";
 $lang["userrequestcomment"]="コメント";
 $lang["addresourcebatchbrowser"]="バッチでリソース追加 - ブラウザより";
-$lang["addresourcebatchbrowserjava"]="バッチでリソース追加 - ブラウザより (Java)";
 
-$lang["addresourcebatchftp"]="バッチでリソース追加 - FTP";
 $lang["replaceresourcebatch"]="バッチでリソース置換";
 $lang["editmode"]="編集モード";
 $lang["replacealltext"]="全テキスト置換";
@@ -614,7 +606,6 @@ $lang["noattachedusers"]="追加ユーザなし";
 $lang["confirmdeleteaccess"]="本当にこのアクセスキーを削除しますか? このキーでアクセスしているユーザはもうこのコレクションにアクセスできなくなります。";
 $lang["noexternalsharing"]="外部との共有なし";
 $lang["sharedcollectionaddwarning"]="警告: 本コレクションは外部のユーザと共有しています。あなたが追加したリソースは外部ユーザに利用可能になります。本コレクションの外部アクセスを管理するには'共有'をクリックしてください。";
-$lang["addresourcebatchlocalfolder"]="バッチでリソース追加 - ローカルのアップロード用フォルダーから取得";
 # Setup Script
 $lang["setup-alreadyconfigured"]="あなたのResourceSpaceインスタレーションはすでに構成されています。再構成するには<pre>include/config.php</pre>を削除し再度本ページにブラウザでアクセスしてください。";
 $lang["setup-successheader"]="おめでとうございます!";
@@ -739,9 +730,6 @@ $lang["resource_request__introtext"]="ご要望のリソースはオンライン
 $lang["search_advanced__introtext"]="<strong>検索の技</strong><br />検索で空白のままにするか、またはチェックを入れなかったセクションはすべての用語を含んだものとして検索します。 例えば、国を空白にすると、検索はすべての国から結果を返すでしょう。 あなたがアフリカだけを選択すると、結果はアフリカからのリソースだけを含むでしょう。";
 $lang["tag__introtext"]="リソースにタグ付けをすることによって検索結果を改善できます。 例えば、空白かコンマによって分割された: 犬,家,ボール,バースデーケーキ。 写真に写っている人のフルネームや分かっている地名を入れてください。";
 $lang["team_archive__introtext"]="個々のアーカイブリソースを編集するために、リソースを単純検索してください、そして、リソーススクリーンの上のリソース・ツール パネルの編集をクリックしてください。 アーカイブされる準備ができているリソースが記載されたリソース・ペンディング リストです。 このリストから、アーカイブに詳細情報の追加と、リソース・レコードを移すのは可能です。";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_copy__introtext"]="あなたがコピーしたいリソースのIDを入力してください。 リソースデータだけがコピーされるでしょう--アップロードされたファイルはコピーされないでしょう。";
 $lang["team_home__introtext"]="チームセンターへようこそ。 以下のリンクを使用して、リソースの管理、リソースの要求へ対応、テーマの管理、システム設定の変更をしてください。";
 $lang["team_report__introtext"]="レポートと日付の範囲を選んでください。 Microsoft Excelか同様のスプレッドシートアプリケーションでレポートを開くことができます。";
