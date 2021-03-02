@@ -481,6 +481,23 @@ function collection_writeable($collection)
         || checkperm("a")
         // Adding to active upload_share
         || upload_share_active() == $collection;
+
+    // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
+    if ($writable === false && checkperm("r"))
+        {
+        include_once 'research_functions.php';
+        $research_requests = get_research_requests();
+        $collections = array();
+        foreach ($research_requests as $research_request)
+            {
+            $collections[] = $research_request["collection"];
+            }
+        if (in_array($collection,$collections))
+            {
+            $writable = true;
+            }
+        }
+        
     return $writable;
 
     }
