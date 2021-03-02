@@ -3501,8 +3501,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
         }
 
-    // Share external link to upload to collection
-    if(can_share_upload_link($collection_data))
+    // Share external link to upload to collection, not permitted if already externally shared for view access
+    $eakeys = get_collection_external_access($collection_data['ref']);
+    if(can_share_upload_link($collection_data) && count($eakeys) == 0)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("share_collection"=>$collection_data['ref']));
         $options[$o]['value']='share_upload';
@@ -5348,11 +5349,12 @@ function cleanup_anonymous_collections(int $limit = 100)
  */
 function can_share_upload_link($collection_data)
     {
+    global $usergroup,$upload_link_usergroups;
     if(!is_array($collection_data) && is_numeric($collection_data))
         {
         $collection_data = get_collection($collection_data);
         }
-    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup"));
+    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup") || in_array($usergroup,$upload_link_usergroups));
     }
     
 /**

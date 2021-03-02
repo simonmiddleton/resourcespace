@@ -2,7 +2,7 @@
 include "../include/db.php";
 include "../include/authenticate.php";
 
-if(!(checkperm('a') || checkperm('exup')))
+if(!(checkperm('a') || checkperm('exup') || in_array($usergroup,$upload_link_usergroups)))
     {
     error_alert($lang["error-permissiondenied"],true);
     exit();
