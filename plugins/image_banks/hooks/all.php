@@ -58,10 +58,16 @@ function HookImage_banksAllSearchfiltertop()
                 {
                 if(typeof search_show == 'undefined' || search_show)
                     {
-                    siblings.show();
-                    
-                    TriggerChangesForRenderedFields();
-
+                    siblings.each(function()
+						{
+                        qid = this.id.substring(13);
+                        console.log('Checking field'  + qid);
+                        if(!clearhiddenfields.includes(qid))
+                            {
+                            console.log('Dont show field'  + qid);
+                            jQuery(this).show();
+                            }
+						});
                     }
                 return;
                 }

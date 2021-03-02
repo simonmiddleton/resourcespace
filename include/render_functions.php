@@ -248,6 +248,13 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         ?>
         <script type="text/javascript">
         
+        <?php 
+        if(!$displaycondition && $forsearchbar)
+            {
+            // Add to array to make sure hidden when form is cleared
+            echo "clearhiddenfields.push('" . $field["ref"] . "');";
+            }
+        ?>
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
             // Check the node passed in from the changed governing field

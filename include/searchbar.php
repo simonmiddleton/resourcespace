@@ -327,6 +327,10 @@ if (!$basic_simple_search)
     <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
     <?php if ($searchbar_selectall) { ?>
     <script type="text/javascript"> 
+
+    // Create array of fields to hide when clearing 
+    var clearhiddenfields = new Array;
+
     function resetTickAll(){
         var checkcount=0;
         // set tickall to false, then check if it should be set to true.
@@ -493,7 +497,6 @@ elseif($restypes=='')
         if ($render)
             {
             $rendered_names[]=$fields[$n]["name"];
-            $rendered_refs[]=$fields[$n]["ref"];
             
             # Fetch current value
             $value = '';
@@ -514,30 +517,7 @@ elseif($restypes=='')
             }
         }
     ?>
-
-    <script>
-    // Trigger an initial change event for each rendered field
-    jQuery(document).ready(function(){
-        simpleSearchFieldsAreHidden = <?php if($simpleSearchFieldsAreHidden) { echo "true"; } else { echo "false"; } ?>;
-        // If simple search fields are hidden there is no need to trigger initial change events
-        if (!simpleSearchFieldsAreHidden) {
-            TriggerChangesForRenderedFields();
-        }
-    });
-    </script>
-
     <script type="text/javascript">
-
-    function TriggerChangesForRenderedFields() {
-        <?php
-        foreach($rendered_refs as $trigger_field)
-            {
-            ?>
-            jQuery("#field_<?php echo $trigger_field?>").trigger('change');
-            <?php
-            }
-        ?>
-    }
 
     function FilterBasicSearchOptions(clickedfield,resourcetype)
         {
