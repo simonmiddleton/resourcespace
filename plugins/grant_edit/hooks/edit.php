@@ -32,6 +32,7 @@ function HookGrant_editEditeditbeforeheader()
 		# Build a new list and insert
 		$users=resolve_userlist_groups($users);
 		$ulist=array_unique(trim_array(explode(",",$users)));
+        $ulist = array_map("escape_check",$ulist);
 		$urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
 		
 		if (count($urefs)>0)

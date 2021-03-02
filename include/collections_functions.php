@@ -1251,6 +1251,7 @@ function save_collection($ref, $coldata=array())
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
+        $ulist = array_map("escape_check",$ulist);
         $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
         if (count($urefs)>0)
             {
@@ -1523,6 +1524,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $key_required=$emails_keys['key_required'];
 
     # Add the collection(s) to the user's My Collections page
+    $ulist = array_map("escape_check",$ulist);
     $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
     if (count($urefs)>0)
         {
