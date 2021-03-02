@@ -327,7 +327,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys=get_collection_external_access($collection);
+        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0));
         if (count($keys)>0)
             {
             $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
@@ -3502,7 +3502,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Share external link to upload to collection, not permitted if already externally shared for view access
-    $eakeys = get_collection_external_access($collection_data['ref']);
+    $eakeys = get_external_shares(array("share_collection"=>$collection_data['ref'],"share_type"=>0));
     if(can_share_upload_link($collection_data) && count($eakeys) == 0)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("share_collection"=>$collection_data['ref']));
