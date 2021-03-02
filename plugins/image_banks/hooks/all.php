@@ -61,10 +61,8 @@ function HookImage_banksAllSearchfiltertop()
                     siblings.each(function()
 						{
                         qid = this.id.substring(13);
-                        console.log('Checking field'  + qid);
                         if(!clearhiddenfields.includes(qid))
                             {
-                            console.log('Dont show field'  + qid);
                             jQuery(this).show();
                             }
 						});
