@@ -59,24 +59,21 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     $processing_start_time = microtime(true);
 
-    $file=fopen($filename,'r');
-    
-    $transposed_csv = get_transposed_csv($file);
-
-    fclose($file);
+    $transposed_csv = get_transposed_csv($filename);
 
     $error_count=0;
 
-    $resource_ids = array_values($transposed_csv["Resource ID(s)"]);
-
-    if(!validate_resourceids($resource_ids, $messages, $error_count))
+    // if updating existing resources, validate the resource id column
+    if ($csv_set_options["update_existing"])
         {
-        return false;
-        };
-
+        $resource_ids = array_values($transposed_csv["Resource ID(s)"]);
+        if(!validate_resourceids($resource_ids, $messages, $error_count))
+            {
+            return false;
+            }
+        }
+  
     $line_count=0;
-
-
     $file=fopen($filename,'r');
     $headers = fgetcsv($file);
   
@@ -1004,8 +1001,9 @@ function csv_upload_log($logfile,$logtext)
  */
 
 
-function get_transposed_csv($file)
+function get_transposed_csv($filename)
     {
+    $file=fopen($filename,'r');
     $transposed_csv = array();
         
     // get csv header line
@@ -1022,6 +1020,8 @@ function get_transposed_csv($file)
             $transposed_csv[$field_name][] = $cell_value;
             }
         }  
+
+    fclose($file);
     return $transposed_csv;
     }
 

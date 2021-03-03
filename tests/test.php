@@ -245,5 +245,5 @@ if(array_search('noteardown',$argv)===false)
     {
     # Remove database
     sql_query("drop database `$mysql_db`");
-    rcRmdir($storagedir);
+    //rcRmdir($storagedir);
     }
