@@ -126,13 +126,12 @@ function purge_plugin_config($name)
  *
  * @param string $path Path to .yaml file to open.
  * @param bool $validate Check that the .yaml file is complete. [optional, default=false]
- * @return array Associative array of yaml values.
+ * @return array|bool Associative array of yaml values. If validate is false, this function will return an array of 
+ *                    blank values if a yaml isn't available
  */
 function get_plugin_yaml($path, $validate=true)
     {
     #We're not using a full YAML structure, so this parsing function will do
-    #If validate is false, this function will return an array of blank values if a yaml isn't available
-    $yaml_file_ptr = @fopen($path, 'r');
     $plugin_yaml['author'] = '';
     $plugin_yaml['info_url'] = '';
     $plugin_yaml['update_url'] = '';
@@ -142,6 +141,13 @@ function get_plugin_yaml($path, $validate=true)
     $plugin_yaml['disable_group_select'] = '0';
     $plugin_yaml['title'] = '';
     $plugin_yaml['icon'] = '';
+
+    if(!(file_exists($path) && is_readable($path)))
+        {
+        return ($validate ? false : $plugin_yaml);
+        }
+    $yaml_file_ptr = fopen($path, 'r');
+
     if ($yaml_file_ptr!=false)
         {
         while (($line = fgets($yaml_file_ptr))!='')
