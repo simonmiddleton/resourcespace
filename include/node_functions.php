@@ -1833,7 +1833,6 @@ function get_tree_strings($resource_nodes,$allnodes = false)
             unset($resource_nodes[$n]);
             }
         $resource_nodes = array_values($resource_nodes);
-        $resource_nodes_ref_array = array_column($resource_nodes,"ref"); 
         }
 
     // Create an array of all branch nodes for each node
@@ -1848,8 +1847,7 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         $nodeparent = $resource_node["parent"];
         while($nodeparent != "" && isset($treenodes[$nodeparent]))
             {
-            // $node_parts[$resource_node["ref"]][] = i18n_get_translated($treenodes[$nodeparent]["name"]);
-            $node_parts[$resource_node["ref"]][] = $treenodes[$nodeparent]["name"];
+            $node_parts[$resource_node["ref"]][] = i18n_get_translated($treenodes[$nodeparent]["name"]);
             $nodeparent = $treenodes[$nodeparent]["parent"];
             }
 
