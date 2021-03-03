@@ -530,7 +530,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     if (!hook("replacesearch"))
         {   
         $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
-        $full_dataset = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch, false, false, $daylimit, false, true, false, $editable_only, false, $search_access);
+        $full_dataset = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch, false, false, $daylimit, false, false, false, $editable_only, false, $search_access);
         }
     }
 else
@@ -1283,7 +1283,8 @@ if($responsive_ui)
         {        
         $saved_archive_standard = $archive_standard;
         $archive_standard = false;
-        $arcresults=do_search($search,$restypes,$order_by,2,0);
+        // Search archive but don't log this to daily_stat
+        $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
         
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
