@@ -1587,6 +1587,21 @@ function check_access_key($resources,$key)
 
     if(count($keys) == 0 || count(array_diff($resources,array_column($keys,"resource"))) > 0)
         {
+        // Check if this is a request for a resource uploaded to an upload_share
+        $upload_sharecol = upload_share_active();
+        if($upload_sharecol && check_access_key_collection($upload_sharecol,$key))
+            {
+            $uploadsession = get_rs_session_id();
+            $uploadcols = get_session_collections($uploadsession);
+            foreach($uploadcols as $uploadcol)
+                {
+                $sessioncol_resources = get_collection_resources($uploadcol);
+                if(!array_diff($sessioncol_resources,$resources))
+                    {                       
+                    return true;
+                    }
+                }
+            }
         return false;
         }
 

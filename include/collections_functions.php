@@ -5610,6 +5610,7 @@ function upload_share_setup(string $key,$shareopts = array())
         "category_tree_lazy_load",
         "suggest_keywords",
         "add_keyword",
+        "download", // Required to see newly created thumbnails if $hide_real_filepath=true;
         );
 
     if(!in_array($pagename,$validpages))
