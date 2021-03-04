@@ -4060,7 +4060,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             # Use a display template to render this field
             $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
-            $template = str_replace('[value]', htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target"))), $template);
+            $template = str_replace('[value]', strip_tags_and_attributes(htmlspecialchars($value),array("a"),array("href","target")), $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
 
