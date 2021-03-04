@@ -132,6 +132,8 @@ function purge_plugin_config($name)
 function get_plugin_yaml($path, $validate=true)
     {
     #We're not using a full YAML structure, so this parsing function will do
+    $plugin_yaml['name'] = basename($path, '.yaml');
+    $plugin_yaml['version'] = '0';
     $plugin_yaml['author'] = '';
     $plugin_yaml['info_url'] = '';
     $plugin_yaml['update_url'] = '';
@@ -179,15 +181,7 @@ function get_plugin_yaml($path, $validate=true)
         {
         return false;
         }
-    if (!isset($plugin_yaml['name']))
-        {
-        $plugin_yaml['name'] = basename($path,'.yaml');
-        }
-    if (!isset($plugin_yaml['version']))
-        {
-        $plugin_yaml['version'] = '0';
-        }
-        
+
     return $plugin_yaml;
     }
 
