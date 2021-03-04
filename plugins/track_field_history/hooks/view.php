@@ -7,9 +7,14 @@ function HookTrack_field_historyViewValue_mod_after_highlight($field,$value){
 
 	if($k=='' && in_array($field['ref'], $track_fields)) {
 		
-		$get_params = '?ref=' . $ref . '&field=' . $field['ref'] . '&field_title=' . $field['title'] . '&search=' . $search;
-
-		$value.= '<a href="' . $baseurl . '/plugins/track_field_history/pages/field_history_log.php' . $get_params . '" style="margin-left: 20px;">&gt;&nbsp;History</a>';
+        $get_params = array(
+            "ref"=> $ref,
+            "field"=> $field['ref'],
+            "field_title" => $field['title'],
+            "search" => $search
+        );
+        $url    = generateurl($baseurl . '/plugins/track_field_history/pages/field_history_log.php', $get_params);
+		$value  = '<a href="' . $url . '" style="margin-left: 20px;">&gt;&nbsp;History</a>';
 		
 		return $value;
 	}

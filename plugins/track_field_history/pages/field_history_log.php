@@ -21,9 +21,12 @@ if(empty($field_log_records)) {
     $no_records = true;
 }
 
+$get_params = array("ref" => $resource_id, "search" => $search);
+$url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
+
 ?>
 <p>
-    <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo $resource_id; ?>&search=<?php echo $search; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<?php echo LINK_CARET_BACK ?>' . $lang['backtoresourceview']; ?></a>
+    <a href="<?php echo $url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<?php echo LINK_CARET_BACK ?>' . $lang['backtoresourceview']; ?></a>
 </p>
 <div class="BasicsBox">
     <h1><?php echo str_replace('%fieldtitle%', $field_title, $lang['track_field_history_field_history_page_title']); ?></h1>
