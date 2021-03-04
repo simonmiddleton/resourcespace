@@ -14,7 +14,7 @@ function HookTrack_field_historyViewValue_mod_after_highlight($field,$value){
             "search" => $search
         );
         $url    = generateurl($baseurl . '/plugins/track_field_history/pages/field_history_log.php', $get_params);
-		$value  = '<a href="' . $url . '" style="margin-left: 20px;">&gt;&nbsp;History</a>';
+		$value .= '<a href="' . $url . '" style="margin-left: 20px;">&gt;&nbsp;History</a>';
 		
 		return $value;
 	}
