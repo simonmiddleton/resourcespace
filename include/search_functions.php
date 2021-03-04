@@ -1276,8 +1276,17 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        $upload_share_active = upload_share_active();
-        $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+        $validcollections = [];
+        if(upload_share_active() !== false)
+            {
+            $validcollections = get_session_collections(get_rs_session_id(), $userref);
+            }
+        else
+            {
+            $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+            $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
+            $validcollections = array_unique(array_merge($user_collections, $public_collections));
+            }
 
         if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
             {
@@ -1288,10 +1297,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            exit($lang["error-permissiondenied"]);
+            return [];
             }
         
-
         # Smart collections update
         global $allow_smart_collections, $smart_collections_async;
         if($allow_smart_collections)

@@ -10,7 +10,7 @@
  * @param  string $order_by Column to sort by
  * @param  string $sort ASC or DESC sort order
  * @param  integer $fetchrows   How many rows to fetch
- * @param  boolean $auto_create Create a default My Collection if one doesn't exist
+ * @param  boolean $auto_create Create a standard "Default Collection" if one doesn't exist
  * @return array
  */
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
@@ -42,11 +42,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 			if ($keyref!==false) {$keyrefs[]=$keyref;}
 
 			$keysql.=" join collection_keyword k" . $n . " on k" . $n . ".collection=ref and (k" . $n . ".keyword='$keyref')";	
-			//$keysql="or keyword in (" . join (",",$keyrefs) . ")";
 			}
-
- 
-		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
 		}
 
     // Type filter
@@ -512,8 +508,7 @@ function collection_readable($collection)
 	{
     global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
 
-    # Precautionary check to see if user has featured collection access or collection is their own
-    if(getval("k","") == "" && !in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
+    $k = getval('k', '');
 
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
@@ -528,15 +523,15 @@ function collection_readable($collection)
 	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
 
 	# Access if collection_commenting is enabled and request feedback checked
-	# Access if it's a public collection (or theme)
+	# Access if it's a public collection (or featured collection to which user has access to)
 	# Access if k is not empty or option to ignore collection access is enabled and k is empty
-    if (($collection_commenting && $collectiondata['request_feedback'] == 1)
-         ||
-        $collectiondata["public"]==1 
-         ||
-        getval("k","")!=""
-         ||
-        (getval("k","")=="" && $ignore_collection_access))
+    if (
+        ($collection_commenting && $collectiondata['request_feedback'] == 1)
+        || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
+        || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+        || $k!=""
+        || ($k=="" && $ignore_collection_access)
+    )
 		{
 		return true;
 		}
@@ -546,14 +541,24 @@ function collection_readable($collection)
 		{
 		# Access if:
 		#	- It's their collection
-		# 	- It's a public collection (or theme)
+		# 	- It's a public collection (or featured collection to which user has access to)
 		#	- They have the 'access and edit all collections' admin permission
 		# 	- They are attached to this collection
 		#   - Option to ignore collection access is enabled and k is empty
-		if($userref==$collectiondata["user"] || $collectiondata["public"]==1 || checkperm("h") || in_array($userref,$attached)  || in_array($usergroup,$attached_groups) || checkperm("R") || getval("k","")!="" || (getval("k","")=="" && $ignore_collection_access))
-			{
-			return true;
-			}
+        if(
+            $userref == $collectiondata["user"]
+            || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
+            || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+            || checkperm("h")
+            || in_array($userref, $attached)
+            || in_array($usergroup, $attached_groups)
+            || checkperm("R")
+            || $k!=""
+            || ($k=="" && $ignore_collection_access)
+        )
+            {
+            return true;
+            }
 		}
 
 	return false;
