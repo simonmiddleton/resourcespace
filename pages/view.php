@@ -1230,21 +1230,23 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				}
 			elseif ($download_usage)
 				// download usage form displayed - load into main window
-				{ ?>
-							
-				<a id="downloadlink" href="<?php
-					echo $baseurl ?>/pages/download_usage.php?ref=<?php echo urlencode($ref) ?>&size=<?php
-					echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
-					echo urlencode($k)?>"><?php echo $lang["action-download"]?></a>							
-				<?php 
-				}
-			else
-				{
-				?><a id="downloadlink" href="#" onclick="directDownload('<?php
-						echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref) ?>&size=<?php
-						echo $size_info['id']?>&ext=<?php echo $size_info['extension']?>&k=<?php
-						echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a><?php
-				}
+                { 
+                ?> <a id="downloadlink" <?php
+                if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
+                    {
+                    echo 'href=' . $baseurl . '/pages/download_usage.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k);
+                    }
+                ?>><?php echo $lang["action-download"]?></a><?php
+                }
+            else
+                {
+                ?> <a id="downloadlink" <?php
+                if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
+                    {
+                    echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ')"';
+                    }
+                ?>><?php echo $lang["action-download"]?></a><?php
+                }
 				unset($size_info_array);
 				?>
 			</td>
