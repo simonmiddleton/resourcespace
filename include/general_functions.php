@@ -1616,8 +1616,7 @@ function pager($break=true,$scrolltotop=true,$options=array())
             if ($curpage<$totalpages)
                 {
                 ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
-                }?>
-            <i aria-hidden="true" class="fa fa-arrow-right"></i>
+                }?><i aria-hidden="true" class="fa fa-arrow-right"></i>
             <?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
             </span>
             
