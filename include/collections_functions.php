@@ -4136,7 +4136,7 @@ function collection_download_process_summary_notes(
     
     if($zipped_collection_textfile == true && $includetext == "true")
         {
-        $qty_sizes = count($available_sizes[$size]);
+        $qty_sizes = isset($available_sizes[$size]) ? count($available_sizes[$size]) : 0;
         $qty_total = count($result);
         $text.= $lang["status-note"] . ": " . $qty_sizes . " " . $lang["of"] . " " . $qty_total . " ";
         switch ($qty_total) {
