@@ -129,16 +129,22 @@ foreach ($fieldrefs as $fieldref)
                     }
                 }
                 
-            foreach ($exiftool_tags as  $exiftool_tag) 
+            $value = "";
+            $exiftool_tag = "";
+            foreach ($exiftool_tags as $current_exiftool_tag) 
                 {
-                $command = $exiftool_fullpath . " -s -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -" . $exiftool_tag . " " . escapeshellarg($image);
+                if(strpos(trim($current_exiftool_tag), " ")==true)
+                    {
+                    exit("ERROR: exiftool tags do not use spaces please check the tags used in the fields options for Field " . $fieldref);
+                    }
+                $command = $exiftool_fullpath . " -s -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -" . trim($current_exiftool_tag) . " " . escapeshellarg($image);
                 echo $command . PHP_EOL;
-                $value = iptc_return_utf8(trim(run_command($command)));
-                
-                if ($value == "-")
+                $current_value = iptc_return_utf8(trim(run_command($command)));
+                if ($current_value != "-")
                     {
                     # exiftool returned hyphen for unset tag.
-                    $value = "";
+                    $value = $current_value;
+                    $exiftool_tag = $current_exiftool_tag;
                     }
 
                 $plugin="../../plugins/exiftool_filter_" . $name . ".php";
@@ -150,19 +156,30 @@ foreach ($fieldrefs as $fieldref)
                     {
                     include $plugin;
                     }
-                
-                if ($blanks)
+                }
+
+            if ($blanks)
+                {
+                update_field($ref,$fieldref,$value);
+                if (trim($value) != "") 
+                    {
+                    echo ("-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL); 
+                    }
+                else 
+                    {
+                    echo ("-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and applied \"\" to Resource " . $ref . " Field " . $fieldref . PHP_EOL);
+                    }
+                }
+            else
+                {
+                if (trim($value) != "")
                     {
                     update_field($ref,$fieldref,$value);
-                    echo ("Updated Resource " . $ref . PHP_EOL . "-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to ResourceSpace Field " . $fieldref . PHP_EOL);
+                    echo ("-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL);   
                     }
-                else
+                else 
                     {
-                    if (trim($value) != "")
-                        {
-                        update_field($ref,$fieldref,$value);
-                        echo ("Updated Resource " . $ref . PHP_EOL . "-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to ResourceSpace Field " . $fieldref . PHP_EOL . PHP_EOL);	
-                        }
+                    echo ("-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and has made no changes for Resource " . $ref . PHP_EOL);
                     }
                 }
             }
