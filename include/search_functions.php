@@ -1264,7 +1264,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
         # Special case if a key has been provided.
-        if(getval('k', '') != '')
+        if($k != '')
             {
             $sql_filter = 'r.ref > 0';
             }
@@ -1295,7 +1295,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 return array();
                 }
             }
-        else
+        elseif($k == "" || upload_share_active() !== false)
             {
             return [];
             }
