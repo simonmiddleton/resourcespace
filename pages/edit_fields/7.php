@@ -16,6 +16,8 @@ $update_result_count_function_call = 'UpdateResultCount();';
 $tree_id                           = ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
 $tree_container_styling            = ($category_tree_open ? 'display: block;' : 'display: none;');
 
+$current_val_fieldname = "field_{$field['ref']}_currentval";
+
 if(!isset($selected_nodes))
     {
     $selected_nodes = array();
@@ -91,7 +93,7 @@ if(!(isset($treeonly) && true == $treeonly))
            onclick="
 			<?php if (!$is_search) // No need to confim, this is just for searching
 				{?>
-                if(confirm('<?php echo $lang["clearcategoriesareyousure"]?>'))
+                if(confirm('<?php echo $lang["clearcategoriesareyousure"];?>'))
                     {
 				<?php }?>
                     jQuery('#<?php echo $tree_id; ?>').jstree(true).deselect_all();
@@ -186,59 +188,80 @@ echo $hidden_input_elements;
     var category_tree_add_parents     = <?php echo ($category_tree_add_parents ? 'true' : 'false'); ?>;
     var category_tree_remove_children = <?php echo ($category_tree_remove_children ? 'true' : 'false'); ?>;
 
-    // Handle select changes done in category tree
+    // When a node is selected, and add parents is enabled, then automatically select all ancestors 
     jquery_tree_by_id.on('select_node.jstree', function (event, data)
         {
-        if(false == category_tree_add_parents)
+        if(category_tree_add_parents)
             {
-            return;
+            // Establish the parent of the selected node
+            var parent_node = jQuery('#<?php echo $tree_id; ?>')
+                .jstree(true)
+                .get_parent(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(data.node.id));
+
+            // Trigger selection of the parent node
+            jQuery('#<?php echo $tree_id; ?>')
+                .jstree(true)
+                .select_node(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(parent_node), data.selected, event);
             }
-
-        // Force adding parent nodes
-        var parent_node = jQuery('#<?php echo $tree_id; ?>')
-                            .jstree(true)
-                            .get_parent(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(data.node.id));
-
-        jQuery('#<?php echo $tree_id; ?>')
-            .jstree(true)
-            .select_node(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(parent_node), data.selected, event);
         });
 
-    <?php
-	// Handle deselect changes done in category tree
-    if($category_tree_remove_children && !$is_search)
+<?php
+if(!$is_search)
+    {
+    ?>
+    // When a node is deselected, and remove children is enabled, then automatically deselect its descendants 
+    jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
+        {					
+        if(category_tree_remove_children)
+            {
+            // If the deselected node is closed then open it
+            if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
                 {
-                ?>
-				jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
-					{					
-					 // If parent node is closed, make sure we open its children and deselect them as well
-					if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
-						{
-						jQuery('#<?php echo $tree_id; ?>').jstree(
-							'open_node',
-							data.node);
-						}
-					// Force removing all children
-					var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
-			 
-					for(var i = 0; i < rendered_childrens.length; i++)
-						{
-						jQuery('#<?php echo $tree_id; ?>')
-							.jstree(true)
-							.deselect_node(
-								jQuery('#<?php echo $tree_id; ?>')
-								.jstree(true)
-								.get_node(rendered_childrens[i]), data.selected, event
-							);
-						}
-					});
-				
-				<?php
-				}	
-				?>				
-	
+                jQuery('#<?php echo $tree_id; ?>').jstree(
+                    'open_node',
+                    data.node);
+                }
 
-    // Handle common tasks for when (de)selecting nodes
+            // Establish the descendents of the deselected node
+            var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
+        
+            for(var i = 0; i < rendered_childrens.length; i++)
+                {
+                // Trigger deselection of each descendent
+                jQuery('#<?php echo $tree_id; ?>')
+                    .jstree(true)
+                    .deselect_node(
+                        jQuery('#<?php echo $tree_id; ?>')
+                        .jstree(true)
+                        .get_node(rendered_childrens[i]), data.selected, event
+                    );
+                }
+            }
+        });
+    
+    <?php
+    }	
+    ?>				
+
+    // Reflect node selections onto the status box and hidden inputs 
+    jquery_tree_by_id.on('select_node.jstree', function (event, data)
+        {
+        // Add hidden input which is used to post to the edit or search 
+        document.getElementById('<?php echo $tree_id; ?>').insertAdjacentHTML(
+            'beforeBegin',
+            '<input id="<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id +
+            '" type="hidden" name="<?php echo $name; ?>" class ="<?php echo $tree_id; ?>_nodes" value="' + data.node.id +
+            '">');
+        });
+
+    // Reflect node deselections onto the status box and hidden inputs 
+    jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
+        {
+        // Remove hidden input so that it is no longer posted to the edit or search 
+        jQuery('#<?php echo $hidden_input_elements_id_prefix; ?>'+data.node.id+'.<?php echo "{$tree_id}_nodes"?>').remove();
+        });
+
+    // Reflect aggregated changes on status box; trigger centralspace events; trigger autosave
     jquery_tree_by_id.on('changed.jstree', function (event, data)
         {
         if(!(data.action == 'select_node' || data.action == 'deselect_node'))
@@ -246,23 +269,13 @@ echo $hidden_input_elements;
             return;
             }
 
-        // Remove all currently selected options
+        // Clear the status box containing the names of the selected nodes
         jQuery('#<?php echo $status_box_id; ?>').empty();
-        jQuery('.<?php echo $tree_id; ?>_nodes').remove();
 
         var selected_rs_node_ids = data.selected;
 
         for(var i = 0; i < selected_rs_node_ids.length; i++)
             {
-            // Add hidden input in order to do the search
-            document.getElementById('<?php echo $tree_id; ?>').insertAdjacentHTML(
-                'beforeBegin',
-                '<input id="<?php echo $hidden_input_elements_id_prefix; ?>'
-                + selected_rs_node_ids[i]
-                + '" type="hidden" name="<?php echo $name; ?>" class ="<?php echo $tree_id; ?>_nodes" value="'
-                + selected_rs_node_ids[i]
-                + '">');
-
             // Update status box with the selected option
             var status_option_element = document.getElementById('<?php echo $status_box_id; ?>_option_' + selected_rs_node_ids[i]);
             if(status_option_element == null)
@@ -270,8 +283,7 @@ echo $hidden_input_elements;
                 document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
                     'beforeEnd',
                     '<div class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
-                    + selected_rs_node_ids[i]
-                    + '">'
+                    + selected_rs_node_ids[i] + '">'
                     + jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(selected_rs_node_ids[i]).text
                     + '</span><br /></div>');
                 }
@@ -280,6 +292,7 @@ echo $hidden_input_elements;
             jQuery('#CentralSpace').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
             //console.log('Category tree: Sending node ID ' + selected_rs_node_ids[i]);
             }
+
         if(selected_rs_node_ids.length == 0)
             {
             //console.log('Category tree cleared');

@@ -2060,7 +2060,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
-				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+				echo "<input id='field_" . $field['ref']  . "_currentval' name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
