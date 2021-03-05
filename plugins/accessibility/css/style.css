@@ -5,9 +5,17 @@ html, body {
     font-size: 18px;
 }
 
-/* Larger font size for header links */
-.HorizontalNav li {
+/* Larger font size for header links and dash tiles*/
+.HorizontalNav li,
+.HomePanelDynamicDash h2,
+.HomePanelThemes h2,
+.FeaturedSimpleTileContents h2 {
     font-size: 18px;
+}
+
+
+#themeselect {
+    font-size: 0.875rem;
 }
 
 /* Slightly larger and darker font for download info */
@@ -27,11 +35,12 @@ html, body {
 a:link, a:visited {color: #000;}
 a:active, a:hover {color: #2d2d2d;}
 
-/* Reset table header link style back to white */   
+/* Reset table header link style and annotate plugin buttons back to white */   
 .ListviewTitleStyle td,
 .ListviewTitleStyle th,
 .ListviewTitleStyle a,
-.ListviewTitleStyle a:visited {
+.ListviewTitleStyle a:visited,
+.annotate-view-wrapper a {
     color: white;
 }
 
