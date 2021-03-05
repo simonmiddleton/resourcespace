@@ -7,10 +7,6 @@ $upload_collection = getval('upload_share_active','');
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {  
     include "../include/authenticate.php";
-    if (! (checkperm("c") || checkperm("d")))
-        {
-        exit ("Permission denied.");
-        }
     }
 include_once "../include/image_processing.php";
 # Editing resource or collection of resources (multiple)?
