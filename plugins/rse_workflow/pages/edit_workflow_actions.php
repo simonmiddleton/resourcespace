@@ -154,9 +154,11 @@ else
 				$fromstatetext="";
 				foreach ($fromstates as $fromstate)
 					{
+                    if(!isset($lang["status" . $fromstate])){continue;} //This state has been deleted
 					if($fromstatetext!=""){$fromstatetext.=", ";}
 					$fromstatetext.=$lang["status" . $fromstate]; 
 					}
+                if($fromstatetext==""){$fromstatetext=$lang["rse_workflow_err_missing_wfstate"];}
 				echo $fromstatetext; 
 				?>
 			</td>
