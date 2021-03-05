@@ -25,6 +25,9 @@ $page     = getvalescaped('page', 0, true);
 // Get annotation data if an ID has been provided
 $annotation_id = getvalescaped('annotation_id', 0, true);
 $annotation    = getval('annotation', array());
+
+debug(sprintf('[annotations][annotations.php] AJAX request: action = %s | resource = %s | annotation_id = %s', $action, $resource, $annotation_id));
+
 if(0 < $annotation_id)
     {
     $annotation = getAnnotation($annotation_id);
@@ -53,7 +56,7 @@ if('create' == $action && 0 < $resource)
         }
 
     $annotation_id = createAnnotation($annotation);
-    debug('[annotations][annotations.php] annotation_id = ' . json_encode($annotation_id));
+    debug('[annotations][annotations.php] newly created annotation_id = ' . json_encode($annotation_id));
 
     if(false === $annotation_id)
         {
