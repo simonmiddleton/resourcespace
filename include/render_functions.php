@@ -1509,17 +1509,15 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
 	?>
-	<div id="pixelwidth" class="<?php echo implode(" ", $div_class); ?>" >
+	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
-		<div>
 		<?php
-		echo "<input name=\"" . $input . "\" type=\"text\" ". ($numeric?"numericinput":"") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
+		echo "<input name=\"" . $input . "\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
 			
 		echo $additionaltext;
 		?>
-		</div>
+	    <div class="clearerleft"> </div>
 	</div>
-	<div class="clearerleft"> </div>
 	<?php
 	}
 	
