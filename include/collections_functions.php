@@ -1114,6 +1114,13 @@ function save_collection($ref, $coldata=array())
         $sqlset = array();
         foreach($coldata as $colopt => $colset)
             {
+            // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
+            // incorrect SQL query for the update statement.
+            if(in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users']))
+                {
+                continue;
+                }
+
             // Public collection
             if($colopt == "public" && $colset == 1)
                 {
@@ -1164,7 +1171,7 @@ function save_collection($ref, $coldata=array())
 
                 continue;
                 }
-            if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt] && $colopt != "users")
+            if(!isset($oldcoldata[$colopt]) || $colset != $oldcoldata[$colopt])
                 {
                 $sqlset[$colopt] = $colset;
                 }
@@ -1321,7 +1328,7 @@ function save_collection($ref, $coldata=array())
         {
         remove_all_resources_from_collection($ref);
         }
-		
+
 	# Delete all resources?
 	if (isset($coldata["deleteall"]) && $coldata["deleteall"]!="" && !checkperm("D"))
         {

@@ -55,12 +55,14 @@ if ($copy!="")
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save collection data
-    $coldata["name"]            = getval("name","");
-    $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
-    $coldata["public"]          = getval('public', 0, true);
-    $coldata["keywords"]        = getval("keywords","");
-    $coldata["description"]     = getval("description","");
-    $coldata["users"]           = getval("users","");
+    $coldata["name"] = getval("name","");
+    $coldata["allow_changes"] = getval("allow_changes","") != "" ? 1 : 0;
+    $coldata["public"] = getval('public', 0, true);
+    $coldata["keywords"] = getval("keywords","");
+    $coldata["description"] = getval("description","");
+    $coldata["result_limit"] = getval("result_limit",0,true);
+    $coldata["users"] = getval("users","");
+    $coldata["deleteall"] = getval("deleteall","") != "";
 
     if($collection["public"] == 1 && getval("update_parent", "") == "true")
         {
