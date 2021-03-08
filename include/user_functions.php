@@ -2671,7 +2671,7 @@ function delete_profile_image($user_ref)
  */
 function get_profile_image($user_ref = "", $by_image = "")
     {
-    global $storagedir, $baseurl;
+    global $storagedir, $storageurl, $baseurl;
 
     if (is_dir($storagedir.'/user_profiles'))
         {
@@ -2687,7 +2687,7 @@ function get_profile_image($user_ref = "", $by_image = "")
 
         if ($profile_image_name != "")
             {
-            return $baseurl . '/filestore/user_profiles/' . $profile_image_name;
+            return $storageurl . '/user_profiles/' . $profile_image_name;
             }
         else
             {
