@@ -814,6 +814,7 @@ $lang["action-expand"]="Expand";
 $lang["action-more"]="More";
 $lang["action-less"]="Less";
 $lang["action-select"]="Select";
+$lang["action-selectrequesteditems"]="Show all requested items in my collection bar";
 $lang["action-download"]="Download";
 $lang["action-email"]="E-mail";
 $lang["action-edit"]="Edit";
