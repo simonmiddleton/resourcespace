@@ -59,19 +59,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     $processing_start_time = microtime(true);
 
-    $transposed_csv = get_transposed_csv($filename);
-
     $error_count=0;
-
-    // if updating existing resources, validate the resource id column
-    if ($csv_set_options["update_existing"])
-        {
-        $resource_ids = array_values($transposed_csv["Resource ID(s)"]);
-        if(!validate_resourceids($resource_ids, $messages, $error_count))
-            {
-            return false;
-            }
-        }
   
     $line_count=0;
     $file=fopen($filename,'r');
@@ -342,6 +330,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 // Matching on resource ID
                 $id_column = isset($csv_set_options["id_column"]) ? $csv_set_options["id_column"] : "";
                 $resource_id = isset($line[$id_column]) ? $line[$id_column] : "";
+                if(!in_array($resource_id,$replaceresources))
+                    {
+                    $logtext = "Error: Invalid resource id: '" . $resource_id . "' specified in line " . count($line);
+                    csv_upload_log($logfile,$logtext);
+                    array_push ($messages,$logtext);
+                    
+                                $error_count++;
+                                continue;
+                    }
                 $resourcerefs = array((int) $resource_id);
                 }
             else
@@ -954,74 +951,5 @@ function csv_upload_get_info($filename, &$messages)
 function csv_upload_log($logfile,$logtext)
     {
     fwrite($logfile, $logtext . "\n"); 
-    }
-
-    /**
-     * validation checks on an array of resource ids from a csv file
-     * 
-     * @param array $resource_ids array of resource ids
-     * 
-     * @return boolean
-     */
-
-    function validate_resourceids($resource_ids, &$messages, &$error_count)
-    {
-
-    // check that all rows have a resource id
-    $unique_resourceids = array_unique($resource_ids);
-    if (count($resource_ids) != count($unique_resourceids))
-        {
-        $messages[] = "Error: Resource IDs are not unique in csv file";
-        return false;
-        }
-
-    // check that all resource ids exist in the db
-    // Limit resources to replace to those that user can edit
-    $replaceresources = do_search('','','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
-    $replaceresources = array_column($replaceresources, "ref");
-
-    $resourceids_in_db = array_intersect($replaceresources, $resource_ids);
-    if (count($resourceids_in_db) < count($resource_ids))
-        {
-        $messages[] = "Error: Resource id(s) not found in database";
-        $messages[] = "Error:" .  implode(",",array_diff($resource_ids, array_intersect($resource_ids,$replaceresources)));
-        return false;
-        }
-        
-    return true;
-    }
-
-
-/**
- * takes file pointer for csv file and returns array containing transposed csv
- * 
- * @param stream $file file pointer for csv file
- * 
- * @return array|boolean
- */
-
-
-function get_transposed_csv($filename)
-    {
-    $file=fopen($filename,'r');
-    $transposed_csv = array();
-        
-    // get csv header line
-    if (($columns = fgetcsv($file))==false) 
-        {
-        return false;
-        }
-    
-    while(($line = fgetcsv($file))!= false)
-        {
-        foreach($line as $key => $cell_value)
-            {
-            $field_name = $columns[$key];
-            $transposed_csv[$field_name][] = $cell_value;
-            }
-        }  
-
-    fclose($file);
-    return $transposed_csv;
     }
 
