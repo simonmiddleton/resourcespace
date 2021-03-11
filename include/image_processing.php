@@ -1604,9 +1604,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 # Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
                 # mean that the height/width of the larger sizes is less than the required target height/width
                 list($checkw,$checkh) = @getimagesize($file);
+                $using_original = false;
                 if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
                     {
                     $file=file_exists($hpr_path)?$hpr_path:$origfile;
+                    $using_original = true;
                     }
                 }
 
@@ -1816,10 +1818,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $command_list.=$runcommand."\n";
                             $output=run_command($runcommand);
                             $created_count++;
-                            # if this is the first file generated for non-ingested resources check rotation
+                            # if this is the first file generated or the original file is used as the source, for non-ingested resources check rotation
                             if($autorotate_no_ingest 
                                 &&
-                                $created_count==1
+                                ($created_count==1 || $using_original)
                                 &&
                                 !$ingested
                                 &&
