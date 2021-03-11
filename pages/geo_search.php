@@ -6,7 +6,7 @@ include '../include/authenticate.php';
 include '../include/header.php';
 
 // Setup initial map variables.
-global $default_display, $geo_search_modal_results, $baseurl, $mapsearch_height, $map_default, $map_centerview, $map_zoomslider, $map_zoomnavbar, $map_kml, $map_kml_file, $map_default_cache, $map_layer_cache, $map_retina;
+global $default_display, $geo_search_modal_results, $baseurl, $mapsearch_height, $map_default, $map_zoomslider, $map_zoomnavbar, $map_kml, $map_kml_file, $map_default_cache, $map_layer_cache, $map_retina;
 $zoomslider = 'false';
 $zoomcontrol = 'true';
 
@@ -35,7 +35,6 @@ if ($default_display == 'map' || $display == 'map')
     $geo_search_modal_results = false;
     }
 
-set_geo_bounds();
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang['geographicsearch']; ?></h1>
@@ -59,15 +58,20 @@ set_geo_bounds();
 
 <script type="text/javascript">
     var Leaflet = L.noConflict();
-
+    <?php set_geo_map_centerview(); ?>
     // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js.
+
+    if(typeof map1 !== 'undefined')
+        {
+        map1.remove();
+        }
     var map1 = new Leaflet.map('search_map', {
         editable: true,
         preferCanvas: true,
         renderer: Leaflet.canvas(),
         zoomsliderControl: <?php echo $zoomslider; ?>,
         zoomControl: <?php echo $zoomcontrol; ?>
-    }).setView(<?php echo $map_centerview;?>);
+    }).setView(mapcenterview,mapdefaultzoom);
 
     // Load available Leaflet basemap groups, layers, and attribute definitions.
     <?php include '../include/map_processing.php'; ?>

@@ -1,9 +1,5 @@
 <?php
 // Leaflet.js Basemap Processing
-//
-?>
-<!--Define available Leaflet basemaps groups and layers using leaflet.providers.js, L.TileLayer.PouchDBCached.js, and styledLayerControl.js based on map_functions.php-->
-<?php
 if($geo_leaflet_maps_sources)
     {
     echo leaflet_osm_basemaps();
@@ -77,14 +73,22 @@ else
                     $varoptions[$option] = $optval;
                     }
                 }
-            //echo "var " . $varcode . "_attribute = '" . htmlspecialchars($varoptions["options"]["attribution"]) . "';\n";
-                        echo "var " . $varcode . " = L.tileLayer.provider('" . $leaflet_source["group"] . "."  . $variant . "', {\n";
+            $attribution = isset($varoptions["options"]["attribution"]) ? $varoptions["options"]["attribution"] : $varoptions["attribution"]; 
+            echo "var " . $varcode . "_attribute = '" . htmlspecialchars($attribution) . "';\n";
+            echo "var " . $varcode . " = L.tileLayer.provider('" . $leaflet_source["group"] . "."  . $variant . "', {\n";
             echo "    useCache: '" . ($map_default_cache ? "true" : "false") . "',\n";
             echo "    detectRetina: '" . ($map_retina ? "true" : "false") . "',\n";
-            
+            echo "    name : '" . $leaflet_source["group"] . "." . $variant . "',\n";
             foreach ($varoptions as  $varoption => $optval)
                 {
-                echo "    " . htmlspecialchars($varoption) . ": '" . htmlspecialchars($optval) . "',\n";
+                if($varoption == "attribution")
+                    {
+                    echo "    " . htmlspecialchars($varoption) . ": '" . htmlspecialchars($optval) . "',\n";
+                    }
+                else
+                    {
+                    echo "    " . htmlspecialchars($varoption) . ": " . htmlspecialchars($optval) . ",\n";
+                    }
                 }
             echo "});\n";
             }

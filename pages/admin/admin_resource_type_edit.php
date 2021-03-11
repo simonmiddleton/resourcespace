@@ -14,13 +14,12 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-
 $ref                   = getvalescaped('ref', '', true);
 $name                  = getvalescaped('name', '');
 $config_options        = getvalescaped('config_options', '');
 $allowed_extensions    = getvalescaped('allowed_extensions', '');
 $tab                   = getvalescaped('tab', '');
-$colour                = getvalescaped('colour', '');
+$colour                = getvalescaped('colour', 0, true);
 $push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
 $inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
 
@@ -39,15 +38,14 @@ if($backurl=="")
     }
 
 if (getval("save","")!="" && enforcePostRequest(false))
-	{
-	# Save resource type data
+    {
+    # Save resource type data
+    log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
+    log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
+    log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
+    log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab_name',$ref);
 
-	log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
-	log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
-	log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
-	log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab_name',$ref);
-
-        if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
+    if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
         
     sql_query("
         UPDATE resource_type
@@ -60,10 +58,10 @@ if (getval("save","")!="" && enforcePostRequest(false))
                colour = '{$colour}'
          WHERE ref = '$ref'
      ");
-     clear_query_cache("schema");
+    clear_query_cache("schema");
 
-	redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
-	}
+    redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
+    }
 
 
 $confirm_delete = false;
@@ -292,7 +290,7 @@ else
     </div>
 
     <?php
-    $marker_colors[0] = $lang["select"];
+    $marker_colors[-1] = $lang["select"];
     render_dropdown_question($lang['resource_type_marker_colour'],"colour",$marker_colors,$restypedata["colour"]);
     ?>
     

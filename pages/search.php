@@ -131,6 +131,12 @@ $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fie
 
 # get display and normalize display specific variables
 $display=getvalescaped("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
+if(!$leaflet_maps_enable && $display == "map")
+    {
+    // Map view is not supported unless leaflet maps is enabled
+    $display = "thumbs";
+    }
+
 
 switch ($display)
     {
@@ -264,7 +270,7 @@ rs_setcookie('per_page', $per_page,0,"","",false,false);
 $clear_selection_collection = (getval("clear_selection_collection", "") != "no");
 $paging_request = in_array(getval("go", ""), array("next", "prev", "page"));
 
-// Preserve selection on display layout change.
+// Preserve selection on display layout change (not available for map view).
 $displaytypes = array('xlthumbs', 'thumbs', 'strip', 'list');
 if (isset($_POST['display']))
     {
@@ -526,8 +532,12 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     {
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
-        {   
+        {
+        // Save $max_results as this gets changed by do_search();
+        $saved_max_results = $max_results;
         $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+
+        $max_results = $saved_max_results;
         $full_dataset = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch, false, false, $daylimit, false, true, false, $editable_only, false, $search_access);
         }
     }
@@ -1059,7 +1069,7 @@ if($responsive_ui)
                     }
                 }
             
-            if (!$disable_geocoding)
+            if (!$disable_geocoding && $leaflet_maps_enable)
                 {
                 if($display == 'map')
                     { ?>
@@ -1067,7 +1077,16 @@ if($responsive_ui)
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo $lang['maptitle'] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
+                    if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
+                        {
+                        echo "return false;";
+                        }
+                    else
+                        {
+                        echo "return " . ($modal ? 'Modal' : 'CentralSpace') . "Load(this);";
+                        }
+                    ?>">
                     <span class="far fa-map" style="font-size:23px;"></span>
                     </a>
                     <?php
@@ -1083,7 +1102,7 @@ if($responsive_ui)
             <?php if ($display=="strip") { ?><span class="Selected"><?php echo $lang["striptitle"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["striptitle"]?></a><?php } ?>&nbsp; |&nbsp;
             <?php if ($display=="list") { ?> <span class="Selected"><?php echo $lang["list"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list"]?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
             <?php
-            if(!$disable_geocoding)
+            if(!$disable_geocoding && $leaflet_maps_enable)
                 {
                 if ($display == 'map')
                     { ?>
@@ -1091,7 +1110,16 @@ if($responsive_ui)
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="return window.location.reload(); CentralSpaceLoad(this);"><?php echo $lang['maptitle']?></a><?php
+                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
+                    if($resources_count > $search_map_max_results)
+                        {
+                        echo "return false;";
+                        }
+                    else
+                        {
+                        echo "return " . ($modal ? 'Modal' : 'CentralSpace') . "Load(this);";
+                        }
+                    ?>"><?php echo $resources_count > $search_map_max_results ? $lang['search_results_overlimit'] : $lang['maptitle'] ?></a><?php
                     }
                 }
             }
@@ -1187,7 +1215,7 @@ if($responsive_ui)
             }
         }
 
-        if($display_selector_dropdowns || $perpage_dropdown)
+        if(($display_selector_dropdowns || $perpage_dropdown) && $display != 'map')
             {
             ?>
             <div class="InpageNavLeftBlock">
@@ -1274,8 +1302,11 @@ if($responsive_ui)
     <?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->
     <div class="TopInpageNavRight">
     <?php
+    if($display != 'map')
+        {
         pager(false);
         $draw_pager=true;
+        }
     ?>
     </div>
     <div class="clearerleft"></div>
@@ -1439,7 +1470,7 @@ if($responsive_ui)
     hook('searchresources');
 
     // Determine geolocation parameters for map search view.
-    if (!$disable_geocoding)
+    if (!$disable_geocoding && $display == "map")
         {
         global $marker_metadata_field, $use_watermark;
 
@@ -1447,9 +1478,13 @@ if($responsive_ui)
         $result_count = count($result);
         for ($n = 0; $n < $result_count; $n++)
             {
-            if(!is_array($result[$n]))
+            if(!is_array($result[$n]) && isset($full_dataset[$n]))
                 {
-                // TODO - Resolve for maps - temporary fix to prevent errors when results are padded
+                $result[$n] = $full_dataset[$n];
+                }
+            
+            if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
+                {
                 continue;
                 }
             // Get resource data for resources returned by the current search.
@@ -1459,18 +1494,17 @@ if($responsive_ui)
             // Get custom metadata field value.
             if (isset($marker_metadata_field))
                 {
-                $geomark2 = sql_query("SELECT value FROM resource_data WHERE resource = $geo AND resource_type_field = $marker_metadata_field");
+                $geomark2 = get_data_by_field($geo,$marker_metadata_field);
                 }
             else
                 {
-                $geomark2[0]['value'] = '';
+                $geomark2 = '';
                 }
-
             // Check for resources without geolocation or invalid coordinates and skip those.
-            if ($geomark['geo_lat'] >= -90 && $geomark['geo_lat'] <= 90 && $geomark['geo_long'] >= -180 && $geomark['geo_long'] <= 180)
+            if (is_numeric($geomark['geo_lat']) && is_numeric($geomark['geo_long']) && $geomark['geo_lat'] >= -90 && $geomark['geo_lat'] <= 90 && $geomark['geo_long'] >= -180 && $geomark['geo_long'] <= 180)
                 {
                 // Create array of geolocation parameters.
-                $geomarker[] = "[{$geomark['geo_long']}, {$geomark['geo_lat']}, {$geomark['ref']}, {$geomark['resource_type']}, {$geomark2[0]['value']}]";
+                $geomarker[] = "[" . $geomark['geo_long'] . ", " . $geomark['geo_lat'] . ", " . $geomark['ref'] . ", " . $geomark['resource_type'] . "," . (trim($geomark2) != "" ? floatval($geomark2) : "") . "]";
                 $preview_paths[] = $geomark['preview_path'];
                 }
             }
@@ -1522,84 +1556,87 @@ if($responsive_ui)
             $annotate_enabled_adjust_size_all = true;
             }
      
-        # loop and display the results
-        $startresource = max($offset-$colcount,0);
-        $endresource = $result_count-$colcount;
-        for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
+        # loop and display the results, unless map view
+
+        if ($display == 'map')
             {
-            # Allow alternative configuration settings for this resource type.
-            resource_type_config_override($result[$n]["resource_type"]);
-            
-            if ($order_by=="resourcetype" && $display!="list")
+            # ----Map view----
+            include_once 'search_views/map.php';
+            }
+        else
+            {
+            $startresource = max($offset-$colcount,0);
+            $endresource = $result_count-$colcount;
+            for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
                 {
-                if ($n==0 || ((isset($result[$n-1])) && $result[$n]["resource_type"]!=$result[$n-1]["resource_type"]))
+                # Allow alternative configuration settings for this resource type.
+                resource_type_config_override($result[$n]["resource_type"]);
+                
+                if ($order_by=="resourcetype" && $display!="list")
                     {
-                    if($result[$n]["resource_type"]!="")
+                    if ($n==0 || ((isset($result[$n-1])) && $result[$n]["resource_type"]!=$result[$n-1]["resource_type"]))
                         {
-                        echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . htmlspecialchars($rtypes[$result[$n]["resource_type"]]) .  "</h1>";
-                        }
-                    else
-                        {
-                        echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . $lang['unknown'] .  "</h1>";
+                        if($result[$n]["resource_type"]!="")
+                            {
+                            echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . htmlspecialchars($rtypes[$result[$n]["resource_type"]]) .  "</h1>";
+                            }
+                        else
+                            {
+                            echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . $lang['unknown'] .  "</h1>";
+                            }
                         }
                     }
-                }
 
-            $ref = $result[$n]["ref"];
-        
-            $GLOBALS['get_resource_data_cache'][$ref] = $result[$n];
-            $url=generateURL($baseurl_short."pages/view.php",$searchparams, array("ref"=>$ref));
+                $ref = $result[$n]["ref"];
             
-            if ($result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
-                {
-                # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
-                $result[$n]["access"]=1; 
-                }           
+                $GLOBALS['get_resource_data_cache'][$ref] = $result[$n];
+                $url=generateURL($baseurl_short."pages/view.php",$searchparams, array("ref"=>$ref));
                 
-            // Check if user or group has been granted specific access level as set in array returned from do_search function. 
-            if(isset($result[$n]["user_access"]) && $result[$n]["user_access"]!="")
-                {$result[$n]["access"]=$result[$n]["user_access"];}
-            elseif (isset($result[$n]["group_access"]) && $result[$n]["group_access"]!="")
-                {$result[$n]["access"]=$result[$n]["group_access"];}
-            // Global $access needs to be set to check watermarks in search views (and may be used in hooks)        
-            $access=$result[$n]["access"];
-        
-            if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
- 
-            hook('beforesearchviewcalls');
+                if ($result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
+                    {
+                    # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
+                    $result[$n]["access"]=1; 
+                    }           
+                    
+                // Check if user or group has been granted specific access level as set in array returned from do_search function. 
+                if(isset($result[$n]["user_access"]) && $result[$n]["user_access"]!="")
+                    {$result[$n]["access"]=$result[$n]["user_access"];}
+                elseif (isset($result[$n]["group_access"]) && $result[$n]["group_access"]!="")
+                    {$result[$n]["access"]=$result[$n]["group_access"];}
+                // Global $access needs to be set to check watermarks in search views (and may be used in hooks)        
+                $access=$result[$n]["access"];
+            
+                if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
+    
+                hook('beforesearchviewcalls');
 
-            if ($display=="thumbs")
-                {
-                #  ---------------------------- Thumbnails view ----------------------------
-                include 'search_views/thumbs.php';
-                } 
+                if ($display=="thumbs")
+                    {
+                    #  ---------------------------- Thumbnails view ----------------------------
+                    include 'search_views/thumbs.php';
+                    } 
 
-            if ($display=="strip")
-                {
-                #  ---------------------------- Thumbnails view ----------------------------
-                include 'search_views/strip.php';
+                if ($display=="strip")
+                    {
+                    #  ---------------------------- Thumbnails view ----------------------------
+                    include 'search_views/strip.php';
+                    }
+
+
+                if ($display=="xlthumbs")
+                    {
+                    #  ---------------------------- X-Large Thumbnails view ----------------------------
+                    include "search_views/xlthumbs.php";
+                    }
+
+                if ($display=="list")
+                    {
+                    # ----------------  List view -------------------
+                    include "search_views/list.php";
+                    }
+
+                hook('customdisplaymode');
                 }
-
-
-            if ($display=="xlthumbs")
-                {
-                #  ---------------------------- X-Large Thumbnails view ----------------------------
-                include "search_views/xlthumbs.php";
-                }
-
-            if ($display=="list")
-                {
-                # ----------------  List view -------------------
-                include "search_views/list.php";
-                }
-
-             if ($display == 'map')
-                {
-                # ----Map view----
-                include_once 'search_views/map.php';
-                }
-
-            hook('customdisplaymode');
             }
     }
         }

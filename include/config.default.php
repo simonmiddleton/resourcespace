@@ -2438,25 +2438,23 @@ $enable_plugin_upload = true;
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
     $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
 
-    // Enable Google Maps for OpenLayers basemaps? If true, must also set $google_maps_api_key.
-    $use_google_maps = false;
-    # $google_maps_api_key = '';
-
     // OpenLayers basemap layers to make available, the first is the default.
-    //$geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
+    // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
 
-    $geo_leaflet_maps_sources = false;
-
-
-    // Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl).
+    // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
     $geo_tile_caching = true;
 
-    // Optional path to OpenLayers tile cache directory.
+    // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';
     
+
+    // TODO - support no servers
+    // TODO support old style servers
+
     // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
     // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
     // information. If no servers are available, then your zoom ability will be limited.
+    // After 9.6 any defiend will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable is enabled
     $geo_tile_servers = array();
     //$geo_tile_servers[] = 'a.tile.sometileserver.org';
     //$geo_tile_servers[] = 'b.tile.sometileserver.org';
@@ -2468,74 +2466,6 @@ $enable_plugin_upload = true;
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
 
-/*
-     
-         var osm_mapnik = L.tileLayer.provider('OpenStreetMap.Mapnik', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 19,
-             attribution: osm_attribute
-         });
- 
-         var osm_de = L.tileLayer.provider('OpenStreetMap.DE', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 18,
-             attribution: osm_attribute
-         });
- 
-         var osm_fr_attribute = '&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
-         var osm_fr = L.tileLayer.provider('OpenStreetMap.France', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 20,
-             attribution: osm_fr_attribute
-         });
- 
-         var osm_ch = L.tileLayer.provider('OpenStreetMap.CH', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 18,
-             attribution: osm_attribute
-         });
- 
-         var osm_bzh = L.tileLayer.provider('OpenStreetMap.BZH', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 19,
-             attribution: osm_attribute
-         });
- 
-         var osm_hot = L.tileLayer.provider('OpenStreetMap.HOT', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 19,
-             attribution: osm_attribute
-         });
- 
-         var osm_hikebike = L.tileLayer.provider('HikeBike.HikeBike', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 19,
-             attribution: osm_attribute
-         });
- 
-         var osm_mtb = L.tileLayer.provider('MtbMap', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             attribution: osm_attribute
-         });
- 
-         var osm_otm_attribute = 'Map data: &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: &copy; <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)';
-         var osm_otm = L.tileLayer.provider('OpenTopoMap', {
-             useCache: '<?php echo $map_default_cache;?>',
-             detectRetina: '<?php echo $map_retina;?>',
-             maxZoom: 17,
-             attribution: osm_otm_attribute
-         }); ";
-
-
-*/
     // How long will tiles be cached? Set to one year by default
     // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
     $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
@@ -2543,8 +2473,10 @@ $enable_plugin_upload = true;
     // Add OpenLayers configuration options to this variable to overwrite all other options.
     $geo_override_options = "";
 
-    // Leaflet default map center EPSG:3857 Web Mercator (WGS84) latitude and longitude in decimal degrees and zoom level.
-    $map_centerview = '[40.66, -111.44], 12';
+    // Leaflet default map center EPSG:3857 Web Mercator (WGS84) latitude and longitude in decimal degrees 
+    // $map_centerview = '[40.66, -111.44]';
+    // Leaflet default map centerzoom level.
+    // $map_default_zoom = 12;
 
     // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
     $geo_search_restrict = array(
@@ -2562,6 +2494,39 @@ $enable_plugin_upload = true;
     // Map height in pixels on the Resource Edit page.
     $mapedit_mapheight = 625;
 
+    // New settings for leaflet maps
+    $leaflet_maps_enable = false;
+
+    // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
+    // This should only be enabled if you are sure that license terms for the tile servers
+    // included will not be breached.
+    // Refer to /lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js to see all defined servers
+    $geo_leaflet_maps_sources = false;
+    // $geo_leaflet_sources = define available tile servers. 
+    $geo_leaflet_sources[] = array(
+        "group"         => "USGSTNM",
+        "code"          => "usgs",
+        "name"          => "usgs",
+        "url"           => "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+        "maxZoom"       => 20,
+        "detectRetina"  => true,
+        "attribution"   => "<a href=\'https://www.usgs.gov\'>U.S. Geological Survey</a>",
+        "default"       => true,
+        "extension"     => "jpeg",
+        "variants"      => array(
+            "USTopo"        => array(),
+            "USImagery"     => array(
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
+                ),
+            "USImageryTopo" => array(
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}',
+            ),
+            )
+        );
+
+    // Limit number of search results that can be displayed in map view. Set to 0 for no limit
+    $search_map_max_results = 5000;
+    
     // Leaflet: Use zoom slidebar instead of standard +/- buttons?
     $map_zoomslider = true;
 
@@ -2580,33 +2545,32 @@ $enable_plugin_upload = true;
     $map_retina = false;
 
     // Leaflet default basemap.
-    $map_default = 'OpenStreetMap.Mapnik'; # Options: 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
+    $map_default = 'USGSTNM.USTopo'; # Options e.g. 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
 
     // Leaflet: show resource thumbnail marker popup, instead of resource ID tooltip?
     $marker_resource_preview = true;
 
     // Leaflet: available marker colors and the order they will be used.
     $marker_colors = array(
-            0 => 'Unset',
-            1 => 'Blue',
-            2 => 'Red',
-            3 => 'Green',
-            4 => 'Orange',
-            5 => 'Yellow',
-            6 => 'Black',
-            7 => 'Grey',
-            8 => 'Violet'
+            0 => 'Blue',
+            1 => 'Red',
+            2 => 'Green',
+            3 => 'Orange',
+            4 => 'Yellow',
+            5 => 'Black',
+            6 => 'Grey',
+            7 => 'Violet'
             );
 
     // Default Leaflet marker color options based on resource type (0 = Blue, 1 = Red, 2 = Green, 3 = Orange, 4 = Yellow, 5 = Black, 6 = Gray, and 7 = Violet).
-    $marker_color1 = 0; # Photo resource type.
-    $marker_color2 = 1; # Document resource type.
-    $marker_color3 = 2; # Video resource type.
-    $marker_color4 = 3; # Audio resource type.
-    $marker_color5 = 4; # User added resource type 1.
-    $marker_color6 = 5; # User added resource type 2.
-    $marker_color7 = 6; # User added resource type 3.
-    $marker_color8 = 7; # User added resource type 4.
+    // $marker_color1 = 0; # Photo resource type.
+    // $marker_color2 = 1; # Document resource type.
+    // $marker_color3 = 2; # Video resource type.
+    // $marker_color4 = 3; # Audio resource type.
+    // $marker_color5 = 4; # User added resource type 1.
+    // $marker_color6 = 5; # User added resource type 2.
+    // $marker_color7 = 6; # User added resource type 3.
+    // $marker_color8 = 7; # User added resource type 4.
 
     // Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
     # $marker_metadata_field = 85; # Example is fieldID 85.
@@ -2614,14 +2578,14 @@ $enable_plugin_upload = true;
 
     // Array of minimum and maximum numeric values for the markers on the map up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
     $marker_metadata_array = [
-        ['min' => 1935, 'max' => 1939], # Marker 1
-        ['min' => 1940, 'max' => 1949], # Marker 2
-        ['min' => 1950, 'max' => 1959], # Marker 3
-        ['min' => 1960, 'max' => 1969], # Marker 4
-        ['min' => 1970, 'max' => 1979], # Marker 5
-        ['min' => 1980, 'max' => 1989], # Marker 6
-        ['min' => 1990, 'max' => 1999], # Marker 7
-        ['min' => 2000, 'max' => 2010]  # Marker 8
+        0 => ['min' => 1935, 'max' => 1939], # Blue marker
+        1 => ['min' => 1940, 'max' => 1949], # Red marker
+        2 => ['min' => 1950, 'max' => 1959], # Green marker
+        3 => ['min' => 1960, 'max' => 1969], # Orange marker
+        4 => ['min' => 1970, 'max' => 1979], # Yellow marker
+        5 => ['min' => 1980, 'max' => 1989], # Black marker
+        6 => ['min' => 1990, 'max' => 1999], # Grey marker
+        7 => ['min' => 2000, 'max' => 2010]  # Violet marker
     ];
 
     // Resource metadata field integer ID containing polygon footprint location string, blank '' if not used.  String in (latitude, longitude) coordinate pairs separated by a comma: (40.75,-111.51), (40.75,-111.49), (40.73,-111.49), (40.73,-111.51) or using braces [].  String can also contain a fifth pair that closes the polygon and equal to the first pair.

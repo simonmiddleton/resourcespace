@@ -23,7 +23,7 @@ if ($geo_override_options == "")
         }?>
     );
 
-    map.addLayers([<?php echo $geo_layers ?>]);
+    map.addLayers([osm]);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     <?php 
     if(count($geo_tile_servers) == 0)

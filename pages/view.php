@@ -1774,7 +1774,15 @@ if (!$disable_geocoding)
     // Only show the map if the resource is geocoded or they have the permission to geocode it.
     if ($edit_access || ($resource['geo_lat'] != '' && $resource['geo_long'] != ''))
         {
-        include '../include/geocoding_view.php';
+        if($leaflet_maps_enable)
+            {
+            include '../include/geocoding_view.php';
+            }
+        else
+            {
+            // Include legacy OpenLayers code
+            include '../include/geocoding_view_ol.php';
+            }
         }
     }
 ?>

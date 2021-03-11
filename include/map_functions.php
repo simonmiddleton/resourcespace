@@ -3,6 +3,9 @@
 // To add additional basemap sources, see http://leaflet-extras.github.io/leaflet-providers/preview/index.html for the provider names, attribution, maximum zoom level, and any other required provider parameters, and add to the appropriate basemap group below or create a new basemap group.  Will also need to add additional code into the <!--Determine basemaps and map groups for user selection--> section on each PHP page using Leaflet maps (../pages/geo_search.php), the Leaflet Providers section in ../include/config.default.php, and the appropriate providers group section in ../languages/en.php.
 
 // Define available Leaflet basemaps groups and layers using leaflet.providers.js, L.TileLayer.PouchDBCached.js, and styledLayerControl.js.
+
+use Gettext\Languages\Exporter\Php;
+
 function leaflet_osm_basemaps() // OpenStreetMap basemaps.
     {
     global $map_default_cache, $map_retina;
@@ -510,44 +513,41 @@ function leaflet_coordinate_check($coordinate, $type)
 // Create a map color markers legend.
 function leaflet_markers_legend()
     {
-    global $lang, $marker_metadata_field, $marker_colors, $marker_color1, $marker_color2, $marker_color3, $marker_color4, $marker_color5, $marker_color6, $marker_color7, $marker_color8, $marker_metadata_array;
+    global $lang, $marker_metadata_field, $marker_metadata_array, $marker_colors;
 
-    $marker_color_def = array($marker_color1, $marker_color2, $marker_color3, $marker_color4, $marker_color5, $marker_color6, $marker_color7, $marker_color8);
+    //$marker_color_def = array($marker_color1, $marker_color2, $marker_color3, $marker_color4, $marker_color5, $marker_color6, $marker_color7, $marker_color8);
 
     if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '')
         { ?>
-        <b> <?php echo $lang['legend_text']?>&nbsp;</b> <?php
-
-        for ($i = 1; $i < 9; $i++) // Start at 1, since we are not using the Global resource type.
+        <b> <?php echo $lang['legend_text']?>&nbsp;</b>
+        <?php
+        $restypes = get_resource_types();
+        foreach($restypes as $restype)
             {
-            if (!empty(get_resource_type_name($i)))
-                {
-                $ic = $i - 1; // Start at 0 for $marker_color_def array.
-
-                ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($marker_colors[$marker_color_def[$ic]])?>.png" alt="<?php echo $marker_colors[$marker_color_def[$ic]]?> Icon" style="width:19px;height:31px;"> <?php echo get_resource_type_name($i); ?> &nbsp; <?php
-                }
+            $markercolour = (isset($restype["colour"]) && $restype["colour"] > 0) ? (int)$restype["colour"] : ($restype['ref'] % count($marker_colors));
+            echo "<img src='../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-" . strtolower($marker_colors[$markercolour])  . ".png' alt='" . $marker_colors[$markercolour] . " Icon' style='width:19px;height:31px;'>" . $restype["name"] . "&nbsp;";
             }
         }
     else // Custom metadata field color markers legend.
         { ?>
         <b> <?php echo $lang['custom_metadata_markers']?>&nbsp;</b> <?php
 
-        // Loop through and create the custom color marker legend text.
-        for ($i = 0; $i < 8; $i++)
+        // Loop through and create the custom color marker legend text, ignoring the first 'unset' item
+        for ($i = 0; $i < count($marker_metadata_array); $i++)
             {
             $ltext[$i] = $marker_metadata_array[$i]['min'] . "-" . $marker_metadata_array[$i]['max'];
             }
 
-        for ($i = 0; $i < 8; $i++)
+        for ($i = 0; $i < count($marker_metadata_array); $i++)
             {
-            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($marker_colors[$marker_color_def[$i]])?>.png" alt="<?php echo $marker_colors[$marker_color_def[$i]]?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
+            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($marker_colors[$i])?>.png" alt="<?php echo $marker_colors[$i]?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
             }
         }
     }
 
 function header_add_map_providers()
     {
-    global $geo_leaflet_sources, $baseurl;
+    global $geo_leaflet_sources, $baseurl, $geo_tile_caching;
     ?>
     <script>
     // Copied from leaflet-providers.js
@@ -643,19 +643,29 @@ function header_add_map_providers()
                     continue;
                     }
                 $urlparams = array(
-                        "provider"=>$leaflet_source["code"]                
+                        "provider"  =>  $leaflet_source["code"],
+                        "apikey"    =>  isset($leaflet_source["apikey"]) ? $leaflet_source["apikey"] : "",               
                     );
                 echo "        url: '" . generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}',\n";
                 echo "        options: {\n";
                 if(isset($leaflet_source["maxZoom"]) && is_int_loose($leaflet_source["maxZoom"]))
                     {
-                    echo "        maxZoom: " . $leaflet_source["maxZoom"] . ",\n";
+                    echo "        maxZoom: " . (int)$leaflet_source["maxZoom"] . ",\n";
                     } 
                 if(isset($leaflet_source["attribution"]))
                     {
                     echo "        attribution: '" . htmlspecialchars($leaflet_source["attribution"]) . "',\n";
                     }
                 echo "        },\n";
+
+                foreach($leaflet_source["variants"] as $variant=>&$variantdata)
+                    {
+                    if($geo_tile_caching)
+                        {
+                        $urlparams["variant"] = $variant;
+                        $variantdata["url"] = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}',\n";
+                        }
+                    }                    
 
                 echo "        variants: " . json_encode($leaflet_source["variants"], JSON_PRETTY_PRINT);
                 }   
@@ -694,25 +704,27 @@ function get_geolibraries()
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-control-geocoder-1.10.0/dist/Control.Geocoder.min.js"></script>
 
     <!--Polyfill for Internet Explorer and Edge browser compatibility-->
-    <script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces5%2Ces6%2Ces2017%2Cdefault%2Ces2018%2Ces7"></script>
+    <!--<script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces5%2Ces6%2Ces2017%2Cdefault%2Ces2018%2Ces7"></script>-->
     <?php
     }
 
 /**
- *  Set bounds for default map view (geo_search.phgp and geo_edit.php)
- *  Uses legacy $geolocation_default_bounds setting if it has been set in config.php
+ *  Set bounds for default map view (geo_search.php and geo_edit.php)
  *
  * @return void
  */
-function set_geo_bounds()
+function set_geo_map_centerview()
     {
-    global $geolocation_default_bounds, $map_centerview;
-    if(isset($geolocation_default_bounds))
-        {
-        $bounds = explode(",", $geolocation_default_bounds);
-        if(count($bounds) == 3)
-            {
-            $map_centerview = "[" . $bounds[0] . "," . $bounds[1] . "]," . $bounds[2];
-            }
-        }
+    global $geolocation_default_bounds;    
+    $centerparts = explode(",",$geolocation_default_bounds);
+    echo "\n    mapcenterview= L.CRS.EPSG3857.unproject(L.point(" . $centerparts[0] . "," . $centerparts[1] . "));\n";
+    echo "mapdefaultzoom = " . (int)$centerparts[2] . ";\n";
+    }
+
+function get_geo_maps_scripts()
+    {
+    global $baseurl;
+    ?>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/leaflet.markercluster.min.js"></script>
+    <?php
     }

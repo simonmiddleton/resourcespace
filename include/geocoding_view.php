@@ -198,7 +198,12 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
         <?php include __DIR__ . '/map_processing.php'; ?>
 
         <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
-        var defaultLayer = new LeafletView.tileLayer.provider('<?php echo $map_default;?>', {
+        startlayer = getCookie('geo_layer');
+        if(typeof startlayer == "undefined")
+            {
+            startlayer = '<?php echo $map_default;?>';
+            }
+        var defaultLayer = new LeafletView.tileLayer.provider(startlayer, {
             useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
             detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
             attribution: default_attribute
@@ -253,6 +258,11 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
 
         <!--Add a marker for the resource-->
         LeafletView.marker([geo_lat, geo_long], {
+            <?php
+            $maprestype = get_resource_types($resource['resource_type']);
+            $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($marker_colors));
+            echo "icon: " . strtolower($marker_colors[$markercolour])  . "Icon,\n";
+            ?>
             title: georound(geo_lat) + ", " + georound(geo_long) + " (WGS84)"
         }).addTo(map);
 
