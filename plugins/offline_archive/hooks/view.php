@@ -21,9 +21,9 @@ function HookOffline_archiveViewResourceactions()
 	return false;
 	}
 
-function HookOffline_archiveViewRenderbeforeresourceview()
+function HookOffline_archiveViewRenderbeforeresourceview($resource)
 	{
-	global $resource,$ref,$lang;
+	global $ref,$lang;
 	if ($resource["archive"]==2)
 		{
 		$checkrestorepending=sql_value("select pending_restore as value from resource where ref='$ref'",0);
