@@ -42,6 +42,23 @@ $ext            = getvalescaped('ext', '');
 $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 $modal          = (getval("modal","")=="true");
 
+// Tile support
+$tile_scale = getval('tile_scale', 1, true);
+$tile_scale = (in_array($tile_scale, $preview_tile_scale_factors));
+$tile_row = getval('tile_row', 0, true);
+$tile_col = getval('tile_col', 0, true);
+$tile_region = $preview_tile_size * $tile_scale;
+
+
+
+
+
+
+
+
+
+
+
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
     $ext='jpg';
@@ -133,7 +150,7 @@ else
         $size="";
     }
     
-    $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
