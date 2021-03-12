@@ -271,7 +271,6 @@ $permitted_html_tags =  array(
             'samp',
             'kbd',
             'tt'
-
         );
 
 // Array of default html attributes that are permitted in field data
