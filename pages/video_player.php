@@ -50,7 +50,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 		# Attempt to play the source file direct (not a preview). For direct MP4 upload support - the file itself is an MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
 		$origvideofile = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, false, '', $alternative);
 
-		if(file_exists($origvideofile))
+		if(file_exists($origvideofile) && in_array($resource['file_extension'],array("mp4","mov"))) # Check video js supported file type
 			{
 			$video_preview_path = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
 			$video_preview_type = "video/{$ffmpeg_preview_extension}";
