@@ -2197,7 +2197,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
     if(is_array($email_notify_usergroups) && count($email_notify_usergroups)>0)
         {
         // If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
-        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
+        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email, lang from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
         return $notification_users_cache[$userpermissionindex];
         }
     
@@ -2723,28 +2723,45 @@ function get_languages_notify_users(array $languages = array())
     {
     global $applicationname,$defaultlanguage;
     
-    $language_strings_all = array();
+    $language_strings_all   = array();
+    $lang_file_en           = dirname(__FILE__)."/../languages/en.php";
+    $lang_file_default      = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+
+     // add en and default language lang array values - always need en as some lang arrays do not contain all strings
+    include $lang_file_en;
+    $language_strings_all["en"] = $lang; 
+
+    include $lang_file_default;
+    $language_strings_all[$defaultlanguage] = $lang; 
        
-        // load language files into array for each language
+    // remove en and default language from array of languages to use
+    $langs2remove = array_unique(array("en", $defaultlanguage));
+    foreach($langs2remove as $lang2remove)
+        {
+        if (in_array($lang2remove, $languages))
+            {
+            unset($languages[$lang2remove]);
+            }
+        }
+
+    // load lang array values into array for each language
     foreach($languages as $language)
         {
         $lang = array();
 
-        // load default values
-        $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
-        include $defaultlangfile;
+        // include en and default lang array values
+        include $lang_file_en;
+        include $lang_file_default;
 
-        // load preferred language, overwriting default values where preferred language strings exist
-        $message_language = $language != "" ? $language : $defaultlanguage;
-        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
-        include $messagelangfile;
-        $language_strings_all[$message_language] = $lang; // append $lang array 
+        $lang_file = dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+
+        if (file_exists($lang_file))
+            {
+            include $lang_file;
+            }
+        
+        $language_strings_all[$language] = $lang; // append $lang array 
         }     
-
-    // load default language
-    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
-    include $defaultlangfile;
-    $language_strings_all[] = $lang; // append $lang array 
 
     return $language_strings_all;
     }
