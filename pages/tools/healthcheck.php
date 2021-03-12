@@ -97,7 +97,7 @@ catch (Exception $e)
 unset($GLOBALS["use_error_exception"]);
 
 $plugincheck = hook("errorcheckadditional");
-if($plugincheck !== true)
+if(is_string($plugincheck))
     {
     exit($plugincheck);
     }

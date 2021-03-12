@@ -612,8 +612,8 @@ function HookSimplesamlHealthcheckErrorcheckadditional()
         }
     catch (Exception $e)
         {
-        return false; 
+        return "FAIL - " . $lang['simplesaml_healthcheck_error']; 
         }
     unset($GLOBALS["use_error_exception"]);
-    return $samlok ? true: "FAIL - " . $lang['simplesaml_healthcheck_error'];
+    return $samlok ? true : "FAIL - " . $lang['simplesaml_healthcheck_error'];
     }
