@@ -601,3 +601,19 @@ function HookSimplesamlAllCheck_access_key()
     // return false because check_access_key() returns true without doing any checks on the key if hook returns TRUE
     return false;
     }
+
+function HookSimplesamlHealthcheckErrorcheckadditional()
+    {
+    global $lang;
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        $samlok = simplesaml_config_check() && simplesaml_php_check();
+        }
+    catch (Exception $e)
+        {
+        return false; 
+        }
+    unset($GLOBALS["use_error_exception"]);
+    return $samlok ? true: "FAIL - " . $lang['simplesaml_healthcheck_error'];
+    }

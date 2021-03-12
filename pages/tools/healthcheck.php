@@ -95,6 +95,12 @@ catch (Exception $e)
     // Error accesing filestore URL - this is as expected    
     }
 unset($GLOBALS["use_error_exception"]);
+
+$plugincheck = hook("errorcheckadditional");
+if($plugincheck !== true)
+    {
+    exit($plugincheck);
+    }
     
 // All is well.
 
