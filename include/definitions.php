@@ -263,7 +263,15 @@ $permitted_html_tags =  array(
             'b',
             'u',
             'p',
-            'i'
+            'i',
+            'big',
+            'cite',
+            'q',
+            'var',
+            'samp',
+            'kbd',
+            'tt'
+
         );
 
 // Array of default html attributes that are permitted in field data
