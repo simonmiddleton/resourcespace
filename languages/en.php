@@ -378,7 +378,7 @@ $lang["collection-name"]="Collection: %collectionname%"; # %collectionname will 
 $lang["collectionid"]="Collection ID";
 $lang["collectionidprefix"]="Col_ID";
 $lang["_dupe"]="_dupe";
-$lang["emailtousers"]="E-mail to users<br><br><b>For existing users</b> start typing the user's name to search, click the user when found and then click plus<br><br><b>For non-registered users</b> type the e-mail address then click plus";
+$lang["emailtousers"]="E-mail to users<br><br><b>For existing users</b> start typing the user's name to search, select the user when found and then click plus<br><br><b>For non-registered users</b> type the e-mail address then click plus";
 $lang["emailtousers_internal"]="E-mail to users<br><br>Start typing the user's name to search, then click the required user when found";
 $lang["removecollectionareyousure"]="Are you sure you wish to remove this collection from your list?";
 $lang["managemycollections"]="Manage my collections";
@@ -419,7 +419,7 @@ $lang["emailcollectionmessage"]="has e-mailed you a collection of resources from
 $lang['collectionprivate_attachedusermessage']="%user% has added you to their collection '%colname%'.";
 $lang["nomessage"]="No message";
 $lang["emailcollectionmessageexternal"]="has e-mailed you a collection of resources from $applicationname."; # suffixed to user name e.g. "Fred has e-mailed you a collection..."
-$lang["clicklinkviewcollection"]="Click the link below to view the collection.";
+$lang["clicklinkviewcollection"]="Use the link below to view the collection.";
 $lang["zippedcollectiontextfile"]="Include text file with resource/collection data.";
 $lang["archivesettings"]="Archive settings";
 $lang["archive-zip"]="ZIP";
@@ -447,8 +447,8 @@ $lang["ownedbyyou"]="owned by you";
 $lang["edit_theme_category"]="Edit featured collection category";
 $lang["emailthemecollectionmessageexternal"]="has e-mailed you collections of resources from $applicationname."; 
 $lang["emailthememessage"]="has e-mailed you a selection of featured collections from $applicationname which have been added to your 'My collections' page.";
-$lang["clicklinkviewthemes"]="Click the link below to view the featured collections.";
-$lang["clicklinkviewcollections"]="Click the links below to view the collections.";
+$lang["clicklinkviewthemes"]="Use the link below to view the featured collections.";
+$lang["clicklinkviewcollections"]="Use the links below to view the collections.";
 $lang["background_image"] = "Background image";
 $lang["background_most_popular_image"] = "Most popular image";
 $lang["background_most_popular_images"] = "Most popular %n images";
@@ -1096,7 +1096,7 @@ $lang["clearall"]="Clear all";
 $lang["clearcategoriesareyousure"]="Are you sure you wish to clear all selected options?";
 
 $lang["archive"]="Archive";
-$lang["collectionviewhover"]="Click to see the resources in this collection";
+$lang["collectionviewhover"]="See all resources in this collection";
 $lang["collectioncontacthover"]="Create a contact sheet with the resources in this collection";
 $lang["original"]="Original";
 
@@ -1161,7 +1161,7 @@ $lang["ratethisresource"]="How do you rate this resource?";
 $lang["ratingthankyou"]="Thank you for your rating.";
 $lang["ratings"]="ratings";
 $lang["rating_lowercase"]="rating";
-$lang["ratingremovehover"]="Click to remove your rating";
+$lang["ratingremovehover"]="Remove your rating";
 $lang["ratingremoved"]="Your rating has been removed.";
 
 $lang["cannotemailpassword"]="You cannot e-mail the user their existing password as it is not stored (a cryptographic hash is stored instead).<br /><br />You must use the 'Suggest' button above which will generate a new password and enable the e-mail function.";
@@ -1186,8 +1186,8 @@ $lang["backtofieldlist"]="Back to field list";
 $lang["rename"]="Rename";
 $lang["showalllanguages"]="Show all languages";
 $lang["hidealllanguages"]="Hide all languages";
-$lang["clicktologinasthisuser"]="Click to log in as this user";
-$lang["clicktoviewlog"]="Click to view log";
+$lang["clicktologinasthisuser"]="Log in as this user";
+$lang["clicktoviewlog"]="View log";
 $lang["addkeyword"]="Add keyword";
 $lang["selectedresources"]="Selected resources";
 $lang["phpextensions"]="PHP extensions";
@@ -2410,7 +2410,7 @@ $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border 
 $lang['manage_dash_tiles'] = 'Dash tiles';
 $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
-$lang['upgrade_available_text'] = 'Click for more information about the new version';
+$lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
 
 /* User group dash tiles */
@@ -2623,8 +2623,8 @@ $lang["slideshow_use_static_image"] = "Use a single random image from the set (i
 $lang["slideshow-image"] = "slideshow image";
 $lang["manage-slideshow-instructions"] = "A slideshow image can be shown in multiple areas on the system. To select other locations, please tick the check boxes below. You can also click on the preview of an image and see details of the resource it is linked to (if any).";
 
-$lang["emailcollectionrequest"] = "<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
-$lang["emailusercollectionrequest"] = "<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the requested resources.<br /><a href='[url]'>[url]</a>";
+$lang["emailcollectionrequest"] = "<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Use the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
+$lang["emailusercollectionrequest"] = "<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Use link below to view the requested resources.<br /><a href='[url]'>[url]</a>";
 $lang['user_pref_show_notifications'] = "Show me system notifications on screen as they are received. If disabled, the counter will still update to indicate the presence of new messages";
 $lang['user_pref_daily_digest'] = "Send me a daily email with all unread notifications from the last 24 hours";
 $lang['email_daily_digest_subject'] = "Notification summary";
@@ -2640,7 +2640,7 @@ $lang["pixel_height"]="Pixel height";
 $lang["pixel_width"]="Pixel width";
 $lang["file_extension_label"]="File extension";
 $lang["signin_required"]="You must be signed in to perform this action";
-$lang["signin_required_request_account"]="You must be signed in to perform this action. If you do not have an account you can request one by clicking on the above link";
+$lang["signin_required_request_account"]="You must be signed in to perform this action. If you do not have an account you can request one using the above link";
 $lang["error_batch_edit_resources"] = "The following resources have not been updated";
 # Job queue message strings
 $lang["job_queue_manage"] = "Job queue";
@@ -2975,9 +2975,9 @@ $lang["upload_share_email_users"]           = "E-mail to users<br><br>Type each 
 $lang["upload_share_email_subject"]         = "You've been sent an upload link from ";
 $lang["upload_share_email_text"]            = " has sent you a link to upload files to ";
 $lang["upload_share_email_password"]        = "Use this password to access the link";
-$lang["upload_share_email_clicklink"]       = "Please click the link below to start uploading";
+$lang["upload_share_email_clicklink"]       = "Please use the link below to start uploading";
 $lang["upload_share_email_template"]        = "<br />\n[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> \n[lang_message] : [message]<br /><br />\n[lang_upload_share_email_clicklink]<br />\n<br />\n[link]\n<br />\n<br />\n[passwordtext]";
-$lang["upload_share_complete"]              = "Thank you for uploading. Please click the button below to upload more resources";
+$lang["upload_share_complete"]              = "Thank you for uploading. Please use the button below to upload more resources";
 $lang["error_invalid_usergroup"]            = "Invalid usergroup";
 $lang["error_invalid_date"]                 = "Invalid date";
 $lang["error_invalid_key"]                  = "Invalid key";
