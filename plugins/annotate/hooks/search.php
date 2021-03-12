@@ -45,11 +45,11 @@ function HookAnnotateSearchIcons($collections = false)
 
 function HookAnnotateSearchThumbs_resourceshell_height()
     {
-    global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view, $thumbs_displayed_fields_height;
+    global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view, $thumbs_displayed_fields_height, $field_height;
 
     if(!('' != $k && !$annotate_public_view))
         {
-        $thumbs_displayed_fields_height=$thumbs_displayed_fields_height + 28;
+        $thumbs_displayed_fields_height = $thumbs_displayed_fields_height + $field_height;
         }
     
     }

@@ -1616,8 +1616,7 @@ function pager($break=true,$scrolltotop=true,$options=array())
             if ($curpage<$totalpages)
                 {
                 ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
-                }?>
-            <i aria-hidden="true" class="fa fa-arrow-right"></i>
+                }?><i aria-hidden="true" class="fa fa-arrow-right"></i>
             <?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
             </span>
             
@@ -4463,8 +4462,10 @@ function trim_filename(string $s)
 /**
 * Flip array keys to use one of the keys of the values it contains. All elements (ie values) of the array must contain 
 * the key (ie. they are arrays). Helper function to greatly increase search performance on huge PHP arrays.
+* Normal use is: array_flip_by_value_key($huge_array, 'ref');
 * 
-* IMPORTANT: make sure that for the key you use all elements have a unique value set.
+* 
+* IMPORTANT: make sure that for the key you intend to use all elements will have a unique value set.
 * 
 * Example: Result after calling array_flip_by_value_key($nodes, 'ref');
 *     [20382] => Array
@@ -4612,3 +4613,28 @@ for ($n=0;$n<count($i);$n++)
     }
 return false;
 }
+
+/**
+ * Ensures filename is unique in $filenames array and adds resulting filename to the array
+ *
+ * @param  string $filename     Requested filename to be added. Passed by reference
+ * @param  array $filenames     Array of filenames already in use. Passed by reference
+ * @return string               New filename 
+ */
+function set_unique_filename(&$filename,&$filenames)
+    {
+    global $lang;
+    if(in_array($filename,$filenames))
+        {
+        $path_parts = pathinfo($filename);
+        if(isset($path_parts['extension']) && isset($path_parts['filename']))
+            {
+            $filename_ext = $path_parts['extension'];
+            $filename_wo  = $path_parts['filename'];
+            // Run through function to guarantee unique filename
+            $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
+            }
+        }
+    $filenames[] = $filename; 
+    return $filename;
+    }

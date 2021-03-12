@@ -1264,7 +1264,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
         # Special case if a key has been provided.
-        if(getval('k', '') != '')
+        if($k != '')
             {
             $sql_filter = 'r.ref > 0';
             }
@@ -1276,21 +1276,30 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        $upload_share_active = upload_share_active();
-        $validcollections = $upload_share_active !== false ? get_session_collections(get_rs_session_id(), $userref) : array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+        $validcollections = [];
+        if(upload_share_active() !== false)
+            {
+            $validcollections = get_session_collections(get_rs_session_id(), $userref);
+            }
+        else
+            {
+            $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+            $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
+            $validcollections = array_unique(array_merge($user_collections, $public_collections));
+            }
 
-        if(validate_collection_parent($collection)=="" || (checkperm("j*")) || (checkperm("j" . validate_collection_parent($collection))))            {
+        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
+            {
             if(!collection_readable($collection))
                 {
                 return array();
                 }
             }
-        else
+        elseif($k == "" || upload_share_active() !== false)
             {
-            exit($lang["error-permissiondenied"]);
+            return [];
             }
         
-
         # Smart collections update
         global $allow_smart_collections, $smart_collections_async;
         if($allow_smart_collections)

@@ -1,31 +1,65 @@
 <?php
 include_once dirname(__DIR__) . '/include/museumplus_functions.php';
+include_once dirname(__DIR__) . '/include/museumplus_resource_functions.php';
+include_once dirname(__DIR__) . '/include/museumplus_search_functions.php';
 
-// Constants
+############################################################
+### Constants ##############################################
+############################################################
 define('MPLUS_LOCK', 'museumplus_import');
 define('MPLUS_LAST_IMPORT', 'last_museumplus_import');
+define('MPLUS_FIELD_ID', '__id'); # This field holds the technical ID of a module item. @see http://docs.zetcom.com/ws/
 
 
-// API
+############################################################
+### MuseumPlus API (MpRIA) #################################
+############################################################
 $museumplus_host = '';
 $museumplus_application = '';
 $museumplus_api_user = '';
 $museumplus_api_pass = '';
-$museumplus_search_mpid_field = '';
+
+// Batch chunk size for Mplus API requests (e.g for expert searches).
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is integer
+$museumplus_api_batch_chunk_size = (isset($GLOBALS['museumplus_api_batch_chunk_size']) && is_int($GLOBALS['museumplus_api_batch_chunk_size']) && $GLOBALS['museumplus_api_batch_chunk_size'] > 0 ? $GLOBALS['museumplus_api_batch_chunk_size'] : 50);
 
 
-// ResourceSpace settings
-$museumplus_mpid_field = null;
-$museumplus_resource_types = array();
-$museumplus_cms_url_form_part = "";
+############################################################
+### ResourceSpace settings #################################
+############################################################
+$museumplus_module_name_field = 0;
+// Field to hold extra secondary links. RS will just generate appropriate M+ URLs based on each link. Secondary links 
+// have a special syntax format: <module name>:<technical ID> e.g. "Object:1234".
+$museumplus_secondary_links_field = 0;
 
-// Script settings
+// Should updating a resource association data -or- "unlinking" a resource from a module record clear the data of the mapped fields in RS?
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is boolean
+$museumplus_clear_field_mappings_on_change = (isset($GLOBALS['museumplus_clear_field_mappings_on_change']) && is_bool($GLOBALS['museumplus_clear_field_mappings_on_change']) ? $GLOBALS['museumplus_clear_field_mappings_on_change'] : false);
+
+// Show a custom top navigation menu with a direct link to the special search (!mplus_invalid_assoc)
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php and/or user group config overrides. @type is boolean
+$museumplus_top_nav = (isset($GLOBALS['museumplus_top_nav']) && is_bool($GLOBALS['museumplus_top_nav']) ? $GLOBALS['museumplus_top_nav'] : true);
+
+
+############################################################
+### Script settings ########################################
+############################################################
 $museumplus_enable_script = true;
 $museumplus_interval_run = ''; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php
 $museumplus_log_directory = '';
 $museumplus_script_failure_notify_days = 3;
-$museumplus_integrity_check_field = null; # not in use until we can reliably get integrity checks of the data from M+
+$museumplus_integrity_check_field = 0; # NOT IN USE until we can reliably get integrity checks of the data from M+. Even __lastModified can't guarantee us some of the virtual fields haven't been changed from other modules.
 
-// MuseumPlus - ResourceSpace mappings
-$museumplus_rs_saved_mappings = base64_encode(serialize(array()));
 
+############################################################
+### MuseumPlus - ResourceSpace modules setup ###############
+############################################################
+$museumplus_modules_saved_config = plugin_encode_complex_configs([
+    1 => [
+        'module_name' => 'Object',
+        'mplus_id_field' => '',
+        'rs_uid_field' => 0,
+        'applicable_resource_types' => [],
+        'field_mappings' => [],
+    ]
+]);

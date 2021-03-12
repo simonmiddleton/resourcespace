@@ -502,21 +502,24 @@ function do_search(
                         $rangefield=$rangefieldinfo["ref"];
                         $rangestring=substr($keystring,8);
                         $minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
-                        if ($max=='' || $min=='')
+                        if ($max!='' || $min !='')
                             {
-                            // if only one number is entered, do a direct search
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                                $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
+                            // At least the min or max should be set
+                            if ($max=='' || $min=='')
+                                {
+                                // if only one number is entered, do a direct search
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                    $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
+                                }
+                            else
+                                {
+                                // else use min and max values as a range search
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                $sql_filter.="rd" . $c . ".value >= " . $min . " ";
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                $sql_filter.="rd" . $c . ".value <= " . $max." ";
+                                }
                             }
-                        else
-                            {
-                            // else use min and max values as a range search
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                            $sql_filter.="rd" . $c . ".value >= " . $min . " ";
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                            $sql_filter.="rd" . $c . ".value <= " . $max." ";
-                            }
-                            
                         $sql_join.=" JOIN resource_data rd" . $c . " ON rd" . $c . ".resource=r.ref AND rd" . $c . ".resource_type_field='" .$rangefield . "'";
 						$keywordprocessed=true;
                         }

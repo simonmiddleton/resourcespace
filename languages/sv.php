@@ -312,13 +312,7 @@ $lang["resources_uploaded-n"]="%done% material överfördes korrekt."; # %done% 
 $lang["resources_failed-0"]="0 överföringar misslyckades.";
 $lang["resources_failed-1"]="1 överföring misslyckades.";
 $lang["resources_failed-n"]="%failed% överföringar misslyckades."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Ange ftp-server";
-$lang["ftpserver"]="Ftp-server";
-$lang["ftpusername"]="Användarnamn (ftp)";
-$lang["ftppassword"]="Lösenord (ftp)";
-$lang["ftpfolder"]="Mapp (ftp)";
 $lang["connect"]="Anslut";
-$lang["uselocalupload"]="ELLER: Använd en lokal överföringsmapp i stället för ftp-server";
 
 # User contributions
 $lang["contributenewresource"]="Bidra med nytt material";
@@ -869,9 +863,7 @@ $lang["warningexpiredtext"]="Varning! Materialets utgångsdatum har passerats. D
 $lang["warningexpiredok"]="&gt; Aktivera hämtning av material";
 $lang["userrequestcomment"]="Meddelande";
 $lang["addresourcebatchbrowser"]="Lägg till material i grupp – i webbläsare";
-$lang["addresourcebatchbrowserjava"]="Lägg till material i grupp – i webbläsare (Java – äldre)";
 
-$lang["addresourcebatchftp"]="Lägg till material i grupp – överför från ftp-server";
 $lang["replaceresourcebatch"]="Ersätt material i grupp";
 $lang["editmode"]="Redigeringsläge";
 $lang["replacealltext"]="Ersätt befintlig text";
@@ -998,7 +990,6 @@ $lang["hidealllanguages"]="Dölj alla språk";
 $lang["clicktologinasthisuser"]="Klicka här om du vill logga in som denna användare";
 $lang["addkeyword"]="Lägg till nyckelord";
 $lang["selectedresources"]="Valda material";
-$lang["addresourcebatchlocalfolder"]="Lägg till material i grupp – överfrån från lokal mapp";
 $lang["phpextensions"]="PHP-utökningar";
 
 # Setup Script
@@ -1084,8 +1075,6 @@ $lang["setup-storage_directory"]="Lagringskatalog";
 $lang["setup-if_storagedirectory"]="Var materialfilerna lagras. Kan vara en absolut sökväg (/var/www/blah/blah) eller relativ till installationen. Obs! Inget efterföljande snedstreck.";
 $lang["setup-storage_url"]="Lagringskatalogens webbadress";
 $lang["setup-if_storageurl"]="Var lagringskatalogen finns tillgänglig. Kan vara absolut (http://filer.exempel.se) eller relativ till installationen. Obs! Inget efterföljande snedstreck.";
-$lang["setup-ftp_settings"]="Ftp-inställningar";
-$lang["setup-if_ftpserver"]="Krävs endast om du planerar att hämta material från en ftp-server.";
 $lang["setup-login_to"]="Logga in i";
 $lang["setup-configuration_file_output"]="Utmatning till konfigurationsfilen";
 
@@ -1617,12 +1606,8 @@ $lang["error-collectionnotfound"]="Samlingen hittades inte.";
 
 $lang["header-upload-subtitle"] = "Steg %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Lokal överföringsmapp";
-$lang["ftp_upload_path"] = "Ftp-mapp";
 $lang["foldercontent"] = "Mappinnehåll";
 $lang["intro-local_upload"] = "Välj en eller flera filer från den lokala överföringsmappen och klicka sedan på <b>Överför</b>. När filerna är överförda kan de tas bort från överföringsmappen.";
-$lang["intro-ftp_upload"] = "Välj en eller flera filer från ftp-mappen och klicka sedan på <b>Överför</b>.";
-$lang["intro-java_upload"] = "Klicka på <b>Bläddra</b> för att välja en eller flera filer och klicka sedan på <b>Överför</b>.";
-$lang["intro-java_upload-replace_resource"] = "Klicka på <b>Bläddra</b> för att välja en fil och klicka sedan på <b>Överför</b>.";
 $lang["intro-single_upload"] = "Klicka på <b>Bläddra</b> för att välja en fil och klicka sedan på <b>Överför</b>.";
 $lang["intro-plupload"] = "Klicka på <b>Lägg till filer</b> för att välja en eller flera filer och klicka sedan på <b>Starta överföring</b>.";
 $lang["intro-plupload_dragdrop"] = "Dra och släpp eller klicka på <b>Lägg till filer</b> för att välja en eller flera filer och klicka sedan på <b>Starta överföring</b>.";
@@ -1852,9 +1837,6 @@ $lang["resource_request__introtext"]="Din begäran är nästan slutförd. Ange a
 $lang["search_advanced__introtext"]="<strong>Söktips</strong><br />Ett avsnitt som du lämnar tomt eller omarkerat medför att <i>allt</i> inkluderas i sökningen. Om du till exempel lämnar alla länders kryssrutor omarkerade, begränsas sökningen inte med avseende på land. Om du däremot sedan markerar kryssrutan ’Sverige’ ger sökningen endast material från just Sverige.";
 $lang["tag__introtext"]="Hjälp till att förbättra framtida sökresultat genom att förse materialen med relevant metadata. Ange till exempel nyckelord som beskrivning av vad du ser på en bild: kanin, hus, boll, födelsedagstårta. Separera nyckelorden med kommatecken eller mellanslag. Ange fullständiga namn på alla personer som förekommer på ett fotografi. Ange platsen för ett fotografi om den är känd.";
 $lang["team_archive__introtext"]="Om du vill redigera ett arkiverat material gör du det enklast genom att söka efter det här och sedan klicka på <b>Redigera</b> på sidan som visar materialet. Alla material som väntar på arkivering kan enkelt nås från länken nedan. Lägg till eventuell relevant information innan du flyttar materialet till arkivet.";
-$lang["team_batch__introtext"]="";
-$lang["team_batch_select__introtext"]="";
-$lang["team_batch_upload__introtext"]="";
 $lang["team_copy__introtext"]="Ange numret för materialet du vill kopiera. Endast materialets metadata kommer att kopieras – eventuella filer kommer inte att kopieras.";
 $lang["team_home__introtext"]="Välkommen till sidan Administration. Använd länkarna nedan om du vill administrera material, svara på förfrågningar, hantera teman och ändra systeminställningar.";
 $lang["team_report__introtext"]="Välj en rapport och en period. Rapporten kan öppnas i till exempel MS Excel eller LibreOffice Calc.";

@@ -88,12 +88,24 @@ jQuery("#toggleall").click(function() {
 </script>
 <div class="BasicsBox">
 <?php
+if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+else {$previous_page_modal = false;}
 if(!$modal)
     {
     ?>
     <p>
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    </p>
+    <?php
+    }
+elseif($previous_page_modal)
+    {
+    $urlparams["context"]='Modal';
+    ?>
+    <p>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
     </p>
     <?php
     }

@@ -103,7 +103,7 @@ function comments_submit()
 	}
 
 /**
- * Parse a comment and replace and add links to any user tags
+ * Parse a comment and replace and add links to any user, resource and collection tags
  *
  * @param  string  $text                 The input text e.g. the body of the comment
  *
@@ -113,6 +113,10 @@ function comments_tags_to_links($text)
 	{
 	global $baseurl_short;
     $text=preg_replace('/@(\S+)/s', '<a href="' . $baseurl_short . 'pages/user/user_profile.php?username=$1">@$1</a>', $text);
+
+    $text=preg_replace('/r([0-9]{1,})/si', '<a href="' . $baseurl_short . '?r=$1">r$1</a>', $text); # r12345 to resource link
+
+    $text=preg_replace('/c([0-9]{1,})/si', '<a href="' . $baseurl_short . '?c=$1">c$1</a>', $text); # c12345 to collection link
 
 	return $text;
 	}

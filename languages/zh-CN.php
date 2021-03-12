@@ -97,13 +97,7 @@ $lang["uploadinprogress"]="上传中";
 $lang["donotmoveaway"]="重要提示:文件上传中，请不要离开!";
 $lang["pleaseselectfiles"]="请选择一个或以上的档案上传.";
 $lang["uploadcomplete"]="上传完成";
-$lang["specifyftpserver"]="指定远程 FTP 服务器";
-$lang["ftpserver"]="FTP 服务器";
-$lang["ftpusername"]="FTP 用户名";
-$lang["ftppassword"]="FTP 密码";
-$lang["ftpfolder"]="FTP 夹";
 $lang["connect"]="连结";
-$lang["uselocalupload"]="或者: 使用本地服务器上传资料";
 
 # User contributions
 $lang["contributenewresource"]="贡献新资源";
@@ -513,9 +507,7 @@ $lang["warningexpiredtext"]="警告! 这个资源已过了有效期限. 请单�
 $lang["warningexpiredok"]="&gt; 容许资源下载";
 $lang["userrequestcomment"]="反馈";
 $lang["addresourcebatchbrowser"]="增加收藏夹批次 - 使用";
-$lang["addresourcebatchbrowserjava"]="增加资源批次 - 使用 Java （建议）";
 
-$lang["addresourcebatchftp"]="增加资源批次 - 使用 FTP server";
 $lang["replaceresourcebatch"]="取代资源批次";
 $lang["editmode"]="编辑模式";
 $lang["replacealltext"]="取代文本";
@@ -652,7 +644,7 @@ $lang["noattachedusers"]="未有用户被加入.";
 $lang["confirmdeleteaccess"]="您确定要删除使用键吗? 使用该使用键的用户将不能浏览收藏夹.";
 $lang["noexternalsharing"]="不供外部分享.";
 $lang["sharedcollectionaddwarning"]="警告: 此收藏夹已和外部用户分享.您新加入的资源也可被他们使用. 想管理外部使用者对此收藏夹的使用权限，请点击 '分享' .";
-$lang["addresourcebatchlocalfolder"]="加入彼此资源";
+
 # Setup Script
 $lang["setup-alreadyconfigured"]="Your ResourceSpace installation is already configured.  To reconfigure, you may delete <pre>include/config.php</pre> and point your browser to this page again.";
 $lang["setup-successheader"]="Congratulations!";

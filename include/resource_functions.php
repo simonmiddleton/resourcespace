@@ -1184,9 +1184,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
 	
-    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
+    // Plugins can do extra actions once all fields have been saved and return errors back if needed
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields));
+    if(is_array($plg_errors) && !empty($plg_errors))
+        {
+        $errors = array_merge($errors, $plg_errors);
+        }
 
-	if (count($errors)==0) {return true;} else {return $errors;}
+	if (count($errors)==0) {daily_stat("Resource edit", $ref); return true;} else {return $errors;}
 	}
 	
 
@@ -1315,6 +1320,9 @@ function save_resource_data_multi($collection,$editsearch = array())
     // set up arays to add to all resources to make query more efficient when only appending or removing options
     $all_nodes_to_add    = array();
     $all_nodes_to_remove = array();
+
+    $successfully_edited_resources = array();
+
 	for ($n=0;$n<count($fields);$n++)
 		{
 		if('' != getval('editthis_field_' . $fields[$n]['ref'], '') || hook('save_resource_data_multi_field_decision', '', array($fields[$n]['ref'])))
@@ -1373,7 +1381,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     {
                     $ref            = $list[$m];
                     $value_changed  = false;
-                    
+
                     $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);                    
                     debug('Current nodes: ' . implode(',',$current_field_nodes));
 
@@ -1393,6 +1401,8 @@ function save_resource_data_multi($collection,$editsearch = array())
 						{
 						$existing_nodes_value = '';
 						$new_nodes_val        = '';
+
+                        $successfully_edited_resources[] = $ref;
 
 						// Build new value:
 						foreach($new_nodes as $new_node)
@@ -1505,6 +1515,12 @@ function save_resource_data_multi($collection,$editsearch = array())
                         {
                         // Log this change, nodes will actually be added later
                         log_node_changes($ref,$added_nodes,$removed_nodes);
+
+                        foreach ($list as $key => $ref) 
+                            {
+                            $successfully_edited_resources[] = $ref;
+                            }
+                            
                         $val = $newval;
                         # If this is a 'joined' field it still needs to add it to the resource column
                         $joins=get_resource_table_joins();
@@ -1692,7 +1708,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                         # This value is different from the value we have on record.                        
                         # Write this edit to the log.
                         resource_log($ref,LOG_CODE_MULTI_EDITED,$fields[$n]["ref"],"",$existing,$val);
-            
+                        $successfully_edited_resources[] = $ref;
+
                         # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                         if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
                     
@@ -1788,6 +1805,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             if(0 < count($ok))
                 {
                 sql_query("INSERT INTO resource_related(resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$ok) . ")");
+                $successfully_edited_resources[] = $ref;
                 }
             }
         }
@@ -1806,7 +1824,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                 {
                 $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
                 $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching
-                
+                $successfully_edited_resources[] = $ref;
+
                 $set_archive_state_hook = hook("save_resource_data_multi_set_archive_state", "", array($ref, $oldarchive));
                 if($set_archive_state_hook !== false && is_numeric($set_archive_state_hook))
                     {
@@ -1831,8 +1850,14 @@ function save_resource_data_multi($collection,$editsearch = array())
 		{
 		if (count($list)>0)
 			{
+            $successfully_edited_resources[] = $ref;
 			sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
 			}
+
+        foreach ($list as $key => $ref) 
+            {
+            $successfully_edited_resources[] = $ref;
+            }
 		}
 	
 	# Also update access level
@@ -1849,6 +1874,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $olduser=get_user($created_by,true);
                 $newuser=get_user($new_created_by,true);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
+                $successfully_edited_resources[] = $ref;
                 }
             }
         }    
@@ -1870,6 +1896,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     delete_resource_custom_access_usergroups($ref);
                     }
 				resource_log($ref,LOG_CODE_ACCESS_CHANGED,0,"",$oldaccess,$access);
+                $successfully_edited_resources[] = $ref;
 				}
 			
 			# For access level 3 (custom) - also save custom permissions
@@ -1884,6 +1911,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 			{
 			$ref=$list[$m];
 			update_resource_type($ref,getvalescaped("resource_type",""));
+            $successfully_edited_resources[] = $ref;
 			}
 		}
 		
@@ -1903,6 +1931,11 @@ function save_resource_data_multi($collection,$editsearch = array())
 				{
 				sql_query("update resource set geo_lat=null,geo_long=null where ref in (" . join(",",$list) . ")");
 				}
+
+            foreach ($list as $key => $ref) 
+                {
+                $successfully_edited_resources[] = $ref;
+                }
 			}
 		}
 
@@ -1920,12 +1953,33 @@ function save_resource_data_multi($collection,$editsearch = array())
 				{
 				sql_query("update resource set mapzoom=null where ref in (" . join(",",$list) . ")");
 				}
+
+            foreach ($list as $key => $ref) 
+                {
+                $successfully_edited_resources[] = $ref;
+                }
 			}
 		}
 
 	hook("saveextraresourcedata","",array($list));
-	
-    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
+
+    // Plugins can do extra actions once all fields have been saved and return errors back if needed.
+    // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
+    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', array()));
+    if(is_array($plg_errors) && !empty($plg_errors))
+        {
+        $errors = array_merge($errors, $plg_errors);
+        }
+
+    if(!empty($successfully_edited_resources))
+        {
+        $successfully_edited_resources = array_unique($successfully_edited_resources);
+
+        foreach ($successfully_edited_resources as $key => $ref) 
+            {
+            daily_stat("Resource edit", $ref);
+            }            
+        }
 
     if (count($errors)==0) {return true;} else {return $errors;}
     
@@ -2816,8 +2870,22 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $fields = sql_query($fieldsSQL);
 
+    # Build an array of valid types and only return fields of this type. Translate field titles. 
+    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
+
+    # Support archive and global.
+    $validtypes[] = 0;
+    $validtypes[] = 999;
+
     // Add category tree values, reflecting tree structure
-    $tree_fields = get_resource_type_fields(array('0',$rtype),"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    $tree_resource_types = array('0',$rtype);
+    if ($multi)
+        {
+        // All resource types checked as this is a metadata template.
+        $tree_resource_types = $validtypes;
+        }
+
+    $tree_fields = get_resource_type_fields($tree_resource_types,"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     foreach($tree_fields as $tree_field)
         {
         $addfield= $tree_field;
@@ -2851,13 +2919,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
-
-    # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
-
-    # Support archive and global.
-    $validtypes[] = 0;
-    $validtypes[] = 999;
 
     // Resource types can be configured to not have global fields in which case we only present the user fields valid for
     // this resource type
@@ -2904,14 +2965,17 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     # Remove duplicate fields e.g. $view_title_field included when $inherit_global_fields is false and also as a valid field. 
     $return = array_unique($return, SORT_REGULAR);
     
+    # Return reindexed array
+    $return = array_values($return);
+    
     return $return;
     }
 
 /**
  * get_resource_field_data_batch - Get all resource data for the given resources
- * Used by CSV metadata export. 
  * 
  * Returns a multidimensional array with resource IDs as top level keys, then fields (order determined by $ord_by setting) 
+ * IMPORTANT: This differs from get_resource_field_data() in that only fields containing data will be returned.
  * 
  * e.g. 
  * Array
@@ -2930,7 +2994,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
  *              [type] => 1))
  *              ....
  * 
- * This differs from get_resource_field_data() in that only fields containing data will be returned.
  *
  * @param array $resources (either an array of resource ids or an array returned from search results)
  * @param  bool $use_permissions    Honour user permissions e.g. field access. TRUE by default
@@ -3064,7 +3127,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     if (empty($fields))
         {
-        return false;
+        return array();
         }
     // Convert to array with resource ID as index
     $res=0;
@@ -3373,7 +3436,7 @@ function copy_resource($from,$resource_type=-1)
 		}
 
 	# Now copy all data
-	copyResourceDataValues($from,$to);
+	copyResourceDataValues($from,$to,$resource_type);
 	
     # Copy nodes
     copy_resource_nodes($from,$to);
@@ -4818,7 +4881,7 @@ function get_resource_access($resource)
 	// We need to check for custom access either when access is set to be custom or
 	// when the user group has restricted access to all resource types or specific resource types
 	// are restricted
-    if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type))
+    if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type) || checkperm("rws{$resourcedata['archive']}"))
         {
         if ($passthru=="no")
             {
@@ -6391,7 +6454,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 * 
 * @return void
 */    
-function copyResourceDataValues($from, $to)
+function copyResourceDataValues($from, $to, $resource_type = "")
     {
     $from            = escape_check($from);    
     $to              = escape_check($to);
@@ -6404,6 +6467,14 @@ function copyResourceDataValues($from, $to)
         $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
         $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
         }
+    
+    $resource_type_sql = "AND (rtf.resource_type = r.resource_type OR rtf.resource_type = 999 OR rtf.resource_type = 0)";
+    // Don't consider resource types if saving metadata template as fields from all types should be copied.
+    global $metadata_template_resource_type;
+    if (isset($metadata_template_resource_type) && $resource_type==$metadata_template_resource_type)
+        {
+        $resource_type_sql = "";
+        }
 
     sql_query("
         INSERT INTO resource_data(resource, resource_type_field, value)
@@ -6413,11 +6484,7 @@ function copyResourceDataValues($from, $to)
                FROM resource_data AS rd
                JOIN resource AS r ON rd.resource = r.ref
                JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
-                    AND (
-                            rtf.resource_type = r.resource_type
-                            OR rtf.resource_type = 999
-                            OR rtf.resource_type = 0
-                        )
+               {$resource_type_sql}
               WHERE rd.resource = '{$from}'
                 {$omit_fields_sql}
     ");
@@ -8366,7 +8433,7 @@ function get_workflow_states()
 */
 function delete_resource_type_field($ref)
     {
-    global $lang, $corefields;
+    global $lang, $corefields, $core_field_refs;
 
     if('cli' != php_sapi_name() && !checkperm('a'))
         {
@@ -8386,12 +8453,26 @@ function delete_resource_type_field($ref)
             }
         }
 
+    // Prevent deleting a "core" field required by other parts of the system (e.g plugins)
+    $core_field_scopes = [];
+    foreach($core_field_refs as $scope => $core_refs)
+        {
+        if(in_array($ref, $core_refs) && !in_array($scope, $core_field_scopes))
+            {
+            $core_field_scopes[] = $scope;
+            }
+        }
+
     if(count($fieldvars) > 0)
         {
         return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
         }
+    else if(!empty($core_field_scopes))
+        {
+        return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
+        }
 
-    
+
     $fieldinfo = get_resource_type_field($ref);
 
     $ref = escape_check($ref);

@@ -94,6 +94,14 @@ if (isset($show_error))
     }
 
 $query_string = 'ref=' . urlencode($ref) . '&search=' . urlencode($search) . '&offset=' . urlencode($offset) . '&order_by=' . urlencode($order_by) . '&sort=' .urlencode($sort) . '&archive=' . urlencode($archive);
+$urlparams    = array(
+    'ref'      => $ref,
+    'search'   => $search,
+    'offset'   => $offset,
+    'order_by' => $order_by,
+    'sort'     => $sort,
+    'archive'  => $archive
+);
 
 $page_header = $lang["share-resource"]; 
 if($editing && !$editexternalurl)
@@ -137,10 +145,28 @@ if($editing && !$editexternalurl)
             }
         else
             {
-            ?><h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
+            if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+            else {$previous_page_modal = false;}
+            ?>
+            
+            <h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
             <p>
-                <a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+            <?php
+            if($previous_page_modal)
+                {
+                ?>
+                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return ModalLoad(this,true);">
+                <?php
+                }
+            else
+                {
+                ?>
+                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
+                <?php
+                }
+            ?>
+
+            <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
                 </a>
             </p><?php
             }

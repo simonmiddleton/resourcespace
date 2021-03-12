@@ -1807,24 +1807,28 @@ function get_tree_strings($resource_nodes,$allnodes = false)
     global $category_tree_add_parents;
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = array();
+    $orderednoderefs = array();
     // Array with node ids as indexes to ease parent tracking
     $treenodes = array();
 
     while(count($resource_nodes) > 0)
         {
         $todocount = count($resource_nodes);
+        $resource_nodes_ref_array = array_column($resource_nodes,"ref");   
         for($n=0;$n < $todocount;$n++)
             {            
             if(
-                in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
+                isset($resource_nodes_ref_array[$resource_nodes[$n]["parent"]])
                 &&
-                !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
+                !isset($orderednoderefs[$resource_nodes[$n]["parent"]])
                 )
                 {
                 // Don't add yet, add once parent has been added
+                // By continuing, the resource_nodes array is unchanged, so array column does not need to be reestablished
                 continue;
                 }
             $orderednodes[] = $resource_nodes[$n];
+            $orderednoderefs[] = $resource_nodes[$n]["parent"];
             $treenodes[$resource_nodes[$n]["ref"]] = $resource_nodes[$n];
             unset($resource_nodes[$n]);
             }
@@ -1914,7 +1918,16 @@ function compute_node_branch_path(array $nodes, int $id)
         $id = $node_parent;
         if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
             {
-            return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+            # Check the nodes found before returning cached value to handle multiple branches containing the same node e.g. resource in multiple collections.
+            $available_nodes = array();
+            foreach ($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id] as $node_available)
+                {
+                $available_nodes[]=$node_available['ref'];
+                }
+            if (in_array($path[0]['ref'],$available_nodes))
+                {
+                return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
+                }
             }
 
         $found_node_index = array_search($id, array_column($nodes, 'ref'));

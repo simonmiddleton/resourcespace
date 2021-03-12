@@ -75,7 +75,7 @@ function debug_function_call($name, array $args)
             return ($value ? "true" : "false");
             }
 
-        return str_replace(PHP_EOL, "", print_r($value, true));
+        return trim(preg_replace('/\s+/m', ' ', print_r($value, true)));
         };
 
     $args_str = "";

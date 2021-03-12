@@ -1590,8 +1590,13 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
  if  ($alternative!=""){?><p>
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($alternative)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a></p><?php } ?>
 
-<?php if ($replace_resource!=""){?><p> <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($replace_resource)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($replace_resource) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p><?php } ?>
+<?php if ($replace_resource!="") { ?>
+    <p>
+        <a onClick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($replace_resource) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">
+            <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+        </a>
+    </p>
+<?php } ?>
 
 <?php if ($alternative!=""){$resource=get_resource_data($alternative);
 	if ($alternative_file_resource_preview){ 
@@ -1696,6 +1701,7 @@ if(     ($replace_resource != ''
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
+    <div class="BasicsBox">
     <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadPluploadForm" class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
@@ -1764,12 +1770,14 @@ if(     ($replace_resource != ''
             <?php
             }
         }
-
+    ?>
+    </form>
+    </div><!-- End of UploadOptionsSection -->
+    <?php
     } // End of upload options
 hook('plupload_before_status');
 if ($status!="") { ?><?php echo $status?><?php } ?>
-</form>
-</div><!-- End of UploadOptionsSection -->
+</div>
 
 <?php 
 if ($show_upload_log)

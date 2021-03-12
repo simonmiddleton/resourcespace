@@ -95,7 +95,6 @@ switch ($newtype)
     <?php } ?>
 
 	<div class="Question">
-		<label />
 		<input type="submit" class="medcomplementwidth" value="<?php echo $lang["save"]?>" />
 		<input type="submit" class="medcomplementwidth" value="<?php echo $lang["cancel"]?>" onclick="ModalClose();" />
 		<div class="clearerleft"> </div>

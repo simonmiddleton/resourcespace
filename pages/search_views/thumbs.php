@@ -2,34 +2,38 @@
 if (!hook("renderresultthumb")) 
     {
     # Establish various metrics for use in thumbnail rendering
-    # Note that only $resolved_title_trim is currently used
     $resolved_title_trim=0; 
-    $resolved_title_height=0;
-    $resolved_title_wordwrap=0; 
-    if ($display == "xlthumbs") 
+
+    $field_height = 31;
+    $resource_type_icon_height = 22;
+    $resource_id_height = 21;
+    $resource_panel_icons_height = 31;
+
+    hook("thumbstextheight");
+
+    if ($display == "xlthumbs")
         {
-        $resolved_title_trim=$xl_search_results_title_trim;
-        $resolved_title_height = 351 + (31 * count($xl_thumbs_display_fields));
-        $resolved_title_wordwrap = $xl_search_results_title_wordwrap;
+        $resolved_title_trim = $xl_search_results_title_trim;
+        $resource_panel_height = 320 + $resource_panel_icons_height;
         }
-    else 
+    else
         {
-        $resolved_title_trim=$search_results_title_trim;
-        $resolved_title_height = 206 + (31 * count($thumbs_display_fields));
-        $resolved_title_wordwrap = $search_results_title_wordwrap;
+        $resolved_title_trim = $search_results_title_trim;
+        $resource_panel_height = 175 + $resource_panel_icons_height;
         }
 
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 351 : 206) + (31 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * count($thumbs_display_fields));
 
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
-        $thumbs_displayed_fields_height += 31;
+        $thumbs_displayed_fields_height += $field_height;
         }
 
     if($resource_type_icons)
         {
-        $thumbs_displayed_fields_height += 22;
+        $thumbs_displayed_fields_height += $resource_type_icon_height;
         }
+
     # Increase height of search panel for each extended field
     if(isset($search_result_title_height))
         {
@@ -41,11 +45,12 @@ if (!hook("renderresultthumb"))
                 }
             }
         }
+
     hook('thumbs_resourceshell_height');
     
     if($display_resource_id_in_thumbnail)
         { 
-        $thumbs_displayed_fields_height += 21;
+        $thumbs_displayed_fields_height += $resource_id_height;
         $br = '<br />';
         }; 
 

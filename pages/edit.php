@@ -7,10 +7,6 @@ $upload_collection = getval('upload_share_active','');
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {  
     include "../include/authenticate.php";
-    if (! (checkperm("c") || checkperm("d")))
-        {
-        exit ("Permission denied.");
-        }
     }
 include_once "../include/image_processing.php";
 # Editing resource or collection of resources (multiple)?
@@ -57,7 +53,6 @@ else
     }
     
 $collection_add = getvalescaped('collection_add', '');
-$local = getvalescaped("local","");
 if($embedded_data_user_select)
   {
   $no_exif=getval("exif_option","");
@@ -72,7 +67,6 @@ $uploadparams = array();
 $uploadparams["relateto"] = getval("relateto","");
 $uploadparams["redirecturl"] =  getval("redirecturl","");
 $uploadparams["collection_add"] =  $collection_add;
-$uploadparams["local"] =  $local;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
@@ -500,8 +494,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
                 {
-                # Log this
-                daily_stat("Resource edit",$ref);
                 if ($upload_review_mode)
                     {
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
@@ -634,9 +626,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             else
                                 {
                                 $url = generateURL($baseurl . "/pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
-                                }                                
+                                }
                             ?>
-                            <script>CentralSpaceLoad('<?php echo urlencode($url); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
                             <?php
                             exit();
                             }
@@ -667,7 +659,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // If noupload is set - create resource without uploading stage
                         if (getval("noupload","") != "")
                             {
-                            $ref=copy_resource(0-$userref);
+                            $ref=copy_resource(0-$userref,$resource_type);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
                             // Create new collection if necessary
@@ -693,14 +685,6 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             exit();
                             }
                         redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
-                        }
-                    elseif (getval("local","") != "" || $uploader == "local")// Test if fetching resource from local upload folder.
-                        {
-                        redirect(generateURL($baseurl_short . "pages/team/team_batch_select.php",array_merge($urlparams,$uploadparams), array("use_local"=>"yes")) . hook("addtouploadurl"));
-                        }
-                    elseif ($uploader == "ftp")
-                        {
-                        redirect(generateURL($baseurl_short . "pages/team/team_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     else
                         {
@@ -1154,12 +1138,23 @@ else
         if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
         } 
    elseif ($ref>0)
+      {
+      if (!hook('replacebacklink') && !$upload_review_mode) 
         {
-        if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
+        if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+        else {$previous_page_modal = false;}
+        if(!$modal)
             {?>
             <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
             <?php
             }
+        elseif ($previous_page_modal)
+            {
+            ?>
+            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+            <?php
+            }
+        }
         if (!hook("replaceeditheader")) 
             { ?>
             <div class="RecordHeader">
@@ -1247,39 +1242,6 @@ else
                 <?php 
                 }
 
-            if($top_nav_upload_type == 'local')
-                {
-                $replace_upload_type = 'plupload';
-                }
-            else 
-                {
-                $replace_upload_type=$top_nav_upload_type;
-                }
-
-            // Allow to upload only if resource is not a data only type
-            if (0 < $ref && !$noupload && !$resource_file_readonly && !$upload_review_mode)
-                {
-                ?>
-                <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php",$urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
-                <?php
-                }
-            if ($resource["file_extension"]!="") 
-                {hook("afterreplacefile");} 
-            else 
-                {hook("afteruploadfile");}
-            if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
-                { ?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a>
-                <?php
-                }
-
-            if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode)
-                {?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php",$urlparams); ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a>
-                <?php 
-                }
             if ($allow_metadata_revert)
                 {?>
                 <br />
@@ -1352,16 +1314,6 @@ else
                 {
                 $titleh1 = $lang["addresource"]; # Add Single Resource
                 }
-            }
-        elseif ($uploader == "ftp")
-            {
-            # Add Resource Batch - Fetch from FTP server
-            $titleh1 = $lang["addresourcebatchftp"];
-            }
-        elseif ((getval("local","")!="")||($uploader == "local"))
-            {
-            # Add Resource Batch - Fetch from local upload folder
-            $titleh1 = $lang["addresourcebatchlocalfolder"];
             }
         else
             {
@@ -1668,6 +1620,12 @@ if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) 
     }
 
 # Load resource data
+
+if ($ref < 0 && !$upload_review_mode)
+    {
+    set_resource_defaults($ref);  # Get resource defaults for edit then upload mode.
+    }
+
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
 
@@ -2299,7 +2257,6 @@ if(!hook('replacesubmitbuttons'))
 hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBox -->
-<?php if($uploader == 'ftp') { print '<input type="hidden" name="uploader" value="ftp" />'; } ?>
 </form>
 
 <script>

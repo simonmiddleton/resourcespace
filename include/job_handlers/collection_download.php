@@ -214,6 +214,10 @@ for($n = 0; $n < count($collection_resources); $n++)
         {
         collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames,$id);
         }
+    else
+        {
+        $newfile = set_unique_filename($filename,$filenames);    
+        }
 
     if(hook("downloadfilenamealt"))
         {

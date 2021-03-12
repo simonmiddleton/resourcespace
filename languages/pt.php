@@ -90,13 +90,7 @@ $lang["donotmoveaway"]="IMPORTANTE: Não saia dessa página até que o upload do
 $lang["pleaseselectfiles"]="Por favor, selecione um ou mais arquivos para fazer o upload.";
 $lang["upload_failed_for_path"]="Upload falhou: %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Upload completo";
-$lang["specifyftpserver"]="Específique o servidor de FTP";
-$lang["ftpserver"]="Servidor FTP";
-$lang["ftpusername"]="Usuário FTP";
-$lang["ftppassword"]="Senha FTP";
-$lang["ftpfolder"]="Folder FTP";
 $lang["connect"]="Conectar";
-$lang["uselocalupload"]="OU: Use a pasta local 'upload' no lugar de um FTP remoto";
 
 # User contributions
 $lang["contributenewresource"]="Enivar novo Arquivo";

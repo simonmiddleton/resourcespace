@@ -1,35 +1,101 @@
-html,body{font-size:18px;color:#000;}
+/* Larger font size, dark color for all text, darker grey for background */
+html, body {
+    color: #000;
+    background: #efefef;
+    font-size: 18px;
+}
+
+/* Larger font size for header links and dash tiles*/
+.HorizontalNav li,
+.HomePanelDynamicDash h2,
+.HomePanelThemes h2,
+.FeaturedSimpleTileContents h2 {
+    font-size: 18px;
+}
+
+
+#themeselect {
+    font-size: 0.875rem;
+}
+
+/* Slightly larger and darker font for download info */
+.RecordPanel .RecordDownloadSpace .DownloadDBlend p {
+    font-size: 15px;
+    color: #737373;
+}
 
 /* Text color change for all elements which do not inherit from body: */
-.plupload_filelist_header, .plupload_filelist_footer,
-.plupload_file_status span {color: #000; font-weight: bold;}
-
-/* Font-size change for most important elements: */
-.treetext {font-size: 16px !important;}
-input, select, td,
-#CollectionMinDrop .SearchWidth,
-.CollectBack .SearchWidth,
-.SearchSpace .SearchWidthHalf,
-.SearchSpace .SearchWidth,
-.Question .stdwidth, .stdwidth,
-.Question .shrtwidth, .shrtwidth,
-.plupload_wrapper,
-#CentralSpace .SearchWidth { font-size: 16px;}
-#HomePanelContainer{font-size:15px;}
-#CollectionMenu li {clear: left;}
-a:link, 
-a:visited, 
-a:active, 
-a:hover
-{color:#000;}
-.HorizontalWhiteNav a:link, .HorizontalWhiteNav a:visited, .HorizontalWhiteNav a:active, .BasicsBox .VerticalNav a:link, .BasicsBox .VerticalNav a:visited, .BasicsBox .VerticalNav a:active, .ListTitle a:link, .ListTitle a:visited, .ListTitle a:active {
-  color: #000;
+.plupload_filelist_header,
+.plupload_filelist_footer,
+.plupload_file_status span {
+    color: #000;
 }
-/*.SearchSpace {font-size: 18px;}*/
 
+/* Darker link colour */
+a:link, a:visited {color: #000;}
+a:active, a:hover {color: #2d2d2d;}
+
+/* Reset table header link style and annotate plugin buttons back to white */   
+.ListviewTitleStyle td,
+.ListviewTitleStyle th,
+.ListviewTitleStyle a,
+.ListviewTitleStyle a:visited,
+.annotate-view-wrapper a {
+    color: white;
+}
+
+.HorizontalWhiteNav a:link,
+.HorizontalWhiteNav a:visited,
+.HorizontalWhiteNav a:active,
+.BasicsBox .VerticalNav a:link,
+.BasicsBox .VerticalNav a:visited,
+.BasicsBox .VerticalNav a:active,
+.ListTitle a:link,
+.ListTitle a:visited,
+.ListTitle a:active {
+    color: #000;
+}
+
+/* Hide small slideshow on smaller screens */
 @media(max-width: 850px) {
-	div.HomePicturePanel
-	{    
+	div.HomePicturePanel {    
 		display: none;
 	}
+}
+
+/* Larger checkbox inputs */
+input[type="checkbox"], .checkselect {
+    transform: scale(1.2);
+    margin: 7px 7px 3px 4px;
+}
+
+/* Darker border for inputs */
+input[type="text"], input[type="password"], input[type="number"], textarea, select, .sp-replacer {
+    border: 1px solid rgba(0,0,0,0.4);
+}
+
+/* Larger margin for left page nav, due to larger pager */
+.TopInpageNavLeft {
+    padding-right: 160px;
+}
+
+/* Darker table header row */
+.ListviewStyle thead, .ListviewTitleStyle {
+    background: #5c5c5d;
+}
+
+/* Fix position of simple search icon */
+.search-icon, .search-icon:hover, .search-icon:active {
+    margin-top: -32px;
+}
+
+/* Fix position of Browse Bar button */
+.BrowseBarTabText {
+    margin-left: 29px;
+}
+
+/* Larger resource type icons */
+.ResourceTypeIcon.fa-fw {
+    width: 20px;
+    height: 20px;
 }

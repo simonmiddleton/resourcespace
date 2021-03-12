@@ -684,6 +684,17 @@ if ($research!="")
 	else
 		{
 		set_user_collection($userref,$col);
+		# Add research request collection for collection bar actions and name fields.
+		$cinfo = get_collection($col);
+		$collection_refs = array();
+		foreach ($list as $col_ref)
+		    {
+		    $collection_refs[] = $col_ref["ref"];
+		    }
+		if (!in_array($col,$collection_refs))
+		    {
+		    $list[] = $cinfo;
+		    }
 		}
 	hook("postresearch");
 	}
@@ -745,9 +756,14 @@ else if ($basket)
 	<h2><?php echo $lang["yourbasket"] ?></h2>
 	<form action="<?php echo $baseurl_short?>pages/purchase.php">
 
-	<?php if ($count_result==0) { ?>
+	<?php 
+	if ($count_result==0) 
+	{ ?>
 	<p><?php echo $lang["yourbasketisempty"] ?></p><br /><br /><br />
-	<?php } else { ?>
+	<?php 
+	} 
+	else 
+	{ ?>
 	<p><?php if ($count_result==1) {echo $lang["yourbasketcontains-1"];} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
 
 	<?php if ($basket_stores_size) {
@@ -757,17 +773,134 @@ else if ($basket)
 	</p>
 
 	<p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["buynow"] ?>&nbsp;&nbsp;&nbsp;" /></p>
-	<?php } ?>
-	<?php if (!$disable_collection_toggle) { ?>
+	<?php 
+	} ?>
+	<?php 
+	if (!$disable_collection_toggle) 
+	{ ?>
     <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo LINK_CARET ?><?php echo $lang["hidethumbnails"]?></a>
-  <?php } ?>
+	<?php 
+	} ?>
 	<a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["viewpurchases"]?></a>
-
-
 	</form>
 	</div>
-	<?php	
-	}
+	<div id="CollectionSpace" class="CollectionSpace">
+	<?php
+
+	# Display thumbnails for basket mode
+
+	# Display thumbnails
+	if ($count_result>0) 
+		{
+		# Loop through resources for thumbnails
+		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
+			{
+			$ref=$result[$n]["ref"];
+			?>
+	<?php 
+	if (!hook("resourceview")) 
+		{ ?>
+		<!--Resource Panel-->
+		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
+        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        
+		<?php if (!hook("rendercollectionthumb")){?>
+        <?php
+        
+        $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
+		$use_watermark=check_use_watermark();?>
+		<table border="0" class="CollectionResourceAlign"><tr><td>
+				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
+                <?php
+                if(1 == $result[$n]['has_image']
+                    && file_exists(get_resource_path($ref, true, ($retina_mode ? 'thm' : 'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                )
+                    {
+                    $colimgpath = get_resource_path($ref, false, ($retina_mode ? 'thm':'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                    ?>
+                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                    <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
+                    }
+				else
+						{?>
+						<img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
+						<?php
+						}
+						hook("aftersearchimg","",array($result[$n]))?>
+						</a></td>
+		</tr></table>
+		<?php } /* end hook rendercollectionthumb */?>
+		
+		<?php 
+
+		$title=$result[$n]["field".$view_title_field];	
+		$title_field=$view_title_field;
+		if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+			{
+			if ($result[$n]['resource_type']==$metadata_template_resource_type)
+				{
+				$title=$result[$n]["field".$metadata_template_title_field];
+				$title_field=$metadata_template_title_field;
+				}	
+			}	
+		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
+		if($field_type==8){
+			$title=str_replace("&nbsp;"," ",$title);
+		}
+		?>	
+		<?php if (!hook("replacecolresourcetitle")){?>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
+		<?php } ?>
+		
+		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users
+		?>
+		<div class="CollectionPanelInfo">
+		<span>  <a aria-hidden="true" class="fa fa-comment"onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"/></span>		
+		</div>
+		<?php } ?>
+		
+		<?php hook('before_collectionpaneltools'); ?>
+		
+		<?php if ($k=="" || $internal_share_access) 
+		{ ?>
+		<div class="CollectionPanelTools">
+
+		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null))
+		{ // add 'remove' link only if this is not a smart collection 
+		?>
+            
+        <?php
+        $rating = '';
+        if(isset($rating_field))
+            {
+            $rating = "field{$rating_field}";
+            }
+            
+            $url = $baseurl_short."pages/view.php?ref=" . $ref . "&amp;search=" . urlencode('!collection' . $usercollection) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=". urlencode($sort) . "&amp;offset=" . urlencode($offset) . "&amp;archive=" . urlencode($archive) . "&amp;k=" . urlencode($k) . "&amp;curpos=" . urlencode($n) . '&amp;restypes=' . urlencode($restypes);
+            
+        # Include standard search views    
+        include "search_views/resource_tools.php";  
+            
+		} # End of remove link condition 
+		?>
+		</div>
+		<?php 
+		} # End of k="" condition 
+		 ?>
+		</div>
+		<?php
+		} # End of ResourceView hook
+
+	} # End of loop through resources for thumbnails
+	?>
+	<div class="clearerleft"></div>
+	<?php
+	} # End of display thumbnails
+	?>
+	</div>
+	<?php
+	} # End of basket mode
+
 elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 	{
 	# ------------- Anonymous access, slightly different display ------------------
@@ -828,7 +961,42 @@ else
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
                 <div style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>: 
                     <br />
-                    <select name="collection" id="collection" onchange="if(document.getElementById('collection').value=='new'){document.getElementById('entername').style.display='block';document.getElementById('entername').focus();return false;} <?php if (!checkperm("b")){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k)  ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url?>');<?php } else { ?>document.getElementById('colselect').submit();<?php } ?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
+                    <select name="collection" id="collection"
+
+					onchange="if(document.getElementById('collection').value=='new') {
+								document.getElementById('entername').style.display='block';
+								document.getElementById('entername').focus();
+								return false;} 
+					  		  <?php	if (!checkperm('b')) 
+								{
+							  ?>
+							  	ChangeCollection( jQuery(this).val(), 
+							  					'<?php echo urlencode($k)  ?>', 
+												'<?php echo urlencode($usercollection) ?>',
+												'<?php echo $change_col_url?>' );
+							  <?php 
+							  	} 
+							  else 
+							  	{ ?>
+								document.getElementById('colselect').submit();
+							  <?php 
+							  	} 
+							  ?>"
+							   
+					<?php 
+					if ($collection_dropdown_user_access_mode)
+						{
+					?>
+						class="SearchWidthExp"
+					<?php 
+					} 
+					else 
+					{ ?> 
+						class="SearchWidth"
+					<?php 
+					} 
+					?>>
+
                     <?php
                     $found=false;
                     for ($n=0;$n<count($list);$n++)
@@ -903,6 +1071,7 @@ else
 
         $resources_count = $count_result;
         render_actions($cinfo, false,true,'',$result);
+
         hook("aftercollectionsrenderactions");
         ?>
         <ul>
@@ -918,60 +1087,69 @@ else
         </ul>
     </div>
     <?php
-    }?>
+    }
+	?>
 
-<!--Resource panels-->
-<?php if ($collection_dropdown_user_access_mode){?>
-<div id="CollectionSpace" class="CollectionSpaceExp">
-<?php } else { ?>
-<div id="CollectionSpace" class="CollectionSpace">
-<?php } ?>
+	<!--Resource panels-->
+	<?php 
+	if ($collection_dropdown_user_access_mode)
+	{?>
+	<div id="CollectionSpace" class="CollectionSpaceExp">
+	<?php 
+	} 
+	else { ?>
+	<div id="CollectionSpace" class="CollectionSpace">
+	<?php } ?>
 
-<?php 
-# Loop through saved searches
-if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $internal_share_access))
-	{ // don't include saved search item in result if this is a smart collection  
+	<?php 
+	# Loop through saved searches
+	if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $internal_share_access))
+		{ // don't include saved search item in result if this is a smart collection  
 
-	# Setting the save search icon
-	$folderurl=$baseurl."/gfx/images/";
-	$iconurl=$folderurl."save-search"."_".$language.".gif";
-	if (!file_exists($iconurl))
-		{
-		# A language specific icon is not found, use the default icon
-		$iconurl = $folderurl . "save-search.gif";
-		}
+		# Setting the save search icon
+		$folderurl=$baseurl."/gfx/images/";
+		$iconurl=$folderurl."save-search"."_".$language.".gif";
+		if (!file_exists($iconurl))
+			{
+			# A language specific icon is not found, use the default icon
+			$iconurl = $folderurl . "save-search.gif";
+			}
 
-	for ($n=0;$n<count($searches);$n++)			
-		{
-		$ref=$searches[$n]["ref"];
-		$url=$baseurl_short."pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
-		?>
-		<!--Resource Panel-->
-		<div id="ResourceShell<?php echo $searches[$n]['ref']; ?>" class="CollectionPanelShell" data-saved-search="yes">
-		<table border="0" class="CollectionResourceAlign"><tr><td>
-		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
-		</tr></table>
-		<?php if(!hook('replacesavedsearchtitle')){?>
-		<div class="CollectionPanelInfo">
-		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo substr($lang["savedsearch"],6)?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
-		<?php if(!hook('replaceremovelink_savedsearch')){?>
-		<div class="CollectionPanelTools">
-		<a class="removeFromCollection fa fa-minus-circle" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
-		</a></div>	<?php } ?>			
-		</div>
-		<?php		
-		}
-}		
+		for ($n=0;$n<count($searches);$n++)			
+			{
+			$ref=$searches[$n]["ref"];
+			$url=$baseurl_short."pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
+			?>
+			<!--Resource Panel-->
+			<div id="ResourceShell<?php echo $searches[$n]['ref']; ?>" class="CollectionPanelShell" data-saved-search="yes">
+			<table border="0" class="CollectionResourceAlign"><tr><td>
+			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
+			</tr></table>
+			<?php if(!hook('replacesavedsearchtitle')){?>
+			<div class="CollectionPanelInfo">
+			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo substr($lang["savedsearch"],6)?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
+			<?php if(!hook('replaceremovelink_savedsearch')){?>
+			<div class="CollectionPanelTools">
+			<a class="removeFromCollection fa fa-minus-circle" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
+			</a></div>	<?php } ?>			
+			</div>
+			<?php		
+			}
+	}		
 
-# Loop through thumbnails
-if ($count_result>0) 
+	# Display thumbnails for standard display
+
+	# Display thumbnails
+	if ($count_result>0) 
 	{
-	# loop and display the results
-	for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
-		{
-		$ref=$result[$n]["ref"];
-		?>
-<?php if (!hook("resourceview")) { ?>
+		# Loop through resources for thumbnails
+		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
+			{
+			$ref=$result[$n]["ref"];
+			?>
+	<?php 
+	if (!hook("resourceview")) 
+		{ ?>
 		<!--Resource Panel-->
 		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
         <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
@@ -1033,10 +1211,13 @@ if ($count_result>0)
 		
 		<?php hook('before_collectionpaneltools'); ?>
 		
-		<?php if ($k=="" || $internal_share_access) { ?><div class="CollectionPanelTools">
+		<?php if ($k=="" || $internal_share_access) 
+		{ ?>
+		<div class="CollectionPanelTools">
 
-		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)){ // add 'remove' link only if this is not a smart collection 
-			?>
+		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null))
+		{ // add 'remove' link only if this is not a smart collection 
+		?>
             
         <?php
         $rating = '';
@@ -1050,23 +1231,26 @@ if ($count_result>0)
         # Include standard search views    
         include "search_views/resource_tools.php";  
             
-			} # End of remove link condition 
-		?></div><?php 
+		} # End of remove link condition 
+		?>
+		</div>
+		<?php 
 		} # End of k="" condition 
 		 ?>
 		</div>
 		<?php
 		} # End of ResourceView hook
-	  } # End of loop through resources
+
+	} # End of loop through resources for thumbnails
 	  
-		# Hook to allow plugins to list additional resources in a collection (e.g. resourceconnect)	  
+	# Hook to allow plugins to list additional resources in a collection (e.g. resourceconnect)	  
 		hook("thumblistextra");
 	?>
 	<div class="clearerleft"></div>
 	<?php
-	} # End of results condition
+	} # End of display thumbnails
 
-	
+
 if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_viewall'))
 	{
 	?>
@@ -1084,21 +1268,20 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 	}
 
 if (count($addarray)>0 && $addarray[0]!="")
-{
-# Animate the new item
-?>
-<script type="text/javascript">
-jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
-</script>
-<?php      
-}
+	{
+	# Animate the new item
+	?>
+	<script type="text/javascript">
+	jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
+	</script>
+	<?php      
+	}
+	?>
 
-?>
 </div></div>
+
 <?php 
-
-}
-
+} # End of standard display
 
 	?><div id="CollectionMinDiv" style="display:<?php if ($thumbs=="hide") { ?>block<?php } else { ?>none<?php } ?>">
 	<!--Title-->	
@@ -1138,6 +1321,7 @@ jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0])
 
 		</div>
 		<?php	
+
 		} // end of Basket Mode
 	elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 		{
@@ -1308,4 +1492,5 @@ if ($chosen_dropdowns_collection) { ?>
 	});
 </script>
 <!-- End of chosen support -->
-<?php } ?>
+<?php 
+} ?>

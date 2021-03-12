@@ -444,6 +444,20 @@ function config_add_text_input($config_var, $label, $password = false, $width = 
 
 
 /**
+* Generate a data structure to instruct the configuration page generator to add a hidden input
+* 
+* @param string $cf_var_name  Plugins' configuration variable name
+* @param string $cf_var_value Value
+* 
+* @return array
+*/
+function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
+    {
+    return array('text_hidden_input', $cf_var_name, $cf_var_value);
+    }
+
+
+/**
 * Generate an HTML input file with its own form
 *
 * @param string $name        HTML input file name attribute
@@ -885,7 +899,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         ?>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px"
     <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>>
-    <option value="" <?php echo (($current=="")?' selected':'') ?>></option>
+    <option value="" <?php echo (($current=="")?' selected':'') ?>><?php echo $lang["select"]; ?></option>
 <?php
     foreach($fields as $field)
         {
@@ -1197,4 +1211,34 @@ function config_register_core_fieldvars($source="BASE", $varnames=array())
             $corefields[$source][] = $varname;
             }
         }
+    }
+
+
+/**
+* Used to block deletion of 'core' fields.
+* 
+* @param string $source What part (e.g plugin) relies on this list of metadata fields
+* @param array  $refs   List of metadata field IDs to prevent being deleted
+*/
+function config_register_core_field_refs(string $source, array $refs)
+    {
+    global $core_field_refs;
+
+    $source = trim($source);
+    $source = ($source !== '' ? $source : 'BASE');
+
+    if(!isset($core_field_refs[$source]))
+        {
+        $core_field_refs[$source] = [];
+        }
+
+    foreach($refs as $ref)
+        {
+        if(is_int_loose($ref) && $ref > 0)
+            {
+            $core_field_refs[$source][] = $ref;
+            }
+        }
+
+    return;
     }

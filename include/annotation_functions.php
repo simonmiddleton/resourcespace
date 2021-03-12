@@ -214,20 +214,31 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 */
 function annotationEditable(array $annotation)
     {
+    debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
     global $userref, $annotate_read_only, $annotate_crud_anonymous;
 
     if($annotate_read_only)
         {
+        debug('[annotations][fct=annotationEditable][info] read-only annotation! Reason: the system is configured with annotate_read_only = true');
         return false;
         }
+
+    $add_operation = !isset($annotation['user']);
+    $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
+
+    /* Non-admin edit authorisation is valid when:
+        - user is just adding a new annotation
+        - when editing/removing an existing annotation, the annotation was created by the user itself
+    */
+    $non_admin_athz = ($add_operation || $userref == $annotation['user']);
 
     // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
     if(checkPermission_anonymoususer())
         {
-        return $annotate_crud_anonymous && $userref == $annotation['user'];
+        return $annotate_crud_anonymous && $non_admin_athz && $field_edit_access;
         }
 
-    return checkperm('a') || $userref == $annotation['user'];
+    return (checkperm('a') || $non_admin_athz) && $field_edit_access;
     }
 
 
@@ -311,12 +322,15 @@ function deleteAnnotation(array $annotation)
 */
 function createAnnotation(array $annotation)
     {
+    debug(sprintf('[annotations][fct=createAnnotation] Param $annotation = %s', json_encode($annotation)));
     global $userref;
 
     if(!annotationEditable($annotation))
         {
+        debug('[annotations][fct=createAnnotation][warn] annotation not editable');
         return false;
         }
+    debug('[annotations][fct=createAnnotation] attempting to create annotation...');
 
     // Annotorious annotation
     $x      = escape_check($annotation['shapes'][0]['geometry']['x']);
@@ -335,14 +349,15 @@ function createAnnotation(array $annotation)
     sql_query($query);
 
     $annotation_ref = sql_insert_id();
+    debug('[annotations][fct=createAnnotation] annotation_ref = ' . json_encode($annotation_ref));
 
     if(0 == $annotation_ref)
         {
+        debug('[annotations][fct=createAnnotation][warn] Unable to create annotation');
         return false;
         }
 
-    // Prepare tags before association by adding new nodes to 
-    // dynamic keywords list (if permissions allow it)
+    // Prepare tags before association by adding new nodes to dynamic keywords list (if permissions allow it)
     $prepared_tags = prepareTags($tags);
 
     // Add any tags associated with it
@@ -373,6 +388,7 @@ function createAnnotation(array $annotation)
 */
 function updateAnnotation(array $annotation)
     {
+    debug(sprintf('[annotations][fct=updateAnnotation] Param $annotation = %s', json_encode($annotation)));
     if(!isset($annotation['ref']) || !annotationEditable($annotation))
         {
         return false;

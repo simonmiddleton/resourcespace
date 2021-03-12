@@ -10,6 +10,11 @@ if (!checkperm("a"))
 	}
 
 
+// Plugins add their own size properties (return is an array where index is the column name and value the value for that column - getval())
+$plg_cols = hook('get_size_extra_columns');
+$plg_cols = (!is_array($plg_cols)) ? array() : $plg_cols;
+$plg_cols_str = (is_array($plg_cols) && !empty($plg_cols)? ', ' . implode(', ', array_keys($plg_cols)) : '');
+
 $find=getval("find","");
 $order_by=getval("orderby","");
 $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}" : "");
@@ -70,6 +75,11 @@ if (getval("save", false) && enforcePostRequest(false))
 	$cols["allow_preview"]=(getval('allowpreview',false) ? "1" : "0");
 	$cols["allow_restricted"]=(getval('allowrestricted',false) ? "1" : "0");
 
+    foreach($plg_cols as $extra_column_name => $extra_column_value)
+        {
+        $cols[$extra_column_name] = $extra_column_value;
+        }
+
 	foreach ($cols as $col=>$val)
 		{
 		if (isset($sql_columns))
@@ -89,11 +99,9 @@ if (getval("save", false) && enforcePostRequest(false))
 	exit;
 	}
 
-$record = sql_query("select * from preview_size where ref={$ref}");
+$record = sql_query("SELECT ref, id, width, height, padtosize, `name`, internal, allow_preview, allow_restricted, quality{$plg_cols_str} FROM preview_size WHERE ref = '{$ref}'");
 $record = $record[0];
-
 include "../../include/header.php";
-
 ?>
 <form method="post" 
       enctype="multipart/form-data" 
@@ -183,6 +191,8 @@ include "../../include/header.php";
 			</div>
 			<?php
 			}
+
+        hook('render_extra_columns', '', array($record));
 		?>
 
 		<div class="QuestionSubmit">

@@ -86,12 +86,23 @@ if ($alt_access)
 			// download usage form displayed - load into main window
 				{ 
 				?>
-					<a href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>"><?php echo $lang["action-download"]?></a>			
-				<?php
+					<a <?php 
+					if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) 
+					    {
+					    ?>href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) . '"';
+					    }	
+					?>><?php echo $lang["action-download"]?></a><?php
 				}	
-		else { ?>
-            <a href="#" onclick="directDownload('<?php echo generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"><?php echo $lang["action-download"]?></a>
-		<?php } ?></td></td>
+		else 
+		    { 
+			?> <a
+		    <?php 
+			if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) 
+			    {
+			    echo 'href="#" onclick="directDownload(\'' . generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"<?php
+			    }	
+			    ?>><?php echo $lang["action-download"]?></a><?php
+            } ?></td></td>
 		<?php } else { ?>
 		<td class="DownloadButton"><?php
 			if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user

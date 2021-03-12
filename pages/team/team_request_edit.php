@@ -135,7 +135,7 @@ if ($request !== false)
         <?php if(!hook("disprequesteditems")): ?>
         <div class="Question">
             <label><?php echo $lang["requesteditems"]?></label>
-            <div class="Fixed"><a href="#" onclick="ChangeCollection(<?php echo $request["collection"]?>,'');"><?php echo LINK_CARET ?><?php echo $lang["action-select"]?></a></div>
+            <div class="Fixed"><a href="#" onclick="ChangeCollection(<?php echo $request["collection"]?>,'');"><?php echo LINK_CARET ?><?php echo $lang["action-selectrequesteditems"]?></a></div>
             <div class="clearerleft"></div>
         </div>
         <?php endif; ?>

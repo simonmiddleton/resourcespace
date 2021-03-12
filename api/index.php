@@ -8,7 +8,7 @@ include_once "../include/ajax_functions.php";
 include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
 
-if (!$enable_remote_apis) {exit("API not enabled.");}
+if (!$enable_remote_apis) {http_response_code(403);exit("API not enabled.");}
 
 debug("API:");
 define("API_CALL", true);
@@ -59,11 +59,11 @@ if($function != "login")
         if(!check_api_key($user, $query, $sign, $authmode))
             {
             debug("API: Invalid signature");
+            http_response_code(401);
             exit("Invalid signature");
             }
     
-        # Log user in (if permitted)
-        
+        # Log user in (if permitted)        
         $validuser = setup_user(get_user(get_user_by_username($user)));
         if(!$validuser)
             {
@@ -76,11 +76,3 @@ if($function != "login")
 echo execute_api_call($query, $pretty);
 debug("API: finished execute_api_call({$query});");
 
-
-/*
- * API v2 - To Do
- *
- * POST requirement for anything that performs an action
- * Better support for parameters - URL/GET perhaps a bit too limiting in some cases? Perhaps support for parameters being JSON encoded?
- *
- */

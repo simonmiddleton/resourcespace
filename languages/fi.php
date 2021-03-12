@@ -267,13 +267,7 @@ $lang["resources_uploaded-n"]="%done% resurssia ladattu onnistuneesti."; # %done
 $lang["resources_failed-0"]="0 resurssia epäonnistui.";
 $lang["resources_failed-1"]="1 resurssi epäonnistui.";
 $lang["resources_failed-n"]="%done% resurssia epäonnistui."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Määrittele etäkäytön FTP-palvelin";
-$lang["ftpserver"]="FTP-palvelin";
-$lang["ftpusername"]="FTP-käyttäjänimi";
-$lang["ftppassword"]="FTP-salasana";
-$lang["ftpfolder"]="FTP-kansio";
 $lang["connect"]="Ota yhteys";
-$lang["uselocalupload"]="TAI: käytä paikallista 'latauskansiota' FTP-palvelimen etäkäytön sijasta";
 
 # User contributions
 $lang["contributenewresource"]="Lisää uusi resurssi";
@@ -793,8 +787,6 @@ $lang["warningexpiredtext"]="Varoitus! Resurssin voimassaolo on päättynyt. Nap
 $lang["warningexpiredok"]="&gt; Salli resurssien lataaminen";
 $lang["userrequestcomment"]="Kommentti";
 $lang["addresourcebatchbrowser"]="Lisää resurssijoukko - selaimessa";
-$lang["addresourcebatchbrowserjava"]="Lisää resurssijoukko - selaimessa - Javalla (vanha versio) ";
-$lang["addresourcebatchftp"]="Lisää joukko resursseja - hae FTP-palvelimelta";
 $lang["replaceresourcebatch"]="Korvaa joukko resursseja";
 $lang["editmode"]="Muokkaustila";
 $lang["replacealltext"]="Korvaa kaikki teksti / valinnat";
@@ -918,7 +910,6 @@ $lang["hidealllanguages"]="Piilota kaikki kielet";
 $lang["clicktologinasthisuser"]="Napsauta kirjautuaksesi tänä käyttäjänä";
 $lang["addkeyword"]="Lisää avainsana";
 $lang["selectedresources"]="Valitut resurssit";
-$lang["addresourcebatchlocalfolder"]="Lisää resurssijoukko - Lataa paikallisesta latauskansiosta";
 $lang["phpextensions"]="PHP-tiedostopäätteet";
 
 # Setup Script
@@ -1004,8 +995,6 @@ $lang["setup-storage_directory"]="Varastohakemisto";
 $lang["setup-if_storagedirectory"]="Minne mediatiedostot laitetaan. Voi olla absoluuttinen (/var/www/blah/blah) tai relatiivinen polku suhteessa asennukseen. HUOMAA: ei kauttaviivaa polun loppuun.";
 $lang["setup-storage_url"]="Varaston URL";
 $lang["setup-if_storageurl"]="Missä storagedir on saatavilla. Voi olla absoluuttinen (http://files.example.com) tai relatiivinen asennukseen nähden. HUOMAA: Ei kauttaviivaa loppuun.";
-$lang["setup-ftp_settings"]="FTP-asetukset";
-$lang["setup-if_ftpserver"]="Tarvitaan vain FTP-tiedostonsiirtoa käytettäessä.";
 $lang["setup-login_to"]="Kirjaudu sisään";
 $lang["setup-configuration_file_output"]="Asetustiedoston ulostulo";
 
@@ -1521,12 +1510,8 @@ $lang["error-collectionnotfound"]="Kokoelmaa ei löydy.";
 
 $lang["header-upload-subtitle"] = "Askel %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Paikallinen latauskansio";
-$lang["ftp_upload_path"] = "FTP-kansio";
 $lang["foldercontent"] = "Kansion sisältö";
 $lang["intro-local_upload"] = "Valitse yksi tai usempi tiedosto paikallisesta latauskansiosta ja napsauta <b>Lataa</b>. Kun tiedostot on ladattu, ne voidaan poistaa latauskansiosta.";
-$lang["intro-ftp_upload"] = "Valitse yksi tai useampi tiedosto FTP-kansiosta ja napsauta <b>Lataa</b>.";
-$lang["intro-java_upload"] = "Napsauta <b>Selaa</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Lataa</b>.";
-$lang["intro-java_upload-replace_resource"] = "Napsauta <b>Selaa</b> löytääksesi tiedoston ja napsauta sitten <b>Lataa</b>.";
 $lang["intro-single_upload"] = "Napsauta <b>Selaa</b> löytääksesi tiedoston ja napsauta sitten <b>Lataa</b>.";
 $lang["intro-plupload"] = "Napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>.";
 $lang["intro-plupload_dragdrop"] = "Vedä ja pudota tai napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>.";

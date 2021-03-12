@@ -565,10 +565,11 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 
 function ajax_download(download_offline, tar)
 	{
+    console.debug('ajax_download(download_offline = %o, tar = %o)', download_offline, tar);
     var ifrm = document.getElementById('downloadiframe');
     ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
 
-    if(download_offline)
+    if(download_offline && !tar)
         {
         styledalert('<?php echo $lang['collection_download']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
         document.getElementById('downloadbuttondiv').style.display='none';
@@ -755,7 +756,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 
-<script>var tar=true;</script>	
+<script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
@@ -775,18 +776,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="
-            if(tar)
-                {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, true);
-                return false;
-                }
-            else
-                {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, false);
-                return false;
-                }
-           "
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>

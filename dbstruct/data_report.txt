@@ -21,7 +21,7 @@ or
 )
 
 
-group by k.ref order by 'Entered Count' desc limit 100;
+group by k.ref order by 'Entered Count' desc limit 5000;
 "
 2,"Keywords used in searches","select k.keyword 'Keyword',sum(count) Searches from keyword k,daily_stat d where k.ref=d.object_ref and d.activity_type='Keyword usage'
 

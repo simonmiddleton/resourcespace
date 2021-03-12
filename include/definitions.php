@@ -269,7 +269,7 @@ $permitted_html_tags =  array(
 // Array of default html attributes that are permitted in field data
 $permitted_html_attributes = array('id', 'class', 'style');
 
-$jquery_path = "/lib/js/jquery-3.3.1.min.js";
+$jquery_path = "/lib/js/jquery-3.5.1.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
 
 // Define dropdown action categories
@@ -280,6 +280,10 @@ define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
 
+
+// Global variable that contains variable names that reference metadata fields considered to be core to ResourceSpace 
+// and shouldn't be deleted. Plugins can register their own with config_register_core_fieldvars()
+// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_fieldvars().
 $corefields = array(
     "BASE" => array(
         'filename_field',
@@ -314,6 +318,11 @@ $corefields = array(
         'join_fields'
         )
     );
+
+// Similar to $corefields but holds list of field refs we want the system to prevent from deleting. Mostly plugins will want
+// to register these IF the plugin is configured to use certain metadata fields.
+// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_field_refs().
+$core_field_refs = [];
 
 
 // ----------------------------------------------

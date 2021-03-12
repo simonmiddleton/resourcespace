@@ -10,7 +10,7 @@
  * @param  string $order_by Column to sort by
  * @param  string $sort ASC or DESC sort order
  * @param  integer $fetchrows   How many rows to fetch
- * @param  boolean $auto_create Create a default My Collection if one doesn't exist
+ * @param  boolean $auto_create Create a standard "Default Collection" if one doesn't exist
  * @return array
  */
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
@@ -42,11 +42,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 			if ($keyref!==false) {$keyrefs[]=$keyref;}
 
 			$keysql.=" join collection_keyword k" . $n . " on k" . $n . ".collection=ref and (k" . $n . ".keyword='$keyref')";	
-			//$keysql="or keyword in (" . join (",",$keyrefs) . ")";
 			}
-
- 
-		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
 		}
 
     // Type filter
@@ -327,7 +323,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys=get_collection_external_access($collection);
+        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0));
         if (count($keys)>0)
             {
             $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
@@ -478,7 +474,26 @@ function collection_writeable($collection)
         // Collection has been shared but is not public AND user is either attached or in attached group
         || ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
         // System admin
-        || checkperm("a");
+        || checkperm("a")
+        // Adding to active upload_share
+        || upload_share_active() == $collection;
+
+    // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
+    if ($writable === false && checkperm("r"))
+        {
+        include_once 'research_functions.php';
+        $research_requests = get_research_requests();
+        $collections = array();
+        foreach ($research_requests as $research_request)
+            {
+            $collections[] = $research_request["collection"];
+            }
+        if (in_array($collection,$collections))
+            {
+            $writable = true;
+            }
+        }
+        
     return $writable;
 
     }
@@ -493,8 +508,7 @@ function collection_readable($collection)
 	{
     global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
 
-    # Precautionary check to see if user has featured collection access or collection is their own
-    if(getval("k","") == "" && !in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) && !featured_collection_check_access_control($collection)) {return false;}
+    $k = getval('k', '');
 
 	# Fetch collection details.
 	if (!is_numeric($collection)) {return false;}
@@ -509,15 +523,15 @@ function collection_readable($collection)
 	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
 
 	# Access if collection_commenting is enabled and request feedback checked
-	# Access if it's a public collection (or theme)
+	# Access if it's a public collection (or featured collection to which user has access to)
 	# Access if k is not empty or option to ignore collection access is enabled and k is empty
-    if (($collection_commenting && $collectiondata['request_feedback'] == 1)
-         ||
-        $collectiondata["public"]==1 
-         ||
-        getval("k","")!=""
-         ||
-        (getval("k","")=="" && $ignore_collection_access))
+    if (
+        ($collection_commenting && $collectiondata['request_feedback'] == 1)
+        || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
+        || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+        || $k!=""
+        || ($k=="" && $ignore_collection_access)
+    )
 		{
 		return true;
 		}
@@ -527,14 +541,24 @@ function collection_readable($collection)
 		{
 		# Access if:
 		#	- It's their collection
-		# 	- It's a public collection (or theme)
+		# 	- It's a public collection (or featured collection to which user has access to)
 		#	- They have the 'access and edit all collections' admin permission
 		# 	- They are attached to this collection
 		#   - Option to ignore collection access is enabled and k is empty
-		if($userref==$collectiondata["user"] || $collectiondata["public"]==1 || checkperm("h") || in_array($userref,$attached)  || in_array($usergroup,$attached_groups) || checkperm("R") || getval("k","")!="" || (getval("k","")=="" && $ignore_collection_access))
-			{
-			return true;
-			}
+        if(
+            $userref == $collectiondata["user"]
+            || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
+            || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
+            || checkperm("h")
+            || in_array($userref, $attached)
+            || in_array($usergroup, $attached_groups)
+            || checkperm("R")
+            || $k!=""
+            || ($k=="" && $ignore_collection_access)
+        )
+            {
+            return true;
+            }
 		}
 
 	return false;
@@ -1090,6 +1114,13 @@ function save_collection($ref, $coldata=array())
         $sqlset = array();
         foreach($coldata as $colopt => $colset)
             {
+            // skip data that is not a collection property (e.g result_limit or deleteall) otherwise the $sqlset will have an
+            // incorrect SQL query for the update statement.
+            if(in_array($colopt, ['result_limit', 'relateall', 'removeall', 'deleteall', 'users']))
+                {
+                continue;
+                }
+
             // Public collection
             if($colopt == "public" && $colset == 1)
                 {
@@ -1211,7 +1242,7 @@ function save_collection($ref, $coldata=array())
 	index_collection($ref);
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-	if (isset($coldata["users"]) && $coldata["users"]!="")
+	if (isset($coldata["users"]))
         {
         $old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
         $new_attached_users=array();
@@ -1232,6 +1263,7 @@ function save_collection($ref, $coldata=array())
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
+        $ulist = array_map("escape_check",$ulist);
         $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
         if (count($urefs)>0)
             {
@@ -1296,7 +1328,7 @@ function save_collection($ref, $coldata=array())
         {
         remove_all_resources_from_collection($ref);
         }
-		
+
 	# Delete all resources?
 	if (isset($coldata["deleteall"]) && $coldata["deleteall"]!="" && !checkperm("D"))
         {
@@ -1504,6 +1536,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $key_required=$emails_keys['key_required'];
 
     # Add the collection(s) to the user's My Collections page
+    $ulist = array_map("escape_check",$ulist);
     $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
     if (count($urefs)>0)
         {
@@ -3482,8 +3515,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
         }
 
-    // Share external link to upload to collection
-    if(can_share_upload_link($collection_data))
+    // Share external link to upload to collection, not permitted if already externally shared for view access
+    $eakeys = get_external_shares(array("share_collection"=>$collection_data['ref'],"share_type"=>0));
+    if(can_share_upload_link($collection_data) && count($eakeys) == 0)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/share_upload.php",array(),array("share_collection"=>$collection_data['ref']));
         $options[$o]['value']='share_upload';
@@ -3673,12 +3707,15 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
                 urlencode($user_mycollection)
             );
             
-            $options[$o]['value'] = 'hide_collection';
-            $options[$o]['label'] = $lang['hide_collection'];
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
-            $options[$o]['category']  = ACTIONGROUP_ADVANCED;
-            $options[$o]['order_by']  = 270;
-            $o++;
+            if ($pagename != "load_actions")
+                {
+                $options[$o]['value'] = 'hide_collection';
+                $options[$o]['label'] = $lang['hide_collection'];
+                $options[$o]['extra_tag_attributes']=$extra_tag_attributes;	
+                $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+                $options[$o]['order_by']  = 270;
+                $o++;
+                }
         }
         }
         
@@ -3878,27 +3915,10 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
 	$basename_minus_extension=remove_extension($pathparts['basename']);
 
-    $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
-
-  
-    
-    // check if a file has already been processed with this name
-    if(in_array($filename, $filenames))
-        {
-        $path_parts = pathinfo($filename);
-        if(isset($path_parts['extension']) && isset($path_parts['filename']))
-            {
-            $filename_ext = $path_parts['extension'];
-            $filename_wo  = $path_parts['filename'];
-
-            // Run through function to guarantee unique filename
-            $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
-            }
-        }
-    
-    // Add the filename to the array so it can be checked in the next loop
-    $filenames[] = $filename;
-
+    $fs=explode("/",$filename);
+    $filename=$fs[count($fs)-1]; 
+    set_unique_filename($filename,$filenames);
+   
     # Copy to tmp (if exiftool failed) or rename this file
     # this is for extra efficiency to reduce copying and disk usage
     
@@ -4128,7 +4148,7 @@ function collection_download_process_summary_notes(
     
     if($zipped_collection_textfile == true && $includetext == "true")
         {
-        $qty_sizes = count($available_sizes[$size]);
+        $qty_sizes = isset($available_sizes[$size]) ? count($available_sizes[$size]) : 0;
         $qty_total = count($result);
         $text.= $lang["status-note"] . ": " . $qty_sizes . " " . $lang["of"] . " " . $qty_total . " ";
         switch ($qty_total) {
@@ -5343,11 +5363,12 @@ function cleanup_anonymous_collections(int $limit = 100)
  */
 function can_share_upload_link($collection_data)
     {
+    global $usergroup,$upload_link_usergroups;
     if(!is_array($collection_data) && is_numeric($collection_data))
         {
         $collection_data = get_collection($collection_data);
         }
-    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup"));
+    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup") || in_array($usergroup,$upload_link_usergroups));
     }
     
 /**
@@ -5601,6 +5622,7 @@ function upload_share_setup(string $key,$shareopts = array())
         "category_tree_lazy_load",
         "suggest_keywords",
         "add_keyword",
+        "download", // Required to see newly created thumbnails if $hide_real_filepath=true;
         );
 
     if(!in_array($pagename,$validpages))

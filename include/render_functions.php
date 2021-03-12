@@ -248,6 +248,22 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
         ?>
         <script type="text/javascript">
         
+        <?php 
+        if(!$displaycondition && $forsearchbar)
+            {
+            // Create or add to array of fields to hide when clearing search
+            ?>
+            if(typeof clearhiddenfields == "object")
+                {
+                clearhiddenfields.push('<?php echo $field["ref"]; ?>');
+                }
+            else
+                {
+                clearhiddenfields = new Array('<?php echo $field["ref"]; ?>');
+                }
+            <?php
+            }?>
+
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
             // Check the node passed in from the changed governing field
@@ -758,6 +774,18 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             $treeonly                    = true;
             $status_box_elements         = '';
 
+            ?>
+            <script type="text/javascript">
+                jQuery(document).ready(function()
+                {
+                    jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                    {
+                        FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);
+                    });
+                });
+            </script>
+            <?php
+
             foreach($searched_nodes as $node)
                 {
                 $n_details = array();
@@ -1029,7 +1057,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 if($two_line)
                     {
                     ?>
-                   <br/>
+                    <br />
                     <?php
                     }
                     ?>
@@ -1493,17 +1521,15 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
 	?>
-	<div id="pixelwidth" class="<?php echo implode(" ", $div_class); ?>" >
+	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
-		<div>
 		<?php
-		echo "<input name=\"" . $input . "\" type=\"text\" ". ($numeric?"numericinput":"") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
+		echo "<input name=\"" . $input . "\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
 			
 		echo $additionaltext;
 		?>
-		</div>
+	    <div class="clearerleft"> </div>
 	</div>
-	<div class="clearerleft"> </div>
 	<?php
 	}
 	
@@ -2044,7 +2070,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
-				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+				echo "<input id='field_" . $field['ref']  . "_currentval' name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
@@ -3419,8 +3445,6 @@ function render_selected_collection_actions()
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
            $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
 
-    
-
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
@@ -3469,15 +3493,7 @@ function render_selected_collection_actions()
     $lang["searchitemsdiskusage"] = $lang["selected_items_disk_usage"];
     $lang["share"] = $lang["share_selected"];
 
-    if (getvalescaped("clear_selection_collection", "") == "no")
-        {
-        render_actions($collection_data, true, false,'');
-        }
-    else 
-        {
-        render_actions($collection_data, true, false,'',array(),true);
-        }
-    
+    render_actions($collection_data, true, false);
 
     $search = $orig_search;
     $result = $orig_result;
@@ -4054,7 +4070,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             # Use a display template to render this field
             $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
-            $template = str_replace('[value]', htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target"))), $template);
+            $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
 
@@ -4163,7 +4179,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         {
         echo "<a href='#' id='lock_link_" . $ref . "' onclick='return updateResourceLock(" . $ref . ",!resource_lock_status);' ";
         echo "title='" .  $lock_details . "'";
-        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>";
+        echo "class='LockedResourceAction " . ($resource_locked ? "ResourceLocked" : "ResourceUnlocked" ). "'>&nbsp;";
         if($resource_locked)
             {
             $locktext = (checkperm("a") || ($lockuser == $userref)) ? $lang["action_unlock"] : $lang["status_locked"];
@@ -5132,6 +5148,54 @@ function render_top_page_error_style(string $err_msg)
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
     return;
     }
+
+
+/**
+* Render a FormHelper. These are used in forms, to provide extra information to the user to a question.
+* 
+* @param string $txt Help text
+* @param string $id  Div ID
+* @param array  $ctx Contextual data
+*/
+function render_question_form_helper(string $txt, string $id, array $ctx)
+    {
+    $txt = trim($txt);
+    $id = trim($id);
+
+    if($txt === '' || $id === '')
+        {
+        return;
+        }
+
+    $ctx_class = (isset($ctx['class']) && is_array($ctx['class']) ? $ctx['class'] : array());
+    $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
+
+
+    $class = htmlspecialchars(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', htmlspecialchars($ctx_style)) : '');
+    ?>
+    <div id="help_<?php echo htmlspecialchars($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+        <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render an HTML hidden input
+* 
+* @param string $name  Input name
+* @param string $value Input value
+*/
+function render_hidden_input(string $name, string $value)
+    {
+    ?>
+    <input type="hidden" name="<?php echo htmlspecialchars($name); ?>" value="<?php echo htmlspecialchars($value); ?>">
+    <?php
+    return;
+    }
+
 
 function render_workflow_state_question($current=null, $checkaccess=true)
     {

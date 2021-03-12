@@ -32,14 +32,6 @@ include "../../include/header.php";
             <li><i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/<?php echo $url?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchbrowser"]?></a></li>
         <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
 
-		<?php if($upload_methods['fetch_from_ftp']): // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-exchange"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&uploader=ftp" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchftp"]?></a></li>
-		<?php endif // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
-
-		<?php if($upload_methods['fetch_from_local_folder']): // Test if Add Resource Batch - Fetch from local upload folder is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;local=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchlocalfolder"]?></a></li>
-		<?php endif // Test if Add Resource Batch - Fetch from local upload folder is allowed. ?>
-
 		<?php 
 		hook("addteamresourcetool");
 		

@@ -68,8 +68,8 @@ $introtext=text("introtext");
         if($offline_job_queue)
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR, $userref);
-            $failedjobcount = 2;
-            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount>0?"<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
+            $failedjobcount = count($failedjobs);
+            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
             echo "</li>";
             }
 

@@ -95,13 +95,7 @@ $lang["donotmoveaway"]="IMPORTANTE: Não saia desta página até que envio seja 
 $lang["pleaseselectfiles"]="Selecione um ou mais arquivos para enviar.";
 $lang["upload_failed_for_path"]="Envio falhou para %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Envio finalizado";
-$lang["specifyftpserver"]="Especifique um Servidor FTP Remoto";
-$lang["ftpserver"]="Servidor FTP";
-$lang["ftpusername"]="Usuário FTP";
-$lang["ftppassword"]="Senha FTP";
-$lang["ftpfolder"]="Pasta FTP";
 $lang["connect"]="Conectar";
-$lang["uselocalupload"]="OU: utilize a pasta de envio local ao invés do FTP Remoto.";
 
 # User contributions
 $lang["contributenewresource"]="Contribua com Novo Conteúdo";
@@ -484,9 +478,7 @@ $lang["warningexpiredtext"]="Aviso! Este conteúdo excedeu o prazo de validade. 
 $lang["warningexpiredok"]="&gt; Habilitar download do conteúdo";
 $lang["userrequestcomment"]="Comentário";
 $lang["addresourcebatchbrowser"]="Adicionar Conteúdo em Lote - No Navegador";
-$lang["addresourcebatchbrowserjava"]="Adicionar Conteúdo em Lote - No Navegador (Java)";
 
-$lang["addresourcebatchftp"]="Adicionar Conteúdo em Lote - Servidor FTP remoto";
 $lang["replaceresourcebatch"]="Trocar Conteúdo em Lote";
 $lang["editmode"]="Modo de Edição";
 $lang["replacealltext"]="Trocar Todo o Texto";
@@ -620,7 +612,6 @@ $lang["noattachedusers"]="Nenhum usuário anexado.";
 $lang["confirmdeleteaccess"]="Tem certeza que deseja apagar esta chave de conteúdo? Usuários que possuírem esta chave não terão mais acesso a esta coleção.";
 $lang["noexternalsharing"]="Nenhum compartilhamento externo.";
 $lang["sharedcollectionaddwarning"]="Aviso: esta coleção foi compartilhada com usuários externos. O conteúdo que você adicionou  nesta coleção foi disponibilizado para os usuários. Clique em \"compartilhar\" para gerenciar o acesso externo a essa coleção.";
-$lang["addresourcebatchlocalfolder"]="Adicionar Conteúdo em Lote - Pasta Local";
 
 # Collection log - actions
 $lang["collectionlog"]="Registro de Coleção";

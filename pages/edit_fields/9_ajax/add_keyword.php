@@ -6,10 +6,6 @@ $upload_collection = upload_share_active();
 if ($k=="" || !check_access_key_collection($upload_collection,$k))
     {
     include dirname(__FILE__) . '/../../../include/authenticate.php';
-    if (! (checkperm("c") || checkperm("d")))
-        {
-        exit ("Permission denied.");
-        }
     }
 
 $field   = getvalescaped('field', '');

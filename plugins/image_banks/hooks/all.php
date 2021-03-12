@@ -58,10 +58,14 @@ function HookImage_banksAllSearchfiltertop()
                 {
                 if(typeof search_show == 'undefined' || search_show)
                     {
-                    siblings.show();
-                    
-                    TriggerChangesForRenderedFields();
-
+                    siblings.each(function()
+						{
+                        qid = this.id.substring(13);
+                        if(typeof clearhiddenfields == "object" && !clearhiddenfields.includes(qid))
+                            {
+                            jQuery(this).show();
+                            }
+						});
                     }
                 return;
                 }

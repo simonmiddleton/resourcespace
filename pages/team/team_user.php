@@ -202,15 +202,22 @@ include "../../include/header.php";
 	?>
 	<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 	</tr>
-
 	<?php
+    // Parse $url var as this is being manipulated by the pager(). This allows us to build correct URLs later on (e.g for team_user_edit_url)
+    $url_parse = parse_url($url);
+    $url_qs = [];
+    if(isset($url_parse['query']))
+        {
+        parse_str($url_parse['query'], $url_qs);
+        }
+
 	for ($n=$offset;(($n<count($users)) && ($n<($offset+$per_page)));$n++)
 		{
-	    $team_user_edit_params = array(
-	        'ref'     => $users[$n]["ref"],
-	        'backurl' => "{$url}&offset={$offset}",
-	    );
-	    $team_user_edit_url = generateURL("{$baseurl}/pages/team/team_user_edit.php", $team_user_edit_params);
+        $team_user_edit_params = array(
+            'ref' => $users[$n]["ref"],
+            'backurl' => generateURL($url_parse['path'], $url_qs, ['offset' => $offset]),
+        );
+        $team_user_edit_url = generateURL("{$baseurl}/pages/team/team_user_edit.php", $team_user_edit_params);
 		?>
 		<tr>
 	        <td>
@@ -234,7 +241,7 @@ include "../../include/header.php";
 		<td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
 		<a href="<?php echo $baseurl ?>/pages/admin/admin_system_log.php?actasuser=<?php echo $users[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>
 		&nbsp;
-		<a href="<?php echo $baseurl ?>/pages/team/team_user_edit.php?ref=<?php echo $users[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+		<a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
 		<?php hook("usertool")?>
 		</div><?php } ?>
 		</td>
