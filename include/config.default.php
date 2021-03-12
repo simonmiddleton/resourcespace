@@ -1913,11 +1913,6 @@ $staticsync_whitelist_folders = array();
 $staticsync_max_files = 10000;
 $staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
 
-# Mapping extensions to resource types for sync'd files
-# Format: staticsync_extension_mapping[resource_type]=array("extension 1","extension 2");
-$staticsync_extension_mapping_default=1;
-$staticsync_extension_mapping[3]=array("mov","3gp","avi","mpg","mp4","flv"); # Video
-$staticsync_extension_mapping[4]=array("flv");
 # Uncomment and set the next line to specify a category tree field to use to store the retieved path information for each file. The tree structure will be automatically modified as necessary to match the folder strucutre within the sync folder (performance penalty).
 # $staticsync_mapped_category_tree=50;
 # Uncomment and set the next line to specify a text field to store the retrieved path information for each file. This is a time saving alternative to the option above.
@@ -2784,11 +2779,9 @@ $actions_modal=true;
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
 
-/*
-Mappings between resource types and file extensions.
-Can be used to automatically create resources in the system based on
-the extension of the file.
-*/
+
+// Mappings between resource types and file extensions.
+// Can be used to automatically create resources in the system based on the extension of the file.
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
     2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl', 'ott' , 'rtf' , 'txt' , 'xml'),

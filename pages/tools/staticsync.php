@@ -2,16 +2,7 @@
 include_once dirname(__FILE__) . "/../../include/db.php";
 include_once dirname(__FILE__) . "/../../include/image_processing.php";
 
-$cli_short_options = 'hc';
-$cli_long_options  = array(
-    'help',
-    'send-notifications',
-    'suppress-output',
-    'clearlock'
-);
-
-$sapi_type = php_sapi_name();
-if (substr($sapi_type, 0, 3) != 'cli')
+if(PHP_SAPI != 'cli')
     {
     exit("Command line execution only.");
     }
@@ -20,6 +11,13 @@ $send_notification  = false;
 $suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;
 
 // CLI options check
+$cli_short_options = 'hc';
+$cli_long_options  = array(
+    'help',
+    'send-notifications',
+    'suppress-output',
+    'clearlock'
+);
 foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
     if(in_array($option_name, array('h', 'help')))
@@ -192,15 +190,15 @@ function touch_category_tree_level($path_parts)
 function ProcessFolder($folder)
     {
     global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $ffmpeg_preview_extension, 
-           $staticsync_autotheme, $staticsync_extension_mapping_default, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS,
-           $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
-           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
+           $staticsync_autotheme, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $staticsync_mapped_category_tree, 
+           $staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
            $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
-           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref;
+           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref,
+           $resource_type_extension_mapping_default, $resource_type_extension_mapping;
     
     $collection = 0;
     $treeprocessed=false;
@@ -461,11 +459,12 @@ function ProcessFolder($folder)
                     }
 
                 # Work out a resource type based on the extension.
-                $type = $staticsync_extension_mapping_default;
-                reset($staticsync_extension_mapping);
-                foreach ($staticsync_extension_mapping as $rt => $extensions)
+                $type = (isset($GLOBALS['staticsync_extension_mapping_default']) ? $GLOBALS['staticsync_extension_mapping_default'] : $resource_type_extension_mapping_default);
+                $rt_ext_mappings = (isset($GLOBALS['staticsync_extension_mapping']) ? $GLOBALS['staticsync_extension_mapping'] : $resource_type_extension_mapping);
+                reset($rt_ext_mappings);
+                foreach($rt_ext_mappings as $rt => $extensions)
                     {
-                    if (in_array($extension,$extensions)) { $type = $rt; }
+                    if(in_array($extension, $extensions)) { $type = $rt; }
                     }
                 $modified_type = hook('modify_type', 'staticsync', array( $type ));
                 if (is_numeric($modified_type)) { $type = $modified_type; }
