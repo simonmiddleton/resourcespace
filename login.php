@@ -49,7 +49,13 @@ if (!hook("replaceauth")) {
 $ip=get_ip();
 $lockouts=sql_value("select count(*) value from ip_lockout where ip='" . escape_check($ip) . "' and tries>='" . $max_login_attempts_per_ip . "' and date_add(last_try,interval " . $max_login_attempts_wait_minutes . " minute)>now()",0);
 
-$username=trim(getvalescaped("username",""));
+$username=getvalescaped("username","");
+if (is_array($username))
+    {
+    redirect($baseurl . "/login.php");
+    }
+
+$username=trim($username);
 if($case_insensitive_username)
     {
     $username=sql_value("select username value from user where lower(username)=lower('" . $username ."')",$username);       
