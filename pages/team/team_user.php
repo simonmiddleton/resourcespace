@@ -218,6 +218,13 @@ include "../../include/header.php";
             'backurl' => generateURL($url_parse['path'], $url_qs, ['offset' => $offset]),
         );
         $team_user_edit_url = generateURL("{$baseurl}/pages/team/team_user_edit.php", $team_user_edit_params);
+
+        $team_user_log_params = array(
+            'actauser' => $users[$n]["ref"],
+            'backurl' => generateURL($url_parse['path'], $url_qs, ['offset' => $offset]),
+        );
+        $team_user_log_url = generateURL("{$baseurl}/pages/admin/admin_system_log.php", $team_user_log_params);
+
 		?>
 		<tr>
 	        <td>
@@ -239,7 +246,7 @@ include "../../include/header.php";
 		<td><?php echo nicedate($users[$n]["last_active"],true) ?></td>
 		<?php hook("additional_user_column");?>
 		<td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
-		<a href="<?php echo $baseurl ?>/pages/admin/admin_system_log.php?actasuser=<?php echo $users[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>
+		<a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>
 		&nbsp;
 		<a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
 		<?php hook("usertool")?>
