@@ -147,6 +147,7 @@ $storageurl="";
 $storagedir=""; # This variable is used in the language files.
 
 include '../include/config.default.php';
+include '../include/config.deprecated.php';
 $defaultlanguage = get_post('defaultlanguage');
 $lang = set_language($defaultlanguage);
 $google_vision_enable=get_post_bool('google_vision_enable');
