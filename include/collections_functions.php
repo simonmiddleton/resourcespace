@@ -635,7 +635,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         {
         $setcolumns["ref"] = (int)$ref;
         }
-    if(trim($rs_session) != "")
+    if(is_numeric(trim($rs_session)))
         {
         $setcolumns["session_id"]   = escape_check($rs_session);
         }
