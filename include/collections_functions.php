@@ -2712,12 +2712,20 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * 
  * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '')
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false)
     {
-    # Generates a HTML link for removing a resource to a collection
+    # Generates a HTML link for removing a resource from a collection
+    # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
 
-    return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+    if ($basketmode) 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefrombasket"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
+    else 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
     }
 
 

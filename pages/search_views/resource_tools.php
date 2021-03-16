@@ -68,6 +68,8 @@ if(!hook("iconemail"))
         
 <!-- Remove from collection icon -->
 <?php 
+$basket=$userrequestmode==2 || $userrequestmode==3;
+
 if(!checkperm('b') && ($k == '' || $internal_share_access))
     {
     $col_link_class = ['fa-minus-circle'];
@@ -81,7 +83,7 @@ if(!checkperm('b') && ($k == '' || $internal_share_access))
         }
 
     $onclick = 'toggle_addremove_to_collection_icon(this);';
-    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onclick) . '</a>';
+    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, $basket) . '</a>';
     }
     ?>
         
@@ -91,7 +93,7 @@ if(!hook('iconcollect') && $pagename!="collections")
     {
     if(!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
-        $col_link_class = (2 == $userrequestmode || 3 == $userrequestmode ? ['fa-shopping-cart'] : ['fa-plus-circle']);
+        $col_link_class = ($basket ? ['fa-shopping-cart'] : ['fa-plus-circle']);
         if(
             isset($usercollection_resources)
             && is_array($usercollection_resources)
@@ -102,7 +104,7 @@ if(!hook('iconcollect') && $pagename!="collections")
             }
 
         $onclick = 'toggle_addremove_to_collection_icon(this);';
-        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
+        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $basket) . '</a>';
         }
     } # end hook iconcollect
     ?>
