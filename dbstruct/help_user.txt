@@ -28,3 +28,5 @@ origin,varchar(50),
 unique_hash,varchar(50),
 csrf_token,varchar(255),
 search_filter_o_id,int(11),
+profile_image,text,The path to an optional image of the user, uploaded via the My Profile page.
+profile_text,varchar(500),The user's profile text, entered via the My Profile page.
