@@ -38,52 +38,6 @@ if (count($geo_search_restrict) > 0)
             }
         }
     }
-?>
-<!--Leaflet.js v1.7.1 files-->
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
-<script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
-
-<!--Leaflet Providers v1.10.2 plugin file-->
-<script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
-
-<!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
-<?php if ($map_default_cache || $map_layer_cache)
-    { ?>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script> <?php
-    } ?>
-
-<!--Leaflet NavBar v1.0.1 plugin files-->
-<?php if ($map_zoomnavbar)
-    { ?>
-    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script> <?php
-    } ?>
-
-<!--Leaflet Omnivore v0.3.1 plugin file-->
-<?php if ($map_kml)
-    { ?>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.1/leaflet-omnivore.min.js"></script> <?php
-    } ?>
-
-<!--Leaflet EasyPrint v2.1.9 plugin file-->
-<?php if ($map1_height >= 335)
-    { ?>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.js"></script> <?php
-    } ?>
-
-<!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
-<script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
-
-<!--Leaflet Zoomslider v0.7.1 plugin files-->
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
-<script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
-
-<!--Polyfill for Internet Explorer and Edge browser compatibility-->
-<script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces5%2Ces6%2Ces2017%2Cdefault%2Ces2018%2Ces7"></script>
-
-<?php
 if($hide_geolocation_panel && !isset($geolocation_panel_only))
     { ?>
     <script>
@@ -198,12 +152,8 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
         <?php include __DIR__ . '/map_processing.php'; ?>
 
         <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
-        startlayer = getCookie('geo_layer');
-        if(typeof startlayer == "undefined")
-            {
-            startlayer = '<?php echo $map_default;?>';
-            }
-        var defaultLayer = new LeafletView.tileLayer.provider(startlayer, {
+   
+        var defaultLayer = new LeafletView.tileLayer.provider('<?php echo $map_default;?>', {
             useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
             detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
             attribution: default_attribute
@@ -260,8 +210,8 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
         LeafletView.marker([geo_lat, geo_long], {
             <?php
             $maprestype = get_resource_types($resource['resource_type']);
-            $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($marker_colors));
-            echo "icon: " . strtolower($marker_colors[$markercolour])  . "Icon,\n";
+            $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
+            echo "icon: " . strtolower($MARKER_COLORS[$markercolour])  . "Icon,\n";
             ?>
             title: georound(geo_lat) + ", " + georound(geo_long) + " (WGS84)"
         }).addTo(map);

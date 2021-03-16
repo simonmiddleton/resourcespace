@@ -108,7 +108,8 @@ echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-vali
     }
 
 if($leaflet_maps_enable)
-    {?>
+    {
+    ?>
 
     <!--Setup Leaflet map container with sizing-->
     <div id="map_edit" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $mapedit_mapheight;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
@@ -135,16 +136,7 @@ if($leaflet_maps_enable)
         <?php include '../include/map_processing.php'; ?>
 
         <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
-        
-        startlayer = getCookie('geo_layer');
-        if(typeof startlayer == "undefined")
-            {
-            startlayer = '<?php echo $map_default;?>';
-            }
-
-        console.log('Startlayer ' + startlayer);
-        
-        var defaultLayer = new Leaflet.tileLayer.provider(startlayer, {
+        var defaultLayer = new Leaflet.tileLayer.provider('<?php echo $map_default;?>', {
             useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
             detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
             attribution: default_attribute
@@ -154,8 +146,8 @@ if($leaflet_maps_enable)
         <?php include '../include/map_basemaps.php'; 
         // Get the resource type to determine the icon to use   
         $maprestype = get_resource_types($resource['resource_type']);
-        $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($marker_colors));
-        $markercolourjs =  strtolower($marker_colors[$markercolour])  . "Icon";
+        $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
+        $markercolourjs =  strtolower($MARKER_COLORS[$markercolour])  . "Icon";
         ?>
 
         <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
@@ -179,21 +171,14 @@ if($leaflet_maps_enable)
 
         <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
         new Leaflet.control.scale().addTo(map2);
-
-        <!--Add download map button to the Leaflet map using bundle.min.js-->
-        Leaflet.easyPrint({
-            title: "<?php echo $lang['map_download'];?>",
-            position: 'bottomleft',
-            sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
-            exportOnly: true,
-            filename: 'resource_edit_map',
-            customWindowTitle: "<?php echo $lang['map_print_title'];?>"
-        }).addTo(map2);
-
+        
+        <?php
+        hook("map_additional");
+        ?>
         <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
         <?php if ($map_kml)
             { ?>
-            omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(map2); <?php
+            omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(map1); <?php
             } ?>
 
         <!--Fix for Microsoft Edge and Internet Explorer browsers-->
@@ -379,6 +364,7 @@ else
     </script> 
     <?php
     }
+
 hook('rendermapfooter'); ?>
 
 <!--Resource marker latitude and longitude form-->
@@ -396,7 +382,7 @@ hook('rendermapfooter'); ?>
 
 
 </div>
-</div> <?php
+</div>
+<?php
 
 include '../include/footer.php';
-?>

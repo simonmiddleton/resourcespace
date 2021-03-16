@@ -1577,7 +1577,7 @@ $lang['map_mapboxtoken'] = 'Access Token';
 $lang['map_mapbox'] = 'Default Map';
 
 // U.S. Geological Survey The National Map group.
-$lang['map_usgstnm_group'] = 'The National Map';
+$lang['map_usgs_group'] = 'The National Map';
 $lang['map_usgstopo'] = 'US Topographic';
 $lang['map_usgsimagery'] = 'US Imagery';
 $lang['map_usgsimagerytopo'] = 'US Imagery & Topographic';

@@ -290,8 +290,8 @@ else
     </div>
 
     <?php
-    $marker_colors[-1] = $lang["select"];
-    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$marker_colors,$restypedata["colour"]);
+    $MARKER_COLORS[-1] = $lang["select"];
+    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"]);
     ?>
     
         <div class="Question">

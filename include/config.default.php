@@ -2442,11 +2442,16 @@ $enable_plugin_upload = true;
     // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
 
     // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
+    // Note that server caching is bypassed if $leaflet_maps_enable=true and $geo_leaflet_maps_sources = true;
+    // Since the client then fetches tiles directly from the source
     $geo_tile_caching = true;
 
+    // How long will tiles be cached? Set to one year by default
+    // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+    $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
+
     // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
-    # $geo_tile_cache_directory = '';
-    
+    # $geo_tile_cache_directory = '';    
 
     // TODO - support no servers
     // TODO support old style servers
@@ -2454,11 +2459,11 @@ $enable_plugin_upload = true;
     // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
     // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
     // information. If no servers are available, then your zoom ability will be limited.
-    // After 9.6 any defiend will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable is enabled
+    // After 9.6 any defined will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable=true
     $geo_tile_servers = array();
-    //$geo_tile_servers[] = 'a.tile.sometileserver.org';
-    //$geo_tile_servers[] = 'b.tile.sometileserver.org';
-    //$geo_tile_servers[] = 'c.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'a.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'b.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'c.tile.sometileserver.org';
 
     // $geo_tile_servers['OpenStreetMap'] = array();
     // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
@@ -2466,17 +2471,8 @@ $enable_plugin_upload = true;
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
 
-    // How long will tiles be cached? Set to one year by default
-    // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
-    $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
-
     // Add OpenLayers configuration options to this variable to overwrite all other options.
     $geo_override_options = "";
-
-    // Leaflet default map center EPSG:3857 Web Mercator (WGS84) latitude and longitude in decimal degrees 
-    // $map_centerview = '[40.66, -111.44]';
-    // Leaflet default map centerzoom level.
-    // $map_default_zoom = 12;
 
     // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
     $geo_search_restrict = array(
@@ -2498,27 +2494,34 @@ $enable_plugin_upload = true;
     $leaflet_maps_enable = false;
 
     // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
-    // This should only be enabled if you are sure that license terms for the tile servers
-    // included will not be breached.
-    // Refer to /lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js to see all defined servers
+    // If this is enabled please refer to /include/map_basemaps to see the available config options that enable specific defined map providers
     $geo_leaflet_maps_sources = false;
+    $map_usgstopo = true;
+    $map_usgsimagery = true;
+    $map_usgsimagerytopo = true;
+
     // $geo_leaflet_sources = define available tile servers. 
+    // Configured sources need to follow the default template as below
+    $geo_leaflet_sources = array();
     $geo_leaflet_sources[] = array(
-        "group"         => "USGSTNM",
-        "code"          => "usgs",
-        "name"          => "usgs",
+        "name"          => "The National Map",
+        "code"          => "USGSTNM",
         "url"           => "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
-        "maxZoom"       => 20,
+        "maxZoom"       => 8,
         "detectRetina"  => true,
-        "attribution"   => "<a href=\'https://www.usgs.gov\'>U.S. Geological Survey</a>",
+        "attribution"   => "<a href=\"https://www.doi.gov\">U.S. Department of the Interior</a> | <a href=\"https://www.usgs.gov\">U.S. Geological Survey</a>",
         "default"       => true,
         "extension"     => "jpeg",
         "variants"      => array(
-            "USTopo"        => array(),
+            "USTopo"        => array(
+                "name"          => "US Topographic",
+            ),
             "USImagery"     => array(
+                "name"          => "US Imagery",
                 "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
                 ),
             "USImageryTopo" => array(
+                "name"          => "US Imagery & Topographic",
                 "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}',
             ),
             )
@@ -2527,15 +2530,11 @@ $enable_plugin_upload = true;
     // Limit number of search results that can be displayed in map view. Set to 0 for no limit
     $search_map_max_results = 5000;
     
-    // Leaflet: Use zoom slidebar instead of standard +/- buttons?
+    // Use zoom slidebar instead of standard +/- buttons?
     $map_zoomslider = true;
 
     // Leaflet: Show zoom history navigation bar?
     $map_zoomnavbar = true;
-
-    // Leaflet: Show a KML overlay on the map?
-    $map_kml = false;
-    $map_kml_file = ''; # Place KML file in ../filestore/system/, example: overlay.kml
 
     // Leaflet: Cache map layer tiles in the browser (recommended to reduce tile server load)?
     $map_default_cache = true; # Default basemap?
@@ -2547,36 +2546,14 @@ $enable_plugin_upload = true;
     // Leaflet default basemap.
     $map_default = 'USGSTNM.USTopo'; # Options e.g. 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
 
-    // Leaflet: show resource thumbnail marker popup, instead of resource ID tooltip?
+    // Open resource when clicking on a search result marker, instead of resource ID tooltip?
     $marker_resource_preview = true;
-
-    // Leaflet: available marker colors and the order they will be used.
-    $marker_colors = array(
-            0 => 'Blue',
-            1 => 'Red',
-            2 => 'Green',
-            3 => 'Orange',
-            4 => 'Yellow',
-            5 => 'Black',
-            6 => 'Grey',
-            7 => 'Violet'
-            );
-
-    // Default Leaflet marker color options based on resource type (0 = Blue, 1 = Red, 2 = Green, 3 = Orange, 4 = Yellow, 5 = Black, 6 = Gray, and 7 = Violet).
-    // $marker_color1 = 0; # Photo resource type.
-    // $marker_color2 = 1; # Document resource type.
-    // $marker_color3 = 2; # Video resource type.
-    // $marker_color4 = 3; # Audio resource type.
-    // $marker_color5 = 4; # User added resource type 1.
-    // $marker_color6 = 5; # User added resource type 2.
-    // $marker_color7 = 6; # User added resource type 3.
-    // $marker_color8 = 7; # User added resource type 4.
 
     // Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
     # $marker_metadata_field = 85; # Example is fieldID 85.
     $lang['custom_metadata_markers'] = ''; # Custom metadata field map legend header text.
 
-    // Array of minimum and maximum numeric values for the markers on the map up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
+    // Array of minimum and maximum numeric values for the markers on the map, up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
     $marker_metadata_array = [
         0 => ['min' => 1935, 'max' => 1939], # Blue marker
         1 => ['min' => 1940, 'max' => 1949], # Red marker
@@ -2588,75 +2565,12 @@ $enable_plugin_upload = true;
         7 => ['min' => 2000, 'max' => 2010]  # Violet marker
     ];
 
+    // Leaflet: Show a KML overlay on the map?
+    $map_kml = false;
+    $map_kml_file = ''; # Place KML file in ../filestore/system/, example: overlay.kml
+
     // Resource metadata field integer ID containing polygon footprint location string, blank '' if not used.  String in (latitude, longitude) coordinate pairs separated by a comma: (40.75,-111.51), (40.75,-111.49), (40.73,-111.49), (40.73,-111.51) or using braces [].  String can also contain a fifth pair that closes the polygon and equal to the first pair.
     # $map_polygon_field = 84;
-
-    // LEAFLET PROVIDERS AVAILABLE FREE WORLDWIDE BASEMAPS
-        // Enabled OpenStreetMap (OSM) basemap layers.
-        $map_osm = true; # Standard, mapnik
-        $map_osmde = false; # Germany
-        $map_osmfr = false; # France
-        $map_osmch = false; # Switzerland
-        $map_osmbzh = false; # BZH
-        $map_osmhot = false; # Humanitarian
-        $map_osmmtb = false; # Mountain bike map
-        $map_osmhikebike = false; # Hike and bike map
-        $map_otm = true; # OpenTopoMap
-        $map_omsroads = false; # OpenMapSurfer roads
-
-        // Enabled Stamen basemap layers.
-        $map_stamentoner = false; # Toner
-        $map_stamentonerlt = false; # Toner light
-        $map_stamentonerback = false; # Toner background
-        $map_stamenterrain = false; # Terrian
-        $map_stamenterrainback = false; # Terrian background
-        $map_stamenrelief = false; # Relief
-        $map_stamenwatercolor = false; # Watercolor
-
-        // Enabled Hydda basemap layers.
-        $map_hyddafull = false; # Full
-        $map_hyddabase = false; # Base
-
-        // Enabled NASA Global Imagery Browse Services (GIBS) basemap layers.
-        $map_nasagibscolor = false; # MODIS-TERRA true color
-        $map_nasagibsfalsecolor = false; # MODIS-TERRA bands 3, 6, and 7 false color
-        $map_nasagibsnight = false; # Earth at night 2012
-
-    // LEAFLET PROVIDERS AVAILABLE FREE LIMITED COVERAGE BASEMAPS
-        // Enabled U.S. Geological Survey basemap layers, United States coverage only.
-        $map_usgstopo = true;
-        $map_usgsimagery = true;
-        $map_usgsimagerytopo = true;
-
-    // LEAFLET PROVIDERS AVAILABLE WORLDWIDE BASEMAPS (REGISTRATION REQUIRED)
-        // Enabled ESRI basemap layers, no API code required.
-        $map_esristreet = true; # WorldStreetMap
-        $map_esridelorme = true; # Delorme
-        $map_esritopo = true; # World topographic
-        $map_esriimagery = true; # World imagery
-        $map_esriterrain = true; # World terrain
-        $map_esrirelief = true; # World shaded relief
-        $map_esriphysical = true; # World physical
-        $map_esriocean = false; # Ocean basemap
-        $map_esrinatgeo = true; # National Geographic
-        $map_esrigray = false; # World gray canvas
-
-        // Enabled Thunderforest basemap layers, API code required.
-        $map_tfapi = '';
-        $map_tfocm = false; # OpenCycleMap
-        $map_tftransport = false; # Transport
-        $map_tftransportdark = false; # Transport dark
-        $map_tflandscape = false; # Landscape
-        $map_tfoutdoors = false; # Outdoors
-        $map_tfpioneer = false; # Pioneer
-        $map_tfmobileatlas = false; # Mobile atlas
-        $map_tfneighbourhood = false; # Neighbourhood
-
-        // Enabled Mapbox basemap layers, ID and access token required.
-        $map_mapbox = false;
-        $map_mapboxid = '';
-        $map_mapboxtoken = '';
-        $map_mapboxattribution = '';
 
 # QuickLook previews (Mac Only)
 # If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.

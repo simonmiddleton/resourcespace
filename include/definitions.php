@@ -365,3 +365,14 @@ define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
+// LEAFLET MAPS - AVAILABLE COLOURS
+$MARKER_COLORS = array(
+    0 => 'Blue',
+    1 => 'Red',
+    2 => 'Green',
+    3 => 'Orange',
+    4 => 'Yellow',
+    5 => 'Black',
+    6 => 'Grey',
+    7 => 'Violet'
+    );

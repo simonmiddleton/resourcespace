@@ -14,65 +14,65 @@ function leaflet_osm_basemaps() // OpenStreetMap basemaps.
         var osm_attribute = 'Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors';
 
         var osm_mapnik = L.tileLayer.provider('OpenStreetMap.Mapnik', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 19,
             attribution: osm_attribute
         });
 
         var osm_de = L.tileLayer.provider('OpenStreetMap.DE', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 18,
             attribution: osm_attribute
         });
 
         var osm_fr_attribute = '&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
         var osm_fr = L.tileLayer.provider('OpenStreetMap.France', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 20,
             attribution: osm_fr_attribute
         });
 
         var osm_ch = L.tileLayer.provider('OpenStreetMap.CH', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 18,
             attribution: osm_attribute
         });
 
         var osm_bzh = L.tileLayer.provider('OpenStreetMap.BZH', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 19,
             attribution: osm_attribute
         });
 
         var osm_hot = L.tileLayer.provider('OpenStreetMap.HOT', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 19,
             attribution: osm_attribute
         });
 
         var osm_hikebike = L.tileLayer.provider('HikeBike.HikeBike', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 19,
             attribution: osm_attribute
         });
 
         var osm_mtb = L.tileLayer.provider('MtbMap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: osm_attribute
         });
 
         var osm_otm_attribute = 'Map data: &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: &copy; <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)';
         var osm_otm = L.tileLayer.provider('OpenTopoMap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 17,
             attribution: osm_otm_attribute
         }); ";
@@ -87,15 +87,15 @@ function leaflet_esri_basemaps() // ESRI basemaps.
     $esri = "<!--ESRI basemap group-->
         var esri_street_attribute = 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012';
         var esri_street = L.tileLayer.provider('Esri.WorldStreetMap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: esri_street_attribute
         });
 
         var esri_delorme_attribute = 'Tiles &copy; Esri &mdash; Copyright: &copy;2012 DeLorme';
         var esri_delorme = L.tileLayer.provider('Esri.DeLorme', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 1,
             maxZoom: 11,
             attribution: esri_delorme_attribute
@@ -103,62 +103,62 @@ function leaflet_esri_basemaps() // ESRI basemaps.
 
         var esri_topo_attribute = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community';
         var esri_topo = L.tileLayer.provider('Esri.WorldTopoMap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: esri_topo_attribute
         });
 
         var esri_imagery_attribute = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
         var esri_imagery = L.tileLayer.provider('Esri.WorldImagery', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: esri_imagery_attribute
         });
 
         var esri_terrain_attribute = 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS';
         var esri_terrain = L.tileLayer.provider('Esri.WorldTerrain', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 13,
             attribution: esri_terrain_attribute
         });
 
         var esri_relief_attribute = 'Tiles &copy; Esri &mdash; Source: Esri';
         var esri_relief = L.tileLayer.provider('Esri.WorldShadedRelief', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 13,
             attribution: esri_relief_attribute
         });
 
         var esri_physical_attribute = 'Tiles &copy; Esri &mdash; Source: US National Park Service';
         var esri_physical = L.tileLayer.provider('Esri.WorldPhysical', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 8,
             attribution: esri_physical_attribute
         });
 
         var esri_ocean_attribute = 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri';
         var esri_ocean = L.tileLayer.provider('Esri.OceanBasemap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 13,
             attribution: esri_ocean_attribute
         });
 
         var esri_natgeo_attribute = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC';
         var esri_natgeo = L.tileLayer.provider('Esri.NatGeoWorldMap', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 16,
             attribution: esri_natgeo_attribute
         });
 
         var esri_gray_attribute = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ';
         var esri_gray = L.tileLayer.provider('Esri.WorldGrayCanvas', {
-            useCache: '<?php echo $map_default_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 16,
             attribution: esri_gray_attribute
         }); ";
@@ -174,8 +174,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         var stamen_attribute = 'Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a> &mdash; Map data &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
 
         var stamen_toner = L.tileLayer.provider('Stamen.Toner', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 20,
             ext: 'png',
@@ -183,8 +183,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_tonerlt = L.tileLayer.provider('Stamen.TonerLite', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 20,
             ext: 'png',
@@ -192,8 +192,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_tonerback = L.tileLayer.provider('Stamen.TonerBackground', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 20,
             ext: 'png',
@@ -201,8 +201,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_terrain = L.tileLayer.provider('Stamen.Terrain', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 18,
             ext: 'png',
@@ -210,8 +210,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_terrainback = L.tileLayer.provider('Stamen.TerrainBackground', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 18,
             ext: 'png',
@@ -219,8 +219,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_relief = L.tileLayer.provider('Stamen.TopOSMRelief', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 0,
             maxZoom: 20,
             ext: 'jpg',
@@ -228,8 +228,8 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
         });
 
         var stamen_watercolor = L.tileLayer.provider('Stamen.Watercolor', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 1,
             maxZoom: 16,
             ext: 'jpg',
@@ -247,15 +247,15 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
         var hydda_attribute = 'Tiles courtesy of <a href=\"http://openstreetmap.se/\" target=\"_blank\">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
 
         var hydda_full = L.tileLayer.provider('Hydda.Full', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 18,
             attribution: hydda_attribute
         });
 
         var hydda_base = L.tileLayer.provider('Hydda.Base', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 18,
             attribution: hydda_attribute
         }); ";
@@ -271,8 +271,8 @@ function leaflet_nasa_basemaps() // NASA basemaps.
         var nasa_attribute = 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href=\"https://earthdata.nasa.gov\">ESDIS</a>) with funding provided by NASA/HQ.';
 
         var nasa_gibscolor = L.tileLayer.provider('NASAGIBS.ModisTerraTrueColorCR', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 1,
             maxZoom: 9,
             format: 'jpg',
@@ -280,8 +280,8 @@ function leaflet_nasa_basemaps() // NASA basemaps.
         });
 
         var nasa_gibsfalsecolor = L.tileLayer.provider('NASAGIBS.ModisTerraBands367CR', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 1,
             maxZoom: 9,
             format: 'jpg',
@@ -289,8 +289,8 @@ function leaflet_nasa_basemaps() // NASA basemaps.
         });
 
         var nasa_gibsnight = L.tileLayer.provider('NASAGIBS.ViirsEarthAtNight2012', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             minZoom: 1,
             maxZoom: 8,
             format: 'jpg',
@@ -308,20 +308,20 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
         var usgstnm_attribute = 'Map data <a href=\"https://www.doi.gov\">U.S. Department of the Interior</a> | <a href=\"https://www.usgs.gov\">U.S. Geological Survey</a>';
 
         var usgs_topo = L.tileLayer.provider('USGSTNM.USTopo', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: usgstnm_attribute
         }); 
 
         var usgs_imagery = L.tileLayer.provider('USGSTNM.USImagery', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: usgstnm_attribute
         });
 
         var usgs_imagerytopo = L.tileLayer.provider('USGSTNM.USImageryTopo', {
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: usgstnm_attribute
         }); ";
     
@@ -337,64 +337,64 @@ function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
 
         var tf_ocm = L.tileLayer.provider('Thunderforest.OpenCycleMap', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
 
         var tf_transport = L.tileLayer.provider('Thunderforest.Transport', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
 
         var tf_transportdark = L.tileLayer.provider('Thunderforest.TransportDark', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
 
         var tf_landscape = L.tileLayer.provider('Thunderforest.Landscape', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
 
         var tf_outdoors = L.tileLayer.provider('Thunderforest.Outdoors', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
 
         var tf_pioneer = L.tileLayer.provider('Thunderforest.Pioneer', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         }); 
         
         var tf_mobileatlas = L.tileLayer.provider('Thunderforest.MobileAtlas', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         });
         
         var tf_neighbourhood = L.tileLayer.provider('Thunderforest.Neighbourhood', {
             apikey: '<?php echo $map_tfapi?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             maxZoom: 22,
             attribution: tf_attribute
         }); ";
@@ -410,8 +410,8 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
         var mapbox = L.tileLayer.provider('MapBox', {
             id: '<?php echo $map_mapboxid?>',
             accessToken: '<?php echo $map_mapboxtoken?>',
-            useCache: '<?php echo $map_layer_cache;?>',
-            detectRetina: '<?php echo $map_retina;?>',
+            useCache: '" .  ( $map_layer_cache ? "true" : "false" ) . "',
+            detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: '<?php echo $map_mapboxattribution?>'
         }); ";
 
@@ -513,7 +513,7 @@ function leaflet_coordinate_check($coordinate, $type)
 // Create a map color markers legend.
 function leaflet_markers_legend()
     {
-    global $lang, $marker_metadata_field, $marker_metadata_array, $marker_colors;
+    global $lang, $marker_metadata_field, $marker_metadata_array, $MARKER_COLORS;
 
     //$marker_color_def = array($marker_color1, $marker_color2, $marker_color3, $marker_color4, $marker_color5, $marker_color6, $marker_color7, $marker_color8);
 
@@ -524,8 +524,8 @@ function leaflet_markers_legend()
         $restypes = get_resource_types();
         foreach($restypes as $restype)
             {
-            $markercolour = (isset($restype["colour"]) && $restype["colour"] > 0) ? (int)$restype["colour"] : ($restype['ref'] % count($marker_colors));
-            echo "<img src='../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-" . strtolower($marker_colors[$markercolour])  . ".png' alt='" . $marker_colors[$markercolour] . " Icon' style='width:19px;height:31px;'>" . $restype["name"] . "&nbsp;";
+            $markercolour = (isset($restype["colour"]) && $restype["colour"] > 0) ? (int)$restype["colour"] : ($restype['ref'] % count($MARKER_COLORS));
+            echo "<img src='../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-" . strtolower($MARKER_COLORS[$markercolour])  . ".png' alt='" . $MARKER_COLORS[$markercolour] . " Icon' style='width:19px;height:31px;'>" . $restype["name"] . "&nbsp;";
             }
         }
     else // Custom metadata field color markers legend.
@@ -540,7 +540,7 @@ function leaflet_markers_legend()
 
         for ($i = 0; $i < count($marker_metadata_array); $i++)
             {
-            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($marker_colors[$i])?>.png" alt="<?php echo $marker_colors[$i]?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
+            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($MARKER_COLORS[$i])?>.png" alt="<?php echo $MARKER_COLORS[$i]?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
             }
         }
     }
@@ -551,7 +551,6 @@ function header_add_map_providers()
     ?>
     <script>
     // Copied from leaflet-providers.js
-
     (function (root, factory) {
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
@@ -631,46 +630,50 @@ function header_add_map_providers()
 
         L.TileLayer.Provider.providers = {
 
-        <?php        
-        foreach(array_unique(array_column($geo_leaflet_sources,"group")) as $group)
+        <?php   
+        foreach($geo_leaflet_sources as $leaflet_source)
             {
-            echo htmlspecialchars($group)  . ": {\n";
-  
-            foreach($geo_leaflet_sources as $leaflet_source)
+            echo htmlspecialchars($leaflet_source["code"])  . ": {\n";
+            if($geo_tile_caching)
                 {
-                if($leaflet_source["group"] != $group)
-                    {
-                    continue;
-                    }
                 $urlparams = array(
-                        "provider"  =>  $leaflet_source["code"],
-                        "apikey"    =>  isset($leaflet_source["apikey"]) ? $leaflet_source["apikey"] : "",               
+                    "provider"  =>  $leaflet_source["code"],
                     );
-                echo "        url: '" . generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}',\n";
-                echo "        options: {\n";
-                if(isset($leaflet_source["maxZoom"]) && is_int_loose($leaflet_source["maxZoom"]))
-                    {
-                    echo "        maxZoom: " . (int)$leaflet_source["maxZoom"] . ",\n";
-                    } 
-                if(isset($leaflet_source["attribution"]))
-                    {
-                    echo "        attribution: '" . htmlspecialchars($leaflet_source["attribution"]) . "',\n";
-                    }
-                echo "        },\n";
-
-                foreach($leaflet_source["variants"] as $variant=>&$variantdata)
+                $sourceurl = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
+                }
+            else
+                {
+                $sourceurl =  $leaflet_source["url"];                        
+                }
+            echo "        url: '" . $sourceurl . "',\n";
+            echo "        options: {\n";
+            if(isset($leaflet_source["maxZoom"]) && is_int_loose($leaflet_source["maxZoom"]))
+                {
+                echo "        maxZoom: " . (int)$leaflet_source["maxZoom"] . ",\n";
+                } 
+            if(isset($leaflet_source["attribution"]))
+                {
+                echo "        attribution: '" . $leaflet_source["attribution"] . "',\n";
+                }
+            echo "    },\n"; // End of options
+            echo "        variants: {\n";
+            foreach($leaflet_source["variants"] as $variant=>&$variantdata)
+                {
+                echo $variant  . ": {\n        ";
+                if(isset($variantdata["url"]))
                     {
                     if($geo_tile_caching)
                         {
                         $urlparams["variant"] = $variant;
-                        $variantdata["url"] = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}',\n";
+                        $variantdata["url"] = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
                         }
-                    }                    
-
-                echo "        variants: " . json_encode($leaflet_source["variants"], JSON_PRETTY_PRINT);
-                }   
-          echo "        },\n";
-          }
+                    echo "    url: '" . $variantdata["url"] . "'\n";
+                    }
+                echo "},\n";
+                }    
+            echo "         },\n"; // End of variants
+            echo "},\n"; // End of leaflet source
+            }
         ?>
         };
 

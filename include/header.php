@@ -261,8 +261,6 @@ if(!$disable_geocoding)
     if($leaflet_maps_enable)
         {
         // Geocoding & leaflet maps
-        //global $baseurl, $map_default_cache, $map_layer_cache, $map_zoomnavbar, $map_kml;
-
         // Load Leaflet and plugin files.
         ?>
         <!--Leaflet.js v1.7.1 files-->
@@ -296,12 +294,9 @@ if(!$disable_geocoding)
         <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.min.js"></script>
 
         <!--Leaflet NavBar v1.0.1 plugin files-->
-        <?php if ($map_zoomnavbar)
-            { ?>
-            <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script> <?php
-            } ?>
-
+        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
+            
         <!--Leaflet Omnivore v0.3.1 plugin file-->
         <?php if ($map_kml)
             { ?>

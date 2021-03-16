@@ -38,29 +38,10 @@ else
     {
     foreach($geo_leaflet_sources as $leaflet_source)
         {
-            //var osm_mapnik = L.tileLayer.provider('OpenStreetMap.Mapnik', {
-            //     useCache: ' echo $map_default_cache;',
-            //     detectRetina: ' echo $map_retina;',
-            //     maxZoom: 19,
-            //     attribution: osm_attribute
-            // });
-            // var osm_de = L.tileLayer.provider('OpenStreetMap.DE', {
-            //     useCache: 'echo $map_default_cac',
-            //     detectRetina: 'echo $map_retina;',
-            //     maxZoom: 18,
-            //     attribution: osm_attribute
-            // });
-        if(isset($leaflet_source["default"]) && $leaflet_source["default"])
-            {
-            echo "var default_attribute = '" . $leaflet_source["code"] . "_attribute';\n";
-            }
-
         foreach($leaflet_source["variants"] as $variant=>$varopts)
             {
-            $varcode = $leaflet_source["code"] . "_" . mb_strtolower($variant);
-            //$geolang = isset($lang['map_' . $leaflet_source["code"] . "_" . mb_strtolower($variant)]) ? $lang['map_' . $leaflet_source["code"] . "_" . mb_strtolower($variant)] : $leaflet_source["code"] . "_" . mb_strtolower($variant);
-            //echo $geolang . " : " . $leaflet_source["code"] . "_" . mb_strtolower($variant) . ",\n";
-            
+            $varcode = mb_strtolower($leaflet_source["code"] . "_" . $variant);
+
             $varoptions = array();
             $varoptions["maxZoom"] = $leaflet_source["maxZoom"];
             $varoptions["attribution"] = $leaflet_source["attribution"];
@@ -74,16 +55,19 @@ else
                     }
                 }
             $attribution = isset($varoptions["options"]["attribution"]) ? $varoptions["options"]["attribution"] : $varoptions["attribution"]; 
-            echo "var " . $varcode . "_attribute = '" . htmlspecialchars($attribution) . "';\n";
-            echo "var " . $varcode . " = L.tileLayer.provider('" . $leaflet_source["group"] . "."  . $variant . "', {\n";
+            echo "var " . $varcode . "_attribute = '" . $attribution . "';\n";
+            if(mb_strtolower($map_default) == mb_strtolower($leaflet_source["code"] . "." . $variant))
+                {
+                echo "default_attribute = '" . $attribution . "';\n";
+                }
+            echo "var " . $varcode . " = L.tileLayer.provider('" . $leaflet_source["code"] . "."  . $variant . "', {\n";
             echo "    useCache: '" . ($map_default_cache ? "true" : "false") . "',\n";
             echo "    detectRetina: '" . ($map_retina ? "true" : "false") . "',\n";
-            echo "    name : '" . $leaflet_source["group"] . "." . $variant . "',\n";
             foreach ($varoptions as  $varoption => $optval)
                 {
                 if($varoption == "attribution")
                     {
-                    echo "    " . htmlspecialchars($varoption) . ": '" . htmlspecialchars($optval) . "',\n";
+                    echo "    " . htmlspecialchars($varoption) . ": '" . $optval . "',\n";
                     }
                 else
                     {
