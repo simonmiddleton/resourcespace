@@ -1283,6 +1283,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 		}
 	}
 
+$basket=$userrequestmode==2 || $userrequestmode==3;
 
 # Look for a viewer to handle the right hand panel. If not, display the standard photo download / file download boxes.
 if (file_exists("../viewers/type" . $resource["resource_type"] . ".php"))
@@ -1304,7 +1305,6 @@ else
 <?php
 $table_headers_drawn=false;
 $nodownloads=false;$counter=0;$fulldownload=false;
-$basket=$userrequestmode==2 || $userrequestmode==3;
 hook("additionalresourcetools");
 if ($resource["has_image"]==1 && $download_multisize)
 	{
