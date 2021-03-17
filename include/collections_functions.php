@@ -1191,7 +1191,6 @@ function save_collection($ref, $coldata=array())
             $sqlupdate = "";
             $clear_fc_query_cache = false;
             $collection_columns = [
-                'ref',
                 'name',
                 'user',
                 'created',
