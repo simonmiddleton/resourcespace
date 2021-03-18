@@ -48,7 +48,6 @@ function i18n_get_translated($text)
     
     # Split
     $s=explode("~",$text);
-
     # Not a translatable field?
     if (count($s)<2) {return $text;}
 
@@ -64,12 +63,12 @@ function i18n_get_translated($text)
 		$textLanguage=substr($s[$n],0,$p);
         if ($textLanguage==$language) {return substr($s[$n],$p+1);}
         
-        if ($textLanguage==$asdefaultlanguage || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
+        if ($textLanguage==$asdefaultlanguage || $p==0) {$default=substr($s[$n],$p+1);}
         }    
     
     # Translation not found? Return default language
-    # No default language entry? Then consider this a broken language string and return the string unprocessed.
-    if ($default!="") {return $default;} else {return $text;}
+    # No default language entry? Then return empty string
+    if ($default!="") {return $default;} else {return "";}
     }
 
 
