@@ -1646,7 +1646,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
             // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and will eventually be replaced by -alpha off)
             // Extensions for which the alpha/matte channel should not be disabled (and therefore option -flatten is unnecessary)
-            $extensions_no_alpha_off = array('png', 'gif', 'tif', 'psd');
+            $extensions_no_alpha_off = array('png', 'gif', 'psd');
 
             if( $prefix == "cr2:" || $prefix == "nef:" || in_array($extension, $extensions_no_alpha_off) || getval("noflatten","")!="") {
                 $flatten = "";
@@ -1658,7 +1658,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
        
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] ' . $alphaoff : '[0] ') . " " . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] ' . $flatten . ' -quality ' . $preview_quality;
                 }
 
             # fetch target width and height
