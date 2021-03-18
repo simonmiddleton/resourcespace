@@ -2540,16 +2540,16 @@ $enable_plugin_upload = true;
     $map_default_cache = true; # Default basemap?
     $map_layer_cache = true; # All basemaps?
 
-    // Leaflet: Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
+    // Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
     $map_retina = false;
 
-    // Leaflet default basemap.
+    // Leaflet: default basemap.
     $map_default = 'USGSTNM.USTopo'; # Options e.g. 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
 
-    // Open resource when clicking on a search result marker, instead of resource ID tooltip?
+    // Open resource when clicking on a search result marker, instead of resource tooltip?
     $marker_resource_preview = true;
 
-    // Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
+    // Leaflet: Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
     # $marker_metadata_field = 85; # Example is fieldID 85.
     $lang['custom_metadata_markers'] = ''; # Custom metadata field map legend header text.
 
