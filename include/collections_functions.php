@@ -635,7 +635,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         {
         $setcolumns["ref"] = (int)$ref;
         }
-    if(trim($rs_session) != "")
+    if(is_int_loose(trim($rs_session)))
         {
         $setcolumns["session_id"]   = escape_check($rs_session);
         }
@@ -2745,12 +2745,20 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * 
  * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '')
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false)
     {
-    # Generates a HTML link for removing a resource to a collection
+    # Generates a HTML link for removing a resource from a collection
+    # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
 
-    return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+    if ($basketmode) 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefrombasket"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
+    else 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
     }
 
 
@@ -2783,7 +2791,7 @@ function get_collection_external_access($collection)
         {
         $condition .= "AND user='" . escape_check($userref) . "'";
         }
-	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload,status from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
+	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
 
 

@@ -183,7 +183,6 @@ function simplesaml_config_check()
         return false;
         }
     
-
     require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
 	$config = \SimpleSAML\Configuration::getInstance();
     $version = $config->getVersion();

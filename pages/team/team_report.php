@@ -61,7 +61,7 @@ if ($report!="" && (getval("createemail","")==""))
 	}
 
 include "../../include/header.php";	
-	
+
 if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 	{
 	$send_all_users       = false;

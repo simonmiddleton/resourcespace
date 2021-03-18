@@ -788,8 +788,6 @@ else if ($basket)
 	<?php
 
 	# Display thumbnails for basket mode
-
-	# Display thumbnails
 	if ($count_result>0) 
 		{
 		# Loop through resources for thumbnails
@@ -891,13 +889,25 @@ else if ($basket)
 		<?php
 		} # End of ResourceView hook
 
-	} # End of loop through resources for thumbnails
+	} # End of loop through basket mode thumbnails
+
 	?>
 	<div class="clearerleft"></div>
 	<?php
-	} # End of display thumbnails
+	} # End of display thumbnails for basket mode
+
+	if (count($addarray)>0 && $addarray[0]!="")
+	{
+	# Animate the new item
+	?>
+	<script type="text/javascript">
+	jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
+	</script>
+	<?php      
+	}
 	?>
 	</div>
+
 	<?php
 	} # End of basket mode
 
@@ -1138,11 +1148,9 @@ else
 	}		
 
 	# Display thumbnails for standard display
-
-	# Display thumbnails
 	if ($count_result>0) 
 	{
-		# Loop through resources for thumbnails
+		# Loop through resources for thumbnails for standard display
 		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
 			{
 			$ref=$result[$n]["ref"];
@@ -1241,14 +1249,14 @@ else
 		<?php
 		} # End of ResourceView hook
 
-	} # End of loop through resources for thumbnails
+	} # End of loop through standard display thumbnails
 	  
 	# Hook to allow plugins to list additional resources in a collection (e.g. resourceconnect)	  
 		hook("thumblistextra");
 	?>
 	<div class="clearerleft"></div>
 	<?php
-	} # End of display thumbnails
+	} # End of display thumbnails for standard display
 
 
 if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_viewall'))

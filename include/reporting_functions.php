@@ -84,7 +84,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         $results=sql_query($sql);
         }
     
-    $resultcount = count($results);    
+    $resultcount = count($results);
     if($resultcount == 0)
         {
         // No point downloading as the resultant file will be empty
@@ -154,11 +154,27 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         {
         # Not downloading - output a table
 
+        // If report results are too big, display the first rows and notify user they should download it instead
+        $output = '';
+        if($resultcount > $report_rows_attachment_limit)
+            {
+            $results = array_slice($results, 0, $report_rows_attachment_limit);
+
+            // Catch the error now and place it above the table in the output
+            render_top_page_error_style($lang['team_report__err_report_too_long']);
+            $output = ob_get_contents();
+            ob_clean();
+            ob_start();
+            }
+
         // Pre-render process: Process nodes search syntax (e.g @@228 or @@!223) and add a new column that contains the node list and their names
-        $results = process_node_search_syntax_to_names($results, 'search_string');
+        if(isset($results[0]['search_string']))
+            {
+            $results = process_node_search_syntax_to_names($results, 'search_string');
+            }
         $border="";
         if ($add_border) {$border="border=\"1\"";}
-        $output="<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";
+        $output .= "<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";
         for ($n=0;$n<count($results);$n++)
             {
             $result=$results[$n];

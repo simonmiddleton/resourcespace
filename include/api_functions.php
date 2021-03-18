@@ -88,7 +88,7 @@ function execute_api_call($query,$pretty=false)
             {
             debug("API: {$param_name} - value has been passed (by name): '{$params[$param_name]}'");
 
-            if($fparam->hasType() && $fparam->isArray() && gettype($params[$param_name]) != "array")
+            if($fparam->hasType() && $fparam->getType() == "array" && gettype($params[$param_name]) != "array")
                 {
                 $error = str_replace(
                     array("%arg", "%expected-type", "%type"),

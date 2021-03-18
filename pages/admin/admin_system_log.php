@@ -174,7 +174,7 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
 
 $links_trail[] = array(
     'title' => htmlspecialchars($title),
-    'href'  => $baseurl_short . "pages/admin/admin_system_log.php"
+    'href'  => ""
 );
 
 renderBreadcrumbs($links_trail);
