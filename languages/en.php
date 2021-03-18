@@ -1496,7 +1496,7 @@ $lang['marker'] = 'Marker';
 $lang['markers'] = 'Markers';
 $lang['map_configuration'] = 'Search Results Map';
 $lang['map_introtext1'] = 'The map below shows resources from the search result that have a geolocation associated with them. The marker color is set to the resource type or a custom metadata field (key below the map). When markers would overprint other markers, green-colored clustering is used with a number indicating the number of clustered markers, zoom-in or double click a cluster.  Click on an individual marker to load a popup for that resource showing a preview image.  Click the preview image to load a window for that resource.  Hover over an individual marker for the geocoordinates.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
-$lang['search_map_introtext'] = 'Pan and zoom to the map view of interest or search for a location using the upper right search button, then draw a blue box on the map by dragging to select a search area for resources with a geolocation that lie within the box.  To search for a specific location or geographic feature name, use the upper right search button.  Change the basemap using the upper right map layers button.  Save the map to a PNG file using the lower left map button.';
+$lang['search_map_introtext'] = '';
 $lang['edit_map_introtext'] = "Pan and zoom to the map view of interest, then click on the map to locate the resource location marker.  Save the most recent geolocation using the Save button and then click 'Back to resource edit or geolocate collection' to return.  To search for a specific location or geographic feature name, use the upper right search button.  Change the basemap using the upper right map layers button.  Save the map to a PNG file using the lower left map button.";
 $lang['mapview'] = 'Map';
 $lang['maptitle'] = 'Map view';
@@ -1900,7 +1900,7 @@ $lang['latlong'] = 'Lat / long';
 $lang['geographicsearch'] = 'Geographic search';
 $lang['geographicsearchresults'] = 'Geographic search results';
 $lang['geographicsearchmissing'] = 'Geographic search criteria missing';
-$lang['geographicsearch_help'] = 'Drag to select a search area.';
+$lang['geographicsearch_help'] = 'Drag to select a search area';
 $lang['search_results_overlimit'] =  "Too many resources found. Please refine your search to enable this view";
 $lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server. Please check your \$geo_tile_servers configuration setting";
 

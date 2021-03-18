@@ -7,7 +7,7 @@ include '../include/header.php';
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["geographicsearch"] ?></h1>
-<p><?php echo $lang["geographicsearch_help"]; render_help_link("user/geolocation");?></p>
+<p><?php echo $lang["geographicsearch_help"]; render_help_link("user/geographic-search");?></p>
 
 <?php
 if($leaflet_maps_enable)

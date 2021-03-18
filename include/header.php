@@ -304,7 +304,7 @@ if(!$disable_geocoding)
             } ?>
 
         <!--Leaflet EasyPrint v2.1.9 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.js"></script>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
 
         <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
         <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
@@ -317,9 +317,6 @@ if(!$disable_geocoding)
         <!--Leaflet Shades v1.0.2 plugin files-->
         <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
         <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.min.js"></script>
-
-        <!--Leaflet EasyPrint v2.1.9 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.js"></script>
 
         <?php
         }
