@@ -51,7 +51,7 @@ while((     !is_file($file)
             $gettile
         )
     {
-    if(count($geo_leaflet_sources) > 0)
+    if($leaflet_maps_enable && count($geo_leaflet_sources) > 0)
         {
         $geo_tile_urls = array();
         foreach($geo_leaflet_sources as $geo_leaflet_source)
@@ -133,7 +133,7 @@ while((     !is_file($file)
                 }
             }        
         }
-    if($gettile && count($geo_tile_servers) > 0)
+   elseif($gettile && count($geo_tile_servers) > 0)
         {
         while(count($geo_tile_servers) > 0)
             {

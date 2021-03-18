@@ -685,7 +685,7 @@ $port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
 
 $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 
-if(!$disable_geocoding)
+if($leaflet_maps_enable)
     {
     get_geolibraries();
     }

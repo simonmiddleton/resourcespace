@@ -163,7 +163,8 @@ else
     <input type="radio" name="dragmode" id="dragmodepan" onClick="control.point.deactivate();" /><label for="dragmodepan"><?php echo $lang["geodragmodepan"] ?></label>
     </div>
     
-    <?php include "../include/geo_map.php"; ?>
+    <?php
+     include "../include/geo_map.php"; ?>
     <script>
     
     var control = new OpenLayers.Control();

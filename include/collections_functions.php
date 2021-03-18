@@ -3002,7 +3002,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only;
+           $system_read_only, $leaflet_maps_enable;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3367,7 +3367,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             }
         }
 
-	if(($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
+	if(!$leaflet_maps_enable && ($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/geolocate_collection.php",$urlparams);
         $options[$o]['value']='geolocatecollection';

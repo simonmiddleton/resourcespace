@@ -110,7 +110,6 @@ echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-vali
 if($leaflet_maps_enable)
     {
     ?>
-
     <!--Setup Leaflet map container with sizing-->
     <div id="map_edit" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $mapedit_mapheight;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
     </div>

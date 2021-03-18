@@ -675,6 +675,15 @@ function header_add_map_providers()
             echo "},\n"; // End of leaflet source
             }
         ?>
+        ResourceSpace: {
+            url: '<?php echo $baseurl; ?>/pages/ajax/tiles.php?x={x}&y={y}&z={z}',
+            options: {
+                maxZoom: 3,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                },
+            variants: { OSM: {}}
+            }
+
         };
 
         L.tileLayer.provider = function (provider, options) {

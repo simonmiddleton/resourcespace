@@ -77,4 +77,10 @@ else
             echo "});\n";
             }
         }
+    echo "var rs_default = L.tileLayer.provider('ResourceSpace.OSM', {
+        useCache: 'true',
+        detectRetina: 'false',
+        maxZoom: 3,
+        attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',
+        });\n\n";
     }
