@@ -9,9 +9,12 @@ if('cli' != PHP_SAPI)
     }
 
 
-// Setup test
-
-
+// Test ref not a number
+if(save_collection('notnumeric', ['name' => 'Name of a non-numeric collection']) !== false)
+    {
+    echo 'UC: Non-numeric ref - ';
+    return false;
+    }
 
 // Test relating all resources in collection
 $col_rr = create_collection($userref, 'Test 1403 - Private collection - relating resources');
@@ -127,5 +130,9 @@ else if(!(
     }
 
 
+// Tear down
+unset($col_rr, $pp_col, $col, $new_col_data);
+unset($rr_a, $rr_b, $return, $col_data);
+unset($fc_1, $fc_11, $fc_bg, $fc_data, $fcs);
 
 return true;
