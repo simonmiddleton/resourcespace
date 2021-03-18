@@ -1190,8 +1190,33 @@ function save_collection($ref, $coldata=array())
             {
             $sqlupdate = "";
             $clear_fc_query_cache = false;
+            $collection_columns = [
+                'name',
+                'user',
+                'created',
+                'public',
+                'allow_changes',
+                'cant_delete',
+                'keywords',
+                'savedsearch',
+                'home_page_publish',
+                'home_page_text',
+                'home_page_image',
+                'session_id',
+                'description',
+                'type',
+                'parent',
+                'thumbnail_selection_method',
+                'bg_img_resource_ref',
+            ];
             foreach($sqlset as $colopt => $colset)
                 {
+                // Only valid collection columns should be processed
+                if(!in_array($colopt, $collection_columns))
+                    {
+                    continue;
+                    }
+
                 if($sqlupdate != "")
                     {
                     $sqlupdate .= ", ";    
@@ -1208,33 +1233,41 @@ function save_collection($ref, $coldata=array())
                     continue;
                     }
 
+                if($colopt == 'allow_changes')
+                    {
+                    $colset = (int) $colset;
+                    }
+
                 $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
 
-            $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
-            sql_query($sql);
-
-            if($clear_fc_query_cache)
+            if($sqlupdate !== '')
                 {
-                clear_query_cache("featured_collections");
-                }
+                $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
+                sql_query($sql);
 
-            // Log the changes
-            foreach($sqlset as $colopt => $colset)
-                {
-                switch($colopt)
+                if($clear_fc_query_cache)
                     {
-                    case "public";
-                        collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
-                    break;    
-                    case "allow_changes";
-                        collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
-                    break; 
-                    default;
-                        collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
-                    break;
+                    clear_query_cache("featured_collections");
                     }
-                 
+
+                // Log the changes
+                foreach($sqlset as $colopt => $colset)
+                    {
+                    switch($colopt)
+                        {
+                        case "public";
+                            collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
+                        break;    
+                        case "allow_changes";
+                            collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
+                        break; 
+                        default;
+                            collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
+                        break;
+                        }
+                     
+                    }
                 }
             }
         } # end replace hook - modifysavecollection
