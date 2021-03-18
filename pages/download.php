@@ -5,6 +5,7 @@ we will clear the buffer and start over right before we download the file*/
 ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/db.php';
 include_once dirname(__FILE__) . '/../include/resource_functions.php';
+include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
 
 $k="";
@@ -43,20 +44,9 @@ $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 $modal          = (getval("modal","")=="true");
 
 // Tile support
-$tile_scale = getval('tile_scale', 1, true);
-$tile_scale = (in_array($tile_scale, $preview_tile_scale_factors));
-$tile_row = getval('tile_row', 0, true);
-$tile_col = getval('tile_col', 0, true);
-$tile_region = $preview_tile_size * $tile_scale;
-
-
-
-
-
-
-
-
-
+$tile_scale = (int) getval('tile_scale', 1, true);
+$tile_row = (int) getval('tile_row', 0, true);
+$tile_col = (int) getval('tile_col', 0, true);
 
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
@@ -146,10 +136,40 @@ else
 
     // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
     if ($size == 'videojs' && $ext == 'mp3')
-    {
+        {
         $size="";
-    }
-    
+        }
+
+
+
+
+
+
+    if($preview_tiles)
+        {
+        // TODO: the size needs to be the one requested
+        $image_size = get_original_imagesize($ref, get_resource_path($ref, true, '', false));
+        $image_width = (int) $image_size[1];
+        $image_height = (int) $image_size[2];
+
+        $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
+        // TODO; convert row/cols to tile regions in order to identify the right one
+        $tile = array_filter($tiles, function($v) use ($tile_row, $tile_col)
+            {
+            return ($v['x'] == $tile_col && $v['y'] == $tile_row);
+            });
+
+        if(!empty($tile))
+            {
+            $size = $tile[0]['id'];
+            }
+        }
+
+
+
+
+
+
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
