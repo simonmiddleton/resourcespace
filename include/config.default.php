@@ -3250,7 +3250,7 @@ $purge_temp_folder_age=0;
 $password_reset_link_expiry =1;
 
 # Show the resource view in a modal when accessed from search results?
-$resource_view_modal = false;
+$resource_view_modal = true;
 
 # Option to show other standard pages e.g. resource requests in a modal
 $modal_default=false;
