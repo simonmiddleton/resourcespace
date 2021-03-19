@@ -3377,7 +3377,9 @@ function get_preview_source_file($ref, $extension, $previewonly, $previewbased, 
 
 
 /**
-* Compute tiles based on a scale factor.
+* Compute image tile regions based on a scale factor.
+* 
+* IMPORTANT: Please note that the origin position (0,0) is the upper left-most pixel of the image
 * 
 * @see https://iiif.io/api/image/2.1/#region
 * @see https://iiif.io/api/image/2.1/#size
@@ -3386,13 +3388,21 @@ function get_preview_source_file($ref, $extension, $previewonly, $previewbased, 
 * @param int $sw Source image width
 * @param int $sh Source image height
 * 
-* @return array Returns array of tile data (id, width, height, x, y, w, h)
+* @return array Returns array of tile data:
+* - id -> tile region identifier. Usually used as the size argument with {@see get_resource_path()}
+* - x -> represents the number of pixels from the origin (ie. position zero) on the horizontal axis
+* - y -> represents the number of pixels from the origin (ie. position zero) on the vertical axis
+* - w -> width of the region in pixels
+* - h -> height of the region in pixels
+* - row -> represents the row grid position of the region (used with DZI compliant systems)
+* - column -> represents the column grid position of the region (used with DZI compliant systems)
 */
 function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
     {
     global $preview_tile_size, $preview_tile_scale_factors;
 
-    debug(sprintf('Computing tiles for image with size: width = %s x height = %s', $sw, $sh));
+    $debug_id = uniqid();
+    debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Computing tiles for image with size: width = %s x height = %s and scale_factor = %s', $debug_id, $sw, $sh, $sf));
 
     if(!(in_array($sf, $preview_tile_scale_factors) && $sw > 0 && $sh > 0))
         {
@@ -3400,22 +3410,30 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
         }
 
     $tile_region = $preview_tile_size * $sf;
-    debug(sprintf('Tile region size = %s @ scale = %s', $tile_region, $sf));
+    debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Tile region size = %s @ scale = %s', $debug_id, $tile_region, $sf));
     if($tile_region > $sh && $tile_region > $sw)
         {
-        debug(sprintf('Scaled tile (@scale=%s) too large for source image', $sf));
+        debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Scaled tile (@scale=%s) too large for source image', $debug_id, $sf));
         return [];
         }
 
     $tiles = [];
-    $y = 0; # rows
-    $x = 0; # columns
+    /**
+    * @var int $y Represents the number of pixels from the origin (ie. position zero) on the vertical axis
+    */
+    $y = 0;
+    /**
+    * @var int $x Represents the number of pixels from origin (ie. position zero) on the horizontal axis
+    */
+    $x = 0;
+    $row = 0;
+    $column = 0;
     while($y < $sh)
         {
         $tileh = $tile_region;
         if(($y + $tile_region) > $sh)
             {
-            debug(sprintf('Tile taller than area, reducing height by %s', $y));
+            debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Tile taller than area, reducing height by %s', $debug_id, $y));
             $tileh = $sh - $y;
             }
 
@@ -3424,30 +3442,33 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
             $tilew = $tile_region;
             if(($x + $tile_region) > $sw)
                 {
-                debug(sprintf('Tile wider than area, reducing width by %s', $x));
+                debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Tile wider than area, reducing width by %s', $debug_id, $x));
                 $tilew = $sw - $x;
                 }
 
             $tile_id = sprintf('%s_%s_%s_%s', $x, $y, $tilew, $tileh);
             $tile = [
                 'id' => "tile_{$tile_id}",
-                'width' => $preview_tile_size,
-                'height' => $preview_tile_size,
                 'x' => $x,
                 'y' => $y,
                 'w' => $tilew,
                 'h' => $tileh,
+                'row' => $row,
+                'column' => $column,
             ];
             $tiles[] = $tile;
-            debug(sprintf('Computed tile: @scale = %s, x = %s, y = %s, tile_id = %s', $sf, $x, $y, $tile_id));
+            debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Computed tile: @scale = %s, x = %s, y = %s, tile_id = %s', $debug_id, $sf, $x, $y, $tile_id));
 
-            // Advance to next column in the grid
+            // Advance to next X point on the grid
             $x = $x + $tile_region;
+            ++$column;
             }
 
-        // Advance to next row in the grid and reset column
+        // Advance to next Y point on the grid and reset X
         $x = 0;
         $y = $y + $tile_region;
+        ++$row;
+        $column = 0;
         }
 
     return $tiles;

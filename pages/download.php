@@ -152,16 +152,19 @@ else
         $image_width = (int) $image_size[1];
         $image_height = (int) $image_size[2];
 
-        $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
-        // TODO; convert row/cols to tile regions in order to identify the right one
-        $tile = array_filter($tiles, function($v) use ($tile_row, $tile_col)
-            {
-            return ($v['x'] == $tile_col && $v['y'] == $tile_row);
-            });
+        debug('[page=download.php]');
+        debug('[page=download.php]');
+        debug(sprintf('[page=download.php] Requesting scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
 
-        if(!empty($tile))
+
+        $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
+        foreach($tiles as $tile)
             {
-            $size = $tile[0]['id'];
+            if($tile['column'] == $tile_col && $tile['row'] == $tile_row)
+                {
+                $size = $tile['id'];
+                break;
+                }
             }
         }
 
@@ -171,7 +174,7 @@ else
 
 
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
-
+    debug(sprintf('[page=download.php] Requesting path=%s', $path));
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
         {
