@@ -1607,6 +1607,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             
             # If we've already made the LPR or SCR then use those for the remaining previews.
             # As we start with the large and move to the small, this will speed things up.
+            $using_original = false;
             if ($extension!="png" && $extension!="gif")
                 {
                 if(file_exists($hpr_path))
@@ -1625,7 +1626,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 # Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
                 # mean that the height/width of the larger sizes is less than the required target height/width
                 list($checkw,$checkh) = @getimagesize($file);
-                $using_original = false;
                 if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
                     {
                     $file=file_exists($hpr_path)?$hpr_path:$origfile;
