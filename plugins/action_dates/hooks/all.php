@@ -199,7 +199,7 @@ function HookAction_datesCronCron()
             }
         foreach($admin_notify_emails as $admin_notify_email)
                     {
-                    send_mail($admin_notify_email,$applicationname . ": " . $lang['action_dates_notification_subject'],$message,"","","emailproposedchanges",$templatevars);    
+                    send_mail($admin_notify_email,$applicationname . ": " . $subject,$message,"","","emailproposedchanges",$templatevars);    
                     }
                 
                 if (count($admin_notify_users)>0)
