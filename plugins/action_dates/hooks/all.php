@@ -11,7 +11,7 @@ function HookAction_datesCronCron()
 	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
-           $action_dates_extra_config, $DATE_FIELD_TYPES;
+           $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state, $action_dates_email_for_restrict;
 
     global $action_dates_eligible_states;
 	
@@ -33,7 +33,7 @@ function HookAction_datesCronCron()
         $restrict_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource "
             . ($eligible_states_list == "" ? "" : "AND r.archive IN ({$eligible_states_list})")    
             . " WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
-		$emailrefs=array();
+		$email_restrict_refs=array();
 		foreach ($restrict_resources as $resource)
 			{
 			$ref=$resource["resource"];
@@ -42,7 +42,7 @@ function HookAction_datesCronCron()
 				$action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
 				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
 					{  			
-					$emailrefs[]=$ref;		
+					$email_restrict_refs[]=$ref;		
 					}
 				}
 			
@@ -57,47 +57,6 @@ function HookAction_datesCronCron()
 					resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
 					}
 				}
-			}
-			
-		if(count($emailrefs)>0)
-			{
-			global $baseurl,$baseurl_short;
-			# Send email as the date is within the specified number of days
-			
-			$subject=$lang['action_dates_email_subject'];
-			$message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text']) . "\r\n";
-			$notification_message = $message; 
-			$message.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$emailrefs) . "\r\n";
-			$url = $baseurl_short . "pages/search.php?search=!list" . implode(":",$emailrefs);
-			$templatevars['message']=$message;
-			$admin_notify_emails = array();
-			$admin_notify_users = array();
-			$notify_users=get_notification_users("RESOURCE_ADMIN");
-			foreach($notify_users as $notify_user)
-				{
-				get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);		  
-				if($send_message==false){$continue;}		
-				get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-				if($send_email && $notify_user["email"]!="")
-					{
-					echo "Sending email to " . $notify_user["email"] . "\r\n";
-					$admin_notify_emails[] = $notify_user['email'];				
-					}        
-				else
-					{
-					$admin_notify_users[]=$notify_user["ref"];
-					}
-				}
-			foreach($admin_notify_emails as $admin_notify_email)
-						{
-						send_mail($admin_notify_email,$applicationname . ": " . $lang['action_dates_notification_subject'],$message,"","","emailproposedchanges",$templatevars);    
-						}
-					
-					if (count($admin_notify_users)>0)
-						{
-						echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . "\r\n";
-						message_add($admin_notify_users,$notification_message,$url,0);
-						}
 			}
         }
     
@@ -145,6 +104,15 @@ function HookAction_datesCronCron()
         foreach($candidate_resources as $resource)
             {
             $ref = $resource['resource'];
+            if($action_dates_email_admin_days!="") # Set up email notification to admin of resources changing state
+            {
+            $email_state_refs = array();
+            $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
+            if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
+                {  			
+                $email_state_refs[]=$ref;		
+                }
+            }
             
             # Candidate deletion date reached or passed 
             if (time() >= strtotime($resource['value']))
@@ -181,7 +149,65 @@ function HookAction_datesCronCron()
                 }
             }
         }
-        
+
+    $emailrefs = array();
+    if ($action_dates_email_for_state && $action_dates_email_for_restrict)
+        {
+        $emailrefs = array_merge($email_state_refs,$email_restrict_refs);
+        $emailrefs = array_unique($emailrefs);
+        $subject = $lang['action_dates_email_subject'];
+        $message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text']) . "\r\n";
+        }
+    elseif ($action_dates_email_for_state && !$action_dates_email_for_restrict)
+        {
+        $emailrefs = $email_state_refs;
+        $subject = $lang['action_dates_email_subject_state'];
+        $message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_state']) . "\r\n";
+        }
+    elseif (!$action_dates_email_for_state && $action_dates_email_for_restrict)
+        {
+        $emailrefs = $email_restrict_refs;
+        $subject = $lang['action_dates_email_subject_restrict'];
+        $message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_restrict']) . "\r\n";
+        }
+
+    if(count($emailrefs)>0)
+        {
+        global $baseurl,$baseurl_short;
+        # Send email as the date is within the specified number of days
+        $notification_message = $message; 
+        $message.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$emailrefs) . "\r\n";
+        $url = $baseurl_short . "pages/search.php?search=!list" . implode(":",$emailrefs);
+        $templatevars['message']=$message;
+        $admin_notify_emails = array();
+        $admin_notify_users = array();
+        $notify_users=get_notification_users("RESOURCE_ADMIN");
+        foreach($notify_users as $notify_user)
+            {
+            get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);		  
+            if($send_message==false){$continue;}		
+            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+            if($send_email && $notify_user["email"]!="")
+                {
+                echo "Sending email to " . $notify_user["email"] . "\r\n";
+                $admin_notify_emails[] = $notify_user['email'];				
+                }        
+            else
+                {
+                $admin_notify_users[]=$notify_user["ref"];
+                }
+            }
+        foreach($admin_notify_emails as $admin_notify_email)
+                    {
+                    send_mail($admin_notify_email,$applicationname . ": " . $lang['action_dates_notification_subject'],$message,"","","emailproposedchanges",$templatevars);    
+                    }
+                
+                if (count($admin_notify_users)>0)
+                    {
+                    echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . "\r\n";
+                    message_add($admin_notify_users,$notification_message,$url,0);
+                    }
+        }
         
     // Perform additional actions based on fields
     foreach($action_dates_extra_config as $action_dates_extra_config_setting)
