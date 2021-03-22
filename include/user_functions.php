@@ -2798,7 +2798,7 @@ function get_upload_url($collection="",$k="")
 function emulate_user($user, $usergroup="")
     {
     debug_function_call("emulate_user",func_get_args());
-    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes;
+    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes, $userresourcedefaults;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
     global $username,$baseurl, $anonymous_login, $upload_link_workflow_state;
 
@@ -2817,7 +2817,7 @@ function emulate_user($user, $usergroup="")
         $groupjoin="g.ref='" . escape_check($usergroup) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
         $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
         }
-    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
+    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id, g.derestrict_filter_id, g.resource_defaults from user u join usergroup g on $groupjoin where u.ref='$user'");
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
@@ -2836,6 +2836,11 @@ function emulate_user($user, $usergroup="")
             $userpermissions = array_diff($userpermissions, $removeperms);
             $userpermissions = array_values($userpermissions);
             $userref = $user;
+            }
+
+        if(isset($userinfo[0]["resource_defaults"]))
+            {
+            $userresourcedefaults = $userinfo[0]["resource_defaults"];
             }
         
         if ($search_filter_nodes)
