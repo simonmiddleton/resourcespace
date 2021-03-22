@@ -13,7 +13,7 @@ include "../../include/authenticate.php";if (!checkperm("R")) {exit ("Permission
 include "../../include/request_functions.php";
 include "../../include/header.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 ?>
 
 <div class="BasicsBox"> 

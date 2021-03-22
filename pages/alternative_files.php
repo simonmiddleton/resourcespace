@@ -7,7 +7,7 @@ $ref=getvalescaped("ref","",true);
 $alt=getvalescaped("alternative","",true);
 
 $search=getvalescaped("search","");
-$offset=getvalescaped("offset","",true);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");

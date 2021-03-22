@@ -25,7 +25,7 @@ if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
 
 if (!checkperm("t")) {exit ("Permission denied.");}
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $findtext=getvalescaped("findtext","");
 $activity_type=getvalescaped("activity_type","");
 

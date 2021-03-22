@@ -10,7 +10,7 @@ if (!checkperm("a"))
 include "../../include/header.php";
 
 $ref=getval("ref","");
-$offset=getval("offset",0);
+$offset=getval("offset",0,true);
 $order_by=getval("orderby","");
 $filter_by_parent=getval("filterbyparent","");
 $find=getval("find","");

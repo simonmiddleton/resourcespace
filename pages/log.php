@@ -37,7 +37,7 @@ $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $per_page=getvalescaped("per_page_list", $default_perpage_list);rs_setcookie('per_page_list', $per_page);
 // When filtering by download records only the table output will be slightly different, showing only the following columns:
 // date, user, usage option and usage reason

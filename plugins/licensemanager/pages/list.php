@@ -9,7 +9,7 @@ global $baseurl;
 include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
 $findtext=getvalescaped("findtext","");
 

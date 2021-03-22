@@ -5,7 +5,7 @@ include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
 include "../include/header.php";

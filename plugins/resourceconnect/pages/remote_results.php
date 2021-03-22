@@ -6,7 +6,7 @@ include_once "../config/config.php";
 
 $search=getvalescaped("search","");
 $sign=getvalescaped("sign","");
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $pagesize=getvalescaped("pagesize",$resourceconnect_pagesize);
 $affiliatename=getvalescaped("affiliatename","");
 

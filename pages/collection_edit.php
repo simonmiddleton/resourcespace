@@ -7,7 +7,7 @@ if(checkperm("b") || $system_read_only)
 
 $ref=getvalescaped("ref","",true);
 $copycollectionremoveall=getvalescaped("copycollectionremoveall","");
-$offset=getval("offset",0);
+$offset=getval("offset",0,true);
 $find=getvalescaped("find","");
 $col_order_by=getvalescaped("col_order_by","name");
 $sort=getval("sort","ASC");

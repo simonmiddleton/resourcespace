@@ -11,7 +11,7 @@ include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("o
 include_once dirname(__FILE__)."/../inc/news_functions.php";
 
 $ref=getvalescaped("ref","",true);
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $findtext=getvalescaped("findtext","");
 
 $date=getval("date",date("Y-m-d H:i:s"));

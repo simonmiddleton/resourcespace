@@ -9,7 +9,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find","");
 $order_by=getvalescaped("order_by","u.username");
 $group=getvalescaped("group",0);

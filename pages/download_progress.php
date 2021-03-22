@@ -54,7 +54,7 @@ if (!$save_as)
     <h1><?php echo $lang["downloadinprogress"]?></h1>
     <p><?php echo text("introtext")?></p>
 	<?php } 
-	$offset= getval("saved_offset",getval("offset",""));
+	$offset= getval("saved_offset",getval("offset",0,true));
 	$order_by= getval("saved_order_by",getval("order_by",""));
 	$sort= getval("saved_sort",getval("sort",""));
 	$archive= getval("saved_archive",getval("archive",""));
