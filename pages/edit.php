@@ -206,7 +206,8 @@ if ($go!="")
         {
         # Locate this resource
         $pos=-1;
-        for ($n=0;$n<count($result);$n++)
+        $result_count = count($result);
+        for ($n=0;$n<$result_count;$n++)
             {
             if (isset($result[$n]["ref"]) && $result[$n]["ref"]==$ref) {$pos=$n;}
             }
@@ -518,7 +519,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // Process all remaining resources in the collection
                         $autosave_errors = false; 
                         $lastedited = $ref;
-                        for($n=1;$n<count($review_collection_contents);$n++)
+                        $review_collection_contents_count = count($review_collection_contents);
+                        for($n=1;$n<$review_collection_contents_count;$n++)
                             {
                             $auto_errors = array();
                             $ref = $review_collection_contents[$n]["ref"];
@@ -1337,6 +1339,23 @@ hook("editbefresmetadata"); ?>
     if(!$multiple)
         {
         ?>
+        <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
+        <?php
+        }
+        ?>
+
+        <select name="resource_type" id="resourcetype" class="stdwidth" 
+                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+        <?php
+        $types                = get_resource_types();
+        $shown_resource_types = array();
+        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
+          {
+          echo "<option value='' selected>" . $lang["select"] . "</option>";
+          }
+        
+        $types_count = count($types);
+        for($n = 0; $n < $types_count; $n++)
         <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
             <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
             if ($lockable_fields)
@@ -1645,17 +1664,19 @@ if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
 if (($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
     # recreate fields array, first with metadata template field
   $x=0;
-  for ($n=0;$n<count($fields);$n++){
+  $fields_count = count($fields);
+  for ($n=0;$n<$fields_count;$n++){
     if ($fields[$n]["resource_type"]==$metadata_template_resource_type){
       $newfields[$x]=$fields[$n];
-      $x++;
+      ++$x;
    }
 }
     # then add the others
-for ($n=0;$n<count($fields);$n++){
+$fields_count = count($fields);
+for ($n=0;$n<$fields_count;$n++){
  if ($fields[$n]["resource_type"]!=$metadata_template_resource_type){
    $newfields[$x]=$fields[$n];
-   $x++;
+   ++$x;
 }
 }
 $fields=$newfields;
@@ -1667,7 +1688,8 @@ $required_fields_exempt=array(); # new array to contain required fields that hav
 $display_any_fields=false;
 $tabname="";
 $tabcount=0;
-for ($n=0;$n<count($fields);$n++)
+$fields_count = count($fields);
+for ($n=0;$n<$fields_count;$n++)
   {
    if (is_field_displayed($fields[$n]))
      {
@@ -1759,7 +1781,8 @@ if($tabs_on_edit)
         $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
         }
 
-    for ($n=0;$n<count($fields);$n++)
+    $fields_count = count($fields);
+    for ($n=0;$n<$fields_count;$n++)
         {   
         # If field is displayable then render its tab name when the tab name changes
         if (is_field_displayed($fields[$n]))
@@ -1778,7 +1801,7 @@ if($tabs_on_edit)
                 $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
                 if($tabcount==0){$tabtophtml.=" TabSelected ";}
                 $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$ref.",".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
-                $tabcount++;
+                ++$tabcount;
                 $tabname=$fields[$n]["tab_name"];
                 }
             }
@@ -1804,8 +1827,9 @@ if($tabs_on_edit)
 
     #  -----------------------------  Draw fields ---------------------------
     $tabname=null;
-    $tabcount=0;    
-    for ($n=0;$n<count($fields);$n++)
+    $tabcount=0; 
+    $fields_count = count($fields);   
+    for ($n=0;$n<$fields_count;$n++)
         {
         # Should this field be displayed?
         if (is_field_displayed($fields[$n]))
@@ -1820,7 +1844,7 @@ if($tabs_on_edit)
                 <?php if(isset($extra)){echo $extra;} ?>
                 </div><!-- end of TabPanelInner --></div>
                 <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div class="TabPanelInner"><?php  
-                $tabcount++;
+                ++$tabcount;
                 $extra="";
                 $newtab=true;
                 $tabname=$fields[$n]["tab_name"];
@@ -2008,7 +2032,8 @@ else
                  global $default_customaccess;
                  $customaccesssource = ($lockable_fields && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
                  $groups=get_resource_custom_access($customaccesssource);
-                 for ($n=0;$n<count($groups);$n++)
+                 $groups_count = count($groups);
+                 for ($n=0;$n<$groups_count;$n++)
                  {
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
@@ -2195,51 +2220,92 @@ else
 <?php
 }
 
+// Multiple method of changing geolocation.
 if ($multiple && !$disable_geocoding)
-{
-    # Multiple method of changing location.
- ?>
-</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref=="new") echo "Upload"; ?>">
-<div class="Question"><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo $lang["location"] ?></label></div>
-<div class="Question" style="display:none;" id="editlocation_question">
-  <label for="location"><?php echo $lang["latlong"]?></label>
-  <input type="text" name="location" id="location" class="stdwidth">
-  <div class="clearerleft"> </div>
-</div>
-<div class="Question"><input name="editmapzoom" id="editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editmapzoom"><?php echo $lang["mapzoom"] ?></label></div>
-<div class="Question" style="display:none;" id="editmapzoom_question">
-  <label for="mapzoom"><?php echo $lang["mapzoom"]?></label>
-  <select name="mapzoom" id="mapzoom">
-    <option value=""><?php echo $lang["select"]?></option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-    <option value="13">13</option>
-    <option value="14">14</option>
-    <option value="15">15</option>
-    <option value="16">16</option>
-    <option value="17">17</option>
-    <option value="18">18</option>
- </select>
-</div>
-<div class="clearerleft"> </div>
+    { ?>
+    </div><h2 <?php echo ($collapsible_sections) ? " class=\"CollapsibleSectionHead\"" : ""?> id="location_title"><?php echo $lang["location-title"]; ?></h2><div <?php echo ($collapsible_sections) ? "class=\"CollapsibleSection\"" : ""?> id="LocationSection<?php if ($ref == "new") echo "Upload"; ?>">
 
+    <div class="Question"><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo $lang["location"]; ?></label></div>
 
-<?php
-hook("locationextras");
-}
+    <div class="Question" style="display:none;" id="editlocation_question">
+        <label for="location"><?php echo $lang["latlong"]; ?></label>
+        <input type="text" name="location" id="location" class="stdwidth">
+        <div class="clearerleft"> </div>
+    </div>
+
+    <div class="Question"><input name="editmapzoom" id="editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editmapzoom"><?php echo $lang["mapzoom"]; ?></label></div>
+
+    <div class="Question" style="display:none;" id="editmapzoom_question">
+        <label for="mapzoom"><?php echo $lang["mapzoom"]; ?></label>
+        <select name="mapzoom" id="mapzoom">
+            <option value=""><?php echo $lang["select"]; ?></option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+        </select>
+    </div>
+
+    <div class="Question"><input name="editmaplocation" id="editmaplocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editmaplocation_map');if (this.checked) {q.style.display='block'; map3.invalidateSize(true);} else {q.style.display='none';}">&nbsp;<label for="editmaplocation"><?php echo $lang['location-edit']; ?></label></div>
+
+    <!--Setup Leaflet map container with sizing-->
+    <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
+
+    <script>
+        var Leaflet1 = L.noConflict();
+
+        <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
+        var map3 = new Leaflet1.map('editmaplocation_map').setView(<?php echo $map_centerview; ?>);
+        var defaultLayer = new Leaflet1.tileLayer.provider('OpenStreetMap.Mapnik', {
+            attribution: 'Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors'
+        }).addTo(map3);
+
+        <!--Limit geocoordinate values to six decimal places for display on marker hover-->
+        function georound(num) {
+            return +(Math.round(num + "e+6") + "e-6");
+        }
+
+        <!--Place a marker on the map when clicked-->
+        var resourceMarker = [];
+        currentZoom = map3.getZoom();
+        map3.on('click', function(e) {
+            geoLat = e.latlng.lat;
+            geoLong = e.latlng.lng;
+            currentZoom = map3.getZoom();
+            console.log(geoLat, geoLong, currentZoom);
+
+            <!--Clear existing marker when locating a new marker as we only want one marker for the resource-->
+            if (resourceMarker != undefined) {
+                map3.removeLayer(resourceMarker);
+            };
+
+            <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
+            resourceMarker = L.marker([geoLat, geoLong], {
+                title: georound(geoLat) + ", " + georound(geoLong) + " (WGS84)"
+            }).addTo(map3);
+            map3.setView([geoLat, geoLong], currentZoom);
+        });
+    </script>
+
+    <div class="clearerleft"> </div> <?php
+    hook("locationextras");
+    }
 
 if($disablenavlinks)
-        {
-        ?>
+        { ?>
         <input type=hidden name="disablenav" value="true">
         <?php
         }

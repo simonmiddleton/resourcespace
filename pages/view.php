@@ -19,7 +19,7 @@ $internal_share_access = internal_share_access();
 
 # Update hit count
 update_hitcount($ref);
-	
+
 # fetch the current search (for finding similar matches)
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
@@ -52,7 +52,7 @@ $go=getval("go","");
 if ($go!="") 
 	{
 	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
-	
+
 	# Re-run the search and locate the next and previous records.
 	$modified_result_set=hook("modifypagingresult"); 
 	if ($modified_result_set){
@@ -94,7 +94,6 @@ if ($go!="")
     # Check access permissions for this new resource, if an external user.
     if ($k!="" && !$internal_share_access && !check_access_key($ref, $k)) {$ref = $origref;} # Cancel the move.
 	}
-
 
 hook("chgffmpegpreviewext", "", array($ref));
 
@@ -180,7 +179,6 @@ if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
         $access = 1;
         }
     }
-
 
 hook("beforepermissionscheck");
 
@@ -303,7 +301,7 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
 							alert('<?php echo $lang["error"] ?>\n' + textStatus);
 							}
 						});
-				}				
+				}
 		</script>
 		<?php
 		}
@@ -513,7 +511,6 @@ if ($view_panels)
 
 <div class="RecordHeader">
 <?php if (!hook("renderinnerresourceheader")) { ?>
-
 
 <?php
 
@@ -809,10 +806,6 @@ else if(1 == $resource['has_image'])
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
             <script>
-
-
-		
-
             function showHidePreviewTools()
                 {
                 var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
@@ -869,8 +862,6 @@ else if(1 == $resource['has_image'])
                     var img_copy_id        = 'previewimagecopy';
                     var img_src            = preview_image.attr('src');
 
-					
-					
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
@@ -1532,9 +1523,6 @@ hook('additionalresourcetools2', '', array($resource, $access));
 include "view_alternative_files.php";
 
 ?>
-
-
-
 </table>
 
 <?php
@@ -1743,10 +1731,7 @@ if (!hook("replaceuserratingsbox")){
 if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/user_rating.php"; }
 } /* end hook replaceuserratingsbox */
 
-
 ?>
-
-
 </div>
 <?php } /* End of renderresourcedownloadspace hook */ ?>
 <?php } /* End of renderinnerresourceview hook */
@@ -1754,7 +1739,6 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 if ($download_summary) {include "../include/download_summary.php";}
 
 hook("renderbeforeresourcedetails");
-
 
 /* ---------------  Display metadata ----------------- */
 if (!hook('replacemetadata')) {
@@ -1834,17 +1818,24 @@ $resourcedata=$resource;?>
 <?php hook("custompanels");//For custom panels immediately below resource display area 
 $resource=$resourcedata;?>
 
-
-
-
-<?php 
-if (!$disable_geocoding) { 
-  // only show this section if the resource is geocoded OR they have permission to do it themselves
-  if ($edit_access||($resource["geo_lat"]!="" && $resource["geo_long"]!=""))
-  		{
-		include "../include/geocoding_view.php";
-	  	} 
- 	} 
+<?php
+// Show resource geolocation map.
+if (!$disable_geocoding) 
+    {
+    // Only show the map if the resource is geocoded or they have the permission to geocode it.
+    if ($edit_access || ($resource['geo_lat'] != '' && $resource['geo_long'] != ''))
+        {
+        if($leaflet_maps_enable)
+            {
+            include '../include/geocoding_view.php';
+            }
+        else
+            {
+            // Include legacy OpenLayers code
+            include '../include/geocoding_view_ol.php';
+            }
+        }
+    }
 ?>
 
 <?php 
@@ -1991,7 +1982,6 @@ if (count($result)>0)
 					}	
 						
 				?>
-				
 				<!--Resource Panel-->
 				<div class="CollectionPanelShell">
 				<table border="0" class="CollectionResourceAlign"><tr><td>
@@ -2050,7 +2040,6 @@ if (count($result)>0)
 					}	
 						
 				?>
-				
 				<!--Resource Panel-->
 				<div class="CollectionPanelShell">
 				<table border="0" class="CollectionResourceAlign"><tr><td>
@@ -2073,7 +2062,6 @@ if (count($result)>0)
 		} #end of display loop by resource extension
 	} #end of IF sorted relations	
 	
-	
 	# -------- Related Resources (Default)
 	else { 
 		 ?><!--Panel for related resources-->
@@ -2086,7 +2074,6 @@ if (count($result)>0)
     	# loop and display the results
     	for ($n=0;$n<count($result);$n++)            
         	{
-
 			if(in_array($result[$n]["resource_type"],$relatedtypes_shown))
 				{
 				// Don't show this type again.
@@ -2170,7 +2157,6 @@ if (count($result)>0)
 	
 	</div><?php
 	}} 
-
 
 if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access)) { ?>
 <!--Panel for search for similar resources-->
@@ -2276,5 +2262,3 @@ jQuery('document').ready(function()
     });
 </script>
 <?php include "../include/footer.php";
-
-
