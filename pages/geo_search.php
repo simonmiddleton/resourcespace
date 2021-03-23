@@ -5,6 +5,16 @@ include '../include/db.php';
 include '../include/authenticate.php'; 
 include '../include/header.php';
 ?>
+
+
+<!--Leaflet Heatmap -->
+<?php if ($geo_search_heatmap)
+    { ?>
+    <script src="<?php echo $baseurl?>/lib/heatmap.js/heatmap.js"></script>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-heat/leaflet-heatmap.js"></script>
+    <?php
+    } ?>
+
 <div class="BasicsBox">
 <h1><?php echo $lang["geographicsearch"] ?></h1>
 <p><?php echo $lang["geographicsearch_help"]; render_help_link("user/geographic-search");?></p>
@@ -54,7 +64,7 @@ if($leaflet_maps_enable)
     <div id="search_map" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $map1_height; ?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
     </div>
 
-    <script type="text/javascript">
+    <script>
         var Leaflet = L.noConflict();
         <?php set_geo_map_centerview(); ?>
         // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js.
@@ -118,20 +128,34 @@ if($leaflet_maps_enable)
         //Add heatmap to aid searching
         if($geo_search_heatmap)
             {
-            if(file_exists($heatmap_cached))
+            $heatmapfile = get_temp_dir() . "/heatmap_" . md5("heatmap" . $scramble_key);
+            if(file_exists($heatmapfile))
                 {
-                echo "<script src='" . get_temp_dir(true) . "/heatmap_" . md5("heatmap" . $scramble_key) . "'></script>";
+                echo file_get_contents($heatmapfile);
                 ?>
-                var heat = Leaflet.heatLayer(heatpoints,{
-                    radius: 15,
-                    blur: 20, 
-                    maxZoom: mapdefaultzoom + 5
-                    }).addTo(map1);
-            <?php
+                var cfg = {
+                    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                    // if scaleRadius is false it will be the constant radius used in pixels
+                    "radius": 25,
+                    "maxOpacity": .5,
+                    // scales the radius based on map zoom
+                    "scaleRadius": false,
+                    // if set to false the heatmap uses the global maximum for colorization
+                    // if activated: uses the data maximum within the current map boundaries
+                    //   (there will always be a red spot with useLocalExtremas true)
+                    "useLocalExtrema": true,
+                    latField: 'lat',
+                    lngField: 'lng',
+                    valueField: 'count'
+                };  
+    
+                var heatmapLayer = new HeatmapOverlay(cfg).addTo(map1);
+                heatmapLayer.setData(heatpoints);
+                <?php
                 }
             }?>
 
-        <!--Fix for Microsoft Edge and Internet Explorer browsers-->
+    <!--Fix for Microsoft Edge and Internet Explorer browsers-->
         map1.invalidateSize(true);
 
         <!--Add an Area of Interest (AOI) selection box to the Leaflet map using leaflet-shades.js-->

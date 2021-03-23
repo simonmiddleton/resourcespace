@@ -1339,23 +1339,6 @@ hook("editbefresmetadata"); ?>
     if(!$multiple)
         {
         ?>
-        <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
-        <?php
-        }
-        ?>
-
-        <select name="resource_type" id="resourcetype" class="stdwidth" 
-                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
-        <?php
-        $types                = get_resource_types();
-        $shown_resource_types = array();
-        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
-          {
-          echo "<option value='' selected>" . $lang["select"] . "</option>";
-          }
-        
-        $types_count = count($types);
-        for($n = 0; $n < $types_count; $n++)
         <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
             <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
             if ($lockable_fields)
@@ -2259,7 +2242,7 @@ if ($multiple && !$disable_geocoding)
         </select>
     </div>
 
-    <div class="Question"><input name="editmaplocation" id="editmaplocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editmaplocation_map');if (this.checked) {q.style.display='block'; map3.invalidateSize(true);} else {q.style.display='none';}">&nbsp;<label for="editmaplocation"><?php echo $lang['location-edit']; ?></label></div>
+    <div class="Question"><input name="editmaplocation" id="editmaplocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editmaplocation_map');if (this.checked) {q.style.display='block'; map3.invalidateSize(true);} else {q.style.display='none';}">&nbsp;<label for="editmaplocation"><?php echo $lang['mapview']; ?></label></div>
 
     <!--Setup Leaflet map container with sizing-->
     <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
@@ -2268,8 +2251,9 @@ if ($multiple && !$disable_geocoding)
         var Leaflet1 = L.noConflict();
 
         <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
-        var map3 = new Leaflet1.map('editmaplocation_map').setView(<?php echo $map_centerview; ?>);
-        var defaultLayer = new Leaflet1.tileLayer.provider('OpenStreetMap.Mapnik', {
+        <?php set_geo_map_centerview(); ?>
+        var map3 = new Leaflet1.map('editmaplocation_map').setView(mapcenterview,mapdefaultzoom);
+        var defaultLayer = new Leaflet1.tileLayer.provider('<?php echo $map_default;?>', {
             attribution: 'Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors'
         }).addTo(map3);
 
@@ -2291,6 +2275,9 @@ if ($multiple && !$disable_geocoding)
             if (resourceMarker != undefined) {
                 map3.removeLayer(resourceMarker);
             };
+
+            document.getElementById('location').value=georound(geoLat) + ', ' + georound(geoLong);
+            document.getElementById('mapzoom').value=currentZoom;
 
             <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
             resourceMarker = L.marker([geoLat, geoLong], {

@@ -303,14 +303,6 @@ if(!$disable_geocoding)
             <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script> <?php
             } ?>
 
-        <!--Leaflet Heatmap -->
-        <?php if ($geo_search_heatmap)
-            { ?>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-heat/leaflet-heat.js"></script>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-heat/leaflet-heatmap.js"></script>
-            <?php
-            } ?>
-
         <!--Leaflet EasyPrint v2.1.9 plugin file-->
         <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
 
