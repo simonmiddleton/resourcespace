@@ -25,6 +25,9 @@ function HookAction_datesCronCron()
 
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
     
+    $email_state_refs = array();
+    $email_restrict_refs=array();
+
     # Process resource access restriction if a restriction date has been configured
     # The restriction date will be processed if it is a valid date field
 	if(in_array($action_dates_restrictfield, $allowable_fields))
@@ -33,18 +36,9 @@ function HookAction_datesCronCron()
         $restrict_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource "
             . ($eligible_states_list == "" ? "" : "AND r.archive IN ({$eligible_states_list})")    
             . " WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
-		$email_restrict_refs=array();
 		foreach ($restrict_resources as $resource)
 			{
 			$ref=$resource["resource"];
-			if($action_dates_email_admin_days!="") # Set up email notification to admin of expiring resources
-				{
-				$action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
-					{  			
-					$email_restrict_refs[]=$ref;		
-					}
-				}
 			
 			if (time()>=strtotime($resource["value"]))		
 				{		
@@ -57,6 +51,17 @@ function HookAction_datesCronCron()
 					resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
 					}
 				}
+            else
+                {
+                if($action_dates_email_admin_days!="") # Set up email notification to admin of expiring resources
+                    {
+                    $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
+                    if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
+                        {  			
+                        $email_restrict_refs[]=$ref;		
+                        }
+                    }
+                }
 			}
         }
     
@@ -104,15 +109,6 @@ function HookAction_datesCronCron()
         foreach($candidate_resources as $resource)
             {
             $ref = $resource['resource'];
-            if($action_dates_email_admin_days!="") # Set up email notification to admin of resources changing state
-            {
-            $email_state_refs = array();
-            $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-            if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
-                {  			
-                $email_state_refs[]=$ref;		
-                }
-            }
             
             # Candidate deletion date reached or passed 
             if (time() >= strtotime($resource['value']))
@@ -146,6 +142,17 @@ function HookAction_datesCronCron()
                     }
 
                 resource_log($ref,'x','',$lang['action_dates_delete_logtext']);
+                }
+            else
+                {
+                if($action_dates_email_admin_days!="") # Set up email notification to admin of resources changing state
+                    {
+                    $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
+                    if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
+                        {  			
+                        $email_state_refs[]=$ref;		
+                        }
+                    }
                 }
             }
         }
