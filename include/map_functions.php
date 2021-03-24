@@ -515,8 +515,6 @@ function leaflet_markers_legend()
     {
     global $lang, $marker_metadata_field, $marker_metadata_array, $MARKER_COLORS;
 
-    //$marker_color_def = array($marker_color1, $marker_color2, $marker_color3, $marker_color4, $marker_color5, $marker_color6, $marker_color7, $marker_color8);
-
     if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '')
         { ?>
         <b> <?php echo $lang['legend_text']?>&nbsp;</b>
@@ -705,6 +703,7 @@ function get_geolibraries()
         "geo_search",
         "search",
         "view",
+        "edit",
         );
     if(!in_array($pagename,$map_pages))
         {

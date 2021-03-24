@@ -4,14 +4,11 @@
 include '../include/db.php';
 include '../include/authenticate.php'; 
 include '../include/header.php';
-?>
 
-
-<!--Leaflet Heatmap -->
-<?php if ($geo_search_heatmap)
+if ($geo_search_heatmap && $leaflet_maps_enable)
     { ?>
     <script src="<?php echo $baseurl?>/lib/heatmap.js/heatmap.js"></script>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-heat/leaflet-heatmap.js"></script>
+    <script src="<?php echo $baseurl?>/lib/heatmap.js/leaflet-heatmap.js"></script>
     <?php
     } ?>
 
@@ -136,7 +133,7 @@ if($leaflet_maps_enable)
                 var cfg = {
                     // radius should be small ONLY if scaleRadius is true (or small radius is intended)
                     // if scaleRadius is false it will be the constant radius used in pixels
-                    "radius": 25,
+                    "radius": 15,
                     "maxOpacity": .5,
                     // scales the radius based on map zoom
                     "scaleRadius": false,

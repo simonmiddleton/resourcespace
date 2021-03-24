@@ -431,5 +431,6 @@ $MARKER_COLORS = array(
     4 => 'Yellow',
     5 => 'Black',
     6 => 'Grey',
-    7 => 'Violet'
+    7 => 'Violet',
+    8 => 'Gold'
     );
