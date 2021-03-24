@@ -43,12 +43,6 @@ $ext            = getvalescaped('ext', '');
 $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 $modal          = (getval("modal","")=="true");
 
-// Tile support
-$tile_scale = (int) getval('tile_scale', 1, true);
-$tile_row = (int) getval('tile_row', 0, true);
-$tile_col = (int) getval('tile_col', 0, true);
-
-
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
     $ext='jpg';
@@ -145,8 +139,14 @@ else
 
 
 
-    if($preview_tiles)
+    if($preview_tiles && getval('tile_region', 0, true) == 1)
         {
+        $tile_scale = (int) getval('tile_scale', 1, true);
+        $tile_row = (int) getval('tile_row', 0, true);
+        $tile_col = (int) getval('tile_col', 0, true);
+
+        // TODO: make sure tiles work if user has access to the full size
+
         // TODO: the size needs to be the one requested
         $image_size = get_original_imagesize($ref, get_resource_path($ref, true, '', false));
         $image_width = (int) $image_size[1];

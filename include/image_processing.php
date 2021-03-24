@@ -1499,59 +1499,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             
         if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes))
             {
-            $o = count($ps);
             // Ensure that scales are in order
             natsort($preview_tile_scale_factors);
 
             debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
             foreach($preview_tile_scale_factors as $scale)
                 {
-                $x=0;
-                $y=0;
-                $fullgenerated = false;
-                $tileregion = $preview_tile_size * $scale;
-                debug("create_previews - creating tiles at scale: " . $scale . ". Region size=" . $tileregion);
-                if($fullgenerated && $tileregion > $sh && $tileregion > $sw)
+                foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
                     {
-                    debug("create_previews scaled tile (" . $scale . ") too large for source. Tile region length: " . $tileregion );
-                    continue;
-                    }                    
-                
-                while($y < $sh)
-                    {
-                    $tileh = $tileregion;
-                    if(($y + $tileregion) > $sh)
-                        {
-                        debug("create_previews tiles: $y, - tile taller than area, reducing height");
-                        $tileh = $sh - $y;
-                        }
-                    while($x < $sw)
-                        {
-                        $tilew = $tileregion;
-                        if(($x + $tileregion) > $sw)
-                            {
-                            debug("create_previews tiles: $x, - tile wider than area, reducing width");
-                            $tilew = $sw - $x;
-                            }
-                        $tileid = (string)($x) . "_" . (string)($y) . "_" . (string)($tilew) . "_" . (string)($tileh);
-                        debug("create_previews tiles scale: " . $scale . ", x: " . $x . ", y: " . $y);
-                        debug("create_previews tiles id: " . $tileid);
-                        $ps[$o]['id']               = "tile_" . $tileid; 
-                        $ps[$o]['width']            = floor($tilew / $scale);
-                        $ps[$o]["height"]           = floor($tileh / $scale);
-                        $ps[$o]["x"]                = $x;
-                        $ps[$o]["y"]                = $y;  
-                        $ps[$o]["w"]                = $tilew;
-                        $ps[$o]["h"]                = $tileh;
-                        $ps[$o]["type"]             = "tile";
-                        $ps[$o]["internal"]         = 1;
-                        $ps[$o]["allow_preview"]    = 0;
+                    $tile['width'] = floor($tile['w'] / $scale);
+                    $tile['height'] = floor($tile['h'] / $scale);
+                    $tile['type'] = 'tile';
+                    $tile['internal'] = 1;
+                    $tile['allow_preview'] = 0;
 
-                        $x = $x + $tileregion;
-                        $o++;
-                        }
-                    $x=0;
-                    $y = $y + $tileregion;
+                    $ps[] = $tile;
                     }
                 }
             }
