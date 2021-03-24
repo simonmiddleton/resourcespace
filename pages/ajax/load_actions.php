@@ -24,7 +24,7 @@ switch ($type)
         $order_by = getvalescaped("order_by", "relevance");
         $archive = getvalescaped("archive", "0");
         $per_page = getvalescaped("per_page", null, true);
-        $offset = getvalescaped("offset", null, true);
+        $offset = getvalescaped("offset", 0, true);
         $fetchrows = (!is_null($per_page) || !is_null($offset) ? $per_page + $offset : -1);
         $sort = getvalescaped("sort", "desc");
         // $access_override = false;

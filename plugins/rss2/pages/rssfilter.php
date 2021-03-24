@@ -54,7 +54,7 @@ if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ",
 
 
 if (strpos($search,"!")===false) {setcookie("search",$search,0,'','',false,true);} # store the search in a cookie if not a special search
-$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {setcookie("saved_offset",$offset,0,'','',false,true);}
+$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {setcookie("saved_offset",$offset,0,'','',false,true);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 ######## CAMILLO

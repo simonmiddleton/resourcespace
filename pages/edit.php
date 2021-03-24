@@ -1620,6 +1620,12 @@ if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) 
     }
 
 # Load resource data
+
+if ($ref < 0 && !$upload_review_mode)
+    {
+    set_resource_defaults($ref);  # Get resource defaults for edit then upload mode.
+    }
+
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
 

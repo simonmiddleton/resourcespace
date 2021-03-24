@@ -1,7 +1,9 @@
 <?php
 # Video player - plays the preview file created to preview video resources.
 
-global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support;
+global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,
+$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
+$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
 
 $ref_escaped                               = escape_check($ref);
 $video_player_thumbs_view_alt_name_escaped = escape_check($video_player_thumbs_view_alt_name);
@@ -46,11 +48,11 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 	if((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref) == 0)
 		{
 		# Attempt to play the source file direct (not a preview). For direct MP4 upload support - the file itself is an MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
-		$origvideofile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
+		$origvideofile = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, false, '', $alternative);
 
-		if(file_exists($origvideofile))
+		if(file_exists($origvideofile) && in_array($resource['file_extension'],array("mp4","mov"))) # Check video js supported file type
 			{
-			$video_preview_path = get_resource_path($ref, false, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
+			$video_preview_path = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
 			$video_preview_type = "video/{$ffmpeg_preview_extension}";
 			}
 		}

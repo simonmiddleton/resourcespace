@@ -2,6 +2,6 @@ ref,int(11),NO,PRI,,auto_increment
 search_string,mediumtext,YES,,,
 resource_types,mediumtext,YES,,,
 archive_states,mediumtext,YES,,,
-logged,datetime,YES,,CURRENT_TIMESTAMP,
+logged,timestamp,YES,,CURRENT_TIMESTAMP,
 user,int(11),YES,,,
 result_count,int(11),YES,MUL,,

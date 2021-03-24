@@ -9,7 +9,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $ref=getvalescaped("ref","",true);
 $userdata=get_user($ref);
 $backurl=getval("backurl","");

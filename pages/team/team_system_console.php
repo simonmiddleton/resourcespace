@@ -12,7 +12,7 @@ if ($same_page_callback)
 
 $callback = getval("callback","");
 $actasuser = getval("actasuser","");
-$offset = getval("offset",0);
+$offset = getval("offset",0,true);
 
 if (!checkperm("a") && $callback!="activitylog")		// currently only activity log is allowed for callback
 	{

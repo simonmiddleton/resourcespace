@@ -1117,7 +1117,19 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews']);
     debug_function_call("create_previews", func_get_args());
     
-    if (!$previewonly) {
+    $imversion = get_imagemagick_version();
+    // Set correct syntax for commands to remove alpha channel
+    if($imversion[0] >= 7)
+        {
+        $alphaoff = "-alpha off";
+        }
+    else
+        {
+        $alphaoff = "+matte";
+        }
+
+    if (!$previewonly)
+        {
         // make sure the extension is the same as the original so checksums aren't done for previews
         $o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
         if($extension==$o_ext && $checksum_required)
@@ -1125,7 +1137,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             debug("create_previews - generate checksum for $ref");
             generate_file_checksum($ref,$extension);
             }
-    }
+        }
     # first reset preview tweaks to 0
     sql_query("update resource set preview_tweaks = '0|1' where ref = '$ref'");
 
@@ -1226,11 +1238,10 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     }
 
                 # Process the image
-                $version = get_imagemagick_version();
-                if($version[0] > 5 || ($version[0] == 5 && $version[1] > 5) || ($version[0] == 5 && $version[1] == 5 && $version[2] > 7 ))
+                if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
                     {
                     // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] +matte' : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
+                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . $alphaoff : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
                     }
                 else
                     {
@@ -1419,6 +1430,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         $identify_fullpath = get_utility_path("im-identify");
         if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
 
+        $imversion = get_imagemagick_version();
+        // Set correct syntax for commands to remove alpha channel
+        if($imversion[0] >= 7)
+            {
+            $alphaoff = "-alpha off";
+            }
+        else
+            {
+            $alphaoff = "+matte";
+            }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
 
         if($extension == "svg")
@@ -1516,8 +1537,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         debug("create_previews tiles scale: " . $scale . ", x: " . $x . ", y: " . $y);
                         debug("create_previews tiles id: " . $tileid);
                         $ps[$o]['id']               = "tile_" . $tileid; 
-                        $ps[$o]['width']            = $preview_tile_size;
-                        $ps[$o]["height"]           = $preview_tile_size;
+                        $ps[$o]['width']            = floor($tilew / $scale);
+                        $ps[$o]["height"]           = floor($tileh / $scale);
                         $ps[$o]["x"]                = $x;
                         $ps[$o]["y"]                = $y;  
                         $ps[$o]["w"]                = $tilew;
@@ -1586,6 +1607,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             
             # If we've already made the LPR or SCR then use those for the remaining previews.
             # As we start with the large and move to the small, this will speed things up.
+            $using_original = false;
             if ($extension!="png" && $extension!="gif")
                 {
                 if(file_exists($hpr_path))
@@ -1607,6 +1629,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
                     {
                     $file=file_exists($hpr_path)?$hpr_path:$origfile;
+                    $using_original = true;
                     }
                 }
 
@@ -1623,7 +1646,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
             // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and will eventually be replaced by -alpha off)
             // Extensions for which the alpha/matte channel should not be disabled (and therefore option -flatten is unnecessary)
-            $extensions_no_alpha_off = array('png', 'gif', 'tif', 'psd');
+            $extensions_no_alpha_off = array('png', 'gif', 'psd');
 
             if( $prefix == "cr2:" || $prefix == "nef:" || in_array($extension, $extensions_no_alpha_off) || getval("noflatten","")!="") {
                 $flatten = "";
@@ -1635,8 +1658,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
        
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
-            }
+                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] ' . $flatten . ' -quality ' . $preview_quality;
+                }
 
             # fetch target width and height
             $tw=$ps[$n]["width"];
@@ -1802,7 +1825,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command ." ".( !in_array($extension, $extensions_no_alpha_off) ? " +matte $profile " : "" );
+                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif") ? $alphaoff . " " . $profile : "");
+                        //$runcommand = $command . " " . ( !in_array($extension, $extensions_no_alpha_off) ? ($alphaoff . " " . $profile . " ") : "");
                         
                         if($crop)
                             {
@@ -1816,10 +1840,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $command_list.=$runcommand."\n";
                             $output=run_command($runcommand);
                             $created_count++;
-                            # if this is the first file generated for non-ingested resources check rotation
+                            # if this is the first file generated or the original file is used as the source, for non-ingested resources check rotation
                             if($autorotate_no_ingest 
                                 &&
-                                $created_count==1
+                                ($created_count==1 || $using_original)
                                 &&
                                 !$ingested
                                 &&
@@ -1875,13 +1899,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
                         {
-                        $runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . $alphaoff . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
                     // alternate command for png/gif using the path from above, and omitting resizing
                     if ($extension=="png" || $extension=="gif")
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2136,7 +2160,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         
                         // let's create the watermark and save as an mpr
                         $command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
-                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
+                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escape1774shellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
                         $mpr_init_write=true;
                         $mpr_wm_created=true;
                         $command.=" -delete 1 -write mpr:" . $ref . " -delete 0";
@@ -2155,7 +2179,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $output = run_command($command);
             }
         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
-        $target=@imagecreatefromjpeg(get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative));
+        $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
+        if(file_exists($thumbpath))
+            {
+            $target = imagecreatefromjpeg($thumbpath);
+            }
+        else
+            {
+            $target = false;
+            }
+        
         if ($target && $alternative==-1) # Do not run for alternative uploads 
             {
             extract_mean_colour($target,$ref);

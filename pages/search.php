@@ -6,9 +6,14 @@ if($annotate_enabled)
     include_once '../include/annotation_functions.php';
     }
 
-
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$s = explode(" ",getvalescaped("search",""));
+$s = getvalescaped("search","");
+if (is_array($s))
+    {
+    redirect($baseurl . "/pages/search.php");
+    }
+$s = explode(" ", $s);
+
 $k = getvalescaped("k","");
 $resetlockedfields = getvalescaped("resetlockedfields","") != "";
 

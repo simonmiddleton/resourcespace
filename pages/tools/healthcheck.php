@@ -81,10 +81,25 @@ if($debug_log)
     }
 
 # Check filestore folder browseability
-$output=@file_get_contents($baseurl . "/filestore");
-if (strpos($output,"Index of")!==false)
-	{
-    exit("FAIL - " . $lang["noblockedbrowsingoffilestore"]);
+$GLOBALS["use_error_exception"] = true;
+try
+    {
+    $output=file_get_contents($baseurl . "/filestore");
+    if (strpos($output,"Index of")!==false)
+        {
+        exit("FAIL - " . $lang["noblockedbrowsingoffilestore"]);
+        }
+    }
+catch (Exception $e)
+    {
+    // Error accesing filestore URL - this is as expected    
+    }
+unset($GLOBALS["use_error_exception"]);
+
+$plugincheck = hook("errorcheckadditional");
+if(is_string($plugincheck))
+    {
+    exit($plugincheck);
     }
     
 // All is well.

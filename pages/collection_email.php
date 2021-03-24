@@ -5,7 +5,7 @@ include "../include/authenticate.php";
 
 $collection_url	= getvalescaped("collection","");
 $find			= getvalescaped('find', '');
-$offset 		= getvalescaped("offset","");
+$offset 		= getvalescaped("offset",0,true);
 $order_by 		= getvalescaped("order_by","");
 $sort 			= getvalescaped("sort","");
 $search 		= getvalescaped("search","");

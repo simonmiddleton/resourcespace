@@ -156,7 +156,6 @@ else
         debug('[page=download.php]');
         debug(sprintf('[page=download.php] Requesting scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
 
-
         $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
         foreach($tiles as $tile)
             {

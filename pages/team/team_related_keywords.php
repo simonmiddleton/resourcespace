@@ -10,7 +10,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php";if (!checkperm("k")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find","");
 
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting

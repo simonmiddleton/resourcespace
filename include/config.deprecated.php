@@ -120,9 +120,6 @@ $collections_footer = true;
 # leave blank for no extra trimming.
 $config_trimchars="";
 
-# Enable work-arounds required when installed on Microsoft Windows systems (rarely used in the code)
-$config_windows=false;
-
 // Display help links on pages
 $contextual_help_links=true;
 

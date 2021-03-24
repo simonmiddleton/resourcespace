@@ -38,7 +38,7 @@ if ($filter_by_permissions != "")
 	$sql_permision_filter .= ")";
 	}
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("orderby","name");
 
 $groups=sql_query("

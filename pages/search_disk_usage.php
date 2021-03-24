@@ -4,7 +4,7 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 $search=getvalescaped("search","");
-$offset=getvalescaped("offset","",true);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");

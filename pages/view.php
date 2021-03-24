@@ -1283,6 +1283,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 		}
 	}
 
+$basket=$userrequestmode==2 || $userrequestmode==3;
 
 # Look for a viewer to handle the right hand panel. If not, display the standard photo download / file download boxes.
 if (file_exists("../viewers/type" . $resource["resource_type"] . ".php"))
@@ -1304,7 +1305,6 @@ else
 <?php
 $table_headers_drawn=false;
 $nodownloads=false;$counter=0;$fulldownload=false;
-$showprice=$userrequestmode==2 || $userrequestmode==3;
 hook("additionalresourcetools");
 if ($resource["has_image"]==1 && $download_multisize)
 	{
@@ -1340,7 +1340,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 				<td><?php echo $lang["fileinformation"]?></td>
 				<?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
 				<td><?php echo $lang["filesize"]?></td>
-				<?php if ($showprice) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
+				<?php if ($basket) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
 				<td class="textcenter"><?php echo $lang["options"]?></td>
 				</tr>
  				<?php
@@ -1358,7 +1358,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 			}
 		?></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
 
-		<?php if ($showprice) {
+		<?php if ($basket) {
 			?><td><?php echo get_display_price($ref, $sizes[$n]) ?></td>
 		<?php } ?>
 
@@ -1577,7 +1577,7 @@ hook ("resourceactions") ?>
 			?>
 			<li>
 			<?php 
-			echo remove_from_collection_link($ref,$search);
+			echo remove_from_collection_link($ref,$search,"","",$basket);
 			echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
 			</a>
 			</li>

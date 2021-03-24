@@ -22,7 +22,7 @@ $allow_reorder=false;
 # Fetch and set the values
 $search=getvalescaped("search","");
 if (strpos($search,"!")===false) {rs_setcookie('search', $search);} # store the search in a cookie if not a special search
-$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
+$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 $order_by=getvalescaped("order_by",$default_sort);if (strpos($search,"!")===false) {rs_setcookie('saved_order_by', $order_by);}
 if ($order_by=="") {$order_by=$default_sort;}
@@ -57,7 +57,7 @@ if ($allow_reorder)
 $border=true;
 
 $search='!collection'.$colref;
-$offset=getvalescaped("offset","",true);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","relevance");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");

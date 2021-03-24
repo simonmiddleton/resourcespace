@@ -5,7 +5,7 @@ include "../include/authenticate.php";
 include "../include/image_processing.php";
 
 $ref=getvalescaped("ref","",true);
-$offset=getval("offset",0);
+$offset=getval("offset",0,true);
 $find=getvalescaped("find","");
 $col_order_by=getvalescaped("col_order_by","name");
 $order_by=getvalescaped("order_by","");

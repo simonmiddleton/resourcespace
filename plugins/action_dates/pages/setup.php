@@ -36,6 +36,8 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_reallydelete"] = getvalescaped('action_dates_reallydelete','');
     $action_dates_config["action_dates_new_state"] = getvalescaped('action_dates_new_state','');
     $action_dates_config["action_dates_eligible_states"] = getvalescaped('action_dates_eligible_states','');
+    $action_dates_config["action_dates_email_for_state"] = getvalescaped('action_dates_email_for_state','');
+    $action_dates_config["action_dates_email_for_restrict"] = getvalescaped('action_dates_email_for_restrict','');
     $action_dates_config["action_dates_email_admin_days"] = getvalescaped('action_dates_email_admin_days','',true);
     $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
     $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
@@ -73,10 +75,11 @@ $page_def[] = config_add_single_ftype_select('action_dates_deletefield',$lang['a
 $page_def[] = config_add_boolean_select('action_dates_reallydelete',$lang['action_dates_reallydelete']);
 $page_def[] = config_add_single_select('action_dates_new_state', $lang['action_dates_new_state'], $editable_states);
 $page_def[] = config_add_multi_archive_select("action_dates_eligible_states", $lang["action_dates_eligible_states"], $editable_states_less_deleted);
-$page_def[] = config_add_text_input('action_dates_email_admin_days',$lang['action_dates_email_admin_days']);
 $page_def[] = config_add_single_ftype_select('action_dates_restrictfield',$lang['action_dates_restrict'],420);
 $page_def[] = config_add_boolean_select('action_dates_remove_from_collection',$lang['action_dates_remove_from_collection']);
-
+$page_def[] = config_add_text_input('action_dates_email_admin_days',$lang['action_dates_email_admin_days']);
+$page_def[] = config_add_boolean_select('action_dates_email_for_state', $lang['action_dates_email_for_state']);
+$page_def[] = config_add_boolean_select('action_dates_email_for_restrict', $lang['action_dates_email_for_restrict']);
 
 $page_def[] = config_add_section_header($lang['action_dates_additional_settings']);
 

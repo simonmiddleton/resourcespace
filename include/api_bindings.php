@@ -839,3 +839,30 @@ function api_get_users($find="")
     $return=array();
     return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
     }
+
+function api_save_collection(int $ref, string $coldata)
+    {
+    if(checkperm("b"))
+        {
+        return false;
+        }
+
+    // Security control - only limited data is allowed to be saved via the API
+    $coldata = array_intersect_key(
+        json_decode($coldata, true),
+        [
+            'keywords' => 0,
+            'allow_changes' => 0,
+            'users' => 0,
+        ]
+    );
+
+    // DO NOT REMOVE - this is to prevent bypassing allowed coldata. save_collection() uses getvals if coldata is empty!
+    if(empty($coldata))
+        {
+        return false;
+        }
+
+    $fct_return = save_collection($ref, $coldata);
+    return (is_null($fct_return) ? true : $fct_return);
+    }

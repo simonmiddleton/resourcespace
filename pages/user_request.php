@@ -128,16 +128,26 @@ include "../include/login_background.php";
 <?php if ($error) { ?><div class="FormError"><?php echo $error . ' ' . $error_extra?></div><?php } ?>
 <?php
 if (!hook("replacemain"))
-    { /* BEGIN hook Replacemain */ ?>
+    { /* BEGIN hook Replacemain */ 
+    
+    $name = getvalescaped("name","");
+    $name = is_array($name) ? "" : htmlspecialchars($name);
+    
+    $email = getvalescaped("email","");
+    $email = is_array($email) ? "" : htmlspecialchars($email);
+    
+    
+    
+    ?>
     <div class="Question">
     <label for="name"><?php echo $lang["yourname"]?> <sup>*</sup></label>
-    <input type=text name="name" id="name" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("name",""))?>">
+    <input type=text name="name" id="name" class="stdwidth" value="<?php echo $name ?>">
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
     <label for="email"><?php echo $lang["youremailaddress"]?> <sup>*</sup></label>
-    <input type=text name="email" id="email" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email",""))?>">
+    <input type=text name="email" id="email" class="stdwidth" value="<?php echo $email ?>">
     <div class="clearerleft"> </div>
     </div>
     <?php
@@ -284,10 +294,15 @@ $groups=get_registration_selectable_usergroups();
 <?php } ?>
 <?php } /* END hook Replacegroupselect */ ?>
 
-<?php if (!hook("replaceuserrequestcomment")){ ?>
+<?php if (!hook("replaceuserrequestcomment")){ 
+    $userrequestcomment = getvalescaped("userrequestcomment","");
+    $userrequestcomment = is_array($userrequestcomment) ? "" : htmlspecialchars($userrequestcomment);
+    
+    
+    ?>
 <div class="Question">
 <label for="userrequestcomment"><?php echo $lang["userrequestcomment"]?></label>
-<textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo htmlspecialchars(getvalescaped("userrequestcomment",""))?></textarea>
+<textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
 <div class="clearerleft"> </div>
 </div>	
 <?php } /* END hook replaceuserrequestcomment */ ?>

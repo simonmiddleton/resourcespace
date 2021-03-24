@@ -11,7 +11,7 @@ if (!checkperm("a"))
 
 
 $find=getvalescaped("find","");
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
     
     

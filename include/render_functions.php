@@ -774,6 +774,18 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             $treeonly                    = true;
             $status_box_elements         = '';
 
+            ?>
+            <script type="text/javascript">
+                jQuery(document).ready(function()
+                {
+                    jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                    {
+                        FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);
+                    });
+                });
+            </script>
+            <?php
+
             foreach($searched_nodes as $node)
                 {
                 $n_details = array();

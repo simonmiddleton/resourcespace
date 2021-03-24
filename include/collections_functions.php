@@ -635,7 +635,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         {
         $setcolumns["ref"] = (int)$ref;
         }
-    if(trim($rs_session) != "")
+    if(is_int_loose(trim($rs_session)))
         {
         $setcolumns["session_id"]   = escape_check($rs_session);
         }
@@ -1190,8 +1190,33 @@ function save_collection($ref, $coldata=array())
             {
             $sqlupdate = "";
             $clear_fc_query_cache = false;
+            $collection_columns = [
+                'name',
+                'user',
+                'created',
+                'public',
+                'allow_changes',
+                'cant_delete',
+                'keywords',
+                'savedsearch',
+                'home_page_publish',
+                'home_page_text',
+                'home_page_image',
+                'session_id',
+                'description',
+                'type',
+                'parent',
+                'thumbnail_selection_method',
+                'bg_img_resource_ref',
+            ];
             foreach($sqlset as $colopt => $colset)
                 {
+                // Only valid collection columns should be processed
+                if(!in_array($colopt, $collection_columns))
+                    {
+                    continue;
+                    }
+
                 if($sqlupdate != "")
                     {
                     $sqlupdate .= ", ";    
@@ -1208,33 +1233,41 @@ function save_collection($ref, $coldata=array())
                     continue;
                     }
 
+                if($colopt == 'allow_changes')
+                    {
+                    $colset = (int) $colset;
+                    }
+
                 $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
 
-            $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
-            sql_query($sql);
-
-            if($clear_fc_query_cache)
+            if($sqlupdate !== '')
                 {
-                clear_query_cache("featured_collections");
-                }
+                $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
+                sql_query($sql);
 
-            // Log the changes
-            foreach($sqlset as $colopt => $colset)
-                {
-                switch($colopt)
+                if($clear_fc_query_cache)
                     {
-                    case "public";
-                        collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
-                    break;    
-                    case "allow_changes";
-                        collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
-                    break; 
-                    default;
-                        collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
-                    break;
+                    clear_query_cache("featured_collections");
                     }
-                 
+
+                // Log the changes
+                foreach($sqlset as $colopt => $colset)
+                    {
+                    switch($colopt)
+                        {
+                        case "public";
+                            collection_log($ref, LOG_CODE_COLLECTION_ACCESS_CHANGED, 0, $colset ? 'public' : 'private');
+                        break;    
+                        case "allow_changes";
+                            collection_log($ref, LOG_CODE_UNSPECIFIED, 0,  $colset ? 'true' : 'false' );
+                        break; 
+                        default;
+                            collection_log($ref, LOG_CODE_EDITED, 0,  $colopt  . " = " . $colset);
+                        break;
+                        }
+                     
+                    }
                 }
             }
         } # end replace hook - modifysavecollection
@@ -2712,12 +2745,20 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * 
  * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '')
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false)
     {
-    # Generates a HTML link for removing a resource to a collection
+    # Generates a HTML link for removing a resource from a collection
+    # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
 
-    return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+    if ($basketmode) 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefrombasket"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
+    else 
+        {
+        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
+        }
     }
 
 
@@ -2750,7 +2791,7 @@ function get_collection_external_access($collection)
         {
         $condition .= "AND user='" . escape_check($userref) . "'";
         }
-	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload,status from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
+	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
 	}
 
 
