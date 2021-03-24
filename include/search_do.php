@@ -1067,15 +1067,15 @@ function do_search(
                 $suggestjoin=", ";
                 }
 
-            for ($n=0;$n<count($suggested);$n++)
+            foreach ($suggested as $suggestion)
                 {
-                if ($suggested[$n]!="")
+                if ($suggestion != "")
                     {
                     if ($suggest!="")
                         {
                         $suggest.=$suggestjoin;
                         }
-                    $suggest.=$suggested[$n];
+                    $suggest.=$suggestion;
                     }
                 }
             debug ("Suggesting $suggest");
