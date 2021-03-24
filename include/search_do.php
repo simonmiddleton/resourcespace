@@ -63,7 +63,7 @@ function do_search(
            $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
-           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access;
+           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators;
 
     if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
         {
@@ -622,6 +622,25 @@ function do_search(
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
+                            
+                            if ($keyref === false)
+                            {
+                            // Check keyword for defined separators and if found each part of the value is added as a keyword for checking.
+                            $contains_separators = false;
+                            foreach ($config_separators as $separator)
+                                {
+                                if (strpos($keyword, $separator) !== false)
+                                    {
+                                    $contains_separators = true;
+                                    }
+                                }
+                            if ($contains_separators === true)
+                                {
+                                $keyword_split = split_keywords($keyword);
+                                $keywords = array_merge($keywords,$keyword_split);
+                                continue;
+                                }
+                            }
 
                             // Attempt related keywords for the original keyword before determining there were no keywords matched
                             if($keyref === false)
