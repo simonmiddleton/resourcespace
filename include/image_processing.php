@@ -1537,8 +1537,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         debug("create_previews tiles scale: " . $scale . ", x: " . $x . ", y: " . $y);
                         debug("create_previews tiles id: " . $tileid);
                         $ps[$o]['id']               = "tile_" . $tileid; 
-                        $ps[$o]['width']            = $preview_tile_size;
-                        $ps[$o]["height"]           = $preview_tile_size;
+                        $ps[$o]['width']            = floor($tilew / $scale);
+                        $ps[$o]["height"]           = floor($tileh / $scale);
                         $ps[$o]["x"]                = $x;
                         $ps[$o]["y"]                = $y;  
                         $ps[$o]["w"]                = $tilew;
