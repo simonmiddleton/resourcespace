@@ -194,14 +194,12 @@ echo $hidden_input_elements;
         if(category_tree_add_parents)
             {
             // Establish the parent of the selected node
-            var parent_node = jQuery('#<?php echo $tree_id; ?>')
-                .jstree(true)
-                .get_parent(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(data.node.id));
+            var parent_node = jquery_tree_by_id.jstree(true)
+                .get_parent(jquery_tree_by_id.jstree(true).get_node(data.node.id));
 
             // Trigger selection of the parent node
-            jQuery('#<?php echo $tree_id; ?>')
-                .jstree(true)
-                .select_node(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(parent_node), data.selected, event);
+            jquery_tree_by_id.jstree(true)
+                .select_node(jquery_tree_by_id.jstree(true).get_node(parent_node), data.selected, event);
             }
         });
 
@@ -209,36 +207,72 @@ echo $hidden_input_elements;
 if(!$is_search)
     {
     ?>
-    // When a node is deselected, and remove children is enabled, then automatically deselect its descendants 
+    // When a node is deselected and remove children is enabled, then automatically deselect the children if present 
     jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
-        {					
+        {		
+        thisJstree = jQuery(this);
+
+        if(thisJstree.jstree('is_leaf', data.node.id)) { 
+            // console.log("NODE "+data.node.id+" DESELECTED LEAF - NO CHILDREN - NO FURTHER ACTION");
+            return; 
+        }
+	
         if(category_tree_remove_children)
             {
-            // If the deselected node is closed then open it
-            if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
-                {
-                jQuery('#<?php echo $tree_id; ?>').jstree(
-                    'open_node',
-                    data.node);
+            if(thisJstree.jstree('is_parent', data.node.id)) { 
+                // console.log("PARENT NODE "+data.node.id+" DESELECTED - PROCESS ITS CHILDREN");
+                if(thisJstree.jstree('is_closed', data.node.id)) {
+                    // console.log("-- PARENT NODE "+data.node.id+" IS CLOSED - OPEN IT");
+                    thisJstree.jstree('open_node', data.node.id, function(e, data) {
+                        // console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
+                        deselect_children_of_node(thisJstree, e.id);   
+                        });
                 }
-
-            // Establish the descendents of the deselected node
-            var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
-        
-            for(var i = 0; i < rendered_childrens.length; i++)
-                {
-                // Trigger deselection of each descendent
-                jQuery('#<?php echo $tree_id; ?>')
-                    .jstree(true)
-                    .deselect_node(
-                        jQuery('#<?php echo $tree_id; ?>')
-                        .jstree(true)
-                        .get_node(rendered_childrens[i]), data.selected, event
-                    );
+                else {
+                    // Parent is already open
+                    // console.log("-- PARENT NODE "+data.node.id+" ALREADY OPEN - DESELECT ITS CHILDREN");
+                    deselect_children_of_node(thisJstree, data.node.id);
                 }
             }
+        }
         });
-    
+        
+
+function deselect_children_of_node(theJstree, nodeId) {
+
+    // Node is open by the time we get here so that its children can also be deselected if necessary
+    var children_of_this = theJstree.jstree('get_children_dom', nodeId);
+    // console.log("DESELECT CHILDREN OF "+ nodeId + " COUNT "+children_of_this.length);
+    for(var i = 0; i < children_of_this.length; i++) {
+        // Trigger deselection of each child if necessary
+        if(theJstree.jstree('is_selected', children_of_this[i].id)) {
+            // console.log("-- CHILD NODE "+children_of_this[i].id+" IS SELECTED - DESELECT IT");
+            theJstree.jstree('deselect_node', children_of_this[i].id);
+        }
+        else { 
+            // Child is not selected; but continue to process the descendents to cater for tier gaps
+            // console.log("-- CHILD NODE "+children_of_this[i].id+" NOT SELECTED");
+            if(theJstree.jstree('is_parent', children_of_this[i].id)) {
+
+                if(theJstree.jstree('is_closed', children_of_this[i].id)) {
+                    // console.log("-- -- CHILD NODE "+children_of_this[i].id+" IS A CLOSED PARENT - OPEN IT");
+                    theJstree.jstree('open_node', children_of_this[i].id, function(e, data) {
+                        // console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
+                        deselect_children_of_node(theJstree, e.id);   
+                        });
+                }
+                else {
+                    // Child is already open
+                    // console.log("-- CHILD NODE "+children_of_this[i].id+" ALREADY OPEN - DESELECT ITS CHILDREN");
+                    deselect_children_of_node(theJstree, children_of_this[i].id);
+                }
+
+            }
+        }
+    }
+
+}
+
     <?php
     }	
     ?>				
