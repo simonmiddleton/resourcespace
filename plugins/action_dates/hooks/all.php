@@ -157,21 +157,31 @@ function HookAction_datesCronCron()
             }
         }
 
+    // Only allow email for actions configured.
+    if ($action_dates_restrictfield == "")
+        {
+        $action_dates_email_for_restrict = "0";
+        }
+    if ($action_dates_deletefield == "")
+        {
+        $action_dates_email_for_state = "0";
+        }
+    
     $emailrefs = array();
-    if ($action_dates_email_for_state && $action_dates_email_for_restrict)
+    if ($action_dates_email_for_state == "1" && $action_dates_email_for_restrict == "1")
         {
         $emailrefs = array_merge($email_state_refs,$email_restrict_refs);
         $emailrefs = array_unique($emailrefs);
         $subject = $lang['action_dates_email_subject'];
         $message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text']) . "\r\n";
         }
-    elseif ($action_dates_email_for_state && !$action_dates_email_for_restrict)
+    elseif ($action_dates_email_for_state == "1" && $action_dates_email_for_restrict == "0")
         {
         $emailrefs = $email_state_refs;
         $subject = $lang['action_dates_email_subject_state'];
         $message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_state']) . "\r\n";
         }
-    elseif (!$action_dates_email_for_state && $action_dates_email_for_restrict)
+    elseif ($action_dates_email_for_state == "0" && $action_dates_email_for_restrict == "1")
         {
         $emailrefs = $email_restrict_refs;
         $subject = $lang['action_dates_email_subject_restrict'];
