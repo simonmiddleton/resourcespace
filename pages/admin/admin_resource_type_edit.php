@@ -291,7 +291,8 @@ else
 
     <?php
     $MARKER_COLORS[-1] = $lang["select"];
-    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"]);
+    ksort($MARKER_COLORS);
+    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));
     ?>
     
         <div class="Question">

@@ -85,69 +85,60 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
     <div class="Title"><?php echo $lang['location-title']; ?></div>
     <?php
 
-    if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
+if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
+    { ?>
+    <?php if ($edit_access)
+        { ?>
+        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p>
+        <?php
+        }
+    $zoom = leaflet_map_zoom($resource['mapzoom']);
+
+    // Check for modal view.
+    if (!$modal)
         {
-        $zoom = leaflet_map_zoom($resource['mapzoom']);
+        $map_container      = 'map_id';
+        $map_container_obj  = "map_obj";
+        }
+    else
+        {
+        $map_container      = 'map_id_modal';
+        $map_container_obj  = "map_modal_obj";
+        }
+    ?>
+    <!--Setup Leaflet map container with sizing-->
+    <div id="<?php echo $map_container; ?>" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $map1_height;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
+    </div>
 
-        // Check for modal view.
-        if ($modal)
+    <script type="text/javascript">
+
+        // Define available Leaflet basemaps groups and layers using leaflet.providers.js, L.TileLayer.PouchDBCached.js, and styledLayerControl.js based on ../include/map_functions.php.
+        <?php include __DIR__ . '/map_processing.php'; ?>
+        <!--Determine basemaps and map groups for user selection-->
+        <?php include __DIR__ . '/map_basemaps.php'; ?>        
+
+        jQuery(document).ready(function ()
             {
-            $map_container = 'map_id_modal';
-            }
-        else
-            {
-            $map_container = 'map_id';
-            }
-        if ($edit_access)
-            {?>
-            <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p>
-            <?php
-            }
-
-        ?>
-        <!--Setup Leaflet map container with sizing-->
-        <div id=<?php echo $map_container; ?> style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $map1_height;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
-        </div>
-
-        <script type="text/javascript">
             var LeafletView = L.noConflict();
 
             <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
-            var geo_lat = <?php echo $resource['geo_lat']; ?>;
-            var geo_long = <?php echo $resource['geo_long']; ?>;
-            var zoom = <?php echo $zoom; ?>;
-
-            var map = new LeafletView.map(<?php echo $map_container; ?>, {
-                preferCanvas: true,
+            var <?php echo $map_container_obj; ?>_geo_lat = <?php echo $resource['geo_lat']; ?>;
+            var <?php echo $map_container_obj; ?>_geo_long = <?php echo $resource['geo_long']; ?>;
+            var <?php echo $map_container_obj; ?>_zoom = <?php echo $zoom; ?>;
+        
+            if (typeof <?php echo $map_container_obj; ?> !== "undefined")
+                {
+                <?php echo $map_container_obj; ?>.remove();
+                }
+            var <?php echo $map_container_obj; ?> = new LeafletView.map(<?php echo $map_container; ?>, {
+            preferCanvas: true,
                 renderer: LeafletView.canvas(),
                 zoomsliderControl: <?php echo $zoomslider?>,
                 zoomControl: <?php echo $zoomcontrol?>
-            }).setView([geo_lat, geo_long], zoom);
+                }).setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom);
+            <?php echo $map_container_obj; ?>.invalidateSize(); 
 
-            <?php if ($modal)
-                { ?>
-                map.remove();
-                var map = new LeafletView.map(<?php echo $map_container; ?>, {
-                    preferCanvas: true,
-                    renderer: LeafletView.canvas(),
-                    zoomsliderControl: <?php echo $zoomslider?>,
-                    zoomControl: <?php echo $zoomcontrol?>
-                }).setView([geo_lat, geo_long], zoom);
-                map.invalidateSize(); <?php
-                }
-            ?>
 
-            jQuery.noConflict();
-            jQuery(function($) {
-                $(document).ready(function(){
-                    $('#map_id').on('shown.bs.modal', function(){
-                        map.invalidateSize();
-                    });
-                });
-            });
-
-            // Define available Leaflet basemaps groups and layers using leaflet.providers.js, L.TileLayer.PouchDBCached.js, and styledLayerControl.js based on ../include/map_functions.php.
-            <?php include __DIR__ . '/map_processing.php'; ?>
 
             <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
     
@@ -155,11 +146,9 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
                 useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
                 detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
                 attribution: default_attribute
-            }).addTo(map);
-            map.invalidateSize(true);
+            }).addTo(<?php echo $map_container_obj; ?>);
+            <?php echo $map_container_obj; ?>.invalidateSize(true);
 
-            <!--Determine basemaps and map groups for user selection-->
-            <?php include __DIR__ . '/map_basemaps.php'; ?>        
             <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
             var options = {
                 container_maxHeight: "<?php echo $layer_controlheight?>px",
@@ -168,35 +157,21 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
             };
 
             var control = LeafletView.Control.styledLayerControl(baseMaps,options);
-            map.addControl(control);
+            <?php echo $map_container_obj; ?>.addControl(control);
 
             <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
             <?php if ($map_zoomnavbar && $view_mapheight >= 400)
                 { ?>
-                LeafletView.control.navbar().addTo(map); <?php
+                LeafletView.control.navbar().addTo(<?php echo $map_container_obj; ?>); <?php
                 } ?>
 
             <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
-            new LeafletView.control.scale().addTo(map);
-
-            <!--Add download map button to the Leaflet map using bundle.min.js-->
-            <?php if ($map1_height >= 335)
-                { ?>
-                LeafletView.easyPrint({
-                    title: "<?php echo $lang['leaflet_mapdownload']; ?>",
-                    position: 'bottomleft',
-                    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
-                    exportOnly: true,
-                    filename: 'search_results_map',
-                    customWindowTitle: "<?php echo $lang['map_print_title']; ?>"
-                }).addTo(map);
-                <?php
-                } ?>
+            new LeafletView.control.scale().addTo(<?php echo $map_container_obj; ?>);
 
             <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
             <?php if ($map_kml)
                 { ?>
-                omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(map); <?php
+                omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(<?php echo $map_container_obj; ?>); <?php
                 } ?>
 
             <!--Limit geocoordinate values to six decimal places for display on marker hover-->
@@ -205,14 +180,14 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
             }
 
             <!--Add a marker for the resource-->
-            LeafletView.marker([geo_lat, geo_long], {
+            LeafletView.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
                 <?php
                 $maprestype = get_resource_types($resource['resource_type']);
                 $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
                 echo "icon: " . strtolower($MARKER_COLORS[$markercolour])  . "Icon,\n";
                 ?>
-                title: georound(geo_lat) + ", " + georound(geo_long) + " (WGS84)"
-            }).addTo(map);
+                title: georound(<?php echo $map_container_obj; ?>_geo_lat) + ", " + georound(<?php echo $map_container_obj; ?>_geo_long) + " (WGS84)"
+            }).addTo(<?php echo $map_container_obj; ?>);
 
             <!--Add the resource footprint polygon to the map and pan/zoom to the polygon-->
             <?php if (is_numeric($map_polygon_field))
@@ -220,20 +195,21 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
                 $polygon = leaflet_polygon_parsing($fields, false);
                 if (!is_null($polygon['values']) && $polygon['values'] != "" && $polygon['values'] != "[]")
                     { ?>
-                    var refPolygon = LeafletView.polygon([<?php echo $polygon['values']; ?>]).addTo(map);
-                    map.fitBounds(refPolygon.getBounds(), {
+                    var refPolygon = LeafletView.polygon([<?php echo $polygon['values']; ?>]).addTo(<?php echo $map_container_obj; ?>);
+                    <?php echo $map_container_obj; ?>.fitBounds(refPolygon.getBounds(), {
                         padding: [25, 25]
                     }); <?php
                     }
                 }
             else // Pan to the marker location.
                 { ?>
-                map.setView([geo_lat, geo_long], zoom); <?php
+                <?php echo $map_container_obj; ?>.setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom); <?php
                 }
 
             ?>
             <!--Fix for Microsoft Edge and Internet Explorer browsers-->
-            map.invalidateSize(true);
+            <?php echo $map_container_obj; ?>.invalidateSize(true);
+            });
 
         </script>
 
@@ -248,25 +224,24 @@ if(!$hide_geolocation_panel || isset($geolocation_panel_only))
         <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo $lang['location-add'];?></a> <?php
         }
 
-    if($view_panels)
-        { ?>
-        <script>
-        jQuery(document).ready(function ()
-            {
-            jQuery("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo("#Titles1");
-            removePanel = jQuery("#GeolocationData").parent().parent(".RecordBox");
-            jQuery("#GeolocationData").appendTo("#Panel1").addClass("TabPanel").hide();
-            removePanel.remove();
+if($view_panels)
+    { ?>
+    <script>
+    jQuery(document).ready(function ()
+        {
+        jQuery("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo("#Titles1");
+        removePanel = jQuery("#GeolocationData").parent().parent(".RecordBox");
+        jQuery("#GeolocationData").appendTo("#Panel1").addClass("TabPanel").hide();
+        removePanel.remove();
 
-            <!--Function to switch tab panels-->
-            jQuery('.ViewPanelTitles').children('.Title').click(function()
-                {
-                jQuery(this).parent().parent().children('.TabPanel').hide();
-                jQuery(this).parent().children('.Title').removeClass('Selected');
-                jQuery(this).addClass('Selected');
-                jQuery('#' + jQuery(this).attr('panel')).show();
-                map.invalidateSize(true);
-                });
+        <!--Function to switch tab panels-->
+        jQuery('.ViewPanelTitles').children('.Title').click(function()
+            {
+            jQuery(this).parent().parent().children('.TabPanel').hide();
+            jQuery(this).parent().children('.Title').removeClass('Selected');
+            jQuery(this).addClass('Selected');
+            jQuery('#' + jQuery(this).attr('panel')).show();
+            <?php echo $map_container_obj; ?>.invalidateSize(true);
             });
         </script> <?php
         } ?>

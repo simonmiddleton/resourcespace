@@ -2150,6 +2150,9 @@ $enable_plugin_upload = true;
     // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
     $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
 
+    // User agent string to use when server requests tiles from sources
+    $geo_tile_user_agent = "ResourceSpace";
+
     // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
 
@@ -2244,8 +2247,10 @@ $enable_plugin_upload = true;
     // Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
     $map_retina = false;
 
-    // Leaflet: default basemap.
-    $map_default = 'USGSTNM.USTopo'; # Options e.g. 'OpenStreetMap.Mapnik', 'OpenStreetMap.DE', 'OpenTopoMap', 'HikeBike.HikeBike', 'OpenStreetMap.HOT', 'MtbMap', 'OpenStreetMap.France', 'OpenStreetMap.BZH', 'OpenStreetMap.CH', and 'OpenMapSurfer.Roads'.
+    // Leaflet: default basemap to show
+    // Set to be '{CODE}.{variant} - matching the definitions from the $geo_leaflet_source code array 
+    // e.g. "OSM.Mapnik" 
+    $map_default = 'USGSTNM.USTopo';
 
     // Open resource when clicking on a search result marker, instead of resource tooltip?
     $marker_resource_preview = true;
