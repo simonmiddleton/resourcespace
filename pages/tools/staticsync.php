@@ -202,6 +202,7 @@ function ProcessFolder($folder)
     
     $collection = 0;
     $treeprocessed=false;
+    $skipfc_create = false; // Flag to prevent creation of new FC
     
     if(!file_exists($folder))
         {
@@ -346,114 +347,129 @@ function ProcessFolder($folder)
 
                 echo "Processing file: $fullpath" . PHP_EOL;
 
-                if ($collection == 0 && $staticsync_autotheme)
+                if ($collection == 0 && $staticsync_autotheme && !$skipfc_create)
                     {
-                    # Make a new collection for this folder.
+                    # Find or create a featured collection for this folder as required.
                     $e = explode("/", $shortpath);
                     $fallback_fc_categ_name = ucwords($e[0]);
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
                     echo "Collection '{$name}'" . PHP_EOL;
-
                     // The real featured collection will always be the last directory in the path
                     $proposed_fc_categories = array_diff($e, array_slice($e, -2));
-                    echo "Proposed Featured Collection Categories: " . join(" / ", $proposed_fc_categories) . PHP_EOL;
-
-                    // Build the tree first, if needed
-                    $proposed_branch_path = array();
-                    for($b = 0; $b < count($proposed_fc_categories); $b++)
+                    if(count($proposed_fc_categories) == 0)
                         {
-                        $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
-                        $fc_categ_name = ucwords($proposed_fc_categories[$b]);
-
-                        $fc_categ_ref_sql = sprintf(
-                              "SELECT DISTINCT ref AS `value`
-                                 FROM collection AS c
-                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                WHERE `type` = %s
-                                  AND parent %s
-                                  AND `name` = '%s'
-                             GROUP BY c.ref
-                               HAVING count(DISTINCT cr.resource) = 0",
-                            COLLECTION_TYPE_FEATURED,
-                            sql_is_null_or_eq_val($parent, $parent == 0),
-                            escape_check($fc_categ_name)
-                        );
-                        $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
-
-                        if($fc_categ_ref == 0)
+                        if(count($e) > 1)
                             {
-                            echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
-                            $fc_categ_ref = create_collection($userref, $fc_categ_name);
-                            echo "Created '{$fc_categ_name}' with ref #{$fc_categ_ref}" . PHP_EOL;
+                            // This is a top level folder - this is needed to ensure no duplication of existing top level FCs
+                            echo "File is in a top level folder" . PHP_EOL;
+                            $proposed_fc_categories = array($e[0]);
+                            }
+                        else
+                            {
+                            // This file is in the root folder, no FC needs to be created
+                            echo "File is not in a folder, skipping FC creation" . PHP_EOL;
+                            $skipfc_create = true;
+                            }
+                        }
+                    if(!$skipfc_create)
+                        {
+                        echo "Proposed Featured Collection Categories: " . join(" / ", $proposed_fc_categories) . PHP_EOL;
+                        // Build the tree first, if needed
+                        $proposed_branch_path = array();
+                        for($b = 0; $b < count($proposed_fc_categories); $b++)
+                            {
+                            $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
+                            $fc_categ_name = ucwords($proposed_fc_categories[$b]);
 
-                            $updated_fc_category = save_collection(
-                                $fc_categ_ref,
+                            $fc_categ_ref_sql = sprintf(
+                                "SELECT DISTINCT ref AS `value`
+                                    FROM collection AS c
+                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                    WHERE `type` = %s
+                                    AND parent %s
+                                    AND `name` = '%s'
+                                GROUP BY c.ref
+                                HAVING count(DISTINCT cr.resource) = 0",
+                                COLLECTION_TYPE_FEATURED,
+                                sql_is_null_or_eq_val($parent, $parent == 0),
+                                escape_check($fc_categ_name)
+                            );
+                            $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
+                            if($fc_categ_ref == 0)
+                                {
+                                echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
+                                $fc_categ_ref = create_collection($userref, $fc_categ_name);
+                                echo "Created '{$fc_categ_name}' with ref #{$fc_categ_ref}" . PHP_EOL;
+
+                                $updated_fc_category = save_collection(
+                                    $fc_categ_ref,
+                                    array(
+                                        "featured_collections_changes" => array(
+                                            "update_parent" => $parent,
+                                            "force_featured_collection_type" => true,
+                                            "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                        )   
+                                    ));
+                                if($updated_fc_category === false)
+                                    {
+                                    echo "Unable to update '{$fc_categ_name}' with ref #{$fc_categ_ref} to a Featured Collection Category" . PHP_EOL;
+                                    }
+                                }
+
+                            $proposed_branch_path[] = $fc_categ_ref;
+                            }
+
+                        $collection_parent = array_pop($proposed_branch_path);
+                        if(is_null($collection_parent))
+                            {
+                            // We don't have enough folders to create categories so the first one will do (legacy logic)
+                            $collection_parent = create_collection($userref, $fallback_fc_categ_name);
+                            save_collection(
+                                $collection_parent,
                                 array(
                                     "featured_collections_changes" => array(
-                                        "update_parent" => $parent,
+                                        "update_parent" => 0,
+                                        "force_featured_collection_type" => true,
+                                        "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                    )   
+                                ));
+                            }
+                        echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
+
+                        $collection = sql_value(
+                            sprintf(
+                                "SELECT DISTINCT ref AS `value`
+                                    FROM collection AS c
+                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                    WHERE `type` = %s
+                                    AND parent %s
+                                    AND `name` = '%s'
+                                GROUP BY c.ref
+                                HAVING count(DISTINCT cr.resource) > 0",
+                                COLLECTION_TYPE_FEATURED,
+                                sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
+                                escape_check(ucwords($name))
+                            ),
+                            0);
+
+                        if($collection == 0)
+                            {
+                            $collection = create_collection($userref, ucwords($name));
+                            echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
+
+                            $updated_fc_category = save_collection(
+                                $collection,
+                                array(
+                                    "featured_collections_changes" => array(
+                                        "update_parent" => $collection_parent,
                                         "force_featured_collection_type" => true,
                                         "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
                                     )   
                                 ));
                             if($updated_fc_category === false)
                                 {
-                                echo "Unable to update '{$fc_categ_name}' with ref #{$fc_categ_ref} to a Featured Collection Category" . PHP_EOL;
+                                echo "Unable to update '{$name}' with ref #{$collection} to be a Featured Collection under parent ref #{$collection_parent}" . PHP_EOL;
                                 }
-                            }
-
-                        $proposed_branch_path[] = $fc_categ_ref;
-                        }
-
-                    $collection_parent = array_pop($proposed_branch_path);
-                    if(is_null($collection_parent))
-                        {
-                        // We don't have enough folders to create categories so the first one will do (legacy logic)
-                        $collection_parent = create_collection($userref, $fallback_fc_categ_name);
-                        save_collection(
-                            $collection_parent,
-                            array(
-                                "featured_collections_changes" => array(
-                                    "update_parent" => 0,
-                                    "force_featured_collection_type" => true,
-                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
-                                )   
-                            ));
-                        }
-                    echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
-
-                    $collection = sql_value(
-                        sprintf(
-                              "SELECT DISTINCT ref AS `value`
-                                 FROM collection AS c
-                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                WHERE `type` = %s
-                                  AND parent %s
-                                  AND `name` = '%s'
-                             GROUP BY c.ref
-                               HAVING count(DISTINCT cr.resource) > 0",
-                            COLLECTION_TYPE_FEATURED,
-                            sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
-                            escape_check(ucwords($name))
-                        ),
-                        0);
-
-                    if($collection == 0)
-                        {
-                        $collection = create_collection($userref, ucwords($name));
-                        echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
-
-                        $updated_fc_category = save_collection(
-                            $collection,
-                            array(
-                                "featured_collections_changes" => array(
-                                    "update_parent" => $collection_parent,
-                                    "force_featured_collection_type" => true,
-                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
-                                )   
-                            ));
-                        if($updated_fc_category === false)
-                            {
-                            echo "Unable to update '{$name}' with ref #{$collection} to be a Featured Collection under parent ref #{$collection_parent}" . PHP_EOL;
                             }
                         }
                     }
@@ -683,7 +699,7 @@ function ProcessFolder($folder)
                         }
 
                     # Add to collection
-                    if ($staticsync_autotheme)
+                    if ($staticsync_autotheme && !$skipfc_create)
                         {
                         // Featured collection categories cannot contain resources. At this stage we need to distinguish
                         // between categories and collections by checking for children collections.

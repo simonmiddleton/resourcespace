@@ -1913,7 +1913,9 @@ $staticsync_whitelist_folders = array();
 
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
-$staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
+# Automatically create featured collections (formerly known as themes) based on the sync folder structure.
+# Note that files found in the root of the $syncdir location will not be allocated to a featured collection
+$staticsync_autotheme=true;
 
 # Uncomment and set the next line to specify a category tree field to use to store the retieved path information for each file. The tree structure will be automatically modified as necessary to match the folder strucutre within the sync folder (performance penalty).
 # $staticsync_mapped_category_tree=50;
