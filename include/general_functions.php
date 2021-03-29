@@ -4318,9 +4318,12 @@ function text($name)
  */
 function get_section_list($page)
 	{
-	return sql_array("select distinct name value from site_text where page='$page' and name<>'introtext' order by name");
-	}
+    global $usergroup;
+    $specific_usergroup = (isset($usergroup)) ? $usergroup : '';
 
+    return sql_array("select distinct name value from site_text where page='$page' and name<>'introtext' and (specific_to_group IS NULL or specific_to_group =$specific_usergroup) order by name");
+    
+	}
 /**
  * Returns a more friendly user agent string based on the passed user agent. Used in the user area to establish browsers used.
  *
