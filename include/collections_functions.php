@@ -4752,20 +4752,49 @@ function featured_collection_check_access_control(int $c_ref)
         return true;
         }
     else
-        {
-        // Get all parents
-        $allparents = sql_query("
-                SELECT  C2.ref, C2.parent
-                  FROM  (SELECT @r AS p_ref,
-                        (SELECT @r := parent FROM collection WHERE ref = p_ref) AS parent,
-                        @l := @l + 1 AS lvl
-                  FROM  (SELECT @r := '" . $c_ref . "', @l := 0) vars,
-                        collection c
-                 WHERE  @r <> 0) C1
-                  JOIN  collection C2
-                    ON  C1.p_ref = C2.ref
-              ORDER BY  C1.lvl DESC",
-                "featured_collections");
+        {        
+        // Get all parents. Query varies according to MySQL cte support
+        $mysql_version = sql_query('SELECT LEFT(VERSION(), 3) AS ver');
+        if(version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
+            {
+            $allparents = sql_query("
+                WITH RECURSIVE cte(ref,parent, level) AS
+                        (
+                        SELECT  ref,
+                                parent,
+                                1 AS level
+                          FROM  collection
+                         WHERE  ref= '" . $c_ref . "'
+                     UNION ALL
+                        SELECT  c.ref,
+                                c.parent,
+                                level+1 AS LEVEL
+                          FROM  collection c
+                    INNER JOIN  cte
+                            ON  c.ref = cte.parent
+                        )
+                SELECT ref,
+                       parent,
+                       level
+                  FROM cte
+              ORDER BY level DESC;",
+            "featured_collections");
+            }
+        else
+            {
+            $allparents = sql_query("
+                    SELECT  C2.ref, C2.parent
+                    FROM  (SELECT @r AS p_ref,
+                            (SELECT @r := parent FROM collection WHERE ref = p_ref) AS parent,
+                            @l := @l + 1 AS lvl
+                    FROM  (SELECT @r := '" . $c_ref . "', @l := 0) vars,
+                            collection c
+                    WHERE  @r <> 0) C1
+                    JOIN  collection C2
+                        ON  C1.p_ref = C2.ref
+                ORDER BY  C1.lvl DESC", 
+                    "featured_collections");
+            }
 
           foreach($allparents as $parent)
                 {
