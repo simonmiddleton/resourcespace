@@ -107,7 +107,22 @@ if ($api_function!="")
 
 </form>
 
-<?php if ($output!="") { ?>
+<?php if ($output!="") { 
+    //rebuild params for output to include encoding if needed
+    $query="function=" . $api_function;
+    foreach($fct_params as $fparam)
+        {
+        $param_name = $fparam->getName();
+        $param_val = trim(getval($param_name, ""));
+
+        if($fparam->isOptional() && $param_val == "")
+            {
+            continue;
+            }
+
+        strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
+        }
+    ?>
 <pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo htmlspecialchars($output) ?></pre>
 
 
@@ -121,10 +136,10 @@ if ($api_function!="")
 
 <span class="codecomment">// Set the private API key for the user (from the user account page) and the user we're accessing the system as.</span>
 $private_key="<?php echo get_api_key($userref) ?>";
-$user="<?php echo $username ?>";
+$user=<?php echo strpos(urlencode($username), '%') === false?'"' . $username . '"':'urlencode("' . $username . '")'; ?>;
 
 <span class="codecomment">// Formulate the query</span>
-$query="user=" . $user . "&amp;<?php echo htmlspecialchars($query) ?>";
+$query="user=" . $user . "&amp;<?php echo substr($query, -4)!=' . "'?htmlspecialchars($query) . '"':substr(htmlspecialchars($query), 0, -9); ?>;
 
 <span class="codecomment">// Sign the query using the private key</span>
 $sign=hash("sha256",$private_key . $query);
