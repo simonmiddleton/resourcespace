@@ -422,3 +422,15 @@ $offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","
 # Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
 $regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
 
+// LEAFLET MAPS - AVAILABLE COLOURS
+$MARKER_COLORS = array(
+    0 => 'Blue',
+    1 => 'Red',
+    2 => 'Green',
+    3 => 'Orange',
+    4 => 'Yellow',
+    5 => 'Black',
+    6 => 'Grey',
+    7 => 'Violet',
+    8 => 'Gold'
+    );

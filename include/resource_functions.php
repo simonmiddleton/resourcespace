@@ -3241,7 +3241,7 @@ function get_resource_types($types = "", $translate = true)
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select * from resource_type $sql order by order_by,ref","schema");
+    $r=sql_query("select *, colour from resource_type $sql order by order_by,ref","schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)

@@ -1580,24 +1580,25 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
+    $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
 
     $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
-    ?>
-    <div class="<?php echo implode(" ", $div_class); ?>">
-        <label for="<?php echo $inputname?>"><?php echo $label; ?></label>
-        <select  name="<?php echo $inputname?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
-        <?php
-        foreach ($options as $optionvalue=>$optiontext)
-            {
-            ?>
-            <option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
-            <?php
-            }
-        ?>
-        </select>
+	?>
+	<div class="<?php echo implode(" ", $div_class); ?>">
+		<label><?php echo $label; ?></label>
+		<select  name="<?php echo $inputname ?>" class="<?php echo $input_class ?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+		<?php
+		foreach ($options as $optionvalue=>$optiontext)
+			{
+			?>
+			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+			<?php
+			}
+		?>
+		</select>
         <div class="clearerleft"></div>
     </div>
     <?php

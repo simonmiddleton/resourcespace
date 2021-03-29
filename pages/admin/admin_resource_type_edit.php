@@ -14,12 +14,12 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-
 $ref                   = getvalescaped('ref', '', true);
 $name                  = getvalescaped('name', '');
 $config_options        = getvalescaped('config_options', '');
 $allowed_extensions    = getvalescaped('allowed_extensions', '');
 $tab                   = getvalescaped('tab', '');
+$colour                = getvalescaped('colour', 0, true);
 $push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
 $inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
 
@@ -38,15 +38,14 @@ if($backurl=="")
     }
 
 if (getval("save","")!="" && enforcePostRequest(false))
-	{
-	# Save resource type data
+    {
+    # Save resource type data
+    log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
+    log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
+    log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
+    log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab_name',$ref);
 
-	log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
-	log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
-	log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
-	log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab_name',$ref);
-
-        if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
+    if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
         
     sql_query("
         UPDATE resource_type
@@ -55,13 +54,14 @@ if (getval("save","")!="" && enforcePostRequest(false))
                allowed_extensions = '{$allowed_extensions}',
                tab_name = '{$tab}',
                push_metadata = '{$push_metadata}',
-               inherit_global_fields = '{$inherit_global_fields}'
+               inherit_global_fields = '{$inherit_global_fields}',
+               colour = '{$colour}'
          WHERE ref = '$ref'
      ");
-     clear_query_cache("schema");
+    clear_query_cache("schema");
 
-	redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
-	}
+    redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
+    }
 
 
 $confirm_delete = false;
@@ -125,7 +125,8 @@ $restypedata=sql_query ("
              allowed_extensions,
              tab_name,
              push_metadata,
-             inherit_global_fields
+             inherit_global_fields,
+             colour
         FROM resource_type
        WHERE ref = '{$ref}'
     ORDER BY `name`
@@ -287,6 +288,12 @@ else
 	</div>
 	<div class="clearerleft"> </div>
     </div>
+
+    <?php
+    $MARKER_COLORS[-1] = $lang["select"];
+    ksort($MARKER_COLORS);
+    render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));
+    ?>
     
         <div class="Question">
     <label><?php echo $lang["property-push_metadata"]?></label>

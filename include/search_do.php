@@ -1603,7 +1603,6 @@ function do_search(
         {
         $max_results=$fetchrows;
         }
-
   
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
     
