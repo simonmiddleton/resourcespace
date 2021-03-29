@@ -971,7 +971,28 @@ else if(1 == $resource['has_image'])
             if($image_preview_zoom)
                 {
                 // Swap the image with the 'lpr' size when hoverable image zooming is enabled in config. If 'lpr' size not available then use the 'scr' size.
+
                 // TODO: if access to full size, call openseadragon with the full size tile regions, otherwise, use static image (lpr/scr)
+                if(resource_download_allowed($ref, '', $resource['resource_type']))
+                    {
+                    $imagepath = get_resource_path($ref, true, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                    if(file_exists($imagepath))
+                        {
+                        $image_size = get_original_imagesize($ref, $imagepath);
+                        $image_width = (int) $image_size[1];
+                        $image_height = (int) $image_size[2];
+
+                        // Force $hide_real_filepath temporarily to get the download URL
+                        $orig_hrfp = $hide_real_filepath;
+                        $hide_real_filepath = true;
+                        $tile_url = get_resource_path($ref, false, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                        $hide_real_filepath = $orig_hrfp;
+                        }
+                    }
+
+
+
+
 
 
 
@@ -986,6 +1007,7 @@ else if(1 == $resource['has_image'])
 					{
 					$previewurl = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
 					}
+                // TODO: $previewurl to be dropped as this used to be for the jQuery zoom.
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1014,10 +1036,8 @@ else if(1 == $resource['has_image'])
                             debugGridColor: ['red'],
 
                             tileSources: {
-                                height: 3744,
-                                width: 5616,
-                                // height: <?php echo $image_height; ?>,
-                                // width:  <?php echo $image_width; ?>,
+                                height: <?php echo $image_height; ?>,
+                                width:  <?php echo $image_width; ?>,
                                 tileSize: <?php echo $preview_tile_size; ?>,
 
                                 // TODO: for each image determine the mininum level
@@ -1026,7 +1046,7 @@ else if(1 == $resource['has_image'])
                                 getTileUrl: function(level, x, y)
                                     {
                                     var scale_factor = Math.pow(2, this.maxLevel - level);
-                                    var tile_url = 'http://localhost/dev1/pages/download.php?ref=1&size=&ext=jpg&page=1&alternative=-1&k=&noattach=true';
+                                    var tile_url = '<?php echo $tile_url; ?>';
                                         tile_url += '&tile_region=1';
                                         tile_url += '&tile_scale=' + scale_factor;
                                         tile_url += '&tile_row=' + y;
@@ -1051,7 +1071,7 @@ else if(1 == $resource['has_image'])
                         }
                     else
                         {
-                        console.error('Unable to destroy OpenSeadragon');
+                        console.error('Something went wrong with toggleImagePreviewZoomOption');
                         }
 
                     toggleMode(element);
