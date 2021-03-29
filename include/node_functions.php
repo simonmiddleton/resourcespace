@@ -1814,13 +1814,12 @@ function get_tree_strings($resource_nodes,$allnodes = false)
     while(count($resource_nodes) > 0)
         {
         $todocount = count($resource_nodes);
-        $resource_nodes_ref_array = array_column($resource_nodes,"ref");   
         for($n=0;$n < $todocount;$n++)
             {            
             if(
-                isset($resource_nodes_ref_array[$resource_nodes[$n]["parent"]])
+                in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
                 &&
-                !isset($orderednoderefs[$resource_nodes[$n]["parent"]])
+                !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
                 )
                 {
                 // Don't add yet, add once parent has been added
