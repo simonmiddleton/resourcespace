@@ -1745,7 +1745,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
 
-  debug_function_call("display_field", func_get_args());
+  // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
+  debug("display_field()" . "n = " . $n . ", field ref=" . $field["ref"] . ", modal=" . ($modal ? "TRUE" : "FALSE"));
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -5226,7 +5227,7 @@ function render_share_password_question($blank=true)
     ?>
     <div class="Question">
     <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-    <input type="password" id="sharepassword" name="sharepassword" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
     <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 
