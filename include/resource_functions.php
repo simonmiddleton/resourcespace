@@ -8789,3 +8789,25 @@ function get_external_shares(array $filteropts)
     $external_shares = sql_query($external_access_keys_query);
     return $external_shares;
     }
+
+/**
+* Get video duration
+* 
+* @uses run_command()
+* 
+* @param  string $file_path    Path to video file
+*
+* @return float
+*/
+function get_video_duration(string $file_path)
+    {
+        $duration_tag = run_command("exiftool -mediaduration {$file_path}");
+        $duration = str_replace(" s", "", substr($duration_tag, strpos($duration_tag, ":") + 2));
+
+        if(empty($duration))
+            {
+            $duration = 0;
+            }
+
+        return floatval($duration);
+    }

@@ -1,18 +1,81 @@
-#splice_scroll {
-	width: 90%;
-	height: 140px;
-	overflow-x: scroll;
-	background-image: url('../gfx/FilmStrip.gif');
-	background-repeat: repeat-x;
+.video-splice-tool {
+	position: relative;
+	margin: auto;
+	padding: 10px;
+	width: 51%;
 }
-#splice_reel {
-    margin-top: 20px;
-	margin-left: 10px;
-	height: 75px;
-	overflow:auto;
+
+.video-splice-slider {
+	position: relative;
+	z-index: 1;
+	height: 10px;
+	margin: 0 15px;
 }
-.splice_item {
-	margin-right: 5px;
-	display: inline !important;
-	vertical-align: middle;
+.video-splice-slider > .bar {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border-radius: 5px;
+	background-color: #cbe4f6;
+}
+.video-splice-slider > .selected {
+	position: absolute;
+	z-index: 2;
+	left: 25%;
+	right: 25%;
+	top: 0;
+	bottom: 0;
+	border-radius: 5px;
+	background-color: #1988d7;
+}
+.video-splice-slider > .handle {
+	position: absolute;
+	z-index: 3;
+	width: 20px;
+	height: 20px;
+	background-color: #1988d7;
+	border-radius: 25%;
+	box-shadow: 0 0 0 0 #1988d7;
+	transition: box-shadow .3s ease-in-out;
+}
+.video-splice-slider > .handle.start {
+	left: 25%;
+	transform: translate(-10px, -5px);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 25%)
+}
+.video-splice-slider > .handle.end {
+	right: 25%;
+	transform: translate(10px, -5px);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 25%)
+}
+.video-splice-slider > .handle.hover {
+    filter: brightness(1.08);
+    -moz-filter: brightness(1.08);
+    -webkit-filter: brightness(1.08);    
+	box-shadow: 0 0 0 5px #1988d7;
+}
+.video-splice-slider > .handle.active {
+	box-shadow: 0 0 0 2px #1988d7;
+}
+
+input[type=range] {
+	position: absolute;
+	pointer-events: none;
+	-webkit-appearance: none;
+	z-index: 2;
+	height: 10px;
+	width: 100%;
+	opacity: 0;
+}
+input[type=range]::-webkit-slider-thumb {
+	pointer-events: all;
+	width: 30px;
+	height: 30px;
+	border-radius: 0;
+	border: 0 none;
+	background-color: red;
+	-webkit-appearance: none;
 }
