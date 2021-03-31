@@ -4,7 +4,9 @@
 # -------
 #
 #
-$lang["action-cut"]="Cut";
+$lang["action-trim"]="Trim";
+$lang["video-trim"]="Video Trim";
+
 $lang["error-from_time_after_to_time"]="Error: 'from' time must be before 'to' time.";
 $lang["from-time"]="From";
 $lang["to-time"]="To";
