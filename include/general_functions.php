@@ -4318,10 +4318,11 @@ function text($name)
  */
 function get_section_list($page)
 	{
+        
     global $usergroup;
-    $specific_usergroup = (isset($usergroup)) ? $usergroup : '';
+    
 
-    return sql_array("select distinct name value from site_text where page='$page' and name<>'introtext' and (specific_to_group IS NULL or specific_to_group =$specific_usergroup) order by name");
+    return sql_array("select distinct name value from site_text where page='" . escape_check($page) . "' and name<>'introtext' and (specific_to_group IS NULL or specific_to_group ='" . escape_check($usergroup) . "') order by name");
     
 	}
 /**
