@@ -476,7 +476,11 @@ function mplus_validate_association(array $ramc, bool $use_technical_id)
             $non_numeric_resources = array_diff_key($computed_md5s, $resources_to_validate);
             debug("mplus_validate_association(): Resources that that don't have a numeric MpID (to be marked invalid) = " . json_encode($non_numeric_resources));
 
-            mplus_resource_mark_validation_failed($non_numeric_resources);
+            if(!empty($non_numeric_resources))
+                {
+                mplus_resource_mark_validation_failed($non_numeric_resources);
+                $errors[] = $lang['museumplus_error_invalid_association'];
+                }
             }
 
         foreach(array_chunk($resources_to_validate, $museumplus_api_batch_chunk_size, true) as $resources_chunk)
