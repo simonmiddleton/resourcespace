@@ -5187,7 +5187,15 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         // Migrate unless marked not to due to failure (flag will be reset if group is edited)
         $migrateeditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions, true);
-        $migrateresult = migrate_filter($migrateeditfilter); 
+        if(trim($usereditfilter) !== "")
+            {
+            $migrateresult = migrate_filter($migrateeditfilter);
+            }
+        else
+            {
+            $migrateresult = 0; // filter was only for resource type, not failed but no need to migrate again
+            }
+                
         $notification_users = get_notification_users();
         if(is_numeric($migrateresult))
             {

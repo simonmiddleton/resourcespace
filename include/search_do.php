@@ -1308,7 +1308,14 @@ function do_search(
             {
             // Migrate unless marked not to due to failure
             $usereditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions);
-            $migrateresult = migrate_filter($usereditfilter);
+            if(trim($usereditfilter) !== "")
+                {
+                $migrateresult = migrate_filter($usereditfilter);
+                }
+            else
+                {
+                $migrateresult = 0; // filter was only for resource type, hasn't failed but no need to migrate again
+                }
             if(is_numeric($migrateresult))
                 {
                 debug("Migrated . " . $migrateresult);
