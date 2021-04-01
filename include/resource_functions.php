@@ -4377,7 +4377,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
 
-	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
+	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check((int)$file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
 	
