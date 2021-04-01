@@ -6,6 +6,9 @@
 #
 $lang["action-trim"]="Trim";
 $lang["video-trim"]="Video Trim";
+$lang["video-trim-warning"]="Trim Warning";
+$lang["video-trim-warning-text"]="Your start or end trim point/s proceeds the video preview length.<br><br>The preview provided will not fully represent the final outcome, please consider increasing your video preview length and recreating preview files should you wish to preview the timmed outcome.";
+$lang["video-trim_upload-type"]="Upload Type";
 
 $lang["error-from_time_after_to_time"]="Error: 'from' time must be before 'to' time.";
 $lang["from-time"]="From";

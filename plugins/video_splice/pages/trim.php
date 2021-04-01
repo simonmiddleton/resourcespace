@@ -22,28 +22,34 @@ $sort=getval("sort",$default_sort_direction);
 $curpos=getvalescaped("curpos","");
 $go=getval("go","");
 
+$start_time = getval("input_start",null);
+$end_time = getval("input_end",null);
+$upload_type = getval("upload_type",null);
+
 $urlparams= array(
-    'resource' => $ref,
-    'ref' => $ref,
-    'search' => $search,
-    'order_by' => $order_by,
-    'offset' => $offset,
-    'restypes' => $restypes,
-    'starsearch' => $starsearch,
-    'archive' => $archive,
-    'default_sort_direction' => $default_sort_direction,
-    'sort' => $sort,
-    'curpos' => $curpos,
+    "resource" => $ref,
+    "ref" => $ref,
+    "search" => $search,
+    "order_by" => $order_by,
+    "offset" => $offset,
+    "restypes" => $restypes,
+    "starsearch" => $starsearch,
+    "archive" => $archive,
+    "default_sort_direction" => $default_sort_direction,
+    "sort" => $sort,
+    "curpos" => $curpos,
     "modal" => ($modal ? "true" : ""),
 );
 
-# Fetch resource data.
+global $lang, $context, $display, $video_preview_original;
+
+// fetch resource data.
 $resource=get_resource_data($ref);
 
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 
-# Not allowed to edit this resource?
-if (!($editaccess || checkperm('A')) && $ref>0) {exit ("Permission denied.");}
+// not allowed to edit this resource?
+if (!($editaccess || checkperm("A")) && $ref>0) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
@@ -51,11 +57,100 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     http_response_code(403);
     exit($error);
     }
+
+// try to find a preview file.
+$video_preview_file = get_resource_path(
+    $ref,
+    true,
+    "pre",
+    false,
+    (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? "m3u8" : $ffmpeg_preview_extension
+);
+// get original file to find full duration
+$video_original_file = get_resource_path(
+    $ref,
+    true,
+    "",
+    false,
+    $resource["file_extension"]
+);
+
+$preview_duration = get_video_duration($video_preview_file);
+$original_duration = get_video_duration($video_original_file);
+
+$preview_cap = $original_duration;
+if(!$video_preview_original && ($preview_duration < $original_duration))
+    {
+    $preview_cap = $preview_duration;
+    }
+
+if(isset($start_time) && isset($end_time) && isset($upload_type)) 
+    {
+    global $ffmpeg_preview_extension, $videosplice_parent_field, $userref;
+
+    // process video
+    // set up the start and end timepoints which will be used
+    $ffmpeg_start_time = gmdate("H:i:s", $start_time);
+    $ffmpeg_end_time = gmdate("H:i:s", $end_time);
+    $ffmpeg_duration_time = gmdate("H:i:s", $end_time - $start_time);
+
+    // establish FFMPEG location.
+    $ffmpeg_fullpath = get_utility_path("ffmpeg");
+    $use_avconv = false;
+    if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
+ 
+    // create new resource
+    if ($upload_type == "new")
+        {
+        // create a new resource.
+        $newref=copy_resource($ref);
+        $target=get_resource_path($newref,true,"",true,$ffmpeg_preview_extension,-1,1,false,"",-1,false);
+
+        update_field($newref,$videosplice_parent_field, "Trimmed video created from resource " . $ref . ":
+            Start time from original: " . $ffmpeg_start_time . "
+            End time from original: " . $ffmpeg_end_time . "
+            Total duration: " . $ffmpeg_duration_time);
+        
+        // Set created_by, archive and extension
+        sql_query("update resource set created_by='$userref',archive=-2,file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+
+            # Unlink the target
+        if (file_exists($target)) {unlink ($target);}
+
+        if ($config_windows)
+            {
+            # Windows systems have a hard time with the long paths used for video generation.
+            $target_ext = strrchr($target, '.');
+            $source_ext = strrchr($video_original_file, '.');
+            $target_temp = get_temp_dir() . "/vs_t" . $newref . $target_ext;
+            $target_temp = str_replace("/", "\\", $target_temp);
+            $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
+            $source_temp = str_replace("/", "\\", $source_temp);
+            copy($video_original_file, $source_temp);
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
+            $output = exec($shell_exec_cmd);
+            rename($target_temp, $target);
+            unlink($source_temp);
+            }
+        else
+            {
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
+            debug("jacktest: \$shell_exec_cmd = {$shell_exec_cmd}");
+            $output = exec($shell_exec_cmd);
+            }
+
+        create_previews($newref,false,$ffmpeg_preview_extension);
+
+        # Add the resource to the user's collection.
+        global $usercollection,$baseurl;
+        add_resource_to_collection($newref,$usercollection);
+        }
+    }
 ?>
 
 <div class="BasicsBox">
 <?php
-if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
+if (getval("context",false) == "Modal"){$previous_page_modal = true;}
 else {$previous_page_modal = false;}
 if(!$modal)
     {
@@ -67,7 +162,7 @@ if(!$modal)
     }
 elseif($previous_page_modal)
     {
-    $urlparams["context"]='Modal';
+    $urlparams["context"]="Modal";
     ?>
     <p>
     <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
@@ -91,45 +186,17 @@ elseif($previous_page_modal)
         </div>
     </div>
 <?php
-if(isset($resource['field'.$view_title_field]))
+if(isset($resource["field".$view_title_field]))
     {
-    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
+    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
     }
     ?>
-<h1><?php echo $lang["video-trim"]; render_help_link('plugins/video-splice');?></h1>
+<h1><?php echo $lang["video-trim"]; render_help_link("plugins/video-splice");?></h1>
 <div class="RecordBox">
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
         <?php
-        global $video_preview_original;
-
-        # Try to find a preview file.
-        $video_preview_file = get_resource_path(
-            $ref,
-            true,
-            'pre',
-            false,
-            (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? 'm3u8' : $ffmpeg_preview_extension
-        );
-        # Get original file to find full duration
-        $video_original_file = get_resource_path(
-            $ref,
-            true,
-            '',
-            false,
-            $resource["file_extension"]
-        );
-
-        $preview_duration = get_video_duration($video_preview_file);
-        $original_duration = get_video_duration($video_original_file);
-
-        $preview_cap = $original_duration;
-        if(!$video_preview_original && ($preview_duration < $original_duration))
-            {
-            $preview_cap = $preview_duration;
-            }
-
-        if ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($video_preview_file)))
+        if ((!(isset($resource["is_transcoding"]) && $resource["is_transcoding"]!=0) && file_exists($video_preview_file)))
             {
             # Include the player if a video preview file exists for this resource.
             ?>
@@ -140,12 +207,52 @@ if(isset($resource['field'.$view_title_field]))
             </div>
             <?php    
             }    
-
-            global $context, $display;
         ?>
+        </div>
+    </div>
+    <?php
+    if($camera_autorotation)
+        {
+        // If enabled and specified in URL then override the default
+        $autorotate = getval("autorotate","");
+
+        if($autorotate == "")
+            {
+            $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+            }
+        else
+            {
+            $autorotate = true;
+            }
+        }
+    else
+        {
+        $autorotate = false;
+        }
+        
+    $collection_add = getvalescaped("collection_add", "");
+    if($embedded_data_user_select)
+      {
+      $no_exif=getval("exif_option","");
+      }
+    else
+      {
+      $no_exif=getval("no_exif","");
+      }
+
+    $form_action = generateURL($baseurl_short . "plugins/video_splice/pages/trim.php",$urlparams);
+    ?>  
+    <form method="post"
+          action="<?php echo $form_action; ?>"
+          id="trimform"
+          onsubmit="
+            return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(this, true);">
+            <?php generateFormToken("trimform"); ?>
+            <div class="Question" id="video_trim_tool">
+            <label><?php echo $lang["video-trim"]?></label>
             <div class="video-trim-tool">
-                <input type="range" id="input-start" min="0" max="<?php echo $original_duration ?>" value="0">
-                <input type="range" id="input-end" min="0" max="<?php echo $original_duration ?>" value="<?php echo $original_duration ?>">
+                <input type="range" name="input_start" id="input-start" min="0" max="<?php echo $original_duration ?>" value="0">
+                <input type="range" name="input_end" id="input-end" min="0" max="<?php echo $original_duration ?>" value="<?php echo $original_duration ?>">
 
                 <div class="video-trim-slider">
                     <p id="start-timestamp">00:00:00</p>
@@ -158,8 +265,76 @@ if(isset($resource['field'.$view_title_field]))
                     <p id="end-timestamp">00:00:00</p>
                 </div>
             </div>
+            <div class="clearerleft"> </div>
+            </div>
+            <div class="Question" id="resource_ref_div" style="border-top:none;">
+            <label><?php echo $lang["resourceid"]?></label>
+            <div class="Fixed"><?php echo urlencode($ref) ?></div>
+            <div class="clearerleft"> </div>
+            </div>
+            <div class="Question" id="question_file">
+                <label><?php echo $lang["file"]?></label>
+            <div class="Fixed">
+            <?php
+            if ($resource["has_image"]==1)
+                { ?>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
+                <?php // check for watermarked version and show it if it exists
+                if (checkperm("w"))
+                    {
+                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    if (file_exists($wmpath))
+                        { ?>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <?php 
+                        }
+                    } ?>
+                <br />
+                <?php
+                }
+            else
+                {
+                # Show the no-preview icon
+                ?>
+                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+                <br />
+                <?php
+                }
+            if ($resource["file_extension"]!="") 
+                { ?>           
+                <strong>
+                <?php 
+                echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
+                ?>
+                </strong>
+                <?php 
+                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
+                    {?> 
+                    &nbsp;&nbsp;
+                    <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo $lang["showwatermark"]?>"){jQuery(this).text("<?php echo $lang["hidewatermark"]?>");} else {jQuery(this).text("<?php echo $lang["showwatermark"]?>");}'><?php echo $lang["showwatermark"]?></a>
+                    <?php 
+                    }?>
+                <br />
+                <?php 
+                }
+            ?>
+            </div>
+            <div class="clearerleft"> </div>
         </div>
-    </div>
+        <div class="Question" id="question_uploadtype">
+            <label><?php echo $lang["video-trim_upload-type"]?></label>
+            <select name="upload_type" id="uploadtype" class="stdwidth">
+            <option value="alt"><?php echo $lang["addalternativefile"]?></option>
+            <option value="new"><?php echo $lang["createnewresource"]?></option>
+            </select>
+            <div class="clearerleft"> </div>
+        </div>
+        <div class="QuestionSubmit">
+             <input name="trim_submit" class="trimsubmit" type="submit" value="<?php echo $lang["action-trim"] ?>" onclick="stopLoop()">
+             <br />
+             <div class="clearerleft"> </div>
+        </div>
+    </form>
 </div>
 <script>
 var inputStart = document.getElementById("input-start");
@@ -167,6 +342,7 @@ var inputEnd = document.getElementById("input-end");
 var handleStart = document.querySelector(".video-trim-slider > .handle.start");
 var handleEnd = document.querySelector(".video-trim-slider > .handle.end");
 var selected = document.querySelector(".video-trim-slider > .selected");
+var thisLoop = null; // holder for current loop to be reset on slider change
 
 function setStartValue() {
     var thisInput = inputStart,
@@ -239,15 +415,23 @@ function startCalculatedPreviewPlayback(start, end){
 
     // if preview file duration smaller then original file the start or end of trim preview needs to be capped
     if (start > <?php echo $preview_cap ?> || end > <?php echo $preview_cap ?>) 
-      {
-      preview.currentTime = 0;
-      preview.pause();
-      alert("Your start or end trim point/s proceeds the video preview length.\n\nPlease consider increasing your video preview length and recreating preview files should you wish to preview the timmed outcome.\n\nThe preview provided will not fully represent the final outcome.");
-      }
+        {
+        styledalert("<?php echo $lang["video-trim-warning"] ?>", "<?php echo $lang["video-trim-warning-text"]; ?>", 500);
+
+        preview.currentTime = 0;
+        preview.pause();
+        }
     else
         {
         preview.play();
-        setInterval(function()
+
+        console.log(typeof thisInterval);
+        if(typeof thisLoop !== 'undefined')
+        {
+        clearInterval(thisLoop);
+        }
+
+        thisLoop = setInterval(function()
           {
           if(preview.currentTime > end)
               {
@@ -259,6 +443,13 @@ function startCalculatedPreviewPlayback(start, end){
               }
           });
         }
+    }
+
+function stopLoop(){
+    var preview = document.getElementById("<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>_html5_api");
+
+        preview.currentTime = 0;
+        preview.pause();
     }
 
 function generateTimestamps(){
