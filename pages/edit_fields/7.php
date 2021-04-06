@@ -225,53 +225,18 @@ if(!$is_search)
                     // console.log("-- PARENT NODE "+data.node.id+" IS CLOSED - OPEN IT");
                     thisJstree.jstree('open_node', data.node.id, function(e, data) {
                         // console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
-                        deselect_children_of_node(thisJstree, e.id);   
+                        deselect_children_of_jstree_node(thisJstree, e.id);   
                         });
                 }
                 else {
                     // Parent is already open
                     // console.log("-- PARENT NODE "+data.node.id+" ALREADY OPEN - DESELECT ITS CHILDREN");
-                    deselect_children_of_node(thisJstree, data.node.id);
+                    deselect_children_of_jstree_node(thisJstree, data.node.id);
                 }
             }
         }
         });
         
-
-function deselect_children_of_node(theJstree, nodeId) {
-
-    // Node is open by the time we get here so that its children can also be deselected if necessary
-    var children_of_this = theJstree.jstree('get_children_dom', nodeId);
-    // console.log("DESELECT CHILDREN OF "+ nodeId + " COUNT "+children_of_this.length);
-    for(var i = 0; i < children_of_this.length; i++) {
-        // Trigger deselection of each child if necessary
-        if(theJstree.jstree('is_selected', children_of_this[i].id)) {
-            // console.log("-- CHILD NODE "+children_of_this[i].id+" IS SELECTED - DESELECT IT");
-            theJstree.jstree('deselect_node', children_of_this[i].id);
-        }
-        else { 
-            // Child is not selected; but continue to process the descendents to cater for tier gaps
-            // console.log("-- CHILD NODE "+children_of_this[i].id+" NOT SELECTED");
-            if(theJstree.jstree('is_parent', children_of_this[i].id)) {
-
-                if(theJstree.jstree('is_closed', children_of_this[i].id)) {
-                    // console.log("-- -- CHILD NODE "+children_of_this[i].id+" IS A CLOSED PARENT - OPEN IT");
-                    theJstree.jstree('open_node', children_of_this[i].id, function(e, data) {
-                        // console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
-                        deselect_children_of_node(theJstree, e.id);   
-                        });
-                }
-                else {
-                    // Child is already open
-                    // console.log("-- CHILD NODE "+children_of_this[i].id+" ALREADY OPEN - DESELECT ITS CHILDREN");
-                    deselect_children_of_node(theJstree, children_of_this[i].id);
-                }
-
-            }
-        }
-    }
-
-}
 
     <?php
     }	
@@ -286,6 +251,14 @@ function deselect_children_of_node(theJstree, nodeId) {
             '<input id="<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id +
             '" type="hidden" name="<?php echo $name; ?>" class ="<?php echo $tree_id; ?>_nodes" value="' + data.node.id +
             '">');
+
+        document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
+                'beforeEnd',
+                '<div class="<?php echo $tree_id; ?>_option_status"><span blabla=3333 id="<?php echo $status_box_id;?>_option_'
+                + data.node.id + '">'
+                + data.node.text
+                + '</span><br /></div>');
+
         });
 
     // Reflect node deselections onto the status box and hidden inputs 
@@ -293,9 +266,12 @@ function deselect_children_of_node(theJstree, nodeId) {
         {
         // Remove hidden input so that it is no longer posted to the edit or search 
         jQuery('#<?php echo $hidden_input_elements_id_prefix; ?>'+data.node.id+'.<?php echo "{$tree_id}_nodes"?>').remove();
+
+        // Remove entry from statusbox 
+        jQuery('#<?php echo $status_box_id;?>_option_'+data.node.id).parent().remove();
         });
 
-    // Reflect aggregated changes on status box; trigger centralspace events; trigger autosave
+    // Reflect aggregated changes - trigger centralspace events; trigger autosave
     jquery_tree_by_id.on('changed.jstree', function (event, data)
         {
         if(!(data.action == 'select_node' || data.action == 'deselect_node'))
@@ -303,28 +279,12 @@ function deselect_children_of_node(theJstree, nodeId) {
             return;
             }
 
-        // Clear the status box containing the names of the selected nodes
-        jQuery('#<?php echo $status_box_id; ?>').empty();
-
         var selected_rs_node_ids = data.selected;
 
         for(var i = 0; i < selected_rs_node_ids.length; i++)
             {
-            // Update status box with the selected option
-            var status_option_element = document.getElementById('<?php echo $status_box_id; ?>_option_' + selected_rs_node_ids[i]);
-            if(status_option_element == null)
-                {
-                document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
-                    'beforeEnd',
-                    '<div class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
-                    + selected_rs_node_ids[i] + '">'
-                    + jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(selected_rs_node_ids[i]).text
-                    + '</span><br /></div>');
-                }
-
             // Trigger an event so we can chain actions once we've changed a category tree option
             jQuery('#CentralSpace').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
-            //console.log('Category tree: Sending node ID ' + selected_rs_node_ids[i]);
             }
 
         if(selected_rs_node_ids.length == 0)
