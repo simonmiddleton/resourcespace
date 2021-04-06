@@ -96,14 +96,14 @@ function HookMuseumplusViewRenderfield($field, $resource)
                     && $mplus_resource_data['museumplus_technical_id'] !== ''
                 )
                     {
-                    $mplus_object_url = mplus_generate_module_record_url($module_name, $mplus_resource_data['museumplus_technical_id']);
+                    $mplus_object_url = mplus_generate_module_record_url($module_name, (int) $mplus_resource_data['museumplus_technical_id']);
                     break;
                     }
                 }
             }
         else
             {
-            $mplus_object_url = mplus_generate_module_record_url($module_name, $mpid);
+            $mplus_object_url = mplus_generate_module_record_url($module_name, (int) $mpid);
             }
         ?>
         <div class="itemNarrow">
