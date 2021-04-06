@@ -18,6 +18,7 @@ function HookRse_search_notificationsCron_copy_hitcountAddplugincronjob()
             continue;    
             }
         setup_user($userdata);
+        $GLOBALS['userdata'] = $userdata;
         search_notification_process($user);
         }
 
