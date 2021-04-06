@@ -1284,6 +1284,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         else
             {
             $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+            $selection_collection = array();
+            $user_selection_collection = get_user_selection_collection($userref);
+            if (isset($user_selection_collection))
+                {
+                $selection_collection[] = $user_selection_collection;
+                }
             $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
             # include collections of requested resources
             $request_collections = array();
@@ -1299,7 +1305,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 include_once('research_functions.php');
                 $research_collections = array_column(get_research_requests(), 'collection');
                 }
-            $validcollections = array_unique(array_merge($user_collections, $public_collections, $request_collections, $research_collections));
+            $validcollections = array_unique(array_merge($user_collections, $selection_collection, $public_collections, $request_collections, $research_collections));
             }
 
         if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
