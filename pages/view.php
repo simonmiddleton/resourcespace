@@ -970,44 +970,63 @@ else if(1 == $resource['has_image'])
 			
             if($image_preview_zoom)
                 {
-                // Swap the image with the 'lpr' size when hoverable image zooming is enabled in config. If 'lpr' size not available then use the 'scr' size.
-
-                // TODO: if access to full size, call openseadragon with the full size tile regions, otherwise, use static image (lpr/scr)
-                if(resource_download_allowed($ref, '', $resource['resource_type']))
+                $imagepath = get_resource_path($ref, true, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                if($preview_tiles && file_exists($imagepath) && resource_download_allowed($ref, '', $resource['resource_type']))
                     {
-                    $imagepath = get_resource_path($ref, true, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                    $image_size = get_original_imagesize($ref, $imagepath);
+                    $image_width = (int) $image_size[1];
+                    $image_height = (int) $image_size[2];
+
+                    // Force $hide_real_filepath temporarily to get the download URL
+                    $orig_hrfp = $hide_real_filepath;
+                    $hide_real_filepath = true;
+                    $tile_url = get_resource_path($ref, false, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                    $hide_real_filepath = $orig_hrfp;
+
+                    // Generate the custom tile source object for OpenSeadragon
+                    ?>
+                    <script>
+                    var openseadragon_custom_tile_source = {
+                        height: <?php echo $image_height; ?>,
+                        width:  <?php echo $image_width; ?>,
+                        tileSize: <?php echo $preview_tile_size; ?>,
+                        getTileUrl: function(level, x, y)
+                            {
+                            var scale_factor = Math.pow(2, this.maxLevel - level);
+                            var tile_url = '<?php echo $tile_url; ?>';
+                                tile_url += '&tile_region=1';
+                                tile_url += '&tile_scale=' + scale_factor;
+                                tile_url += '&tile_row=' + y;
+                                tile_url += '&tile_col=' + x;
+
+                            console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
+                            console.debug('[OpenSeadragon] tile_url = %o', tile_url);
+                            return tile_url;
+                            }
+                    };
+                    </script>
+                    <?php
+                    }
+                else
+                    {
+                    // Use static image of a higher resolution (lpr/scr)
+                    $imagepath = get_resource_path($ref, true, 'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
                     if(file_exists($imagepath))
                         {
-                        $image_size = get_original_imagesize($ref, $imagepath);
-                        $image_width = (int) $image_size[1];
-                        $image_height = (int) $image_size[2];
-
-                        // Force $hide_real_filepath temporarily to get the download URL
-                        $orig_hrfp = $hide_real_filepath;
-                        $hide_real_filepath = true;
-                        $tile_url = get_resource_path($ref, false, '', false, $resource['preview_extension'], true, 1, $use_watermark);
-                        $hide_real_filepath = $orig_hrfp;
+                        $preview_url = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
                         }
+                    else
+                        {
+                        $preview_url = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], true, 1, $use_watermark);
+                        }
+
+                    // Generate the custom tile source object for OpenSeadragon
+                    ?>
+                    <script>
+                    var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
+                    </script>
+                    <?php
                     }
-
-
-
-
-
-
-
-
-
-				$pathtofile = get_resource_path($ref, true,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-				if (file_exists($pathtofile))
-				    {
-				    $previewurl = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-					}
-					else
-					{
-					$previewurl = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-					}
-                // TODO: $previewurl to be dropped as this used to be for the jQuery zoom.
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1017,11 +1036,10 @@ else if(1 == $resource['has_image'])
                 function toggleImagePreviewZoomOption(element)
                     {
                     var option = jQuery(element);
-                    console.debug('Called toggleImagePreviewZoomOption(element = %o)', option);
 
                     if(!option.hasClass('Enabled'))
                         {
-                        console.debug('Image zoom with OpenSeadragon - enabled');
+                        console.debug('Enabling image zoom with OpenSeadragon');
 
                         jQuery('#previewimagewrapper').prepend('<div id="openseadragon_viewer"></div>');
 
@@ -1035,33 +1053,12 @@ else if(1 == $resource['has_image'])
                             debugMode: true,
                             debugGridColor: ['red'],
 
-                            tileSources: {
-                                height: <?php echo $image_height; ?>,
-                                width:  <?php echo $image_width; ?>,
-                                tileSize: <?php echo $preview_tile_size; ?>,
-
-                                // TODO: for each image determine the mininum level
-                                minLevel: 11,
-
-                                getTileUrl: function(level, x, y)
-                                    {
-                                    var scale_factor = Math.pow(2, this.maxLevel - level);
-                                    var tile_url = '<?php echo $tile_url; ?>';
-                                        tile_url += '&tile_region=1';
-                                        tile_url += '&tile_scale=' + scale_factor;
-                                        tile_url += '&tile_row=' + y;
-                                        tile_url += '&tile_col=' + x;
-
-                                    console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
-                                    console.debug('[OpenSeadragon] tile_url = %o', tile_url);
-                                    return tile_url;
-                                    }
-                            }
+                            tileSources: openseadragon_custom_tile_source
                         });
                         }
                     else if(option.hasClass('Enabled'))
                         {
-                        console.debug('Image zoom with OpenSeadragon - diabled');
+                        console.debug('Disabling image zoom with OpenSeadragon');
                         openseadragon_viewer.destroy();
                         openseadragon_viewer = null;
                         jQuery('#openseadragon_viewer').remove();
@@ -1076,7 +1073,6 @@ else if(1 == $resource['has_image'])
 
                     toggleMode(element);
 
-                    console.debug('End of toggleImagePreviewZoomOption ... returning');
                     return false;
                     }
 
