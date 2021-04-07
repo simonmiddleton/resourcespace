@@ -134,27 +134,18 @@ else
         $size="";
         }
 
-
-
-
-
-
-    if($preview_tiles && getval('tile_region', 0, true) == 1)
+    // Provide a tile region if enabled and requested for the main resource.
+    if($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
         {
         $tile_scale = (int) getval('tile_scale', 1, true);
         $tile_row = (int) getval('tile_row', 0, true);
         $tile_col = (int) getval('tile_col', 0, true);
 
-        // TODO: make sure tiles work if user has access to the full size
-
-        // TODO: the size needs to be the one requested
-        $image_size = get_original_imagesize($ref, get_resource_path($ref, true, '', false));
+        $image_size = get_original_imagesize($ref, get_resource_path($ref, true, $size, false));
         $image_width = (int) $image_size[1];
         $image_height = (int) $image_size[2];
 
-        debug('[page=download.php]');
-        debug('[page=download.php]');
-        debug(sprintf('[page=download.php] Requesting scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
+        debug(sprintf('PAGES/DOWNLOAD.PHP: Requesting a tile region with scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
 
         $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
         foreach($tiles as $tile)
@@ -167,13 +158,8 @@ else
             }
         }
 
-
-
-
-
-
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
-    debug(sprintf('[page=download.php] Requesting path=%s', $path));
+
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
         {

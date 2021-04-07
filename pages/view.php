@@ -1009,7 +1009,7 @@ else if(1 == $resource['has_image'])
                     }
                 else
                     {
-                    // Use static image of a higher resolution (lpr/scr)
+                    // Use static image of a higher resolution (lpr/scr) preview
                     $imagepath = get_resource_path($ref, true, 'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
                     if(file_exists($imagepath))
                         {
