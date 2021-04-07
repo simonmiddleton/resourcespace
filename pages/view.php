@@ -1082,7 +1082,7 @@ else if(1 == $resource['has_image'])
                     ?>
                     jQuery(document).ready(function ()
                         {
-                        showHidePreviewTools(); // TODO: check why the previewtools mess the z-index of both the tools wrapper and openseadragon
+                        showHidePreviewTools();
                         toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
                         });
                     <?php
