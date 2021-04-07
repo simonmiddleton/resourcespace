@@ -42,8 +42,9 @@ elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true))
 
 $jobs = job_queue_get_jobs($job_type,$job_status,$job_user,'',$job_orderby,$job_sort,$job_find);
 $endedjobs = 0;
-$per_page =getvalescaped("per_page",$default_perpage, true); 
-$per_page = (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
+$per_page =getvalescaped("per_page",$default_perpage_list, true); 
+$per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage : $per_page;
+rs_setcookie('per_page', $per_page);
 $jobcount   = count($jobs);
 $totalpages = ceil($jobcount/$per_page);
 $offset     = getval("offset",0,true);
