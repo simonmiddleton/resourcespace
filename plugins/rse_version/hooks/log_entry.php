@@ -10,12 +10,7 @@ function HookRse_versionLog_entryGet_resource_log_extra_fields()
 function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry)
     {
     global $lang, $baseurl;    
-    if($column == "revert_enabled")
-        {
-        // Don't need to show this
-        return true;
-        }
-    elseif($logentry["type"]==LOG_CODE_UPLOADED && $column == "diff")
+    if($logentry["type"]==LOG_CODE_UPLOADED && $column == "diff")
         {
         // For images, display the uploaded image in the "Difference" section of the log.
         $name = $lang["difference"];
@@ -77,14 +72,16 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
             $altdl_link = generateurl($baseurl . "/pages/terms.php",$altdlparams);
             echo "<br/><a href='" . $altdl_link . "'  onClick='return CentralSpaceLoad(this,true);'>" . LINK_CARET . $lang['logdownloadearlierversion'] . "</a>";
             }
-
-        if(isset($logentry["revert_enabled"]) && $logentry["revert_enabled"] == 1)
-            {
-            // Show revert link
-            ?>
-            <br/><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a>
-            <?php
-            }
+        echo "</td></tr>";
+        return true;
+        }
+    elseif($column == "revert_enabled")
+        {
+        // Show revert link
+        ?>
+        <td><?php echo $lang["actions"]; ?></td>
+        <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
+        <?php
         return true;
         }
     return false;
