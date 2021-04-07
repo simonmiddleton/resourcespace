@@ -216,6 +216,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
             $logentry["usage"] = nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
             }
         $logentry["usagemedium"]  = htmlspecialchars($log[$n]["notes"]);
+        $tabledata["data"][] = $logentry;        
         }
     else
         {
