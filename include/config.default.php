@@ -1038,6 +1038,9 @@ $basic_simple_search=false;
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
 
+# Hide the resource type selector on the simple search and advanced search pages
+$hide_search_resource_types = false;
+
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
 
