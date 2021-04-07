@@ -3633,7 +3633,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 /**
  * Get resource log records. The standard field titles are translated using $lang. Custom field titles are i18n translated.
  *
- * @param  int    $resource    Resource ID
+ * @param  int    $resource    Resource ID - set to NULL and specify r.ref=>[id] in the $filters array to retrieve a specific log entry by log ref
  * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see sql_query()
  * @param  array  $filters     List of filters to include in the where clause. The key of the array is linked to the 
  *                             available columns in the sql statement so they must match!
@@ -3654,19 +3654,22 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         {
         $extrafields = '';
         }
-
-    $sql_filters = "";
+    
+    // Create filter SQL
+    $filterarr = array();
+    if(is_int_loose($resource))
+        {
+        $filterarr[] = "r.resource='" . $resource . "'";
+        }
     foreach($filters as $column => $filter_value)
         {
-        $sql_filters .= sprintf(" AND %s = '%s'",
-            escape_check($column),
-            escape_check($filter_value)
-        );
-        }
-    $sql_filters = ltrim($sql_filters);
+        $filterarr[] = escape_check(trim($column)) . "='" . escape_check($filter_value) . "'";
+        }  
+    $sql_filter = "WHERE " . implode(" AND ", $filterarr);
 
     $log = sql_query(
                 "SELECT r.ref,
+                        r.resource,
                         r.date,
                         u.username,
                         u.fullname,
@@ -3688,8 +3691,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN user AS ekeys_u ON ekeys.user = ekeys_u.ref
               LEFT JOIN preview_size AS ps ON r.purchase_size = ps.id
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
-                  WHERE r.resource = '{$resource}'
-                        {$sql_filters}
+                        {$sql_filter}
                GROUP BY r.ref
                ORDER BY r.ref DESC",
         false,

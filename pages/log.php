@@ -38,7 +38,7 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 $offset=getvalescaped("offset",0,true);
-$per_page=getvalescaped("per_page_list", $default_perpage_list);rs_setcookie('per_page_list', $per_page);
+$per_page=getvalescaped("per_page", $default_perpage_list);rs_setcookie('per_page', $per_page);
 // When filtering by download records only the table output will be slightly different, showing only the following columns:
 // date, user, usage option and usage reason
 $filter_dld_records_only = ($filter_by_type == LOG_CODE_DOWNLOADED);
@@ -63,7 +63,7 @@ if ($go!="")
 		$pos=-1;
 		for ($n=0;$n<count($result);$n++)
 			{
-			if ($result[$n]["ref"]==$ref) {$pos=$n;}
+			if (isset($result[$n]["ref"]) && $result[$n]["ref"]==$ref) {$pos=$n;}
 			}
 		if ($pos!=-1)
 			{
@@ -93,6 +93,7 @@ $url_params = array(
     "sort" => $sort,
     "archive" => $archive,
     "k" => $k,
+    "search_go" => $go,
 );
 
 include "../include/header.php";
@@ -163,141 +164,69 @@ else
     }
 
 # Calculate pager vars.
-$results=count($log);
-$totalpages=ceil($results/$per_page);
-$curpage=floor($offset/$per_page)+1;
-$url = generateURL(
-    "{$baseurl_short}pages/log.php",
-    array_merge($url_params, $filter_url_params)
-) . hook("nextpreviousextraurl");
-?>
-<div class="TopInpageNav"><!--<?php pager(false); ?></div>-->
-<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
-	<?php 
-	for($n=0;$n<count($list_display_array);$n++){?>
-	<?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);" href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
-	<?php } ?>
-	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);" href="<?php echo $url; ?>&per_page_list=99999"><?php echo $lang["all"]?></a><?php } ?>
-	</div> <?php pager(false); ?></div>
+$results    =   count($log);
+$totalpages =   ceil($results/$per_page);
+$curpage    =   floor($offset/$per_page)+1;
+$url        =  generateURL(
+        "{$baseurl_short}pages/log.php",
+        array_merge($url_params, $filter_url_params)
+        ) . hook("nextpreviousextraurl");
 
+$headers = array(
+    "date"=>array("name"=>$lang["date"],"sortable"=>false, "width"=>"170px"),
+    "user"=>array("name"=>$lang["user"],"sortable"=>false),
+    );
+if($filter_dld_records_only)
+    {
+    $headers["usagemedium"] = array("name"=>$lang["indicateusagemedium"],"sortable"=>false); 
+    $headers["usage"] = array("name"=>$lang["usage"],"sortable"=>false);    
+    }
+else
+    {
+    $headers["action"] = array("name"=>$lang["action"],"sortable"=>false);
+    $headers["field"] = array("name"=>$lang["field"],"sortable"=>false, "html"=>true);
+    }
 
-<div class="Listview">
-<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-<!--Title row-->	
-<tr class="ListviewTitleStyle">
-    <td width="10%"><?php echo $lang["date"]?></td>
-    <td width="10%"><?php echo $lang["user"]?></td>
-    <?php
+hook("log_extra_columns_header");
+
+$tabledata = array(
+    "class" => "LogTable",
+    "headers"=>$headers,
+    "defaulturl"=>$baseurl . "/pages/log.php",
+    "params"=>array_merge($url_params, $filter_url_params),
+    "pager"=>array("current"=>$curpage,"total"=>$totalpages, "per_page"=>$per_page, "break" =>false),
+    "data"=>array()
+    );
+
+for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
+	{
+    $logentry = array();
+    $logentry["date"] = nicedate($log[$n]["date"],true,true, true);
+    if (!isset($lang["log-".$log[$n]["type"]]))
+        {
+        $lang["log-".$log[$n]["type"]]="";
+        }
+    $logusertext = $log[$n]["access_key"] != "" ? ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) : $log[$n]["fullname"];    
+    $logentry["user"] = hook("userdisplay","",array($log[$n])) ? "" : $logusertext;
+
     if($filter_dld_records_only)
         {
-        ?>
-        <td width="20%"><?php echo $lang["indicateusagemedium"]; ?></td>
-        <td><?php echo $lang["usage"]; ?></td>
-        <?php
+        if(isset($download_usage_options[$log[$n]["usageoption"]]) && $log[$n]["usageoption"] != -1 && $log[$n]["usageoption"] >= 0)
+            {
+            $logentry["usage"] = nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
+            }
+        $logentry["usagemedium"]  = htmlspecialchars($log[$n]["notes"]);
         }
     else
         {
-        ?>
-        <td width="10%"><?php echo $lang["action"]; ?></td>
-        <td width="10%"><?php echo $lang["field"]; ?></td>
-        <td><?php echo $lang["difference"]; ?></td>
-        <?php
-        hook("log_extra_columns_header");
+        $logentry["action"]     = htmlspecialchars($lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"]);
+        $logentry["field"]      = htmlspecialchars($log[$n]["title"]);
+        $logentry["rowlink"]    = generateURL("{$baseurl_short}pages/log_entry.php", array_merge($url_params, $filter_url_params), array("ref" => $log[$n]["ref"]));
+        $tabledata["data"][] = $logentry;
         }
-        ?>
-</tr>
-<?php
-for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
-	{
-    if (!isset($lang["log-".$log[$n]["type"]])){$lang["log-".$log[$n]["type"]]="";}
-    $logusertext = $log[$n]["access_key"] != "" ? ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) : $log[$n]["fullname"];
-	?>
-	<!--List Item-->
-	<tr>
-	<td nowrap><?php echo nicedate($log[$n]["date"],true,true, true)?></td>
-	<td nowrap><?php echo hook("userdisplay","",array($log[$n])) ? "" : $logusertext ?></td>
-	
-    <?php
-    if($filter_dld_records_only)
-        {
-        ?>
-        <td><?php
-        if(isset($download_usage_options[$log[$n]["usageoption"]]) && $log[$n]["usageoption"] != -1 && $log[$n]["usageoption"] >= 0)
-            {
-            echo nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
-            }
-        ?></td>
-        <td><?php echo htmlspecialchars($log[$n]["notes"]); ?></td>
-        </tr>
-        <?php
-        continue;
-        }
-    ?>
-    <td><?php echo htmlspecialchars($lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"])?></td>
-	<td><?php echo htmlspecialchars($log[$n]["title"])?></td>
-	<td><?php
-    if($log[$n]["diff"]!=="")
-        {
-        $difftext = $log[$n]["diff"];
-        if($log[$n]["resource_type_field"] != "" && in_array($log[$n]["resource_type_field"],$FIXED_LIST_FIELD_TYPES))
-            {
-            $transdifflines = array();
-            $difflines = explode("\n",$difftext);
-            foreach($difflines as $diffline)
-                {
-                $action = substr($diffline,0,1);
-                $transdifflines[] = $action . " " . i18n_get_translated(substr($diffline,2));
-                }
-            $difftext = implode("\n",$transdifflines);
-             }
-        echo nl2br(format_string_more_link(htmlspecialchars(wordwrap($difftext,75,"\n",true))));
-        }
-    if ($log[$n]["usageoption"]!="-1" && $log[$n]["usageoption"]!="")
-        {
-        // if usageoption is set to -1 when logging, you can avoid the usage description here
-        // Check that the value in the table is valid first
-        if (isset($download_usage_options[$log[$n]["usageoption"]]))
-            {
-            if ($log[$n]["notes"]=="" || $log[$n]["notes"]=="-1")
-                { 
-                echo $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]])); 
-                }
-            else
-                {
-                echo $lang["usage"] . ": " . nl2br(htmlspecialchars($log[$n]["notes"])) . "<br />" . $lang["indicateusagemedium"] . ": " . nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
-                }
-            }
-	    }
+    }
+echo "<div id='log_container'";
+render_table($tabledata);
+echo "\n</div><!-- End of BasicsBox -->";
 
-	# For purchases, append size and price
-	if ($log[$n]["type"]=="p")
-        {
-        echo " (" . ($log[$n]["purchase_size"]==""?$lang["collection_download_original"]:$log[$n]["purchase_size"]) . ", " . $currency_symbol . number_format($log[$n]["purchase_price"],2) . ")";
-        }
-	
-	# For downloads, add size 
-	if ($log[$n]["type"]=="d")
-        {
-		if(is_numeric($log[$n]["purchase_size"])) // The user downloaded an alternative file
-			{
-			echo " (" . $lang["alternativefiles"] . " <a href='" . $baseurl . "/pages/alternative_files.php?ref=" . $ref . "&alternative=" . $log[$n]["purchase_size"] . "'>#" . $log[$n]["purchase_size"] . "<a/>)";
-			}
-		else
-			{
-			echo " (" . ($log[$n]["size"]==""?$lang["collection_download_original"]:$log[$n]["size"]) . ")";	
-			}
-        }
-
-        hook("log_diff_td_extra","",array($ref));
-	?></td>
-	<?php hook("log_extra_columns_row") ?>
-	</tr>
-	<?php
-	}
-?>
-</table>
-</div> <!-- end of BasicsBox -->
-
-<div class="BottomInpageNav"><?php pager(false); ?></div>
-<?php
 include "../include/footer.php";
