@@ -1050,8 +1050,8 @@ else if(1 == $resource['has_image'])
                             id: "openseadragon_viewer",
                             prefixUrl: "<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/images/",
 
-                            debugMode: true,
-                            debugGridColor: ['red'],
+                            // debugMode: true,
+                            // debugGridColor: ['red'],
 
                             tileSources: openseadragon_custom_tile_source
                         });
