@@ -3801,6 +3801,8 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		unset($GLOBALS['hook_return_value']);
 		$empty_global_return_value=true;
 		// we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
+        // $GLOBALS["hook_return_value"] will be unset by new calls to hook() -  when using $GLOBALS["hook_return_value"] make sure 
+        // the value is used or stored locally before calling hook() or functions using hook().
 
 		foreach ($hook_cache[$hook_cache_index] as $function)
 			{

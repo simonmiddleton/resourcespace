@@ -6,6 +6,13 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
     {
     global $lang, $watched_searches_url, $search, $restypes, $archive, $k, $system_read_only;
 
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
     if($k != '' || $system_read_only)
         {
         return false;
@@ -29,12 +36,6 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
         )
     );
 
-    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
-        {
-        // @see hook() for an explanation about the hook_return_value global
-        $options = $GLOBALS["hook_return_value"];
-        }
-
     $option = array(
         'value'     => 'watch_this_search',
         'label'     => $lang['search_notifications_watch_this_search'],
@@ -55,7 +56,8 @@ function HookRse_search_notificationsAllRender_actions_add_collection_option($to
         {
         return;
         }
-
+    
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
         // @see hook() for an explanation about the hook_return_value global
