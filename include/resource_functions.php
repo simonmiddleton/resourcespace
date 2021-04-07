@@ -8792,7 +8792,7 @@ function get_external_shares(array $filteropts)
       LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
                 $conditional_sql .
      " GROUP BY access_key, collection
-       ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
+       ORDER BY " . escape_check($share_order_by) . " " . $share_sort;
 
     $external_shares = sql_query($external_access_keys_query);
     return $external_shares;
