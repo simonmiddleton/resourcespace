@@ -45,20 +45,7 @@ $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
 
-// copied from collection_manage to support compact style collection adds (without redirecting to collection_manage)
-$addcollection=getvalescaped("addcollection","");
-if ($addcollection!="")
-	{
-	# Add someone else's collection to your My Collections
-	add_collection($userref,$addcollection);
-	set_user_collection($userref,$addcollection);
-	refresh_collection_frame();
-	
-   	# Log this
-	daily_stat("Add public collection",$userref);
-	}
-
-#Remove all from collection
+// Remove all from collection
 $emptycollection = getvalescaped("emptycollection","",true);
 if($emptycollection!='' && getvalescaped("submitted","")=='removeall' && getval("removeall","")!="" && collection_writeable($emptycollection))
     {
