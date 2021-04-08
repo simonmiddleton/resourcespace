@@ -193,13 +193,13 @@ echo $hidden_input_elements;
         {
         if(category_tree_add_parents)
             {
+            var thisJstree = jQuery(this);
             // Establish the parent of the selected node
-            var parent_node = jquery_tree_by_id.jstree(true)
-                .get_parent(jquery_tree_by_id.jstree(true).get_node(data.node.id));
-
-            // Trigger selection of the parent node
-            jquery_tree_by_id.jstree(true)
-                .select_node(jquery_tree_by_id.jstree(true).get_node(parent_node), data.selected, event);
+            var parent_node = thisJstree.jstree('get_parent', data.node.id);
+            if (parent_node) {      
+                // Trigger selection of the parent node
+                thisJstree.jstree('select_node', parent_node);
+                }
             }
         });
 
@@ -210,7 +210,7 @@ if(!$is_search)
     // When a node is deselected and remove children is enabled, then automatically deselect the children if present 
     jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
         {		
-        thisJstree = jQuery(this);
+        var thisJstree = jQuery(this);
 
         if(thisJstree.jstree('is_leaf', data.node.id)) { 
             // console.log("NODE "+data.node.id+" DESELECTED LEAF - NO CHILDREN - NO FURTHER ACTION");
@@ -289,7 +289,7 @@ if(!$is_search)
 
         if(selected_rs_node_ids.length == 0)
             {
-            //console.log('Category tree cleared');
+            // Category tree cleared
             jQuery('#CentralSpace').trigger('categoryTreeChanged', 0);
             }
 
