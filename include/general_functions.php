@@ -2774,9 +2774,11 @@ function validate_html($html)
         
     $error=htmlspecialchars(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
     $s=explode("\n",$html);
-    $error.= "<pre>" . trim(htmlspecialchars(@$s[$line-2])) . "<br />";
-    $error.= "<strong>" . trim(htmlspecialchars(@$s[$line-1])) . "</strong><br />";
-    $error.= trim(htmlspecialchars(@$s[$line])) . "<br /></pre>";       
+    $error .= "<pre>" ;
+    $error.= ($s[$line-2]) ? trim(htmlspecialchars($s[$line-2])) . "<br />": "";
+    $error.= isset($s[$line-1]) ? "<strong>" . trim(htmlspecialchars($s[$line-1])) . "</strong><br />": "";
+    $error.= isset($s[$line]) ? trim(htmlspecialchars($s[$line])) . "<br />" : "";   
+    $error .= "</pre>";    
     return $error;
     }
     else
