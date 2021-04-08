@@ -970,17 +970,34 @@ else if(1 == $resource['has_image'])
 			
             if($image_preview_zoom)
                 {
-                $imagepath = get_resource_path($ref, true, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                $tile_region_support = false;
+                $imagepath = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, $use_watermark);
                 if($preview_tiles && file_exists($imagepath) && resource_download_allowed($ref, '', $resource['resource_type']))
                     {
                     $image_size = get_original_imagesize($ref, $imagepath);
                     $image_width = (int) $image_size[1];
                     $image_height = (int) $image_size[2];
 
+                    $tiles = compute_tiles_at_scale_factor(1, $image_width, $image_height);
+                    $first_tile = (isset($tiles[0]['id']) ? $tiles[0]['id'] : '');
+                    $last_tile = (isset($tiles[count($tiles) - 1]['id']) ? $tiles[count($tiles) - 1]['id'] : '');
+                    if(
+                        $first_tile !== '' && $last_tile !== ''
+                        && file_exists(get_resource_path($ref, true, $first_tile, false))
+                        && file_exists(get_resource_path($ref, true, $last_tile, false))
+                    )
+                        {
+                        $tile_region_support = true;
+                        }
+                    }
+
+
+                if($tile_region_support)
+                    {
                     // Force $hide_real_filepath temporarily to get the download URL
                     $orig_hrfp = $hide_real_filepath;
                     $hide_real_filepath = true;
-                    $tile_url = get_resource_path($ref, false, '', false, $resource['preview_extension'], true, 1, $use_watermark);
+                    $tile_url = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, $use_watermark);
                     $hide_real_filepath = $orig_hrfp;
 
                     // Generate the custom tile source object for OpenSeadragon
@@ -990,6 +1007,7 @@ else if(1 == $resource['has_image'])
                         height: <?php echo $image_height; ?>,
                         width:  <?php echo $image_width; ?>,
                         tileSize: <?php echo $preview_tile_size; ?>,
+                        minLevel: 11,
                         getTileUrl: function(level, x, y)
                             {
                             var scale_factor = Math.pow(2, this.maxLevel - level);

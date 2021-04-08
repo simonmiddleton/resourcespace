@@ -153,6 +153,7 @@ else
             if($tile['column'] == $tile_col && $tile['row'] == $tile_row)
                 {
                 $size = $tile['id'];
+                $ext = 'jpg';
                 break;
                 }
             }
