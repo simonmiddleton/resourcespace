@@ -3233,3 +3233,8 @@ $system_read_only = false;
 $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
+
+// Specify file extensions that will not be 'flattened' by ImageMagick
+$preview_no_flatten_extensions = array("gif","png","tif","svg");
+// Specify file extensions that will have their transparency layer replaced with a checkerboard pattern. If the alpha layer has just been used for construction then tou may need to remove 'tif' from this array
+$preview_keep_alpha_extensions = array("gif","png","tif","svg");
