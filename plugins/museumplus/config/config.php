@@ -8,6 +8,7 @@ include_once dirname(__DIR__) . '/include/museumplus_search_functions.php';
 ############################################################
 define('MPLUS_LOCK', 'museumplus_import');
 define('MPLUS_LAST_IMPORT', 'last_museumplus_import');
+define('MPLUS_LAST_LOG_TRUNCATE', 'last_museumplus_log_truncate');
 define('MPLUS_FIELD_ID', '__id'); # This field holds the technical ID of a module item. @see http://docs.zetcom.com/ws/
 
 
@@ -39,6 +40,10 @@ $museumplus_clear_field_mappings_on_change = (isset($GLOBALS['museumplus_clear_f
 // Show a custom top navigation menu with a direct link to the special search (!mplus_invalid_assoc)
 // IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php and/or user group config overrides. @type is boolean
 $museumplus_top_nav = (isset($GLOBALS['museumplus_top_nav']) && is_bool($GLOBALS['museumplus_top_nav']) ? $GLOBALS['museumplus_top_nav'] : true);
+
+// Truncate the museumplus_log table at regular intervals (default 7 days)
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is int
+$museumplus_truncate_log_interval = (isset($GLOBALS['museumplus_truncate_log_interval']) && is_int($GLOBALS['museumplus_truncate_log_interval']) && $GLOBALS['museumplus_truncate_log_interval'] > 0 ? $GLOBALS['museumplus_truncate_log_interval'] : 7);
 
 
 ############################################################
