@@ -2917,3 +2917,16 @@ function is_authenticated()
     global $is_authenticated;
     return isset($is_authenticated) && $is_authenticated;
     }
+
+
+/**
+ * Determine whether the user is setup as an e-commerce user
+ *
+ * @return boolean
+ */
+function is_ecommerce_user()
+    {
+    global $userrequestmode;
+    return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
+    }
+
