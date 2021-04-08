@@ -3623,7 +3623,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
             (($userref != "") ? "'" . escape_check($userref) . "'" : "null") . ",'" . escape_check($resource) . "','" . escape_check($type) . "'," . (($field=="" || !is_numeric($field)) ? "null" : "'" . escape_check($field) . "'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'" . substr($k, 0, 50) . "'" : "null") . ",'" . escape_check($fromvalue) . "')");
+            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'" . mb_strcut($k, 0, 50) . "'" : "null") . ",'" . escape_check($fromvalue) . "')");
         $log_ref = sql_insert_id();
         $resource_log_previous_ref = $log_ref;
         return $log_ref;
