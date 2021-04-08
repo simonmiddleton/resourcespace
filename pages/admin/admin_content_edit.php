@@ -303,7 +303,6 @@ jQuery('#checkhtml').click(function(e) {
         '../tools/check_html.php', 
         {
             'text': checktext, 
-            csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
             <?php echo generateAjaxToken('admin_content_edit'); ?>,
         }, function(response, status, xhr){
 		CentralSpaceHideLoading();
