@@ -49,7 +49,7 @@ function HookMuseumplusAllInitialise()
 
 
     $core_fields = [];
-    $all_field_mappings_refs = [];
+    $GLOBALS['museumplus_all_field_mappings_refs'] = [];
     foreach($mplus_config as $cfg_name => $cfg_value)
         {
         // Base plugin config options
@@ -67,22 +67,33 @@ function HookMuseumplusAllInitialise()
 
                 $field_mappings_refs = array_column($module_cfg['field_mappings'], 'rs_field');
                 $core_fields = array_merge($core_fields, $field_mappings_refs);
-                $all_field_mappings_refs = array_merge($all_field_mappings_refs, $field_mappings_refs);
+                $GLOBALS['museumplus_all_field_mappings_refs'] = array_merge($GLOBALS['museumplus_all_field_mappings_refs'], $field_mappings_refs);
                 }
             }
         }
     $core_fields = array_values(array_unique($core_fields));
-    $all_field_mappings_refs = array_values(array_unique($all_field_mappings_refs));
+    $GLOBALS['museumplus_all_field_mappings_refs'] = array_values(array_unique($GLOBALS['museumplus_all_field_mappings_refs']));
 
     // Mark as core any plugin config option that relies on a metadata field to prevent them from being deleted if the plugin is in use.
     config_register_core_field_refs('museumplus', $core_fields);
 
-    // Modify the global permissions of the user and deny edit access to the modules' mapped fields. Users should never have to
-    // edit those manually. In addition, this avoids edit conflicts since the process will update the mapped fields of a module
-    $GLOBALS['global_permissions'] .= implode(',', array_map(function($v) { return "F{$v}"; }, $all_field_mappings_refs));
-
     return;
     }
+
+
+function HookMuseumplusAllAfter_setup_user()
+    {
+    // Modify the users' permissions and deny write access to the modules' mapped fields. Users should never have to
+    // edit those manually. In addition, this avoids edit conflicts since the process will update the mapped fields of a module
+    if(
+        isset($GLOBALS['usergroup'], $GLOBALS['museumplus_ug_bypass_F_perm'])
+        && !in_array($GLOBALS['usergroup'], $GLOBALS['museumplus_ug_bypass_F_perm']))
+        {
+        $mapped_F_perms = array_map(build_permission('F'), $GLOBALS['museumplus_all_field_mappings_refs']);
+        $GLOBALS['userpermissions'] = array_values(array_unique(array_merge($GLOBALS['userpermissions'], $mapped_F_perms)));
+        }
+    }
+
 
 /* 
 IMPORTANT: DO NOT USE the "update_field" hook! You can potentially end up in a processing loop.

@@ -277,6 +277,9 @@ function setup_user($userdata)
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
         eval($config_options);
         }
+
+    hook('after_setup_user');
+
     return true;
     }
     

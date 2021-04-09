@@ -45,6 +45,10 @@ $museumplus_top_nav = (isset($GLOBALS['museumplus_top_nav']) && is_bool($GLOBALS
 // IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is int
 $museumplus_truncate_log_interval = (isset($GLOBALS['museumplus_truncate_log_interval']) && is_int($GLOBALS['museumplus_truncate_log_interval']) && $GLOBALS['museumplus_truncate_log_interval'] > 0 ? $GLOBALS['museumplus_truncate_log_interval'] : 7);
 
+// List of user groups that can bypass denying write access to the mapped fields.
+// IMPORTANT: Do not expose this to the end user. If you need to adjust it, add it to config.php. @type is array
+$museumplus_ug_bypass_F_perm = (isset($GLOBALS['museumplus_ug_bypass_F_perm']) && is_array($GLOBALS['museumplus_ug_bypass_F_perm']) ? $GLOBALS['museumplus_ug_bypass_F_perm'] : []);
+
 
 ############################################################
 ### Script settings ########################################

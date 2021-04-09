@@ -4646,3 +4646,15 @@ function set_unique_filename(&$filename,&$filenames)
     $filenames[] = $filename; 
     return $filename;
     }
+
+/**
+* Build a specific permission closure which can be applied to a list of items.
+* 
+* @param string $perm Permission string to build (e.g f-, F, T, X, XU)
+* 
+* @return Closure
+*/
+function build_permission(string $perm)
+    {
+    return function($v) use ($perm) { return "{$perm}{$v}"; };
+    }
