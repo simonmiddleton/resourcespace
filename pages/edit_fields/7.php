@@ -89,45 +89,60 @@ if(!(isset($treeonly) && true == $treeonly))
                 return false;"
         ><?php echo LINK_CARET . $lang['showhidetree']; ?></a>
         &nbsp;
-        <a href="#"
-           onclick="
-			<?php if (!$is_search) // No need to confim, this is just for searching
-				{?>
-                if(confirm('<?php echo $lang["clearcategoriesareyousure"];?>'))
-                    {
-				<?php }?>
-                    jQuery('#<?php echo $tree_id; ?>').jstree(true).deselect_all();
-
-                    /* remove the hidden inputs */
-                    var elements = document.getElementsByName('<?php echo $name; ?>');
-                    while(elements[0])
-                        {
-                        elements[0].parentNode.removeChild(elements[0]);
-                        }
-
-                    /* update status box */
-                    var node_statusbox = document.getElementById('<?php echo $status_box_id; ?>');
-                    while(node_statusbox.lastChild)
-                        {
-                        node_statusbox.removeChild(node_statusbox.lastChild);
-                        }
-
-                    <?php
-					if(!$is_search && $edit_autosave)
-						{
-						echo "AutoSave('{$field['ref']}');";
-						}
-
-					echo $update_result_count_function_call;
-					
-				if (!$is_search) 
-					{?>
-					}<?php
-					}
-				?>
-                return false;"
-        ><?php echo LINK_CARET .  $lang['clearall']; ?></a>
+        <a href="#" onclick="clearCategoryTree_<?php echo $tree_id; ?>(); return false;">
+            <?php echo LINK_CARET .  $lang['clearall']; ?>
+        </a>
     </div>
+    <script>
+    function clearCategoryTree_<?php echo $tree_id; ?>() {
+        if(!confirm('<?php echo $lang["clearcategoriesareyousure"];?>')) {
+            return false;
+        }
+        var thisJstree = jQuery('#<?php echo $tree_id; ?>');
+
+        // Ensure that the child deselection occurs irrespective of the setting of category_tree_remove_children
+        category_tree_clear = true;
+
+        // Establish all root nodes of this tree, open them and deselect them
+        var rootNodesJstree = thisJstree.jstree(true).get_node("#").children;
+        rootNodesJstree.forEach(function(rootNode) {
+            thisJstree.jstree('open_node', rootNode, function(e, data) {
+                if(thisJstree.jstree('is_selected', e.id)) {
+                    thisJstree.jstree('deselect_node', e.id);
+                }
+                else {
+                    deselect_children_of_jstree_node(thisJstree, e.id);   
+                }
+            });
+        });
+
+        category_tree_clear = false;
+
+        // Remove the hidden inputs
+        var elements = document.getElementsByName('<?php echo $name; ?>');
+        while(elements[0])
+            {
+            elements[0].parentNode.removeChild(elements[0]);
+            }
+
+        // Clear contents of status box
+        var node_statusbox = document.getElementById('<?php echo $status_box_id; ?>');
+        while(node_statusbox.lastChild)
+            {
+            node_statusbox.removeChild(node_statusbox.lastChild);
+            }
+
+        <?php
+        if(!$is_search && $edit_autosave)
+            {
+            echo "AutoSave('{$field['ref']}');";
+            }
+
+        echo $update_result_count_function_call;
+        ?>
+
+    }
+    </script>
     <?php
     }
 
@@ -188,6 +203,8 @@ echo $hidden_input_elements;
     var category_tree_add_parents     = <?php echo ($category_tree_add_parents ? 'true' : 'false'); ?>;
     var category_tree_remove_children = <?php echo ($category_tree_remove_children ? 'true' : 'false'); ?>;
 
+    var category_tree_clear = false;
+
     // When a node is selected, and add parents is enabled, then automatically select all ancestors 
     jquery_tree_by_id.on('select_node.jstree', function (event, data)
         {
@@ -217,7 +234,7 @@ if(!$is_search)
             return; 
         }
 	
-        if(category_tree_remove_children)
+        if(category_tree_remove_children || category_tree_clear)
             {
             if(thisJstree.jstree('is_parent', data.node.id)) { 
                 // console.log("PARENT NODE "+data.node.id+" DESELECTED - PROCESS ITS CHILDREN");
@@ -254,7 +271,7 @@ if(!$is_search)
 
         document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
                 'beforeEnd',
-                '<div class="<?php echo $tree_id; ?>_option_status"><span blabla=3333 id="<?php echo $status_box_id;?>_option_'
+                '<div class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
                 + data.node.id + '">'
                 + data.node.text
                 + '</span><br /></div>');
