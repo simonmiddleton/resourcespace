@@ -3379,6 +3379,12 @@ function isValidCSRFToken($token_data, $session_id)
 
     $csrf_data = json_decode($plaintext, true);
 
+    if(is_null($csrf_data))
+        {
+        debug("CSRF: INVALID - unable to decrypt token data");
+        return false;
+        }
+
     if($csrf_data["session"] == $session_id)
         {
         return true;
