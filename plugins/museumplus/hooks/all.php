@@ -86,7 +86,7 @@ function HookMuseumplusAllAfter_setup_user()
     // Modify the users' permissions and deny write access to the modules' mapped fields. Users should never have to
     // edit those manually. In addition, this avoids edit conflicts since the process will update the mapped fields of a module
     if(
-        isset($GLOBALS['usergroup'], $GLOBALS['museumplus_ug_bypass_F_perm'])
+        isset($GLOBALS['usergroup'], $GLOBALS['museumplus_ug_bypass_F_perm'], $GLOBALS['museumplus_all_field_mappings_refs'])
         && !in_array($GLOBALS['usergroup'], $GLOBALS['museumplus_ug_bypass_F_perm']))
         {
         $mapped_F_perms = array_map(build_permission('F'), $GLOBALS['museumplus_all_field_mappings_refs']);
