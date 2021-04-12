@@ -116,7 +116,7 @@ if($html_validation !== true && $html_validation !== '')
 		<?php generateFormToken("mainform"); ?>
         <input type=hidden name=page value="<?php echo $page?>">
 		<input type=hidden name=name value="<?php echo $name?>">
-        <input type=hidden name=copyme value="">
+        <input type=hidden name=copyme id="copyme" value="">
 		<input type=hidden name=langswitch id="langswitch" value="">
 		<input type=hidden name=groupswitch id="groupswitch" value="">
 		<input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
