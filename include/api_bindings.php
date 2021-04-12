@@ -138,6 +138,11 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
         $metadata=json_decode($metadata);
         foreach ($metadata as $field=>$value)
             {
+            // check $value is not an array
+            if (is_array($value))
+                {
+                return false;
+                }
             update_field($ref,$field,$value);
             }
         }
