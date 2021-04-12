@@ -581,6 +581,7 @@ if ($collectionsearch)
         {?>
         <script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl."/pages/" . $default_home_page;?>'</script>
         <?php
+        return;
         } 
     # Check to see if this user can edit (and therefore reorder) this resource
     if (($userref==$collectiondata["user"]) || ($collectiondata["allow_changes"]==1) || (checkperm("h")))
