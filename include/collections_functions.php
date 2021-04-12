@@ -687,18 +687,19 @@ function delete_collection($collection)
         }
 
 	hook("beforedeletecollection","",array($ref));
-	sql_query("delete from collection where ref='$ref'");
-	sql_query("delete from collection_resource where collection='$ref'");
-	sql_query("delete from collection_keyword where collection='$ref'");
+	sql_query("DELETE FROM collection WHERE ref='$ref'");
+	sql_query("DELETE FROM collection_resource WHERE collection='$ref'");
+	sql_query("DELETE FROM collection_keyword WHERE collection='$ref'");
+	sql_query("DELETE FROM external_access_keys WHERE collection='$ref'");
 	
 	if($home_dash)
 		{
 		// Delete any dash tiles pointing to this collection
-		$collection_dash_tiles=sql_array("select ref value from dash_tile WHERE link like '%search.php?search=!collection" . $ref . "&%'",0);
+		$collection_dash_tiles=sql_array("SELECT ref value FROM dash_tile WHERE link LIKE '%search.php?search=!collection" . $ref . "&%'",0);
 		if(count($collection_dash_tiles)>0)
 			{
-			sql_query("delete from dash_tile WHERE ref in (" .  implode(",",$collection_dash_tiles) . ")");
-			sql_query("delete from user_dash_tile WHERE dash_tile in (" .  implode(",",$collection_dash_tiles) . ")");
+			sql_query("DELETE FROM dash_tile WHERE ref IN (" .  implode(",",$collection_dash_tiles) . ")");
+			sql_query("DELETE FROM user_dash_tile WHERE dash_tile IN (" .  implode(",",$collection_dash_tiles) . ")");
 			}
 		}
 
@@ -4595,8 +4596,7 @@ function delete_old_collections($userref=0, $days=30)
     $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='{$userref}' AND created < DATE_SUB(NOW(), INTERVAL '{$days}' DAY) AND `type` = " . COLLECTION_TYPE_STANDARD, 0);
     foreach($old_collections as $old_collection)
         {
-        sql_query("DELETE FROM collection_resource WHERE collection='" . $old_collection . "'");
-        sql_query("DELETE FROM collection WHERE ref='" . $old_collection . "'");
+        delete_collection($old_collection);
         $deletioncount++;
         }
     return $deletioncount;

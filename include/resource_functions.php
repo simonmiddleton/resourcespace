@@ -8755,7 +8755,7 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.upload=1";
         }
-    if((int)$share_collection > 0)
+    if(is_int_loose($share_collection))
         {
         $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
         }
