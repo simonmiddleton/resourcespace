@@ -866,3 +866,13 @@ function api_save_collection(int $ref, string $coldata)
     $fct_return = save_collection($ref, $coldata);
     return (is_null($fct_return) ? true : $fct_return);
     }
+
+function api_get_collection(int $ref)
+    {
+    // Only work for admin access for now - TO DO: incorporate permissions check within get_collections() internal function and remove the basic admin-only check here.
+    if(!checkperm("a"))
+        {
+        return false;
+        }
+    return get_collection($ref);
+    }
