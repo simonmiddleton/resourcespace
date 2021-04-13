@@ -729,13 +729,11 @@ function email_reset_link($email,$newuser=false)
         }
 
     $details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
-
+    sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        sleep($password_brute_force_delay);
         return false;
         }
-
     $details = $details[0];
 
     global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
