@@ -720,7 +720,7 @@ body {
         text-align: center;
     }
  }
- @media(max-width:1280px) {
+ @media(max-width:1430px) {
     .TopInpageNavLeft {
         padding: 0;
         margin: 10px 0;
@@ -881,7 +881,7 @@ body {
         margin-bottom: 12px;    
     }
 }
-@media(min-width:1301px) {
+@media(min-width:1601px) {
     .InpageNavLeftBlock {
         display:inline-block!important;
     }
