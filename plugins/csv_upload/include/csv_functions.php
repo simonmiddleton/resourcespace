@@ -635,7 +635,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 // Update the field with the new option
                                 if($processcsv)
                                     {
-                                    $new_node = set_node(null, $fieldid, $cell_value_item, null, null, false);
+                                    $new_node = set_node(null, $fieldid, $cell_value_item, null, null, true);
                                     }
                                 else 
                                     {
