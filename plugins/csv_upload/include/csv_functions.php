@@ -152,8 +152,45 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     elseif (in_array($field_type,$NODE_FIELDS))
         {
         // Get all current field options, including translations
-        $currentoptions = get_current_field_options($fieldid,$field_type);
-        $allfields[$fieldid]["current_options"] =  $currentoptions;  
+        $field_nodes = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
+        $allfields[$fieldid]["nodes"] = $field_nodes;
+        $allfields[$fieldid]["node_options"] = array_column($field_nodes, 'name', 'ref');
+
+        $currentoptions = array();
+        $node_trans_arr[$fieldid] = array();
+        foreach($field_nodes as $field_node)
+            {
+            // Create array to hold all translations for a node so that any translation can match the correct node
+            $node_trans_arr[$fieldid][$field_node["ref"]] = array();
+            $nodetranslations = explode('~', $field_node["name"]);
+
+            if(count($nodetranslations) < 2)
+                {
+                $currentoptions[]=mb_strtolower(trim($field_node['name'])); # Not a translatable field
+                $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
+                }
+            else
+                {
+                for ($n=1;$n<count($nodetranslations);$n++)
+                    {
+                    if (substr($nodetranslations[$n],2,1)!=":" && substr($nodetranslations[$n],5,1)!=":" && substr($nodetranslations[$n],0,1)!=":")
+                        {
+                        # Not a translated string, return as-is
+                        $currentoptions[]=mb_strtolower(trim($field_node['name']));
+                        $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
+                        }
+                    else
+                        {
+                        # Support both 2 character and 5 character language codes (for example en, en-US)
+                        $p=strpos($nodetranslations[$n],':');                        
+                        $currentoptions[]=mb_strtolower(trim(substr($nodetranslations[$n],$p+1)));
+                        $node_trans_arr[$fieldid][$field_node["ref"]][] = trim(substr($nodetranslations[$n],$p+1));
+                        }
+                    }
+                }
+            }
+            $allfields[$fieldid]["current_options"] =  $currentoptions;  
+
         }
     elseif ($allfields[$fieldid]['type']==FIELD_TYPE_DATE_RANGE)
         {
@@ -165,7 +202,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     }
 
-    $reload_nodes = false;    
+
+
+    
 
 	while ((($line=fgetcsv($file))!==false) && ($error_count<$max_error_count || $max_error_count==0))
 		{
@@ -512,21 +551,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             elseif (in_array($field_type,$NODE_FIELDS))
                 {
                 // Get all current field options, including translations
-                if ($reload_nodes === false)
-                    {
-                    $field_nodes   = $allfields[$fieldid]["nodes"];
-                    $node_options = $allfields[$fieldid]["node_options"];
-                    $currentoptions = $allfields[$fieldid]["current_options"];
-                    }
-                else
-                    {
-                    $reload_nodes = false;
-                    $currentoptions = array();
-                    $currentoptions = get_current_field_options($fieldid,$field_type);
-                    $allfields[$fieldid]["nodes"] = $field_nodes;
-                    $allfields[$fieldid]["node_options"] = array_column($field_nodes, 'name', 'ref');
-                    $allfields[$fieldid]["current_options"] =  $currentoptions;
-                    }
+                
+                $field_nodes   = $allfields[$fieldid]["nodes"];
+                $node_options = $allfields[$fieldid]["node_options"];
+                $currentoptions = $allfields[$fieldid]["current_options"];
                 }
 
                 $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
@@ -620,7 +648,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 
                                 $node_trans_arr[$fieldid][$new_node] = array($cell_value_item);
                                 $node_options[$new_node] = $cell_value_item;
-                                $reload_nodes = true; 
                             break;
 
                             case (FIELD_TYPE_DATE_RANGE):
@@ -926,51 +953,3 @@ function csv_upload_log($logfile,$logtext)
     fwrite($logfile, $logtext . "\n"); 
     }
 
-/**
- * Get all current field options, including translations
- *
- * @param  int    $fieldid      Id of current field.
- * @param  int    $field_tyoe   Id of field type.
- * 
- * @return array  $currentoptions  Array of field options for given field.
- */
-function get_current_field_options($fieldid, $field_type)
-    {
-    $field_nodes = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
-    $allfields[$fieldid]["nodes"] = $field_nodes;
-    $allfields[$fieldid]["node_options"] = array_column($field_nodes, 'name', 'ref');
-    $currentoptions = array();
-    $node_trans_arr[$fieldid] = array();
-    foreach($field_nodes as $field_node)
-        {
-        // Create array to hold all translations for a node so that any translation can match the correct node
-        $node_trans_arr[$fieldid][$field_node["ref"]] = array();
-        $nodetranslations = explode('~', $field_node["name"]);
-    
-        if(count($nodetranslations) < 2)
-            {
-            $currentoptions[]=mb_strtolower(trim($field_node['name'])); # Not a translatable field
-            $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
-            }
-        else
-            {
-            for ($n=1;$n<count($nodetranslations);$n++)
-                {
-                if (substr($nodetranslations[$n],2,1)!=":" && substr($nodetranslations[$n],5,1)!=":" && substr($nodetranslations[$n],0,1)!=":")
-                    {
-                    # Not a translated string, return as-is
-                    $currentoptions[]=mb_strtolower(trim($field_node['name']));
-                    $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
-                    }
-                else
-                    {
-                    # Support both 2 character and 5 character language codes (for example en, en-US)
-                    $p=strpos($nodetranslations[$n],':');                        
-                    $currentoptions[]=mb_strtolower(trim(substr($nodetranslations[$n],$p+1)));
-                    $node_trans_arr[$fieldid][$field_node["ref"]][] = trim(substr($nodetranslations[$n],$p+1));
-                    }
-                }
-            }
-        }
-    return $currentoptions;    
-    }
