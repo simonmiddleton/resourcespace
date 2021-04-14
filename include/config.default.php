@@ -2161,9 +2161,6 @@ $enable_plugin_upload = true;
     // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
 
-    // TODO - support no servers
-    // TODO support old style servers
-
     // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
     // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
     // information. If no servers are available, then your zoom ability will be limited.
@@ -2179,7 +2176,6 @@ $enable_plugin_upload = true;
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
 
-# Log developer debug information to the debug log (filestore/tmp/debug.txt)?
     // Add OpenLayers configuration options to this variable to overwrite all other options.
     $geo_override_options = "";
 
