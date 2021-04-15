@@ -1302,6 +1302,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
             }
 
+        // Attach the negated user reference special collection
+        $validcollections[] = (0 - $userref);
+            
         if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
             {
             if(!collection_readable($collection))
