@@ -759,8 +759,9 @@ function sql_insert_id()
  */
 function get_query_cache_location()
 	{
-	global $storagedir;
-	return $storagedir . "/tmp/querycache";
+	global $storagedir,$tempdir;
+    if(isset($tempdir)){return $tempdir . "/querycache";}
+    else {return $storagedir . "/tmp/querycache";}
 	}
 
 	
