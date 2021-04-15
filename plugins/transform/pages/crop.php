@@ -777,19 +777,37 @@ if(!$cropperestricted)
 
                     document.imagetools_form.lastWidthSetting.value = document.getElementById('new_width').value;
                     document.imagetools_form.lastHeightSetting.value = document.getElementById('new_height').value;
-                    console.log("cropheight " + jQuery('#new_height').val());
-                    console.log("cropwidth " + jQuery('#new_width').val());
+                    
+
+                    imgheight = jQuery('#cropimage').height();
+                    imgwidth = jQuery('#cropimage').width();
+                    console.log("cropheight " + imgheight);
+                    console.log("cropwidth " + imgwidth);
+
+
                     this.removeCropper();
+                       // console.log(Math.floor(imgrotation/180));
+                    if(imgrotation % 180 == 0)
+                        {
+                        cropaspectratio = imgwidth/imgheight;
+                        }
+                    else
+                        {
+                        cropaspectratio = imgheight/imgwidth;
+                        }
+                    console.log("new ratio " + cropaspectratio);
                     this.curCrop = jQuery('#cropimage').Jcrop(
                         {
                             onRelease: onEndCrop ,
                             onChange: onEndCrop ,
                             onSelect: onEndCrop ,
-                            aspectRatio: jQuery('#new_width').val()/jQuery('#new_height').val()
+                            aspectRatio: cropaspectratio,
+                            //addClass: 'jcrop-aligned'
                         },
                         function()
                             {
                             jcrop_api = this;
+                            jcrop_active=true;
                             }
                     );
     
@@ -806,7 +824,7 @@ if(!$cropperestricted)
                     if( this.curCrop != null ) {
                         this.curCrop = null;
                     }
-                },
+                    },
                 
                 /**
                  * Resets the cropper, either re-setting or re-applying
@@ -915,10 +933,80 @@ if(!$cropperestricted)
             }
         
         console.log("imgrotation: " + imgrotation);
-        imgheight = jQuery('#cropimage').height();
-        imgwidth = jQuery('#cropimage').width();
+
+        rotateimg = jQuery('#cropimage');
+        imgheight = rotateimg.height();
+        imgwidth = rotateimg.width();
         rotatesq = Math.max(imgheight, imgwidth);
+        padImage(rotateimg);
+
+        selheight = jQuery('#new_height').val();
+        selwidth = jQuery('#new_width').val();
+
+        rotateimg = jQuery('#cropimage');
+        rotatediv = jQuery('#cropimgdiv');              
+        // console.log("imgheight: " + imgheight);
+        // console.log("imgwidth: " + imgwidth);
+        // console.log("selheight: " + selheight);
+        // console.log("selwidth: " + selwidth);
         
+
+
+        if(typeof jcrop_active != 'undefined' && jcrop_active)
+            {
+            // Disable cropper and reatatche with transformed co-ordinates
+            var curCoords = jcrop_api.tellSelect();
+            jcrop_api.destroy();
+            }
+        
+        rotatediv.css({"height":rotatesq,"width": rotatesq});
+        jQuery('.jcrop-aligned').css({"height":rotatesq,"width": rotatesq});
+        //rotateimg.css("transform","rotate(" + imgrotation + "deg)");
+        rotateimg.rotate(imgrotation);
+        jQuery('#imagetool-toolbar').css({"height":rotatesq}); 
+
+        // jQuery('#cropimage').css("transform","rotate(" + imgrotation + "deg)");
+        // jQuery('#cropimgdiv').css({"height":rotatesq,"width": rotatesq});
+        // jQuery('#imagetool-toolbar').css({"height":rotatesq});        
+        // jQuery('#cropimage').css("padding",0);
+        // topad.forEach(function(paditem)
+        //     {
+        //     jQuery('#cropimage').css("padding-" + paditem,padding);
+        //     });
+        
+        jQuery('#new_width').val(selheight);
+        jQuery('#new_height').val(selheight);
+        }
+
+    function toggleCropper()
+        {
+        if(typeof jcrop_active != 'undefined' && jcrop_active)
+            {
+            //jcrop_api.destroy();
+            //jcrop_api.disable();
+
+            //CropManager.removeCropper();
+            jcrop_active=false;
+            }
+        else
+            {
+            CropManager.attachCropper();
+            //jcrop_api.enable();
+            CropManager.curCrop.setOptions({rotate: imgrotation});
+            //jcrop_api.setOptions({
+            //     rotate: imgrotation
+            // });
+            
+            
+            //rotateimg = jQuery('.jcrop-holder img');
+            //padImage(rotateimg);
+            }
+        }
+
+    function padImage(image)
+        {
+        imgheight = image.height();
+        imgwidth = image.width();
         if(imgheight > imgwidth)
             {
             padding = (imgheight - imgwidth) / 2;
@@ -944,28 +1032,12 @@ if(!$cropperestricted)
             default:
                 topad=['left','top'];
             }
-
-        selheight = jQuery('#new_height').val();
-        selwidth = jQuery('#new_width').val();
-
-        console.log("imgheight: " + imgheight);
-        console.log("imgwidth: " + imgwidth);
-        console.log("selheight: " + selheight);
-        console.log("selwidth: " + selwidth);
-        
-        jQuery('#cropimage').css("transform","rotate(" + imgrotation + "deg)");
-        jQuery('#cropimgdiv').css({"height":rotatesq,"width": rotatesq});
-        jQuery('#imagetool-toolbar').css({"height":rotatesq});        
-        jQuery('#cropimage').css("padding",0);
+        image.css("padding",0);
         topad.forEach(function(paditem)
             {
-            jQuery('#cropimage').css("padding-" + paditem,padding);
+            image.css("padding-" + paditem,padding);
             });
-        
-        jQuery('#new_width').val(selheight);
-        jQuery('#new_height').val(selheight);
         }
-
 
     </script>
     <?php
@@ -1013,7 +1085,7 @@ if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted)
         <td style="margin-left:3px;"><a href='#' onclick="jQuery('.imagetools_actions').hide();jQuery('#imagetools_download_actions').show();return false;"><span class="fa fa-file-download"></span></a></td>
         </tr>
         <tr style="background: #fff;color:#000;">
-        <td><a href='#' onclick="CropManager.attachCropper();return false;"><span class="fa fa-crop"></span></a></td>
+        <td><a href='#' onclick="toggleCropper();return false;"><span class="fa fa-crop"></span></a></td>
         </tr>
         <tr style="background: #fff;color:#000;">
         <td><span class="fa fa-image"></span></td>
