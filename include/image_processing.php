@@ -1664,7 +1664,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if(in_array($extension,$preview_keep_alpha_extensions))
                 {
                 // Add checkerboard code
-                $addcheckbdpre = "-size " . $sw . "x" . $sh . " tile:pattern:checkerboard ";
+                $cb_scale = 100;
+                $cb_width = $sw;
+                $cb_height = $sh;
+                if ($sw > 1200 || $sh > 1200)
+                    {
+                    // Scale the checkerboard for larger images to make it more visible
+                    $cb_width = $sw / 6;
+                    $cb_height = $sh / 6;
+                    $cb_scale = 600;
+                    }
+                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height . " tile:pattern:checkerboard -scale " . $cb_scale . "% ";
                 if($extension=="svg")
                     {
                     $addcheckbdpre = "-transparent white " .  $addcheckbdpre;
