@@ -10,7 +10,7 @@ $lang['museumplus_api_pass'] = $lang['password'] = "Password";
 
 $lang['museumplus_RS_settings_header'] = 'ResourceSpace settings';
 $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus identifier (MpID)';
-$lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules\' name for which the MpID is valid';
+$lang['museumplus_module_name_field'] = 'Metadata field used to hold the modules\' name for which the MpID is valid. IF not set, the plugin will fallback to the "Object" module configuration.';
 $lang['museumplus_secondary_links_field'] = 'Metadata field used to hold the secondary links to other modules. ResourceSpace will generate a MuseumPlus URL for each of the links. Links will have a special syntax format: module_name:ID (e.g. "Object:1234")';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
 

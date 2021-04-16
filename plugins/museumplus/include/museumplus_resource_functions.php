@@ -199,21 +199,65 @@ function mplus_resource_get_association_data(array $filters)
     {
     if(
         !isset($GLOBALS['museumplus_module_name_field'], $GLOBALS['museumplus_modules_saved_config'])
-        || !(is_int_loose($GLOBALS['museumplus_module_name_field']) && $GLOBALS['museumplus_module_name_field'] > 0)
         || !(is_string($GLOBALS['museumplus_modules_saved_config']) && $GLOBALS['museumplus_modules_saved_config'] !== '')
     )
         {
         return [];
         }
 
-    $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
-    $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
+    // Additional filters (as required by caller code)
+    $additional_filters = [];
+    foreach(mplus_validate_resource_association_filters($filters) as $filter_name => $filter_args)
+        {
+        switch($filter_name)
+            {
+            case 'byref':
+                $refs = array_filter($filter_args, 'is_int_loose');
+                $additional_filters[] = 'AND r.ref IN (' . implode(', ', $refs) . ')';
+                break;
+            }
+        }
+
+
+    // When plugin is not configured to store the module name in a metadata field, then we fallback to the "Object" module
+    // because the plugin used to work only for that module so it's assumed a safe choice. If the Object module config
+    // is not found then there's nothing to process.
+    $field_to_hold_module_name_set = (is_int_loose($GLOBALS['museumplus_module_name_field']) && $GLOBALS['museumplus_module_name_field'] > 0);
+    if(!$field_to_hold_module_name_set)
+        {
+        $object_mcfg = mplus_get_cfg_by_module_name('Object');
+        if(empty($object_mcfg))
+            {
+            return [];
+            }
+
+        $applicable_resource_types = array_filter($object_mcfg['applicable_resource_types'], 'is_int_loose');
+        if(empty($applicable_resource_types))
+            {
+            return [];
+            }
+
+        $sqlq = sprintf('
+               SELECT r.ref AS `value`
+                 FROM resource AS r
+                WHERE r.archive = 0
+                  AND r.resource_type IN (\'%s\')
+                  %s # Additional filters
+            ORDER BY r.ref DESC
+            ',
+            implode('\', \'', $applicable_resource_types),
+            implode(PHP_EOL, $additional_filters)
+        );
+
+        return sql_array($sqlq);
+        }
 
 
     // Get filters required at a "per module configuration" level.
     // IMPORTANT: do not continue if the plugin isn't properly configured (ie. this information is missing or corrupt)
     $rs_uid_fields = [];
     $per_module_cfg_filters = [];
+    $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
     foreach($modules_config as $mcfg)
         {
         $module_name = $mcfg['module_name'];
@@ -238,21 +282,7 @@ function mplus_resource_get_association_data(array $filters)
     if(empty($rs_uid_fields) || empty($per_module_cfg_filters)) { return []; }
 
 
-    // Additional filters (as required by caller code)
-    $additional_filters = [];
-    foreach(mplus_validate_resource_association_filters($filters) as $filter_name => $filter_args)
-        {
-        switch($filter_name)
-            {
-            case 'byref':
-                $refs = array_filter($filter_args, 'is_int_loose');
-                $additional_filters[] = 'AND r.ref IN (' . implode(', ', $refs) . ')';
-                break;
-            }
-        }
-
-
-    // Build and run SQL
+    $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
     $sqlq = sprintf('
            SELECT r.ref AS `value`
              FROM resource AS r
