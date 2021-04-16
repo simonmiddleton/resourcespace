@@ -716,7 +716,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 
     if(!hook('previewpskipthumb', '', array($file)))
         {
-        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 -ss ' . $snapshottime . ' ' . escapeshellarg($target);
+        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -ss ' . $snapshottime . ' -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 ' . escapeshellarg($target);
         $output = run_command($cmd);
 
         debug("FFMPEG-VIDEO: Get snapshot: {$cmd}");
