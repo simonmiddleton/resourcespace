@@ -1375,7 +1375,7 @@ function save_collection($ref, $coldata=array())
     # Update limit count for saved search
 	if (isset($coldata["result_limit"]) && (int)$coldata["result_limit"] > 0)
         {
-        sql_query("update collection_savedsearch set result_limit='" . $result_limit . "' where collection='$ref'");
+        sql_query("update collection_savedsearch set result_limit='" . $coldata["result_limit"] . "' where collection='$ref'");
         }
 
     refresh_collection_frame();
