@@ -4365,7 +4365,7 @@ function collection_download_process_collection_download_name(&$filename, $colle
  */
 function collection_download_process_archive_command($collection_download_tar, &$zip, $filename, $usertempdir, $archiver, $settings_id, &$zipfile)
     {
-    global $lang, $use_zip_extension, $collection_download_settings, $archiver_listfile_argument, $cmdfile, $config_windows;
+    global $lang, $use_zip_extension, $collection_download_settings, $archiver_listfile_argument, $cmdfile, $config_windows,$zipcommand;
 
     $archiver_fullpath = get_utility_path("archiver");
 
