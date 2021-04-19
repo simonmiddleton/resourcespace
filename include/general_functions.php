@@ -1992,7 +1992,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
         $result.="/$uniqid";
         if(!is_dir($result))
             {
-            $GLOBALS["use_error_exception"]; 
+            $GLOBALS["use_error_exception"] = true; 
             // If it does not exist, create it.
             try {
                 mkdir($result, 0777,true);
