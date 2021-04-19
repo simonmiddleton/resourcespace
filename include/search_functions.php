@@ -728,18 +728,13 @@ function compile_search_actions($top_actions)
     // If all resources are editable, display an edit all link
     if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
-        $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
-
-        if (is_array($editable_resources) && $resources_count == count($editable_resources))
-            {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
-            $options[$o]['value']='editsearchresults';
-            $options[$o]['label']=$lang['edit_all_resources'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_EDIT;
-            $options[$o]['order_by']  = 130;
-            $o++;
-            }
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
+        $options[$o]['value']='editsearchresults';
+        $options[$o]['label']=$lang['edit_all_resources'];
+        $options[$o]['data_attr']=$data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_EDIT;
+        $options[$o]['order_by']  = 130;
+        $o++;
         }
         
     if($top_actions && ($k == '' || $internal_share_access))

@@ -1354,7 +1354,10 @@ function save_collection($ref, $coldata=array())
     # Relate all resources?
     if (isset($coldata["relateall"]) && $coldata["relateall"] != "")
         {
-        relate_all_collection($ref);
+        if(allow_multi_edit($ref))
+            {
+            relate_all_collection($ref);
+            }
         }
 
     # Remove all resources?
@@ -2134,14 +2137,14 @@ function allow_multi_edit($collection,$collectionid = 0)
 			{
 			// Need the collection resources so need to run the search
 			$collectionid = $collection;
-			$collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,false);
+			$collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,false);
 			}
         if(is_array($collection))
             {
             $resultcount = count($collection);
             }
         $editcount = 0;
-        $editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,true);
+        $editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,true);
         if(is_array($editresults))
             {
             $editcount = count($editresults);
@@ -2930,7 +2933,7 @@ function collection_min_access($collection)
         }
     else
         {
-        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
+        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '','',false,false);
         if (!is_array($result))
             {
             $result = array();
@@ -3310,14 +3313,20 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	{
 		$order_by = $default_collection_sort;
 		}
-    
+
+    // Check minimum access if we have all the data (i.e. not padded for search display), if not then render anyway and access will be checked on target page
+    $lastresource = end($resource_data);
     if($pagename == 'collection_manage') 
         {
         $min_access = collection_min_access($collection_data['ref']);
         }
+    elseif(isset($lastresource["ref"]))
+        {
+        $min_access = collection_min_access($resource_data);
+        }
     else
         {
-        $min_access = collection_min_access(empty($resource_data) ? $result : $resource_data);
+        $min_access = 0;
         }
 
     // If resourceconnect plugin activated, need to consider if resource connect resources exist in the collection - if yes display view all resources link	
@@ -3507,8 +3516,18 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by'] = 110;
         $o++;
         }
-    // work this out in one place to prevent multiple calls as function is expensive
-    $allow_multi_edit=allow_multi_edit(empty($resource_data) ? $collection_data['ref'] : $resource_data, $collection_data['ref']);
+    
+    if(isset($lastresource["ref"]))
+        {
+        // Work this out based on resource data
+        $allow_multi_edit=allow_multi_edit($resource_data, $collection_data['ref']);
+        }
+    else
+        {
+        // Padded result set. It is too expensive to work this out every time for large result sets,
+        // Show edit actions for logged in users and access will be checked once action has been selected.
+        $allow_multi_edit = $k == "";
+        }
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
@@ -3606,17 +3625,14 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
-		# Ability to request a whole collection (only if user has restricted access to any of these resources)
-        if($min_access != 0)
-            {                
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
-            $options[$o]['value']='request_all';
-            $options[$o]['label']=$lang['requestall'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-            $options[$o]['order_by']  = 170;
-            $o++;
-            }
+		# Ability to request a whole collection 
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
+        $options[$o]['value']='request_all';
+        $options[$o]['label']=$lang['requestall'];
+        $options[$o]['data_attr']=$data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
+        $options[$o]['order_by']  = 170;
+        $o++;
         }
 
 	if(!$leaflet_maps_enable && ($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
