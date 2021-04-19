@@ -3,8 +3,9 @@
 function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$private=0)
 	{
 	# For the resources matching $search, synchronise with Flickr.
-	
-	global $flickr,$flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up, $flickr_nice_progress,$flickr_default_size,$flickr_alt_image_sizes;
+
+	global $flickr,$flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up,
+    $flickr_nice_progress,$flickr_default_size,$flickr_alt_image_sizes, $FIXED_LIST_FIELD_TYPES;
 			
 	$results=do_search($search);
 	
@@ -23,7 +24,22 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 		# Fetch some resource details.
 		$title=i18n_get_translated($result["field" . $view_title_field]);
 		$description=sql_value("select value from resource_data where resource_type_field=$flickr_caption_field and resource='" . $result["ref"] . "'","");
-		$keywords=sql_value("select value from resource_data where resource_type_field=$flickr_keywords_field and resource='" . $result["ref"] . "'","");
+		
+		$field_type=sql_value("select type value from resource_type_field where ref=$flickr_keywords_field","", "schema");
+		if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
+		    {
+		    $keyword_node_values = get_resource_nodes($result["ref"], $flickr_keywords_field, true);
+		    $keyword_node_values = array_column($keyword_node_values,'name');
+		    # flickr requires a space separated string of tag words - remove any duplciates.
+		    $keywords = implode(" ", $keyword_node_values);
+		    $keywords = explode(" ", $keywords);
+		    $keywords = implode(" ", array_unique($keywords));
+		    }
+		else
+		    {
+		    $keywords = sql_value("select value from resource_data where resource_type_field=$flickr_keywords_field and resource='" . $result["ref"] . "'","");
+		    }
+
 		$photoid=sql_value("select flickr_photo_id value from resource where ref='" . $result["ref"] . "'","");
 		if($flickr_nice_progress)
             {
