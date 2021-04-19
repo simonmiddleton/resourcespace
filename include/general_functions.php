@@ -1992,6 +1992,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
         $result.="/$uniqid";
         if(!is_dir($result))
             {
+            $GLOBALS["use_error_exception"] 
             // If it does not exist, create it.
             try {
                 mkdir($result, 0777,true);
@@ -1999,6 +2000,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
             catch (Exception $e) {
                 debug("get_temp_dir: Attempt to create folder '$result' failed. Reason: {$e->getMessage()}");  
             }
+            unset($GLOBALS["use_error_exception"]);    
         }
     }
     
