@@ -4132,72 +4132,85 @@ function get_debug_log_dir()
  * @return boolean
  */
 function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE_TRANSFORMED)
-	{
+    {
     # Update the resource log if resource reference passed.
-	if(!is_null($resource_log_resource_ref))
+    if(!is_null($resource_log_resource_ref))
         {
         resource_log($resource_log_resource_ref,$resource_log_code,'','','',$text);
         }
 
-	# Output some text to a debug file.
-	# For developers only
-	global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
-	if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
-	
-	# Cannot use the general.php: get_temp_dir() method here since general may not have been included.
-	if (isset($debug_log_location))
-		{
-		$debugdir = dirname($debug_log_location);
-		if (!is_dir($debugdir)){mkdir($debugdir, 0755, true);}
-		}
-	else 
-		{
-		$debug_log_location=get_debug_log_dir() . "/debug.txt";
-		}
-	if(!file_exists($debug_log_location))
-		{
-		// Set the permissions if we can to prevent browser access (will not work on Windows)
-		$f=fopen($debug_log_location,"a");
-		chmod($debug_log_location,0333);
-		}
-    else
+    # Output some text to a debug file.
+    # For developers only
+    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
+    if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
+
+    # Cannot use the general.php: get_temp_dir() method here since general may not have been included.
+    $GLOBALS["use_error_exception"] = true;
+    try
         {
-		$f=fopen($debug_log_location,"a");
-		}
-	
-	$extendedtext = "";	
-	if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
-		{
-		$backtrace = debug_backtrace(0);
-		$btc = count($backtrace);
-		$callingfunctions = array();
-		$page = "";
-		for($n=$btc;$n>0;$n--)
-			{
-			if($page == "" && isset($backtrace[$n]["file"]))
-				{
-				$page = $backtrace[$n]["file"];
-				}
-				
-			if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
-				{
-				if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
-					{
-					$callingfunctions[] = $backtrace[$n]["args"][0];
-					}
-				else
-					{
-					$callingfunctions[] = $backtrace[$n]["function"];
-					}
-				}
-			}
-		$extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
-		}
-		
+        if (isset($debug_log_location))
+            {
+            $debugdir = dirname($debug_log_location);
+            if (!is_dir($debugdir))
+                {
+                mkdir($debugdir, 0755, true);
+                }
+            }
+        else 
+            {
+            $debug_log_location=get_debug_log_dir() . "/debug.txt";
+            }
+
+        if(!file_exists($debug_log_location))
+            {
+            // Set the permissions if we can to prevent browser access (will not work on Windows)
+            $f=fopen($debug_log_location,"a");
+            chmod($debug_log_location,0333);
+            }
+        else
+            {
+            $f=fopen($debug_log_location,"a");
+            }
+        }
+    catch(Exception $e)
+        {
+        return false;
+        }
+    unset($GLOBALS["use_error_exception"]);
+
+    $extendedtext = "";	
+    if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
+        {
+        $backtrace = debug_backtrace(0);
+        $btc = count($backtrace);
+        $callingfunctions = array();
+        $page = "";
+        for($n=$btc;$n>0;$n--)
+            {
+            if($page == "" && isset($backtrace[$n]["file"]))
+                {
+                $page = $backtrace[$n]["file"];
+                }
+                
+            if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
+                {
+                if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
+                    {
+                    $callingfunctions[] = $backtrace[$n]["args"][0];
+                    }
+                else
+                    {
+                    $callingfunctions[] = $backtrace[$n]["function"];
+                    }
+                }
+            }
+        $extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
+        }
+
     fwrite($f,date("Y-m-d H:i:s") . " " . $extendedtext . $text . "\n");
     fclose ($f);
-	return true;
-	}
+    return true;
+    }
     
 /**
  * Recursively removes a directory.
