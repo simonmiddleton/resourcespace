@@ -7388,7 +7388,7 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
                 $returnline["path"]=$path;
                 $returnline["url"] = get_resource_path($ref, false, $sizes[$n]["id"], false, "jpg");
                 $returnline["id"]=$sizes[$n]["id"];
-                if ($file_exists)
+                if ($file_exists && filesize_unlimited($path) > 0)
                     {
                     $filesize = filesize_unlimited($path);
                     list($sw,$sh) = getimagesize($path);  
