@@ -91,6 +91,10 @@ if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_ov
         color: #fff;
         }    
 
+        #CollectionMenu , #CollectionMenu a, #CollectionMinDiv, #CollectionMinDiv a
+        {
+        color: <?php echo $collection_bar_foreground_override; ?>;
+        }    
 
     .ui-layout-resizer
         {
