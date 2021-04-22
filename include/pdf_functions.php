@@ -146,7 +146,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         $pdf_margins = $pdf_properties['margins'];
         }
 
-    $html2pdf = new HTML2PDF($pdf_orientation, $pdf_format, $pdf_language, $pdf_unicode, $pdf_encoding, $pdf_margins);
+    $html2pdf = new Spipu\Html2Pdf\Html2Pdf($pdf_orientation, $pdf_format, $pdf_language, $pdf_unicode, $pdf_encoding, $pdf_margins);
 
     // Set PDF title
     if(array_key_exists('title', $pdf_properties) && '' != trim($pdf_properties['title']))
