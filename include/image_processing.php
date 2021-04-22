@@ -1667,7 +1667,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $cb_scale = 100;
                 $cb_width = $sw;
                 $cb_height = $sh;
-                if ($sw > 1200 || $sh > 1200)
+                if (($sw > 1200 || $sh > 1200) && $sw > 0 && $sh > 0)
                     {
                     // Scale the checkerboard for larger images to make it more visible
                     $cb_width = $sw / 6;
