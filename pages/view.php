@@ -1662,7 +1662,7 @@ hook ("resourceactions") ?>
             }
 
         // Show the upload preview link
-        if (!$disable_upload_preview && !resource_file_readonly($ref))
+        if (!$disable_upload_preview && !resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
             { ?>
             <li>
                 <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
