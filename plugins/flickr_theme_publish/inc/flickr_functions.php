@@ -30,9 +30,8 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 		    {
 		    $keyword_node_values = get_resource_nodes($result["ref"], $flickr_keywords_field, true);
 		    $keyword_node_values = array_column($keyword_node_values,'name');
-		    # flickr requires a space separated string of tag words - remove any duplciates.
-		    $keywords = implode(" ", $keyword_node_values);
-		    $keywords = explode(" ", $keywords);
+		    # flickr requires a space separated string of tag words - adding comma allows flickr to pick up multi word tags.
+		    $keywords = array_map(function($kw) {return $kw . ',';}, $keyword_node_values);
 		    $keywords = implode(" ", array_unique($keywords));
 		    }
 		else
