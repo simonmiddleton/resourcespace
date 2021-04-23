@@ -1125,7 +1125,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION;
+    global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1139,7 +1139,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $direction=((strpos($order_by,"DESC")===false)?"ASC":"DESC");
             $order_by="r2.ref " . $direction;
             }
-       
+        
+        # add date field, if access allowed, for use in $order_by
+        if(metadata_field_view_access($date_field) && strpos($select, "field" . $date_field) === false )
+            {
+            $select .= ", field{$date_field} ";
+            }
         
         # Extract the number of records to produce
         $last=explode(",",$search);
