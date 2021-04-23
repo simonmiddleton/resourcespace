@@ -32,7 +32,7 @@ if ($callback == "")
 		{
 		include "../../include/header.php";
 		}
-	foreach (array("debuglog","memorycpu","database","sqllogtransactions") as $section)
+	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
 		?><script>
 			var timeOutControl<?php echo $section; ?> = null;
@@ -384,6 +384,46 @@ switch ($callback)
 			}
 
 		break;
+
+        case 'trackVars':
+            $vars_csv = trim(getval('vars_csv', ''));
+
+            if(getval('save', '') === '1' && $vars_csv !== '')
+                {
+                set_sysvar("track_var_{$userref}", $vars_csv);
+                }
+            else if(getval('cancel', '') === '1')
+                {
+                set_sysvar("track_var_{$userref}", null);
+                }
+
+            render_text_question(
+                $lang['systemconsole_label_input_vars'],
+                'track_vars',
+                sprintf('<div class="FormHelp"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_vars'])),
+                false,
+                ' id="track_vars" class="stdwidth"',
+                get_sysvar("track_var_{$userref}", '')
+            );
+
+            // TODO: add input for specifying how long (in minutes) to track the vars
+
+            ?>
+            <div class="Question">
+                <label for="submit">&nbsp;</label>
+                <input type="submit"
+                       name="save"
+                       value="<?php echo htmlspecialchars($lang['save']); ?>"
+                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&vars_csv=' + encodeURIComponent(jQuery('#track_vars').val()));">
+                <input class="ClearSelectedButton"
+                       type="submit"
+                       name="cancel"
+                       value="<?php echo htmlspecialchars($lang['cancel']); ?>"
+                       onclick="SystemConsoletrackVarsLoad(-1, '&cancel=1');">
+                <div class="clearerleft"></div>
+            </div>
+            <?php
+            break;
 	} // end of callback switch
 
 	if($same_page_callback)	// do not display any filters if page being directly included
