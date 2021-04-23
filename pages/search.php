@@ -1259,7 +1259,10 @@ if($responsive_ui)
             }
         else
             {
-            render_actions($collectiondata, true, false, '', $result);
+            if (is_array($result))
+                {
+                render_actions($collectiondata, true, false, '', $result);
+                }
             }
 
         hook("search_header_after_actions");
