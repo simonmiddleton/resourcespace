@@ -1,7 +1,6 @@
 <?php
 include "../include/db.php";
 
-
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k           = getvalescaped('k', '');
 $ref         = getvalescaped('ref', '', true);
@@ -9,6 +8,8 @@ $col         = getvalescaped('collection', getvalescaped('col', -1, true), true)
 $size        = getvalescaped('size', '');
 $ext         = getvalescaped('ext', '');
 $alternative = getvalescaped('alternative', -1);
+
+$iaccept = getvalescaped('iaccept', 'off');
 
 if(-1 != $col)
     {
@@ -48,6 +49,7 @@ if (getval("save",'') != '' && enforcePostRequest(false))
                             "&ext=" . urlencode($ext) . 
                             "&k=" . urlencode($k) . 
                             "&alternative=" . urlencode($alternative) . 
+                            "&iaccept=" . urlencode($iaccept) .
                             "&usage=" . urlencode($usage) . 
                             "&usagecomment=" . urlencode($usagecomment) .
                             "&offset=" . urlencode(getval("saved_offset", getval("offset",0,true))) .
@@ -97,6 +99,7 @@ if(isset($download_usage_prevent_options))
         <input type="hidden" name="alternative" value="<?php echo htmlspecialchars($alternative) ?>" />
         <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>" />
         <input type="hidden" name="save" value="true" />
+        <input type="hidden" name="iaccept" value="<?php echo htmlspecialchars($iaccept) ?>" />
         <h1><?php echo $lang["usage"]?></h1>
         <p><?php echo $lang["indicateusage"]?></p>
 

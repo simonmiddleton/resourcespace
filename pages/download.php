@@ -36,11 +36,32 @@ $ref            = getvalescaped('ref', '', true);
 $size           = getvalescaped('size', '');
 $alternative    = getvalescaped('alternative', -1, true);
 $page           = getvalescaped('page', 1);
+$iaccept        = getvalescaped('iaccept', 'off');
 $usage          = getvalescaped('usage', '-1');
 $usagecomment   = getvalescaped('usagecomment', '');
 $ext            = getvalescaped('ext', '');
 $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 $modal          = (getval("modal","")=="true");
+
+// Ensure terms have been accepted and usage has been supplied when required
+if($terms_download)
+    {
+    if ($iaccept != 'on')
+        {
+        exit('Terms have not been accepted');
+        }
+    if ($download_usage)
+        {
+        if ( !(is_numeric($usage) && $usage >= 0) )
+            {
+            exit('Terms usage has not been specified');
+            }
+        if ($usagecomment == '')
+            {
+            exit('Terms usage comment has not been specified');
+            }            
+        }
+    }
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
