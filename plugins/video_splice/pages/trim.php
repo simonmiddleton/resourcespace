@@ -22,6 +22,9 @@ $sort=getval("sort",$default_sort_direction);
 $curpos=getvalescaped("curpos","");
 $go=getval("go","");
 
+$trimmed_resources_new = empty(getval("trimmed_resources_new",null))?null:explode(",", getval("trimmed_resources_new",null));
+$trimmed_resources_alt = empty(getval("trimmed_resources_alt",null))?null:explode(",", getval("trimmed_resources_alt",null));
+$collection_add = getval("collection_add",null);
 $start_time = getval("input_start",null);
 $end_time = getval("input_end",null);
 $upload_type = getval("upload_type",null);
@@ -86,7 +89,7 @@ if(!$video_preview_original && ($preview_duration < $original_duration))
 
 if(isset($start_time) && isset($end_time) && isset($upload_type)) 
     {
-    global $ffmpeg_preview_extension, $videosplice_parent_field, $userref;
+    global $ffmpeg_preview_extension, $videosplice_parent_field, $alternative_file_previews, $notify_on_resource_change_days, $usercollection;
 
     // process video
     // set up the start and end timepoints which will be used
@@ -104,7 +107,19 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         {
         // create a new resource.
         $newref=copy_resource($ref);
-        $target=get_resource_path($newref,true,"",true,$ffmpeg_preview_extension,-1,1,false,"",-1,false);
+        $target=get_resource_path(
+            $newref,
+            true,
+            "",
+            true,
+            $ffmpeg_preview_extension,
+            -1,
+            1,
+            false,
+            "",
+            -1,
+            false
+        );
 
         update_field($newref,$videosplice_parent_field, "Trimmed video created from resource " . $ref . ":
             Start time from original: " . $ffmpeg_start_time . "
@@ -112,14 +127,14 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Total duration: " . $ffmpeg_duration_time);
         
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=-2,file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
 
-            # Unlink the target
+            // Unlink the target
         if (file_exists($target)) {unlink ($target);}
 
         if ($config_windows)
             {
-            # Windows systems have a hard time with the long paths used for video generation.
+            // Windows systems have a hard time with the long paths used for video generation.
             $target_ext = strrchr($target, '.');
             $source_ext = strrchr($video_original_file, '.');
             $target_temp = get_temp_dir() . "/vs_t" . $newref . $target_ext;
@@ -141,9 +156,92 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
 
         create_previews($newref,false,$ffmpeg_preview_extension);
 
-        # Add the resource to the user's collection.
-        global $usercollection,$baseurl;
-        add_resource_to_collection($newref,$usercollection);
+        if ($collection_add == "yes")
+            {
+            // Add the resource to the user's collection
+            add_resource_to_collection($newref,$usercollection);
+            }
+
+        // add ref to list
+        $trimmed_resources_new[] = $newref;
+        }
+    elseif ($upload_type == "alt")
+        {
+        // Upload an alternative file 
+        $resource_data = get_resource_data($ref);
+
+        // Add a new alternative file
+        $alt_filename = "Video trim for resource " . $ref . ": " . $ffmpeg_start_time . "-" . $ffmpeg_end_time;
+        $alt_ref=add_alternative_file($ref,$alt_filename);
+   
+        // Find the path for this resource.
+        $target=get_resource_path(
+            $ref,
+            true,
+            "",
+            true,
+            $ffmpeg_preview_extension,
+            -1,
+            1,
+            false,
+            "",
+            $alt_ref
+        );
+      
+        // Set created_by, archive and extension
+        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$alt_ref'");
+
+        // Unlink the target
+        if (file_exists($target)) {unlink ($target);}
+
+        if ($config_windows)
+            {
+            // Windows systems have a hard time with the long paths used for video generation.
+            $target_ext = strrchr($target, '.');
+            $source_ext = strrchr($video_original_file, '.');
+            $target_temp = get_temp_dir() . "/vs_t" . $alt_ref . $target_ext;
+            $target_temp = str_replace("/", "\\", $target_temp);
+            $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
+            $source_temp = str_replace("/", "\\", $source_temp);
+            copy($video_original_file, $source_temp);
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
+            $output = exec($shell_exec_cmd);
+            rename($target_temp, $target);
+            unlink($source_temp);
+            }
+        else
+            {
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
+            debug("jacktest: \$shell_exec_cmd = {$shell_exec_cmd}");
+            $output = exec($shell_exec_cmd);
+            }
+
+        chmod($target,0777);
+        $file_size = @filesize_unlimited($target);
+
+        // Save alternative file data.
+        sql_query("update resource_alt_files set file_name='" . escape_check($alt_filename) . "',file_extension='" . escape_check($ffmpeg_preview_extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$ref' and ref='$alt_ref'");
+      
+        if ($alternative_file_previews)
+            {
+            create_previews($ref,false,$ffmpeg_preview_extension,false,false,$alt_ref);
+            }
+  
+        hook('after_alt_upload','',array($ref,array("ref"=>$alt_ref,"file_size"=>$file_size,"extension"=>$ffmpeg_preview_extension,"name"=>$alt_filename,"altdescription"=>"","path"=>$target,"basefilename"=>str_ireplace("." . $ffmpeg_preview_extension, '', $alt_filename))));
+  
+        // Check to see if we need to notify users of this change                           
+        if($notify_on_resource_change_days!=0)
+            {                               
+            // we don't need to wait for this..
+            ob_flush();flush();
+            notify_resource_change($ref);
+            }
+    
+        // Update disk usage
+        update_disk_usage($ref);
+
+        // add ref to list
+        $trimmed_resources_alt[] = $alt_ref; 
         }
     }
 ?>
@@ -190,6 +288,23 @@ if(isset($resource["field".$view_title_field]))
     {
     echo "<h2>" . htmlspecialchars(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
     }
+if(!empty($trimmed_resources_new))
+    {
+    $links_holder = "";
+    foreach ($trimmed_resources_new as $trimmed_ref) {
+        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
+    }
+    echo "<p><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, $lang["video-trim_new-response"]) . "</p><br/>";
+    }
+if(!empty($trimmed_resources_alt))
+    {
+    $parent_link = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a>';
+    $links_holder = "";
+    foreach ($trimmed_resources_alt as $trimmed_ref) {
+        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/preview.php', array('ref' => $ref, 'alternative' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
+    }
+    echo "<p><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, $lang["video-trim_alt-response"])) . "</p><br/>";
+    }
     ?>
 <h1><?php echo $lang["video-trim"]; render_help_link("plugins/video-splice");?></h1>
 <div class="RecordBox">
@@ -198,7 +313,7 @@ if(isset($resource["field".$view_title_field]))
         <?php
         if ((!(isset($resource["is_transcoding"]) && $resource["is_transcoding"]!=0) && file_exists($video_preview_file)))
             {
-            # Include the player if a video preview file exists for this resource.
+            // Include the player if a video preview file exists for this resource.
             ?>
             <div id="previewimagewrapper">
                 <?php 
@@ -294,7 +409,7 @@ if(isset($resource["field".$view_title_field]))
                 }
             else
                 {
-                # Show the no-preview icon
+                // Show the no-preview icon
                 ?>
                 <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
                 <br />
@@ -323,10 +438,15 @@ if(isset($resource["field".$view_title_field]))
         </div>
         <div class="Question" id="question_uploadtype">
             <label><?php echo $lang["video-trim_upload-type"]?></label>
-            <select name="upload_type" id="uploadtype" class="stdwidth">
+            <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
             <option value="alt"><?php echo $lang["addalternativefile"]?></option>
             <option value="new"><?php echo $lang["createnewresource"]?></option>
             </select>
+            <div class="clearerleft"> </div>
+        </div>
+        <div class="Question" id="question_collectionadd" style="display:none;">
+            <label><?php echo $lang["addtocurrentcollection"]?></label>
+            <input name="collection_add" id="collectionadd" value="yes" type="checkbox">
             <div class="clearerleft"> </div>
         </div>
         <div class="QuestionSubmit">
@@ -334,6 +454,8 @@ if(isset($resource["field".$view_title_field]))
              <br />
              <div class="clearerleft"> </div>
         </div>
+        <input type="hidden" name="trimmed_resources_new" value="<?php echo isset($trimmed_resources_new)?implode(',', $trimmed_resources_new):null ?>" />
+        <input type="hidden" name="trimmed_resources_alt" value="<?php echo isset($trimmed_resources_alt)?implode(',', $trimmed_resources_alt):null ?>" />
     </form>
 </div>
 <script>
