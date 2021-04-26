@@ -762,7 +762,7 @@ function sql_insert_id()
 function get_query_cache_location()
 	{
 	global $storagedir,$tempdir;
-    if(isset($tempdir)){return $tempdir . "/querycache";}
+    if(!is_null($tempdir)){return $tempdir . "/querycache";}
     else {return $storagedir . "/tmp/querycache";}
 	}
 
