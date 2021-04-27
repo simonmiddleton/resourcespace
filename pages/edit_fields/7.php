@@ -50,10 +50,11 @@ foreach($selected_nodes as $node)
 
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
 
-    // Show previously searched options on the status box
+    // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" . htmlspecialchars($node_data['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node_data['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" 
+                             . htmlspecialchars($node_data['name']) . "</span><br /></div>";
         }
     }
 
@@ -72,7 +73,9 @@ if(!$is_search)
 if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+    <div id="<?php echo $status_box_id; ?>" class="CategoryBox" style="height:200px" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+        <div id="<?php echo $tree_id; ?>_statusbox_begin" style="display:none;"></div>
+        <div id="<?php echo $tree_id; ?>_statusbox_platform" style="display:none;"></div>
         <?php echo $status_box_elements; ?>
     </div>
     <div>
@@ -94,6 +97,37 @@ if(!(isset($treeonly) && true == $treeonly))
         </a>
     </div>
     <script>
+
+
+    // The nodes in the statusbox list have been rendered in ascending node sequence.
+    // The list must be reordered to reflect the preorder traversal sequence of the jstree to make it more readable.
+    function reorder_selected_statusbox_<?php echo $tree_id; ?>() {
+
+        var thisJstree = jQuery('#<?php echo $tree_id; ?>');
+
+        var treefieldid = jQuery(thisJstree)[0].id;
+        // The preorder sequence will only contain the loaded tree nodes (ie. not necessarily the whole tree).
+        var preorderlist = jQuery(thisJstree).find("li");
+
+        // The statusbox platform is the element before which we need to insert selected divs in preorder sequence
+        // This method should give us the order we need for improved readability (instead of by node ref)
+        let statusboxbegin = jQuery("#"+treefieldid+"_statusbox_begin");
+        let statusboxplatform = jQuery("#"+treefieldid+"_statusbox_platform");
+        // Re-position the platform
+        // Any selected nodes not yet loaded in the tree will remain below the platform and so are effectively "moved" to the end of the list
+        statusboxplatform.insertAfter(statusboxbegin);
+        
+        // Place each node (in preorder sequence) onto the platform
+        for (var i = 0;i<preorderlist.length;i++) {
+            // var pentry = jQuery("#tree_"+treefieldid+"_selected_"+preorderlist[i].id);
+            var pentry = jQuery("#"+treefieldid+"_selected_"+preorderlist[i].id);
+            if (pentry) {
+                pentry.insertBefore(statusboxplatform);
+                }
+        }
+    }
+
+
     function clearCategoryTree_<?php echo $tree_id; ?>() {
         if(!confirm('<?php echo $lang["clearcategoriesareyousure"];?>')) {
             return false;
@@ -208,9 +242,10 @@ echo $hidden_input_elements;
     // When a node is selected, and add parents is enabled, then automatically select all ancestors 
     jquery_tree_by_id.on('select_node.jstree', function (event, data)
         {
+        var thisJstree = jQuery(this);
+
         if(category_tree_add_parents)
             {
-            var thisJstree = jQuery(this);
             // Establish the parent of the selected node
             var parent_node = thisJstree.jstree('get_parent', data.node.id);
             if (parent_node) {      
@@ -271,7 +306,7 @@ if(!$is_search)
 
         document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
                 'beforeEnd',
-                '<div class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
+                '<div id="<?php echo $tree_id."_selected_";?>' + data.node.id + '" class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
                 + data.node.id + '">'
                 + data.node.text
                 + '</span><br /></div>');
@@ -296,6 +331,15 @@ if(!$is_search)
             return;
             }
 
+        <?php
+        if( !(isset($treeonly) && true == $treeonly) )
+            {
+        ?>
+            reorder_selected_statusbox_<?php echo $tree_id; ?>();
+        <?php
+            } 
+        ?>
+
         var selected_rs_node_ids = data.selected;
 
         for(var i = 0; i < selected_rs_node_ids.length; i++)
@@ -319,5 +363,19 @@ if(!$is_search)
         echo $update_result_count_function_call;
         ?>
         });
+
+    // Reorder associated statusbox list if present
+    jquery_tree_by_id.on('after_open.jstree', function (event, data)
+        {
+        <?php
+        if( !(isset($treeonly) && true == $treeonly) )
+            {
+        ?>
+            reorder_selected_statusbox_<?php echo $tree_id; ?>();
+        <?php
+            } 
+        ?>
+        });
+
     </script>
 </div>
