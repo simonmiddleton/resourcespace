@@ -6,7 +6,10 @@
 */
 
 include_once "../include/db.php";
-if(trim(getval('k', '')) === '') { include '../include/authenticate.php'; }
+
+$k = getval('k', '');
+if(is_array($k) || trim($k) === '') { include '../include/authenticate.php'; }
+
 
 header("Content-type: text/css");
 
