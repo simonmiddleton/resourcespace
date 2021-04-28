@@ -73,7 +73,7 @@ if(!$is_search)
 if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $status_box_id; ?>" class="CategoryBox" style="height:200px" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+    <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
         <div id="<?php echo $tree_id; ?>_statusbox_begin" style="display:none;"></div>
         <div id="<?php echo $tree_id; ?>_statusbox_platform" style="display:none;"></div>
         <?php echo $status_box_elements; ?>
