@@ -8,7 +8,13 @@ $k=getvalescaped("k","");
 $modal = (getval("modal", "") == "true");
 
 $log_entry = get_resource_log(NULL,-1,array("r.ref" => $logref));
+if(!is_array($log_entry) || count($log_entry)==0)
+    {
+    exit($lang['error_invalid_input']);    
+    }
 $log_entry = $log_entry[0];
+
+$searchparams = get_search_params();
 
 // Logs can sometimes contain confidential information and the user looking at them must have admin permissions set.
 // Some log records can be viewed by all users. Ensure access control by allowing only white listed log codes to bypass 
@@ -26,7 +32,8 @@ if(!checkperm('v') && !$bypass_permission_check)
 <div class="RecordBox">
     <div class="RecordPanel">
         <div class="RecordHeader">
-            <div class="backtoresults"> 
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/log.php",$searchparams,array("ref"=>$log_entry["resource"]));?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>   
+        <div class="backtoresults"> 
                 <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
             </div>
             <h1><?php echo $lang["log-reference"] . " " . $log_entry["ref"]; ?></h1>
