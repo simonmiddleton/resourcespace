@@ -6,9 +6,12 @@ $results_per_page = 20;
 if ($same_page_callback)
 	{
 	include "../../include/db.php";
-	
 	include "../../include/authenticate.php";
 	}
+
+// TODO: remove after testing
+debug_track_vars('team_system_console - after authenticate', get_defined_vars());
+
 
 $callback = getval("callback","");
 $actasuser = getval("actasuser","");
@@ -386,6 +389,12 @@ switch ($callback)
 		break;
 
         case 'trackVars':
+            if(!checkperm('v'))
+                {
+                clear_tracking_vars_info([$userref]);
+                break;
+                }
+
             $track_vars = trim(getval('track_vars', ''));
             $track_var_duration = (int) getval('track_var_duration', 0);
 

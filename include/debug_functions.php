@@ -146,3 +146,61 @@ function is_tracking_vars_active(int $user)
 
     return $duration > (int) $diff_in_min;
     }
+
+
+/**
+* 
+*/
+function get_tracked_vars(int $user)
+    {
+    if($user <= 0)
+        {
+        return [];
+        }
+
+    $vars_csv = get_sysvar("track_var_{$user}", '');
+    $vars_list = explode(',', $vars_csv);
+    $vars_trimmed = array_map('trim', $vars_list);
+    return array_filter($vars_trimmed);
+    }
+
+
+/**
+* Partially implements structured data from RFC 5424 @see https://tools.ietf.org/html/rfc5424
+*/
+function debug_track_vars(string $ns)
+    {
+    /*
+    SYSLOG-MSG      = HEADER SP STRUCTURED-DATA [SP MSG]
+
+    STRUCTURED-DATA = NILVALUE / 1*SD-ELEMENT
+    SD-ELEMENT      = "[" SD-ID *(SP SD-PARAM) "]"
+    SD-PARAM        = PARAM-NAME "=" %d34 PARAM-VALUE %d34
+    SD-ID           = SD-NAME
+    PARAM-NAME      = SD-NAME
+    PARAM-VALUE     = UTF-8-STRING ; characters '"', '\' and
+                                 ; ']' MUST be escaped.
+    SD-NAME         = 1*32PRINTUSASCII
+                    ; except '=', SP, ']', %d34 (")
+    */
+
+    $pid = getmypid();
+    $format = 'tracking var: [pid=%s ns="%s"][%s="%s"]';
+
+    // For readability reasons, we show each tracked var on a new line in the debug log. If performance is badly affected,
+    // we can switch to combine all tracked vars in the last SD-ELEMENT (ie [var1="value" var2="value"])
+    $tracked_vars = get_tracked_vars($GLOBALS['userref'] ?? 0);
+    foreach($tracked_vars as $tracked_var)
+        {
+        // TODO: continue work here. We need to get the value of the tracked_var from input or global scope
+        debug(sprintf($format, $pid, $ns, $tracked_var, 'none'));
+        }
+
+
+
+
+
+
+
+    // return debug($msg);
+    }

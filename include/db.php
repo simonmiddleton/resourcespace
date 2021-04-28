@@ -52,7 +52,12 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
-if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
+if (file_exists(dirname(__FILE__)."/config.default.php"))
+    {
+    include dirname(__FILE__) . "/config.default.php";
+    // TODO: need another way to log tracked vars as at this point you don't have debug enabled or DB connection established
+    // we need to keep hold of the vars in memory and process them once we have the required information
+    }
 if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
 
 # Load the real config
