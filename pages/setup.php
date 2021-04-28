@@ -17,9 +17,10 @@ include_once '../include/user_functions.php';
  * @param string $key _REQUEST key to sanitize and return
  * @return string Santized _REQUEST key.
  **/
-function get_post($key){ 
-    return filter_var(@$_REQUEST[$key], FILTER_SANITIZE_STRING);
-}
+function get_post($key)
+    {
+    return isset($_REQUEST[$key]) ? filter_var($_REQUEST[$key], FILTER_SANITIZE_STRING) : "";
+    }
 /**
  * Returns true if a given $_REQUEST key is set.
  * 
@@ -55,12 +56,12 @@ function sslash($data){
  */
 
 function url_exists($url) 
-{
+    {
     $parsed_url = parse_url($url);
-    $host = @$parsed_url['host'];
-    $path = @$parsed_url['path'];
-    $port = @$parsed_url['port'];
-    $scheme = @$parsed_url['scheme'];
+    $host = isset($parsed_url['host']) ? $parsed_url['host'] : "localhost"; 
+    $path = isset($parsed_url['path']) ? $parsed_url['path'] : "";
+    $port = isset($parsed_url['port']) ? $parsed_url['port'] : "80";
+    $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] : "http";
     if (empty($path))
         {
         $path = "/";
@@ -545,7 +546,7 @@ h2#dbaseconfig{  min-height: 32px;}
                 }
 
             // Check DB access
-            if(@mysqli_select_db($mysqli_connection, $mysql_db) === false)
+            if(mysqli_select_db($mysqli_connection, $mysql_db) === false)
                 {
                 $errors['databasedb'] = true;
                 break;
@@ -554,9 +555,9 @@ h2#dbaseconfig{  min-height: 32px;}
             // Check DB permissions
             if($db_connection_mode == "read_write")
                 {
-                if(@mysqli_query($mysqli_connection, "CREATE table configtest(test varchar(30))"))  
+                if(mysqli_query($mysqli_connection, "CREATE table configtest(test varchar(30))"))  
                     {
-                    @mysqli_query($mysqli_connection, "DROP table configtest");
+                    mysqli_query($mysqli_connection, "DROP table configtest");
                     }
                 else 
                     {
@@ -1122,18 +1123,28 @@ else
 				?>
 					<p class="<?php echo ($pass==true?'':'failure');?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
-					if (!file_exists($storagedir)) {@mkdir ($storagedir,0777);}
-					$success = is_writable($storagedir);
-					if ($success===false)
-						{
-						$result = $lang["status-warning"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
-						$pass = false;
-						}
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
+					if (!file_exists($storagedir))
+                        {
+                        try
+                            {
+                            mkdir ($storagedir,0777);
+                            }
+                        catch(Exception $e)
+                            {
+                            // Next check will now fail
+                            }
+                        }
+                    $success = is_writable($storagedir);
+                    if ($success===false)
+                        {
+                        $result = $lang["status-warning"] . ": " . realpath($storagedir) . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
+                        $pass = false;
+                        }
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
+                        }
 				?>
 					<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 			</div>
@@ -1425,38 +1436,38 @@ else
 					<?php if(isset($errors['imagemagick_path'])){?>
 						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'convert'.</div>
 					<?php } ?>
-					<label for="imagemagickpath"><?php echo str_replace("%bin", "ImageMagick/GraphicsMagick", $lang["setup-binpath"]) . ":"; ?></label><input id="imagemagickpath" type="text" name="imagemagick_path" value="<?php echo @$imagemagick_path; ?>"/>
+					<label for="imagemagickpath"><?php echo str_replace("%bin", "ImageMagick/GraphicsMagick", $lang["setup-binpath"]) . ":"; ?></label><input id="imagemagickpath" type="text" name="imagemagick_path" value="<?php echo $imagemagick_path; ?>"/>
 				</div>
 				<div class="configitem">
 					<?php if(isset($errors['ghostscript_path'])){?>
 						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'gs'.</div>
 					<?php } ?>
-					<label for="ghostscriptpath"><?php echo str_replace("%bin", "Ghostscript", $lang["setup-binpath"]) . ":"; ?></label><input id="ghostscriptpath" type="text" name="ghostscript_path" value="<?php echo @$ghostscript_path; ?>"/>
+					<label for="ghostscriptpath"><?php echo str_replace("%bin", "Ghostscript", $lang["setup-binpath"]) . ":"; ?></label><input id="ghostscriptpath" type="text" name="ghostscript_path" value="<?php echo $ghostscript_path; ?>"/>
 				</div>
 				<div class="configitem">
 					<?php if(isset($errors['ffmpeg_path'])){?>
 						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'ffmpeg'.</div>
 					<?php } ?>
-					<label for="ffmpegpath"><?php echo str_replace("%bin", "FFMpeg/libav", $lang["setup-binpath"]) . ":"; ?></label><input id="ffmpegpath" type="text" name="ffmpeg_path" value="<?php echo @$ffmpeg_path; ?>"/>
+					<label for="ffmpegpath"><?php echo str_replace("%bin", "FFMpeg/libav", $lang["setup-binpath"]) . ":"; ?></label><input id="ffmpegpath" type="text" name="ffmpeg_path" value="<?php echo $ffmpeg_path; ?>"/>
 				</div>
 				<div class="configitem">
 					<?php if(isset($errors['exiftool_path'])){?>
 						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'exiftool'.</div>
 					<?php } ?>
-					<label for="exiftoolpath"><?php echo str_replace("%bin", "Exiftool", $lang["setup-binpath"]) . ":"; ?></label><input id="exiftoolpath" type="text" name="exiftool_path" value="<?php echo @$exiftool_path; ?>"/>
+					<label for="exiftoolpath"><?php echo str_replace("%bin", "Exiftool", $lang["setup-binpath"]) . ":"; ?></label><input id="exiftoolpath" type="text" name="exiftool_path" value="<?php echo $exiftool_path; ?>"/>
 				</div>
 				<div class="configitem">
 				<?php if(isset($errors['antiword_path'])){?>
 						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'AntiWord'.</div>
 					<?php } ?>
-					<label for="antiwordpath"><?php echo str_replace("%bin", "AntiWord", $lang["setup-binpath"]) . ":"; ?></label><input id="antiwordpath" type="text" name="antiword_path" value="<?php echo @$antiword_path; ?>"/>
+					<label for="antiwordpath"><?php echo str_replace("%bin", "AntiWord", $lang["setup-binpath"]) . ":"; ?></label><input id="antiwordpath" type="text" name="antiword_path" value="<?php echo $antiword_path; ?>"/>
 				</div>
 				
 				<div class="configitem">
 					<?php if(isset($errors['pdftotext_path'])){?>
-						<div class="erroritem"><?php echo @$lang["setup-err_path"];?> 'pdftotext'.</div>
+						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'pdftotext'.</div>
 					<?php } ?>
-					<label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo @$pdftotext_path; ?>"/>
+					<label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo $pdftotext_path; ?>"/>
 				</div>
 			</p>
 
