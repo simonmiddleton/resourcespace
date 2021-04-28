@@ -103,3 +103,46 @@ function debug_function_call($name, array $args)
 
     return debug("{$name}( {$args_str} );");
     }
+
+
+/**
+* Clear sysvar entries used for tracking variables in ResourceSpace
+* 
+* @param array $users List of user IDs
+* 
+*/
+function clear_tracking_vars_info(array $users)
+    {
+    foreach($users as $uref)
+        {
+        if(!is_numeric($uref))
+            {
+            continue;
+            }
+
+        set_sysvar("track_var_{$uref}", null);
+        set_sysvar("track_var_{$uref}_duration", null);
+        set_sysvar("track_var_{$uref}_start_datetime", null);
+        }
+    }
+
+
+/**
+* Check if ResourceSpace is still tracking variables for debug purposes.
+* 
+* @uses get_sysvar() to return global scope data.
+* 
+* @param int $user User ID for which we check if tracking vars is active
+* 
+* @return boolean
+*/
+function is_tracking_vars_active(int $user)
+    {
+    $duration = (int) get_sysvar("track_var_{$user}_duration", 0) ?? 0;
+    $start = new DateTime(get_sysvar("track_var_{$user}_start_datetime", ''));
+    $now = new DateTime();
+
+    $diff_in_min = abs($now->getTimestamp() - $start->getTimestamp()) / 60;
+
+    return $duration > (int) $diff_in_min;
+    }

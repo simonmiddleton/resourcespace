@@ -386,27 +386,44 @@ switch ($callback)
 		break;
 
         case 'trackVars':
-            $vars_csv = trim(getval('vars_csv', ''));
+            $track_vars = trim(getval('track_vars', ''));
+            $track_var_duration = (int) getval('track_var_duration', 0);
 
-            if(getval('save', '') === '1' && $vars_csv !== '')
+            // Stop tracking variables if we passed the tracking period
+            if(!is_tracking_vars_active($userref))
                 {
-                set_sysvar("track_var_{$userref}", $vars_csv);
+                clear_tracking_vars_info([$userref]);
+                }
+
+            // Start/Stop tracking variables in ResourceSpace
+            if(getval('save', '') === '1' && $track_vars !== '' && is_int($track_var_duration))
+                {
+                set_sysvar("track_var_{$userref}", $track_vars);
+                set_sysvar("track_var_{$userref}_duration", $track_var_duration);
+                set_sysvar("track_var_{$userref}_start_datetime", date("Y-m-d H:i:s"));
                 }
             else if(getval('cancel', '') === '1')
                 {
-                set_sysvar("track_var_{$userref}", null);
+                clear_tracking_vars_info([$userref]);
                 }
 
             render_text_question(
                 $lang['systemconsole_label_input_vars'],
                 'track_vars',
-                sprintf('<div class="FormHelp"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_vars'])),
+                sprintf('<div id="help_track_vars" class="FormHelp" style="display: none;"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_vars'])),
                 false,
-                ' id="track_vars" class="stdwidth"',
+                ' id="track_vars" class="stdwidth" onblur="HideHelp(\'track_vars\'); return false;" onfocus="ShowHelp(\'track_vars\'); return false;"',
                 get_sysvar("track_var_{$userref}", '')
             );
 
-            // TODO: add input for specifying how long (in minutes) to track the vars
+            render_text_question(
+                $lang['systemconsole_label_input_track_period'],
+                'track_var_duration',
+                sprintf('<div id="help_track_var_duration" class="FormHelp" style="display: none;"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_period'])),
+                true,
+                ' id="track_var_duration" class="stdwidth" min="0" onblur="HideHelp(\'track_var_duration\'); return false;" onfocus="ShowHelp(\'track_var_duration\'); return false;"',
+                get_sysvar("track_var_{$userref}_duration", 0) ?? 0
+            );
 
             ?>
             <div class="Question">
@@ -414,7 +431,7 @@ switch ($callback)
                 <input type="submit"
                        name="save"
                        value="<?php echo htmlspecialchars($lang['save']); ?>"
-                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&vars_csv=' + encodeURIComponent(jQuery('#track_vars').val()));">
+                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&track_vars=' + encodeURIComponent(jQuery('#track_vars').val()) + '&track_var_duration=' + jQuery('#track_var_duration').val());">
                 <input class="ClearSelectedButton"
                        type="submit"
                        name="cancel"

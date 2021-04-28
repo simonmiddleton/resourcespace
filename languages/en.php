@@ -2561,8 +2561,8 @@ $lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or
 $lang['systemconsoletrackVars'] = "Tracking variables";
 $lang['systemconsole_label_input_vars'] = "Variable names";
 $lang['systemconsole_help_track_vars'] = "Use a CSV of variable names that you wish to track throughout the system. This is mainly used for debugging purposes as it helps determining where a specific variable is being set or overriden.";
-$lang['systemconsole_'] = "";
-$lang['systemconsole_'] = "";
+$lang['systemconsole_label_input_track_period'] = "Specify how long to track variables for";
+$lang['systemconsole_help_track_period'] = "Value in minutes.";
 $lang['systemconsole_'] = "";
 
 /* Global Trash Bin */
