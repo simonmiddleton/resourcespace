@@ -10,7 +10,10 @@ if ($same_page_callback)
 	}
 
 // TODO: remove after testing
-debug_track_vars('team_system_console - after authenticate', get_defined_vars());
+$annotate_fields[] = 'é';
+$annotate_fields[] = 'Düsseldorf';
+$annotate_fields[] = NAN;
+debug_track_vars('team_system_console-#############', get_defined_vars());
 
 
 $callback = getval("callback","");

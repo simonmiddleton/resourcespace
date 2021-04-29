@@ -205,17 +205,31 @@ function get_tracked_vars(int $user)
 *                      IMPORTANT: it is important to keep the location format consistent to help developers filter faster
 *                      when processing the debug log for tracked vars.
 * @param array $vars   Defined variables within the scope the function was called from
+* @param array $ctx_sd Contextual structured data. Array keys will be used as a PARAM-NAME and its values as a PARAM-VALUE.
+*                      Used to provide extra information (for an example @see process_config_options())
 * 
 */
-function debug_track_vars(string $place, array $vars)
+function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
     {
     $pid = getmypid() ?: 'Undefined'; # TODO: PHP processes might be re-used between requests. Try hashing important info from the HTTP request
     $userref = $GLOBALS['userref'] ?? 0;
     $user = $userref ?: 'System';
 
     // Log message formats
-    $format          = 'tracking var: [pid="%s" user="%s" place="%s"][%s="%s"]';
-    $format_json_err = 'tracking var: [pid="%s" user="%s" place="%s"][error] JSON error "%s" when $%s = %s';
+    $format          = 'tracking var: [pid="%s" user="%s" place="%s"]%s[%s="%s"]';
+    $format_json_err = 'tracking var: [pid="%s" user="%s" place="%s"]%s[error] JSON error "%s" when $%s = %s';
+
+    // Process contextual structured data (if any are valid)
+    $ctx_sd_str = '';
+    foreach($ctx_sd as $param_name => $param_value)
+        {
+        if(is_string($param_name) && (is_string($param_value) || is_numeric($param_value)))
+            {
+            $ctx_sd_str .= " {$param_name}=\"{$param_value}\"";
+            }
+        }
+    $ctx_sd_str = trim($ctx_sd_str);
+    $ctx_structured_data = $ctx_sd_str !== '' ? "[info@context {$ctx_sd_str}]" : '';
 
     // For readability reasons, we show each tracked var on a new line in the debug log. If performance is badly affected,
     // we can switch to combine all tracked vars in the last SD-ELEMENT (ie [var1="value" var2="value"])
@@ -227,7 +241,7 @@ function debug_track_vars(string $place, array $vars)
             continue;
             }
 
-        // JSON encode the tracked variables' value. If it fails, attempt to log this in the debug log.
+        // JSON encode the tracked variables' value. If it fails, attempt to log this event (failure) in the debug log.
         $tracked_var_value = json_encode($vars[$tracked_var], JSON_NUMERIC_CHECK);
         if(json_last_error() !== JSON_ERROR_NONE)
             {
@@ -239,6 +253,7 @@ function debug_track_vars(string $place, array $vars)
                     $pid,
                     $user,
                     $place,
+                    $ctx_structured_data,
                     json_last_error_msg(),
                     $tracked_var,
                     debug_stringify($vars[$tracked_var])
@@ -248,6 +263,8 @@ function debug_track_vars(string $place, array $vars)
             continue;
             }
 
-        debug(sprintf($format, $pid, $user, $place, $tracked_var, $tracked_var_value));
+        debug(sprintf($format, $pid, $user, $place, $ctx_structured_data, $tracked_var, $tracked_var_value));
         }
     }
+
+
