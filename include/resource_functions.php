@@ -6043,6 +6043,7 @@ function resource_type_config_override($resource_type)
             # Switch to global context and execute.
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
             eval($config_options);
+            debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         $resource_type_config_override_last=$resource_type;
         }
