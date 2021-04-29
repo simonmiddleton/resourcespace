@@ -1,9 +1,9 @@
 <?php
 
-function generate_transform_preview($ref, $destpath)
+function generate_transform_preview($ref, $destpath, $options)
     {
 	global $storagedir,$imagemagick_path,$imversion;
-
+    debug_function_call("generate_transform_preview",func_get_args());
 	if (!isset($imversion))
         {
 		$imversion = get_imagemagick_version();
@@ -38,7 +38,22 @@ function generate_transform_preview($ref, $destpath)
         $colorspace2 =  " -colorspace sRGB ";
         }
 
-    $command .= " \"$transformsourcepath\"[0] +matte -flatten $colorspace1 -geometry 450 $colorspace2 \"$destpath\"";
+    $tweaks = "";
+    if(isset($options["rotation"]) && is_int_loose($options["rotation"]))
+        {
+        $tweaks .= " -rotate " . $options["rotation"];
+        }
+
+    if(isset($options["flipx"]) && (bool)$options["flipx"]==true)
+        {
+        $tweaks .= " -flop ";
+        }
+    if(isset($options["flipy"]) && (bool)$options["flipy"]==true)
+        {
+        $tweaks .= " -flip ";
+        }
+
+    $command .= " \"$transformsourcepath\"[0] +matte -flatten $tweaks $colorspace1 -resize 450x450 $colorspace2 \"$destpath\"";
     run_command($command);
     
     if(!file_exists($destpath))

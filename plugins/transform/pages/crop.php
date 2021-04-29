@@ -15,6 +15,9 @@ $order_by   = getval("order_by","");
 $sort       = getval("sort","");
 $k          = getval("k","");
 
+$reload_image   = getval('reload_image','') != '';
+$reset          = getval('reset','') != '';
+
 // Build view url for redirect
 $urlparams = array(
     "ref"       =>  $ref,
@@ -92,17 +95,55 @@ if($blockcrop)
 
 $imversion = get_imagemagick_version();
 
-// generate a preview image for the operation if it doesn't already exist
-$crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date(time()) . $scramble_key) . ".jpg";
-$crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date(time()) . ".jpg";
-if (!file_exists($crop_pre_file))
+if (getval('flipx',0,true) == 1 && !$cropperestricted)
     {
-	//echo  "generating preview";
-	//exit($crop_pre_file);
-	if(!generate_transform_preview($ref,$crop_pre_file))
+    $flipx = true;
+    }
+else
+    {
+    $flipx = false;
+    }
+if (getval('flipy',0,true) == 1 && !$cropperestricted)
+    {
+    $flipy = true;
+    }
+else
+    {
+    $flipy = false;
+    }
+$rotation = getval('rotation',0,true);
+if (($rotation < 0 || $rotation > 360) && !$cropperestricted)
+    {
+    $rotation = 0;
+    }
+// generate a preview image for the operation if it doesn't already exist
+$crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
+$crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date("Ymd",time()) . ".jpg";
+
+//echo  "generating preview";
+//exit($crop_pre_file);
+$options=array(
+    "rotation" => $rotation,
+    "flipx"     => $flipx,
+    "flipy"     => $flipy,
+    );
+
+$generated = generate_transform_preview($ref,$crop_pre_file, $options);
+if($reload_image)
+    {
+    if($generated)
         {
-        error_alert($lang["transform_preview_gen_error"]);
+        $response['message'] = "SUCCESS";
         }
+    else
+        {
+        $response['message'] = $lang["transform_preview_gen_error"];            
+        }
+    exit(json_encode($response));            
+    }
+elseif(!$generated)
+    {
+    error_alert($lang["transform_preview_gen_error"]);
     }
 # Locate imagemagick.
 if (!isset($imagemagick_path))
@@ -185,24 +226,6 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'docrop')
     $new_height  = getvalescaped('new_height','',true);
     $alt_type    = getvalescaped('alt_type','');
 
-
-    if (isset($_REQUEST['flip']) && $_REQUEST['flip'] == 1 && !$cropperestricted)
-        {
-        $flip = true;
-        }
-    else
-        {
-        $flip = false;
-        }
-
-    if (isset($_REQUEST['rotation']) && is_numeric($_REQUEST['rotation']) && $_REQUEST['rotation'] > 0 && $_REQUEST['rotation'] < 360 && !$cropperestricted)
-        {
-        $rotation = $_REQUEST['rotation'];
-        }
-    else
-        {
-        $rotation = 0;
-        }
 
     if (isset($_REQUEST['filename']) && $cropper_custom_filename)
         {
@@ -735,8 +758,11 @@ if (file_exists($crop_pre_file))
     {
     ?>
     <div>
-        <div id='cropimgdiv' style='float:left;padding:0;margin:0;' onmouseover='unfocus_widths();' >
-            <img src="<?php echo $crop_pre_url?>" id='cropimage' />
+        <div id='cropimgdiv' onmouseover='unfocus_widths();' >
+            
+            <div id='crop_imgholder'>
+                <img src="<?php echo $crop_pre_url?>" id='cropimage' />
+            </div>
         </div>
     <?php
     }
@@ -745,7 +771,7 @@ if (file_exists($crop_pre_file))
 if(!$cropperestricted)
     {
     ?>
-    <script type="text/javascript" language="javascript">
+    <script>
         function onEndCrop( coords )
             {
             document.imagetools_form.xcoord.value=coords.x;
@@ -778,31 +804,12 @@ if(!$cropperestricted)
                     document.imagetools_form.lastWidthSetting.value = document.getElementById('new_width').value;
                     document.imagetools_form.lastHeightSetting.value = document.getElementById('new_height').value;
                     
-
-                    imgheight = jQuery('#cropimage').height();
-                    imgwidth = jQuery('#cropimage').width();
-                    console.log("cropheight " + imgheight);
-                    console.log("cropwidth " + imgwidth);
-
-
                     this.removeCropper();
-                       // console.log(Math.floor(imgrotation/180));
-                    if(imgrotation % 180 == 0)
-                        {
-                        cropaspectratio = imgwidth/imgheight;
-                        }
-                    else
-                        {
-                        cropaspectratio = imgheight/imgwidth;
-                        }
-                    console.log("new ratio " + cropaspectratio);
                     this.curCrop = jQuery('#cropimage').Jcrop(
                         {
                             onRelease: onEndCrop ,
                             onChange: onEndCrop ,
                             onSelect: onEndCrop ,
-                            aspectRatio: cropaspectratio,
-                            //addClass: 'jcrop-aligned'
                         },
                         function()
                             {
@@ -837,8 +844,10 @@ if(!$cropperestricted)
                 }
             };
 
-            // Set default rotation
-            imgrotation = 0;		    
+            // Set defaults
+            imgrotation = 0;
+            flipx = 0;
+            flipy = 0;
             
             function unfocus_widths(){
                 document.getElementById('new_width').blur();
@@ -924,65 +933,172 @@ if(!$cropperestricted)
         return true;
         }
 
-    function imageToolsRotate()
+    function cropReload(action)
         {
-        imgrotation += 90;
-        if(imgrotation >= 360)
-            {
-            imgrotation -= 360;
-            }
-        
-        console.log("imgrotation: " + imgrotation);
+        console.log('cropReload');
 
-        rotateimg = jQuery('#cropimage');
-        imgheight = rotateimg.height();
-        imgwidth = rotateimg.width();
-        rotatesq = Math.max(imgheight, imgwidth);
-        padImage(rotateimg);
+        // Get current settings
+        imgheight = jQuery('#cropimage').height();
+        imgwidth = jQuery('#cropimage').width();
+        jcropreload = false;
+        flippedx = false;
+        flippedy = false;
+        rotated = false;
 
-        selheight = jQuery('#new_height').val();
-        selwidth = jQuery('#new_width').val();
-
-        rotateimg = jQuery('#cropimage');
-        rotatediv = jQuery('#cropimgdiv');              
-        // console.log("imgheight: " + imgheight);
-        // console.log("imgwidth: " + imgwidth);
-        // console.log("selheight: " + selheight);
-        // console.log("selwidth: " + selwidth);
-        
-
-
+        console.log("before load imgheight " + imgheight);
+        console.log("before load imgwidth " + imgwidth); 
         if(typeof jcrop_active != 'undefined' && jcrop_active)
             {
-            // Disable cropper and reatatche with transformed co-ordinates
-            var curCoords = jcrop_api.tellSelect();
+            // Disable cropper but record co-ordinates
+            curCoords = jcrop_api.tellSelect();
+            console.log(curCoords);
             jcrop_api.destroy();
+            console.log('killed jcrop');
+            jcrop_active=false;
+            jcropreload = true;
             }
-        
-        rotatediv.css({"height":rotatesq,"width": rotatesq});
-        jQuery('.jcrop-aligned').css({"height":rotatesq,"width": rotatesq});
-        //rotateimg.css("transform","rotate(" + imgrotation + "deg)");
-        rotateimg.rotate(imgrotation);
-        jQuery('#imagetool-toolbar').css({"height":rotatesq}); 
 
-        // jQuery('#cropimage').css("transform","rotate(" + imgrotation + "deg)");
-        // jQuery('#cropimgdiv').css({"height":rotatesq,"width": rotatesq});
-        // jQuery('#imagetool-toolbar').css({"height":rotatesq});        
-        // jQuery('#cropimage').css("padding",0);
-        // topad.forEach(function(paditem)
-        //     {
-        //     jQuery('#cropimage').css("padding-" + paditem,padding);
-        //     });
-        
-        jQuery('#new_width').val(selheight);
-        jQuery('#new_height').val(selheight);
+        if(action=="reset")
+            {
+            imgrotation = 0;
+            flipx = 0;
+            flipy = 0;
+            //recrop = false;
+            imgheight = <?php echo $origpreheight ?>;
+            imgwidth = <?php echo $origprewidth ?>;
+            delete curCoords;
+            jcropreload = false;
+            }
+        else if(action == "rotate")
+            {
+            imgrotation += 90;
+            if(imgrotation >= 360)
+                {
+                imgrotation -= 360;
+                }
+            
+            imgheight = jQuery('#cropimage').width();
+            imgwidth = jQuery('#cropimage').height()
+            console.log("new rotate imgheight " + imgheight);
+            console.log("new rotate  imgwidth " + imgwidth);
+            rotated=true;
+            }
+        else if(action == "flipx")
+            {
+            flipx = !flipx;
+            imgheight = jQuery('#cropimage').height();
+            imgwidth = jQuery('#cropimage').width();
+            if(jcropreload)
+                {
+                flippedx = true;
+                }
+            }
+        else if(action == "flipy")
+            {
+            flipy = !flipy;
+            imgheight = jQuery('#cropimage').height();
+            imgwidth = jQuery('#cropimage').width();
+            if(jcropreload)
+                {
+                flippedy = true;
+                }
+            }
+
+        var crop_data = {
+            ref: '<?php echo $ref; ?>',
+            reload_image: 'true',
+            rotation: imgrotation,
+            flipx: (flipx ? 1 : 0),
+            flipy: (flipy ? 1 : 0),
+            <?php echo generateAjaxToken('crop_reload'); ?>
+            };
+        cropdate = new Date();
+        jQuery.ajax({
+            type: 'POST',
+            url: baseurl_short + 'plugins/transform/pages/crop.php',
+            data: crop_data,
+            dataType: "json",
+            success: function(data) {
+                if (data.message.trim() == "SUCCESS")
+                    {
+                    console.log('Replacing image');
+                    jQuery('#cropimage').attr('src','<?php echo $crop_pre_url ?>&' + cropdate.getTime());
+                    }
+                },
+            error: function (err) {
+                console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                styledalert("Unable to modify image");
+                }
+            }); 
         }
+
+    
+        jQuery('#cropimage').on("load", function() 
+            {
+            console.log("cropimage reloaded");
+            if(typeof imgwidth === "undefined")
+                {       
+                imgheight = jQuery('#cropimage').height();
+                imgwidth = jQuery('#cropimage').width();
+                }
+
+            console.log("afterload imgheight " + imgheight);
+            console.log("afterload imgwidth " + imgwidth);
+            
+            // Adjust padding and image to match new size
+            lpad = imgheight > imgwidth ? ((imgheight-imgwidth)/2) : 0;
+            tpad = imgwidth > imgheight ? ((imgwidth-imgheight)/2) : 0;
+            console.log("lpad " + lpad);
+            console.log("tpad " + tpad);
+            jQuery('#crop_imgholder').css("padding-left",lpad);
+            jQuery('#crop_imgholder').css("padding-top",tpad);
+            jQuery('#cropimage').height(imgheight);
+            jQuery('#cropimage').width(imgwidth);
+
+            // re-attach cropper if we had co-ordinates
+            if (typeof jcropreload !== "undefined" && jcropreload==true && typeof curCoords !== "undefined")
+                {
+                // Get current preview image co-ordinates
+                curx = curCoords["x"];
+                cury = curCoords["y"];
+                curx2 = curCoords["x2"];
+                cury2 = curCoords["y2"];
+                // Transform based on action
+                if (typeof flippedx !== "undefined" && flippedx==true)
+                    {
+                    newx = imgwidth - curx2;
+                    newy = cury;
+                    newx2 = imgwidth - curx;
+                    newy2 = cury2;
+                    }
+                else if (typeof flippedy !== "undefined" && flippedy==true)
+                    {
+                    newx = curx;
+                    newy = imgheight - cury2;
+                    newx2 = curx2;
+                    newy2 = imgheight - cury;
+                    }
+                else if (typeof rotated !== "undefined" && rotated==true)
+                    {
+                    newx = imgwidth - cury2;
+                    newy = curx;
+                    newx2 = imgwidth - cury;
+                    newy2 = curx2;
+                    }
+
+                console.log('reattaching cropper');
+                CropManager.attachCropper();
+                console.log('Re-adding selection jcrop_api.setSelect([' + newx + ',' + newy + ',' + newx2 + ',' + newy2 + ']);');
+                jcrop_api.setSelect([newx,newy,newx2,newy2]);
+                }  
+            })
+        
 
     function toggleCropper()
         {
         if(typeof jcrop_active != 'undefined' && jcrop_active)
             {
-            //jcrop_api.destroy();
+            jcrop_api.destroy();
             //jcrop_api.disable();
 
             //CropManager.removeCropper();
@@ -992,7 +1108,7 @@ if(!$cropperestricted)
             {
             CropManager.attachCropper();
             //jcrop_api.enable();
-            CropManager.curCrop.setOptions({rotate: imgrotation});
+            //CropManager.curCrop.setOptions({rotate: imgrotation});
             //jcrop_api.setOptions({
             //     rotate: imgrotation
             // });
@@ -1002,43 +1118,7 @@ if(!$cropperestricted)
             //padImage(rotateimg);
             }
         }
-
-    function padImage(image)
-        {
-        imgheight = image.height();
-        imgwidth = image.width();
-        if(imgheight > imgwidth)
-            {
-            padding = (imgheight - imgwidth) / 2;
-            }
-        else
-            {
-            padding = (imgwidth - imgheight) / 2; 
-            }
-        switch(imgrotation)
-            {
-            case 0:
-                topad=['top'];
-                break;
-            case 90:
-                topad=['left','top'];
-                break;
-            case 180:
-                topad=['bottom'];
-                break;
-            case 270:
-                topad=['right','bottom'];
-                break;
-            default:
-                topad=['left','top'];
-            }
-        image.css("padding",0);
-        topad.forEach(function(paditem)
-            {
-            image.css("padding-" + paditem,padding);
-            });
-        }
-
+    
     </script>
     <?php
     }
@@ -1072,14 +1152,18 @@ if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted)
 
 <div id="imagetool-toolbar">
     <table style="margin:auto;">
-    <?php
-    if (count($saveactions) > 0)
-        {?>
-        <tr style="background: #fff;color:#000;">
-        <td style="margin-left:3px;"><a href='#' onclick="jQuery('.imagetools_actions').hide();jQuery('#imagetools_save_actions').show();return false;"><span class="far fa-save"></span></a></td>
+        
+    <tr style="background: #fff;color:#000;">
+        <td><a href='#' onclick="cropReload('reset');return false;"><span class="fa fa-undo"></span></a></td>
         </tr>
         <?php
-        }?>
+        if (count($saveactions) > 0)
+            {?>
+            <tr style="background: #fff;color:#000;">
+            <td style="margin-left:3px;"><a href='#' onclick="jQuery('.imagetools_actions').hide();jQuery('#imagetools_save_actions').show();return false;"><span class="far fa-save"></span></a></td>
+            </tr>
+            <?php
+            }?>
 
         <tr style="background: #fff;color:#000;">
         <td style="margin-left:3px;"><a href='#' onclick="jQuery('.imagetools_actions').hide();jQuery('#imagetools_download_actions').show();return false;"><span class="fa fa-file-download"></span></a></td>
@@ -1094,7 +1178,13 @@ if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted)
         <td><span class="fa fa-copy"></span></td>
         </tr>
         <tr style="background: #fff;color:#000;">
-        <td><a href='#' onclick="imageToolsRotate();return false;"><span class="fa fa-sync"></span></a></td>
+        <td><a href='#' onclick="cropReload('rotate');return false;"><span class="fa fa-sync"></span></a></td>
+        </tr>
+        <tr style="background: #fff;color:#000;">
+        <td><a href='#' onclick="cropReload('flipx');return false;"><span class="fas fa-arrows-alt-h"></span></a></td>
+        </tr>
+        <tr style="background: #fff;color:#000;">
+        <td><a href='#' onclick="cropReload('flipy');return false;"><span class="fas fa-arrows-alt-v"></span></a></td>
         </tr>
         <tr style="background: #fff;color:#000;">
         <td><a href='#' onclick="jQuery('.imagetools_actions').hide();jQuery('#imagetools_corrections_actions').show();return false;"><span class="fa fa-sliders-h"></span></a></td>
@@ -1314,6 +1404,7 @@ if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted)
     ?>
         <p style='text-align:right;margin-top:15px;' id='transform_actions'>
         <input type='button' value="<?php echo $lang['cancel']; ?>" onclick="javascript:return CentralSpaceLoad('<?php echo $view_url ?>',true);" />
+        
         <?php if ($original){ ?>
                 <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>" />
         <?php } else { ?>

@@ -71,7 +71,7 @@ function get_resource_path(
            $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if(!$getfilepath && $hide_real_filepath)
+    if(!$getfilepath && $hide_real_filepath && !in_array($size,array("col","thm","pre")))
         {
         global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
