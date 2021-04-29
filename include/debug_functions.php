@@ -211,13 +211,14 @@ function get_tracked_vars(int $user)
 */
 function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
     {
-    $pid = getmypid() ?: 'Undefined'; # TODO: PHP processes might be re-used between requests. Try hashing important info from the HTTP request
+    $pid = getmypid() ?: 'Undefined';
+    $rid = md5(sprintf('%s-%s-%s', $pid, $_SERVER['REQUEST_URI'], serialize($_POST)));
     $userref = $GLOBALS['userref'] ?? 0;
     $user = $userref ?: 'System';
 
     // Log message formats
-    $format          = 'tracking var: [pid="%s" user="%s" place="%s"]%s[%s="%s"]';
-    $format_json_err = 'tracking var: [pid="%s" user="%s" place="%s"]%s[error] JSON error "%s" when $%s = %s';
+    $format          = 'tracking var: [pid="%s" rid="%s" user="%s" place="%s"]%s[%s="%s"]';
+    $format_json_err = 'tracking var: [pid="%s" rid="%s" user="%s" place="%s"]%s[error] JSON error "%s" when $%s = %s';
 
     // Process contextual structured data (if any are valid)
     $ctx_sd_str = '';
@@ -251,6 +252,7 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
                 sprintf(
                     $format_json_err,
                     $pid,
+                    $rid,
                     $user,
                     $place,
                     $ctx_structured_data,
@@ -263,7 +265,7 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
             continue;
             }
 
-        debug(sprintf($format, $pid, $user, $place, $ctx_structured_data, $tracked_var, $tracked_var_value));
+        debug(sprintf($format, $pid, $rid, $user, $place, $ctx_structured_data, $tracked_var, $tracked_var_value));
         }
     }
 
