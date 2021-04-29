@@ -89,7 +89,7 @@ if(!$video_preview_original && ($preview_duration < $original_duration))
 
 if(isset($start_time) && isset($end_time) && isset($upload_type)) 
     {
-    global $ffmpeg_preview_extension, $videosplice_parent_field, $alternative_file_previews, $notify_on_resource_change_days, $usercollection;
+    global $ffmpeg_preview_extension, $videosplice_description_field, $alternative_file_previews, $notify_on_resource_change_days, $usercollection;
 
     // process video
     // set up the start and end timepoints which will be used
@@ -121,7 +121,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             false
         );
 
-        update_field($newref,$videosplice_parent_field, "Trimmed video created from resource " . $ref . ":
+        update_field($newref,$videosplice_description_field, "Trimmed video created from resource " . $ref . ":
             Start time from original: " . $ffmpeg_start_time . "
             End time from original: " . $ffmpeg_end_time . "
             Total duration: " . $ffmpeg_duration_time);
@@ -570,14 +570,14 @@ function startCalculatedPreviewPlayback(start, end){
 function stopLoop(){
     var preview = document.getElementById("<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>_html5_api");
 
-        preview.currentTime = 0;
-        preview.pause();
+    preview.currentTime = 0;
+    preview.pause();
     }
 
 function generateTimestamps(){
-      document.getElementById("start-timestamp").innerHTML = secondsToHHMMSS(inputStart.value);
-      document.getElementById("end-timestamp").innerHTML = secondsToHHMMSS(inputEnd.value);
-      document.getElementById("duration-timestamp").innerHTML = secondsToHHMMSS(inputEnd.value-inputStart.value);
+    document.getElementById("start-timestamp").innerHTML = secondsToHHMMSS(inputStart.value);
+    document.getElementById("end-timestamp").innerHTML = secondsToHHMMSS(inputEnd.value);
+    document.getElementById("duration-timestamp").innerHTML = secondsToHHMMSS(inputEnd.value-inputStart.value);
     }
 
 function secondsToHHMMSS(seconds){

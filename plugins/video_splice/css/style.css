@@ -112,3 +112,22 @@ input[type=range]::-webkit-slider-thumb {
 .trimsubmit {
 	margin: auto;
 }
+
+#splice_scroll {
+    overflow-x: scroll;
+}
+#splice_reel {
+    margin: 20px;
+    height: 200px;
+    overflow:auto;
+}
+.splice_item {
+    margin: 5px;
+    display: inline !important;
+    vertical-align: middle;
+}
+
+.splicesubmit {
+	margin: auto;
+	width: 100px;
+}

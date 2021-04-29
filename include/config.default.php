@@ -3068,3 +3068,28 @@ $system_read_only = false;
 $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
+
+// Used for video track and video splice plugins to decide commands used for output. Video tracks will use its own config if provided to keep
+// backwards compatibility
+$ffmpeg_std_output_options= array(
+    "mp4"=>array(
+        "command"=>"-f mp4 -ar 22050 -b 650k -ab 32k -ac 1 -crf 20",
+        "extension"=>"mp4")     
+        ); 
+
+// Used by video splice plugin to decide common resolution for all video files to be merged
+$ffmpeg_std_resolution_options= array(
+    "1920 x 1080(horizontal)"=>array(
+        "width"=>"1920",
+        "height"=>"1080"),
+    "1080 x 1920(vertical)"=>array(
+        "width"=>"1080",
+        "height"=>"1920")
+    ); 
+
+// Used by video splice plugin to decide common frame rate for all video files to be merged
+$ffmpeg_std_frame_rate_options= array(
+    "23.98(fps)"=>"23.98",
+    "30(fps)"=>"30",
+    "60(fps)"=>"60"
+    ); 
