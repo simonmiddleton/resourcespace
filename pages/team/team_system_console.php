@@ -9,12 +9,6 @@ if ($same_page_callback)
 	include "../../include/authenticate.php";
 	}
 
-// TODO: remove after testing
-$annotate_fields[] = 'é';
-$annotate_fields[] = 'Düsseldorf';
-$annotate_fields[] = NAN;
-debug_track_vars('team_system_console-#############', get_defined_vars());
-
 
 $callback = getval("callback","");
 $actasuser = getval("actasuser","");
