@@ -95,6 +95,9 @@ if($blockcrop)
 
 $imversion = get_imagemagick_version();
 
+
+$actions = explode(",",getval("actions",""));
+
 if (getval('flipx',0,true) == 1 && !$cropperestricted)
     {
     $flipx = true;
@@ -128,7 +131,7 @@ $options=array(
     "flipy"     => $flipy,
     );
 
-$generated = generate_transform_preview($ref,$crop_pre_file, $options);
+$generated = generate_transform_preview($ref,$crop_pre_file, $actions);
 if($reload_image)
     {
     if($generated)
@@ -845,9 +848,9 @@ if(!$cropperestricted)
             };
 
             // Set defaults
-            imgrotation = 0;
-            flipx = 0;
-            flipy = 0;
+            imgactions = [];
+            // flipx = 0;
+            // flipy = 0;
             
             function unfocus_widths(){
                 document.getElementById('new_width').blur();
@@ -960,9 +963,7 @@ if(!$cropperestricted)
 
         if(action=="reset")
             {
-            imgrotation = 0;
-            flipx = 0;
-            flipy = 0;
+            imgactions = [];
             //recrop = false;
             imgheight = <?php echo $origpreheight ?>;
             imgwidth = <?php echo $origprewidth ?>;
@@ -971,12 +972,7 @@ if(!$cropperestricted)
             }
         else if(action == "rotate")
             {
-            imgrotation += 90;
-            if(imgrotation >= 360)
-                {
-                imgrotation -= 360;
-                }
-            
+            imgactions.push('r');            
             imgheight = jQuery('#cropimage').width();
             imgwidth = jQuery('#cropimage').height()
             console.log("new rotate imgheight " + imgheight);
@@ -985,7 +981,7 @@ if(!$cropperestricted)
             }
         else if(action == "flipx")
             {
-            flipx = !flipx;
+            imgactions.push('x'); 
             imgheight = jQuery('#cropimage').height();
             imgwidth = jQuery('#cropimage').width();
             if(jcropreload)
@@ -995,7 +991,7 @@ if(!$cropperestricted)
             }
         else if(action == "flipy")
             {
-            flipy = !flipy;
+            imgactions.push('y'); 
             imgheight = jQuery('#cropimage').height();
             imgwidth = jQuery('#cropimage').width();
             if(jcropreload)
@@ -1007,9 +1003,10 @@ if(!$cropperestricted)
         var crop_data = {
             ref: '<?php echo $ref; ?>',
             reload_image: 'true',
-            rotation: imgrotation,
-            flipx: (flipx ? 1 : 0),
-            flipy: (flipy ? 1 : 0),
+            // rotation: imgrotation,
+            // flipx: (flipx ? 1 : 0),
+            // flipy: (flipy ? 1 : 0),
+            actions: imgactions.join(),
             <?php echo generateAjaxToken('crop_reload'); ?>
             };
         cropdate = new Date();

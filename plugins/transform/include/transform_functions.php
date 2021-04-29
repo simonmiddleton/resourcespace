@@ -53,6 +53,24 @@ function generate_transform_preview($ref, $destpath, $options)
         $tweaks .= " -flip ";
         }
 
+    foreach($options as $option)
+        {
+        switch ($option)
+            {
+            case "r":
+                $tweaks .= " -rotate 90 ";
+                break;
+            case "x":
+                $tweaks .= " -flop ";
+            break;
+            case "y":
+                $tweaks .= " -flip ";
+            break;
+            }
+
+
+        }
+
     $command .= " \"$transformsourcepath\"[0] +matte -flatten $tweaks $colorspace1 -resize 450x450 $colorspace2 \"$destpath\"";
     run_command($command);
     
