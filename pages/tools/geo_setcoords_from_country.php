@@ -1,7 +1,4 @@
 <?php
-
-include "../../include/db.php";
-
 # A script to set the geo coordinates based on a country field (if available) for resources with no geolocation information set.
 
 $coords=build_coords();
