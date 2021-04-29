@@ -158,7 +158,8 @@ function is_tracking_vars_active(int $user)
 
 
 /**
-* Get all tracked variables (for debug) for user
+* Get all tracked variables (for debug) for user. If user invalid, it will get all the variables currently being tracked
+* by all users.
 * 
 * @param int $user User ID
 * 
@@ -166,15 +167,27 @@ function is_tracking_vars_active(int $user)
 */
 function get_tracked_vars(int $user)
     {
-    if($user <= 0)
+    if($user > 0)
         {
-        return [];
+        $vars_csv = get_sysvar("track_var_{$user}", '');
+        $vars_list = explode(',', $vars_csv);
+        $vars_trimmed = array_map('trim', $vars_list);
+        $vars_not_empty = array_filter($vars_trimmed);
+        return array_values(array_unique($vars_not_empty));
         }
 
-    $vars_csv = get_sysvar("track_var_{$user}", '');
-    $vars_list = explode(',', $vars_csv);
-    $vars_trimmed = array_map('trim', $vars_list);
-    return array_filter($vars_trimmed);
+    $all_tracked_vars = [];
+    $all_users_tracked_vars = sql_array("SELECT `value` FROM sysvars WHERE `name` REGEXP '^track_var_[[:digit:]]+$'");
+    foreach($all_users_tracked_vars as $vars_csv)
+        {
+        $vars_list = explode(',', $vars_csv);
+        $vars_trimmed = array_map('trim', $vars_list);
+        $vars_not_empty = array_filter($vars_trimmed);
+
+        $all_tracked_vars = array_merge($all_tracked_vars, $vars_not_empty);
+        }
+
+    return array_values(array_unique($all_tracked_vars));
     }
 
 
@@ -196,13 +209,17 @@ function get_tracked_vars(int $user)
 */
 function debug_track_vars(string $place, array $vars)
     {
-    $pid = getmypid() ?: 'Undefined';
-    $format = 'tracking var: [pid=%1$s place="%2$s"][%3$s="%4$s"]';
-    $format_json_err = 'tracking var: [pid=%1$s place="%2$s"][error] JSON error "%3$s" when $%4$s = %5$s';
+    $pid = getmypid() ?: 'Undefined'; # TODO: PHP processes might be re-used between requests. Try hashing important info from the HTTP request
+    $userref = $GLOBALS['userref'] ?? 0;
+    $user = $userref ?: 'System';
+
+    // Log message formats
+    $format          = 'tracking var: [pid="%s" user="%s" place="%s"][%s="%s"]';
+    $format_json_err = 'tracking var: [pid="%s" user="%s" place="%s"][error] JSON error "%s" when $%s = %s';
 
     // For readability reasons, we show each tracked var on a new line in the debug log. If performance is badly affected,
     // we can switch to combine all tracked vars in the last SD-ELEMENT (ie [var1="value" var2="value"])
-    $tracked_vars = get_tracked_vars($GLOBALS['userref'] ?? 0);
+    $tracked_vars = get_tracked_vars($userref);
     foreach($tracked_vars as $tracked_var)
         {
         if(!isset($vars[$tracked_var]))
@@ -220,6 +237,7 @@ function debug_track_vars(string $place, array $vars)
                 sprintf(
                     $format_json_err,
                     $pid,
+                    $user,
                     $place,
                     json_last_error_msg(),
                     $tracked_var,
@@ -230,6 +248,6 @@ function debug_track_vars(string $place, array $vars)
             continue;
             }
 
-        debug(sprintf($format, $pid, $place, $tracked_var, $tracked_var_value));
+        debug(sprintf($format, $pid, $user, $place, $tracked_var, $tracked_var_value));
         }
     }
