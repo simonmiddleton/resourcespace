@@ -446,6 +446,37 @@ switch ($callback)
                 <div class="clearerleft"></div>
             </div>
             <?php
+            // ----- start of tail read
+            $track_vars_dbg_log_path = $debug_log_location ?? get_debug_log_dir() . '/debug.txt';
+            if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
+                {
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000));
+                foreach($lines as $line)
+                    {
+                    $line = trim($line);
+                    if($line === '' || strpos($line, 'tracking var:') === false)
+                        {
+                        continue;
+                        }
+                    // Remove the identifying string as it's just poluting the log entry from this point on
+                    $line = str_replace('tracking var:', '', $line);
+
+                    if($filter === '' || strpos($line, $filter) !== false)
+                        {
+                        $entry = [$lang['log'] => $line];
+                        array_push($results, $entry);
+                        }
+                    }
+                }
+            else
+                {
+                ?><br />
+                <?php
+                echo $lang["systemconsoleondebuglognotsetorfound"];
+                ?><br />
+                <?php
+                }
+            // ----- end of tail read
             break;
 	} // end of callback switch
 
