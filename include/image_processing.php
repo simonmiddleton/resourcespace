@@ -1893,7 +1893,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 # Add a watermarked image too?
                 global $watermark, $watermark_single_image;
                 
-                if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command)) && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
+                if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))
+                     && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) 
+                     && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}

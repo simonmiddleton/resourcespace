@@ -2628,6 +2628,10 @@ function set_user_profile($user_ref,$profile_text,$image_path)
             {
             unlink($image_path);
             }
+        else
+            {
+            return false;
+            }
         }
 
     # Update user to set user.profile
