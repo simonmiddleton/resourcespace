@@ -406,7 +406,7 @@ switch ($callback)
                 {
                 set_sysvar("track_var_{$userref}", $track_vars);
                 set_sysvar("track_var_{$userref}_duration", $track_var_duration);
-                set_sysvar("track_var_{$userref}_start_datetime", date("Y-m-d H:i:s"));
+                set_sysvar("track_var_{$userref}_start_datetime", date('Y-m-d H:i:s'));
                 }
             else if(getval('cancel', '') === '1')
                 {
