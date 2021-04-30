@@ -1122,8 +1122,8 @@ function save_collection($ref, $coldata=array())
                 continue;
                 }
 
-            // Public collection
-            if($colopt == "public" && $colset == 1)
+            // Set type to public unless explicitly passed
+            if($colopt == "public" && $colset == 1 && !isset($coldata["type"]))
                 {
                 $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
                 }
