@@ -11,7 +11,7 @@ $page_heading = $lang['videospliceconfiguration'];
 
 
 $page_def[]= config_add_single_rtype_select("videosplice_resourcetype",$lang["video_resource_type"]);
-$page_def[]= config_add_single_ftype_select("videosplice_parent_field",$lang["parent_resource_field"]);
+$page_def[]= config_add_single_ftype_select("videosplice_description_field",$lang["description_resource_field"]);
 
 
 // Do the page generation ritual

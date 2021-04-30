@@ -294,7 +294,7 @@ if(!empty($trimmed_resources_new))
     foreach ($trimmed_resources_new as $trimmed_ref) {
         $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
     }
-    echo "<p><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, $lang["video-trim_new-response"]) . "</p><br/>";
+    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, $lang["video-trim_new-response"]) . "</div>";
     }
 if(!empty($trimmed_resources_alt))
     {
@@ -303,7 +303,7 @@ if(!empty($trimmed_resources_alt))
     foreach ($trimmed_resources_alt as $trimmed_ref) {
         $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/preview.php', array('ref' => $ref, 'alternative' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
     }
-    echo "<p><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, $lang["video-trim_alt-response"])) . "</p><br/>";
+    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, $lang["video-trim_alt-response"])) . "</div>";
     }
     ?>
 <h1><?php echo $lang["video-trim"]; render_help_link("plugins/video-splice");?></h1>

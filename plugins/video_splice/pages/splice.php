@@ -3,17 +3,20 @@
 include "../../../include/db.php";
 
 include "../../../include/authenticate.php";
-include "../../../include/image_processing.php";
+include "../include/splice_functions.php";
 
 // Fetch videos and process...
-$videos = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC");
+$message = "";
+$videos = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC", false, 0, false, false, '', false, true, true);
+$videos_data = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC");
 $offline = $offline_job_queue;
 $splice_order = getval("splice_order", null);
-$video_splice_format = getval("video_splice_format", null);
+$video_splice_video = getval("video_splice_video", null);
 $video_splice_resolution = getval("video_splice_resolution", null);
 $video_splice_frame_rate = getval("video_splice_frame_rate", null);
+$video_splice_audio = getval("video_splice_audio", null);
 $video_splice_type = getval("video_splice_type", null);
-$description = getval("question_description", null);
+$description = getval("video_splice_new_desc", "");
 
 // The user can decide if he/ she wants to wait for the file to be transcoded or be notified when ready
 $transcode_now = (getval('transcode_now', '') == 'yes' ? true : false);
@@ -26,7 +29,8 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
     {
     // Lets get the correct splice_order and put it into an array '$videos_reordered'
     $explode_splice = explode(",", $splice_order);
-    $videos_reordered = array();#
+    $videos_reordered = array();
+    $videos_data_reordered = array();
 
     foreach($explode_splice as $key => $splice_ref)
         {
@@ -34,68 +38,63 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
         $this_key = $explode_splice[$key];
         $the_key_i_need = array_search($this_key, array_column($videos, 'ref'));
         $videos_reordered[] = $videos[$the_key_i_need];
+        $videos_data_reordered[] = $videos_data[$the_key_i_need];
         }
     
     # Reset $videos to the correct order from $videos_reordered
     $videos = $videos_reordered;
-    # Below works as before
-    $ref = copy_resource($videos[0]["ref"]); # Base new resource on first video (top copy metadata).
+    $videos_data = $videos_data_reordered;
 
-    if($video_splice_format!=null && $video_splice_resolution!=null && $video_splice_frame_rate!=null)
+    if($video_splice_video!=null && $video_splice_resolution!=null && $video_splice_frame_rate!=null)
         {       
-        // Build up the ffmpeg command
-        $ffmpeg_fullpath = get_utility_path("ffmpeg");
-        $ffprobe_fullpath = get_utility_path("ffprobe");
-        $randstring=md5(rand() . microtime());
-
         // Build the chosen ffmpeg command as set in the config
-        $target_format_command = $ffmpeg_std_output_options[$video_splice_format]["command"];
-        $target_format_extension = $ffmpeg_std_output_options[$video_splice_format]["extension"];
+        $target_video_command = $ffmpeg_std_video_options[$video_splice_video]["command"];
+        $target_video_extension = $ffmpeg_std_video_options[$video_splice_video]["extension"];
+        $target_audio = $ffmpeg_std_audio_options[$video_splice_audio]["command"];
         $target_width = $ffmpeg_std_resolution_options[$video_splice_resolution]["width"];
         $target_height = $ffmpeg_std_resolution_options[$video_splice_resolution]["height"];
-        $target_height = $ffmpeg_std_resolution_options[$video_splice_resolution]["height"];
-        $target_frame_rate = $ffmpeg_std_frame_rate_options[$video_splice_frame_rate];
-        $target_temp_location = get_temp_dir(false,"splice/" . $ref . "_" . md5($username . $randstring . $scramble_key));
-        $target_order_count = 0;
-        $target_completed_locations = array();
-
-        foreach ($videos as $video) 
+        $target_frame_rate = $ffmpeg_std_frame_rate_options[$video_splice_frame_rate]["value"];
+        
+        if ($video_splice_type == "video_splice_save_new") 
             {
-            $filesource = get_resource_path($video["ref"],true,"",false,$video["file_extension"]);
-            $has_no_audio = empty(run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource) . " -show_streams -select_streams a -loglevel error", true))?"_noaudio":"";  
-            $target_completed_location = $target_temp_location . "/" . $target_order_count . $has_no_audio . "." . $target_format_extension; 
+            if($offline)
+                { 
+                // Add this to the job queue for offline processing
+                $generate_merged_video_job_data = array(
+                    'videos' => $videos,
+                    'video_splice_type' => $video_splice_type,
+                    'target_video_command' => $target_video_command,
+                    'target_video_extension' => $target_video_extension,
+                    'target_audio' => $target_audio,
+                    'target_width' => $target_width,
+                    'target_height' => $target_height,
+                    'target_frame_rate' => $target_frame_rate,
+                    'description' => $description
+                );
+                $generate_merged_video_job_success_text = "success";
+                $generate_merged_video_job_failure_text = "fail";
 
-            $video_splice_options = $target_format_command . ' -vf "fps=' . $target_frame_rate . ',scale=' . $target_width . ':' . $target_height . ':force_original_aspect_ratio=decrease,pad=' . $target_width . ':' . $target_height . ':(ow-iw)/2:(oh-ih)/2" -sws_flags lanczos';
-            $video_splice_command = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . escapeshellarg($filesource) . " " . $video_splice_options . " " . $target_completed_location;
+                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
 
-            $output=run_command($video_splice_command);
-
-            if(!empty($has_no_audio))
-                {
-                $no_audio_command = $ffmpeg_fullpath . " -i " . escapeshellarg($target_completed_location) . " -f lavfi -i anullsrc -vcodec copy -acodec aac -b:a 32k -ar 22050 -ac 1 -shortest " . str_replace("_noaudio","",$target_completed_location);
-                $output=run_command($no_audio_command);
-                unlink($target_completed_location);
-                $target_completed_location = str_replace("_noaudio","",$target_completed_location);
+                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
                 }
-            $target_completed_locations[] = $target_completed_location;
-            $target_order_count++;
+            else
+                {               
+                $ref = generate_merged_video(
+                    $videos,
+                    $video_splice_type,
+                    $target_video_command,
+                    $target_video_extension,
+                    $target_audio,
+                    $target_width,
+                    $target_height,
+                    $target_frame_rate,
+                    $description
+                    ); 
+
+                $message = str_replace("%ref", $ref, $lang["video_splice_completed"]);         
+                }
             }
-
-        $list_file_command = "";
-
-        foreach ($target_completed_locations as $target_completed_location) 
-            {
-            // Build list file contents
-            $list_file_command .= "file '" . $target_completed_location . "'\n";
-            }
-
-        file_put_contents($target_temp_location . "/list.txt", $list_file_command);
-
-        $merge_command = "ffmpeg -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . $target_format_extension . "'";
-
-        $output=run_command($merge_command);
-
-        //echo '<pre>';echo print_r($merge_command, true);echo '</pre>';die('Died at line ' . __LINE__ . ' in ' . __FILE__);
         }
     }
 
@@ -106,6 +105,12 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 <h1><?php echo $lang["video-splice"]; render_help_link("plugins/video-splice");?></h1>
 <p><?php echo $lang["video-splice-intro"]?></p>
+<?php
+    if ($message!="")
+        {
+        echo "<div class=\"PageInformal\">" . $message . "</div>";
+        }
+?>
 <div class="RecordBox">
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
@@ -113,19 +118,19 @@ include "../../../include/header.php";
                 <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo ((count($videos)+2) * 180);?>px">
                 <?php
                 
-                    foreach ($videos as $video)
+                    foreach ($videos_data as $video_data)
                         {
-                        if ($video["has_image"])
+                        if ($video_data["has_image"])
                             {
-                            $img = get_resource_path($video["ref"], false, "thm", false, $video["preview_extension"], -1, 1, false, $video["file_modified"]);
+                            $img = get_resource_path($video_data["ref"], false, "thm", false, $video_data["preview_extension"], -1, 1, false, $video_data["file_modified"]);
                             }
                         else
                             {
-                            $img = "../../../gfx/" . get_nopreview_icon($video["resource_type"], $video["file_extension"], true);
+                            $img = "../../../gfx/" . get_nopreview_icon($video_data["resource_type"], $video_data["file_extension"], true);
                             }
                             
                 ?>
-                <img src="<?php echo $img ?>" id="splice_<?php echo $video["ref"] ?>" class="splice_item">
+                <img src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
                 <?php } ?>
                 </div>
             </div>
@@ -145,13 +150,13 @@ include "../../../include/header.php";
             <p id="ids_in_order"></p>
             <div class="clearerleft"> </div>
             </div>
-        <div class="Question" id="question_video_splice_format">
-            <label><?php echo $lang["video_splice_select_output"] ?></label>
-            <select class="stdwidth" name="video_splice_format" id="video_splice_format" >
+        <div class="Question" id="question_video_splice_video">
+            <label><?php echo $lang["video_splice_select_video"] ?></label>
+            <select class="stdwidth" name="video_splice_video" id="video_splice_video" >
             <?php
-            foreach ($ffmpeg_std_output_options as $video_output_format=>$video_splice_output_command)
+            foreach ($ffmpeg_std_video_options as $video_output_video=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_format)) . "' >" . htmlspecialchars(trim($video_output_format)) . "</option>";
+                echo "<option value='" . htmlspecialchars(trim($video_output_video)) . "' " . (isset($ffmpeg_std_video_options[$video_output_video]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_video)) . "</option>";
                 }
                 ?>
             </select>
@@ -163,7 +168,7 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_resolution_options as $video_output_resolution=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_resolution)) . "' >" . htmlspecialchars(trim($video_output_resolution)) . "</option>";
+                echo "<option value='" . htmlspecialchars(trim($video_output_resolution)) . "' " . (isset($ffmpeg_std_resolution_options[$video_output_resolution]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_resolution)) . "</option>";
                 }
                 ?>
             </select>
@@ -175,7 +180,19 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_frame_rate_options as $video_output_frame_rate=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_frame_rate)) . "' >" . htmlspecialchars(trim($video_output_frame_rate)) . "</option>";
+                echo "<option value='" . htmlspecialchars(trim($video_output_frame_rate)) . "' " . (isset($ffmpeg_std_frame_rate_options[$video_output_frame_rate]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_frame_rate)) . "</option>";
+                }
+                ?>
+            </select>
+        <div class="clearerleft"></div>
+        </div>
+        <div class="Question" id="question_video_splice_audio">
+            <label><?php echo $lang["video_splice_select_audio"] ?></label>
+            <select class="stdwidth" name="video_splice_audio" id="video_splice_audio" >
+            <?php
+            foreach ($ffmpeg_std_audio_options as $video_output_audio=>$video_splice_output_command)
+                {
+                echo "<option value='" . htmlspecialchars(trim($video_output_audio)) . "' " . (isset($ffmpeg_std_audio_options[$video_output_audio]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_audio)) . "</option>";
                 }
                 ?>
             </select>
@@ -249,7 +266,7 @@ include "../../../include/header.php";
                 {
                 ?>
                 <div class="Question" id="question_transcode_now_or_notify_me" style="display:none;">
-                    <label><?php echo $lang['video_splices_transcode_now_or_notify_me_label']; ?></label>
+                    <label><?php echo $lang['video_splice_transcode_now_or_notify_me_label']; ?></label>
                     <table cellpadding="5" cellspacing="0">
                         <tbody>
                             <tr>
@@ -261,7 +278,7 @@ include "../../../include/header.php";
                                            value="yes"
                                            ">
                                     <label class="customFieldLabel Inline"
-                                           for="transcode_now"><?php echo $lang['video_splices_transcode_now_label']; ?></label>
+                                           for="transcode_now"><?php echo $lang['video_splice_transcode_now_label']; ?></label>
                                 </td>
                             </tr>
                         </tbody>
@@ -273,7 +290,7 @@ include "../../../include/header.php";
                 ?>
         <input type="hidden" name="splice_order" id="splice_reel_order" />
         <div class="QuestionSubmit">
-             <input name="splice_submit" class="splicesubmit" type="submit" value="<?php echo $lang["action-splice"]?>" onclick="CentralSpaceShowLoading();">
+             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo $lang["action-splice"]?>" onclick="CentralSpaceShowLoading();">
              <br />
              <div class="clearerleft"> </div>
         </div>
