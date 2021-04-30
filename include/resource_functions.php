@@ -1073,12 +1073,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
-
     $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
- 
-    foreach($autocomplete_fields as $ref => $value)
+    foreach($autocomplete_fields as $autocomplete_field_ref => $autocomplete_field_value)
         {
-        $new_checksums[$ref] = md5($value);
+        $new_checksums[$autocomplete_field_ref] = md5($autocomplete_field_value);
         }
         
     // Initialise an array of updates for the resource table
