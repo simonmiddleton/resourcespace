@@ -211,6 +211,12 @@ function get_tracked_vars(int $user)
 */
 function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
     {
+    global $debug_log;
+    if(!$debug_log)
+        {
+        return;
+        }
+
     $pid = getmypid() ?: 'Undefined';
     $rid = md5(sprintf('%s-%s-%s', $pid, $_SERVER['REQUEST_URI'], serialize($_POST)));
     $userref = $GLOBALS['userref'] ?? 0;
