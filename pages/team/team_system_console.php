@@ -464,6 +464,32 @@ switch ($callback)
                     if($filter === '' || strpos($line, $filter) !== false)
                         {
                         $entry = [$lang['log'] => $line];
+
+                        // Preprocess the line and extract out to their own columns common structured data (e.g PID, 
+                        // RID - request ID, User and the place the tracking took place)
+                        if(
+                            preg_match_all('/(\w+)="([a-zA-Z0-9_@\/.\[\]-]+)"/', $line, $matches) !== false
+                            && !empty($matches)
+                            // safety checks (preg_match_all might ensure internally the below)
+                            && isset($matches[0], $matches[1], $matches[2])
+                            && count($matches[0]) === count($matches[1])
+                            && count($matches[1]) === count($matches[2])
+                        )
+                            {
+                            $entry = [];
+                            // Iterate through param names in the structured data (for the data that we know about the event)
+                            foreach($matches[1] as $idx => $param_name)
+                                {
+                                if(in_array($param_name, ['pid', 'rid', 'user', 'place']))
+                                    {
+                                    $entry[$param_name] = $matches[2][$idx];
+                                    $line = str_replace($matches[0][$idx], '', $line);
+                                    }
+                                }
+                            $line = preg_replace('/\[\s*\]/', '', $line);
+                            $entry[$lang['log']] = $line;
+                            }
+
                         array_push($results, $entry);
                         }
                     }

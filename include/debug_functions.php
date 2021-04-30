@@ -218,7 +218,7 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
 
     // Log message formats
     $format          = 'tracking var: [pid="%s" rid="%s" user="%s" place="%s"]%s[%s="%s"]';
-    $format_json_err = 'tracking var: [pid="%s" rid="%s" user="%s" place="%s"]%s[error] JSON error "%s" when $%s = %s';
+    $format_json_err = 'tracking var: [pid="%s" rid="%s" user="%s" place="%s"]%s JSON error "%s" when $%s = %s';
 
     // Process contextual structured data (if any are valid)
     $ctx_sd_str = '';
