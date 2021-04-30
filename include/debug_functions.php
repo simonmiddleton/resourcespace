@@ -218,7 +218,7 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
         }
 
     $pid = getmypid() ?: 'Undefined';
-    $rid = md5(sprintf('%s-%s-%s', $pid, $_SERVER['REQUEST_URI'], serialize($_POST)));
+    $rid = md5(sprintf('%s-%s-%s', $pid, $_SERVER['REQUEST_URI'] ?? $_SERVER['argv'], serialize($_POST)));
     $userref = $GLOBALS['userref'] ?? 0;
     $user = $userref ?: 'System';
 
