@@ -56,9 +56,17 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	$command = get_utility_path("im-convert");
 	if (!$command)
 		die("Could not find ImageMagick 'convert' utility.");
-
+    
+	$requested_extension = $resource['file_extension'];
+	# If downloading alternative file, lookup its file extension before preparing resource path as it may differ from the resource.
+	if ($alternative > 0)
+	    {
+	    $alt_file = get_alternative_file($resource['ref'], $alternative);
+	    $requested_extension = $alt_file['file_extension'];
+	    }
+	
 	$originalPath = get_resource_path($resource['ref'], true, '', false,
-			$resource['file_extension'], -1, $page, false, '', $alternative);
+			$requested_extension, -1, $page, false, '', $alternative);
 
 	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
 	if ($resource['file_extension'] == "eps")		
