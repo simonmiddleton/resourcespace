@@ -395,8 +395,9 @@ switch ($callback)
             $track_vars = trim(getval('track_vars', ''));
             $track_var_duration = (int) getval('track_var_duration', 0);
 
-            // Stop tracking variables if we passed the tracking period
-            if(!is_tracking_vars_active($userref))
+            // Stop tracking variables if session expired
+            $tracking_vars_session_active = is_tracking_vars_active($userref);
+            if(!$tracking_vars_session_active)
                 {
                 clear_tracking_vars_info([$userref]);
                 }
@@ -448,7 +449,11 @@ switch ($callback)
             <?php
             // ----- start of tail read
             $track_vars_dbg_log_path = $debug_log_location ?? get_debug_log_dir() . '/debug.txt';
-            if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
+            if(!$tracking_vars_session_active)
+                {
+                // DO NOT process the log file since tracking session expired
+                }
+            else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
                 $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000));
                 foreach($lines as $line)
