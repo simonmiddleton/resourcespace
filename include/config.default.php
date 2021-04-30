@@ -3073,7 +3073,7 @@ $upload_link_workflow_state = -1;
 // backwards compatibility
 $ffmpeg_std_output_options= array(
     "mp4"=>array(
-        "command"=>"-f mp4 -ar 22050 -b 650k -ab 32k -ac 1 -crf 20",
+        "command"=>"-f mp4 -b:v 650k -b:a 32k -ar 22050 -ac 1 -crf 20",
         "extension"=>"mp4")     
         ); 
 
@@ -3084,7 +3084,13 @@ $ffmpeg_std_resolution_options= array(
         "height"=>"1080"),
     "1080 x 1920(vertical)"=>array(
         "width"=>"1080",
-        "height"=>"1920")
+        "height"=>"1920"),
+    "1280 x 720(horizontal)"=>array(
+        "width"=>"1280",
+        "height"=>"720"),
+    "720 x 1280(vertical)"=>array(
+        "width"=>"720",
+        "height"=>"1280")
     ); 
 
 // Used by video splice plugin to decide common frame rate for all video files to be merged
