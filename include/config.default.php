@@ -838,14 +838,6 @@ $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
 
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 
-
 
 # A list of types which get the extra video icon in the search results
 $videotypes=array(3);
