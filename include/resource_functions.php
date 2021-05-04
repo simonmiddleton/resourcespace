@@ -1031,6 +1031,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
          # save related resources field
          sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
+         # Trim whitespace from each entry
+         foreach ($related as &$relatedentry) {
+            $relatedentry = trim($relatedentry);
+         }
          # Make sure all submitted values are numeric
          $to_relate = array_filter($related,"is_int_loose");
          if(count($to_relate)>0)
