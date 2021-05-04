@@ -48,17 +48,17 @@ if($terms_download)
     {
     if ($iaccept != 'on')
         {
-        exit('Terms have not been accepted');
+        exit($lang["mustaccept"]);
         }
     if ($download_usage)
         {
         if ( !(is_numeric($usage) && $usage >= 0) )
             {
-            exit('Terms usage has not been specified');
+            exit($lang["termsmustindicateusage"]);
             }
         if ($usagecomment == '')
             {
-            exit('Terms usage comment has not been specified');
+            exit($lang["termsmustspecifyusagecomment"]);
             }            
         }
     }
