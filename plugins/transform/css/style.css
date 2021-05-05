@@ -22,3 +22,13 @@
     width:450px;
     height:450px;
     }
+
+.FloatingOptions {
+    float: left;
+    margin-left: 10px;
+    }
+
+#cropdiv{
+    float: left;
+    width: 500px;
+    }
