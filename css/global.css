@@ -464,6 +464,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     background-color: #f2f2f2;
     border-top: 1px solid #c1c1c1;
     box-shadow: 0 -12px 15px -12px #bbbbbb;
+    z-index: 2;
 }
 /* IE does not support position: sticky so fall back to standard styling */
 @media all and (-ms-high-contrast:none) {
@@ -1765,7 +1766,8 @@ a.Enabled, a:visited.Enabled {
 #preview {
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     max-height: 250px;
-    max-width: 235px;
+    max-width: 240px;
+    margin-top: 10px;
 }
 
 /* Configuration options */
@@ -2011,8 +2013,6 @@ a.BrowseRefresh{
 }
 
 .Question.QuestionStickyRight {
-    position: sticky;
-    top: 0;
     background-color: #f2f2f2;
     border-left: 1px solid #c1c1c1;
     border-top: none;
@@ -2021,7 +2021,6 @@ a.BrowseRefresh{
     padding-left: 15px;
     padding-top: 0;
     padding-bottom: 0;
-    z-index: 1;
     width: 100%;
     height: 100%;
 }
@@ -2030,38 +2029,23 @@ a.BrowseRefresh{
     margin-bottom: 10px;
 }
 
-.BasicsBoxLeft {
-    z-index: 2;
-    /*width: 80%;
-    display: inline-block;*/
-}
-
-.BasicsBoxRight {
-    /*width: 20%;
-    display: inline-block;*/
-}
-
 .BasicsBoxEdit {
     display: grid;
     grid-template-columns: 1fr 250px;
     /*grid-template-rows: 1fr 60px;*/
 }
 
-#modal .BasicsBoxEdit .RecordHeader {
-    margin: -20px 0px 0 -20px;
+.BasicsBoxEdit .QuestionSubmit.QuestionSticky,
+.BasicsBoxEdit .RecordHeader {
+    width: calc(100% + 250px);
 }
 
-.BasicsBoxEdit .backtoresults {
-    margin-right: 10px;
-}
-
-.BasicsBoxFooter {
-    grid-column-start: 1;
-    grid-column-end: span 2;
-    z-index: 2;
+.BasicsBoxRight {
+    margin-top: 75px;
 }
 
 .FloatingPreviewContainer {
+    position: -webkit-sticky; 
     position: sticky;
     top: 15px;
 }

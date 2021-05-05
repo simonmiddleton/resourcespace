@@ -2374,6 +2374,12 @@ jQuery('document').ready(function()
 	/* Call SelectTab upon page load to select first tab*/
     SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
     registerCollapsibleSections(true);
+
+    // Move the preview image to the top of the page on smaller devices
+    if (jQuery(document).width() < 850)
+        {
+        jQuery('#question_file').insertAfter(jQuery('.RecordHeader'));
+        }
     });
 </script>
 <?php

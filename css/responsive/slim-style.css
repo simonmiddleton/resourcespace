@@ -1180,3 +1180,36 @@ body {
         width: 100%;
     }
 }
+
+/* Edit page preview */
+@media (max-width: 1280px) {
+    .BasicsBoxEdit {
+        grid-template-columns: 1fr 200px;
+    }
+    #preview {
+        max-width: 200px;
+    }
+    .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
+    .BasicsBoxEdit .RecordHeader {
+        width: calc(100% + 200px);
+    }
+    #CentralSpace .Question select {
+        width: 97%;
+    }
+}
+@media (max-width: 850px) {
+    .BasicsBoxEdit {
+        display: block;
+    }
+    .Question.QuestionStickyRight {
+        height: auto;
+        border-left: none;
+        box-shadow: none;
+        padding-left: 0.5em;
+    }
+    .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
+    .BasicsBoxEdit .RecordHeader {
+        width: 100%;
+    }
+    
+}
