@@ -1230,7 +1230,12 @@ else
                 { ?>           
                 <strong>
                 <?php 
-                echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
+                $orig_path = get_resource_path($ref,true,"",false,$resource["file_extension"]);
+                if(file_exists($orig_path))
+                    {
+                    $filesize = filesize_unlimited($orig_path);
+                    echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize($filesize) . ")";
+                    }                
                 ?>
                 </strong>
                 <?php 
