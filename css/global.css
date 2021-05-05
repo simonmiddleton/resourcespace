@@ -1765,6 +1765,7 @@ a.Enabled, a:visited.Enabled {
 #preview {
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     max-height: 250px;
+    max-width: 235px;
 }
 
 /* Configuration options */
@@ -1994,7 +1995,7 @@ a.BrowseRefresh{
 
 .JobTable {
     clear: both;
-}
+}margin
 .JobTable .ListTools a {
     float: left;
     margin-left: 10px;
@@ -2007,6 +2008,62 @@ a.BrowseRefresh{
 .TablePagerHolder {
     float: right;
     margin-bottom: 5px;
+}
+
+.Question.QuestionStickyRight {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    border-left: 1px solid #c1c1c1;
+    border-top: none;
+    border-bottom: none;
+    box-shadow: -12px 0px 15px -12px #bbbbbb;
+    padding-left: 15px;
+    padding-top: 0;
+    padding-bottom: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.ImageBorder {
+    margin-bottom: 10px;
+}
+
+.BasicsBoxLeft {
+    z-index: 2;
+    /*width: 80%;
+    display: inline-block;*/
+}
+
+.BasicsBoxRight {
+    /*width: 20%;
+    display: inline-block;*/
+}
+
+.BasicsBoxEdit {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    /*grid-template-rows: 1fr 60px;*/
+}
+
+#modal .BasicsBoxEdit .RecordHeader {
+    margin: -20px 0px 0 -20px;
+}
+
+.BasicsBoxEdit .backtoresults {
+    margin-right: 10px;
+}
+
+.BasicsBoxFooter {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    z-index: 2;
+}
+
+.FloatingPreviewContainer {
+    position: sticky;
+    top: 15px;
 }
 
 /* Tile navigation used on top menus */
