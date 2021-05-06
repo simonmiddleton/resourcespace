@@ -95,41 +95,44 @@ if($blockcrop)
 
 $imversion = get_imagemagick_version();
 
-
+// Get the actions that have been requested
 $actions = explode(",",getval("actions",""));
+$actions["quality"] = getval("quality",100,TRUE);
+$actions["resolution"] = getval("resolution",0,TRUE);
 
-if (getval('flipx',0,true) == 1 && !$cropperestricted)
-    {
-    $flipx = true;
-    }
-else
-    {
-    $flipx = false;
-    }
-if (getval('flipy',0,true) == 1 && !$cropperestricted)
-    {
-    $flipy = true;
-    }
-else
-    {
-    $flipy = false;
-    }
-$rotation = getval('rotation',0,true);
-if (($rotation < 0 || $rotation > 360) && !$cropperestricted)
-    {
-    $rotation = 0;
-    }
+// if (getval('flipx',0,true) == 1 && !$cropperestricted)
+//     {
+//     $flipx = true;
+//     }
+// else
+//     {
+//     $flipx = false;
+//     }
+// if (getval('flipy',0,true) == 1 && !$cropperestricted)
+//     {
+//     $flipy = true;
+//     }
+// else
+//     {
+//     $flipy = false;
+//     }
+
+// $rotation = getval('rotation',0,true);
+// if (($rotation < 0 || $rotation > 360) && !$cropperestricted)
+//     {
+//     $rotation = 0;
+//     }
 // generate a preview image for the operation if it doesn't already exist
 $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
 $crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date("Ymd",time()) . ".jpg";
 
 //echo  "generating preview";
 //exit($crop_pre_file);
-$options=array(
-    "rotation" => $rotation,
-    "flipx"     => $flipx,
-    "flipy"     => $flipy,
-    );
+// $options=array(
+//     "rotation" => $rotation,
+//     "flipx"     => $flipx,
+//     "flipy"     => $flipy,
+//     );
 
 $generated = generate_transform_preview($ref,$crop_pre_file, $actions);
 if($reload_image)
@@ -247,41 +250,45 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'docrop')
         exit;
         }
 
-if ($cropper_debug)
-    {
-	error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
-    }
+    if ($cropper_debug)
+        {
+        error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
+        }
 
-if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted)
-	{
-	// the user did not indicate a crop. presumably they are scaling
-	$verb = $lang['scaled'];
-	$crop_necessary = false;
-	}
+    if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted)
+        {
+        // the user did not indicate a crop. presumably they are scaling
+        $verb = $lang['scaled'];
+        }
 else if (!$cropperestricted)
 	{
-	$crop_necessary = true;
 	$verb = $lang['cropped'];
 	// now we need to mathematically convert to the original size
-	$finalxcoord = round ((($origwidth  * $xcoord)/$cropwidth),0);
-	$finalycoord = round ((($origheight * $ycoord)/$cropheight),0);	
+	$actions["finalxcoord"] = round ((($origwidth  * $xcoord)/$cropwidth),0);
+	$actions["finalycoord"] = round ((($origheight * $ycoord)/$cropheight),0);	
 	
-	// Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
-	// If landscape crop, set the width first, then base the height on that
-	$desiredratio = $width / $height;
-	if($desiredratio > 1)
-		{
-		$finalwidth  = round ((($origwidth  * $width)/$cropwidth),0);
-		$finalheight = round ($finalwidth / $desiredratio,0);
-		}
-	else
-		{
-		$finalheight = round ((($origheight * $height)/$cropheight),0);
-		$finalwidth= round($finalheight *  $desiredratio,0);			
-		}
-	}
-	
-
+    // Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
+    // If landscape crop, set the width first, then base the height on that
+    $desiredratio = $width / $height;
+    if($desiredratio > 1)
+        {
+        $finalwidth  = round ((($origwidth  * $width)/$cropwidth),0);
+        $finalheight = round ($finalwidth / $desiredratio,0);
+        }
+    else
+        {
+        $finalheight = round ((($origheight * $height)/$cropheight),0);
+        $finalwidth= round($finalheight *  $desiredratio,0);			
+        }
+    
+    $actions["crop"] = true;
+    $actions["finalwidth"]  = $finalwidth;
+	$actions["finalheight"] = $finalheight;
+    $actions["new_width"]   = $new_width;
+	$actions["new_height"]  = $new_height;
+    $actions["origwidth"]   = $origwidth;
+	$actions["origheight"]  = $origheight;
+    }
 
     // determine output format
     // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
@@ -351,351 +358,196 @@ else if (!$cropperestricted)
         $newpath = "$tmpdir/transform_plugin/download_$ref." . $new_ext;
         }
 
-    // workaround for weird change in colorspace command in ImageMagick 6.7.5
-    if ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""))
-        {
-        if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
-            {
-            $colorspace1 = " -colorspace sRGB ";
-            $colorspace2 =  " -colorspace RGB ";
-            }
-        else
-            {
-            $colorspace1 = " -colorspace RGB ";
-            $colorspace2 =  " -colorspace sRGB ";
-            }
-        }
-    else
-        {
-        $colorspace1 = '';
-        $colorspace2 = '';
-        }
-
-    $commandprefix="";
-    $keep_transparency=false;
-    if (strtoupper($new_ext)=="PNG" || strtoupper($new_ext)=="GIF")
-        {
-        $commandprefix = " -background transparent ";
-        $keep_transparency=true;
-        $command .= $commandprefix . " \"$originalpath\" ";
-        
-        }
-    else
-        {
-        $command .= $commandprefix . " \"$originalpath\"[0] ";
-        }
 
     
-    $quality = getval("quality","",TRUE);
-    if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($new_ext) , array("PNG","JPG")))
-        {
-        $command .= " -quality " .  $quality . "% ";
-        }
+
+    // Perform the actual transformation
+    $transformed = transform_file($originalpath, $newpath, $actions);
+
+    // TODO
+    // if ($flip || $rotation > 0 && !$cropperestricted)
+    //     {
+    //     // assume we should reset exif orientation flag since they have rotated to another orientation
+    //     $command .= " -orient undefined ";
+    //     }
 
 
-    $resolution=getval("resolution","",TRUE);
-    if ($resolution!="")
-        {
-        $command .= " -units PixelsPerInch -density " .  $resolution . " ";
-        }
-        
-	
-    // below is a hack to make this work with multilayer images
-    // the result will always be a flattened single-layer image
-    if ($orig_ext=="psd" && !$keep_transparency){$command .= " -alpha Off ";}
-    $command .= "-flatten ";
-
-    $command .= $colorspace1;
-
-    if ($crop_necessary  && !$cropperestricted)
-        {
-        $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+$finalycoord ";
-        }
-
-    if ($cropper_use_repage)
-        {
-        $command .= " +repage "; // force imagemagick to repage image to fix canvas and offset info
-        }
-
-    // did the user request a width? If so, tack that on
-    if (is_numeric($new_width)||is_numeric($new_height))
-        {
-        $scalewidth = is_numeric($new_width)?true:false;
-        $scaleheight = is_numeric($new_height)?true:false;
-        
-        if (!$cropper_allow_scale_up)
-            {
-            // sanity checks
-            // don't allow a specified size larger than the natural crop size
-            // or the original size of the image
-            if ($crop_necessary)
-                {
-                $checkwidth = $finalwidth;
-                $checkheight = $finalheight;
-                } 
-            else
-                {
-                $checkwidth = $origwidth;
-                $checkheight = $origheight;
-                }
-            
-            if (is_numeric($new_width) && $new_width > $checkwidth)
-                {
-                // if the requested width is greater than the original or natural size, ignore
-                $new_width = '';
-                $scalewidth = false;
-                }
-        
-            if (is_numeric($new_height) && $new_height > $checkheight)
-                {
-                // if the requested height is greater than original or natural size, ignore
-                $new_height = '';
-                $scaleheight = false;
-                }
-            }
-
-        if ($scalewidth || $scaleheight)
-            {
-            // add scaling command
-            // note that there is a minor issue here: may be rounding
-            // errors when the crop box is scaled up from preview size to original	 size
-            // if so and the resulting match doesn't quite match the required width and 
-            // height, there may be a tiny amount of distortion introduced as the
-            // program scales up or down by a few pixels. This should be
-            // imperceptible, but perhaps worth revisiting at some point.
-            
-            $command .= " -scale $new_width";
-            
-            if ($new_height > 0)
-                {
-                $command .= "x$new_height";
-                }
-            
-            $command .= " ";
-            }
-        }
-
-    if ($flip  && !$cropperestricted)
-        {
-        $command .= " -flop ";
-        }
-
-    if ($rotation > 0 && !$cropperestricted)
-        {
-        $command .= " -rotate $rotation ";
-        }
-
-    if ($flip || $rotation > 0 && !$cropperestricted)
-        {
-        // assume we should reset exif orientation flag since they have rotated to another orientation
-        $command .= " -orient undefined ";
-        }
-
-    $command .= $colorspace2;
-
-    $command .= " \"$newpath\"";
-
-    if ($cropper_debug && !$download && getval("slideshow","")=="")
-        {
-        debug($command);
-        if (isset($_REQUEST['showcommand']))
-            {
-            echo htmlspecialchars($command);
-            delete_alternative_file($ref,$newfile);
-            exit;
-            }
-        }
-
-    $shell_result = run_command($command);
-    if ($cropper_debug)
-        {
-        error_log("SHELL RESULT: $shell_result");
-        }
-
-    if ($resolution!="")
-        {
-        // See if we have got exiftool, in which case we can target the Photoshop specific PPI data
-        $exiftool_fullpath = get_utility_path("exiftool");
-        global $exiftool_no_process;
-        if (($exiftool_fullpath!=false) && !in_array($new_ext,$exiftool_no_process))
-            {
-            $command = $exiftool_fullpath . " -m -overwrite_original -E ";
-            $command.= "-Photoshop:XResolution=$resolution -Photoshop:YResolution=$resolution";
-            $command.= " " . escapeshellarg($newpath);
-            $output = run_command($command);
-            }
-        }
-
-
+if($transformed)
+    {
     // get final pixel dimensions of resulting file
     $newfilesize = filesize_unlimited($newpath);
-    $newfiledimensions = getimagesize($newpath);
-    $newfilewidth = $newfiledimensions[0];
-    $newfileheight = $newfiledimensions[1];
+        $newfiledimensions = getimagesize($newpath);
+        $newfilewidth = $newfiledimensions[0];
+        $newfileheight = $newfiledimensions[1];
 
-    // generate previews if needed
-    global $alternative_file_previews;
-    if ($cropper_enable_alternative_files && $alternative_file_previews && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted)
-        {
-        create_previews($ref,false,$new_ext,false,false,$newfile);
-        }
-
-    // strip of any extensions from the filename, since we'll provide that
-    if(preg_match("/(.*)\.\w\w\w\\$/",$filename,$matches))
-        {
-        $filename = $matches[1];
-        }
-
-    // avoid bad characters in filenames
-    $filename = preg_replace("/[^A-Za-z0-9_\- ]/",'',$filename);
-    //$filename = str_replace(' ','_',trim($filename));
-
-    // if there is not a filename, create one
-    if ( $cropper_custom_filename && strlen($filename) > 0)
-        {
-        $filename = "$filename";
-        }
-    else
-        {
-        if (!$alternative_file_previews || $download || getval("slideshow","")!="")
+        // generate previews if needed
+        global $alternative_file_previews;
+        if ($cropper_enable_alternative_files && $alternative_file_previews && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted)
             {
-            $filename=$ref . "_" . strtolower($lang['transformed']);
+            create_previews($ref,false,$new_ext,false,false,$newfile);
             }
-        elseif ($original && !$cropperestricted)
+
+        // strip of any extensions from the filename, since we'll provide that
+        if(preg_match("/(.*)\.\w\w\w\\$/",$filename,$matches))
             {
-            // fixme
+            $filename = $matches[1];
+            }
+
+        // avoid bad characters in filenames
+        $filename = preg_replace("/[^A-Za-z0-9_\- ]/",'',$filename);
+        //$filename = str_replace(' ','_',trim($filename));
+
+        // if there is not a filename, create one
+        if ( $cropper_custom_filename && strlen($filename) > 0)
+            {
+            $filename = "$filename";
             }
         else
             {
-            $filename = "alt_$newfile";
+            if (!$alternative_file_previews || $download || getval("slideshow","")!="")
+                {
+                $filename=$ref . "_" . strtolower($lang['transformed']);
+                }
+            elseif ($original && !$cropperestricted)
+                {
+                // fixme
+                }
+            else
+                {
+                $filename = "alt_$newfile";
+                }
             }
-        }
 
-    $filename = escape_check($filename);
+        $filename = escape_check($filename);
 
-    $lcext = strtolower($new_ext);
+        $lcext = strtolower($new_ext);
 
-    $mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
+        $mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
 
-    // don't show  a megapixel count if it rounded down to 0
-    if ($mpcalc > 0)
-        {
-        $mptext = " ($mpcalc " . $lang["megapixel-short"] . ")";
-        }
-    else
-        {
-        $mptext = '';
-        }
+        // don't show  a megapixel count if it rounded down to 0
+        if ($mpcalc > 0)
+            {
+            $mptext = " ($mpcalc " . $lang["megapixel-short"] . ")";
+            }
+        else
+            {
+            $mptext = '';
+            }
 
-    if (strlen($mydesc) > 0){ $deschyphen = ' - '; } else { $deschyphen = ''; }
-        
-    // Do something with the final file:
-    if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted)
-        {
-        // we are supposed to make an alternative
-        
-        // note that we will now record transformation applied to alt files for future use
-        $sql  = "update resource_alt_files set file_name='{$filename}.".$lcext."',file_extension='$lcext', file_size = '$newfilesize', description = concat(description,'" . $deschyphen . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " $mptext') ";
-        $sql .= ", transform_scale_w=" . ($new_width>0?"'$new_width'":"null") . ", transform_scale_h=" . ($new_height>0?"'$new_height'":"null") . "";
-        $sql .= ", transform_crop_w=" . ($finalwidth>0?"'$finalwidth'":"null") . ", transform_crop_h=" . ($finalheight>0?"'$finalheight'":"null") . ", transform_crop_x=" . ($finalxcoord>0?"'$finalxcoord'":"null") . ", transform_crop_y=" . ($finalycoord>0?"'$finalycoord'":"null") . "";
-        $sql .= ", transform_flop=" . ($flip?"'1'":"null") . ", transform_rotation=" . ($rotation>0?"'$rotation'":"null") . "";
-        $sql .= " where ref='$newfile'";
+        if (strlen($mydesc) > 0){ $deschyphen = ' - '; } else { $deschyphen = ''; }
+            
+        // Do something with the final file:
+        if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted)
+            {
+            // we are supposed to make an alternative
+            
+            // note that we will now record transformation applied to alt files for future use
+            $sql  = "update resource_alt_files set file_name='{$filename}.".$lcext."',file_extension='$lcext', file_size = '$newfilesize', description = concat(description,'" . $deschyphen . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " $mptext') ";
+            $sql .= ", transform_scale_w=" . ($new_width>0?"'$new_width'":"null") . ", transform_scale_h=" . ($new_height>0?"'$new_height'":"null") . "";
+            $sql .= ", transform_crop_w=" . ($finalwidth>0?"'$finalwidth'":"null") . ", transform_crop_h=" . ($finalheight>0?"'$finalheight'":"null") . ", transform_crop_x=" . ($finalxcoord>0?"'$finalxcoord'":"null") . ", transform_crop_y=" . ($finalycoord>0?"'$finalycoord'":"null") . "";
+            $sql .= ", transform_flop=" . ($flip?"'1'":"null") . ", transform_rotation=" . ($rotation>0?"'$rotation'":"null") . "";
+            $sql .= " where ref='$newfile'";
 
-        $result = sql_query($sql);
-        resource_log($ref,'b','',"$new_ext " . strtolower($verb) . " to $newfilewidth x $newfileheight");
+            $result = sql_query($sql);
+            resource_log($ref,'b','',"$new_ext " . strtolower($verb) . " to $newfilewidth x $newfileheight");
 
-        }
-    elseif ($original && getval("slideshow","")=="" && !$cropperestricted)
-        {
-        // we are supposed to replace the original file
+            }
+        elseif ($original && getval("slideshow","")=="" && !$cropperestricted)
+            {
+            // we are supposed to replace the original file
 
-        $origalttitle = $lang['priorversion'];
-        $origaltdesc = $lang['replaced'] . " " . strftime("%Y-%m-%d, %H:%M");
-        $origfilename = sql_value("select value from resource_data left join resource_type_field on resource_data.resource_type_field = resource_type_field.ref where resource = '$ref' and name = 'original_filename'",$ref . "_original.$orig_ext");
-        $origalt  = add_alternative_file($ref,$origalttitle,$origaltdesc);
-        $origaltpath = get_resource_path($ref, true, "", true, $orig_ext, -1, 1, false, "", $origalt);
-        $mporig =  round(($origwidth*$origheight)/1000000,2);
-        $filesizeorig = filesize_unlimited($originalpath);
-        rename($originalpath,$origaltpath);
-        $result = sql_query("update resource_alt_files set file_name='{$origfilename}',file_extension='$orig_ext',file_size = '$filesizeorig' where ref='$origalt'");
-        $neworigpath = get_resource_path($ref,true,'',false,$new_ext);
-        rename($newpath,$neworigpath);
-        $result = sql_query("update resource set file_extension = '$new_ext' where ref = '$ref' limit 1"); // update extension
-        resource_log($ref,'t','','original transformed');
-        create_previews($ref, false, $orig_ext, false, false, $origalt);
-        create_previews($ref,false,$new_ext);
+            $origalttitle = $lang['priorversion'];
+            $origaltdesc = $lang['replaced'] . " " . strftime("%Y-%m-%d, %H:%M");
+            $origfilename = sql_value("select value from resource_data left join resource_type_field on resource_data.resource_type_field = resource_type_field.ref where resource = '$ref' and name = 'original_filename'",$ref . "_original.$orig_ext");
+            $origalt  = add_alternative_file($ref,$origalttitle,$origaltdesc);
+            $origaltpath = get_resource_path($ref, true, "", true, $orig_ext, -1, 1, false, "", $origalt);
+            $mporig =  round(($origwidth*$origheight)/1000000,2);
+            $filesizeorig = filesize_unlimited($originalpath);
+            rename($originalpath,$origaltpath);
+            $result = sql_query("update resource_alt_files set file_name='{$origfilename}',file_extension='$orig_ext',file_size = '$filesizeorig' where ref='$origalt'");
+            $neworigpath = get_resource_path($ref,true,'',false,$new_ext);
+            rename($newpath,$neworigpath);
+            $result = sql_query("update resource set file_extension = '$new_ext' where ref = '$ref' limit 1"); // update extension
+            resource_log($ref,'t','','original transformed');
+            create_previews($ref, false, $orig_ext, false, false, $origalt);
+            create_previews($ref,false,$new_ext);
 
-        # delete existing resource_dimensions
-        sql_query("delete from resource_dimensions where resource='$ref'");
-        sql_query("insert into resource_dimensions (resource, width, height, file_size) values ('$ref', '$newfilewidth', '$newfileheight', '" . (int)$newfilesize . "')");
+            # delete existing resource_dimensions
+            sql_query("delete from resource_dimensions where resource='$ref'");
+            sql_query("insert into resource_dimensions (resource, width, height, file_size) values ('$ref', '$newfilewidth', '$newfileheight', '" . (int)$newfilesize . "')");
 
-        # call remove annotations, since they will not apply to transformed
-        hook("removeannotations","",array($ref));
+            # call remove annotations, since they will not apply to transformed
+            hook("removeannotations","",array($ref));
 
-        hook("transformcropafterreplaceoriginal");
+            hook("transformcropafterreplaceoriginal");
 
+            if('' !== $return_to_url)
+                {
+                redirect($return_to_url);
+                }
+
+            redirect($view_url);
+            exit;
+            }
+        elseif (getval("slideshow","")!="" && !$cropperestricted)
+            {
+            # Produce slideshow.
+            $sequence = getval("sequence", "");
+
+            if (!is_numeric($sequence)) {exit("Invalid sequence number. Please enter a numeric value.");}
+
+            if(!checkperm('t'))
+                {
+                exit('Permission denied.');
+                }
+
+            if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
+                !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
+                {
+                exit ("Unable to replace existing slideshow image. Please check file permissions or use different slideshow sequence number");
+                }
+
+            copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
+            set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
+
+            unlink($newpath);
+            unlink($crop_pre_file);
+            }
+        else
+            {
+            // we are supposed to download
+            # Output file, delete file and exit
+            $filename.="." . $new_ext;
+            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+            header("Content-Type: application/octet-stream");
+
+            set_time_limit(0);
+
+            daily_stat('Resource download', $ref);
+            resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
+
+            readfile($newpath);
+            unlink($newpath);	
+            unlink($crop_pre_file);
+
+            exit();
+            }
+        hook("aftercropfinish");
+
+        // If other pages request us to go back to them rather then on the view page, do so
         if('' !== $return_to_url)
             {
             redirect($return_to_url);
             }
 
+        // send user back to view page
         redirect($view_url);
-        exit;
-        }
-    elseif (getval("slideshow","")!="" && !$cropperestricted)
-        {
-        # Produce slideshow.
-        $sequence = getval("sequence", "");
-
-        if (!is_numeric($sequence)) {exit("Invalid sequence number. Please enter a numeric value.");}
-
-        if(!checkperm('t'))
-            {
-            exit('Permission denied.');
-            }
-
-        if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
-            !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
-            {
-            exit ("Unable to replace existing slideshow image. Please check file permissions or use different slideshow sequence number");
-            }
-
-        copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-        set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
-
-        unlink($newpath);
-        unlink($crop_pre_file);
+        exit();
         }
     else
         {
-        // we are supposed to download
-        # Output file, delete file and exit
-        $filename.="." . $new_ext;
-        header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-        header("Content-Type: application/octet-stream");
-
-        set_time_limit(0);
-
-        daily_stat('Resource download', $ref);
-        resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
-
-        readfile($newpath);
-        unlink($newpath);	
-        unlink($crop_pre_file);
-
-        exit();
+        $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));
         }
-    hook("aftercropfinish");
-
-    // If other pages request us to go back to them rather then on the view page, do so
-    if('' !== $return_to_url)
-        {
-        redirect($return_to_url);
-        }
-
-    // send user back to view page
-    redirect($view_url);
-    exit();
     }
 else
     {
