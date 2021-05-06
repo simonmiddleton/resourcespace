@@ -742,7 +742,7 @@ function extract_exif_comment($ref,$extension="")
                     $read=true;
                     $value=$metadata[$subfield];
                     debug("[extract_exif_comment()][ref={$ref}] Found embedded field mapping for '{$subfield}' with value '{$value}'");
-                    
+                   
                     # Dropdown box or checkbox list?
                     if (in_array($read_from[$i]["type"],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
                         {
@@ -760,6 +760,20 @@ function extract_exif_comment($ref,$extension="")
                         for ($n=0;$n<count($s);$n++)
                             {
                             if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}                             
+                            }
+                        }
+
+                    if ($read_from[$i]["type"] == FIELD_TYPE_DATE)
+                        {
+                        $invalid_date = check_date_format($value);
+
+                        if(!empty($invalid_date))
+                            {
+                            $invalid_date = str_replace("%field%", $read_from[$i]['name'], $invalid_date);
+                            $invalid_date = str_replace("%row% ", "", $invalid_date);
+
+                            debug ("EXIF - " . $invalid_date);
+                            continue;
                             }
                         }
                     
