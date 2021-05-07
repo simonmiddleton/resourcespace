@@ -69,6 +69,7 @@ function simpleldap_authenticate($username,$password){
                 debug("ERROR: LDAP bind failed " . $e->errorMessage());
                 $login=false;
             }
+            unset($GLOBALS["use_error_exception"]);
 			if (!$login){continue;}else{$userdomain=$binddomain;break;}
 			}
 		if (!$login){debug("LDAP - failed to bind to LDAP server");	return false; }
