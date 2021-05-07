@@ -2510,16 +2510,14 @@ function update_collection_order($neworder,$collection,$offset=0)
 		exit ("Error: invalid input to update collection function.");
 	}
 
+    $neworder = array_filter($neworder,'is_numeric');
     if (count($neworder)>0) {
         $updatesql= "update collection_resource set sortorder=(case resource ";
         $counter = 1 + $offset;
         foreach ($neworder as $colresource)
             {
-            if (is_int($colresource))
-                {
-                $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
-                $counter++;
-                }
+            $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
+            $counter++;    
             }
         $updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
         sql_query($updatesql);
