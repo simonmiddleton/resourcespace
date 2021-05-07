@@ -7,7 +7,21 @@ if(PHP_SAPI != 'cli')
 // Defaults arguments which we don't have to test
 $order_by = 'name';
 $sort = 'ASC';
+$include_resources = false;
 $fetchrows = -1;
+
+// Save global scope vars that will change during this test
+$original_public_collections_confine_group = $public_collections_confine_group;
+
+
+// Create users in other user groups
+$general_user = new_user('test_002501_general', 2);
+$super_admin_user = new_user('test_002501_super_admin', 3);
+if($general_user === false && $super_admin_user === false)
+    {
+    echo 'Test setup (new_user function) - ';
+    return false;
+    }
 
 /* Create a simple featured collections tree:
 Level A
@@ -26,9 +40,9 @@ save_collection( $fc_cat_lvl_b,['featured_collections_changes' => ['update_paren
 $fc_cat_lvl_b1 = create_collection(0, 'Sub-level B.1');
 save_collection( $fc_cat_lvl_b1,['featured_collections_changes' => ['update_parent' => $fc_cat_lvl_b, 'force_featured_collection_type' => true]]);
 
-$fc_a = create_collection(0, 'FC A (at level A/A.1)', 0, 0, 0, true);
+$fc_a = create_collection($general_user, 'FC A (at level A/A.1)', 0, 0, 0, true);
 save_collection($fc_a, ['featured_collections_changes' => ['update_parent' => $fc_cat_lvl_a1, 'force_featured_collection_type' => true]]);
-$fc_b = create_collection(0, 'FC B', 0, 0, 0, true);
+$fc_b = create_collection($super_admin_user, 'FC B', 0, 0, 0, true);
 save_collection($fc_b, ['featured_collections_changes' => ['update_parent' => $fc_cat_lvl_b1, 'force_featured_collection_type' => true]]);
 
 $public_col = create_collection($userref, 'User public collection (at user level)', 1, 0, 0, true);
@@ -97,20 +111,53 @@ if(!($found_col_refs[$fc_a] == 1 && $found_col_refs[$public_col] == 2))
     }
 
 
-// TODO: args $override_group_restrict, $search_user_collections
+// Search for collections confined to the user group (parent, child, sibling)
+$public_collections_confine_group = true;
+$spc_result = search_public_collections('', $order_by, $sort, false, false);
+$found_col_refs = array_flip(array_column($spc_result, 'ref'));
+if(
+    !(
+        // Expecting Super Admins collections
+        isset($found_col_refs[$fc_b], $found_col_refs[$public_col])
+        // The general user collection shouldn't be returned
+        && !isset($found_col_refs[$fc_a])
+    )
+)
+    {
+    echo 'Search confined by group (Super Admin) - ';
+    return false;
+    }
 
+
+// Override group confinment
+$public_collections_confine_group = false;
+$spc_result_no_confinment = search_public_collections('', $order_by, $sort, false, false);
+$found_col_refs_no_confinment = array_column($spc_result_no_confinment, 'ref');
+$public_collections_confine_group = true;
+$spc_result_override_group_restrict = search_public_collections('', $order_by, $sort, false, false, $include_resources, true);
+$found_col_refs_override_group_restrict = array_column($spc_result_override_group_restrict, 'ref');
+if($found_col_refs_no_confinment != $found_col_refs_override_group_restrict)
+    {
+    echo 'Override group confinment - ';
+    return false;
+    }
+unset($spc_result_no_confinment, $found_col_refs_no_confinment, $spc_result_override_group_restrict, $found_col_refs_override_group_restrict);
+
+
+// TODO: args $search_user_collections
 
 // TODO test behaviour determined by the following globals:
 // - $search_public_collections_ref
-// - $public_collections_confine_group, $userref, $usergroup
 
 
-// $spc_result = search_public_collections($search="", $order_by, $sort, $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows);
 
 // Tear down
-unset($order_by, $sort, $fetchrows);
+$public_collections_confine_group = $original_public_collections_confine_group;
+
+unset($order_by, $sort, $include_resources, $fetchrows, $general_user, $super_admin_user);
 unset($fc_cat_lvl_a, $fc_cat_lvl_a1, $fc_cat_lvl_b, $fc_cat_lvl_b1, $public_col, $private_col);
 unset($resource_a, $resource_b);
 unset($spc_result, $found_col_refs);
+unset($original_public_collections_confine_group);
 
 return true;
