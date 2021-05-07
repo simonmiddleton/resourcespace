@@ -8687,6 +8687,7 @@ function get_resource_lock_message($lockuser)
  *                              "share_collection"  - (int) Collection ID
  *                              "share_resource"    - (int) Resource ID
  *                              "access_key"        - (string) Access key
+ *                              "ignore_permissions"- (bool) Show all shares, irrespective of permissions
  * @return array
  */
 function get_external_shares(array $filteropts)
@@ -8702,6 +8703,7 @@ function get_external_shares(array $filteropts)
         "share_collection",
         "share_resource",
         "access_key",
+        "ignore_permissions",
     );
     foreach($validfilterops as $validfilterop)
         {
@@ -8728,7 +8730,7 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.user ='" . (int)$share_user . "'";
         }
-    elseif(!checkperm('a'))
+    elseif(!checkperm('a') && !$ignore_permissions)
         {
         $usercondition = "eak.user ='" . (int)$userref . "'";
         if(checkperm("ex"))

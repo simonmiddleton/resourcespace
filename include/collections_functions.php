@@ -323,7 +323,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0));
+        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
         if (count($keys)>0)
             {
             $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
