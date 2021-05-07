@@ -53,6 +53,8 @@ function getImageFormat($size)
  */
 function convertImage($resource, $page, $alternative, $target, $width, $height, $profile)
 	{
+    global $exiftool_write, $username, $scramble_key;
+ 
 	$command = get_utility_path("im-convert");
 	if (!$command)
 		die("Could not find ImageMagick 'convert' utility.");
@@ -64,18 +66,31 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $alt_file = get_alternative_file($resource['ref'], $alternative);
 	    $requested_extension = $alt_file['file_extension'];
 	    }
-	
+
 	$originalPath = get_resource_path($resource['ref'], true, '', false,
-			$requested_extension, -1, $page, false, '', $alternative);
+				$requested_extension, -1, $page, false, '', $alternative);
+
+    if($exiftool_write)
+        {
+	    $randstring=md5(rand() . microtime());
+	    $target_temp_id = $resource['ref'] . "_" . md5($username . $randstring . $scramble_key);
+		$path = write_metadata($originalPath, $resource['ref'], "format_chooser/" . $target_temp_id);
+        //$temp_path for removal later to assure not removing original path
+        $temp_path = get_temp_dir(false,"format_chooser/" . $resource['ref'] . "_" . md5($username . $randstring . $scramble_key));;
+        }
+    else
+	    {
+	    $path = $originalPath;
+	    }
 
 	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
 	if ($resource['file_extension'] == "eps")		
         {
-		$command .= " \"$originalPath\"[0] -transparent -auto-orient";
+		$command .= " \"$path\"[0] -transparent -auto-orient";
 		}
 	else
 	    {
-	    $command .= " \"$originalPath\"[0] -auto-orient";
+	    $command .= " \"$path\"[0] -auto-orient";
 	    }
 	
     // Handle alpha/ matte channels
@@ -104,7 +119,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 		{
 		// Find out if the image does already have a profile
 		$identify = get_utility_path("im-identify");
-		$identify .= ' -verbose "' . $originalPath . '"';
+		$identify .= ' -verbose "' . $path . '"';
 		$info = run_command($command);
 		$basePath = dirname(__FILE__) . '/../../../';
 		if (preg_match("/Profile-icc:/", $info) != 1)
@@ -114,9 +129,13 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 
 	$command .= " \"$target\"";
 
-	// echo '<pre>';print_r($command);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-
 	run_command($command);
+
+    //remove temp once completed
+    if(isset($temp_path))
+        {
+        rcRmdir($temp_path);
+        }
 	}
 
 function sendFile($filename)
