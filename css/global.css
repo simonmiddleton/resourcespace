@@ -527,7 +527,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;}
+#previewimagewrapper {margin: 0 15px 15px 0; position: relative; min-width: 720px;}
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
@@ -1616,9 +1616,7 @@ form.FormFilter button.ClearButton {
 #PreviewTools {
     height: 41px;
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
+    position: relative;
 }
 
 #PreviewToolsOptionsWrapper {
