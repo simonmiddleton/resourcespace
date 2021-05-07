@@ -194,7 +194,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
                             else {
                                 # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
-                                $checkname = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
                                 $jquery_selector = "input[name=\"{$checkname}\"]";
 
                                 # If however its a drop down list then we should be processing select elements
@@ -332,7 +332,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     else {
                         # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
                         #   so search for checked boxes
-                        $jquery_condition_selector = "input[name=\"{$checkname}\"]:checked:enabled";
+                        $jquery_condition_selector = "input[name=\"{$checkname}[]\"]:checked:enabled";
 
                         # If however its a drop down list then we should be searching for selected option
                         If ($scriptcondition['display_as_dropdown'] == true)
@@ -615,7 +615,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                         $node = $field['nodes'][$node_index_to_be_reshuffled];
                                         ?>
                                         <td valign=middle>
-                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                                         </td>
                                         <td valign=middle>
                                             <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -657,7 +657,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             {
                             ?>
                             <td valign=middle>
-                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                             </td>
                             <td valign=middle>
                                 <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
