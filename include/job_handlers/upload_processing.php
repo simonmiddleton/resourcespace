@@ -87,7 +87,7 @@ else if($resource !== false && !is_null($alternative) && $alternative > 0 && $ex
 
 global $baseurl, $offline_job_delete_completed;
 
-$url = isset($job_data['resource']) ? $baseurl . "/?r=" . $job_data['resource']: '';
+$url = isset($job_data['resource']) ? $baseurl_short . "?r=" . $job_data['resource']: '';
 
 if($status===false)
     {

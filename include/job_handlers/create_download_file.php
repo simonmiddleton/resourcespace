@@ -52,7 +52,7 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
      if(file_exists($job_data["outputfile"]))
         {
         global $lang, $baseurl, $download_file_lifetime, $offline_job_delete_completed;
-        $url=(isset($job_data["url"]))?$job_data["url"]:(isset($job_data["resource"])?$baseurl . "/?r=" . $job_data["resource"]:"");
+        $url=(isset($job_data["url"])) ? $job_data["url"] : (isset($job_data["resource"]) ? $baseurl_short . "?r=" . $job_data["resource"]:"");
         $message=$job_success_text!=""?$job_success_text:$lang["download_file_created"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
         message_add($job["user"],$message,$url,0);
         if($offline_job_delete_completed)
@@ -85,7 +85,7 @@ if(!$jobsuccess)
 	// Job failed, update job queue
 	job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message=$job_failure_text!=""?$job_failure_text:$lang["download_file_creation_failed"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
-    $url=$baseurl . "/?r=" . $job_data["resource"];
+    $url=$baseurl_short . "?r=" . $job_data["resource"];
     message_add($job["user"],$message,$url,0);
 	}
 		

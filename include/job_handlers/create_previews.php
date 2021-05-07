@@ -29,7 +29,7 @@ $ingested          = false;
 $checksum_required = true;
 
 // For messages
-$url = isset($job_data['resource']) ? "{$baseurl}/?r={$job_data['resource']}": '';
+$url = isset($job_data['resource']) ? "{$baseurl_short}?r={$job_data['resource']}": '';
 
 // Overwrite defaults
 foreach($job_data as $arg => $value)
