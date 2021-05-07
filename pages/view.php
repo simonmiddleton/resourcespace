@@ -845,7 +845,6 @@ else if(1 == $resource['has_image'])
                     if(!rs_tagging_plugin_added)
                         {
                         anno.addPlugin('RSTagging',
-                        anno.addPlugin('RSTagging',
                             {
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
