@@ -20,7 +20,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     // Ensure /r line endings (such as those created in MS Excel) are handled correctly
 	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
     global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref,$username,
-    $category_tree_add_parents, $mysql_verbatim_queries, $baseurl, $scramble_key, $lang;
+    $category_tree_add_parents, $mysql_verbatim_queries, $baseurl, $scramble_key, $lang, 
+    $search_all_workflow_states;
+    
+    // Ensure that the searchs are across all states
+    $search_all_workflow_states_cache = $search_all_workflow_states;
+    $search_all_workflow_states=true;
     
     $workflow_states = get_editable_states($userref);
 
@@ -893,6 +898,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         {
         unlink($flagpath);
         }
+
+    // reset $search_all_workflow_states as precaution
+    $search_all_workflow_states = $search_all_workflow_states_cache;
+
     return true;
     }
 
