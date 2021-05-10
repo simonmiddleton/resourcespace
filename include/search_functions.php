@@ -1102,6 +1102,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             }
 
+        if (count($blockedrestypes) > 0)
+            {
+            $blockrestypesor="";
+            if ($edit_access_for_contributor)
+                {
+                $blockrestypesor .= " created_by='" . $userref . "'";
+                }
+            if ($editable_filter != "")
+                {
+                $editable_filter .= " AND ";
+                }
+            $editable_filter.="(resource_type NOT IN ('" . implode("','",$blockedrestypes) . "')" . (($blockrestypesor != "") ? " OR " . $blockrestypesor : "") . ")";
+            }
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
