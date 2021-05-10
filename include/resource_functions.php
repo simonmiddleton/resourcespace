@@ -3506,15 +3506,15 @@ function copy_resource($from,$resource_type=-1)
  * Log resource activity
  *
  * 
- * @param   int     $resource - resource ref                            -- resource_log.resource
- * @param   string  $type - log code defined in include/definitions.php -- resource_log.type
- * @param   int     $field - resource type field                        -- resource_log.resource_type_field
- * @param   string  $notes - text notes                                 -- resource_log.notes
- * @param   string  $fromvalue - original value                         -- resource_log.previous_value
- * @param   string  $tovalue - new value
- * @param   int     $usage                                              -- resource_log.usageoption
- * @param   string  $purchase_size                                      -- resource_log.purchase_size
- * @param   float   $purchase_price                                     -- resource_log.purchase_price
+ * @param   int        $resource - resource ref                            -- resource_log.resource
+ * @param   string     $type - log code defined in include/definitions.php -- resource_log.type
+ * @param   int        $field - resource type field                        -- resource_log.resource_type_field
+ * @param   string     $notes - text notes                                 -- resource_log.notes
+ * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
+ * @param   mixed      $tovalue - new value (int or string)
+ * @param   int        $usage                                              -- resource_log.usageoption
+ * @param   string     $purchase_size                                      -- resource_log.purchase_size
+ * @param   float      $purchase_price                                     -- resource_log.purchase_price
  * 
  * @return int (or false)
  */
@@ -3524,7 +3524,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
-    $param_str = array($type,$notes,$fromvalue,$tovalue,$purchase_size);
+    $param_str = array($type,$notes,$purchase_size);
     $param_num = array($resource,$usage,$purchase_price);
  
     foreach($param_str as $par)
