@@ -118,7 +118,8 @@ include "../../include/header.php";
 
 	<?php if (getval("expired","")!="") { ?><div class="FormError">!! <?php echo $lang["password_expired"]?> !!</div><?php } ?>
 
-	<form method="post" action="<?php echo $baseurl_short?>pages/user/user_change_password.php">
+    <form method="post" action="<?php echo $baseurl_short?>pages/user/user_change_password.php" onsubmit="return CentralSpacePost(this, true);return false;">
+    <input type="hidden" name="save" value="yes">
 	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getvalescaped("expired",""))?>">
 	<?php
     generateFormToken("user_change_password");

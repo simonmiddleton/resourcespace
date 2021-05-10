@@ -742,7 +742,7 @@ function extract_exif_comment($ref,$extension="")
                     $read=true;
                     $value=$metadata[$subfield];
                     debug("[extract_exif_comment()][ref={$ref}] Found embedded field mapping for '{$subfield}' with value '{$value}'");
-                    
+                   
                     # Dropdown box or checkbox list?
                     if (in_array($read_from[$i]["type"],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
                         {
@@ -760,6 +760,20 @@ function extract_exif_comment($ref,$extension="")
                         for ($n=0;$n<count($s);$n++)
                             {
                             if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}                             
+                            }
+                        }
+
+                    if ($read_from[$i]["type"] == FIELD_TYPE_DATE)
+                        {
+                        $invalid_date = check_date_format($value);
+
+                        if(!empty($invalid_date))
+                            {
+                            $invalid_date = str_replace("%field%", $read_from[$i]['name'], $invalid_date);
+                            $invalid_date = str_replace("%row% ", "", $invalid_date);
+
+                            debug ("EXIF - " . $invalid_date);
+                            continue;
                             }
                         }
                     
@@ -1111,6 +1125,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         trigger_error("Parameter 'ref' must be numeric!");
         }
+
+    $fs_path = hook('create_previews_extra', '', array($ref));
+
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
 
@@ -2058,7 +2075,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -2170,7 +2187,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         
                         // let's create the watermark and save as an mpr
                         $command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
-                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escape1774shellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
+                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
                         $mpr_init_write=true;
                         $mpr_wm_created=true;
                         $command.=" -delete 1 -write mpr:" . $ref . " -delete 0";

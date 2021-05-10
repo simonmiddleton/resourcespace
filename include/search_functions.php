@@ -1102,6 +1102,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             }
 
+        if (count($blockedrestypes) > 0)
+            {
+            $blockrestypesor="";
+            if ($edit_access_for_contributor)
+                {
+                $blockrestypesor .= " created_by='" . $userref . "'";
+                }
+            if ($editable_filter != "")
+                {
+                $editable_filter .= " AND ";
+                }
+            $editable_filter.="(resource_type NOT IN ('" . implode("','",$blockedrestypes) . "')" . (($blockrestypesor != "") ? " OR " . $blockrestypesor : "") . ")";
+            }
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
@@ -1851,6 +1864,10 @@ function get_filter_sql($filterid)
     global $userref, $access_override, $custom_access_overrides_search_filter, $open_access_for_contributor;
 
     $filter         = get_filter($filterid);
+    if (!$filter)
+        {
+        return false;
+        }
     $filterrules    = get_filter_rules($filterid);
 
     $modfilterrules=hook("modifysearchfilterrules");

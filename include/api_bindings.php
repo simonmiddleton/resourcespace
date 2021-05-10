@@ -852,22 +852,41 @@ function api_save_collection(int $ref, string $coldata)
         return false;
         }
 
-    // Security control - only limited data is allowed to be saved via the API
-    $coldata = array_intersect_key(
-        json_decode($coldata, true),
-        [
-            'keywords' => 0,
-            'allow_changes' => 0,
-            'users' => 0,
-        ]
-    );
-
     // DO NOT REMOVE - this is to prevent bypassing allowed coldata. save_collection() uses getvals if coldata is empty!
     if(empty($coldata))
         {
         return false;
         }
 
+     // Security control - only limited data is allowed to be set
+     $coldata = array_intersect_key(
+        json_decode($coldata, true),
+            [
+                'keywords' => 0,
+                'allow_changes' => 0,
+                'users' => 0,
+                'name' => 0,
+                'public' => 0,
+                'type' => 0,
+                'force_featured_collection_type' => 0,
+                'parent' => 0,
+                'thumbnail_selection_method' => 0,
+                'bg_img_resource_ref' => 0,                
+            ]
+        );
+    // Only certain collection types can be edited via the API
+    if(isset($coldata["type"]) 
+        && !in_array($coldata["type"],
+                array(
+                    COLLECTION_TYPE_STANDARD,
+                    COLLECTION_TYPE_FEATURED,
+                    COLLECTION_TYPE_PUBLIC)
+                    )
+        )
+        {
+        return false;
+        }
+    
     $fct_return = save_collection($ref, $coldata);
     return (is_null($fct_return) ? true : $fct_return);
     }

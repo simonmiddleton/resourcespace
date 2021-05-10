@@ -1161,6 +1161,10 @@ function do_search(
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
         $search_filter_sql = get_filter_sql($usersearchfilter);
+        if (!$search_filter_sql)
+            {
+            exit($lang["error_edit_filter_invalid"]);
+            }
         if($search_filter_sql)
             {
             if ($sql_filter != "")
@@ -1337,6 +1341,10 @@ function do_search(
         if ($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
             {
             $edit_filter_sql = get_filter_sql($usereditfilter);
+            if (!$edit_filter_sql)
+                {
+                exit($lang["error_edit_filter_invalid"]);
+                }
             if($edit_filter_sql)
                 {
                 if ($sql_filter != "")

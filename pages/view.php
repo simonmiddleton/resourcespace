@@ -795,7 +795,9 @@ else if(1 == $resource['has_image'])
         }
 
     hook('previewextras');
-
+?>
+</div>
+<?php
     if(canSeePreviewTools($edit_access))
         {
     	if($annotate_enabled)
@@ -844,7 +846,6 @@ else if(1 == $resource['has_image'])
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
-                        anno.addPlugin('RSTagging',
                         anno.addPlugin('RSTagging',
                             {
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
@@ -990,7 +991,6 @@ else if(1 == $resource['has_image'])
         <?php
         } /* end of canSeePreviewTools() */
         ?>
-    </div>
     <?php
     }
 else
@@ -1676,7 +1676,7 @@ hook ("resourceactions") ?>
         <?php 
         }
     } /* End replaceresourceactions */ 
-hook("afterresourceactions");
+hook("afterresourceactions", "", array($ref));
 hook("afterresourceactions2");
 ?>
 <?php } /* End if ($k!="")*/ 

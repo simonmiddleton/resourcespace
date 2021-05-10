@@ -62,7 +62,7 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
         if ($alternative_file_previews)
             {create_previews($job_data["resource"],false,$job_data["alt_extension"],false,false,$newaltfile);}
         $message = ($job_success_text!="")?$job_success_text:$lang["alternative_file_created"] . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
-        message_add($job["user"],$message,$baseurl . "/?r=" . $job_data["resource"],0);
+        message_add($job["user"],$message,$baseurl_short . "?r=" . $job_data["resource"],0);
         if($offline_job_delete_completed)
             {
             job_queue_delete($jobref);
@@ -85,7 +85,7 @@ if(!$jobsuccess)
     // Job failed, upate job queue
     job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message = ($job_success_text!="")?$job_success_text:$lang["alternative_file_creation_failed"] . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
-    message_add($job["user"],$message,$baseurl . "/?r=" . $job_data["resource"],0);
+    message_add($job["user"],$message,$baseurl_short . "?r=" . $job_data["resource"],0);
     }
 
 

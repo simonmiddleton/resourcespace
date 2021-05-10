@@ -323,7 +323,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0));
+        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
         if (count($keys)>0)
             {
             $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
@@ -1122,8 +1122,8 @@ function save_collection($ref, $coldata=array())
                 continue;
                 }
 
-            // Public collection
-            if($colopt == "public" && $colset == 1)
+            // Set type to public unless explicitly passed
+            if($colopt == "public" && $colset == 1 && !isset($coldata["type"]))
                 {
                 $sqlset["type"] = COLLECTION_TYPE_PUBLIC;
                 }
@@ -2510,16 +2510,14 @@ function update_collection_order($neworder,$collection,$offset=0)
 		exit ("Error: invalid input to update collection function.");
 	}
 
+    $neworder = array_filter($neworder,'is_numeric');
     if (count($neworder)>0) {
         $updatesql= "update collection_resource set sortorder=(case resource ";
         $counter = 1 + $offset;
         foreach ($neworder as $colresource)
             {
-            if (is_int($colresource))
-                {
-                $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
-                $counter++;
-                }
+            $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
+            $counter++;    
             }
         $updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
         sql_query($updatesql);
@@ -4039,18 +4037,38 @@ function collection_download_process_text_file($ref, $collection, $filename)
             $fields = get_resource_field_data($ref, false, true, NULL, true);
             }
         $commentdata=get_collection_resource_comment($ref,$collection);
-        if (count($fields)>0)
-            { 
-            $text.= ($sizetext=="" ? "" : $sizetext) ." ". $filename. "\r\n-----------------------------------------------------------------\r\n";
-            $text.= $lang["resourceid"] . ": " . $ref . "\r\n";
-                for ($i=0;$i<count($fields);$i++){
+        $fields_count = count($fields);
+        if($fields_count > 0)
+            {
+            $hook_replace_text = hook('replacecollectiontext', '', array($text, $sizetext, $filename, $ref, $fields, $fields_count, $commentdata));
+            if($hook_replace_text == false)
+                {
+                $text.= ($sizetext == '' ? '' : $sizetext) . ' '. $filename. "\r\n-----------------------------------------------------------------\r\n";
+                $text .= $lang['resourceid'] . ': ' . $ref . "\r\n";
+
+                for($i = 0; $i < $fields_count; $i++)
+                    {
                     $value=$fields[$i]["value"];
-                    $title=str_replace("Keywords - ","",$fields[$i]["title"]);
-                    if ((trim($value)!="")&&(trim($value)!=",")){$text.= wordwrap("* " . $title . ": " . i18n_get_translated($value) . "\r\n", 65);}
+                    $title=str_replace('Keywords - ', '', $fields[$i]["title"]);
+                    if ((trim($value)!="")&&(trim($value) != ','))
+                        {
+                        $text .= wordwrap('* ' . $title . ': ' . i18n_get_translated($value) . "\r\n", 65);
+                        }
+                    }
+                if(trim($commentdata['comment']) != '')
+                    {
+                    $text .= wordwrap($lang['comment'] . ': ' . $commentdata['comment'] . "\r\n", 65);
+                    }
+                if(trim($commentdata['rating']) != '')
+                    {
+                    $text .= wordwrap($lang['rating'] . ': ' . $commentdata['rating'] . "\r\n", 65);
+                    }
+                $text .= "-----------------------------------------------------------------\r\n\r\n";
                 }
-            if(trim($commentdata['comment'])!=""){$text.= wordwrap($lang["comment"] . ": " . $commentdata['comment'] . "\r\n", 65);}    
-            if(trim($commentdata['rating'])!=""){$text.= wordwrap($lang["rating"] . ": " . $commentdata['rating'] . "\r\n", 65);}   
-            $text.= "-----------------------------------------------------------------\r\n\r\n";    
+            else
+                {
+                $text = $hook_replace_text;
+                }
             }
         }
 
@@ -4207,7 +4225,9 @@ function collection_download_process_summary_notes(
     &$zip)
     {
     global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
-    
+
+    if(!hook('zippedcollectiontextfile', '', array($text)))
+        {
     if($zipped_collection_textfile == true && $includetext == "true")
         {
         $qty_sizes = isset($available_sizes[$size]) ? count($available_sizes[$size]) : 0;
@@ -4265,6 +4285,7 @@ function collection_download_process_summary_notes(
         }
         $deletion_array[]=$textfile;    
         }
+        }
 
     return;
     }
@@ -4284,6 +4305,17 @@ function collection_download_process_summary_notes(
  */
 function collection_download_process_csv_metadata_file(array $result, $id, $collection, $collection_download_tar, $use_zip_extension, &$zip, &$path, array &$deletion_array)
     {
+    // Create the CSV filename.
+    $hook_filename = hook('collectiondownloadcsvfilename');
+    if($hook_filename == false)
+        {
+        $csv_filename = '/Col-' . $collection . '-metadata-export.csv';
+        }
+    else
+        {
+        $csv_filename = $hook_filename;
+        }
+
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
         if(isset($result[0]["ref"]))

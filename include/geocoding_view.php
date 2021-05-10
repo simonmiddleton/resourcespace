@@ -183,7 +183,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
             LeafletView.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
                 <?php
                 $maprestype = get_resource_types($resource['resource_type']);
-                $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
+                $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
                 echo "icon: " . strtolower($MARKER_COLORS[$markercolour])  . "Icon,\n";
                 ?>
                 title: georound(<?php echo $map_container_obj; ?>_geo_lat) + ", " + georound(<?php echo $map_container_obj; ?>_geo_long) + " (WGS84)"

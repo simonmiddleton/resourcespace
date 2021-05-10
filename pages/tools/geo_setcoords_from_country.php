@@ -1,7 +1,4 @@
 <?php
-
-include "../../include/db.php";
-
 # A script to set the geo coordinates based on a country field (if available) for resources with no geolocation information set.
 
 $coords=build_coords();
@@ -97,7 +94,7 @@ reset($codes);
 foreach ($codes as $code)
     {
     $s=explode(",",$code);
-    if (count($s)==2 && strtoupper($s[0])==$country_name) 
+    if (count($s)==2 && ((strtoupper($s[0])==$country_name) || (strpos($country_name,"~EN:" . strtoupper($s[0])) !== false)))
         {
         $found=true;
         $code=$s[1];
