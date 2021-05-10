@@ -1851,6 +1851,10 @@ function get_filter_sql($filterid)
     global $userref, $access_override, $custom_access_overrides_search_filter, $open_access_for_contributor;
 
     $filter         = get_filter($filterid);
+    if (!$filter)
+        {
+        return false;
+        }
     $filterrules    = get_filter_rules($filterid);
 
     $modfilterrules=hook("modifysearchfilterrules");
