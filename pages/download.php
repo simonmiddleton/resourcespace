@@ -155,6 +155,7 @@ else
     }
     
     $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $download_extra = hook('download_resource_extra', '', array($path));
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
@@ -163,6 +164,12 @@ else
         }
 
     hook('modifydownloadpath');
+    // Hook to modify the download path.
+    $path_modified = hook('modifydownloadpath2', '', array($download_extra));
+    if(isset($path_modified) && $path_modified != '' && is_string($path_modified))
+        {
+        $path = $path_modified;
+        }
         
     if(!file_exists($path) && '' != $noattach)
         {
@@ -366,6 +373,6 @@ if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpf
     delete_exif_tmpfile($tmpfile);
     }
 
-hook('beforedownloadresourceexit');
+hook('beforedownloadresourceexit', '', array($download_extra));
 
 exit();

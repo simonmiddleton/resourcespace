@@ -512,7 +512,9 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	
 	# set defaults for resource here (in case there are edit filters that depend on them)
 	set_resource_defaults($insert);	
-	
+
+    hook('resourcecreate', '', array($insert, $resource_type));
+
 	# Autocomplete any blank fields.
 	autocomplete_blank_fields($insert, true);
 
@@ -2657,7 +2659,9 @@ function delete_resource($ref)
                 }
 			}
 		}
-	
+
+    hook('delete_resource_extra', '', array($resource));
+
 	# Delete any alternative files
 	$alternatives=get_alternative_files($ref);
 	for ($n=0;$n<count($alternatives);$n++)
@@ -2670,6 +2674,7 @@ function delete_resource($ref)
 	$resource_path = get_resource_path($ref, true, "pre", true);
 
 	$dirpath = dirname($resource_path);
+    hook('delete_resource_path_extra', '', array($dirpath));
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
@@ -3921,7 +3926,15 @@ function createTempFile($path, $uniqid, $filename)
 
     $tmpfile = "{$tmp_dir}/{$filename}";
 
-    copy($path, $tmpfile);
+    $copy_hook = hook('createtempfile_copy', '', array($path, $tmpfile));
+    if($copy_hook == false)
+        {
+        copy($path, $tmpfile);
+        }
+    else
+        {
+        $tmpfile = $copy_hook;
+        }
 
     return $tmpfile;
     }
@@ -4388,6 +4401,7 @@ function delete_alternative_file($resource,$ref)
 	# Delete any uploaded file.
 	$info=get_alternative_file($resource,$ref);
 	$path=get_resource_path($resource, true, "", true, $info["file_extension"], -1, 1, false, "", $ref);
+    hook('delete_alternative_file_extra', '', array($path));
 	if (file_exists($path)) {unlink($path);}
 	
         // run through all possible extensions/sizes
@@ -4406,6 +4420,8 @@ function delete_alternative_file($resource,$ref)
             unlink($path);
         }
 
+        hook('delete alternative_jpg_extra', '', array($path));
+
         // in some cases, a mp3 original is generated for non-mp3 files like WAVs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'mp3', -1, 1, false, "", $ref);
         if (file_exists($path)) {
@@ -4419,6 +4435,7 @@ function delete_alternative_file($resource,$ref)
                 while ($page <> $lastpage){
                     $lastpage = $page;
                     $path=get_resource_path($resource, true, $size, true, $extension, -1, $page, false, "", $ref);
+                    hook('delete_alternative_file_loop', '', array($path));
                     if (file_exists($path)) {
                         unlink($path);
                         $page++;
@@ -4426,6 +4443,7 @@ function delete_alternative_file($resource,$ref)
                 }
             }
         }
+        hook('delete_alternative_mp3_extra', '', array($path));
         
 	# Delete the database row
 	sql_query("delete from resource_alt_files where resource='" . escape_check($resource) . "' and ref='" . escape_check($ref) . "'");
@@ -6948,7 +6966,10 @@ function save_original_file_as_alternative($ref)
     $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
     $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
     # Move the old file to the alternative file location
-    $result=rename($origpath, $newaltpath);								
+    if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
+        {
+        $result = rename($origpath, $newaltpath);
+        }
 
     if ($alternative_file_previews)
         {
@@ -7030,6 +7051,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
             }
         }
 
+    hook('replace_resource_file_extra', '', array($resource));
     resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
     hook("additional_replace_existing");        

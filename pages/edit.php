@@ -373,6 +373,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
+    hook('edit_recreate_previews_extra', '', array($ref));
     sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
     create_previews($ref,false,$resource["file_extension"]);
     }
@@ -856,6 +857,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
+            hook('edit_previews_recreate_extra', '', array($ref)); 
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }

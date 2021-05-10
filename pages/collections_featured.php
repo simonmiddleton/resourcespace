@@ -61,6 +61,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
 
     renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");
     }
+hook('collections_featured_below_breadcrumbs', '', array($parent, $parent_collection_data));
 
 // Default rendering options (should apply to both FCs and smart FCs)
 $full_width = !$themes_simple_view;
