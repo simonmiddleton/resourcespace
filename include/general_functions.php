@@ -3791,7 +3791,6 @@ function get_sysvar($name, $default=false)
  */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
-
 	global $hook_cache;
 	if($pagename == '')
 		{
@@ -3817,6 +3816,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		foreach ($hook_cache[$hook_cache_index] as $function)
 			{
 			$function_return_value = call_user_func_array($function, $params);
+            debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', $GLOBALS, ['hook_fct_name' => $function]);
 
 			if ($function_return_value === null)
 				{

@@ -2560,6 +2560,11 @@ $lang["systemconsoleonfailedtopcommand"]="Failed to execute top command";
 $lang["systemconsoleonfailedtasklistcommand"]="Failed to execute tasklist command";
 $lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable";
 $lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or \$mysql_log_location file not found or is not readable";
+$lang['systemconsoletrackVars'] = "Tracking variables";
+$lang['systemconsole_label_input_vars'] = "Variable names";
+$lang['systemconsole_help_track_vars'] = "Use a CSV of variable names that you wish to track throughout the system. This is mainly used for debugging purposes as it helps determining where a specific variable is being set or overriden.";
+$lang['systemconsole_label_input_track_period'] = "Specify how long to track variables for";
+$lang['systemconsole_help_track_period'] = "Value represents minutes.";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Remove';

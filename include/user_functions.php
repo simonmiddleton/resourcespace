@@ -276,6 +276,7 @@ function setup_user($userdata)
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
         eval($config_options);
+        debug_track_vars('end@setup_user', get_defined_vars());
         }
 
     hook('after_setup_user');

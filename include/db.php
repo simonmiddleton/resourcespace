@@ -52,12 +52,21 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
-if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
-if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
+if (file_exists(dirname(__FILE__)."/config.default.php"))
+    {
+    include dirname(__FILE__) . "/config.default.php";
+    $track_vars_after_config_default = get_defined_vars();
+    }
+if (file_exists(dirname(__FILE__)."/config.deprecated.php"))
+    {
+    include dirname(__FILE__) . "/config.deprecated.php";
+    $track_vars_after_config_deprecated = get_defined_vars();
+    }
 
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
+$track_vars_after_config = get_defined_vars();
 
 error_reporting($config_error_reporting);
 
@@ -142,6 +151,7 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 		}
 	# Load and use the config
 	eval($remote_config);
+    debug_track_vars('after@remote_config', get_defined_vars());
 	}
 #
 # End of remote config support
@@ -175,6 +185,12 @@ if (!isset($storagedir)) {$storagedir=dirname(__FILE__)."/../filestore";}
 if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 
 sql_connect();
+
+// Track variables for any process that matters but is before we connect to the database (it needs access to sysvars table)
+debug_track_vars('after@include/config.default.php', $track_vars_after_config_default);
+debug_track_vars('after@include/config.deprecated.php', $track_vars_after_config_deprecated);
+debug_track_vars('after@include/config.php', $track_vars_after_config);
+unset($track_vars_after_config_default, $track_vars_after_config_deprecated, $track_vars_after_config);
 
 # Automatically set a HTTPS URL if running on the SSL port.
 if(isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"]==443)

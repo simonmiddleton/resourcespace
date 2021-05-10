@@ -978,26 +978,8 @@ jQuery(document).ready(function()
 }?>
 
 });
-<?php hook("editadditionaljs") ?>
+<?php hook("editadditionaljs");
 
-function ShowHelp(field)
-{
-    // Show the help box if available.
-    if (document.getElementById('help_' + field))
-    {
-       jQuery('#help_' + field).fadeIn();
-    }
- }
- function HideHelp(field)
- {
-    // Hide the help box if available.
-    if (document.getElementById('help_' + field))
-    {
-       document.getElementById('help_' + field).style.display='none';
-    }
- }
-
-<?php
 # Function to automatically save the form on field changes, if configured.
  if ($edit_autosave)
     { ?>
