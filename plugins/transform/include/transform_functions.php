@@ -30,44 +30,39 @@ function generate_transform_preview($ref, $destpath, $actions)
     $profile="+profile icc -colorspace ".$imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
     if ($imagemagick_preserve_profiles) {$profile="";}
 
-
-    $tweaks = "";
-    // if(isset($actions["rotation"]) && is_int_loose($actions["rotation"]))
-    //     {
-    //     $tweaks .= " -rotate " . $actions["rotation"];
-    //     }
-
-    // if(isset($actions["flipx"]) && (bool)$actions["flipx"]==true)
-    //     {
-    //     $tweaks .= " -flop ";
-    //     }
-    // if(isset($actions["flipy"]) && (bool)$actions["flipy"]==true)
-    //     {
-    //     $tweaks .= " -flip ";
-    //     }
-
-    foreach($actions as $action)
+    // Transform actions need to be performed in order the user performed them since they are not commutative
+    $tfparams = "";
+    foreach($actions["tfactions"] as $tfaction)
         {
-        switch ($action)
+        switch ($tfaction)
             {
-            case "r":
-                $tweaks .= " -rotate 90 ";
+            case "r90":
+                debug("BANG in r90 '" . $tfaction . "'");
+                $tfparams .= " -rotate 90 ";
                 break;
-            case "r":
-                $tweaks .= " -rotate 90 ";
+            case "r180":
+                $tfparams .= " -rotate 180 ";
+                break;
+            case "r270":
+                $tfparams .= " -rotate 270 ";
                 break;
             case "x":
-                $tweaks .= " -flop ";
+                $tfparams .= " -flop ";
             break;
             case "y":
-                $tweaks .= " -flip ";
+                $tfparams .= " -flip ";
+            break;
+            default:
+            debug("BANG in default '" . $tfaction . "'");
+                // No transform action
             break;
             }
-
-
         }
+    $command .= " \"$transformsourcepath\"[0] -auto-orient +matte -flatten $tfparams $profile -resize 450x450  \"$destpath\"";
 
-    $command .= " \"$transformsourcepath\"[0] +matte -flatten $tweaks $profile -resize 450x450  \"$destpath\"";
+
+    debug("BANG " . $tfparams);
+
     run_command($command);
     
     if(!file_exists($destpath))
@@ -99,7 +94,7 @@ function generate_transform_preview($ref, $destpath, $actions)
 
 
 /**
- * PErform the reuested action on the roiganl fiel to create a new file
+ * Perform the requested action on the original file to create a new file
  *
  * @param  mixed $originalpath      Path to source file
  * @param  mixed $newpath           Path to new file
@@ -138,6 +133,13 @@ debug("BANG " . print_r($actions, true));
     $profile="+profile icc -colorspace ".$imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
     if ($imagemagick_preserve_profiles) {$profile="";}
 
+    $origsizes  = getimagesize($originalpath);
+    $origwidth  = $origsizes[0];
+    $origheight = $origsizes[1];
+    if($of_parts["extension"] == 'svg')
+        {
+        list($origwidth, $origheight) = getSvgSize($originalpath);
+        }
 
     $keep_transparency=false;
     if (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
@@ -180,33 +182,80 @@ debug("BANG " . print_r($actions, true));
         $command .= $alphaoff;
         }
 
-    
-    $tweaks = "";
-    foreach($actions as $action)
+    // Transform actions need to be performed in order the user performed them since they are not commutative
+    $tfparams = "";
+    // Set var to keep track of rotations so we know if image has swapped height/width. 
+    // This is needed to calculate the crop co-ordinates 
+    $swaphw = 0;
+    foreach($actions["tfactions"] as $tfaction)
         {
-        switch ($action)
+        switch ($tfaction)
             {
-            case "r":
-                $tweaks .= " -rotate 90 ";
+            case "r90":
+                $tfparams .= " -rotate 90 ";
+                $swaphw += 1;
                 break;
-            case "r":
-                $tweaks .= " -rotate 90 ";
+            case "r180":
+                $tfparams .= " -rotate 180 ";
+                break;
+            case "r270":
+                $tfparams .= " -rotate 270 ";
+                $swaphw += 1;
                 break;
             case "x":
-                $tweaks .= " -flop ";
+                $tfparams .= " -flop ";
             break;
             case "y":
-                $tweaks .= " -flip ";
+                $tfparams .= " -flip ";
+            break;
+            default:
+                // No transform action
             break;
             }
         }
 
-    $command .= $tweaks;
-    
+    $command .= $tfparams;
+
+  
     if (isset($actions["crop"]) && $actions["crop"] && !$cropperestricted)
+        {
+        // Need to mathematically convert to the original size
+        $xfactor = $swaphw % 2 == 0 ? $origwidth/$actions["cropwidth"] : $origheight/$actions["cropwidth"];
+        $yfactor = $swaphw % 2 == 0 ? $origheight/$actions["cropheight"] : $origwidth/$actions["cropheight"];
+        
+        debug("BANG xfactor:  " . $xfactor);
+        debug("BANG yfactor:  " . $yfactor);
+        $finalxcoord = round (($actions["xcoord"] * $xfactor),0);
+        $finalycoord = round (($actions["ycoord"] * $yfactor),0);	
+
+        // Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
+        // If landscape crop, set the width first, then base the height on that
+        $desiredratio = (int)$actions["width"] / (int)$actions["height"];
+        debug("BANG desiredratio:  " . $desiredratio);
+        if($desiredratio > 1)
             {
-            $command .= " -crop " . $actions["finalwidth"] . "x" . $actions["finalheight"] . "+" . $actions["finalxcoord"] . "+" . $actions["finalycoord"];
+            $finalwidth  = round ($actions["width"] * $xfactor,0);
+            $finalheight = round ($finalwidth / $desiredratio,0);
             }
+        else
+            {
+            $finalheight = round ($actions["height"] * $yfactor,0);
+            $finalwidth= round($finalheight *  $desiredratio,0);			
+            }
+
+        debug("BANG finalxcoord:  " . $finalxcoord);
+        debug("BANG finalycoord:  " . $finalycoord);
+        debug("BANG cropwidth:  " . $actions["cropwidth"]);
+        debug("BANG cropheight:  " . $actions["cropheight"]);
+        debug("BANG origwidth:  " . $origwidth);
+        debug("BANG origheight:  " . $origheight);
+        debug("BANG new_width:  " . $actions["new_width"]);
+        debug("BANG new_height:  " . $actions["new_height"]);
+        debug("BANG finalwidth:  " . $finalwidth);
+        debug("BANG finalheight:  " . $finalheight);
+
+        $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+" . $finalycoord;
+        }
     
     if ($cropper_use_repage)
         {
@@ -289,25 +338,29 @@ debug("BANG " . print_r($actions, true));
     $shell_result = run_command($command);
     if (true || $cropper_debug)
         {
-        debug("BANG " . $command);
+        //debug("BANG " . $command);
         debug("SHELL RESULT: $shell_result");
-        }    
+        }     
 
-    if (file_exists($outputpath) && isset($actions["resolution"]) && $actions["resolution"] != "")
+    if (file_exists($outputpath))
         {
-        // See if we have got exiftool, in which case we can target the Photoshop specific PPI data
+        // See if we have got exiftool
         $exiftool_fullpath = get_utility_path("exiftool");
         if (($exiftool_fullpath!=false) && !in_array($of_parts["extension"],$exiftool_no_process))
             {
+            $exifcommand = $exiftool_fullpath . ' -m -overwrite_original -E -Orientation#=1 ';
             $exifargs = array();
-            $exifargs["%resolution%"]  = $actions["resolution"];
-            $exifargs["%outputfile%"]  = $outputpath;
 
-            $exifcommand = $exiftool_fullpath . " -m -overwrite_original -E ";
-            $exifcommand.= " -Photoshop:XResolution=%resolution%";
-            $exifcommand.= " -Photoshop:YResolution=%resolution%";
-            $exifcommand.= " %outputfile%";
+            if(isset($actions["resolution"]) && $actions["resolution"] != "")
+                {
+                // Target the Photoshop specific PPI data
+                $exifcommand.= " -Photoshop:XResolution=%resolution%";
+                $exifcommand.= " -Photoshop:YResolution=%resolution%";    
+                $exifargs["%resolution%"]  = $actions["resolution"];            
+                }
             
+            $exifcommand.= " %outputfile%";
+            $exifargs["%outputfile%"]  = $outputpath;
             $command = escape_command_args($exifcommand,$exifargs);
             $output = run_command($command);
             if (true || $cropper_debug)
