@@ -1151,8 +1151,10 @@ else
         
 		<?php if (!hook("rendercollectionthumb")){?>
         <?php
-        
-        $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
+
+		// Resolve access for watermark checking
+		$access = get_resource_access($result[$n]);
+
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
