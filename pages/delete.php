@@ -132,7 +132,8 @@ if(!$modal)
 	<?php if ($error!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($error) ?> !!</div><?php } ?>
 	</div>
 	<?php }
-	
+
+    hook('delete_extra', '', array($ref));
 	$cancelparams = array();
 
 	$cancelparams["ref"] 		= $ref;

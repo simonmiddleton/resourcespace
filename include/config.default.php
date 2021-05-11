@@ -283,7 +283,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above.
+# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
@@ -315,6 +315,9 @@ $dash_tile_shadows=false;
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
 # Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
+
+# Options to show/hide the tiles on the home page
+$home_themeheaders=false;
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
@@ -834,14 +837,6 @@ $collection_download_max_size = 1024 * 1024 * 1024; # default 1GB.
 $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
-
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 
 
 
 # A list of types which get the extra video icon in the search results
@@ -2158,9 +2153,6 @@ $enable_plugin_upload = true;
     // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
 
-    // TODO - support no servers
-    // TODO support old style servers
-
     // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
     // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
     // information. If no servers are available, then your zoom ability will be limited.
@@ -2176,7 +2168,6 @@ $enable_plugin_upload = true;
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
     // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
 
-# Log developer debug information to the debug log (filestore/tmp/debug.txt)?
     // Add OpenLayers configuration options to this variable to overwrite all other options.
     $geo_override_options = "";
 
@@ -3233,3 +3224,8 @@ $system_read_only = false;
 $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
+
+// Specify file extensions that will not be 'flattened' by ImageMagick
+$preview_no_flatten_extensions = array("gif","png","tif","svg");
+// Specify file extensions that will have their transparency layer replaced with a checkerboard pattern. If the alpha layer has just been used for construction then tou may need to remove 'tif' from this array
+$preview_keep_alpha_extensions = array("gif","png","tif","svg");

@@ -84,7 +84,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 				$email_to=sql_value("select email value from user where ref={$user}","");
 				if($email_to!=='')
 					{
-                    if(strpos($url,$baseurl) === false)
+                    if(substr($url,0,1) == "/")
                         {
                         // If a relative link is provided make sure we add the full URL when emailing
                         $url = $baseurl . $url;
@@ -95,7 +95,6 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 				}
 			}
 		}
-
 	}
 
 /**
@@ -276,7 +275,13 @@ function message_send_unread_emails()
 				// Message applies to this user
 				$messageflag=true;
 				$usermail = $unreadmessage["email"];
-				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
+                $msgurl = $unreadmessage["url"];
+                if(substr($msgurl,0,1) == "/")
+                    {
+                    // If a relative link is provided make sure we add the full URL when emailing
+                    $msgurl = $baseurl . $msgurl;
+                    }
+				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $msgurl . "'>" . $lang["link"] . "</a></td></tr>";
 				$messagerefs[]=$unreadmessage["messageref"];
 				}
 			}

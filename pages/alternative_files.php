@@ -156,6 +156,7 @@ if($alternative_file_resource_title && isset($resource['field'.$view_title_field
 <td><?php if (count($files)>0){?><input type="checkbox" class="checkbox" onclick="toggleAll();" id="toggleall" /><?php } ?></td>
 <td><?php echo $lang["name"]?></td>
 <td><?php echo $lang["description"]?></td>
+<?php hook('alternativefileslist'); ?>
 <td><?php echo $lang["filetype"]?></td>
 <td><?php echo $lang["filesize"]?></td>
 <td><?php echo $lang["date"]?></td>
@@ -172,7 +173,8 @@ for ($n=0;$n<count($files);$n++)
 	<tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?>>
 	<td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
 	<td><?php echo htmlspecialchars($files[$n]["name"])?></td>	
-	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>	
+	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
+    <?php hook('alternativefileslist2', '', array($ref, $files[$n])); ?>
 	<td><?php echo ($files[$n]["file_extension"]==""?$lang["notuploaded"]:htmlspecialchars(str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"]))); ?></td>	
 	<td><?php echo formatfilesize($files[$n]["file_size"])?></td>	
 	<td><?php echo nicedate($files[$n]["creation_date"],true)?></td>

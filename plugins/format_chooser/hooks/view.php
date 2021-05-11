@@ -20,9 +20,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
     $inputFormat = $resource['file_extension'];
 

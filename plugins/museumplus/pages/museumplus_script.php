@@ -46,6 +46,26 @@ if('' != trim($museumplus_log_directory))
     // Cleaning up old log files is done by the cron_copy_hitcount hook!
     }
 
+// Truncate museumplus_log table at regular intervals as configured
+$mplus_last_log_truncate = get_sysvar(MPLUS_LAST_LOG_TRUNCATE, false);
+if($mplus_last_log_truncate !== false)
+    {
+    $mplus_today_date = new DateTime();
+    $date_diff = $mplus_today_date->diff(DateTime::createFromFormat('Y-m-d', $mplus_last_log_truncate));
+    if($date_diff->days > $museumplus_truncate_log_interval)
+        {
+        sql_query('TRUNCATE museumplus_log');
+        set_sysvar(MPLUS_LAST_LOG_TRUNCATE, date('Y-m-d'));
+        logScript('[museumplus] Truncate museumplus_log table', $mplus_log_file);
+        }
+    }
+else
+    {
+    set_sysvar(MPLUS_LAST_LOG_TRUNCATE, date('Y-m-d'));
+    }
+
+
+
 // Script options @see https://www.php.net/manual/en/function.getopt.php
 $mplus_short_options = 'hc';
 $mplus_long_options  = array(
@@ -178,7 +198,6 @@ foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
 
 logScript("[museumplus] ", $mplus_log_file);
 logScript(sprintf("[museumplus] Script completed in %01.2f seconds.", microtime(true) - $mplus_script_start_time), $mplus_log_file);
-sql_query("DELETE FROM sysvars WHERE name = '" . MPLUS_LAST_IMPORT . "'");
-sql_query("INSERT INTO sysvars VALUES('" . MPLUS_LAST_IMPORT . "', NOW())");
+set_sysvar(MPLUS_LAST_IMPORT, date('Y-m-d H:i:s'));
 if($mplus_log_file !== null) { fclose($mplus_log_file); }
 clear_process_lock(MPLUS_LOCK);

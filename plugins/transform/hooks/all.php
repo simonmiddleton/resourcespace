@@ -19,7 +19,8 @@ function HookTransformAllRender_actions_add_collection_option($top_actions,$opti
         {
         return false;
         }
-
+    
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
         // @see hook() for an explanation about the hook_return_value global

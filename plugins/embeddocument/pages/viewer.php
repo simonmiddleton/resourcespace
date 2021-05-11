@@ -72,8 +72,8 @@ while (true)
 	
 	# sets height and width to display 
 	$ratio=$resource["thumb_width"]/$resource["thumb_height"];
-	$width=getvalescaped("width","");
-	$height=floor($width / $ratio);
+	$width=getvalescaped("width",0,true);
+	$height= $width > 0 ? floor($width / $ratio): 0;
 	
 	?>
 	embeddocument_pages[<?php echo $page ?>]='<a href="#" onClick="embeddocument_ShowPage(<?php echo ($page + 1) ?>,false,false);"><img border="0" width=<?php echo $width ?> height=<?php echo $height ?> src="<?php echo $preview_path ?>"></a>';

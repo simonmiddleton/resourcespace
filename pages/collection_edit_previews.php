@@ -24,7 +24,7 @@ if ($collection===false)
 	}
 
 # Check access
-if (!collection_writeable($ref))
+if (!allow_multi_edit($collection_ref, $collection_ref))
     {
     exit($lang["no_access_to_collection"]);
     }

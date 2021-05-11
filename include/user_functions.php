@@ -276,7 +276,11 @@ function setup_user($userdata)
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
         eval($config_options);
+        debug_track_vars('end@setup_user', get_defined_vars());
         }
+
+    hook('after_setup_user');
+
     return true;
     }
     
@@ -726,13 +730,11 @@ function email_reset_link($email,$newuser=false)
         }
 
     $details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
-
+    sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        sleep($password_brute_force_delay);
         return false;
         }
-
     $details = $details[0];
 
     global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
@@ -2627,6 +2629,10 @@ function set_user_profile($user_ref,$profile_text,$image_path)
             {
             unlink($image_path);
             }
+        else
+            {
+            return false;
+            }
         }
 
     # Update user to set user.profile
@@ -2917,3 +2923,16 @@ function is_authenticated()
     global $is_authenticated;
     return isset($is_authenticated) && $is_authenticated;
     }
+
+
+/**
+ * Determine whether the user is setup as an e-commerce user
+ *
+ * @return boolean
+ */
+function is_ecommerce_user()
+    {
+    global $userrequestmode;
+    return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
+    }
+

@@ -194,7 +194,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             # Advanced search will display these as dropdowns if marked as such, otherwise they are displayed as checkbox lists to allow OR selection
                             else {
                                 # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
-                                $checkname = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
                                 $jquery_selector = "input[name=\"{$checkname}\"]";
 
                                 # If however its a drop down list then we should be processing select elements
@@ -332,7 +332,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     else {
                         # Prepare selector on the assumption that its an input element (ie. a checkbox list or a radio button or a dropdown displayed as checkbox list)
                         #   so search for checked boxes
-                        $jquery_condition_selector = "input[name=\"{$checkname}\"]:checked:enabled";
+                        $jquery_condition_selector = "input[name=\"{$checkname}[]\"]:checked:enabled";
 
                         # If however its a drop down list then we should be searching for selected option
                         If ($scriptcondition['display_as_dropdown'] == true)
@@ -615,7 +615,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                         $node = $field['nodes'][$node_index_to_be_reshuffled];
                                         ?>
                                         <td valign=middle>
-                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                                         </td>
                                         <td valign=middle>
                                             <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -657,7 +657,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             {
                             ?>
                             <td valign=middle>
-                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                             </td>
                             <td valign=middle>
                                 <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -813,7 +813,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
                         
                         return false;"><?php echo $lang['showhidetree']; ?></a>
-                <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
+                <div id="cattree_<?php  echo isset($fields[$n]['name']) ? $fields[$n]['name'] : ""; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
 
@@ -1745,7 +1745,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
 
-  debug_function_call("display_field", func_get_args());
+  // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
+  debug("display_field()" . "n = " . $n . ", field ref=" . $field["ref"] . ", modal=" . ($modal ? "TRUE" : "FALSE"));
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -5274,7 +5275,7 @@ function render_share_password_question($blank=true)
     ?>
     <div class="Question">
     <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-    <input type="password" id="sharepassword" name="sharepassword" autocomplete="off" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
     <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 

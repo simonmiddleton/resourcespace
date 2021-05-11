@@ -373,6 +373,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
+    hook('edit_recreate_previews_extra', '', array($ref));
     sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
     create_previews($ref,false,$resource["file_extension"]);
     }
@@ -856,6 +857,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
+            hook('edit_previews_recreate_extra', '', array($ref)); 
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
@@ -976,26 +978,8 @@ jQuery(document).ready(function()
 }?>
 
 });
-<?php hook("editadditionaljs") ?>
+<?php hook("editadditionaljs");
 
-function ShowHelp(field)
-{
-    // Show the help box if available.
-    if (document.getElementById('help_' + field))
-    {
-       jQuery('#help_' + field).fadeIn();
-    }
- }
- function HideHelp(field)
- {
-    // Hide the help box if available.
-    if (document.getElementById('help_' + field))
-    {
-       document.getElementById('help_' + field).style.display='none';
-    }
- }
-
-<?php
 # Function to automatically save the form on field changes, if configured.
  if ($edit_autosave)
     { ?>
@@ -1230,7 +1214,12 @@ else
                 { ?>           
                 <strong>
                 <?php 
-                echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
+                $orig_path = get_resource_path($ref,true,"",false,$resource["file_extension"]);
+                if(file_exists($orig_path))
+                    {
+                    $filesize = filesize_unlimited($orig_path);
+                    echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize($filesize) . ")";
+                    }                
                 ?>
                 </strong>
                 <?php 
@@ -1369,7 +1358,7 @@ hook("editbefresmetadata"); ?>
                 {
                 $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
                 // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
-                if(0 > $ref 
+                if((0 > $ref || $upload_review_mode)
                     && 
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
