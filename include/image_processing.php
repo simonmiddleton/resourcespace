@@ -562,7 +562,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     # Update disk usage
     update_disk_usage($ref);
     
-    if(!$upload_then_process || !$after_upload_processing)
+    if(!$after_upload_processing)
         {
         # Log this activity.
         $log_ref=resource_log($ref,"u",0);

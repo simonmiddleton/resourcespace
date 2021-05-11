@@ -4953,18 +4953,21 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  * "headers"  - Column headings using the identifier as the index,
  *  - name - Title to display
  *  - Sortable - can column be sorted?
+ *  - width - Optional column width
  * 
  * "orderbyname"    - name of variable used on page to determine orderby (used to differentiate from standard search values)
  * "orderby"        - Current order by value
  * "sortbyname"     - name of variable used on page to determine sort
  * "sort"           - Current sort
  * "defaulturl"     - Default URL to construct links
+ * "modal"          - Open links in modal? (false by default)
  * "params"         - Current parameters to use in URL
  * "pager"          - Pager settings 
  *  - current page
  *  - total pages
  * "data"          - Array of data to display in table, using header identifers as indexes
- *  - If "rowid" is specified this wil be used as the id attribute for the <tr> element
+ *  - If "rowid" is specified this will be used as the id attribute for the <tr> element
+ *  - The "alerticon" can be used to specify a CSS class to use for a row status icon
  *  - An additional 'tools' element can be included to add custom action icons
  *  - "class" - FontAwesome class to use for icon
  *  - "text" - title attribute
@@ -4993,10 +4996,11 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  */
 function render_table($tabledata)
     {
-    ?>
-    <div class="TablePagerHolder"><?php
+    global $list_display_array, $lang;
+    $modal = isset($tabledata["modal"]) && $tabledata["modal"];
+    $alertcolumn = count(array_column($tabledata["data"],'alerticon')) > 0;
     if(isset($tabledata["pager"]))
-        {
+        {          
         $pageroptions = array(
             "curpage" => $tabledata["pager"]["current"],
             "totalpages" => $tabledata["pager"]["total"],
@@ -5006,21 +5010,49 @@ function render_table($tabledata)
             "url" => $tabledata["defaulturl"],
             "url_params" => $tabledata["params"],
             );
+        ?>
+        <div class="TopInpageNav">
+        <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
+        <?php
+        // Show per page options
+        $list_display_array["all"] = 99999;
+        $pplinks = array();
+        foreach($list_display_array as $ldopt => $ldnum)
+            {
+            $lpp_name = isset($lang[$ldopt]) ? $lang[$ldopt] : $ldnum;
+            if ($pageroptions["per_page"] == $ldnum)
+                {
+                $pplinks[] =  "<span class='Selected'>" . $lpp_name . "</span>";
+                }
+            else
+                {
+                $perpageurl = generateURL($pageroptions["url"],$tabledata["params"], array("per_page"=>$ldnum));
+                $pplinks[] = "<a onclick='return " . ($modal ? "Modal" : "CentralSpace") . "Load(this, true);' href='" . 
+                $perpageurl . "'>" . $lpp_name . "</a>";
+                }
+            }
+        echo implode("&nbsp;|&nbsp;", $pplinks);
+        echo "</div> <!-- End of InpageNavLeftBlock per page div -->";
+        echo "<div class='TablePagerHolder'>";
         pager(true, true,$pageroptions);
+        echo "</div>";
         }?>
     </div><?php
 
     echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
     echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
     echo "<tbody><tr class='ListviewTitleStyle'>\n";
-    echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
+    if($alertcolumn)
+        {
+        echo "<th id='RowAlertStatus' style='width: 10px;'></th>";
+        }
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
-        echo "<th>";
+        echo "<th " . (isset($headerdetails["width"]) ? ("style='width:" . htmlspecialchars($headerdetails["width"]) . "'") : "") . ">";
         if($headerdetails["sortable"])
             {
             $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
-            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return CentralSpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
+            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return " . ($modal ? "Modal" : "CentralSpace") . "SpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
             if($tabledata["orderby"] == $header)
                 {
                 // Currently sorted by this column
@@ -5046,16 +5078,20 @@ function render_table($tabledata)
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            $rowid = isset($rowdata["rowid"]) ? " id = '" . $rowdata["rowid"]  . "'" : "";
+            $rowid = isset($rowdata["rowid"]) ? " id='" . $rowdata["rowid"]  . "'" : "";
+            if(isset($rowdata["rowlink"]))
+                {
+                $rowid .=  " class='row_clickable' data-link='" . htmlspecialchars($rowdata["rowlink"]) . "'";
+                }
             echo "<tr" . $rowid . ">";
 
             if(isset($rowdata['alerticon']))
                 {
                 echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
                 }
-            else
+            elseif($alertcolumn)
                 {
-                echo "<td></td>"; 
+                echo "<td></td>";
                 }
             foreach($tabledata["headers"] as $header=>$headerdetails)
                 {
@@ -5095,9 +5131,21 @@ function render_table($tabledata)
             echo "</tr>\n";
             }
         }
-    echo "</tbody>";
-    echo "</table>";
-    echo "</div>";
+    ?>
+    </tbody>
+    </table>
+    </div>
+    
+    <script>
+    jQuery(document).ready(function()
+        {
+        jQuery(".row_clickable").click(function (e, row, $element)
+            {
+            return ModalLoad(jQuery(this).data('link'), true);
+            });
+        });
+    </script>
+    <?php
     }
 
 /**

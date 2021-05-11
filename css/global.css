@@ -1875,7 +1875,7 @@ select.MultiSelect:before {
     transform-origin: left bottom;
     font-size: 1.2em;
 }
-#BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited{
+#BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited, .row_clickable{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;

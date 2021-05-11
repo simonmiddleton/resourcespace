@@ -3100,3 +3100,6 @@ $lang["share_type"]                         = "Share type";
 $lang["share_type_view"]                    = "View";
 $lang["share_type_upload"]                  = "Upload";
 $lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";
+$lang["log-reference"]                      = "Log entry";
+$lang["log_column"]                         = "Log data";
+$lang["log_value"]                          = "Value";
