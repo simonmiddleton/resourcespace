@@ -220,7 +220,7 @@ include "../../include/header.php";
         $team_user_edit_url = generateURL("{$baseurl}/pages/team/team_user_edit.php", $team_user_edit_params);
 
         $team_user_log_params = array(
-            'actauser' => $users[$n]["ref"],
+            'actasuser' => $users[$n]["ref"],
             'backurl' => generateURL($url_parse['path'], $url_qs, ['offset' => $offset]),
         );
         $team_user_log_url = generateURL("{$baseurl}/pages/admin/admin_system_log.php", $team_user_log_params);
