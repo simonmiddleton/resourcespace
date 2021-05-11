@@ -104,7 +104,7 @@ if ($alt_access)
 			    }	
 			    ?>><?php echo $lang["action-download"]?></a><?php
             } ?></td></td>
-		<?php } else { ?>
+		<?php } elseif (checkperm("q")) { ?>
 		<td class="DownloadButton"><?php
 			if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
 				{
@@ -115,7 +115,11 @@ if ($alt_access)
 				?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
 				}
 			echo $lang["action-request"]?></a></td>
-		<?php } ?>
+		<?php } 
+		else
+		    {
+		    ?><td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td><?php
+		    } ?>
 		</tr>
 		<?php	
 		}
