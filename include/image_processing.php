@@ -1691,10 +1691,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $cb_height = $sh / 6;
                     $cb_scale = 600;
                     }
-                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height . " -scale " . $cb_scale . "% tile:pattern:checkerboard ";
+                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
                 if($extension=="svg")
                     {
-                    $addcheckbdpre = "-transparent white " .  $addcheckbdpre;
+                    $addcheckbdpre = "-transparent white " .  $addcheckbdpre  . " -scale " . $cb_scale . "% tile:pattern:checkerboard ";
+                    }
+                else
+                    {
+                    $addcheckbdpre .= " tile:pattern:checkerboard -scale " . $cb_scale . "% ";
                     }
                 $addcheckbdafter = "-compose over -composite ";
                 }            
