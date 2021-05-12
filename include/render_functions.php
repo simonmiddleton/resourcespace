@@ -5316,11 +5316,12 @@ function radio_get_layout($options)
 * @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
 * @param string $current   The current selected value
 * @param string $extra     Extra attributes used on the selector element
+* @param bool   $listview  Show as vertical list? (false for table view)
 * @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onclick for select)
 * 
 * @return void
 */
-function render_radio_buttons_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
+function render_radio_buttons_question($label, $inputname, $options = array(), $current="", $extra="", $listview=false, array $ctx = array())
     {
     $div_class = array("Question");
     if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
@@ -5335,7 +5336,10 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
     $extra .= " {$onchange}";
 
     list($rows,$cols) = radio_get_layout(array_values($options));
-
+    if($listview)
+        {
+        $cols=1;
+        }
 	?>
     <div class="<?php echo implode(" ", $div_class); ?>">
         <label><?php echo $label; ?></label>

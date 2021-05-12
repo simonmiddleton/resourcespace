@@ -3091,3 +3091,6 @@ $lang["share_type"]                         = "Share type";
 $lang["share_type_view"]                    = "View";
 $lang["share_type_upload"]                  = "Upload";
 $lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";
+$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
+$lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+

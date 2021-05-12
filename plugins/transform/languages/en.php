@@ -79,3 +79,4 @@ $lang['cropper_srgb_option'] = "Add option to force use of sRGB profile";
 $lang['cropper_jpeg_rgb'] = "Force sRGB (overrides user option)";
 $lang['cropper_use_srgb'] = "Use sRGB";
 $lang['transform-recrop'] = "Re-crop image";
+$lang['transform_update_preview'] = "Update preview";

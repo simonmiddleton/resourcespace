@@ -58,10 +58,16 @@ function generate_transform_preview($ref, $destpath, $actions)
             break;
             }
         }
+
+    
+    
+    if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]))
+        {
+        $gamma = round($actions["gamma"]/50,2);
+        $tfparams .= " -gamma " .  $gamma . " ";
+        }
+
     $command .= " \"$transformsourcepath\"[0] -auto-orient +matte -flatten $tfparams $profile -resize 450x450  \"$destpath\"";
-
-
-    debug("BANG " . $tfparams);
 
     run_command($command);
     
@@ -104,7 +110,7 @@ function generate_transform_preview($ref, $destpath, $actions)
 function transform_file($originalpath, $outputpath, $actions)
     {
     global $imagemagick_colorspace, $imagemagick_preserve_profiles, $cropperestricted, $cropper_use_repage;
-    global $cropper_debug;
+    global $cropper_debug, $cropper_allow_scale_up;
     global $image_quality_presets, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
     global $exiftool_no_process;
 
@@ -124,10 +130,8 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $alphaoff = "+matte";
         }
-debug("BANG " . print_r($actions, true));
     $sf_parts = pathinfo($originalpath);
     $of_parts = pathinfo($outputpath);
-
     $commandprefix="";
 
     $profile="+profile icc -colorspace ".$imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
@@ -176,6 +180,11 @@ debug("BANG " . print_r($actions, true));
         $flatten = "-flatten";
         }
 
+    if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]))
+        {
+        $gamma = round($actions["gamma"]/50,2);
+        $command .= " -gamma " .  $gamma . " ";
+        }
 
     if ($sf_parts['extension']=="psd" && !$keep_transparency)
         {
@@ -223,15 +232,14 @@ debug("BANG " . print_r($actions, true));
         $xfactor = $swaphw % 2 == 0 ? $origwidth/$actions["cropwidth"] : $origheight/$actions["cropwidth"];
         $yfactor = $swaphw % 2 == 0 ? $origheight/$actions["cropheight"] : $origwidth/$actions["cropheight"];
         
-        debug("BANG xfactor:  " . $xfactor);
-        debug("BANG yfactor:  " . $yfactor);
+        // debug(" xfactor:  " . $xfactor);
+        // debug(" yfactor:  " . $yfactor);
         $finalxcoord = round (($actions["xcoord"] * $xfactor),0);
         $finalycoord = round (($actions["ycoord"] * $yfactor),0);	
 
         // Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
         // If landscape crop, set the width first, then base the height on that
         $desiredratio = (int)$actions["width"] / (int)$actions["height"];
-        debug("BANG desiredratio:  " . $desiredratio);
         if($desiredratio > 1)
             {
             $finalwidth  = round ($actions["width"] * $xfactor,0);
@@ -243,16 +251,16 @@ debug("BANG " . print_r($actions, true));
             $finalwidth= round($finalheight *  $desiredratio,0);			
             }
 
-        debug("BANG finalxcoord:  " . $finalxcoord);
-        debug("BANG finalycoord:  " . $finalycoord);
-        debug("BANG cropwidth:  " . $actions["cropwidth"]);
-        debug("BANG cropheight:  " . $actions["cropheight"]);
-        debug("BANG origwidth:  " . $origwidth);
-        debug("BANG origheight:  " . $origheight);
-        debug("BANG new_width:  " . $actions["new_width"]);
-        debug("BANG new_height:  " . $actions["new_height"]);
-        debug("BANG finalwidth:  " . $finalwidth);
-        debug("BANG finalheight:  " . $finalheight);
+        debug("finalxcoord:  " . $finalxcoord);
+        debug("finalycoord:  " . $finalycoord);
+        debug("cropwidth:  " . $actions["cropwidth"]);
+        debug("cropheight:  " . $actions["cropheight"]);
+        debug("origwidth:  " . $origwidth);
+        debug("origheight:  " . $origheight);
+        debug("new_width:  " . $actions["new_width"]);
+        debug("new_height:  " . $actions["new_height"]);
+        debug("finalwidth:  " . $finalwidth);
+        debug("finalheight:  " . $finalheight);
 
         $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+" . $finalycoord;
         }
@@ -311,11 +319,11 @@ debug("BANG " . print_r($actions, true));
             // program scales up or down by a few pixels. This should be
             // imperceptible, but perhaps worth revisiting at some point.
             
-            $command .= " -scale $new_width";
+            $command .= " -scale " . (int)$actions["new_width"];
             
-            if ($new_height > 0)
+            if ($actions["new_height"] > 0)
                 {
-                $command .= "x$new_height";
+                $command .= "x" . (int)$actions["new_height"];
                 }
             
             $command .= " ";
