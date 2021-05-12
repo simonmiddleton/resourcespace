@@ -146,20 +146,12 @@ function db_use_multiple_connection_modes()
 * 
 * @return void
 */
-function db_set_connection_mode($name)
+function db_set_connection_mode(string $name)
     {
-    if(
-        !(is_string($name) && trim($name) !== "")
-        || !db_use_multiple_connection_modes()
-        || !array_key_exists($name, $GLOBALS["db"])
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db'][$name]) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        $GLOBALS['db_connection_mode'] = $name;
         }
-
-    // IMPORTANT: It is the responsibility of each function to clear the current db mode once it finished running the 
-    // query as the variable is not meant to persist between queries.
-    $GLOBALS["db_connection_mode"] = $name;
 
     return;
     }
@@ -172,15 +164,12 @@ function db_set_connection_mode($name)
 */
 function db_get_connection_mode()
     {
-    if(
-        !db_use_multiple_connection_modes()
-        || !(isset($GLOBALS["db_connection_mode"]) && trim($GLOBALS["db_connection_mode"]) !== "")
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']))
         {
-        return "";
+        return trim($GLOBALS['db_connection_mode']);
         }
 
-    return $GLOBALS["db_connection_mode"];
+    return '';
     }
 
 
@@ -192,12 +181,10 @@ function db_get_connection_mode()
 */
 function db_clear_connection_mode()
     {
-    if(!db_use_multiple_connection_modes() || !isset($GLOBALS["db_connection_mode"]))
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        unset($GLOBALS['db_connection_mode']);
         }
-
-    unset($GLOBALS["db_connection_mode"]);
 
     return;
     }
@@ -303,6 +290,9 @@ function db_begin_transaction($name)
 
 	if(function_exists('mysqli_begin_transaction'))
 		{
+        db_set_connection_mode('read_write');
+        $GLOBALS['sql_transaction_in_progress'] = true;
+
         debug("SQL: begin transaction '{$name}'");
 		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
@@ -367,6 +357,9 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
+        $GLOBALS['sql_transaction_in_progress'] = false;
+        db_clear_connection_mode();
+
         debug("SQL: commit transaction '{$name}'");
 		return mysqli_commit($db["read_write"], 0, $name);
 		}
@@ -392,6 +385,9 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
+        $GLOBALS['sql_transaction_in_progress'] = false;
+        db_clear_connection_mode();
+
         debug("SQL: rollback transaction '{$name}'");
 		return mysqli_rollback($db["read_write"], 0, $name);
 		}
@@ -531,6 +527,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
+    echo PHP_EOL.'db_connection_mode = ' . json_encode($db_connection_mode);
     $result = mysqli_query($db_connection, $sql);
     
     if ($config_show_performance_footer){
