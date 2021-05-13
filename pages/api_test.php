@@ -92,11 +92,11 @@ if ($api_function!="")
 
             $send_param = getval("send_{$param_name}", '') === 'yes';
             $send_param_input = sprintf(
-                '<input type="checkbox" name="send_%1$s" value="yes" %2$s onchange="ToggleSendParam(this, \'%1$s\');">',
+                '<input type="checkbox" name="send_%s" value="yes" %s onchange="ToggleSendParam(this);">',
                 $param_name,
                 ($send_param ? 'checked' : '')
             );
-            $disabled_attr = 'disabled';
+            $disabled_attr = ($send_param ? '' : 'disabled');
             }
         else
             {
@@ -117,38 +117,7 @@ if ($api_function!="")
         <?php
         }
     }
-
-
 ?>
-<script>
-function ToggleSendParam(el, param)
-    {
-    console.log('ToggleSendParam(%o)', el);
-    var input_el = jQuery(el);
-    var param_name = input_el.attr('name').replace('send_', '');
-    console.log('param_name = %o', param_name);
-
-    var param_input = jQuery('input[name="' + param_name + '"]');
-    console.log('param_input = %o', param_input);
-    if(param_input.length == 0)
-        {
-        console.error('Unable to find an input with name %o', param_name);
-        return false;
-        }
-
-
-    if(input_el.is(':checked'))
-        {
-        param_input.prop('disabled', false);
-        }
-    else
-        {
-        param_input.prop('disabled', true);
-        }
-
-    return true;
-    }
-</script>
 <div class="QuestionSubmit">
     <label></label>
     <input type="hidden" name="submitting" value="" id="submitting" />
@@ -204,5 +173,35 @@ print_r($results);
 
 </div>
 </div>
+<script>
+function ToggleSendParam(el)
+    {
+    console.debug('ToggleSendParam(%o)', el);
+
+    var send_param = jQuery(el);
+    var param_name = send_param.attr('name').replace('send_', '');
+    var param_input = jQuery('input[name="' + param_name + '"]').not('[required]');
+
+    console.debug('param_name = %o', param_name);
+    console.debug('param_input = %o', param_input);
+
+    if(param_input.length == 0)
+        {
+        console.error('Unable to find an input with name %o', param_name);
+        return false;
+        }
+
+    if(send_param.is(':checked'))
+        {
+        param_input.prop('disabled', false);
+        }
+    else
+        {
+        param_input.prop('disabled', true);
+        }
+
+    return true;
+    }
+</script>
 <?php
 include "../include/footer.php";
