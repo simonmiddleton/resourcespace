@@ -357,7 +357,7 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
-        $GLOBALS['sql_transaction_in_progress'] = false;
+        unset($GLOBALS['sql_transaction_in_progress']);
         db_clear_connection_mode();
 
         debug("SQL: commit transaction '{$name}'");
@@ -385,7 +385,7 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
-        $GLOBALS['sql_transaction_in_progress'] = false;
+        unset($GLOBALS['sql_transaction_in_progress']);
         db_clear_connection_mode();
 
         debug("SQL: rollback transaction '{$name}'");

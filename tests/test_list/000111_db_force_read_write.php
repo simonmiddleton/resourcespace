@@ -28,8 +28,31 @@ if($resource_data === false)
     return false;
     }
 
+// Allow resetting connection mode after db_end_transaction
+db_begin_transaction('test_111');
+$new_ref = create_resource(1, 0);
+db_end_transaction('test_111');
+db_set_connection_mode('read_only');
+if(db_get_connection_mode() !== 'read_only')
+    {
+    echo 'Allow setting new connection mode after db_end_transaction() - ';
+    return false;
+    }
+
+// Allow resetting connection mode after db_rollback_transaction
+db_begin_transaction('test_111');
+$new_ref = create_resource(1, 0);
+db_rollback_transaction('test_111');
+db_set_connection_mode('read_only');
+if(db_get_connection_mode() !== 'read_only')
+    {
+    echo 'Allow setting new connection mode after db_rollback_transaction() - ';
+    return false;
+    }
+
 
 // Teardown
 unset($new_ref, $resource_data);
+db_clear_connection_mode();
 
 return true;
