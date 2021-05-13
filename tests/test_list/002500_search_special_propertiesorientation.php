@@ -21,7 +21,7 @@ $search = search_special(
     false,
     false
 );
-if(!is_array($search) || count($search) == 0 || $search[0]["ref"] != $resource_portrait)
+if(!(is_array($search) && count($search) > 0 && in_array($resource_portrait, array_column($search, 'ref'))))
     {
     echo "!propertiesorientation:portrait - ";
     return false;
@@ -45,7 +45,7 @@ $search = search_special(
     false,
     false
 );
-if(!is_array($search) || count($search) == 0 || $search[0]["ref"] != $resource_landscape)
+if(!(is_array($search) && count($search) > 0 && in_array($resource_landscape, array_column($search, 'ref'))))
     {
     echo "!propertiesorientation:landscape - ";
     return false;
@@ -69,7 +69,7 @@ $search = search_special(
     false,
     false
 );
-if(!is_array($search) || count($search) == 0 || $search[0]["ref"] != $resource_square)
+if(!(is_array($search) && count($search) > 0 && in_array($resource_square, array_column($search, 'ref'))))
     {
     echo "!propertiesorientation:square - ";
     return false;
@@ -93,22 +93,19 @@ $search = search_special(
     false,
     false
 );
-if(!is_array($search) || count($search) == 0 || $search[0]["ref"] != $resource_height_null)
+if(!(is_array($search) && count($search) > 0 && in_array($resource_height_null, array_column($search, 'ref'))))
     {
     echo "Invalid dimensions - ";
     return false;
     }
 
 
+
 // Tear down
 delete_resource($resource_portrait);
-unset($resource_portrait);
 delete_resource($resource_landscape);
-unset($resource_landscape);
 delete_resource($resource_square);
-unset($resource_square);
 delete_resource($resource_height_null);
-unset($resource_height_null);
-unset($search);
+unset($resource_portrait, $resource_landscape, $resource_square, $resource_height_null, $search);
 
 return true;
