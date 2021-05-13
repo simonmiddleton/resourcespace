@@ -508,18 +508,16 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.
-    $db_connection_mode = "read_write";
-    $db_connection = $db["read_write"];
-    
-    if(db_use_multiple_connection_modes()
-        && (
-            db_get_connection_mode() == "read_only"
-            || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-        )
+    $db_connection_mode = 'read_write';
+    $db_connection = $db['read_write'];
+    if(
+        db_use_multiple_connection_modes()
+        && !isset($GLOBALS['sql_transaction_in_progress'])
+        && (db_get_connection_mode() === 'read_only' || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) === 'SELECT'))
     )
         {
-        $db_connection_mode = "read_only";
-        $db_connection = $db["read_only"];
+        $db_connection_mode = 'read_only';
+        $db_connection = $db['read_only'];
 
         // In case it needs to retry and developer has forced a read-only
         $logthis = 2;
@@ -527,7 +525,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
-    echo PHP_EOL.'db_connection_mode = ' . json_encode($db_connection_mode);
     $result = mysqli_query($db_connection, $sql);
     
     if ($config_show_performance_footer){

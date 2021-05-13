@@ -369,7 +369,6 @@ function get_resource_data($ref,$cache=true)
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
     truncate_cache_arrays();
     $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
-    echo "<pre>";print_r($resource);echo "</pre>";die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
     if (count($resource)==0) 
         {
         if ($ref>=0)

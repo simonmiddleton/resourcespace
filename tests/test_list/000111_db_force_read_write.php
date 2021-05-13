@@ -12,23 +12,19 @@ if(!db_use_multiple_connection_modes())
 db_clear_connection_mode();
 
 
-// echo PHP_EOL . '############'. PHP_EOL;
-
-// During a DB transaction, the connection mode should be forced to RW automatically by db_*_transaction functions
+// During a DB transaction, the connection mode should be forced to RW automatically by db_begin_transaction().
 db_begin_transaction('test_111');
 if(db_get_connection_mode() !== 'read_write')
     {
-    echo 'db_begin_transaction() not forcing RW connection - ';
+    echo 'Force RW connection with db_begin_transaction() - ';
     return false;
     }
-
 $new_ref = create_resource(1, 0);
 $resource_data = get_resource_data($new_ref, false);
 db_end_transaction('test_111');
-
 if($resource_data === false)
     {
-    echo 'Force RW during DB transaction - ';
+    echo 'Use RW connection mode while reading data (inside transaction) - ';
     return false;
     }
 
