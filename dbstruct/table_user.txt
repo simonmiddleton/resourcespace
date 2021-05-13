@@ -1,6 +1,6 @@
 ref,int(11),NO,PRI,,auto_increment
 username,varchar(50),YES,,,
-password,varchar(64),YES,,,
+password,varchar(255),YES,,,
 fullname,varchar(100),YES,,,
 email,varchar(100),YES,,,
 usergroup,int(11),YES,,,
