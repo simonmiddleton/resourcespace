@@ -17,7 +17,7 @@ $k          = getval("k","");
 
 $reload_image   = getval('reload_image','') != '';
 $reset          = getval('reset','') != '';
-$saveaction         = getval("saveaction","");
+$saveaction     = getval("saveaction","");
 
 // Build view url for redirect
 $urlparams = array(
@@ -43,13 +43,12 @@ if (in_array(strtoupper($resource['file_extension']), $cropper_allowed_extension
 
 # Load edit access level
 $edit_access=get_edit_access($ref);
-$access=get_resource_access($ref);
+$access     =get_resource_access($ref);
 
 $cropperestricted = in_array($usergroup,$cropper_restricteduse_groups);
 
-//TODO
-// Check if trying to replace original
-// $action == "replace" && !$cropperestricted;
+$sswidth = isset($home_slideshow_width) ? $home_slideshow_width : 517; 
+$ssheight = isset($home_slideshow_height) ? $home_slideshow_height : 350;
 
 // Create array to hold errors
 $errors = array();
@@ -57,7 +56,7 @@ $errors = array();
 $blockcrop = false;
 
 // Check sufficient access
-if ($access!=0 || ($saveaction =="replace" && !$edit_access))
+if ($access!=0 || ($saveaction =="original" && !$edit_access))
     {
     $blockcrop= true;
     $error = $lang['error-permissiondenied'];
@@ -90,6 +89,15 @@ if($blockcrop)
 
 $imversion = get_imagemagick_version();
 
+// retrieve image paths for preview image and original file
+$orig_ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
+hook('transformcropbeforegetsize');
+$originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+$previewsourcepath = get_resource_path($ref,true,'scr',false,"jpg");
+if(!file_exists($previewsourcepath))
+    {
+    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,trim($resource["file_path"]) != "");
+    }
 // Get the actions that have been requested
 $imgactions = array();
 // Transformations must be carried out in the order the user performed them
@@ -98,13 +106,20 @@ $imgactions["tfactions"] = explode(",",$tfactions);
 
 $imgactions["quality"] = getval("quality",100,TRUE);
 $imgactions["resolution"] = getval("resolution",0,TRUE);
-$imgactions["gamma"] = getval("gamma",0,TRUE);
+$imgactions["gamma"] = getval("gamma",50,TRUE);
+$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""));
+
 
 // Generate a preview image for the operation if it doesn't already exist
 $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
 $crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date("Ymd",time()) . ".jpg";
 
-$generated = generate_transform_preview($ref,$crop_pre_file, $imgactions);
+$preview_actions = $imgactions;
+$preview_actions["new_width"] = 450;
+$preview_actions["new_height"] = 450;
+
+$generated = transform_file($previewsourcepath,$crop_pre_file, $preview_actions);
+
 if($reload_image)
     {
     if($generated)
@@ -121,24 +136,7 @@ elseif(!$generated)
     {
     error_alert($lang["transform_preview_gen_error"]);
     }
-# Locate imagemagick.
-if (!isset($imagemagick_path))
-    {
-	echo "Error: ImageMagick must be configured for crop functionality. Please contact your system administrator.";
-	exit;
-    }
-
-$command = get_utility_path("im-convert");
-if ($command==false) {exit("Could not find ImageMagick 'convert' utility.");}
-
-// retrieve file extensions
-$orig_ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
-$preview_ext = sql_value("select preview_extension value from resource where ref = '$ref'",'');
-
-// retrieve image paths for preview image and original file
-$originalpath= get_resource_path($ref,true,'',false,$orig_ext);
-
-hook('transformcropbeforegetsize');
+    
 
 // retrieve image sizes for original image and preview used for cropping
 
@@ -165,7 +163,7 @@ $cropheight = $cropsizes[1];
 # check that crop width and crop height are > 0
 if ($cropwidth == 0 || $cropheight == 0)
     {
-    error_alert($lang['error-dimension-zero']);    
+    error_alert($lang['error-dimension-zero'], false);    
     }
     
 $origwidth  = $origsizes[0];
@@ -189,34 +187,29 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 if ($saveaction != '')
     {
+    $actions["repage"] = $cropper_use_repage;
+
     // Get values from jcrop selection
-    $width       = getvalescaped('width','',true);
-    $height      = getvalescaped('height','',true);
-    $xcoord      = getvalescaped('xcoord','',true);
-    $ycoord      = getvalescaped('ycoord','',true);
+    $width       = getvalescaped('width',0,true);
+    $height      = getvalescaped('height',0,true);
+    $xcoord      = getvalescaped('xcoord',0,true);
+    $ycoord      = getvalescaped('ycoord',0,true);
     // Get required size
-    $new_width   = getvalescaped('new_width','',true);
-    $new_height  = getvalescaped('new_height','',true);
+    $new_width   = getvalescaped('new_width',0,true);
+    $new_height  = getvalescaped('new_height',0,true);
 
-    //$cropsize    = getvalescaped('cropsize','',true);
-    
-    // verify that all crop parameters are numeric - just a precaution
-    if (!is_numeric($width) || !is_numeric($height) || !is_numeric($xcoord) || !is_numeric($ycoord))
+    if ($width == 0 && $height == 0)
         {
-        // should never happen, but if it does, could be bad news
-        echo $lang['nonnumericcrop'];
-        exit;
-        }
-
-    if ($cropper_debug)
-        {
-        error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
-        }
-
-    if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted)
-        {
-        // the user did not indicate a crop. presumably they are scaling
-        $verb = $lang['scaled'];
+        if (($new_width > 0 || $new_height > 0) || $cropperestricted)
+            {
+            // the user did not indicate a crop. presumably they are scaling
+            $verb = $lang['scaled'];
+            }
+        elseif($new_width == 0 && $new_height == 0)
+            {
+            // No scaling - maybe just rotation/image tweaks
+            $verb = $lang['tweaked'];
+            }
         }
     else if (!$cropperestricted)
         {
@@ -260,7 +253,7 @@ if ($saveaction != '')
         $new_ext = strtolower($orig_ext);
         }   
 
-    if (($saveaction == "replace" && !$edit_access) || ($saveaction == "slideshow" && !checkperm('a')))
+    if (($saveaction == "original" && !$edit_access) || ($saveaction == "slideshow" && !checkperm('a')))
         {
         error_alert($lang['error-permissiondenied'], true,200);
         }
@@ -300,13 +293,15 @@ if ($saveaction != '')
         $newfilewidth = $newfiledimensions[0];
         $newfileheight = $newfiledimensions[1];
 
-        $filename        = getval("filename","");
-        $filename        = safe_file_name($filename);
+        $name       = getval("filename","");
+        $filename   = safe_file_name($name);
         if (trim($filename) == "")
             {
             $filename = $ref . "_" . strtolower($lang['transformed']);
             }
+        $filename .= "." . $new_ext;
 
+        // Use the resultant file as requested
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)
             {
             $description    = getval("description","");
@@ -316,24 +311,21 @@ if ($saveaction != '')
             
             $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " " . $mptext;
                         
-            $newfile = add_alternative_file($ref,$filename,$description,'','',0,$alt_type);
+            $newfile = add_alternative_file($ref,$name,$description,$filename,$new_ext,$newfilesize,$alt_type);
             $altpath = get_resource_path($ref, true, "", true, $new_ext, -1, 1, false, "", $newfile);
             rename($newpath,$altpath);
             resource_log($ref,'b','',"$new_ext " . strtolower($verb) . " to $newfilewidth x $newfileheight");
             create_previews($ref,false,$new_ext,false,false,$newfile);
             }
-        elseif ($saveaction == "replace" && $cropper_transform_original && !$cropperestricted)
+        elseif ($saveaction == "original" && $cropper_transform_original && $editaccess && !$cropperestricted)
             {
             // Replace the original file
-            save_original_file_as_alternative($ref);
+            $keep_original = getval("keep_original", "") != "";
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
             if (!$success)
                 {
                 $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));
                 }
-                
-            # call remove annotations, since they will not apply to transformed
-            hook("removeannotations","",array($ref));
             hook("transformcropafterreplaceoriginal");
 
             if('' !== $return_to_url)
@@ -344,13 +336,13 @@ if ($saveaction != '')
             redirect($view_url);
             exit;
             }
-        elseif ($saveaction == "slideshow" && !$cropperestricted)
+        elseif ($saveaction == "slideshow" && !$cropperestricted && checkperm('a'))
             {
             # Produce slideshow.
             $sequence = getval("sequence", 0, true);
             if ($sequence == 0)
                 {
-                error_alert($lang['error_slideshow_invalid']);
+                error_alert($lang['error_slideshow_invalid'], false);
                 }
 
             if(!checkperm('a'))
@@ -363,7 +355,6 @@ if ($saveaction != '')
                 {
                 error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder)), $lang['error-file-permissions']);
                 }
-
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
             set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
             unlink($crop_pre_file);
@@ -372,7 +363,6 @@ if ($saveaction != '')
             {
             // we are supposed to download
             # Output file, delete file and exit
-            $filename .= "." . $new_ext;
             header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
             header("Content-Type: application/octet-stream");
 
@@ -384,6 +374,13 @@ if ($saveaction != '')
             readfile($newpath);
             unlink($newpath);
             exit();
+            }
+        elseif ($saveaction == "preview")
+            {
+            $pretmp = get_resource_path($ref,true,"tmp",true,"jpg");
+            $result = rename($newpath, $pretmp);
+            # Create previews
+            create_previews($ref,false,"jpg",true);
             }
         hook("aftercropfinish");
 
@@ -452,7 +449,9 @@ else
     );
     }
 
-$links_trail[] = array('title' => $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']);
+$links_trail[] = array('title' => $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform'],   
+    'help'  => "/plugins/transform",
+    );
 
 renderBreadcrumbs($links_trail);
 
@@ -515,7 +514,7 @@ renderBreadcrumbs($links_trail);
                         document.imagetools_form.lastHeightSetting.value = document.getElementById('new_height').value;
                         
                         this.removeCropper();
-                        //console.log("attaching cropper");
+                        console.log("attaching cropper");
                         this.curCrop = jQuery('#cropimage').Jcrop(
                             {
                             onRelease: onEndCrop ,
@@ -642,8 +641,8 @@ renderBreadcrumbs($links_trail);
             rotated = false;
             lastaction = (tfactions.length > 0 ? tfactions[tfactions.length - 1] : "");
 
-            //console.log("before load imgheight " + imgheight);
-            //console.log("before load imgwidth " + imgwidth); 
+            console.log("before load imgheight " + imgheight);
+            console.log("before load imgwidth " + imgwidth); 
             if(typeof jcrop_active != 'undefined' && jcrop_active)
                 {
                 // Disable cropper but record co-ordinates
@@ -653,7 +652,6 @@ renderBreadcrumbs($links_trail);
                 jcrop_active=false;
                 jcropreload = true;
                 }
-
             if(action=="reset")
                 {
                 tfactions = [];
@@ -661,19 +659,10 @@ renderBreadcrumbs($links_trail);
                 imgwidth = <?php echo $origprewidth ?>;
                 document.imagetools_form.lastWidthSetting.value = "";
                 document.imagetools_form.lastHeightSetting.value ="";
-                delete curCoords;
-                jcropreload = false;
-                <?php
-                if('' === trim($manage_slideshow_action))
-                    {
-                    $sswidth = isset($home_slideshow_width) ? $home_slideshow_width : 517; 
-                    $ssheight = isset($home_slideshow_height) ? $home_slideshow_height : 350;
-                    ?>                    
-                    jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
-                    jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
-                    evaluate_values();
-                    <?php
-                    }?>
+                document.imagetools_form.gamma.value = "50";
+                jcropreload = cropper_always;
+                console.log("jcropreload " + jcropreload);
+                jQuery('#croptools').hide();
                 }
             else if(action == "rotate")
                 {
@@ -724,39 +713,38 @@ renderBreadcrumbs($links_trail);
                 }
             // Update form input
             jQuery("#tfactions").val(tfactions.join());
-            if(!imgloadinprogress)
-                {
-                var crop_data = {
-                    ref: '<?php echo $ref; ?>',
-                    reload_image: 'true',
-                    gamma: jQuery('#gamma').val(),
-                    tfactions: tfactions.join(),
-                    <?php echo generateAjaxToken('crop_reload'); ?>
-                    };
-                cropdate = new Date();
-                jQuery.ajax({
-                    type: 'POST',
-                    url: baseurl_short + 'plugins/transform/pages/crop.php',
-                    data: crop_data,
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.message.trim() == "SUCCESS")
-                            {
-                            console.log('Replacing image');
-                            imgloadinprogress=true;
-                            jQuery('#cropimage').attr('src','<?php echo $crop_pre_url ?>&' + cropdate/1000);
-                            }
-                        },
-                    error: function (err) {
-                        console.log("AJAX error : " + JSON.stringify(err, null, 2));
-                        styledalert("Unable to modify image");
+            var crop_data = {
+                ref: '<?php echo $ref; ?>',
+                reload_image: 'true',
+                gamma: jQuery('#gamma').val(),
+                tfactions: tfactions.join(),
+                ajax: true,
+                <?php echo generateAjaxToken('crop_reload'); ?>
+                };
+            cropdate = new Date();
+            CentralSpaceShowLoading();
+            jQuery.ajax({
+                type: 'POST',
+                url: baseurl_short + 'plugins/transform/pages/crop.php',
+                data: crop_data,
+                dataType: "json",
+                success: function(data) {
+                    if (data.message.trim() == "SUCCESS")
+                        {
+                        console.log('Replacing image');
+                        jQuery('#cropimage').attr('src','<?php echo $crop_pre_url ?>&' + cropdate/1000);
                         }
-                    }); 
-                }
+                    },
+                error: function (err) {
+                    console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                    styledalert("Unable to modify image");
+                    }
+                }); 
             }
         
         jQuery('#cropimage').on("load", function() 
             {
+            CentralSpaceHideLoading();
             console.log("cropimage loaded");
             if(typeof imgwidth === "undefined")
                 {
@@ -775,7 +763,6 @@ renderBreadcrumbs($links_trail);
             jQuery('#crop_imgholder').css("padding-top",tpad);
             jQuery('#cropimage').height(imgheight);
             jQuery('#cropimage').width(imgwidth);
-
             // re-attach cropper if we have saved co-ordinates
             if (typeof jcropreload !== "undefined" && jcropreload==true && typeof curCoords !== "undefined")
                 {
@@ -803,41 +790,54 @@ renderBreadcrumbs($links_trail);
                     newx2 = curx2;
                     newy2 = imgheight - cury;
                     }
-                else if (typeof rotated !== "undefined" && rotated==true && !slideshow_edit)
+                else if (typeof rotated !== "undefined" && rotated==true)
                     {
-                    newx = imgwidth - cury2;
-                    newy = curx;
-                    newx2 = imgwidth - cury;
-                    newy2 = curx2;
+                    if(!slideshow_edit)
+                        {
+                        newx = imgwidth - cury2;
+                        newy = curx;
+                        newx2 = imgwidth - cury;
+                        newy2 = curx2;
+                        neww = jQuery('#new_width').val();
+                        newh = jQuery('#new_height').val();
+                        jQuery('#new_width').val(newh);
+                        jQuery('#new_height').val(neww);
+                        }
+                    else if(slideshow_edit)
+                        {
+                        curw = curx2 - curx;
+                        curh = cury2 - cury;
+                        newx = 0;
+                        newy = 0;
+                        newx2 = curw;
+                        newy2 = curh;
+                        if(newx2 > imgheight)
+                            {
+                            newx2 = imgheight;
+                            }
+                        if(newy2 > imgwidth)
+                            {
+                            newy = imgwidth - curheight;
+                            }
+                        }
                     }
-                else if(slideshow_edit)
+                else
                     {
-                    newx    = imgheight - cury2;
-                    newy    = curx;
-                    newx2 = imgwidth - cury;
-                    newy2 = curx2;
-                    if(newx2 > imgheight)
-                        {
-                        newx = imgheight - (cury2 -cury);
-                        newx2 = imgheight;
-                        }
-                    if(newy2 > imgwidth)
-                        {
-                        newy = imgwidth - (curx2 -curx);
-                        newy2 = imgwidth;
-                        }
+                    // Same as before
+                    newx = curx;
+                    newy = cury;
+                    newx2 = curx2;
+                    newy2 = cury2;
                     }
 
-                // console.log("newx: " + newx);
-                // console.log("newy: " + newy);
-                // console.log("newx2: " + newx2);
-                // console.log("newy2 " + newy2);
+                console.log("newx: " + newx);
+                console.log("newy: " + newy);
+                console.log("newx2: " + newx2);
+                console.log("newy2 " + newy2);
                 CropManager.attachCropper();
                 console.log('Re-adding selection jcrop_api.setSelect([' + newx + ',' + newy + ',' + newx2 + ',' + newy2 + ']);');
                 jcrop_api.setSelect([newx,newy,newx2,newy2]);
-                }
-            
-            imgloadinprogress=false;
+                }            
             });
             
 
@@ -857,12 +857,13 @@ renderBreadcrumbs($links_trail);
         <?php 
         if('' === trim($manage_slideshow_action))
             {?>
-            slideshow_edit=false;
+            slideshow_edit  = false;
+            cropper_always  = false;
             jQuery(document).ready(function ()
                 {
                 jQuery('input[type=radio][name=saveaction]').change(function()
                     {                
-                    jQuery('.imagetools_actions').hide();
+                    jQuery('.imagetools_save_action').hide();
                     if(this.value=='alternative')
                         {
                         slideshow_edit=false;
@@ -870,6 +871,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#new_width').val('');
                         jQuery('#new_height').val('');
                         evaluate_values();
+                        cropper_always=false;
                         }
                     else if(this.value=='download')
                         {
@@ -878,6 +880,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#new_width').val('');
                         jQuery('#new_height').val('');
                         evaluate_values();
+                        cropper_always=false;
                         }
                     else if(this.value=='slideshow')
                         {
@@ -887,6 +890,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
                         jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
                         evaluate_values();
+                        cropper_always=true;
                         }
                     else if(this.value=='original')
                         {
@@ -895,14 +899,28 @@ renderBreadcrumbs($links_trail);
                         jQuery('#new_width').val('');
                         jQuery('#new_height').val('');
                         evaluate_values();
-                        }                    
+                        cropper_always=false;
+                        }
+                    else if(this.value=='preview')
+                        {
+                        slideshow_edit=false;
+                        jQuery('#imagetools_preview_actions').show();
+                        jQuery('#new_width').val('');
+                        jQuery('#new_height').val('');
+                        evaluate_values();
+                        cropper_always=false;
+                        }
                     });
                 });
             <?php
-            }            
+            }
         else
             {
             ?> 
+            jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
+            jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+            CropManager.attachCropper();
+            cropper_always=true;
             slideshow_edit=true;
             <?php
             }?>
@@ -927,19 +945,23 @@ renderBreadcrumbs($links_trail);
         {
         $saveactions["original"] = $lang['transform_original'];
         }
+    if($edit_access)
+        {
+        $saveactions["preview"] = $lang['useaspreviewimage'];
+        }
 
     $imagetools = array();
     if('' === trim($manage_slideshow_action))
         {
         // No need to show other options or crop link if coming from manage slideshow
-        $imagetools[] = array(
-            "name"      => "Save",
-            "action"    => "jQuery('.imagetools_actions').hide();jQuery('#imagetools_save_actions').show();return false;",
-            "icon"      => "far fa-fw fa-save",
-            );
+        // $imagetools[] = array(
+        //     "name"      => "Save",
+        //     "action"    => "jQuery('#imagetools_save_actions').show();return false;",
+        //     "icon"      => "far fa-fw fa-save",
+        //     );
         $imagetools[] = array(
             "name"      => "Crop",
-            "action"    => "toggleCropper();jQuery('.imagetools_actions').hide();jQuery('#imagetools_crop_actions').show();return false;",
+            "action"    => "toggleCropper();jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_crop_actions').show();return false;",
             "icon"      => "fa fa-fw fa-crop",
             );
         }
@@ -951,7 +973,7 @@ renderBreadcrumbs($links_trail);
     $imagetools[] = array(
         "name"      => "Rotate",
         "action"    => "cropReload('rotate');return false;",
-        "icon"      => "fa fa-fw fa-sync",
+        "icon"      => "fa fa-fw fa-rotate-right",
         );
     $imagetools[] = array(
         "name"      => "Flip horizontally",
@@ -965,20 +987,20 @@ renderBreadcrumbs($links_trail);
         );
     $imagetools[] = array(
         "name"      => "Adjustments",
-        "action"    => "jQuery('.imagetools_actions').hide();jQuery('#imagetools_corrections_actions').show();return false;",
+        "action"    => "jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_corrections_actions').show();return false;",
         "icon"      => "fa fa-fw fa-sliders-h",
         );
 
     hook("imagetools_extra");
-
+    
     ?>
     <div id="imagetool-toolbar">
         <table style="margin:auto;">
         <?php
         foreach($imagetools as $imagetool)
             {
-            echo "<tr style=\"background: #fff;color:#000;\">";
-            echo "<td style=\"margin-left:3px;\">";
+            echo "<tr class='toolbar-icon'>";
+            echo "<td>";
             echo "<a href=\"#\" onclick=\"" . htmlspecialchars($imagetool["action"]) . "\" title=\"" . htmlspecialchars($imagetool["name"]) . "\">";
             echo "<span class=\"" . htmlspecialchars($imagetool["icon"]) . "\"></span>";
             echo "</a></td>";
@@ -1007,8 +1029,8 @@ renderBreadcrumbs($links_trail);
     </div>
 </div>
 
-<div class="FloatingOptions">
-        <form name='imagetools_form' id="imagetools_form" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
+
+<form name='imagetools_form' id="imagetools_form" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
         <!-- Standard form inputs -->
         <!--<input type='hidden' name='action' value='docrop' />-->
         <input type='hidden' name='xcoord' id='xcoord' value='0' />
@@ -1023,24 +1045,25 @@ renderBreadcrumbs($links_trail);
         <input type='hidden' name='origheight' id='origheight'  value='<?php echo $origheight ?>' />
         <input type='hidden' name='tfactions' id='tfactions'  value='<?php echo $tfactions ?>' />
 
+    <div class="FloatingOptions">
         <?php
         hook("cropafterhiddeninputs");
         ?>
 
         <!-- Save actions -->
-        <div id="imagetools_save_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
+        <div id="imagetools_save_actions">
             <?php
             if('' === trim($manage_slideshow_action))
                 {
-                render_radio_buttons_question($lang["action"],"saveaction",$saveactions,'','',true);
+                render_radio_buttons_question($lang["action"],"saveaction",$saveactions,'download','',true);
                 }
             else
                 {?>
-                <input type='hidden' name='action' id='acxtion' value='slideshow' />
+                <input type='hidden' name='saveaction' id='saveaction_slideshow' value='slideshow' />
                 <?php
                 }
             ?>
-            <div class="imagetools_actions"  id='imagetools_alternative_actions' style="display:none;">
+            <div class="imagetools_save_action"  id='imagetools_alternative_actions' style="display:none;">
                 <?php
                 render_text_question($lang["name"],"filename");
                 render_text_question($lang["description_for_alternative_file"],"description");
@@ -1060,18 +1083,18 @@ renderBreadcrumbs($links_trail);
                     echo "<input type='hidden' name='alt_type' value='' />\n";
                     }
                 ?>
-                <div class="Question">
+                <div class="QuestionSubmit">
                     <label for="submit">&nbsp;</label>
                     <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>" />
                     <div class="clearerleft"></div>
                 </div>
             </div>
 
-            <div class="imagetools_actions" id="imagetools_download_actions" style="display:none;">
+            <div class="imagetools_save_action" id="imagetools_download_actions" <?php if('' !== trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
                 <?php
-                render_dropdown_question($lang["type"],"new_ext",array_combine($cropper_formatarray , $cropper_formatarray));
+                render_dropdown_question($lang["format"],"new_ext",array_combine($cropper_formatarray , $cropper_formatarray),strtoupper($orig_ext));
                 ?>
-                <div class="Question">
+                <div class="QuestionSubmit">
                     <label for="submit">&nbsp;</label>
                     <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" />
                 
@@ -1080,15 +1103,27 @@ renderBreadcrumbs($links_trail);
                
             </div>
 
-            <div class="imagetools_actions" id="imagetools_original_actions" style="display:none;">
+            <div class="imagetools_save_action" id="imagetools_original_actions" style="display:none;">
+                <div class="Question">
+                    <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+                    <input type='checkbox' name='keep_original' value="1" checked />
+                    <div class="clearerleft"></div>
+                </div>
                 <div class="Question">
                     <label for="submit">&nbsp;</label>
                     <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>" />
                     <div class="clearerleft"></div>
                 </div>
             </div>
+            <div class="imagetools_save_action" id="imagetools_preview_actions" style="display:none;">
+                <div class="QuestionSubmit">
+                    <label for="submit">&nbsp;</label>
+                    <input type='submit' name='preview' value="<?php echo $lang['useaspreviewimage']; ?>" />
+                    <div class="clearerleft"></div>
+                </div>
+            </div>
 
-            <div class="imagetools_actions" id="imagetools_slideshow_actions">
+            <div class="imagetools_save_action" id="imagetools_slideshow_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
 
                 <div class="Question textcenter"><strong><?php echo $lang['transformcrophelp'] ?></strong></div>
 
@@ -1100,115 +1135,104 @@ renderBreadcrumbs($links_trail);
                 <?php
                 render_text_question($lang["slideshowsequencenumber"],"sequence",'',true);
                 ?>
-                <div class="Question">
+                <div class="QuestionSubmit">
                     <label></label>
                     <input type="submit"
                         name="submitTransformAction"
                         value="<?php echo $lang['replaceslideshowimage']; ?>"
                         onclick="
-                        if(check_cropper_selection() && validate_transform(jQuery('#dimensionsForm')))
+                        if(check_cropper_selection() && validate_transform(jQuery('#imagetools_form')))
                                 {
-                                CentralSpacePost(jQuery('#dimensionsForm'));
+                                CentralSpacePost(jQuery('#imagetools_form'));
                                 };
                             return false;">
                     <div class="clearerleft"></div>
                 </div>
-                            
-                        </td>
-                    </tr>
-                </table>
             </div>
 
         </div>
 
-
+        <div id="croptools" class="toolbox" style="display:none;">
         <!-- Crop actions -->
         <div class="imagetools_actions" id="imagetools_crop_actions" style="display:none;">
             
-            <?php
-            $onblur = "onblur=\"evaluate_values();\"";
-            render_text_question($lang["width"],"new_width",$lang['px'],true, " id=\"new_width\" " . $onblur);
-            render_text_question($lang["height"],"new_height",$lang['px'],true," id=\"new_height\" " .$onblur);
-            ?>
+            <div class="Question">
+                <label for="new_width"><?php echo $lang["width"]; ?></label>
+                <input type="number" class="stdwidth" id="new_width" name="new_width" onblur="evaluate_values();">
+                <?php echo $lang['px'] ;?>
+                <div class="clearerleft"></div>
+            </div>
+            <div class="QuestionSubmit">
+                <label for="new_height"><?php echo $lang["height"]; ?></label>
+                <input type="number" class="stdwidth" id="new_height" name="new_height" onblur="evaluate_values();">
+                <?php echo $lang['px'] ;?>
+                <div class="clearerleft"></div>
+            </div>
         </div>
 
         <!-- Correction actions -->
         <div class="imagetools_actions" id="imagetools_corrections_actions" style="display:none;">
-            <p>TODO: Slider here</p>
-
             <div class="Question">
                 <label for="gamma">Gamma</label>
-                <input type="range" id="gamma" name="gamma" min="0" max="100">
+                <input type="range" class="stdwidth" id="gamma" name="gamma" min="0" max="100">
                 <div class="clearerleft"></div>
             </div>
 
-
-            <div class="Question">
-                    <label for="submit">&nbsp;</label>
-                    <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo $lang['transform_update_preview']; ?>" />
+            <?php
+            if($cropper_quality_select && count($image_quality_presets) > 0)
+                {?>
+                <div class="Question">
+                    <label for="quality"><?php echo $lang['property-quality']; ?></label>
+                    <select name='quality'  class="stdwidth" >
+                    <?php 
+                    foreach ($image_quality_presets as $image_quality_preset) 
+                        {
+                        echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
+                        }
+                        ?>
+                    </select>
                     <div class="clearerleft"></div>
                 </div>
-        </div>
-
-    <?php          
-        
-        if($cropper_quality_select && count($image_quality_presets) > 0)
-            {?>
-            <tr>
-            <td style='text-align:right'><?php echo $lang['property-quality']; ?>: </td>
-            <td colspan='3'>
-            <select name='quality'>
-                <?php 
-                foreach ($image_quality_presets as $image_quality_preset) 
-                    {
-                    echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
-                    }
-                    ?>
-            </select>
-            </td>
-            </tr>
-            <?php
-            }
-        
-        if (!$cropper_jpeg_rgb && $cropper_srgb_option)
-            {?>
-                <tr>
-                    <td style='text-align:right'><?php echo $lang["cropper_use_srgb"]; ?>: </td>
-                    <td><input type="checkbox" name='use_srgb' id='use_srgb' value="1" checked="checked"></td>
-                </tr>
+                <?php
+                }        
+            if (!$cropper_jpeg_rgb && $cropper_srgb_option)
+                {?>
+                <div class="Question">
+                    <label for="use_srgb"><?php echo $lang["cropper_use_srgb"]; ?>:</label>
+                    <input type="checkbox" id="use_srgb" name="use_srgb" val="1" checked>
+                    <div class="clearerleft"></div>
+                </div>        
                 <?php
                 }
-            
+                
             if (count($cropper_resolutions)>0)
                 {?>
-                <tr>
-                <td style='text-align:right'><?php echo $lang['cropper_resolution_select']; ?>: </td>
-                <td colspan='3'>
-                    <select name='resolution'>
+                <div class="Question">
+                    <label for="resolution"><?php echo $lang['cropper_resolution_select']; ?></label>
+                    <select name='resolution' class="stdwidth" >
                     <option value='' selected></option>
-                        <?php 
-                        foreach ($cropper_resolutions as $cropper_resolution)
-                            {
-                            echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
-                            }
-                            ?>
+                    <?php 
+                    foreach ($cropper_resolutions as $cropper_resolution)
+                        {
+                        echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
+                        }
+                        ?>
                     </select>
-                </td>
-                </tr>
+                    <div class="clearerleft"></div>
+                </div>
                 <?php
                 }
-                ?>
-        
-        </table>
-        <?php
-    if ($cropper_debug)
-        {
-        echo "<input type='checkbox'  name='showcommand' value='1'>Debug IM Command</checkbox>";
-        }
-    ?>
-       
-    </form>
-</div> 
+            ?>
+            <div class="QuestionSubmit">
+                <label for="submit">&nbsp;</label>
+                <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo $lang['transform_update_preview']; ?>" />
+                <div class="clearerleft"></div>
+            </div>
+        </div>
+    </div>
+
+             
+</form>
 
 <?php  
 

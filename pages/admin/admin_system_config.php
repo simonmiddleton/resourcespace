@@ -427,7 +427,20 @@ $GLOBALS = $system_wide_config_options;
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['systemconfig']; ?></h1>
+    <?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+	    ),
+	    array(
+	        'title' => $lang["systemconfig"],
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+	?>
+
     <p><?php echo $lang['systemconfig_description']; ?></p>
     <div class="CollapsibleSections">
     <?php

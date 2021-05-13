@@ -60,7 +60,21 @@ switch($message_type){
 }
 ?>
 <div class="BasicsBox">
-<h1><?php echo $title; render_help_link('resourceadmin/user-communication');?></h1>
+
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $title,
+        'help'  => "resourceadmin/user-communication"
+    )
+);
+
+renderBreadcrumbs($links_trail);
+?>
 <form id="myform" method="post" action="<?php echo $baseurl_short?>pages/team/team_mail.php">
 <?php
 generateFormToken("myform");

@@ -14,8 +14,19 @@ include "../../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
+<?php
+$links_trail = array(
+    array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+    ),
+    array(
+        'title' => $lang["manageresources"]
+    )
+);
 
-  <h1><?php echo $lang["manageresources"]?></h1>
+renderBreadcrumbs($links_trail);
+?>
 
 	<div class="VerticalNav">
 	<ul>

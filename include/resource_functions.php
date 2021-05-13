@@ -6904,7 +6904,7 @@ function get_default_archive_state($requestedstate = "")
 * Save the original file being replaced, as an alternative file 
 *
 * @param integer    $ref      (required) ID of original resource
-* @return boolean             true = file saved successfully; false = file not saved
+* @return boolean | int       int = id of new alternative file; false = file not saved
 */    
 
 function save_original_file_as_alternative($ref)
@@ -6973,7 +6973,7 @@ function save_original_file_as_alternative($ref)
             }
         }
     debug("save_original_file_as_alternative() completed");
-    return true;
+    return $newaref;
     }
 
 
@@ -7028,9 +7028,9 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
             }
         }
 
-    resource_log($ref,LOG_CODE_REPLACED,'','','');
+    $log_ref = resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
-    hook("additional_replace_existing");        
+    hook("additional_replace_existing","",array($ref,$log_ref));      
 						
     if($notify_on_resource_change_days != 0)
         {								

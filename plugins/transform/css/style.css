@@ -14,6 +14,12 @@
     height: 450px;
     }
 
+#imagetool-toolbar table td{
+    margin: 2px;
+    background: #fff;
+    color:#000;
+    }
+
 #cropimgdiv {
     border: 1px solid #666666;
     float:left;
@@ -31,4 +37,9 @@
 #cropdiv{
     float: left;
     width: 500px;
+    }
+
+#croptools {
+    float:left;
+    padding: 15px;
     }

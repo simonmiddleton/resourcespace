@@ -1,104 +1,4 @@
 <?php
-
-function generate_transform_preview($ref, $destpath, $actions)
-    {
-	global $imversion, $imagemagick_colorspace, $imagemagick_preserve_profiles;
-    debug_function_call("generate_transform_preview",func_get_args());
-	if (!isset($imversion))
-        {
-		$imversion = get_imagemagick_version();
-        }
-
-    // get imagemagick path
-    $command = get_utility_path("im-convert");
-    if ($command==false)
-        {
-        exit("Could not find ImageMagick 'convert' utility.");
-        }
-    
-    $orig_ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
-	$transformsourcepath=get_resource_path($ref,true,'scr',false,'jpg'); //use screen size if available to save time
-	if(!file_exists($transformsourcepath)) // use original if screen not available
-		{$transformsourcepath= get_resource_path($ref,true,'',false,$orig_ext);}
-	
-	$modified_transformsourcepath=hook("modifytransformsourcepath");
-	if ($modified_transformsourcepath)
-        {
-		$transformsourcepath=$modified_transformsourcepath;
-        }
-
-    $profile="+profile icc -colorspace ".$imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-    if ($imagemagick_preserve_profiles) {$profile="";}
-
-    // Transform actions need to be performed in order the user performed them since they are not commutative
-    $tfparams = "";
-    foreach($actions["tfactions"] as $tfaction)
-        {
-        switch ($tfaction)
-            {
-            case "r90":
-                debug("BANG in r90 '" . $tfaction . "'");
-                $tfparams .= " -rotate 90 ";
-                break;
-            case "r180":
-                $tfparams .= " -rotate 180 ";
-                break;
-            case "r270":
-                $tfparams .= " -rotate 270 ";
-                break;
-            case "x":
-                $tfparams .= " -flop ";
-            break;
-            case "y":
-                $tfparams .= " -flip ";
-            break;
-            default:
-            debug("BANG in default '" . $tfaction . "'");
-                // No transform action
-            break;
-            }
-        }
-
-    
-    
-    if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]))
-        {
-        $gamma = round($actions["gamma"]/50,2);
-        $tfparams .= " -gamma " .  $gamma . " ";
-        }
-
-    $command .= " \"$transformsourcepath\"[0] -auto-orient +matte -flatten $tfparams $profile -resize 450x450  \"$destpath\"";
-
-    run_command($command);
-    
-    if(!file_exists($destpath))
-        {
-        return false;
-        }
-
-    // while we're here, clean up any old files still hanging around
-    $parentfolder = dirname($destpath);
-    $foldercontents = new DirectoryIterator($parentfolder);
-    foreach($foldercontents as $objectindex => $object)
-        {           
-        if($object->isDot())
-            {
-            continue;
-            }
-        if($object->isReadable() && time()-$object->getMTime() > 24*60*60)
-            {
-            $tmpfilename = $object->getFilename();
-            if($object->isFile() && strpos($tmpfilename,"transform") === 0)
-                {
-                unlink($parentfolder . DIRECTORY_SEPARATOR . $tmpfilename);
-                }
-            } 
-        }
-
-	return true;
-    }
-
-
 /**
  * Perform the requested action on the original file to create a new file
  *
@@ -134,8 +34,14 @@ function transform_file($originalpath, $outputpath, $actions)
     $of_parts = pathinfo($outputpath);
     $commandprefix="";
 
-    $profile="+profile icc -colorspace ".$imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-    if ($imagemagick_preserve_profiles) {$profile="";}
+    if(!isset($actions["rgb"]))
+        {
+        $profile=" +profile icc -colorspace " . $imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
+        if ($imagemagick_preserve_profiles)
+            {
+            $profile="";
+            }
+        }
 
     $origsizes  = getimagesize($originalpath);
     $origwidth  = $origsizes[0];
@@ -162,6 +68,22 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $command .= " -quality " .  $quality . "% ";
         }
+    
+    $colorspace1 = "";
+    $colorspace2 = "";
+    if(isset($actions["srgb"]))
+        {
+        if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+            {
+            $colorspace1 = " -colorspace sRGB ";
+            $colorspace2 =  " -colorspace RGB ";
+            }
+        else
+            {
+            $colorspace1 = " -colorspace RGB ";
+            $colorspace2 =  " -colorspace sRGB ";
+            }
+        }
 
     if(isset($actions["resolution"]) && is_int_loose($actions["resolution"]) && $actions["resolution"] != 0)
         {
@@ -180,7 +102,9 @@ function transform_file($originalpath, $outputpath, $actions)
         $flatten = "-flatten";
         }
 
-    if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]))
+    $command .= $colorspace1;
+    
+    if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]) && $actions["gamma"] <> 50)
         {
         $gamma = round($actions["gamma"]/50,2);
         $command .= " -gamma " .  $gamma . " ";
@@ -265,25 +189,23 @@ function transform_file($originalpath, $outputpath, $actions)
         $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+" . $finalycoord;
         }
     
-    if ($cropper_use_repage)
+    if (isset($actions["repage"]) && $actions["repage"])
         {
-        $command .= " +repage "; // force imagemagick to repage image to fix canvas and offset info
+        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
         }
 
-    
-
-    // did the user request a width? If so, tack that on
-    if (is_numeric($actions["new_width"])||is_numeric($actions["new_height"]))
+    // Did the user request a width? If so, tack that on
+    if ((isset($actions["new_width"]) && (int)$actions["new_width"] > 0) || (isset($actions["new_height"]) && (int)$actions["new_height"] > 0))
         {
-        $scalewidth = is_numeric($actions["new_width"])?true:false;
-        $scaleheight = is_numeric($actions["new_height"])?true:false;
+        $scalewidth = is_numeric($actions["new_width"]) ? true : false;
+        $scaleheight = is_numeric($actions["new_height"]) ? true : false;
         
         if (!$cropper_allow_scale_up)
             {
             // sanity checks
             // don't allow a specified size larger than the natural crop size
             // or the original size of the image
-            if ($crop_necessary)
+            if (isset($actions["crop"]) && $actions["crop"])
                 {
                 $checkwidth  = $actions["finalwidth"];
                 $checkheight = $actions["finalheight"];
@@ -297,14 +219,14 @@ function transform_file($originalpath, $outputpath, $actions)
             if (is_numeric($actions["new_width"]) && $actions["new_width"] > $checkwidth)
                 {
                 // if the requested width is greater than the original or natural size, ignore
-                $new_width = '';
+                $actions["new_width"] = '';
                 $scalewidth = false;
                 }
         
             if (is_numeric($actions["new_height"]) && $actions["new_height"] > $checkheight)
                 {
                 // if the requested height is greater than original or natural size, ignore
-                $new_height = '';
+                $actions["new_height"] = '';
                 $scaleheight = false;
                 }
             }
@@ -332,24 +254,8 @@ function transform_file($originalpath, $outputpath, $actions)
 
     $command .= $profile  . " \"$outputpath\"";
 
-    // if ($cropper_debug && !$download && getval("slideshow","")=="")
-    //     {
-    //     debug($command);
-    //     if (isset($_REQUEST['showcommand']))
-    //         {
-    //         echo htmlspecialchars($command);
-    //         delete_alternative_file($ref,$newfile);
-    //         exit;
-    //         }
-    //     }
-
     $shell_result = run_command($command);
-    if (true || $cropper_debug)
-        {
-        //debug("BANG " . $command);
-        debug("SHELL RESULT: $shell_result");
-        }     
-
+ 
     if (file_exists($outputpath))
         {
         // See if we have got exiftool
@@ -371,12 +277,8 @@ function transform_file($originalpath, $outputpath, $actions)
             $exifargs["%outputfile%"]  = $outputpath;
             $command = escape_command_args($exifcommand,$exifargs);
             $output = run_command($command);
-            if (true || $cropper_debug)
-                {
-                debug("SHELL RESULT: $shell_result");
-                }
             }
         }
-
+    
     return file_exists($outputpath);   
     }
