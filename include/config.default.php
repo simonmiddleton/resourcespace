@@ -1288,6 +1288,11 @@ $max_login_attempts_wait_minutes=10;
 # This can help to deter 'brute force' attacks, trying to find user's passwords or e-mail addresses in use.
 $password_brute_force_delay=4;
 
+// Password hash algorithm options. @see https://www.php.net/manual/en/function.password-hash.php
+$password_hash_options = [
+    'cost' => 12,
+];
+
 # Use imperial instead of metric for the download size guidelines
 $imperial_measurements=false;
 
