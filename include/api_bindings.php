@@ -391,7 +391,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
-    $refs = json_decode($ref, true);
+    $refs = json_decode($ref, JSON_OBJECT_AS_ARRAY);
     if(is_array($refs))
         {
         $return = array();
@@ -444,9 +444,8 @@ function api_get_resource_data($resource)
     return $resdata;
     }
 
-function api_put_resource_data($resource,$data)
+function api_put_resource_data($resource,array $data)
     {
-    $data=json_decode($data,JSON_OBJECT_AS_ARRAY);
     if (is_null($data)) {return false;}
     return put_resource_data($resource,$data);
     }
@@ -845,7 +844,7 @@ function api_get_users($find="")
     return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
     }
 
-function api_save_collection(int $ref, string $coldata)
+function api_save_collection(int $ref, array $coldata)
     {
     if(checkperm("b"))
         {
@@ -860,7 +859,7 @@ function api_save_collection(int $ref, string $coldata)
 
      // Security control - only limited data is allowed to be set
      $coldata = array_intersect_key(
-        json_decode($coldata, true),
+        $coldata,
             [
                 'keywords' => 0,
                 'allow_changes' => 0,
