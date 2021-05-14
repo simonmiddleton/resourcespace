@@ -1,13 +1,10 @@
 <?php
-
 /**
  * Performs the login using the global $username, and $password. Since the "externalauth" hook
  * is allowed to change the credentials later on, the $password_hash needs to be global as well.
  *
  * @return array Containing the login details ('valid' determines whether or not the login succeeded).
  */
-
-    
 function perform_login($loginuser="",$loginpass="")
 	{
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
