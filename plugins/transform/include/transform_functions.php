@@ -2,16 +2,16 @@
 /**
  * Perform the requested action on the original file to create a new file
  *
- * @param  mixed $originalpath      Path to source file
+ * @param  mixed $sourcepath      Path to source file
  * @param  mixed $newpath           Path to new file
  * @param  mixed $actions           Array of actions to perform
  * @return boolean  Image created successfully?
  */
-function transform_file($originalpath, $outputpath, $actions)
+function transform_file($sourcepath, $outputpath, $actions)
     {
-    global $imagemagick_colorspace, $imagemagick_preserve_profiles, $cropperestricted, $cropper_use_repage;
-    global $cropper_debug, $cropper_allow_scale_up;
-    global $image_quality_presets, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+    global $imagemagick_colorspace, $imagemagick_preserve_profiles, $cropperestricted;
+    global $cropper_allow_scale_up;
+    global $image_quality_presets, $preview_no_flatten_extensions;
     global $exiftool_no_process;
 
     $command = get_utility_path("im-convert");
@@ -30,7 +30,7 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $alphaoff = "+matte";
         }
-    $sf_parts = pathinfo($originalpath);
+    $sf_parts = pathinfo($sourcepath);
     $of_parts = pathinfo($outputpath);
     $commandprefix="";
 
@@ -43,12 +43,15 @@ function transform_file($originalpath, $outputpath, $actions)
             }
         }
 
-    $origsizes  = getimagesize($originalpath);
-    $origwidth  = $origsizes[0];
-    $origheight = $origsizes[1];
-    if($of_parts["extension"] == 'svg')
+    if(strtoupper($sf_parts["extension"]) == 'SVG')
         {
-        list($origwidth, $origheight) = getSvgSize($originalpath);
+        list($origwidth, $origheight) = getSvgSize($sourcepath);
+        }
+    else
+        {
+        $origsizes  = getimagesize($sourcepath);
+        $origwidth  = $origsizes[0];
+        $origheight = $origsizes[1];
         }
 
     $keep_transparency=false;
@@ -56,11 +59,11 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $commandprefix = " -background transparent ";
         $keep_transparency=true;
-        $command .= $commandprefix . " \"$originalpath\" ";        
+        $command .= $commandprefix . " \"$sourcepath\" ";
         }
     else
         {
-        $command .= $commandprefix . " \"$originalpath\"[0] ";
+        $command .= $commandprefix . " \"$sourcepath\"[0] ";
         }
      
     $quality = isset($actions["quality"]) ? $actions["quality"] : "";
@@ -68,7 +71,7 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $command .= " -quality " .  $quality . "% ";
         }
-    
+
     $colorspace1 = "";
     $colorspace2 = "";
     if(isset($actions["srgb"]))
@@ -89,7 +92,7 @@ function transform_file($originalpath, $outputpath, $actions)
         {
         $command .= " -units PixelsPerInch -density " .  $actions["resolution"] . " ";
         }
-    
+
     if(in_array($sf_parts['extension'], $preview_no_flatten_extensions)
         || 
         (isset($actions["noflatten"]) && $actions["noflatten"] == "true")
@@ -103,7 +106,7 @@ function transform_file($originalpath, $outputpath, $actions)
         }
 
     $command .= $colorspace1;
-    
+
     if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]) && $actions["gamma"] <> 50)
         {
         $gamma = round($actions["gamma"]/50,2);
@@ -149,13 +152,12 @@ function transform_file($originalpath, $outputpath, $actions)
 
     $command .= $tfparams;
 
-  
     if (isset($actions["crop"]) && $actions["crop"] && !$cropperestricted)
         {
         // Need to mathematically convert to the original size
         $xfactor = $swaphw % 2 == 0 ? $origwidth/$actions["cropwidth"] : $origheight/$actions["cropwidth"];
         $yfactor = $swaphw % 2 == 0 ? $origheight/$actions["cropheight"] : $origwidth/$actions["cropheight"];
-        
+
         // debug(" xfactor:  " . $xfactor);
         // debug(" yfactor:  " . $yfactor);
         $finalxcoord = round (($actions["xcoord"] * $xfactor),0);
@@ -172,7 +174,7 @@ function transform_file($originalpath, $outputpath, $actions)
         else
             {
             $finalheight = round ($actions["height"] * $yfactor,0);
-            $finalwidth= round($finalheight *  $desiredratio,0);			
+            $finalwidth= round($finalheight *  $desiredratio,0);
             }
 
         debug("finalxcoord:  " . $finalxcoord);
@@ -188,7 +190,7 @@ function transform_file($originalpath, $outputpath, $actions)
 
         $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+" . $finalycoord;
         }
-    
+
     if (isset($actions["repage"]) && $actions["repage"])
         {
         $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
@@ -215,14 +217,14 @@ function transform_file($originalpath, $outputpath, $actions)
                 $checkwidth     = $actions["origwidth"];
                 $checkheight    = $actions["origheight"];
                 }
-            
+
             if (is_numeric($actions["new_width"]) && $actions["new_width"] > $checkwidth)
                 {
                 // if the requested width is greater than the original or natural size, ignore
                 $actions["new_width"] = '';
                 $scalewidth = false;
                 }
-        
+
             if (is_numeric($actions["new_height"]) && $actions["new_height"] > $checkheight)
                 {
                 // if the requested height is greater than original or natural size, ignore
@@ -240,14 +242,11 @@ function transform_file($originalpath, $outputpath, $actions)
             // height, there may be a tiny amount of distortion introduced as the
             // program scales up or down by a few pixels. This should be
             // imperceptible, but perhaps worth revisiting at some point.
-            
             $command .= " -scale " . (int)$actions["new_width"];
-            
             if ($actions["new_height"] > 0)
                 {
                 $command .= "x" . (int)$actions["new_height"];
                 }
-            
             $command .= " ";
             }
         }
@@ -255,7 +254,7 @@ function transform_file($originalpath, $outputpath, $actions)
     $command .= $profile  . " \"$outputpath\"";
 
     $shell_result = run_command($command);
- 
+
     if (file_exists($outputpath))
         {
         // See if we have got exiftool
@@ -269,16 +268,16 @@ function transform_file($originalpath, $outputpath, $actions)
                 {
                 // Target the Photoshop specific PPI data
                 $exifcommand.= " -Photoshop:XResolution=%resolution%";
-                $exifcommand.= " -Photoshop:YResolution=%resolution%";    
-                $exifargs["%resolution%"]  = $actions["resolution"];            
+                $exifcommand.= " -Photoshop:YResolution=%resolution%";
+                $exifargs["%resolution%"]  = $actions["resolution"];
                 }
-            
+
             $exifcommand.= " %outputfile%";
             $exifargs["%outputfile%"]  = $outputpath;
             $command = escape_command_args($exifcommand,$exifargs);
             $output = run_command($command);
             }
         }
-    
-    return file_exists($outputpath);   
+
+    return file_exists($outputpath);
     }
