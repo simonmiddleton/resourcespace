@@ -464,7 +464,7 @@ else
     }
 
 $links_trail[] = array('title' => $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform'],   
-    'help'  => "/plugins/transform",
+    'help'  => "plugins/transform_new",
     );
 
 renderBreadcrumbs($links_trail);
