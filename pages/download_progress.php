@@ -10,10 +10,12 @@ $ext=getval("ext","");
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext)){$ext="jpg";} # Mitigate path injection
 $alternative=getval("alternative",-1);
 $search=getvalescaped("search","");
+$iaccept=getvalescaped("iaccept","off");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
 
-$download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) . "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative);
+$download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) 
+					. "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative) . "&iaccept=" . urlencode($iaccept);
 $download_url_suffix.= hook("addtodownloadquerystring");
 
 if ($download_usage && getval("usage","")=="" && $terms_download)
@@ -40,7 +42,6 @@ if (!$save_as)
 ?>
 
 <div class="BasicsBox">
-
     
 	<?php if ($save_as) { 
 	# $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect)	?>

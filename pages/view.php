@@ -795,7 +795,9 @@ else if(1 == $resource['has_image'])
         }
 
     hook('previewextras');
-
+?>
+</div>
+<?php
     if(canSeePreviewTools($edit_access))
         {
     	if($annotate_enabled)
@@ -804,16 +806,12 @@ else if(1 == $resource['has_image'])
     		}
         	?>
         <!-- Available tools to manipulate previews -->
-        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+        <div id="PreviewTools">
             <script>
             function showHidePreviewTools()
                 {
                 var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
                 var tools_options = tools_wrapper.find('.ToolsOptionLink');
-
-				// move tool bar behind image
-				jQuery("canvas").css("z-index", 1); // move image above preview tools bar so that bottom of image can be annotated
-				jQuery("div#PreviewTools").css("z-index", 0); // move previewtools under resource image using z-index	
 
                 tools_wrapper.toggleClass('Hidden');
 
@@ -823,27 +821,10 @@ else if(1 == $resource['has_image'])
             function toggleMode(element)
                 {
                 jQuery(element).toggleClass('Enabled');
-
-
                 }
-
-			// resets CSS properties to indicate RS Tagging is now available
-			function unsetVisualIndicator(element)
-				{
-				element.css('opacity', 1);
-				jQuery("#previewimagecopy").css('opacity', 1);
-				}
-
-
-			// sets css properties to indicate RS Tagging initalisation
-			function setVisualIndicator(element)
-				{
-				element.css('opacity', '0.2'); // transparent resource image
-				
-				}
-
             </script>
-            <div id="PreviewToolsOptionsWrapper" class="Hidden">
+            </script>
+            <div id="PreviewToolsOptionsWrapper">
             <?php
             if($annotate_enabled && file_exists($imagepath))
                 {
@@ -865,7 +846,6 @@ else if(1 == $resource['has_image'])
                     // Setup Annotorious (has to be done only once)
                     if(!rs_tagging_plugin_added)
                         {
-
                         anno.addPlugin('RSTagging',
                             {
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
@@ -901,8 +881,9 @@ else if(1 == $resource['has_image'])
                             {
                             toggleAnnotationsOption(element);
                             }, 
-                            1500);
-						return false;
+                            1000);
+                        return false;
+						
                         }
 
                     // Feature enabled? Then disable it.
@@ -940,23 +921,8 @@ else if(1 == $resource['has_image'])
 
                     toggleMode(element);
 
-					// reset image css to indicate tagging is now available
-					unsetVisualIndicator(preview_image);
                     return false;
-					}
-					
-					<?php
-                if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
-                    {
-                    ?>
-                    jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
-                        {
-                        toggleAnnotationsOption(jQuery('.AnnotationsOption'));
-                        });
-                    <?php
                     }
-					?>
-					
                 </script>
                 <?php
                 }
@@ -1025,7 +991,6 @@ else if(1 == $resource['has_image'])
         <?php
         } /* end of canSeePreviewTools() */
         ?>
-    </div>
     <?php
     }
 else
@@ -1662,7 +1627,7 @@ hook ("resourceactions") ?>
             }
 
         // Show the upload preview link
-        if (!$disable_upload_preview && !resource_file_readonly($ref))
+        if (!$disable_upload_preview && !resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
             { ?>
             <li>
                 <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
@@ -1711,7 +1676,7 @@ hook ("resourceactions") ?>
         <?php 
         }
     } /* End replaceresourceactions */ 
-hook("afterresourceactions");
+hook("afterresourceactions", "", array($ref));
 hook("afterresourceactions2");
 ?>
 <?php } /* End if ($k!="")*/ 

@@ -251,7 +251,7 @@ if (!hook("replaceslideshow"))
 	<div id="HomePanelContainer">
 	<?php
 	hook('homepanelcontainerstart');
-	if($enable_themes)
+	if($home_themeheaders && $enable_themes)
 		{
 		if($home_dash)
 			{

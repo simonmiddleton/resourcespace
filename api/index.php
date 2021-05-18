@@ -29,17 +29,14 @@ $query = http_build_query($query_params);
 # Support POST request where 'query' is POSTed and is the full query string.
 if (getval("query","")!="") {$query=getval("query","");}
 
-# If a GET, remove the sign and authmode parameters as these would not have been present when signed on the client.
-if ($_SERVER['REQUEST_METHOD'] === 'GET')
+# Remove the sign and authmode parameters if passed as these would not have been present when signed on the client.
+$strip_params = array("sign","authmode");
+parse_str($query,$params);
+foreach($strip_params as $strip_param)
     {
-    $strip_params = array("sign","authmode");
-    parse_str($query,$params);
-    foreach($strip_params as $strip_param)
-        {
-        unset($params[$strip_param]);
-        }
-    $query = http_build_query($params);
+    unset($params[$strip_param]);
     }
+$query = http_build_query($params);
 
 $validauthmodes = array("userkey", "native", "sessionkey");
 $function = getval("function","");

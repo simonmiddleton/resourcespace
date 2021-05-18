@@ -728,18 +728,13 @@ function compile_search_actions($top_actions)
     // If all resources are editable, display an edit all link
     if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
-        $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
-
-        if (is_array($editable_resources) && $resources_count == count($editable_resources))
-            {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
-            $options[$o]['value']='editsearchresults';
-            $options[$o]['label']=$lang['edit_all_resources'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_EDIT;
-            $options[$o]['order_by']  = 130;
-            $o++;
-            }
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
+        $options[$o]['value']='editsearchresults';
+        $options[$o]['label']=$lang['edit_all_resources'];
+        $options[$o]['data_attr']=$data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_EDIT;
+        $options[$o]['order_by']  = 130;
+        $o++;
         }
         
     if($top_actions && ($k == '' || $internal_share_access))
@@ -1107,6 +1102,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             }
 
+        if (count($blockedrestypes) > 0)
+            {
+            $blockrestypesor="";
+            if ($edit_access_for_contributor)
+                {
+                $blockrestypesor .= " created_by='" . $userref . "'";
+                }
+            if ($editable_filter != "")
+                {
+                $editable_filter .= " AND ";
+                }
+            $editable_filter.="(resource_type NOT IN ('" . implode("','",$blockedrestypes) . "')" . (($blockrestypesor != "") ? " OR " . $blockrestypesor : "") . ")";
+            }
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
@@ -1130,7 +1138,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES, $lang, $k;
+    global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1144,7 +1152,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $direction=((strpos($order_by,"DESC")===false)?"ASC":"DESC");
             $order_by="r2.ref " . $direction;
             }
-       
+        
+        # add date field, if access allowed, for use in $order_by
+        if(metadata_field_view_access($date_field) && strpos($select, "field" . $date_field) === false )
+            {
+            $select .= ", field{$date_field} ";
+            }
         
         # Extract the number of records to produce
         $last=explode(",",$search);
@@ -1284,12 +1297,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         else
             {
             $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
-            $selection_collection = array();
-            $user_selection_collection = get_user_selection_collection($userref);
-            if (isset($user_selection_collection))
-                {
-                $selection_collection[] = $user_selection_collection;
-                }
             $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
             # include collections of requested resources
             $request_collections = array();
@@ -1305,9 +1312,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 include_once('research_functions.php');
                 $research_collections = array_column(get_research_requests(), 'collection');
                 }
-            $validcollections = array_unique(array_merge($user_collections, $selection_collection, $public_collections, $request_collections, $research_collections));
+            $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
             }
 
+        // Attach the negated user reference special collection
+        $validcollections[] = (0 - $userref);
+            
         if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
             {
             if(!collection_readable($collection))
@@ -1854,6 +1864,10 @@ function get_filter_sql($filterid)
     global $userref, $access_override, $custom_access_overrides_search_filter, $open_access_for_contributor;
 
     $filter         = get_filter($filterid);
+    if (!$filter)
+        {
+        return false;
+        }
     $filterrules    = get_filter_rules($filterid);
 
     $modfilterrules=hook("modifysearchfilterrules");

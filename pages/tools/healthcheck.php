@@ -37,12 +37,12 @@ $check=sql_value("select count(*) value from resource_type",0);
 if ($check<=0) exit("FAIL - SQL query produced unexpected result");
 
 # Check write access to filestore
-if (!is_writable($storagedir)) {exit("FAIL - $storagedir is not writeable.");}
+if (!is_writable($storagedir)) {exit("FAIL - \$storagedir is not writeable.");}
 $hash=md5(time());
 $file=$storagedir . "/write_test_$hash.txt";
 if(file_put_contents($file,$hash) === false)
     {
-    exit("FAIL - Unable to save the hash in file '{$file}'. Folder permissions are: " . fileperms($storagedir));
+    exit("FAIL - Unable to write to configured \$storagedir. Folder permissions are: " . fileperms($storagedir));
     }
 
 if(!file_exists($file) || !is_readable($file))
@@ -64,19 +64,22 @@ if($mysql_log_transactions)
     {
     $mysql_log_dir=dirname($mysql_log_location);
     if(!is_writeable($mysql_log_dir) || (file_exists($mysql_log_location) && !is_writeable($mysql_log_location)))
-	{
-	exit("FAIL - invalid \$mysql_log_location specified in config file: " . $mysql_log_location); 
-	}
+        {
+        exit("FAIL - invalid \$mysql_log_location specified in config file"); 
+        }
     }
     
 // Check write access to debug_log 
 if($debug_log)
     {
-    if (!isset($debug_log_location)){$debug_log_location=get_debug_log_dir() . "/debug.txt";}
+    if (!isset($debug_log_location))
+        {
+        $debug_log_location=get_debug_log_dir() . "/debug.txt";
+        }
     $debug_log_dir=dirname($debug_log_location);
     if(!is_writeable($debug_log_dir) || (file_exists($debug_log_location) && !is_writeable($debug_log_location)))
         {
-        exit("FAIL - invalid \$debug_log_location specified in config file: " . $debug_log_location); 
+        exit("FAIL - invalid \$debug_log_location specified in config file"); 
         }        
     }
 
@@ -95,6 +98,17 @@ catch (Exception $e)
     // Error accesing filestore URL - this is as expected    
     }
 unset($GLOBALS["use_error_exception"]);
+
+# Check sql logging configured correctly
+if($mysql_log_transactions && !is_writable($mysql_log_location))
+    {
+    exit("FAIL - " . $lang["writeaccess_sql_log"] . ": " . $lang["status-fail"]);
+    }
+# Check debug logging configured correctly
+if($debug_log && !is_writable($debug_log_location))
+    {
+    exit("FAIL - " . $lang["writeaccess_debug_log"] . ": " . $lang["status-fail"]);
+    }
 
 $plugincheck = hook("errorcheckadditional");
 if(is_string($plugincheck))

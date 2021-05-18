@@ -562,7 +562,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     # Update disk usage
     update_disk_usage($ref);
     
-    if(!$upload_then_process || !$after_upload_processing)
+    if(!$after_upload_processing)
         {
         # Log this activity.
         $log_ref=resource_log($ref,"u",0);
@@ -742,7 +742,7 @@ function extract_exif_comment($ref,$extension="")
                     $read=true;
                     $value=$metadata[$subfield];
                     debug("[extract_exif_comment()][ref={$ref}] Found embedded field mapping for '{$subfield}' with value '{$value}'");
-                    
+                   
                     # Dropdown box or checkbox list?
                     if (in_array($read_from[$i]["type"],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
                         {
@@ -760,6 +760,20 @@ function extract_exif_comment($ref,$extension="")
                         for ($n=0;$n<count($s);$n++)
                             {
                             if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}                             
+                            }
+                        }
+
+                    if ($read_from[$i]["type"] == FIELD_TYPE_DATE)
+                        {
+                        $invalid_date = check_date_format($value);
+
+                        if(!empty($invalid_date))
+                            {
+                            $invalid_date = str_replace("%field%", $read_from[$i]['name'], $invalid_date);
+                            $invalid_date = str_replace("%row% ", "", $invalid_date);
+
+                            debug ("EXIF - " . $invalid_date);
+                            continue;
                             }
                         }
                     
@@ -1102,7 +1116,7 @@ function iptc_return_utf8($text)
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
     global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
-    global $previews_allow_enlarge, $offline_job_queue;
+    global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     # Used to preemptively create folder
     get_resource_path($ref,true,"pre",true);
@@ -1111,6 +1125,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         trigger_error("Parameter 'ref' must be numeric!");
         }
+
+    $fs_path = hook('create_previews_extra', '', array($ref));
+
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
 
@@ -1241,14 +1258,13 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
                     {
                     // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . $alphaoff : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
+                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
                     }
                 else
                     {
                     // Use the old imagemagick command syntax (parameters then file)
                     $command = $convert_fullpath . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
                     }
-
                 $output = run_command($command);
 
                 if(file_exists($apath))
@@ -1383,7 +1399,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     if(!is_numeric($ref))
         {
@@ -1644,21 +1660,54 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
 
-            // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and will eventually be replaced by -alpha off)
+            // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and has been replaced by -alpha off)
             // Extensions for which the alpha/matte channel should not be disabled (and therefore option -flatten is unnecessary)
-            $extensions_no_alpha_off = array('png', 'gif', 'psd');
-
-            if( $prefix == "cr2:" || $prefix == "nef:" || in_array($extension, $extensions_no_alpha_off) || getval("noflatten","")!="") {
+          
+            if($prefix == "cr2:" 
+                || $prefix == "nef:"
+                || in_array($extension, $preview_no_flatten_extensions)
+                || getval("noflatten","")!=""
+                )
+                {
                 $flatten = "";
-            } else {
+                }
+            else
+                {
                 $flatten = "-flatten";
-            }
+                }
+
+            $addcheckbdpre = "";
+            $addcheckbdafter = "";
+            if(in_array($extension,$preview_keep_alpha_extensions))
+                {
+                // Add checkerboard code
+                $cb_scale = 100;
+                $cb_width = $sw;
+                $cb_height = $sh;
+                if (($sw > 1200 || $sh > 1200) && $sw > 0 && $sh > 0)
+                    {
+                    // Scale the checkerboard for larger images to make it more visible
+                    $cb_width = $sw / 6;
+                    $cb_height = $sh / 6;
+                    $cb_scale = 600;
+                    }
+                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
+                if($extension=="svg")
+                    {
+                    $addcheckbdpre = "-transparent white " .  $addcheckbdpre  . " -scale " . $cb_scale . "% tile:pattern:checkerboard ";
+                    }
+                else
+                    {
+                    $addcheckbdpre .= " tile:pattern:checkerboard -scale " . $cb_scale . "% ";
+                    }
+                $addcheckbdafter = "-compose over -composite ";
+                }            
 
             $preview_quality=get_preview_quality($ps[$n]['id']);
        
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] ' . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] ' . $flatten . ' -quality ' . $preview_quality;
                 }
 
             # fetch target width and height
@@ -1688,14 +1737,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $mpr_parts['flatten']=($flatten=='' ? false : true);
                 $mpr_parts['icc_transform_complete']=$icc_transform_complete;
                 }
-          
-                
+               
             # Debug
             debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)");
 
             # Find the target path
-            if ($extension=="png" || $extension=="gif"){$target_ext=$extension;} else {$target_ext="jpg";}
-            $path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),$target_ext,-1,1,false,"",$alternative);
+            $path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),"jpg",-1,1,false,"",$alternative);
             
             if($imagemagick_mpr)
                 {
@@ -1714,7 +1761,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if ($keep_for_hpr){$keep_for_hpr=false;}
                     
             # Also try the watermarked version.
-            $wpath=get_resource_path($ref,true,$ps[$n]["id"],false,$target_ext,-1,1,true,"",$alternative);
+            $wpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
                 if (file_exists($wpath))
                     {unlink($wpath);}
             
@@ -1825,8 +1872,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif") ? $alphaoff . " " . $profile : "");
-                        //$runcommand = $command . " " . ( !in_array($extension, $extensions_no_alpha_off) ? ($alphaoff . " " . $profile . " ") : "");
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : "");
                         
                         if($crop)
                             {
@@ -1834,7 +1880,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $runcommand .= " -crop " . $cropw . "x" . $croph . "+" . $cropx . "+" . $cropy;
                             }
                         
-                        $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
+                        $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
                             $command_list.=$runcommand."\n";
@@ -1863,29 +1909,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                     }
                                 }
                             }
-                    
-                    // checkerboard - this will have to be integrated into mpr
-                    if ($extension=="png" || $extension=="gif")
-                        {
-                        global $transparency_background;
-                        $transparencyreal=dirname(__FILE__) ."/../" . $transparency_background;
-
-                        $cmd=str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path));
-                        $command_list.=$cmd."\n";
-                        $wait=run_command($cmd, true);
-
-                        if(file_exists($path))
-                            {
-                            unlink($path);
-                            }
-                        $path=str_replace($extension,"jpg",$path);
-                        }
                     }           
 
                 # Add a watermarked image too?
                 global $watermark, $watermark_single_image;
                 
-                if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command)) && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
+                if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))
+                     && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) 
+                     && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
@@ -1897,9 +1928,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $mpr_parts['wmpath']=$wmpath;
                         }
                     
-                    if(!($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
+                    if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . $alphaoff . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
                     // alternate command for png/gif using the path from above, and omitting resizing
@@ -2048,7 +2079,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -2160,7 +2191,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         
                         // let's create the watermark and save as an mpr
                         $command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
-                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escape1774shellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
+                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
                         $mpr_init_write=true;
                         $mpr_wm_created=true;
                         $command.=" -delete 1 -write mpr:" . $ref . " -delete 0";

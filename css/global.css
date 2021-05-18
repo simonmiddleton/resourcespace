@@ -293,7 +293,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
-.TopInpageNavLeft{float:left;padding-right:120px;}
+.TopInpageNavLeft{float:left;}
 .TopInpageNavRight{position:absolute;right:0;top:3px;width:max-content;text-align:right;}
 .InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 0 0;}
 .InpageNavRightBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 15px 0 0;}
@@ -527,7 +527,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;}
+#previewimagewrapper {margin: 0 15px 15px 0; position: relative; min-width: 720px;}
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
@@ -1616,9 +1616,7 @@ form.FormFilter button.ClearButton {
 #PreviewTools {
     height: 41px;
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
+    position: relative;
 }
 
 #PreviewToolsOptionsWrapper {
@@ -1877,7 +1875,7 @@ select.MultiSelect:before {
     transform-origin: left bottom;
     font-size: 1.2em;
 }
-#BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited{
+#BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited, .row_clickable{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;

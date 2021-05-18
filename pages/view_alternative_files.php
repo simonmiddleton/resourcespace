@@ -66,6 +66,7 @@ if ($alt_access)
 		<h2 class="breakall"><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
 		<p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
 		</td>
+        <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
 		<td class="DownloadFileSize"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>
 		
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
@@ -103,7 +104,7 @@ if ($alt_access)
 			    }	
 			    ?>><?php echo $lang["action-download"]?></a><?php
             } ?></td></td>
-		<?php } else { ?>
+		<?php } elseif (checkperm("q")) { ?>
 		<td class="DownloadButton"><?php
 			if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
 				{
@@ -114,7 +115,11 @@ if ($alt_access)
 				?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
 				}
 			echo $lang["action-request"]?></a></td>
-		<?php } ?>
+		<?php } 
+		else
+		    {
+		    ?><td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td><?php
+		    } ?>
 		</tr>
 		<?php	
 		}

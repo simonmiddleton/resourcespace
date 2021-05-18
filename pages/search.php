@@ -544,15 +544,12 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
         $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
-
         $max_results = $saved_max_results;
-        $full_dataset = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch, false, false, $daylimit, false, true, false, $editable_only, false, $search_access);
         }
     }
 else
     {
     $result=array(); # Do not return resources (e.g. for collection searching only)
-    $full_dataset = array();
     }
 
 # Allow results to be processed by a plugin
@@ -578,9 +575,9 @@ if ($collectionsearch)
 
     if ($k!="" && !$internal_share_access) {$usercollection=$collection;} # External access - set current collection.
     if (!$collectiondata)
-        {?>
-        <script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl."/pages/" . $default_home_page;?>'</script>
-        <?php
+        {
+        error_alert($lang["error-collectionnotfound"],true);
+        exit;
         } 
     # Check to see if this user can edit (and therefore reorder) this resource
     if (($userref==$collectiondata["user"]) || ($collectiondata["allow_changes"]==1) || (checkperm("h")))
@@ -1262,7 +1259,10 @@ if($responsive_ui)
             }
         else
             {
-            render_actions($collectiondata, true, false, "", $full_dataset);
+            if (is_array($result))
+                {
+                render_actions($collectiondata, true, false, '', $result);
+                }
             }
 
         hook("search_header_after_actions");
@@ -1486,12 +1486,7 @@ if($responsive_ui)
         // Loop through search results.
         $result_count = count($result);
         for ($n = 0; $n < $result_count; $n++)
-            {
-            if(!is_array($result[$n]) && isset($full_dataset[$n]))
-                {
-                $result[$n] = $full_dataset[$n];
-                }
-            
+            {            
             if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
                 {
                 continue;
@@ -1713,11 +1708,18 @@ if($search_anchors && $display != 'map')
     }
     ?>
 <script>
-function toggle_addremove_to_collection_icon(el)
+function toggle_addremove_to_collection_icon(plus_minus_link)
     {
-    var icon = jQuery(el);
-    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref'));
+    // The plus minus link can be from the collection bar or from the resource shell in centralspace  
+    var icon = jQuery(plus_minus_link);
 
+    // Use the link to locate the resource shell in centralspace  
+    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref') + ".ResourcePanel");
+
+    // Each resource shell has one plus icon for addition and one minus icon for removal
+    // Each collection bar resource has only one minus icon for removal
+
+    // If its a plus icon then it must be from centralspace, so hide it and then show its minus icon sibling
     if(icon.hasClass('addToCollection'))
         {
         icon.addClass('DisplayNone');
@@ -1727,19 +1729,14 @@ function toggle_addremove_to_collection_icon(el)
             jQuery(rfc[0]).removeClass('DisplayNone');
             }
         }
+    // If its a minus icon then it can be from the collection bar or centralspace
     else if(icon.hasClass('removeFromCollection'))
         {
-        var atc = resource_shell.find('div.ResourcePanelIcons > a.addToCollection');
-        if(atc.length > 0)
-            {
-            jQuery(atc[0]).removeClass('DisplayNone');
-            }
+        // If there is a plus icon then it must be in centralspace and so show it
+        resource_shell.find('div.ResourcePanelIcons > a.addToCollection').removeClass('DisplayNone');
 
-        var rfc = atc.siblings('.removeFromCollection');
-        if(rfc.length > 0)
-            {
-            jQuery(rfc[0]).addClass('DisplayNone');
-            }
+        // Now hide the minus icon in centralspace
+        resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').addClass('DisplayNone');
         }
 
     return;

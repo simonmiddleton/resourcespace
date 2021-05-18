@@ -145,7 +145,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
-    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "",$list_recipients,$add_internal_access,$group, $sharepwd);
+    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "?parent=" . $collection["ref"],$list_recipients,$add_internal_access,$group, $sharepwd);
 	if ($errors=="")
 		{
 		# Log this	

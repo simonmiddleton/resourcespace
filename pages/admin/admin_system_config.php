@@ -220,6 +220,7 @@ $page_def[] = config_add_html('</div>');
 // Featured Collection section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_featured_collections'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 // Workflow section

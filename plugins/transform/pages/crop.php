@@ -1109,7 +1109,7 @@ renderBreadcrumbs($links_trail);
                 ?>
                 <div class="QuestionSubmit">
                     <label for="submit">&nbsp;</label>
-                    <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>" />
+                    <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>"  onclick="postCrop();return false;" />
                     <div class="clearerleft"></div>
                 </div>
             </div>
@@ -1120,7 +1120,7 @@ renderBreadcrumbs($links_trail);
                 ?>
                 <div class="QuestionSubmit">
                     <label for="submit">&nbsp;</label>
-                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>"  onclick="postCrop();return false;" />
+                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop();return false;" />
                 
                     <div class="clearerleft"></div>
                 </div>

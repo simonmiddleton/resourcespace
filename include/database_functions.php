@@ -416,7 +416,8 @@ function db_rollback_transaction($name)
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_already_completed_this_time;
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang;
 	
     // Check cache for this query
     $cache_write=false;
@@ -452,61 +453,62 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         }
 
     if ($config_show_performance_footer)
-    	{
-    	# Stats
-    	# Start measuring query time
-    	$time_start = microtime(true);
-   	    global $querycount;
-		$querycount++;
-    	}
-    	
+        {
+        # Stats
+        # Start measuring query time
+        $time_start = microtime(true);
+        global $querycount;
+        $querycount++;
+        }
+
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
-		{
-		debug("SQL: " . $sql);
-		}
-	
+        {
+        debug("SQL: " . $sql);
+        }
+
     if($mysql_log_transactions && !($logthis==0))
-    	{	
-		global $mysql_log_location, $lang;
+        {	
+        $requirelog = true;
 
-		$requirelog = true;
-
-		if($logthis==2)
-			{
-			// Ignore any SELECTs if the decision to log has not been indicated by function call, 	
-			if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-				{
+        if($logthis==2)
+            {
+            // Ignore any SELECTs if the decision to log has not been indicated by function call, 	
+            if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
+                {
                 $requirelog = false;
                 }
-			}
-			
-		if($logthis==1 || $requirelog)
-			{
-			# Log this to a transaction log file so it can be replayed after restoring database backup
-			$mysql_log_dir = dirname($mysql_log_location);
-			if (!is_dir($mysql_log_dir))
-				{
-				@mkdir($mysql_log_dir, 0333, true);
-				if (!is_dir($mysql_log_dir))
-					{exit("ERROR: Unable to create  folder for \$mysql_log_location specified in config file: " . $mysql_log_location);}
-				}	
-			
-			if(!file_exists($mysql_log_location))
-				{
-				global $mysql_db;
-				$mlf=@fopen($mysql_log_location,"wb");
-				@fwrite($mlf,"USE " . $mysql_db . ";\r\n");
-				if(!file_exists($mysql_log_location))
-					{exit("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);}
-				// Set the permissions if we can to prevent browser access (will not work on Windows)
-				chmod($mysql_log_location,0333);
-				}
-			
-			$mlf=@fopen($mysql_log_location,"ab");
-			fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
-			fclose ($mlf);
-			}
-		}
+            }
+
+        if($logthis==1 || $requirelog)
+            {
+            # Log this to a transaction log file so it can be replayed after restoring database backup
+            $mysql_log_dir = dirname($mysql_log_location);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                if (!is_dir($mysql_log_dir))
+                    {
+                    mkdir($mysql_log_dir, 0333, true);
+                    }
+                if(!file_exists($mysql_log_location))
+                    {
+                    $mlf=fopen($mysql_log_location,"wb");
+                    fwrite($mlf,"USE " . $mysql_db . ";\r\n");
+                    // Set the permissions if we can to prevent browser access (will not work on Windows)
+                    chmod($mysql_log_location,0333);
+                    }
+                $mlf=fopen($mysql_log_location,"ab");
+                fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
+                fclose ($mlf);
+                }
+            catch(Exception $e)
+                {
+                debug("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);
+                $mysql_log_transactions = false;
+                }
+            unset($GLOBALS["use_error_exception"]);
+            }
+        }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.
@@ -759,8 +761,9 @@ function sql_insert_id()
  */
 function get_query_cache_location()
 	{
-	global $storagedir;
-	return $storagedir . "/tmp/querycache";
+	global $storagedir,$tempdir;
+    if(!is_null($tempdir)){return $tempdir . "/querycache";}
+    else {return $storagedir . "/tmp/querycache";}
 	}
 
 	

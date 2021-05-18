@@ -75,7 +75,7 @@ $introtext=text("introtext");
 
         if($allow_share)
             {
-            echo "<li><a href='" . $baseurl_short . "pages/manage_external_shares.php?share_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-share-alt'></i><br />" . $lang['my_shares'] . "</a>";
+            echo "<li><a href='" . $baseurl_short . "pages/manage_external_shares.php?share_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . $lang['my_shares'] . "</a>";
             echo "</li>";
             }
             

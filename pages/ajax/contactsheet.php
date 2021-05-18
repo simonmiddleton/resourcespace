@@ -196,7 +196,13 @@ foreach($results as $result_data)
         {
         $contact_sheet_value = '';
 
-        if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
+        $ref = isset($contact_sheet_field['ref']) ? $contact_sheet_field['ref'] : "";
+        if ($ref == "")
+            {
+            continue;
+            }
+        
+        if(array_key_exists("field{$ref}", $result_data))
             {
             # Include field unless hide restriction is in effect
             if( !($contact_sheet_field['hide_when_restricted'] && 1 == $access) ) 

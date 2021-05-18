@@ -309,7 +309,7 @@ else
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
     }
 
-$download_url   = $baseurl . "/pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $randstring . $suffix . "&filename=" . pathinfo($filename,PATHINFO_FILENAME);
+$download_url   = $baseurl_short . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $randstring . $suffix . "&filename=" . pathinfo($filename,PATHINFO_FILENAME);
 message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data=array();

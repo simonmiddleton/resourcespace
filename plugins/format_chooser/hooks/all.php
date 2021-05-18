@@ -7,9 +7,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 	global $baseurl_short,$imagemagick_preserve_profiles, $format_chooser_input_formats, $format_chooser_output_formats, $k;
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
 		// Check whether download file extension matches
     if(!in_array(strtoupper($ext),$format_chooser_output_formats))
@@ -41,9 +39,7 @@ function HookFormat_chooserAllReplaceuseoriginal()
 	global $format_chooser_output_formats, $format_chooser_profiles, $lang, $use_zip_extension;
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
 	$disabled = '';
 	$submitted = getvalescaped('submitted', null);
@@ -90,9 +86,7 @@ function HookFormat_chooserAllSize_is_available($resource, $path, $size)
 	{
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
 	if (!supportsInputFormat($resource['file_extension']))
 		{
@@ -121,9 +115,7 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
 	global $format_chooser_output_formats, $job_ext;
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
 	$inputFormat = $resource['file_extension'];
 
@@ -148,9 +140,7 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
 	{
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
 	if (!supportsInputFormat($resource['file_extension']))
 		{
@@ -187,9 +177,7 @@ function HookFormat_chooserAllCollection_download_modify_job($job_data=array())
     {
 
 	// Disable for e-commerce
-	global $userrequestmode;
-	if ($userrequestmode == 2 || $userrequestmode == 3) 
-		{return false;}
+	if (is_ecommerce_user()) { return false; }
 
     $ext = getvalescaped("ext","");
     if(trim($ext) != "")

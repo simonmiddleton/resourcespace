@@ -68,9 +68,12 @@ $archiver = $collection_download && ($archiver_fullpath!=false) && (isset($archi
 
 # initiate text file
 if (($zipped_collection_textfile==true)&&($includetext=="true")) { 
+    if(hook('replacecollectiontextfile', '', array($collectiondata)))
+        {
     $text = i18n_get_collection_name($collectiondata) . "\r\n" .
     $lang["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
     $lang["contents"] . ":\r\n\r\n";
+    }
 }
 
 # get collection
@@ -560,6 +563,7 @@ include "../include/header.php";
 <?php
 $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
+hook('collectiondownloadintro');
 ?>
 <script>
 
@@ -699,7 +703,9 @@ if (!hook('replaceuseoriginal'))
 	   }
     }
 
-if ($zipped_collection_textfile=="true") { ?>
+if ($zipped_collection_textfile=="true") { 
+    if(!hook('collectiondownloadtextfile'))
+        { ?>
 <div class="Question">
 <label for="text"><?php echo $lang["zippedcollectiontextfile"]?></label>
 <select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
@@ -718,6 +724,7 @@ else{
 
 <?php
 }
+}
  
 # Archiver settings
 if ($archiver && count($collection_download_settings)>1)
@@ -733,16 +740,19 @@ if ($archiver && count($collection_download_settings)>1)
     </select>
     <div class="clearerleft"></div></div><br />
     </div><?php
-    }	?>
+    }
 
+if(!hook('replacecsvfile'))
+    { ?>
 <!-- Add CSV file with the metadata of all the resources found in this colleciton -->
 <div class="Question">
 	<label for="include_csv_file"><?php echo $lang['csvAddMetadataCSVToArchive']; ?></label>
 	<input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
 	<div class="clearerleft"></div>
 </div>
-
 <?php
+}
+
 if($exiftool_write && !$force_exiftool_write_metadata)
     {
     ?>
@@ -761,14 +771,20 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
 	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+        <?php if(!hook('collectiondownloadfileformats'))
+            { ?>
 		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
-		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
+		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option><?php
+            } ?>   
 	</select>
 	
 	<div class="clearerleft"></div></div><br />
 	<div class="clearerleft"></div>
 	<label for="tarinfo"></label>
-	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+    <?php if(!hook('collectiondownloadformhelp'))
+        { ?>
+	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div><?php
+        } ?>
 	
 	<div class="clearerleft"></div>
 </div>

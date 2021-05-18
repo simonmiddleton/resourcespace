@@ -48,7 +48,7 @@ function create_new_db($db_name)
     # Create a database for testing purposes
     echo "Creating database $db_name\n";
     mysqli_query($db["read_write"], "drop database if exists `$db_name`");
-    mysqli_query($db["read_write"], "create database `$db_name`");
+    mysqli_query($db["read_write"], "CREATE DATABASE `{$db_name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     mysqli_query($db["read_write"], "CREATE TABLE `{$db_name}`.`sysvars`(`name` VARCHAR(50) NOT NULL, `value` TEXT NULL, PRIMARY KEY (`name`))");
     mysqli_query($db["read_write"], "INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
     }
@@ -68,13 +68,14 @@ $inst_plugins = sql_query('SELECT name FROM plugins WHERE inst_version>=0 order 
 
 if(array_search('nosetup',$argv)===false)
     {
+    $mysql_charset = 'utf8mb4';
     # this has to be done in its own function as it includes the config.php and don't want to scope those vars globally
     create_new_db($mysql_db);
     }
     
 // Reset any odd config settings by reapplying config.default and config.new_installs.php
 // Save any important settings e.g for mysql connections first 
-$savedconfigs = array("mysql_db","mysql_server","mysql_server_port","mysql_username","mysql_password","read_only_db_username","read_only_db_password","imagemagick_path","ghostscript_path","exiftool_path");
+$savedconfigs = array("mysql_db", 'mysql_charset',"mysql_server","mysql_server_port","mysql_username","mysql_password","read_only_db_username","read_only_db_password","imagemagick_path","ghostscript_path","exiftool_path");
 foreach($savedconfigs as $savedconfig)
     {
     $saved[$savedconfig] = $$savedconfig;
@@ -87,7 +88,7 @@ foreach($saved as $key => $savedsetting)
     {
     $$key = $savedsetting;
     }
-    
+
 sql_connect();
 
 if(array_search('nosetup',$argv)===false)

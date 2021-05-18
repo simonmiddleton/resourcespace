@@ -116,7 +116,7 @@ if($html_validation !== true && $html_validation !== '')
 		<?php generateFormToken("mainform"); ?>
         <input type=hidden name=page value="<?php echo $page?>">
 		<input type=hidden name=name value="<?php echo $name?>">
-        <input type=hidden name=copyme value="">
+        <input type=hidden name=copyme id="copyme" value="">
 		<input type=hidden name=langswitch id="langswitch" value="">
 		<input type=hidden name=groupswitch id="groupswitch" value="">
 		<input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
@@ -297,9 +297,14 @@ jQuery('#checkhtml').click(function(e) {
 		var checktext = editor.getData();
 	} else {
 		var checktext = jQuery('#text').val();
-	}
-
-	jQuery.get('../tools/check_html.php', {'text': checktext}, function(response, status, xhr){
+    }
+    
+	jQuery.post(
+        '../tools/check_html.php', 
+        {
+            'text': checktext, 
+            <?php echo generateAjaxToken('admin_content_edit'); ?>,
+        }, function(response, status, xhr){
 		CentralSpaceHideLoading();
 		jQuery('#submissionResponse').html(response);
 	});
@@ -309,3 +314,4 @@ jQuery('#checkhtml').click(function(e) {
 <?php		
 include "../../include/footer.php";
 ?>
+

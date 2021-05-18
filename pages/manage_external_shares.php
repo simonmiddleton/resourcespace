@@ -13,13 +13,14 @@ $share_group        = getval("share_group",-1,true);
 $share_orderby      = getval("share_orderby","ref");
 $share_sort         = (strtoupper(getval("share_sort","ASC")) == "ASC") ? "ASC" : "DESC";
 $share_type         = getval("share_type",-1,true);
-$share_collection   = getval("share_collection",-1,true);
+$share_collection   = getval("share_collection",0,true);
 
-if($share_collection != -1 &&!collection_readable($share_collection))
+if($share_collection != 0 &&!collection_readable($share_collection))
     {
     error_alert($lang["error-permissiondenied"],true);
     exit();
     }
+
 if(!checkperm('a') || $share_user == $userref)
     {
     $pagetitle  = $lang["my_shares"];
@@ -87,7 +88,7 @@ foreach($sharedgroups as $sharedgroup)
         $allsharedgroups[$sharedgroup] = $up_group["name"];
         }
     }
-$allsharedcols = array("-1" => ($share_collection == -1 ? $lang["action-select"] : $lang["all"]));
+$allsharedcols = array("0" => ($share_collection == 0 ? $lang["action-select"] : $lang["all"]));
 $sharedcols = array_unique(array_column($shares,"collection"));
 foreach($sharedcols as $sharedcol)
     {    
@@ -327,7 +328,7 @@ function purge_expired_shares()
 
 function clearsharefilter()
     {
-    jQuery('#share_collection').val('-1');
+    jQuery('#share_collection').val('0');
     jQuery('#share_group').val('-1');
     jQuery('#share_type').val('-1');
     jQuery('#share_user').val('');

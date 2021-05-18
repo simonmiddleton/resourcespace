@@ -152,6 +152,17 @@ else
     }
 ?><tr><td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"] ?> (<a href="<?php echo $filestoreurl ?>" target="_blank"><?php echo $filestoreurl ?></a>)</td><td><b><?php echo $result?></b></td></tr><?php
 
+# Check sql logging configured correctly
+if($mysql_log_transactions)
+    {
+    echo "<tr><td colspan='2'>" . $lang["writeaccess_sql_log"] . " (" . $mysql_log_location . ")</td><td><b>" . (is_writable($mysql_log_location) ? $lang["status-ok"] : $lang["status-fail"]) . "</b></td></tr>";
+    }
+# Check debug logging configured correctly
+if($debug_log)
+    {
+    echo "<tr><td colspan='2'>" . $lang["writeaccess_debug_log"] . " (" . $debug_log_location . ")</td><td><b>" . (is_writable($debug_log_location) ? $lang["status-ok"] : $lang["status-fail"]) . "</b></td></tr>";
+    }
+
 
 # Check if we are running 32 bit PHP. If so, no large file support.
 if (!php_is_64bit()){
@@ -212,11 +223,6 @@ if ($collection_download || isset($zipcommand)) # Only check if it is going to b
     }
 }
 
-# Check zip extension
-if ($use_zip_extension){
-display_extension_status("zip");
-}
-
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
 $php_tz = date_default_timezone_get();
 $mysql_tz = sql_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", '');
@@ -241,6 +247,26 @@ hook("addinstallationcheck");?>
 <td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"] ?></b><br/><?php echo $lang["executecronphp"] ?><?php } else {?><b><?php echo $lang["status-ok"] ?></b><?php } ?></td>
 </tr>
 
+<?php
+// Check required PHP extensions 
+$extensions_required = array();
+$extensions_required["curl"] = "curl_init";
+$extensions_required["gd"] = "imagecrop";
+$extensions_required["xml"] = "xml_parser_create";
+$extensions_required["mbstring"] = "mb_strtoupper";
+$extensions_required["ldap"] = "ldap_bind";
+$extensions_required["intl"] = "locale_get_default";
+$extensions_required["json"] = "json_decode";
+$extensions_required["zip"] = "zip_open";
+foreach($extensions_required as $module=> $required_fn)
+    {?>
+    <tr>
+        <td colspan="2">php-<?php echo $module ?></td>
+        <td><b><?php echo function_exists($required_fn) ? $lang['status-ok'] : $lang['status-fail'] ?></b></td>
+    </tr>
+    <?php
+    }
+?>
 <tr>
 <td><?php echo $lang["phpextensions"] ?></td>
 <?php $extensions=get_loaded_extensions();sort($extensions);?>
