@@ -899,3 +899,9 @@ function api_get_collection(int $ref)
         }
     return get_collection($ref);
     }
+
+function api_message_add($users,$text,$url="",$owner=null,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
+    {
+    message_add($users,$text,$url,$owner,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,$ttl_seconds, $related_activity, $related_ref);
+    return true;
+    }

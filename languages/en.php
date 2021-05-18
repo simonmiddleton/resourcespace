@@ -274,7 +274,7 @@ $lang["managecontent"]="Site content";
 $lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
-$lang["sendbulkmail"]="Bulk mail";
+$lang["sendbulkmail"]="Send bulk mail";
 $lang["systemsetup"]="System";
 $lang["systemlog"]="Log";
 $lang["usersonline"]="Users currently online (idle time minutes)";
@@ -3103,3 +3103,7 @@ $lang["intro-plupload_external_share"]      = "Please use this page to upload yo
 $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
 $lang["log_value"]                          = "Value";
+$lang["new_message"]                        ="New message";
+$lang["message_recipients"]                 = "Recipient(s)";
+$lang["error_invalid_user"]                 = "Invalid user specified";
+

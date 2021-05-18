@@ -42,9 +42,10 @@ $usagecomment   = getvalescaped('usagecomment', '');
 $ext            = getvalescaped('ext', '');
 $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 $modal          = (getval("modal","")=="true");
+$tempfile       = getval("tempfile","");
 
 // Ensure terms have been accepted and usage has been supplied when required
-if($terms_download)
+if($terms_download && getval("tempfile","") != "" )
     {
     if ($iaccept != 'on')
         {
@@ -91,7 +92,7 @@ elseif(getval("slideshow",0,true) != 0)
     $noattach       = true;
     $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
     }
-elseif(getval("tempfile","") != "")
+elseif($tempfile != "")
     {
     $noattach       = true;
     $exiftool_write = false;

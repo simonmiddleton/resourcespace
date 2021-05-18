@@ -5059,7 +5059,8 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
  */
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
-	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach;
+	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach, $sizes_always_allowed;
+
 	$access=get_resource_access($resource);
 
     if (checkperm('T' . $resource_type . "_" . $size))
@@ -5105,7 +5106,6 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         // The system should always allow these sizes to be downloaded as these are needed for search results and it makes
         // sense to allow them if a request for one of them is received. For example when $hide_real_filepath is enabled.
         // 'videojs' represents the preview loaded by videojs viewer.
-        $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 
         if('' == $size)
             {

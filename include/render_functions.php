@@ -5318,3 +5318,32 @@ function render_share_password_question($blank=true)
     </div>
     <?php
     }
+
+function render_user_select_question($label, $input, $additionaltext="", $extra="", $currentuser="", array $ctx = array())
+    {
+    global $lang;
+    $div_classes = array("Question");
+    if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
+        {
+        $div_classes = array_merge($div_classes, $ctx["div_class"]);
+        }
+    if(!isset($ctx["input_class"]) || !is_array($ctx["input_class"]) || empty($ctx["input_class"]))
+        {
+        $ctx["input_class"] = array("stdsswidth");
+        }
+
+    $inputel = "<input name=\"%%NAME%%\" type=\"text\" class=\"%%INPUTCLASSES%%\" value=\"%%PLACEHOLDERTEXT%%\" id=\"%%NAME%%_autocomplete\" onFocus=\"if(this.value == '%%PLACEHOLDERTEXT%%') {this.value = ''}\" onBlur=\"if(this.value == '') {this.value = '%%PLACEHOLDERTEXT%%';\" />";
+
+    $placeholders = array("%%NAME%%","%%PLACEHOLDERTEXT%%", "%%INPUTCLASSES%%");
+    $inputdata = array($input,$lang['starttypingusername'], implode(" ", $ctx["input_class"]));
+    ?>
+	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_classes); ?>" >
+		<label><?php echo $label; ?></label>
+		<?php 
+        echo str_replace($placeholders,$inputdata,$inputel);
+		echo $additionaltext;
+		?>
+	    <div class="clearerleft"> </div>
+	</div>
+	<?php
+	}
