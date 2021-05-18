@@ -3229,3 +3229,6 @@ $upload_link_workflow_state = -1;
 $preview_no_flatten_extensions = array("gif","png","tif","svg");
 // Specify file extensions that will have their transparency layer replaced with a checkerboard pattern. If the alpha layer has just been used for construction then tou may need to remove 'tif' from this array
 $preview_keep_alpha_extensions = array("gif","png","tif","svg");
+
+// Array of sizes that will always be permitted through download.php and won't require terms/usage to be entered - needed when hide_real_filepath=true;
+$sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
