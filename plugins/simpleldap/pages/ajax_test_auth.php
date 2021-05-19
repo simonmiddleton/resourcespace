@@ -50,8 +50,17 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
         }
 
 	debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
-
-	$login = @ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
+    $GLOBALS["use_error_exception"] = true;
+    try 
+        {
+        $login = ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
+        }
+    catch(Exception $e)
+        {
+        debug("ERROR: LDAP bind failed " . $e->getMessage());
+        $login=false;
+        }
+    unset($GLOBALS["use_error_exception"]);
 	if ($login)
 		{
 		debug("LDAP - Success binding to AD server as : " . $binduserstring);
@@ -69,8 +78,18 @@ else
 	foreach($searchdns as $searchdn)
 		{
 		$binduserstring = $simpleldap['loginfield'] . "=" . $escaped_ldapuser . "," . $searchdn;
-		debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring . ": " .$simpleldap['ldappassword']);
-		$login = @ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
+		debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
+        $GLOBALS["use_error_exception"] = true;
+        try 
+            {
+            $login = ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
+            }
+        catch(Exception $e)
+            {
+            debug("ERROR: LDAP bind failed " . $e->getMessage());
+            $login=false;
+            }
+        unset($GLOBALS["use_error_exception"]);
 		if (!$login)
 			{
 			debug("LDAP bind failed: " . $searchdn);
@@ -89,6 +108,8 @@ $response['bindsuccess'] = $bindsuccess ? $lang['status-ok'] : "{$lang['status-f
 $response['memberof']    = array();
 
 $userdetails=simpleldap_authenticate($simpleldap['ldapuser'],$simpleldap['ldappassword']);
+
+unset($GLOBALS["use_error_exception"]);
 
 if($userdetails)
 	{
