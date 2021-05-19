@@ -381,6 +381,9 @@ if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpf
     delete_exif_tmpfile($tmpfile);
     }
 
-hook('beforedownloadresourceexit', '', array($download_extra));
+if (isset($download_extra)) 
+    {
+    hook('beforedownloadresourceexit', '', array($download_extra));
+    }
 
 exit();
