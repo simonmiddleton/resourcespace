@@ -1,33 +1,48 @@
 <?php
 include "../include/db.php";
 
-
 # Handle the callback from PayPal and mark the collection items as purchased.
 
-// Read the post from PayPal
+# Fetch the raw IPN message sent from PayPal
+$raw_ipn_post = file_get_contents('php://input');
+$raw_ipn_array = explode('&', $raw_ipn_post);
+
+$ipnPost = array();
+foreach ($raw_ipn_array as $raw_entry) {
+  $raw_entry = explode ('=', $raw_entry);
+  if (count($raw_entry) == 2)
+    $ipnPost[$raw_entry[0]] = urldecode($raw_entry[1]);
+}
+
+# Now construct a request consisting of a copy of the IPN message prefixed with 'cmd=_notify-validate'
 $req = 'cmd=_notify-validate';
-foreach ($_POST as $key => $value)
+foreach ($ipnPost as $key => $value)
 		{
-		$value = urlencode($value); $req .= "&$key=$value";
+		$value = urlencode($value); 
+		$req .= "&$key=$value";
 		}
 
+debug("PAYPAL CALLBACK START");
 
-debug("PAYPAL CALLBACK BEFORE FSOCKOPEN");
-
-
-# Send this request back to PayPal for verification.
+# Send the request back to PayPal for verification; now uses HTTP/1.1 as required by PayPal since October 2013
+# Note the use of single end-of-line markers and final double end-of-line marker
 $header = "";
-$header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+$header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
+$header .= "Content-Length: " . strlen($req) . "\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
+
+$header .= "Host: www.sandbox.paypal.com\r\n"; // Sandbox Host
+# $header .= "Host: www.paypal.com\r\n"; // Live Host
+
+$header .= "Connection: close\r\n\r\n";
+
 
 // TEMP TEMP
-// $fp = fsockopen ('www.paypal.com', 80, $errno, $errstr, 30);
-$fp = fsockopen ('www.sandbox.paypal.com', 80, $errno, $errstr, 30);
+// $fp = fsockopen ('ssl://www.paypal.com', 443, $errno, $errstr, 30);
+$fp = fsockopen ('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
 // TEMP TEMP
 
-
-// Process validation from PayPal
+// Process the validation response from PayPal
 if (!$fp)
 	{ // HTTP ERROR
 	
@@ -49,7 +64,7 @@ else
 
 		debug("PAYPAL CALLBACK RESPONSE=".$res);
 
-		if (strcmp($res, "VERIFIED") == 0)
+		if (strcmp(trim($res), "VERIFIED") == 0)
 			{
 			echo "Verified.";
 			
