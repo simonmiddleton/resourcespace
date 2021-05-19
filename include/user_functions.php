@@ -421,6 +421,10 @@ function get_user_by_email($email)
  */
 function get_user_by_username($username)
     {
+    if(!is_string($username))
+        {
+        return false;
+        }
     return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
     }
 

@@ -209,7 +209,7 @@ select::-ms-expand
 .RecordBox {margin: 10px 20px 10px 0;}
 h2#CollectionsPanelHeader {display:none;}
 
-#UserProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
+.ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
 
 /* Header size variants */
 .HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
@@ -2032,3 +2032,33 @@ a.BrowseRefresh{
     margin-left: -30px;
     position: relative;
   }
+
+
+.message_conversation {width: 70%; font-size: 1em;}
+.user_message {
+    width: 85%;
+    padding: 8px;
+    clear:both;
+    /* padding:5px 0 60px 0; */
+    }
+
+.user_message_text {
+    padding: 10px;
+    background: #fff;
+    color: #000000;
+    border: 1px solid lightgray;
+    width: 90%;
+    float: left;
+    border-radius: 8px;
+    }
+
+.message_content
+    {
+    width: 90%;
+    }
+
+.profileimage {margin-right: 10px;}
+
+.user_message, .message_content .profileimage, .message_content {float: left;}
+
+.own_message, .own_message .user_message,  .own_message .profileimage {float:right;}

@@ -109,10 +109,6 @@ for ($n=0;$n<count($messages);$n++)
 			<td<?php echo $unread_css; ?>><?php echo ($messages[$n]["seen"]==0 ? $lang['no'] : $lang['yes']); ?></td>
 			<td>
 				<div class="ListTools">
-				<?php if ($messages[$n]["url"]!="") { ?>
-					<a href="<?php echo $messages[$n]["url"]; ?>"><?php echo LINK_CARET ?><?php echo $lang["link"]; ?></a>
-				<?php } ?>
-				    
 				    <a href="<?php echo $baseurl_short?>pages/user/user_messages.php" onclick="jQuery.get('<?php
 							echo $baseurl; ?>/pages/ajax/message.php?<?php echo (($messages[$n]["seen"]==0)?"seen":"unseen") . "=" . $messages[$n]['ref'] ; ?>',function() { message_poll(); });
 							return CentralSpaceLoad(this,true);
@@ -123,6 +119,19 @@ for ($n=0;$n<count($messages);$n++)
 							return CentralSpaceLoad(this,true);
 							"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]; ?>
 					</a>
+                <?php
+                if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE)
+                    {
+                    $replyurl = $baseurl_short . "pages/user/user_message.php?users=" . (int)$messages[$n]["ownerid"];
+                    ?>
+					<a href="<?php echo $replyurl; ?>"><?php echo LINK_CARET ?><?php echo $lang["reply"]; ?></a>
+				    <?php
+                    } 
+                if ($messages[$n]["url"]!="")
+                        { ?>
+                        <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo LINK_CARET ?><?php echo $lang["link"]; ?></a>
+                        <?php
+                        }?>
 						  
 				</div>
 			</td>

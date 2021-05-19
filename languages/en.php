@@ -3106,4 +3106,7 @@ $lang["log_value"]                          = "Value";
 $lang["new_message"]                        ="New message";
 $lang["message_recipients"]                 = "Recipient(s)";
 $lang["error_invalid_user"]                 = "Invalid user specified";
+$lang["error_not_logged_in"]                = "You are not logged in";
+$lang["reply"]                              = "Reply";
+
 

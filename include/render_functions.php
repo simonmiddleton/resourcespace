@@ -5347,3 +5347,57 @@ function render_user_select_question($label, $input, $additionaltext="", $extra=
 	</div>
 	<?php
 	}
+
+/**
+ * Render a user message for use in conversation view
+ *
+ * @param array $message  Message data from message_get_conversation()
+ * @return void
+ */
+function render_message($message="")
+    {
+    global $userref;
+    $msgdata = array();
+    if($message == "")
+        {
+        // Template
+        $msgdata[] = " class='user_message;' id='user_message_template' style='display:none;'"; // Classes 
+        $msgdata[] = "%%PROFILEIMAGE%%";
+        $msgdata[] = ""; // Message
+        }
+    else
+        {
+        $udata = get_user($message["owner"]);
+        if($udata["ref"] == $userref)
+            {
+            $msgdata[] = "class='user_message own_message'";
+            }
+        else
+            {
+            $msgdata[] = "class='user_message'";
+            }
+        $sendername = isset($udata["fullname"]) && trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+        $pimage = get_profile_image($message["owner"]);
+        if($pimage == "")
+            {
+            $msgdata[] = "<i title='" . htmlspecialchars($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw'></i>";
+            }
+        else
+            {
+            $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";
+            }  
+        $msgdata[] = $message["message"];      
+        }
+
+    $messagehtml = "<div %%DIVATTRIBUTES%%>
+        <div class='message_content'>
+            <div class='profileimage'>
+            %%PROFILEIMAGE%%
+            </div>
+            <div class='user_message_text'>%%MESSAGE%%</div>
+        </div>
+    </div>";
+
+
+    echo str_replace(array("%%DIVATTRIBUTES%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
+    }
