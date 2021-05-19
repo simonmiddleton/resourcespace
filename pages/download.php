@@ -39,6 +39,7 @@ $page               = getvalescaped('page', 1);
 $iaccept            = getvalescaped('iaccept', 'off');
 $usage              = getvalescaped('usage', '-1');
 $usagecomment       = getvalescaped('usagecomment', '');
+$email              = getvalescaped('email', '');
 $ext                = getvalescaped('ext', '');
 $snapshot_frame     = getvalescaped('snapshot_frame', 0, true);
 $modal              = (getval("modal","")=="true");
@@ -65,7 +66,7 @@ if ($download_usage && $checktermsusage)
         {
         exit($lang["termsmustindicateusage"]);
         }
-    if ($usagecomment == '')
+    if ($usagecomment == '' && !$usage_comment_blank)
         {
         exit($lang["termsmustspecifyusagecomment"]);
         }            
@@ -246,7 +247,7 @@ if('' == $noattach)
     {
     daily_stat('Resource download', $ref);
 
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, '', '', $usage, ($alternative != -1 ? $alternative : $size));
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . ' Downloaded by ' . $email, '', '', $usage, ($alternative != -1 ? $alternative : $size));
 
     hook('moredlactions');
 
