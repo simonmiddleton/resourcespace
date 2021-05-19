@@ -162,7 +162,6 @@ else
         {
         $size="";
         }
-    $download_extra = hook('download_resource_extra', '', array($path));
 
     // Provide a tile region if enabled and requested for the main resource.
     if($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
@@ -190,6 +189,7 @@ else
         }
 
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $download_extra = hook('download_resource_extra', '', array($path));
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
