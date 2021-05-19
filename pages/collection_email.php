@@ -204,24 +204,6 @@ render_help_link("user/sharing-resources");?>
 <?php
 generateFormToken("collectionform");
 
-if ($email_multi_collections && !$themeshare) { ?>
-<script type="text/javascript">
-   function getSelected(opt) {
-      var sel = '';
-	  var newref = '';
-      var index = 0;
-      for (var intLoop=0; intLoop < opt.length; intLoop++) { 
-         if (opt[intLoop].selected) 
-		 {  sel = sel + ', ' +  '<?php echo $collection_prefix?>' + opt[intLoop].value;
-		 	newref = newref + ',' +  opt[intLoop].value;
-		 }
-      }
-	  document.collectionform.ref.value = newref.substring(1, newref.length );
-      return sel.substring(2, sel.length );
-   }
-</script>
-<?php } 
-
 if($themeshare)
     {
     ?>
@@ -236,12 +218,12 @@ else
 	{?>	
 	<div class="Question">
 	<label><?php if ($themeshare) {echo $lang["themes"];} else {echo $lang["collectionname"];}?></label><div class="Fixed"><?php 
-		if (!$email_multi_collections &&  !$themeshare) { 
+		if (!$themeshare) { 
 			echo i18n_get_collection_name($collection);
 		} else { ##  this select copied from collections.php 
 			
 			?>		
-			<select name="collection" multiple="multiple" size="10" class="SearchWidthExt" style="width:365px;" 
+			<select name="collection" multiple size="10" class="stdwidth MultiSelect" style="height:100%;" 
 				onchange="document.getElementById('ref').value = getSelected(this); " >
 			<?php
 			

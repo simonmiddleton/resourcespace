@@ -1521,9 +1521,6 @@ $enable_find_similar=true;
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
 
-# Allow multiple collections to be e-mailed at once
-$email_multi_collections = false;
-
 #  Link back to collections from log page - if "" then link is ignored.
 #  suggest 
 # $back_to_collections_link = "&lt;&lt;-- Back to My Collections &lt;&lt;--";
