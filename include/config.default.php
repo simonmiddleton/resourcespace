@@ -1853,8 +1853,8 @@ $smartsearch_accessoverride=true;
 # Allow special searches to honor resource type settings.
 $special_search_honors_restypes=false;
 
-# Image preview zoom using jQuery.zoom (hover over the preview image to zoom in on the resource view page)
-$image_preview_zoom=false;
+# Image preview zoom
+$image_preview_zoom = false;
 
 # How many characters from the fields are 'mirrored' on to the resource table. This is used for field displays in search results.
 # This is the varchar length of the 'field' columns on the resource table.
