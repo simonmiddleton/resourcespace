@@ -1161,6 +1161,10 @@ function do_search(
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
         $search_filter_sql = get_filter_sql($usersearchfilter);
+        if (!$search_filter_sql)
+            {
+            exit($lang["error_edit_filter_invalid"]);
+            }
         if($search_filter_sql)
             {
             if ($sql_filter != "")
@@ -1308,7 +1312,14 @@ function do_search(
             {
             // Migrate unless marked not to due to failure
             $usereditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions);
-            $migrateresult = migrate_filter($usereditfilter);
+            if(trim($usereditfilter) !== "")
+                {
+                $migrateresult = migrate_filter($usereditfilter);
+                }
+            else
+                {
+                $migrateresult = 0; // filter was only for resource type, hasn't failed but no need to migrate again
+                }
             if(is_numeric($migrateresult))
                 {
                 debug("Migrated . " . $migrateresult);
@@ -1330,6 +1341,10 @@ function do_search(
         if ($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
             {
             $edit_filter_sql = get_filter_sql($usereditfilter);
+            if (!$edit_filter_sql)
+                {
+                exit($lang["error_edit_filter_invalid"]);
+                }
             if($edit_filter_sql)
                 {
                 if ($sql_filter != "")
@@ -1603,7 +1618,6 @@ function do_search(
         {
         $max_results=$fetchrows;
         }
-
   
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
     

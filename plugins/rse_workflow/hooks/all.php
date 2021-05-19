@@ -208,6 +208,13 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     {
     global $baseurl_short, $lang, $pagename, $count_result;
 
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+        
     // On special search !collection the actions will be added from HookRse_workflowSearchRender_search_actions_add_option
     if($pagename != "collections" || $count_result == 0)
         {
@@ -215,12 +222,6 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
         }
 
     $wf_actions_options = rse_workflow_compile_actions($urlparams);
-
-    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
-        {
-        // @see hook() for an explanation about the hook_return_value global
-        $options = $GLOBALS["hook_return_value"];
-        }
 
     return array_merge($options, $wf_actions_options);
     }

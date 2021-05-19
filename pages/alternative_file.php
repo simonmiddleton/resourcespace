@@ -131,6 +131,7 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
 <label for="name"><?php echo $lang["description"]?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo htmlspecialchars($file["description"]) ?>" maxlength="200">
 <div class="clearerleft"> </div>
 </div>
+<?php hook('alternative_file_question', ''); ?>
 
 <?php
 	// if the system is configured to support a type selector for alt files, show it

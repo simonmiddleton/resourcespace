@@ -4,6 +4,11 @@ include "../../../include/db.php";
 include "../../../include/authenticate.php";
 include "../inc/flickr_functions.php";
 
+# Check for access token before loading page header.
+include __DIR__ . "/../lib/phpFlickr.php";
+$flickr = new phpFlickr($flickr_api_key,$flickr_api_secret);
+flickr_get_access_token($userref,(isset($_GET['oauth_verifier']) && $_GET['oauth_verifier'] != ''));
+
 include "../../../include/header.php";
 
 $theme=getvalescaped("theme","");

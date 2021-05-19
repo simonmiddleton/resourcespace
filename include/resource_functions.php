@@ -512,7 +512,9 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	
 	# set defaults for resource here (in case there are edit filters that depend on them)
 	set_resource_defaults($insert);	
-	
+
+    hook('resourcecreate', '', array($insert, $resource_type));
+
 	# Autocomplete any blank fields.
 	autocomplete_blank_fields($insert, true);
 
@@ -1031,6 +1033,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
          # save related resources field
          sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
+         # Trim whitespace from each entry
+         foreach ($related as &$relatedentry) {
+            $relatedentry = trim($relatedentry);
+         }
          # Make sure all submitted values are numeric
          $to_relate = array_filter($related,"is_int_loose");
          if(count($to_relate)>0)
@@ -1073,12 +1079,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
-
     $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
- 
-    foreach($autocomplete_fields as $ref => $value)
+    foreach($autocomplete_fields as $autocomplete_field_ref => $autocomplete_field_value)
         {
-        $new_checksums[$ref] = md5($value);
+        $new_checksums[$autocomplete_field_ref] = md5($autocomplete_field_value);
         }
         
     // Initialise an array of updates for the resource table
@@ -2655,7 +2659,9 @@ function delete_resource($ref)
                 }
 			}
 		}
-	
+
+    hook('delete_resource_extra', '', array($resource));
+
 	# Delete any alternative files
 	$alternatives=get_alternative_files($ref);
 	for ($n=0;$n<count($alternatives);$n++)
@@ -2668,6 +2674,7 @@ function delete_resource($ref)
 	$resource_path = get_resource_path($ref, true, "pre", true);
 
 	$dirpath = dirname($resource_path);
+    hook('delete_resource_path_extra', '', array($dirpath));
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
@@ -3241,7 +3248,7 @@ function get_resource_types($types = "", $translate = true)
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select * from resource_type $sql order by order_by,ref","schema");
+    $r=sql_query("select *, colour from resource_type $sql order by order_by,ref","schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -3499,15 +3506,15 @@ function copy_resource($from,$resource_type=-1)
  * Log resource activity
  *
  * 
- * @param   int     $resource - resource ref                            -- resource_log.resource
- * @param   string  $type - log code defined in include/definitions.php -- resource_log.type
- * @param   int     $field - resource type field                        -- resource_log.resource_type_field
- * @param   string  $notes - text notes                                 -- resource_log.notes
- * @param   string  $fromvalue - original value                         -- resource_log.previous_value
- * @param   string  $tovalue - new value
- * @param   int     $usage                                              -- resource_log.usageoption
- * @param   string  $purchase_size                                      -- resource_log.purchase_size
- * @param   float   $purchase_price                                     -- resource_log.purchase_price
+ * @param   int        $resource - resource ref                            -- resource_log.resource
+ * @param   string     $type - log code defined in include/definitions.php -- resource_log.type
+ * @param   int        $field - resource type field                        -- resource_log.resource_type_field
+ * @param   string     $notes - text notes                                 -- resource_log.notes
+ * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
+ * @param   mixed      $tovalue - new value (int or string)
+ * @param   int        $usage                                              -- resource_log.usageoption
+ * @param   string     $purchase_size                                      -- resource_log.purchase_size
+ * @param   float      $purchase_price                                     -- resource_log.purchase_price
  * 
  * @return int (or false)
  */
@@ -3517,7 +3524,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
-    $param_str = array($type,$notes,$fromvalue,$tovalue,$purchase_size);
+    $param_str = array($type,$notes,$purchase_size);
     $param_num = array($resource,$usage,$purchase_price);
  
     foreach($param_str as $par)
@@ -3623,7 +3630,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
             (($userref != "") ? "'" . escape_check($userref) . "'" : "null") . ",'" . escape_check($resource) . "','" . escape_check($type) . "'," . (($field=="" || !is_numeric($field)) ? "null" : "'" . escape_check($field) . "'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'" . substr($k, 0, 50) . "'" : "null") . ",'" . escape_check($fromvalue) . "')");
+            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'" . mb_strcut($k, 0, 50) . "'" : "null") . ",'" . escape_check($fromvalue) . "')");
         $log_ref = sql_insert_id();
         $resource_log_previous_ref = $log_ref;
         return $log_ref;
@@ -3633,7 +3640,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 /**
  * Get resource log records. The standard field titles are translated using $lang. Custom field titles are i18n translated.
  *
- * @param  int    $resource    Resource ID
+ * @param  int    $resource    Resource ID - set to NULL and specify r.ref=>[id] in the $filters array to retrieve a specific log entry by log ref
  * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see sql_query()
  * @param  array  $filters     List of filters to include in the where clause. The key of the array is linked to the 
  *                             available columns in the sql statement so they must match!
@@ -3654,19 +3661,22 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         {
         $extrafields = '';
         }
-
-    $sql_filters = "";
+    
+    // Create filter SQL
+    $filterarr = array();
+    if(is_int_loose($resource))
+        {
+        $filterarr[] = "r.resource='" . $resource . "'";
+        }
     foreach($filters as $column => $filter_value)
         {
-        $sql_filters .= sprintf(" AND %s = '%s'",
-            escape_check($column),
-            escape_check($filter_value)
-        );
-        }
-    $sql_filters = ltrim($sql_filters);
+        $filterarr[] = escape_check(trim($column)) . "='" . escape_check($filter_value) . "'";
+        }  
+    $sql_filter = "WHERE " . implode(" AND ", $filterarr);
 
     $log = sql_query(
                 "SELECT r.ref,
+                        r.resource,
                         r.date,
                         u.username,
                         u.fullname,
@@ -3688,8 +3698,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN user AS ekeys_u ON ekeys.user = ekeys_u.ref
               LEFT JOIN preview_size AS ps ON r.purchase_size = ps.id
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
-                  WHERE r.resource = '{$resource}'
-                        {$sql_filters}
+                        {$sql_filter}
                GROUP BY r.ref
                ORDER BY r.ref DESC",
         false,
@@ -3919,7 +3928,15 @@ function createTempFile($path, $uniqid, $filename)
 
     $tmpfile = "{$tmp_dir}/{$filename}";
 
-    copy($path, $tmpfile);
+    $copy_hook = hook('createtempfile_copy', '', array($path, $tmpfile));
+    if($copy_hook == false)
+        {
+        copy($path, $tmpfile);
+        }
+    else
+        {
+        $tmpfile = $copy_hook;
+        }
 
     return $tmpfile;
     }
@@ -4377,7 +4394,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
 
-	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
+	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check((int)$file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
 	
@@ -4386,6 +4403,7 @@ function delete_alternative_file($resource,$ref)
 	# Delete any uploaded file.
 	$info=get_alternative_file($resource,$ref);
 	$path=get_resource_path($resource, true, "", true, $info["file_extension"], -1, 1, false, "", $ref);
+    hook('delete_alternative_file_extra', '', array($path));
 	if (file_exists($path)) {unlink($path);}
 	
         // run through all possible extensions/sizes
@@ -4404,6 +4422,8 @@ function delete_alternative_file($resource,$ref)
             unlink($path);
         }
 
+        hook('delete alternative_jpg_extra', '', array($path));
+
         // in some cases, a mp3 original is generated for non-mp3 files like WAVs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'mp3', -1, 1, false, "", $ref);
         if (file_exists($path)) {
@@ -4417,6 +4437,7 @@ function delete_alternative_file($resource,$ref)
                 while ($page <> $lastpage){
                     $lastpage = $page;
                     $path=get_resource_path($resource, true, $size, true, $extension, -1, $page, false, "", $ref);
+                    hook('delete_alternative_file_loop', '', array($path));
                     if (file_exists($path)) {
                         unlink($path);
                         $page++;
@@ -4424,6 +4445,7 @@ function delete_alternative_file($resource,$ref)
                 }
             }
         }
+        hook('delete_alternative_mp3_extra', '', array($path));
         
 	# Delete the database row
 	sql_query("delete from resource_alt_files where resource='" . escape_check($resource) . "' and ref='" . escape_check($ref) . "'");
@@ -5187,7 +5209,15 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         // Migrate unless marked not to due to failure (flag will be reset if group is edited)
         $migrateeditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions, true);
-        $migrateresult = migrate_filter($migrateeditfilter); 
+        if(trim($usereditfilter) !== "")
+            {
+            $migrateresult = migrate_filter($migrateeditfilter);
+            }
+        else
+            {
+            $migrateresult = 0; // filter was only for resource type, not failed but no need to migrate again
+            }
+                
         $notification_users = get_notification_users();
         if(is_numeric($migrateresult))
             {
@@ -6035,6 +6065,7 @@ function resource_type_config_override($resource_type)
             # Switch to global context and execute.
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
             eval($config_options);
+            debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         $resource_type_config_override_last=$resource_type;
         }
@@ -6938,7 +6969,10 @@ function save_original_file_as_alternative($ref)
     $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
     $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
     # Move the old file to the alternative file location
-    $result=rename($origpath, $newaltpath);								
+    if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
+        {
+        $result = rename($origpath, $newaltpath);
+        }
 
     if ($alternative_file_previews)
         {
@@ -7020,6 +7054,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
             }
         }
 
+    hook('replace_resource_file_extra', '', array($resource));
     resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
     hook("additional_replace_existing");        
@@ -7380,7 +7415,7 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
                 $returnline["path"]=$path;
                 $returnline["url"] = get_resource_path($ref, false, $sizes[$n]["id"], false, "jpg");
                 $returnline["id"]=$sizes[$n]["id"];
-                if ($file_exists)
+                if ($file_exists && filesize_unlimited($path) > 0)
                     {
                     $filesize = filesize_unlimited($path);
                     list($sw,$sh) = getimagesize($path);  
@@ -8677,6 +8712,7 @@ function get_resource_lock_message($lockuser)
  *                              "share_collection"  - (int) Collection ID
  *                              "share_resource"    - (int) Resource ID
  *                              "access_key"        - (string) Access key
+ *                              "ignore_permissions"- (bool) Show all shares, irrespective of permissions
  * @return array
  */
 function get_external_shares(array $filteropts)
@@ -8692,6 +8728,7 @@ function get_external_shares(array $filteropts)
         "share_collection",
         "share_resource",
         "access_key",
+        "ignore_permissions",
     );
     foreach($validfilterops as $validfilterop)
         {
@@ -8718,7 +8755,7 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.user ='" . (int)$share_user . "'";
         }
-    elseif(!checkperm('a'))
+    elseif(!checkperm('a') && !$ignore_permissions)
         {
         $usercondition = "eak.user ='" . (int)$userref . "'";
         if(checkperm("ex"))
@@ -8747,7 +8784,7 @@ function get_external_shares(array $filteropts)
         {
         $conditions[] = "eak.upload=1";
         }
-    if((int)$share_collection > 0)
+    if(is_int_loose($share_collection) && $share_collection != 0)
         {
         $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
         }
@@ -8784,7 +8821,7 @@ function get_external_shares(array $filteropts)
       LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
                 $conditional_sql .
      " GROUP BY access_key, collection
-       ORDER BY eak." . escape_check($share_order_by) . " " . $share_sort;
+       ORDER BY " . escape_check($share_order_by) . " " . $share_sort;
 
     $external_shares = sql_query($external_access_keys_query);
     return $external_shares;

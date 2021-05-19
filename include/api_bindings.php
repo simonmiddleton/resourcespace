@@ -135,10 +135,18 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow metadata to be passed here.
     if ($metadata!="")
         {
-        $metadata=json_decode($metadata);
-        foreach ($metadata as $field=>$value)
+        $metadata=json_decode($metadata, true);
+        if (is_array($metadata))
             {
-            update_field($ref,$field,$value);
+            foreach ($metadata as $field=>$value)
+                {
+                // check $value is not an array
+                if (is_array($value))
+                    {
+                    return false;
+                    }
+                update_field($ref,$field,$value);
+                }
             }
         }
     
@@ -386,7 +394,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
-    $refs = json_decode($ref, true);
+    $refs = json_decode($ref, JSON_OBJECT_AS_ARRAY);
     if(is_array($refs))
         {
         $return = array();
@@ -439,9 +447,8 @@ function api_get_resource_data($resource)
     return $resdata;
     }
 
-function api_put_resource_data($resource,$data)
+function api_put_resource_data($resource,array $data)
     {
-    $data=json_decode($data,JSON_OBJECT_AS_ARRAY);
     if (is_null($data)) {return false;}
     return put_resource_data($resource,$data);
     }
@@ -840,22 +847,12 @@ function api_get_users($find="")
     return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
     }
 
-function api_save_collection(int $ref, string $coldata)
+function api_save_collection(int $ref, array $coldata)
     {
     if(checkperm("b"))
         {
         return false;
         }
-
-    // Security control - only limited data is allowed to be saved via the API
-    $coldata = array_intersect_key(
-        json_decode($coldata, true),
-        [
-            'keywords' => 0,
-            'allow_changes' => 0,
-            'users' => 0,
-        ]
-    );
 
     // DO NOT REMOVE - this is to prevent bypassing allowed coldata. save_collection() uses getvals if coldata is empty!
     if(empty($coldata))
@@ -863,6 +860,45 @@ function api_save_collection(int $ref, string $coldata)
         return false;
         }
 
+     // Security control - only limited data is allowed to be set
+     $coldata = array_intersect_key(
+        $coldata,
+            [
+                'keywords' => 0,
+                'allow_changes' => 0,
+                'users' => 0,
+                'name' => 0,
+                'public' => 0,
+                'type' => 0,
+                'force_featured_collection_type' => 0,
+                'parent' => 0,
+                'thumbnail_selection_method' => 0,
+                'bg_img_resource_ref' => 0,                
+            ]
+        );
+    // Only certain collection types can be edited via the API
+    if(isset($coldata["type"]) 
+        && !in_array($coldata["type"],
+                array(
+                    COLLECTION_TYPE_STANDARD,
+                    COLLECTION_TYPE_FEATURED,
+                    COLLECTION_TYPE_PUBLIC)
+                    )
+        )
+        {
+        return false;
+        }
+    
     $fct_return = save_collection($ref, $coldata);
     return (is_null($fct_return) ? true : $fct_return);
+    }
+
+function api_get_collection(int $ref)
+    {
+    // Only work for admin access for now - TO DO: incorporate permissions check within get_collections() internal function and remove the basic admin-only check here.
+    if(!checkperm("a"))
+        {
+        return false;
+        }
+    return get_collection($ref);
     }

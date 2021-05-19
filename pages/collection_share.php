@@ -50,8 +50,22 @@ else
     $sharepwd       = getvalescaped('sharepassword', '');
     }
 
-
 $collection = get_collection($ref);
+if ($collection===false)
+    {
+    $error = $lang['error-collectionnotfound'];
+    if(getval("ajax","") != "")
+        {
+        error_alert($error, false, 404);
+        }
+    else
+        {
+        include "../include/header.php";
+        $onload_message = array("title" => $lang["error"],"text" => $error);
+        include "../include/footer.php";
+        }
+    exit();
+    }
 
 if($collection["type"] == COLLECTION_TYPE_FEATURED)
     {

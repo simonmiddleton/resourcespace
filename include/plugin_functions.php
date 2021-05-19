@@ -1476,6 +1476,7 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
 		global $$name;
 		$$name = $value;
 		}
+    debug_track_vars('end@include_plugin_config', get_defined_vars());
 	}
 
 function register_plugin_language($plugin)

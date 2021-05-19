@@ -1,3 +1,5 @@
+<?php hook('add_to_resource_tools', '', array($ref)); ?>
+
 <!-- Edit icon -->
 <?php
 // The permissions check here is intentionally more basic. It doesn't check edit_filter as this would be computationally intensive

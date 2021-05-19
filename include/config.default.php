@@ -35,11 +35,9 @@
  *    https://yoururl.com/pages/tools/fix_resource_field_column.php?field=8");
 */
 
-
 /* ---------------------------------------------------
 BASIC PARAMETERS
 ------------------------------------------------------ */
-
 #######################################
 ################################ MySQL:
 #######################################
@@ -285,7 +283,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above.
+# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
@@ -317,6 +315,9 @@ $dash_tile_shadows=false;
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
 # Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
+
+# Options to show/hide the tiles on the home page
+$home_themeheaders=false;
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
@@ -836,14 +837,6 @@ $collection_download_max_size = 1024 * 1024 * 1024; # default 1GB.
 $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
-
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 
 
 
 # A list of types which get the extra video icon in the search results
@@ -1913,7 +1906,9 @@ $staticsync_whitelist_folders = array();
 
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
-$staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
+# Automatically create featured collections (formerly known as themes) based on the sync folder structure.
+# Note that files found in the root of the $syncdir location will not be allocated to a featured collection
+$staticsync_autotheme=true;
 
 # Uncomment and set the next line to specify a category tree field to use to store the retieved path information for each file. The tree structure will be automatically modified as necessary to match the folder strucutre within the sync folder (performance penalty).
 # $staticsync_mapped_category_tree=50;
@@ -2116,61 +2111,216 @@ $use_phpmailer=false;
 $enable_thumbnail_creation_on_upload = true;
 
 # Allow Plugin Upload
+# Allow Plugin Upload
 $enable_plugin_upload = true;
 
-# Disable geocoding features?
-$disable_geocoding = false;
+// GEOLOCATION MAP CONFIGURATION------------
+    // Disable maps and geocoding features?
+    $disable_geocoding = false;
 
-# After obtaining an API key, please set the following config option:
-# $google_maps_api_key = '';
+    // Hide map location panel by default (a link to show it will be displayed instead)?
+    $hide_geolocation_panel = false;
 
-#Enable geolocating multiple assets on a map that are part of a collection
-$geo_locate_collection = false;
+    // Show map search results in a modal?
+    $geo_search_modal_results = false;
 
-# OpenLayers: The default center and zoom for the map view when searching or selecting a new location. This is a world view.
-# For example, to specify the USA use: #$geolocation_default_bounds="-10494743.596017,4508852.6025659,4";
-# For example, to specify Utah, use $geolocation_default_bounds="-12328577.96607,4828961.5663655,6";
-$geolocation_default_bounds="-3.058839178216e-9,2690583.3951564,2";
+    // Enable geolocating multiple resources on a map that are part of a collection?
+    $geo_locate_collection = true;
 
-# The layers to make available. The first is the default.
-$geo_layers="osm";
-# To enable Google layers, use:
-# $geo_layers="osm, gmap, gsat, gphy";
+    // Geolocate collection preview image size.
+    $geolocate_image_size = 'pre'; // Use 'thm' or 'pre' for thumbnail and preview image size, respectively.
 
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-$geo_tile_caching=true;
+    // OpenLayers default center and zoom for the map view when selecting a new location, as a world view.
+    // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
+    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
 
-# Optional path to tile cache directory
-#$geo_tile_cache_directory="";
+    // OpenLayers basemap layers to make available, the first is the default.
+    // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
 
+    // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
+    // Note that server caching is bypassed if $leaflet_maps_enable=true and $geo_leaflet_maps_sources = true;
+    // Since the client then fetches tiles directly from the source
+    $geo_tile_caching = true;
 
-# Add OpenLayers configuration options to this variable to overwrite all other options. 
-$geo_override_options = "";
+    // How long will tiles be cached? Set to one year by default
+    // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+    $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
 
-// Only high level tiles are included by default. If you require higher resolution tiles 
-// you need permitted access to a full tile server, or you can set up your own. 
-// See https://wiki.openstreetmap.org/wiki/Tile_servers for more information
-// If no servers are available then your zoom ability will be limited
+    // User agent string to use when server requests tiles from sources
+    $geo_tile_user_agent = "ResourceSpace";
 
-$geo_tile_servers = array();
-//$geo_tile_servers[] = 'a.tile.sometileserver.org';
-//$geo_tile_servers[] = 'b.tile.sometileserver.org';
-//$geo_tile_servers[] = 'c.tile.sometileserver.org';
+    // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
+    # $geo_tile_cache_directory = '';    
 
-// How long will tiles be cached? Set to one year by default
-// Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
-$geo_tile_cache_lifetime = 60*60*24*365;
+    // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
+    // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
+    // information. If no servers are available, then your zoom ability will be limited.
+    // After 9.6 any defined will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable=true
+    $geo_tile_servers = array();
+    // $geo_tile_servers[] = 'a.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'b.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'c.tile.sometileserver.org';
 
-# Log developer debug information to the debug log (filestore/tmp/debug.txt)?
-# As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
+    // $geo_tile_servers['OpenStreetMap'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'a.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
+
+    // Add OpenLayers configuration options to this variable to overwrite all other options.
+    $geo_override_options = "";
+
+    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
+    $geo_search_restrict = array(
+        # array(50,-3,54,3)      // Example omission zone 1.
+        # ,array(-10,-20,-8,-18) // Example omission zone 2.
+        # ,array(1,1,2,2)        // Example omission zone 3.
+    );
+
+    // Map height in pixels on the Resource View page.
+    $view_mapheight = 350;
+
+    // Map height in pixels on the Geographic/Map Search page.
+    $mapsearch_mapheight = 625;
+
+    // Map height in pixels on the Resource Edit page.
+    $mapedit_mapheight = 625;
+
+    // New settings for leaflet maps
+    $leaflet_maps_enable = false;
+
+    // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
+    // If this is enabled please refer to /include/map_basemaps to see the available config options that enable specific defined map providers
+    $geo_leaflet_maps_sources = false;
+    $map_usgstopo = true;
+    $map_usgsimagery = true;
+    $map_usgsimagerytopo = true;
+
+    // $geo_leaflet_sources = define available tile servers. 
+    // Configured sources need to follow the default template as below
+    $geo_leaflet_sources = array();
+    $geo_leaflet_sources[] = array(
+        "name"          => "The National Map",
+        "code"          => "USGSTNM",
+        "url"           => "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+        "maxZoom"       => 8,
+        "detectRetina"  => true,
+        "attribution"   => "<a href=\"https://www.doi.gov\">U.S. Department of the Interior</a> | <a href=\"https://www.usgs.gov\">U.S. Geological Survey</a>",
+        "default"       => true,
+        "extension"     => "jpeg",
+        "variants"      => array(
+            "USTopo"        => array(
+                "name"          => "US Topographic",
+            ),
+            "USImagery"     => array(
+                "name"          => "US Imagery",
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
+                ),
+            "USImageryTopo" => array(
+                "name"          => "US Imagery & Topographic",
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}',
+            ),
+            )
+        );
+
+    // Limit number of search results that can be displayed in map view. Set to 0 for no limit
+    $search_map_max_results = 5000;
+    
+    // Use zoom slidebar instead of standard +/- buttons?
+    $map_zoomslider = true;
+
+    // Leaflet: Show zoom history navigation bar?
+    $map_zoomnavbar = true;
+
+    // Leaflet: Cache map layer tiles in the browser (recommended to reduce tile server load)?
+    $map_default_cache = true; # Default basemap?
+    $map_layer_cache = true; # All basemaps?
+
+    // Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
+    $map_retina = false;
+
+    // Leaflet: default basemap to show
+    // Set to be '{CODE}.{variant} - matching the definitions from the $geo_leaflet_source code array 
+    // e.g. "OSM.Mapnik" 
+    $map_default = 'USGSTNM.USTopo';
+
+    // Open resource when clicking on a search result marker, instead of resource tooltip?
+    $marker_resource_preview = true;
+
+    // Leaflet: Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
+    # $marker_metadata_field = 85; # Example is fieldID 85.
+    $lang['custom_metadata_markers'] = ''; # Custom metadata field map legend header text.
+
+    // Array of minimum and maximum numeric values for the markers on the map, up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
+    $marker_metadata_array = [
+        0 => ['min' => 1935, 'max' => 1939], # Blue marker
+        1 => ['min' => 1940, 'max' => 1949], # Red marker
+        2 => ['min' => 1950, 'max' => 1959], # Green marker
+        3 => ['min' => 1960, 'max' => 1969], # Orange marker
+        4 => ['min' => 1970, 'max' => 1979], # Yellow marker
+        5 => ['min' => 1980, 'max' => 1989], # Black marker
+        6 => ['min' => 1990, 'max' => 1999], # Grey marker
+        7 => ['min' => 2000, 'max' => 2010], # Violet marker
+        8 => ['min' => 2010, 'max' => 2020]  # Gold marker
+    ];
+
+    // Leaflet: Show a KML overlay on the map?
+    $map_kml = false;
+    $map_kml_file = ''; # Place KML file in ../filestore/system/, example: overlay.kml
+
+    // Resource metadata field integer ID containing polygon footprint location string, blank '' if not used.  String in (latitude, longitude) coordinate pairs separated by a comma: (40.75,-111.51), (40.75,-111.49), (40.73,-111.49), (40.73,-111.51) or using braces [].  String can also contain a fifth pair that closes the polygon and equal to the first pair.
+    # $map_polygon_field = 84;
+
+// Option to add a 'heatmap' when performing a geographic search to aid searching
+// Heatmap data relies on presence of a file that is generated by a ResourceSpace cron job (scheduled task)
+// Please note the following:-
+//  - This should be disabled in multi-client environments
+//  - Cached location co-ordinates are rounded to one decimal place to improve handling of large numbers of resources
+//  - Only resources that are currently in the default search states will be included in the heatmap
+//  - This can be enabled per usergroup as a configuration option
+$geo_search_heatmap = false;
+
+# QuickLook previews (Mac Only)
+# If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
+# This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
+# $qlpreview_path="/usr/bin";
+
+// A list of extensions that QuickLook previews should NOT be used for.
+$qlpreview_exclude_extensions = array("tif","tiff");
+
+// Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
-# Optional extended debugging information from backtrace (records pagename and calling functions)
-# debug_extended_info = true;
+// Optional extended debugging information from backtrace (records pagename and calling functions).
+$debug_extended_info = false;
 
-# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access to both the file and the containing folder by web service account
-#$debug_log_location="d:/logs/resourcespace.log";
-#$debug_log_location="/var/log/resourcespace/resourcespace.log";
+// Optional debug log location. Used to specify a full path to debug file and ensure folder permissions allow write access to both the file and the containing folder by web service account.
+# $debug_log_location = "d:/logs/resourcespace.log";
+# $debug_log_location = "/var/log/resourcespace/resourcespace.log";
+
+# enable a list of collections that a resource belongs to, on the view page
+// Suppress SQL information in the debug log?
+$suppress_sql_log = false;
+
+# Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
+# Metadata templates can be selected on the resource edit screen to pre-fill fields.
+# The intention is that you will create a new resource type named "Metadata Template" and enter its ID below.
+# This resource type can be hidden from view if necessary, using the restrictive resource type permission.
+#
+# Metadata template resources act a little differently in that they have editable fields for all resource types. This is so they can be used with any 
+# resource type, e.g. if you complete the photo fields then these will be copied when using this template for a photo resource.
+# 
+# $metadata_template_resource_type=5;
+#
+# The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
+# $metadata_template_title_field=10; # ** SEE NOTE (1)
+
+// Ability to default metadata templates to a particular resource ID
+$metadata_template_default_option = 0;
+
+// Force selection of a metadata template
+$metadata_template_mandatory = false;
 
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
@@ -2456,11 +2606,9 @@ $usage_comment_blank=false;
 # Option to add a link to the resource view page that allows a user to email the $email_notify address about the resource
 $resource_contact_link=false;
 
-# Hide geolocation panel by default (a link to show it will be displayed instead)
-$hide_geolocation_panel=false;
-
 # Option to move the welcome text into the Home Picture Panel. Stops text from falling behind other panels.
 $welcome_text_picturepanel=false;
+
 # Hide Welcome Text
 $no_welcometext = false;
 
@@ -2576,8 +2724,8 @@ $purge_temp_folder_age=0;
 # If it is set to 1 the link will also be valid all the next day
 $password_reset_link_expiry =1;
 
-# Show the resource view in a modal when accessed from search results.
-$resource_view_modal=true;
+# Show the resource view in a modal when accessed from search results?
+$resource_view_modal = true;
 
 # Option to show other standard pages e.g. resource requests in a modal
 $modal_default=false;
@@ -2591,6 +2739,16 @@ $resource_view_use_pre = false;
 # Use the larger layout on the view page for landscape images, smaller layout for portrait images.
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
+
+# Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
+# Show an edit icon/link in the search results.
+$search_results_edit_icon=true;
+
+# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
+$pending_submission_prompt_review=true;
+
+# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
+$thumbs_previews_via_download=false;
 
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
@@ -3066,3 +3224,11 @@ $system_read_only = false;
 $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
+
+// Specify file extensions that will not be 'flattened' by ImageMagick
+$preview_no_flatten_extensions = array("gif","png","tif","svg");
+// Specify file extensions that will have their transparency layer replaced with a checkerboard pattern. If the alpha layer has just been used for construction then tou may need to remove 'tif' from this array
+$preview_keep_alpha_extensions = array("gif","png","tif","svg");
+
+// Array of sizes that will always be permitted through download.php and won't require terms/usage to be entered - needed when hide_real_filepath=true;
+$sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');

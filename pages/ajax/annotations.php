@@ -106,9 +106,14 @@ if('get_allowed_fields' == $action)
         // Make sure user has access to this field
         if(metadata_field_view_access($annotate_field))
             {
-            $field_data['title'] = i18n_get_translated($field_data['title']);
-
-            $return['data'][] = $field_data;
+            $return['data'][] = 
+                array(
+                    "ref"=> $annotate_field, 
+                    "title" => i18n_get_translated($field_data['title']),
+                    "name" => $field_data['name'],
+                    "order_by" => $field_data['order_by'],
+                    "type" => $field_data['type']
+                );
             }
         }
 

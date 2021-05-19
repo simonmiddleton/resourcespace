@@ -19,6 +19,9 @@ function HookFormat_chooserViewReplacedownloadoptions()
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
 
+	// Disable for e-commerce
+	if (is_ecommerce_user()) { return false; }
+
     $inputFormat = $resource['file_extension'];
 
     if ($resource["has_image"] != 1 || !$download_multisize || $save_as

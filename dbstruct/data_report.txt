@@ -271,6 +271,7 @@ count(rl.resource) 'Resource Downloads'
 
 from
 resource_log rl
+join resource r on r.ref=rl.resource
 left outer join user u on rl.user=u.ref
 left outer join usergroup g on u.usergroup=g.ref
 where

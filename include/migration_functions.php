@@ -700,6 +700,12 @@ function edit_filter_to_restype_permission($filtertext, $usergroup, $existingper
             $cleanedrules[] = trim($filterrule);
             }
         }
+
+    $currentgroup = get_usergroup($usergroup);
+    if(in_array("permissions",$currentgroup["inherit"]))
+        {
+        $existingperms = explode(",",$currentgroup["permissions"]);
+        }
     $newperms = array_diff($addpermissions,$existingperms);
     if(count($newperms) > 0)
         {

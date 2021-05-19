@@ -44,7 +44,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
         }
 
     // User has an access token, no need to continue
-    if('' !== $access_token && '' !== $state)
+    if('' !== $access_token)
         {
         return $access_token;
         }

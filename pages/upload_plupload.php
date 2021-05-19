@@ -693,7 +693,7 @@ if ($_FILES)
 
                 # Update disk usage
                 update_disk_usage($alternative);
-
+                hook('upload_alternative_extra', '', array($path));
                 die(
                     json_encode(
                         array(
@@ -840,6 +840,8 @@ if ($_FILES)
                         update_field($ref, $view_title_field, $new_auto_generated_title);
                         }
                     }
+
+                hook('upload_original_extra', '', array($ref));
 
                 if(file_exists($plupload_processed_filepath))
                     {
@@ -1207,10 +1209,13 @@ var pluploadconfig = {
                                         upRedirBlock = true;
                                         }
                                     else
-                                        {
+                                        { <?php
+                                        if(hook('replace_upload_log_text'))
+                                            { ?>
                                         jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                                         if(resource_keys===processed_resource_keys){resource_keys=[];}
-                                        resource_keys.push(uploadresponse.id.replace( /^\D+/g, ''));
+                                        resource_keys.push(uploadresponse.id.replace( /^\D+/g, ''));<?php
+                                            } ?>
                                         }
                                     }
                                 catch(e)
@@ -1780,6 +1785,8 @@ if ($status!="") { ?><?php echo $status?><?php } ?>
 </div>
 
 <?php 
+if(hook('upload_log'))
+    {
 if ($show_upload_log)
     {
     ?>
@@ -1790,6 +1797,7 @@ if ($show_upload_log)
     </div> <!-- End of UploadLogSection -->
     </div>
     <?php
+    }
     }
     ?>    
 </div>

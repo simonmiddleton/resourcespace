@@ -50,10 +50,11 @@ foreach($selected_nodes as $node)
 
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
 
-    // Show previously searched options on the status box
+    // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" . htmlspecialchars($node_data['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node_data['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" 
+                             . htmlspecialchars($node_data['name']) . "</span><br /></div>";
         }
     }
 
@@ -73,6 +74,8 @@ if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
     <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+        <div id="<?php echo $tree_id; ?>_statusbox_begin" style="display:none;"></div>
+        <div id="<?php echo $tree_id; ?>_statusbox_platform" style="display:none;"></div>
         <?php echo $status_box_elements; ?>
     </div>
     <div>
@@ -89,45 +92,91 @@ if(!(isset($treeonly) && true == $treeonly))
                 return false;"
         ><?php echo LINK_CARET . $lang['showhidetree']; ?></a>
         &nbsp;
-        <a href="#"
-           onclick="
-			<?php if (!$is_search) // No need to confim, this is just for searching
-				{?>
-                if(confirm('<?php echo $lang["clearcategoriesareyousure"];?>'))
-                    {
-				<?php }?>
-                    jQuery('#<?php echo $tree_id; ?>').jstree(true).deselect_all();
-
-                    /* remove the hidden inputs */
-                    var elements = document.getElementsByName('<?php echo $name; ?>');
-                    while(elements[0])
-                        {
-                        elements[0].parentNode.removeChild(elements[0]);
-                        }
-
-                    /* update status box */
-                    var node_statusbox = document.getElementById('<?php echo $status_box_id; ?>');
-                    while(node_statusbox.lastChild)
-                        {
-                        node_statusbox.removeChild(node_statusbox.lastChild);
-                        }
-
-                    <?php
-					if(!$is_search && $edit_autosave)
-						{
-						echo "AutoSave('{$field['ref']}');";
-						}
-
-					echo $update_result_count_function_call;
-					
-				if (!$is_search) 
-					{?>
-					}<?php
-					}
-				?>
-                return false;"
-        ><?php echo LINK_CARET .  $lang['clearall']; ?></a>
+        <a href="#" onclick="clearCategoryTree_<?php echo $tree_id; ?>(); return false;">
+            <?php echo LINK_CARET .  $lang['clearall']; ?>
+        </a>
     </div>
+    <script>
+
+
+    // The nodes in the statusbox list have been rendered in ascending node sequence.
+    // The list must be reordered to reflect the preorder traversal sequence of the jstree to make it more readable.
+    function reorder_selected_statusbox_<?php echo $tree_id; ?>() {
+
+        var thisJstree = jQuery('#<?php echo $tree_id; ?>');
+
+        var treefieldid = jQuery(thisJstree)[0].id;
+        // The preorder sequence will only contain the loaded tree nodes (ie. not necessarily the whole tree).
+        var preorderlist = jQuery(thisJstree).find("li");
+
+        // The statusbox platform is the element before which we need to insert selected divs in preorder sequence
+        // This method should give us the order we need for improved readability (instead of by node ref)
+        let statusboxbegin = jQuery("#"+treefieldid+"_statusbox_begin");
+        let statusboxplatform = jQuery("#"+treefieldid+"_statusbox_platform");
+        // Re-position the platform
+        // Any selected nodes not yet loaded in the tree will remain below the platform and so are effectively "moved" to the end of the list
+        statusboxplatform.insertAfter(statusboxbegin);
+        
+        // Place each node (in preorder sequence) onto the platform
+        for (var i = 0;i<preorderlist.length;i++) {
+            // var pentry = jQuery("#tree_"+treefieldid+"_selected_"+preorderlist[i].id);
+            var pentry = jQuery("#"+treefieldid+"_selected_"+preorderlist[i].id);
+            if (pentry) {
+                pentry.insertBefore(statusboxplatform);
+                }
+        }
+    }
+
+
+    function clearCategoryTree_<?php echo $tree_id; ?>() {
+        if(!confirm('<?php echo $lang["clearcategoriesareyousure"];?>')) {
+            return false;
+        }
+        var thisJstree = jQuery('#<?php echo $tree_id; ?>');
+
+        // Ensure that the child deselection occurs irrespective of the setting of category_tree_remove_children
+        category_tree_clear = true;
+
+        // Establish all root nodes of this tree, open them and deselect them
+        var rootNodesJstree = thisJstree.jstree(true).get_node("#").children;
+        rootNodesJstree.forEach(function(rootNode) {
+            thisJstree.jstree('open_node', rootNode, function(e, data) {
+                if(thisJstree.jstree('is_selected', e.id)) {
+                    thisJstree.jstree('deselect_node', e.id);
+                }
+                else {
+                    deselect_children_of_jstree_node(thisJstree, e.id);   
+                }
+            });
+        });
+
+        category_tree_clear = false;
+
+        // Remove the hidden inputs
+        var elements = document.getElementsByName('<?php echo $name; ?>');
+        while(elements[0])
+            {
+            elements[0].parentNode.removeChild(elements[0]);
+            }
+
+        // Clear contents of status box
+        var node_statusbox = document.getElementById('<?php echo $status_box_id; ?>');
+        while(node_statusbox.lastChild)
+            {
+            node_statusbox.removeChild(node_statusbox.lastChild);
+            }
+
+        <?php
+        if(!$is_search && $edit_autosave)
+            {
+            echo "AutoSave('{$field['ref']}');";
+            }
+
+        echo $update_result_count_function_call;
+        ?>
+
+    }
+    </script>
     <?php
     }
 
@@ -188,20 +237,21 @@ echo $hidden_input_elements;
     var category_tree_add_parents     = <?php echo ($category_tree_add_parents ? 'true' : 'false'); ?>;
     var category_tree_remove_children = <?php echo ($category_tree_remove_children ? 'true' : 'false'); ?>;
 
+    var category_tree_clear = false;
+
     // When a node is selected, and add parents is enabled, then automatically select all ancestors 
     jquery_tree_by_id.on('select_node.jstree', function (event, data)
         {
+        var thisJstree = jQuery(this);
+
         if(category_tree_add_parents)
             {
             // Establish the parent of the selected node
-            var parent_node = jQuery('#<?php echo $tree_id; ?>')
-                .jstree(true)
-                .get_parent(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(data.node.id));
-
-            // Trigger selection of the parent node
-            jQuery('#<?php echo $tree_id; ?>')
-                .jstree(true)
-                .select_node(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(parent_node), data.selected, event);
+            var parent_node = thisJstree.jstree('get_parent', data.node.id);
+            if (parent_node) {      
+                // Trigger selection of the parent node
+                thisJstree.jstree('select_node', parent_node);
+                }
             }
         });
 
@@ -209,36 +259,37 @@ echo $hidden_input_elements;
 if(!$is_search)
     {
     ?>
-    // When a node is deselected, and remove children is enabled, then automatically deselect its descendants 
+    // When a node is deselected and remove children is enabled, then automatically deselect the children if present 
     jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
-        {					
-        if(category_tree_remove_children)
-            {
-            // If the deselected node is closed then open it
-            if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
-                {
-                jQuery('#<?php echo $tree_id; ?>').jstree(
-                    'open_node',
-                    data.node);
-                }
+        {		
+        var thisJstree = jQuery(this);
 
-            // Establish the descendents of the deselected node
-            var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
-        
-            for(var i = 0; i < rendered_childrens.length; i++)
-                {
-                // Trigger deselection of each descendent
-                jQuery('#<?php echo $tree_id; ?>')
-                    .jstree(true)
-                    .deselect_node(
-                        jQuery('#<?php echo $tree_id; ?>')
-                        .jstree(true)
-                        .get_node(rendered_childrens[i]), data.selected, event
-                    );
+        if(thisJstree.jstree('is_leaf', data.node.id)) { 
+            // console.log("NODE "+data.node.id+" DESELECTED LEAF - NO CHILDREN - NO FURTHER ACTION");
+            return; 
+        }
+	
+        if(category_tree_remove_children || category_tree_clear)
+            {
+            if(thisJstree.jstree('is_parent', data.node.id)) { 
+                // console.log("PARENT NODE "+data.node.id+" DESELECTED - PROCESS ITS CHILDREN");
+                if(thisJstree.jstree('is_closed', data.node.id)) {
+                    // console.log("-- PARENT NODE "+data.node.id+" IS CLOSED - OPEN IT");
+                    thisJstree.jstree('open_node', data.node.id, function(e, data) {
+                        // console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
+                        deselect_children_of_jstree_node(thisJstree, e.id);   
+                        });
+                }
+                else {
+                    // Parent is already open
+                    // console.log("-- PARENT NODE "+data.node.id+" ALREADY OPEN - DESELECT ITS CHILDREN");
+                    deselect_children_of_jstree_node(thisJstree, data.node.id);
                 }
             }
+        }
         });
-    
+        
+
     <?php
     }	
     ?>				
@@ -252,6 +303,14 @@ if(!$is_search)
             '<input id="<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id +
             '" type="hidden" name="<?php echo $name; ?>" class ="<?php echo $tree_id; ?>_nodes" value="' + data.node.id +
             '">');
+
+        document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
+                'beforeEnd',
+                '<div id="<?php echo $tree_id."_selected_";?>' + data.node.id + '" class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
+                + data.node.id + '">'
+                + data.node.text
+                + '</span><br /></div>');
+
         });
 
     // Reflect node deselections onto the status box and hidden inputs 
@@ -259,9 +318,12 @@ if(!$is_search)
         {
         // Remove hidden input so that it is no longer posted to the edit or search 
         jQuery('#<?php echo $hidden_input_elements_id_prefix; ?>'+data.node.id+'.<?php echo "{$tree_id}_nodes"?>').remove();
+
+        // Remove entry from statusbox 
+        jQuery('#<?php echo $status_box_id;?>_option_'+data.node.id).parent().remove();
         });
 
-    // Reflect aggregated changes on status box; trigger centralspace events; trigger autosave
+    // Reflect aggregated changes - trigger centralspace events; trigger autosave
     jquery_tree_by_id.on('changed.jstree', function (event, data)
         {
         if(!(data.action == 'select_node' || data.action == 'deselect_node'))
@@ -269,33 +331,26 @@ if(!$is_search)
             return;
             }
 
-        // Clear the status box containing the names of the selected nodes
-        jQuery('#<?php echo $status_box_id; ?>').empty();
+        <?php
+        if( !(isset($treeonly) && true == $treeonly) )
+            {
+        ?>
+            reorder_selected_statusbox_<?php echo $tree_id; ?>();
+        <?php
+            } 
+        ?>
 
         var selected_rs_node_ids = data.selected;
 
         for(var i = 0; i < selected_rs_node_ids.length; i++)
             {
-            // Update status box with the selected option
-            var status_option_element = document.getElementById('<?php echo $status_box_id; ?>_option_' + selected_rs_node_ids[i]);
-            if(status_option_element == null)
-                {
-                document.getElementById('<?php echo $status_box_id; ?>').insertAdjacentHTML(
-                    'beforeEnd',
-                    '<div class="<?php echo $tree_id; ?>_option_status"><span id="<?php echo $status_box_id;?>_option_'
-                    + selected_rs_node_ids[i] + '">'
-                    + jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(selected_rs_node_ids[i]).text
-                    + '</span><br /></div>');
-                }
-
             // Trigger an event so we can chain actions once we've changed a category tree option
             jQuery('#CentralSpace').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
-            //console.log('Category tree: Sending node ID ' + selected_rs_node_ids[i]);
             }
 
         if(selected_rs_node_ids.length == 0)
             {
-            //console.log('Category tree cleared');
+            // Category tree cleared
             jQuery('#CentralSpace').trigger('categoryTreeChanged', 0);
             }
 
@@ -308,5 +363,19 @@ if(!$is_search)
         echo $update_result_count_function_call;
         ?>
         });
+
+    // Reorder associated statusbox list if present
+    jquery_tree_by_id.on('after_open.jstree', function (event, data)
+        {
+        <?php
+        if( !(isset($treeonly) && true == $treeonly) )
+            {
+        ?>
+            reorder_selected_statusbox_<?php echo $tree_id; ?>();
+        <?php
+            } 
+        ?>
+        });
+
     </script>
 </div>

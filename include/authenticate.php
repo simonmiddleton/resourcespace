@@ -50,7 +50,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         $valid = true;
         setup_user($userdata[0]);
 
-        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && $pagename!="user_change_password" && $pagename!="index" && $pagename!="collections" && strlen(trim($userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
+        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && in_array($pagename, array("user_change_password","index","collections")) === false && strlen(trim($userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
         	{
         	# Redirect the user to the password change page if their password has expired.
 	        $last_password_change=time()-strtotime($userdata[0]["password_last_change"]);
@@ -230,7 +230,7 @@ Note: it is considered safe to show the collection bar because even if we enable
       later on, when the user might have resources in it, they would not be able to do anything with them
       unless they accept terms
 */
-if($terms_login && 0 == $useracceptedterms && 'login' != $pagename && 'terms' != $pagename && 'collections' != $pagename)
+if($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password")) === false )
     {
     redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/{$default_home_page}"));
     }

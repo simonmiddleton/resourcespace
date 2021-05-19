@@ -187,6 +187,12 @@ if (!is_numeric($width) || !is_numeric($height) || !is_numeric($xcoord) || !is_n
 	exit;
 }
 
+// Verify crop height - prevent divide by zero
+if($height == 0) {
+    echo($lang['error-dimension-zero']);
+    exit;
+}
+
 if ($cropper_debug){
 	error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
 }

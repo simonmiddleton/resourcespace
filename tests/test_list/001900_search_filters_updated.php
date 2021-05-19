@@ -147,6 +147,7 @@ if(count($results) != ($pre_count + 1) || !in_array($resourced,array_column($res
     return false;
     }
 
+
 // Reset before next script
 $usersearchfilter = '';
 $search_filter_nodes = $saved_search_filter_nodes;

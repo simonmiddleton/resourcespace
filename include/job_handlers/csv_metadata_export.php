@@ -10,7 +10,7 @@ $job_data["$search_results"] - (array) Result set returned by do_search()*/
 
 include_once __DIR__ . '/../csv_export_functions.php';
 
-global $lang, $baseurl, $offline_job_delete_completed, $scramble_key, $download_file_lifetime, $userref, $username;
+global $lang, $baseurl_short, $offline_job_delete_completed, $scramble_key, $download_file_lifetime, $userref, $username;
 
 foreach($job_data as $arg => $value)
     {
@@ -37,7 +37,7 @@ $findstrings = array("%%SEARCH%%","%%TIME%%");
 $replacestrings = array(safe_file_name("TEST"),date("Ymd-H:i",time()));
 $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 
-$csvurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename . ".csv";
+$csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename . ".csv";
 
 generateResourcesMetadataCSV($exportresources,$personaldata, $allavailable, $csvfile);
 
