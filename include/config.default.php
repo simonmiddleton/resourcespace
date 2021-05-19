@@ -1853,7 +1853,8 @@ $smartsearch_accessoverride=true;
 # Allow special searches to honor resource type settings.
 $special_search_honors_restypes=false;
 
-# Image preview zoom
+# Image preview zoom. IF $preview_tiles is enabled, it will have enhanced zooming capability otherwise it will use a 
+# static image of a higher resolution (lpr/scr).
 $image_preview_zoom = false;
 
 # How many characters from the fields are 'mirrored' on to the resource table. This is used for field displays in search results.
@@ -3006,7 +3007,7 @@ $iiif_custom_sizes = false;
 $iiif_max_width  = 1024;
 $iiif_max_height = 1024;
 
-// Tile settings (currently only used by IIIF when $iiif_level is 1)
+// Tile settings (used by IIIF when $iiif_level is 1 and by $image_preview_zoom)
 $preview_tiles = false;
 // Tiles can be generated along with normal previews or created upon request.
 // If enabling IIIF on an existing system then it is recommended to add all IIIF published resources to a collection first and use the batch/recreate_previews.php script
