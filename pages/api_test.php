@@ -1,8 +1,6 @@
 <?php
 include "../include/db.php";
-
 include "../include/authenticate.php";
-include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
@@ -86,18 +84,39 @@ if ($api_function!="")
     foreach($fct_params as $fparam)
         {
         $param_name = $fparam->getName();
-        $required = ($fparam->isOptional() ? "" : " *");
-        $required_attr = ($fparam->isOptional() ? "" : "required");
+
+        if($fparam->isOptional())
+            {
+            $required = '';
+            $required_attr = '';
+
+            $send_param = getval("send_{$param_name}", '') === 'yes';
+            $send_param_input = sprintf(
+                '<input type="checkbox" name="send_%s" value="yes" %s onchange="ToggleSendParam(this);">',
+                $param_name,
+                ($send_param ? 'checked' : '')
+            );
+            $disabled_attr = ($send_param ? '' : 'disabled');
+            }
+        else
+            {
+            $required = ' *';
+            $required_attr = 'required';
+            $send_param_input = '';
+            $disabled_attr = '';
+            }
         ?>
         <div class="Question">
-            <label><?php echo $param_name; echo $required; ?></label>
-            <input type="text" name="<?php echo $param_name; ?>" class="stdwidth" value="<?php echo htmlspecialchars(getval($param_name, "")); ?>" <?php echo $required_attr; ?>>
+            <label><?php echo $send_param_input . $param_name . $required; ?></label>
+            <input type="text"
+                   name="<?php echo $param_name; ?>"
+                   class="stdwidth"
+                   value="<?php echo htmlspecialchars(getval($param_name, "")); ?>"
+                   <?php echo "{$required_attr} {$disabled_attr}"; ?>>
         </div>
         <?php
         }
     }
-
-
 ?>
 <div class="QuestionSubmit">
     <label></label>
@@ -154,6 +173,35 @@ print_r($results);
 
 </div>
 </div>
+<script>
+function ToggleSendParam(el)
+    {
+    console.debug('ToggleSendParam(%o)', el);
+
+    var send_param = jQuery(el);
+    var param_name = send_param.attr('name').replace('send_', '');
+    var param_input = jQuery('input[name="' + param_name + '"]').not('[required]');
+
+    console.debug('param_name = %o', param_name);
+    console.debug('param_input = %o', param_input);
+
+    if(param_input.length == 0)
+        {
+        console.error('Unable to find an input with name %o', param_name);
+        return false;
+        }
+
+    if(send_param.is(':checked'))
+        {
+        param_input.prop('disabled', false);
+        }
+    else
+        {
+        param_input.prop('disabled', true);
+        }
+
+    return true;
+    }
+</script>
 <?php
 include "../include/footer.php";
-?>
