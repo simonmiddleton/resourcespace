@@ -10,9 +10,12 @@ function perform_login($loginuser="",$loginpass="")
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
     $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
 
+    debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password', json_encode($password)));
+
     if(trim($loginpass) != "")
         {
         $password = trim($loginpass); 
+        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password', json_encode($password)));
         }
     if(trim($loginuser) != "")
         {
@@ -28,10 +31,12 @@ function perform_login($loginuser="",$loginpass="")
 		{
 		# Provided password is not a hash, so generate a hash.
 		$password_hash=hash('sha256', md5("RS" . $username . $password));				
+        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password_hash', json_encode($password_hash)));
 		}
 	else
 		{
 		$password_hash=$password;
+        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password_hash', json_encode($password_hash)));
 		}
 
 	// ------- Automatic migration of md5 hashed or plain text passwords to SHA256 hashed passwords ------------
@@ -239,3 +244,26 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
         }
     }
 
+/**
+* ResourceSpace password hashing
+* 
+* @uses password_hash - @see https://www.php.net/manual/en/function.password-hash.php
+* 
+* @param string $password Password input
+* 
+* @return string Password hash
+*/
+function rs_password_hash(string $password)
+    {
+    $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
+    $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
+
+
+
+    /*if(mb_strlen($pass_hash_v2) <= 64)
+        {
+        // 
+        }*/
+
+    return password_hash($password, $algo, $options);
+    }
