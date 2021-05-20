@@ -31,6 +31,9 @@ $allow_save_search=true;
 # Display resource title on alternative file management page
 $alternative_file_resource_title=true;
 
+# option to always send emails from the logged in user
+$always_email_from_user=false;
+
 # Always record the name of the resource creator for new records.
 # If false, will only record when a resource is submitted into a provisional status.
 $always_record_resource_creator = true;
@@ -211,6 +214,9 @@ $dynamic_keyword_and = false;
 # experimental email notification of php errors to $email_notify. 
 $email_errors=false;
 $email_errors_address="";
+
+#enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
+$email_from_user=false;
 
 ##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
 ##  If blank, uses $baseurl 
