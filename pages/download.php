@@ -78,7 +78,6 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     }
 
 // Is this a user specific download?
-;
 if('' != $userfiledownload)
     {
     $noattach       = '';
