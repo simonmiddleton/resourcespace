@@ -905,3 +905,8 @@ function api_send_user_message($users,$text)
     $success = send_user_message($users,$text);
     return $success;
     }
+
+function api_get_profile_image($user)
+    {
+    return get_profile_image($user);
+    }

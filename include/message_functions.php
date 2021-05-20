@@ -482,7 +482,7 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
     $validfilterops = array(
         "msgfind",
         "sort_desc",
-        "msglimit",
+        "limit",
     );
     foreach($validfilterops as $validfilterop)
         {
@@ -495,8 +495,8 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
             $$validfilterop = NULL;
             }
         }
-        debug("BANG ==" . $user . "==");
-        debug("BANG " . print_r($msgusers,true));
+        // debug("BANG ==" . $user . "==");
+        // debug("BANG " . print_r($msgusers,true));
     $msgquery = "SELECT message.created,
                         message.owner,
                         message.message,
@@ -512,7 +512,7 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
            .  ($msgfind != "" ? (" AND message.message LIKE '%" . escape_check($msgfind) . "%'") : " " )
            . " AND type & '" . MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE . "'"
 		   . " ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC")
-           . ($msglimit != "" ? ("LIMIT " . (int)$msglimit) : "");
+           . ($limit != "" ? (" LIMIT " . (int)$limit) : "");
 	
     $messages = sql_query($msgquery);
     

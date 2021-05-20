@@ -122,7 +122,7 @@ for ($n=0;$n<count($messages);$n++)
                 <?php
                 if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE)
                     {
-                    $replyurl = $baseurl_short . "pages/user/user_message.php?users=" . (int)$messages[$n]["ownerid"];
+                    $replyurl = $baseurl_short . "pages/user/user_message.php?recipient=" . (int)$messages[$n]["ownerid"];
                     ?>
 					<a href="<?php echo $replyurl; ?>"><?php echo LINK_CARET ?><?php echo $lang["reply"]; ?></a>
 				    <?php

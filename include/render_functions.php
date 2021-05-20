@@ -5361,43 +5361,48 @@ function render_message($message="")
     if($message == "")
         {
         // Template
-        $msgdata[] = " class='user_message;' id='user_message_template' style='display:none;'"; // Classes 
-        $msgdata[] = "%%PROFILEIMAGE%%";
-        $msgdata[] = ""; // Message
+        $msgdata[] = "%%CLASSES%%"; // %%CLASSES%%
+        $msgdata[] = " id='user_message_template' style='display:none;'"; // EXTRA 
+        $msgdata[] = "%%PROFILEIMAGE%%";  // %%PROFILEIMAGE%%
+        $msgdata[] = "%%MESSAGE%%"; // %%MESSAGE%%
         }
     else
         {
         $udata = get_user($message["owner"]);
         if($udata["ref"] == $userref)
             {
-            $msgdata[] = "class='user_message own_message'";
+            $msgdata[] = "user_message own_message"; // %%CLASSES%%
             }
         else
             {
-            $msgdata[] = "class='user_message'";
+            $msgdata[] = "user_message"; // %%CLASSES%%
             }
         $sendername = isset($udata["fullname"]) && trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+
+        $msgdata[] = ""; // EXTRA 
+
         $pimage = get_profile_image($message["owner"]);
         if($pimage == "")
             {
-            $msgdata[] = "<i title='" . htmlspecialchars($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw'></i>";
+            $msgdata[] = "<i title='" . htmlspecialchars($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw'></i>";  // %%PROFILEIMAGE%%
             }
         else
             {
-            $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";
+            $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
             }  
-        $msgdata[] = $message["message"];      
+        $msgdata[] = $message["message"];  // %%MESSAGE%%     
         }
 
-    $messagehtml = "<div %%DIVATTRIBUTES%%>
+    $messagehtml = "<div class='%%CLASSES%%' %%EXTRA%%>
         <div class='message_content'>
             <div class='profileimage'>
             %%PROFILEIMAGE%%
             </div>
             <div class='user_message_text'>%%MESSAGE%%</div>
         </div>
+        <div class='clearerleft'></div>
     </div>";
 
 
-    echo str_replace(array("%%DIVATTRIBUTES%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
+    echo str_replace(array("%%CLASSES%%","%%EXTRA%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
     }

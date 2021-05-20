@@ -187,16 +187,25 @@
                             message_refs.push(ref);
                             var message = nl2br(messages[i]['message']);
                             var url = messages[i]['url'];
-                            <?php
-                            if($user_pref_show_notifications)
+                            if(messages[i]['type'] && <?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE ?> && pagename =='user_message' && messages[i]['ownerid'] == recipient)
                                 {
-                                ?>
-                                message_display(message, url, ref, function (ref) {
-                                jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-                                });
-                                <?php
+                                // Show the message directly on the page if on user_message.php and communicating with this user
+                                showUserMessage(messages[i]['message'],false);
                                 }
-                            ?>
+                            else
+                                {
+                                // Show message popup if configured
+                                <?php
+                                if($user_pref_show_notifications)
+                                    {
+                                    ?>
+                                    message_display(message, url, ref, function (ref) {
+                                    jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
+                                    });
+                                    <?php
+                                    }
+                                ?>                                
+                                }                           
                             message_poll();
                             }
                         }

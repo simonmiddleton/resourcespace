@@ -2034,7 +2034,7 @@ a.BrowseRefresh{
   }
 
 
-.message_conversation {width: 70%; font-size: 1em;}
+.message_conversation {width: 100%; font-size: 1em;}
 .user_message {
     width: 85%;
     padding: 8px;
@@ -2047,9 +2047,10 @@ a.BrowseRefresh{
     background: #fff;
     color: #000000;
     border: 1px solid lightgray;
-    width: 90%;
+    width: 85%;
     float: left;
     border-radius: 8px;
+    white-space: pre-line;
     }
 
 .message_content
@@ -2057,8 +2058,8 @@ a.BrowseRefresh{
     width: 90%;
     }
 
-.profileimage {margin-right: 10px;}
+.profileimage {margin-right: 10px; margin-left: 10px;}
 
 .user_message, .message_content .profileimage, .message_content {float: left;}
 
-.own_message, .own_message .user_message,  .own_message .profileimage {float:right;}
+.own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}

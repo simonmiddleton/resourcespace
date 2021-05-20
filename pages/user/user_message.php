@@ -2,30 +2,20 @@
 include "../../include/db.php";
 include "../../include/authenticate.php";
 
-//$recipient  = getval("recipient",0,true);
-$users      = getval("users","");
+$recipient  = getval("recipient",0,true);
 $msglimit   = getval("showcount",3,true);
 $text       = getval("messagetext","");
-if($users != "")
+if($recipient != 0)
     {
-    $ulist=trim_array(explode(",",$users));
-    foreach($ulist as $userto)
+    $messages   = message_get_conversation($userref, array($recipient), array("limit"=>$msglimit,"sort_desc"=>true));
+    $to_user = get_user($recipient);
+    if(!$to_user)
         {
-        if(is_int_loose($users[$n]))
-            {
-            $msgto[] =  $userto;
-            }
-        else
-            {  
-            $uref = get_user_by_username($userto);
-            if (!$uref)
-                {
-                $msgto[] = $uref;
-                }
-            }
+        error_alert($lang["error_invalid_user"],true,200);
+        exit();
         }
-    array_filter($msgto,"is_int_loose");
-    $messages   = message_get_conversation($userref, $msgto, array("limit"=>$msglimit));
+    $to_username = isset($to_user["fullname"]) ? $to_user["fullname"] : $to_user["username"];
+    $to_username = htmlspecialchars($to_username);
     }
 else
     {
@@ -36,36 +26,79 @@ else
 
 include "../../include/header.php";
 
+// The 'recipient' variable below is  used by message polling to detect and intercept messages from this user to show on this page
+?>
+<script>
+recipient = <?php echo $recipient; ?>;
+function sendMessage()
+    {        
+    messagetext = jQuery('#messagetext').val();
+    users = jQuery('#users').val().split();
+    postdata = {
+        'users': users,
+        'text': messagetext,
+        }
+    //console.log(postdata);
+    api("send_user_message",postdata,showUserMessage(messagetext,true));
+    }
+
+function showUserMessage(message,fromself)
+    {
+    // show new message in line
+    msgtemp = document.getElementById("user_message_template").outerHTML;
+    
+    if(fromself)
+        {
+        classtxt = "user_message own_message";
+        imagehtml = "<img title='<?php echo htmlspecialchars($userfullname); ?>' alt='<?php echo htmlspecialchars($userfullname); ?>' class='ProfileImage' src='<?php echo htmlspecialchars(get_profile_image($userref)); ?>'>";
+        jQuery('#messagetext').val('');
+        }
+    else
+        {
+        classtxt = "user_message";
+        imagehtml = "<img title='<?php echo $to_username; ?>' alt='<?php echo $to_username; ?>' class='ProfileImage' src='<?php echo htmlspecialchars(get_profile_image($recipient)); ?>'>";
+        }
+
+    msgtemp = msgtemp.replace("%%PROFILEIMAGE%%", imagehtml);
+    console.log(msgtemp);
+
+    msgtemp = msgtemp.replace("%%CLASSES%%", classtxt);
+    msgtemp = msgtemp.replace("%%MESSAGE%%", message);
+    console.log(msgtemp);
+
+    jQuery('#message_conversation').append(msgtemp);
+    
+    jQuery('.user_message').show();
+    jQuery('.user_message').first().slideUp().remove();
+
+    }
+
+</script>
+<?php
+
 $links_trail = array(
     array(
         'title' => $lang["mymessages"],
         'href'  => $baseurl_short . "pages/user/user_messages.php",
-        ),
-    array(
-        'title' => $lang["new_message"],
-        'help'  => "resourceadmin/user-communication",
         )
     );
+if($recipient != 0)
+    {
+    $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]));
+    $links_trail[] = $links_trail_user;
+    }
+
+$links_trail[] = array(
+    'title' => $lang["new_message"],
+    'help'  => "resourceadmin/user-communication",
+    )
  
 ?>
 <div class="BasicsBox">
 <?php
 renderBreadcrumbs($links_trail);
 
-echo "<div id='message_conversation' class='message_conversation'>";
-foreach($messages as $message)
-    {
-    render_message($message);    
-    }
-
-// Create template for new messages
-render_message();
-
-echo "<div class='clearer'> </div>";
-echo "</div>";
 ?>
-
-
 <form id="myform" method="post" class = "FormWide" action="<?php echo $baseurl_short?>pages/user/user_message.php">
     <?php
     generateFormToken("myform");
@@ -74,33 +107,36 @@ echo "</div>";
 
     <?php 
 
-    echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
-    if(count($msgto) != 1)
+    if($recipient == 0)
         {
         //render_user_select_question($lang["message_recipients"],"users","","","",array("input_class"=>array("stdwidth")));
+        echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
         $user_select_internal = true;
         include "../../include/user_select.php";
+        echo "<div class='clearerleft'> </div></div>";
         }
     else
         {
-        $to_user = get_user($msgto[0]);
-        if(!$to_user)
-            {
-            error_alert($lang["error_invalid_user"],true,200);
-            exit();
-            }
-        else
-            {
-            $to_username = isset($to_user["fullname"]) ? $to_user["fullname"] : $to_user["username"]; 
-            echo "<div class='Fixed'>" . htmlspecialchars($to_username)  . "</div>";  
-            echo "<input type='hidden' id='users' name='users' value='" . htmlspecialchars($to_user["ref"])  . "'/>"; 
-            }
+        echo "<input type='hidden' id='users' name='users' value='" . $recipient . "'/>";
         }
     
-        echo "<div class='clearerleft'> </div></div>";
+
+    // Show conversation
+    echo "<div id='message_conversation' class='message_conversation'>";
+    // Render in reverse order
+    for($n=count($messages)-1;$n>=0;$n--)
+        {
+        render_message($messages[$n]);    
+        }
+    // Add hidden template for new messages
+    render_message();
+    echo "<div class='clearer'> </div>";
+    echo "</div>";
     ?>
+
+
     <div class="Question"><label><?php echo $lang["message"]?></label>
-        <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=15 cols=50></textarea>
+        <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
         <div class="clearerleft"> </div></div>
     <div class="QuestionSubmit">
     <label for="buttons"> </label>			
@@ -108,41 +144,6 @@ echo "</div>";
     </div>
     </form>
 </div>
-<script>
-function sendMessage()
-    {
-        //$users,$text,$url="",$owner=null,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
-    messagetext = jQuery('#messagetext').val();
-    users = jQuery('#users').val().split();
-    postdata = {
-            'users': users,
-            'text': messagetext,
-        }
-        console.log(postdata);
-    api("send_user_message",postdata,showMessage(messagetext,'<?php echo $userref ?>'));
-    }
-
-function showMessage(message, user)
-    {
-    // show new message in line
-    jQuery('#messagetext').val('');
-    alert("Show message");
-    msgtemp = jQuery('#user_message_template');
-    msgtemp = msgtemp.replace("%%PROFILEIMAGE%%", node.drop ? "BrowseBarDroppable" : "");
-    brwstmplt = brwstmplt.replace("%BROWSE_NAME%",node.name);
-                                  
-                                  
-    brwstmplt = brwstmplt.replace("%BROWSE_LEVEL%",newlevel);
-    brwstmplt = brwstmplt.replace("%BROWSE_INDENT%",rowindent);    
-    
-    brwstmplt = brwstmplt.replace("%BROWSE_EXPAND%",expand);
-    jQuery('#message_conversation').append(msgtemp);
-
-
-    }
-
-
-</script>
 
 <?php		
 include "../../include/footer.php";
