@@ -125,7 +125,7 @@ function simpleldap_authenticate($username,$password)
 	$ldapgroupfield=$simpleldap['ldapgroupfield'];
 	$attributes = array("displayname",$ldapgroupfield,$email_attribute,$phone_attribute);
 	$loginfield=$simpleldap['loginfield'];
-	$filter = "(&(objectClass=person)(". $loginfield . "=" . $ldap_username . "))";
+	$filter = "(&(objectClass=person)(". $loginfield . "=" . ldap_escape($ldap_username,'',LDAP_ESCAPE_FILTER) . "))";
 
     $searchdns=explode(";",$simpleldap['basedn']);
     $dn=array();
