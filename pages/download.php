@@ -32,35 +32,44 @@ if(!($direct_download_noauth && $direct))
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
 
-$ref            = getvalescaped('ref', '', true);
-$size           = getvalescaped('size', '');
-$alternative    = getvalescaped('alternative', -1, true);
-$page           = getvalescaped('page', 1);
-$iaccept        = getvalescaped('iaccept', 'off');
-$usage          = getvalescaped('usage', '-1');
-$usagecomment   = getvalescaped('usagecomment', '');
-$ext            = getvalescaped('ext', '');
-$snapshot_frame = getvalescaped('snapshot_frame', 0, true);
-$modal          = (getval("modal","")=="true");
+$ref                = getvalescaped('ref', '', true);
+$size               = getvalescaped('size', '');
+$alternative        = getvalescaped('alternative', -1, true);
+$page               = getvalescaped('page', 1);
+$iaccept            = getvalescaped('iaccept', 'off');
+$usage              = getvalescaped('usage', '-1');
+$usagecomment       = getvalescaped('usagecomment', '');
+$ext                = getvalescaped('ext', '');
+$snapshot_frame     = getvalescaped('snapshot_frame', 0, true);
+$modal              = (getval("modal","")=="true");
+$tempfile           = getval("tempfile","");
+$slideshow          = getval("slideshow",0,true);
+$userfiledownload   = getvalescaped('userfile', '');
 
-// Ensure terms have been accepted and usage has been supplied when required
-if($terms_download)
+// Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
+$checktermsusage =  !in_array($size, $sizes_always_allowed)
+    && $tempfile == ""
+    && $slideshow == 0
+    && $userfiledownload == ""
+    && !($userrequestmode == 2 || $userrequestmode == 3)
+    ;
+if($terms_download && $checktermsusage)
     {
     if ($iaccept != 'on')
         {
         exit($lang["mustaccept"]);
         }
-    if ($download_usage)
+    }
+if ($download_usage && $checktermsusage)
+    {
+    if ( !(is_numeric($usage) && $usage >= 0) )
         {
-        if ( !(is_numeric($usage) && $usage >= 0) )
-            {
-            exit($lang["termsmustindicateusage"]);
-            }
-        if ($usagecomment == '')
-            {
-            exit($lang["termsmustspecifyusagecomment"]);
-            }            
+        exit($lang["termsmustindicateusage"]);
         }
+    if ($usagecomment == '')
+        {
+        exit($lang["termsmustspecifyusagecomment"]);
+        }            
     }
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
@@ -69,7 +78,6 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     }
 
 // Is this a user specific download?
-$userfiledownload = getvalescaped('userfile', '');
 if('' != $userfiledownload)
     {
     $noattach       = '';
@@ -86,16 +94,16 @@ if('' != $userfiledownload)
         }
     hook('modifydownloadpath');
     }
-elseif(getval("slideshow",0,true) != 0)
+elseif($slideshow != 0)
     {
     $noattach       = true;
     $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
     }
-elseif(getval("tempfile","") != "")
+elseif($tempfile != "")
     {
     $noattach       = true;
     $exiftool_write = false;
-    $filedetails    = explode('_', getval("tempfile",""));
+    $filedetails    = explode('_', $tempfile);
     $code           = safe_file_name($filedetails[0]);
     $ref            = (int)$filedetails[1];
     $downloadkey    = strip_extension($filedetails[2]);
@@ -373,6 +381,9 @@ if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpf
     delete_exif_tmpfile($tmpfile);
     }
 
-hook('beforedownloadresourceexit', '', array($download_extra));
+if (isset($download_extra)) 
+    {
+    hook('beforedownloadresourceexit', '', array($download_extra));
+    }
 
 exit();

@@ -88,13 +88,40 @@ function execute_api_call($query,$pretty=false)
             {
             debug("API: {$param_name} - value has been passed (by name): '{$params[$param_name]}'");
 
-            if($fparam->hasType() && $fparam->getType() == "array" && gettype($params[$param_name]) != "array")
+            // Check if array;
+            $type = $fparam->getType();
+            if(gettype($type) == "object")
                 {
-                $error = str_replace(
-                    array("%arg", "%expected-type", "%type"),
-                    array($param_name, "array", gettype($params[$param_name])),
-                    $lang["error-type-mismatch"]);
-                return json_encode($error);
+                // type is an object 
+                $type = $type->getName();
+                }
+            if($fparam->hasType() && gettype($type) == "string" && $type == "array")
+                {
+                // Decode as must be json encoded if array
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    $decoded = json_decode($params[$param_name],JSON_OBJECT_AS_ARRAY);
+                    }
+                catch (Exception $e)
+                    {
+                    $error = str_replace(
+                        array("%arg", "%expected-type", "%type"),
+                        array($param_name, "array (json encoded)",$lang['unknown']),
+                        $lang["error-type-mismatch"]);
+                    return json_encode($error);
+                    }
+                unset($GLOBALS["use_error_exception"]);
+                // Check passed data type after decode
+                if(gettype($decoded) != "array")
+                    {
+                    $error = str_replace(
+                        array("%arg", "%expected-type", "%type"),
+                        array($param_name, "array (json encoded)", $lang['unknown']),
+                        $lang["error-type-mismatch"]);
+                    return json_encode($error);
+                    }
+                $params[$param_name] = $decoded;
                 }
 
             $setparams[$n] = $params[$param_name];

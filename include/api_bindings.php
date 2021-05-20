@@ -135,15 +135,18 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow metadata to be passed here.
     if ($metadata!="")
         {
-        $metadata=json_decode($metadata);
-        foreach ($metadata as $field=>$value)
+        $metadata=json_decode($metadata, true);
+        if (is_array($metadata))
             {
-            // check $value is not an array
-            if (is_array($value))
+            foreach ($metadata as $field=>$value)
                 {
-                return false;
+                // check $value is not an array
+                if (is_array($value))
+                    {
+                    return false;
+                    }
+                update_field($ref,$field,$value);
                 }
-            update_field($ref,$field,$value);
             }
         }
     
@@ -444,9 +447,8 @@ function api_get_resource_data($resource)
     return $resdata;
     }
 
-function api_put_resource_data($resource,$data)
+function api_put_resource_data($resource,array $data)
     {
-    $data=json_decode($data,JSON_OBJECT_AS_ARRAY);
     if (is_null($data)) {return false;}
     return put_resource_data($resource,$data);
     }
@@ -845,7 +847,7 @@ function api_get_users($find="")
     return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
     }
 
-function api_save_collection(int $ref, string $coldata)
+function api_save_collection(int $ref, array $coldata)
     {
     if(checkperm("b"))
         {
@@ -860,7 +862,7 @@ function api_save_collection(int $ref, string $coldata)
 
      // Security control - only limited data is allowed to be set
      $coldata = array_intersect_key(
-        json_decode($coldata, true),
+        $coldata,
             [
                 'keywords' => 0,
                 'allow_changes' => 0,

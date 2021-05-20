@@ -32,6 +32,7 @@ if (!$valid)
 	   
 	<form method="get" action="<?php echo $baseurl_short?>pages/purchase_download.php">
 	<input type="submit" name="reload" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["reload"] ?>&nbsp;&nbsp;&nbsp;">
+	<input type="hidden" name="collection" value="<?php echo $usercollection ?>">
 	</form>
 	<?php
 	}

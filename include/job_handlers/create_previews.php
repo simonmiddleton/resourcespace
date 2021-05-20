@@ -15,7 +15,7 @@ $job_data['checksum_required'] - Optional
 */
 include_once __DIR__ . '/../image_processing.php';
 
-global $lang, $baseurl, $offline_job_delete_completed;
+global $lang, $baseurl, $offline_job_delete_completed, $baseurl_short;
 
 // Defaults for create_previews
 $resource          = 0;
