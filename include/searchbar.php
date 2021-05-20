@@ -325,7 +325,7 @@ if (!$basic_simple_search)
     ?>
     <input type="hidden" name="resetrestypes" value="yes">
     <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
-    <?php if ($searchbar_selectall===true) { ?>
+    <?php if ($searchbar_selectall) { ?>
     <script type="text/javascript"> 
 
     function resetTickAll(){
