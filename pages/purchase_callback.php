@@ -2,6 +2,7 @@
 include "../include/db.php";
 
 # Handle the callback from PayPal and mark the collection items as purchased.
+$paypal_url_parts = parse_url($paypal_url);
 
 # Fetch the raw IPN message sent from PayPal
 $raw_ipn_post = file_get_contents('php://input');
@@ -30,19 +31,13 @@ $header = "";
 $header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
 $header .= "Content-Length: " . strlen($req) . "\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-
-$header .= "Host: www.sandbox.paypal.com\r\n"; // Sandbox Host
-# $header .= "Host: www.paypal.com\r\n"; // Live Host
-
+$header .= "Host: ".$paypal_url_parts['host']."\r\n"; 
 $header .= "Connection: close\r\n\r\n";
 
+# Communicate via socket
+$fp = fsockopen ("ssl://".$paypal_url_parts['host'], 443, $errno, $errstr, 30);
 
-// TEMP TEMP
-// $fp = fsockopen ('ssl://www.paypal.com', 443, $errno, $errstr, 30);
-$fp = fsockopen ('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
-// TEMP TEMP
-
-// Process the validation response from PayPal
+# Process the validation response from PayPal
 if (!$fp)
 	{ // HTTP ERROR
 	
@@ -68,7 +63,7 @@ else
 			{
 			echo "Verified.";
 			
-			// Mark these items as bought.
+			// Mark these items as purchase complete
 			$emailconfirmation=getvalescaped("emailconfirmation","");
 			payment_set_complete(getvalescaped("custom",""),$emailconfirmation);
 			
