@@ -394,7 +394,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
-    $refs = json_decode($ref, JSON_OBJECT_AS_ARRAY);
+    $refs = json_decode($ref, true);
     if(is_array($refs))
         {
         $return = array();
