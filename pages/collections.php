@@ -694,7 +694,7 @@ $result  = do_search("!collection{$usercollection}", '', $default_collection_sor
 $count_result = count($result);
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
-$feedback=$cinfo["request_feedback"];
+$feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
 # E-commerce functionality. Work out total price, if $basket_stores_size is enabled so that they've already selected a suitable size.
 $totalprice=0;
@@ -907,7 +907,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
     <h2><?php echo i18n_get_collection_name($tempcol)?></h2>
         <br />
         <div class="CollectionStatsAnon">
-        <?php echo $lang["created"] . " " . nicedate($tempcol["created"])?><br />
+        <?php echo ($tempcol) ?  $lang["created"] . " " . nicedate($tempcol["created"]) : "" ?><br />
         <?php echo $count_result . " " . $lang["youfoundresources"]?><br />
         </div>
         <?php
