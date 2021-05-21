@@ -7,7 +7,7 @@ if('cli' != PHP_SAPI)
 include_once __DIR__ . '/../../include/login_functions.php';
 
 // Set up
-$password_hash = [
+$password_hash_info = [
     'algo' => PASSWORD_BCRYPT,
     'options' => ['cost' => 5]
 ];
@@ -15,8 +15,11 @@ $password_hash = [
 $plaintext_pass = 'some Super 5ecure-password';
 $pass_hash_v1 = md5($plaintext_pass);
 $pass_hash_v2 = hash('sha256', $pass_hash_v1);
-$pass_hash_v3 = password_hash($plaintext_pass, $password_hash['algo'], $password_hash['options']);
+$pass_hash_v3 = password_hash($plaintext_pass, $password_hash_info['algo'], $password_hash_info['options']);
 // End of set up
+
+
+// TODO: verfiy fails if in the DB the hash is the plain text pass (ie without RSusername)
 
 
 
@@ -67,39 +70,6 @@ if(rs_password_verify('some bad password', $pass_hash_v3))
     return false;
     }
 
-/*
-# This test might not be required as we should only need this check in one place - perform_login()
-$use_cases = [
-    [
-        'msg' => 'v0 (plain text)',
-        'pass' => $plaintext_pass,
-        'hash' => $plaintext_pass,
-    ],
-    [
-        'msg' => 'v1 (MD5)',
-        'pass' => $plaintext_pass,
-        'hash' => $pass_hash_v1,
-    ],
-    [
-        'msg' => 'v2 (SHA256)',
-        'pass' => $plaintext_pass,
-        'hash' => $pass_hash_v2,
-    ],
-];
-foreach($use_cases as $use_case)
-    {
-    if(!password_verify($plaintext_pass, rs_password_needs_rehash($use_case['pass'], $use_case['hash'])))
-        {
-        echo sprintf('Password hash %s needs rehash - ', $use_case['msg']);
-        return false;
-        }
-    }
-echo 'plaintext_pass = ' . json_encode(password_needs_rehash($plaintext_pass, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
-echo 'pass_hash_v1 = ' . json_encode(password_needs_rehash($pass_hash_v1, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
-echo 'pass_hash_v2 = ' . json_encode(password_needs_rehash($pass_hash_v2, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
-echo 'pass_hash_v3 = ' . json_encode(password_needs_rehash($pass_hash_v3, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
-echo 'pass_hash_custom = ' . json_encode(password_needs_rehash($pass_hash_v3, $password_hash['algo'], ['cost' => 12])) . PHP_EOL;
-*/
 
 
 // Tear down

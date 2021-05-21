@@ -1289,7 +1289,7 @@ $max_login_attempts_wait_minutes=10;
 $password_brute_force_delay=4;
 
 // Password hash information - algorithm and options. @see https://www.php.net/manual/en/function.password-hash.php
-$password_hash = [
+$password_hash_info = [
     'algo' => PASSWORD_BCRYPT,
     'options' => ['cost' => 12]
 ];

@@ -10,6 +10,9 @@ function perform_login($loginuser="",$loginpass="")
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
     $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
 
+    $result = [];
+    $result['valid'] = false;
+
     debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
 
     if(trim($loginpass) != "")
@@ -22,11 +25,52 @@ function perform_login($loginuser="",$loginpass="")
         $username = trim($loginuser); 
         }
 
-    if ((strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
-		{
-		exit("Invalid password."); # Prevent MD5s being entered directly while still supporting direct entry of plain text passwords (for systems that were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for the 'log in as this user' feature.
-		}
-		
+    // Get user record
+    $user_ref = get_user_by_username($username);
+    $user_data = ($user_ref !== false ? get_user($user_ref) : []);
+    if(empty($user_data))
+        {
+        $result['error'] = $lang["loginincorrect"];
+        return $result;
+        }
+
+    // Prevent hashes being entered directly while still supporting direct entry of plain text passwords (for systems that 
+    // were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the 
+    // username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for 
+    // the 'log in as this user' feature.
+    $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
+    if(!$impersonate_user && $password === $user_data['password'])
+        {
+        $result['error'] = $lang["loginincorrect"];
+        return $result;
+        }
+
+    $rs_password_verify = rs_password_verify("RS{$username}{$password}", $user_data['password']);
+    if($rs_password_verify)
+        {
+        $password_hash_info = get_password_hash_info();
+        $algo = $password_hash_info['algo'];
+        $options = $password_hash_info['options'];
+
+        if(password_needs_rehash($user_data['password'], $algo, $options))
+            {
+            $password_hash = rs_password_hash("RS{$username}{$password}");
+            sql_query(sprintf("UPDATE user SET `password` = '%s' WHERE ref = '%s'", escape_check($password_hash), escape_check($user_ref)));
+            debug(sprintf('q10529: [line=%s fct=%s] rehashed... %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
+            }
+        else
+            {
+            $password_hash = $user_data['password'];
+            }
+
+        $result['valid'] = true;
+        }
+
+
+var_dump($rs_password_verify);
+var_dump($password_hash);
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+
 	if (strlen($password)!=64)
 		{
 		# Provided password is not a hash, so generate a hash.
@@ -60,11 +104,6 @@ function perform_login($loginuser="",$loginpass="")
 
     # Check the provided credentials
 	$valid=sql_query("select ref,usergroup,account_expires,approved from user where username='".escape_check($username)."' and password='".escape_check($password_hash)."'");
-
-	# Prepare result array
-	$result=array();
-	$result['valid']=false;
-
 	if (count($valid)>=1)
 		{
 		# Account expiry
@@ -255,9 +294,9 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
 */
 function rs_password_hash(string $password)
     {
-    $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
-    $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
-
+    $phi = get_password_hash_info();
+    $algo = $phi['algo'];
+    $options = $phi['options'];
     return password_hash($password, $algo, $options);
     }
 
@@ -301,6 +340,8 @@ function rs_password_verify(string $password, string $hash)
 * this means generating a new hash with rs_password_hash(). For password hashes that already use it, this checks the password
 * hash configuration (algorithm and hash options) and updates the hash based on new configuration, if required.
 * 
+* @uses password_needs_rehash - @see https://www.php.net/manual/en/function.password-needs-rehash.php
+* 
 * @param string $password Password
 * @param string $hash     Password hash
 * 
@@ -308,8 +349,9 @@ function rs_password_verify(string $password, string $hash)
 */
 function rs_password_needs_rehash(string $password, string $hash)
     {
-    $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
-    $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
+    $phi = get_password_hash_info();
+    $algo = $phi['algo'];
+    $options = $phi['options'];
 
     if(password_needs_rehash($hash, $algo, $options))
         {
@@ -317,4 +359,17 @@ function rs_password_needs_rehash(string $password, string $hash)
         }
 
     return $hash;
+    }
+
+/**
+* Helper function to get the password hash information (algorithm and options) from the global scope.
+* 
+* @return array
+*/
+function get_password_hash_info()
+    {
+    return [
+        'algo' => ($GLOBALS['password_hash_info']['algo'] ?? PASSWORD_BCRYPT),
+        'options' => ($GLOBALS['password_hash_info']['options'] ?? ['cost' => 12])
+    ];
     }
