@@ -2437,7 +2437,9 @@ $lang["notify_resource_change_notification"]="A resource that you downloaded in 
 $lang["passwordresetemail"]="Please click on the link below to reset your password.";
 $lang['password_reset_email_html'] = 'Username: [username]<br /><br />Please click on the link below to reset your password.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]="Please click on the link below to set a new password for your account.";
+$lang["passwordresetexternalauth"]="Your account is not authenticated by ResourceSpace. Please contact your system administrator for login instructions";
 $lang["passwordlinkexpired"]="Password reset link has either expired or been used. Please log in or request a new link."; 
+$lang["passwordresetnotpossible"]="Your password reset request could not be completed.";
 $lang["done__user_password_link_sent"]="If your email address was recognised as belonging to a valid account then an e-mail containing a link to reset your password has been sent.<br /><br /> If you do not receive an email and you believe your account is valid please check your email filters before contacting your system administrator.";
 $lang["user_password__introtextreset"]="Enter your e-mail address and a link you can use to reset your password will be sent to you.";
 $lang["ticktoemaillink"]="E-mail user a link so that they can reset their password";

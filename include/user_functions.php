@@ -729,7 +729,7 @@ function email_reset_link($email,$newuser=false)
         return false;
         }
 
-    $details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
+    $details = sql_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
@@ -737,11 +737,16 @@ function email_reset_link($email,$newuser=false)
         }
     $details = $details[0];
 
+    // Don't send password reset links if we don't control the password
+    $blockreset = isset($details["origin"]) && trim($details["origin"]) != "";
+
     global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
 
-    $password_reset_url_key = create_password_reset_key($details['username']);        
-
-    $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
+    if(!$blockreset)
+        {
+        $password_reset_url_key = create_password_reset_key($details['username']);        
+        $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
+        }
         
     if($newuser)
         {
@@ -756,16 +761,32 @@ function email_reset_link($email,$newuser=false)
             }
 
         $templatevars['welcome']=i18n_get_translated($welcome);
-
-        $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-        send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+        $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+        if($blockreset)
+            {
+            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            }
+        else
+            {
+            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            }
         }
     else
         {
         $templatevars['username']=$details["username"];
         $message=$lang["username"] . ": " . $templatevars['username'];
-        $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-        send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+        if($blockreset)
+            {
+            $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            }
+        else
+            {
+            $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
+            send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            }
         }   
     
     return true;
