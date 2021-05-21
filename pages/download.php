@@ -51,7 +51,6 @@ $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $tempfile == ""
     && $slideshow == 0
     && $userfiledownload == ""
-    && !($userrequestmode == 2 || $userrequestmode == 3)
     ;
 if($terms_download && $checktermsusage)
     {
