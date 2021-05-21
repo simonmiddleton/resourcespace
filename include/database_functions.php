@@ -76,6 +76,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
+        ini_set("zend.exception_ignore_args","Off");
         $backtrace = json_encode(
             array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
             JSON_PRETTY_PRINT);
