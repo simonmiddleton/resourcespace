@@ -10,12 +10,12 @@ function perform_login($loginuser="",$loginpass="")
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
     $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
 
-    debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password', json_encode($password)));
+    debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
 
     if(trim($loginpass) != "")
         {
         $password = trim($loginpass); 
-        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password', json_encode($password)));
+        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
         }
     if(trim($loginuser) != "")
         {
@@ -31,12 +31,12 @@ function perform_login($loginuser="",$loginpass="")
 		{
 		# Provided password is not a hash, so generate a hash.
 		$password_hash=hash('sha256', md5("RS" . $username . $password));				
-        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password_hash', json_encode($password_hash)));
+        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
 		}
 	else
 		{
 		$password_hash=$password;
-        debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password_hash', json_encode($password_hash)));
+        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
 		}
 
 	// ------- Automatic migration of md5 hashed or plain text passwords to SHA256 hashed passwords ------------
@@ -249,7 +249,7 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
 * 
 * @uses password_hash - @see https://www.php.net/manual/en/function.password-hash.php
 * 
-* @param string $password Password input
+* @param string $password Password
 * 
 * @return string Password hash
 */
@@ -258,12 +258,51 @@ function rs_password_hash(string $password)
     $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
     $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
 
-
+    $pass_hash_v1 = md5($password);
+    $pass_hash_v2 = hash('sha256', $pass_hash_v1);
 
     /*if(mb_strlen($pass_hash_v2) <= 64)
         {
         // 
         }*/
 
-    return password_hash($password, $algo, $options);
+    return password_hash($pass_hash_v2, $algo, $options);
+    }
+
+/**
+* ResourceSpace verify password
+* 
+* @param string $password Password
+* @param string $hash     Password hash
+* 
+* @return boolean
+*/
+function rs_password_verify(string $password, string $hash)
+    {
+    $hash_v1 = md5($password);
+    $hash_v2 = hash('sha256', $hash_v1);
+    // $hash_v3 = rs_password_hash($password);
+// echo "password = $password". PHP_EOL;
+// echo "hash = $hash". PHP_EOL;
+
+    // Most common case: hash is at version 3 (ie. hash generated using password_hash from PHP)
+    if(password_verify($password, $hash))
+        {
+        return true;
+        }
+    else if($hash_v2 === $hash)
+        {
+        return true;
+        }
+    else if($hash_v1 === $hash)
+        {
+        return true;
+        }
+    // Plain text password hash - when passwords were not hashed at all (very old code)
+    else if($password === $hash)
+        {
+        return true;
+        }
+
+    return false;
     }
