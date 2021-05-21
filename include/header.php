@@ -502,10 +502,10 @@ else
 
     if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d")))
         {
-        $uploadurl = get_upload_url("",$k);
+        $topuploadurl = get_upload_url("",$k);
         ?>
         <li class="HeaderLink UploadButton">
-            <a href="<?php echo $uploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]; ?></a>
+            <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]; ?></a>
         </li><?php
         }
 
