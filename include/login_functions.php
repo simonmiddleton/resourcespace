@@ -258,15 +258,7 @@ function rs_password_hash(string $password)
     $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
     $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
 
-    $pass_hash_v1 = md5($password);
-    $pass_hash_v2 = hash('sha256', $pass_hash_v1);
-
-    /*if(mb_strlen($pass_hash_v2) <= 64)
-        {
-        // 
-        }*/
-
-    return password_hash($pass_hash_v2, $algo, $options);
+    return password_hash($password, $algo, $options);
     }
 
 /**
@@ -281,9 +273,6 @@ function rs_password_verify(string $password, string $hash)
     {
     $hash_v1 = md5($password);
     $hash_v2 = hash('sha256', $hash_v1);
-    // $hash_v3 = rs_password_hash($password);
-// echo "password = $password". PHP_EOL;
-// echo "hash = $hash". PHP_EOL;
 
     // Most common case: hash is at version 3 (ie. hash generated using password_hash from PHP)
     if(password_verify($password, $hash))
@@ -298,11 +287,34 @@ function rs_password_verify(string $password, string $hash)
         {
         return true;
         }
-    // Plain text password hash - when passwords were not hashed at all (very old code)
+    // Plain text password hash - when passwords were not hashed at all (very old code - should really not be the case anymore)
     else if($password === $hash)
         {
         return true;
         }
 
     return false;
+    }
+
+/**
+* ResourceSpace check if password hash needs rehashing. For old password hashes (e.g plain text or MD5 or SHA256 of MD5,
+* this means generating a new hash with rs_password_hash(). For password hashes that already use it, this checks the password
+* hash configuration (algorithm and hash options) and updates the hash based on new configuration, if required.
+* 
+* @param string $password Password
+* @param string $hash     Password hash
+* 
+* @return string Password hash
+*/
+function rs_password_needs_rehash(string $password, string $hash)
+    {
+    $algo = ($GLOBALS['password_hash']['algo'] ?? PASSWORD_BCRYPT);
+    $options = ($GLOBALS['password_hash']['options'] ?? ['cost' => 12]);
+
+    if(password_needs_rehash($hash, $algo, $options))
+        {
+        return rs_password_hash($password);
+        }
+
+    return $hash;
     }

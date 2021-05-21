@@ -15,32 +15,20 @@ $password_hash = [
 $plaintext_pass = 'some Super 5ecure-password';
 $pass_hash_v1 = md5($plaintext_pass);
 $pass_hash_v2 = hash('sha256', $pass_hash_v1);
-$pass_hash_v3 = password_hash($pass_hash_v2, $password_hash['algo'], $password_hash['options']);
-
-$sql_update_user = "UPDATE user SET `password` = '%s' WHERE ref = '%s'";
-
-$test_10300_user = (new_user('test_10300_user') ?: get_user_by_username('test_10300_user'));
-// $test_10300_user_data = get_user($test_10300_user);
-// sql_query(sprintf($sql_update_user, escape_check($plaintext_pass), escape_check($test_10300_user)));
+$pass_hash_v3 = password_hash($plaintext_pass, $password_hash['algo'], $password_hash['options']);
 // End of set up
-
-echo PHP_EOL; # TODO: remove when done
 
 
 
 // Hash a plain text password
-$rs_password_hash = rs_password_hash($plaintext_pass);
-if(!password_verify($pass_hash_v2 , $rs_password_hash))
+if(!password_verify($plaintext_pass , rs_password_hash($plaintext_pass)))
     {
-    echo 'Hash plain text password without losing old hashing algos (v1 & v2) - ';
+    echo 'Hash plain text password - ';
     return false;
     }
 
 
-
-
-
-// user has password not hashed at all (v0 - stored in plain text in the DB)
+// User password is not hashed at all (v0 - stored in plain text in the DB)
 if(!rs_password_verify($plaintext_pass, $plaintext_pass))
     {
     echo 'Verify password hash v0 (plain text) - ';
@@ -48,7 +36,7 @@ if(!rs_password_verify($plaintext_pass, $plaintext_pass))
     }
 
 
-// user has password MD5 hashed (v1 - MD5 stored in the DB)
+// User password is MD5 hashed (v1 - MD5 stored in the DB)
 if(!rs_password_verify($plaintext_pass, $pass_hash_v1))
     {
     echo 'Verify password hash v1 (MD5) - ';
@@ -56,7 +44,7 @@ if(!rs_password_verify($plaintext_pass, $pass_hash_v1))
     }
 
 
-// user has password SHA256 hashed (v2 - SHA256 stored in the DB)
+// User password is SHA256 hashed (v2 - SHA256 stored in the DB)
 if(!rs_password_verify($plaintext_pass, $pass_hash_v2))
     {
     echo 'Verify password hash v2 (SHA256) - ';
@@ -64,41 +52,54 @@ if(!rs_password_verify($plaintext_pass, $pass_hash_v2))
     }
 
 
-// user has password hashed based on config (v3 - stored in the DB)
-if(!rs_password_verify($pass_hash_v2, $pass_hash_v3))
+// User password is hashed based on config (v3 - stored in the DB)
+if(!rs_password_verify($plaintext_pass, $pass_hash_v3))
     {
-    echo 'Verify password hash v3 (plain text) - ';
+    echo 'Verify password hash v3 - ';
     return false;
     }
 
 
+// User provided a bad password
+if(rs_password_verify('some bad password', $pass_hash_v3))
+    {
+    echo 'Verify bad password hash - ';
+    return false;
+    }
 
-todo; hash to just hash.
-another function to convert between hash versions (e.g from plain text/v1/v2 to v3)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// echo json_encode(password_verify($pass_hash_v2 , $pass_hash_v3)) . PHP_EOL;
+/*
+# This test might not be required as we should only need this check in one place - perform_login()
+$use_cases = [
+    [
+        'msg' => 'v0 (plain text)',
+        'pass' => $plaintext_pass,
+        'hash' => $plaintext_pass,
+    ],
+    [
+        'msg' => 'v1 (MD5)',
+        'pass' => $plaintext_pass,
+        'hash' => $pass_hash_v1,
+    ],
+    [
+        'msg' => 'v2 (SHA256)',
+        'pass' => $plaintext_pass,
+        'hash' => $pass_hash_v2,
+    ],
+];
+foreach($use_cases as $use_case)
+    {
+    if(!password_verify($plaintext_pass, rs_password_needs_rehash($use_case['pass'], $use_case['hash'])))
+        {
+        echo sprintf('Password hash %s needs rehash - ', $use_case['msg']);
+        return false;
+        }
+    }
+echo 'plaintext_pass = ' . json_encode(password_needs_rehash($plaintext_pass, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
+echo 'pass_hash_v1 = ' . json_encode(password_needs_rehash($pass_hash_v1, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
+echo 'pass_hash_v2 = ' . json_encode(password_needs_rehash($pass_hash_v2, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
+echo 'pass_hash_v3 = ' . json_encode(password_needs_rehash($pass_hash_v3, $password_hash['algo'], $password_hash['options'])) . PHP_EOL;
+echo 'pass_hash_custom = ' . json_encode(password_needs_rehash($pass_hash_v3, $password_hash['algo'], ['cost' => 12])) . PHP_EOL;
+*/
 
 
 // Tear down
