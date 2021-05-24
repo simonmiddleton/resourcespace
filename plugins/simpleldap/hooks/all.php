@@ -3,7 +3,10 @@
 include_once(dirname(__FILE__) . "/../include/simpleldap_functions.php");
 
 function HookSimpleldapAllExternalauth($uname, $pword){
-	if (!function_exists('ldap_connect')){return false;}
+	if (!function_exists('ldap_connect'))
+        {
+        return false;
+        }
 	global $lang, $simpleldap, $username, $password_hash, $email_attribute, $phone_attribute;
 	
 	// oops - the password is getting escaped earlier in the process, and we don't want that 
@@ -26,7 +29,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 	if ($auth)
         {
         $usersuffix    = $simpleldap['usersuffix'];
-        $addsuffix     = ($usersuffix=="")?"":"." . $usersuffix;
+        $addsuffix     = ($usersuffix=="") ? "" : (substr($usersuffix,0,1)=="." ? "" : ".") . $usersuffix;
         $username      = escape_check($uname . $addsuffix);
         $password_hash = md5('RS' . $username . generateSecureKey());
         $user          = sql_query("SELECT ref, approved, account_expires FROM user WHERE username = '{$username}'");
@@ -82,8 +85,8 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 			}
 		else
 			{
-			// user authenticated, but does not exist, so create if necessary
-			if ($simpleldap['createusers'])
+			// user authenticated, but does not exist, so adopt/create if necessary
+			if ($simpleldap['createusers'] || $simpleldap['create_new_match_email'])
 				{	
 				$email_matches=sql_query("select ref, username, fullname from user where email='" . $email . "'");				
 												
@@ -129,6 +132,11 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 						return $authreturn;
 						}										
 					}
+
+                if(!$simpleldap['createusers'])
+                    {
+                    return false;
+                    }
 			
 				// Create the user
 				$ref=new_user($username);

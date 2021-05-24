@@ -1592,6 +1592,7 @@ function pager($break=true,$scrolltotop=true,$options=array())
         }
 
     if(!hook("replace_pager")){
+        unset($url_params["offset"]);
         if ($totalpages!=0 && $totalpages!=1){?>     
             <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
