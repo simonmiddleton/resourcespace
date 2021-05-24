@@ -122,7 +122,7 @@ if(isset($download_usage_prevent_options))
         
 	<label><?php echo $lang["emailaddress"]?></label>
 	<input name="email" class="stdwidth" value="<?php echo $email ?>">
-    <span class"error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
+    <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
 	<div class="clearerleft"> </div>
 	</div>
    
