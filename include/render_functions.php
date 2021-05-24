@@ -813,7 +813,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
                         
                         return false;"><?php echo $lang['showhidetree']; ?></a>
-                <div id="cattree_<?php  echo isset($fields[$n]['name']) ? $fields[$n]['name'] : ""; ?>" class="RecordPanel PopupCategoryTree">
+                        <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
 
