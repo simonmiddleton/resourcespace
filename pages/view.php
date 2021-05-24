@@ -808,6 +808,22 @@ else if(1 == $resource['has_image'])
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools">
             <script>
+            function is_another_tool_option_enabled(element)
+                {
+                var current_selected_tool = jQuery(element);
+                var tool_options_enabled = jQuery('#PreviewToolsOptionsWrapper')
+                    .find('.ToolsOptionLink.Enabled')
+                    .not(current_selected_tool);
+
+                if(tool_options_enabled.length === 0)
+                    {
+                    return false;
+                    }
+
+                styledalert('<?php echo $lang['not_allowed']; ?>', '<?php echo $lang['error_multiple_preview_tools']; ?>');
+                return true;
+                }
+
             function toggleMode(element)
                 {
                 jQuery(element).toggleClass('Enabled');
@@ -886,6 +902,12 @@ else if(1 == $resource['has_image'])
 
                         toggleMode(element);
 
+                        return false;
+                        }
+
+                    // Always check no other conflicting preview tool option is enabled
+                    if(is_another_tool_option_enabled(element))
+                        {
                         return false;
                         }
 
@@ -1001,9 +1023,14 @@ else if(1 == $resource['has_image'])
                 var openseadragon_viewer = null;
                 function toggleImagePreviewZoomOption(element)
                     {
-                    var option = jQuery(element);
+                    var zoom_option_enabled = jQuery(element).hasClass('Enabled');
 
-                    if(!option.hasClass('Enabled'))
+                    if(!zoom_option_enabled && is_another_tool_option_enabled(element))
+                        {
+                        // Don't enable the tool while a conflicting preview tool is enabled
+                        return false;
+                        }
+                    else if(!zoom_option_enabled)
                         {
                         console.debug('Enabling image zoom with OpenSeadragon');
 
@@ -1022,7 +1049,7 @@ else if(1 == $resource['has_image'])
                             tileSources: openseadragon_custom_tile_source
                         });
                         }
-                    else if(option.hasClass('Enabled'))
+                    else if(zoom_option_enabled)
                         {
                         console.debug('Disabling image zoom with OpenSeadragon');
                         openseadragon_viewer.destroy();
