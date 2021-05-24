@@ -808,21 +808,10 @@ else if(1 == $resource['has_image'])
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools">
             <script>
-            function showHidePreviewTools()
-                {
-                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
-                var tools_options = tools_wrapper.find('.ToolsOptionLink');
-
-                tools_wrapper.toggleClass('Hidden');
-
-                return false;
-                }
-
             function toggleMode(element)
                 {
                 jQuery(element).toggleClass('Enabled');
                 }
-            </script>
             </script>
             <div id="PreviewToolsOptionsWrapper">
             <?php
@@ -1059,7 +1048,6 @@ else if(1 == $resource['has_image'])
                     ?>
                     jQuery(document).ready(function ()
                         {
-                        showHidePreviewTools();
                         toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
                         });
                     <?php
