@@ -21,39 +21,42 @@ if (getval("allseen","")!="")
 <div class="VerticalNav">
 <ul>
 <li>
-<a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["userpreferences"];?></a>
+<a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["userpreferences"];?></a>
+</li>
+<li>
+<a href="<?php echo $baseurl_short?>pages/user/user_message.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["new_message"];?></a>
 </li>
 <?php }
-	$messages=array();
-	if (!message_get($messages,$userref,true,true))		// if no messages get out of here with a message
-		{
-		?>
-		</ul>
-		</div> <!-- End of VerticalNav -->
-		</div> <!-- End of BasicsBox -->
-		<?php
-		echo $lang['mymessages_youhavenomessages'];
-		include "../../include/footer.php";
-		return;
-		}
-		
-	$unread = false;
+    $messages=array();
+    if (!message_get($messages,$userref,true,true))		// if no messages get out of here with a message
+        {
+        ?>
+        </ul>
+        </div> <!-- End of VerticalNav -->
+        </div> <!-- End of BasicsBox -->
+        <?php
+        echo $lang['mymessages_youhavenomessages'];
+        include "../../include/footer.php";
+        return;
+        }
+        
+    $unread = false;
 
-	foreach ($messages as $message)		// if there are unread messages show option to mark all as read
-		{
-		if ($message['seen']==0)
-			{
-			$unread=true;
-			break;
-			}
-		}
-	if ($unread)
-		{
-?><li>
-  <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?allseen=<?php echo $userref; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang['mymessages_markallread']; ?></a>
-  </li>
-<?php
-		}
+    foreach ($messages as $message)		// if there are unread messages show option to mark all as read
+        {
+        if ($message['seen']==0)
+            {
+            $unread=true;
+            break;
+            }
+        }
+    if ($unread)
+        {
+        ?><li>
+        <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?allseen=<?php echo $userref; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang['mymessages_markallread']; ?></a>
+        </li>
+        <?php
+        }
 ?>
 
 </ul>
@@ -122,7 +125,7 @@ for ($n=0;$n<count($messages);$n++)
                 <?php
                 if ($messages[$n]["type"] & MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE)
                     {
-                    $replyurl = $baseurl_short . "pages/user/user_message.php?recipient=" . (int)$messages[$n]["ownerid"];
+                    $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                     ?>
 					<a href="<?php echo $replyurl; ?>"><?php echo LINK_CARET ?><?php echo $lang["reply"]; ?></a>
 				    <?php

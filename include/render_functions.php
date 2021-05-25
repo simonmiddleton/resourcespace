@@ -5321,7 +5321,7 @@ function render_share_password_question($blank=true)
 
 function render_user_select_question($label, $input, $additionaltext="", $extra="", $currentuser="", array $ctx = array())
     {
-    global $lang;
+    global $lang, $baseurl_short;
     $div_classes = array("Question");
     if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
         {
@@ -5332,7 +5332,7 @@ function render_user_select_question($label, $input, $additionaltext="", $extra=
         $ctx["input_class"] = array("stdsswidth");
         }
 
-    $inputel = "<input name=\"%%NAME%%\" type=\"text\" class=\"%%INPUTCLASSES%%\" value=\"%%PLACEHOLDERTEXT%%\" id=\"%%NAME%%_autocomplete\" onFocus=\"if(this.value == '%%PLACEHOLDERTEXT%%') {this.value = ''}\" onBlur=\"if(this.value == '') {this.value = '%%PLACEHOLDERTEXT%%';\" />";
+    $inputacel = "<input name=\"%%NAME%%\_autocomplete" type=\"text\" class=\"%%INPUTCLASSES%%\" value=\"%%PLACEHOLDERTEXT%%\" id=\"%%NAME%%_autocomplete\" onFocus=\"if(this.value == '%%PLACEHOLDERTEXT%%') {this.value = ''}\" onBlur=\"if(this.value == '') {this.value = '%%PLACEHOLDERTEXT%%';\" />";
 
     $placeholders = array("%%NAME%%","%%PLACEHOLDERTEXT%%", "%%INPUTCLASSES%%");
     $inputdata = array($input,$lang['starttypingusername'], implode(" ", $ctx["input_class"]));
@@ -5340,11 +5340,55 @@ function render_user_select_question($label, $input, $additionaltext="", $extra=
 	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_classes); ?>" >
 		<label><?php echo $label; ?></label>
 		<?php 
-        echo str_replace($placeholders,$inputdata,$inputel);
+        echo str_replace($placeholders,$inputdata,$inputacel);
 		echo $additionaltext;
 		?>
+        <input type="hidden" name="<?php echo $input; ?>" value=""/>
 	    <div class="clearerleft"> </div>
 	</div>
+    <script>
+    
+    function <?php echo $input; ?>addUser(event,ui)
+        {
+        var username=document.getElementById("<?php echo $input; ?>_autocomplete").value;
+        var users=document.getElementById("<?php echo $input; ?>");
+        if (typeof ui!=='undefined')
+            {
+            username=ui.item.value;
+            }
+        console.log(ui);
+        if (username.indexOf("<?php echo $lang["group"]?>")!=-1)
+            {
+            if ((confirm("<?php echo $lang["confirmaddgroup"]?>"))==false) {return false;}
+            }
+
+        if (username!="") 
+            {
+            if (users.value.length!=0)
+                {
+                users.value+=", ";}
+            users.value+=username;
+            //var input = users.value;var splitted = input.split(', ');splitted=splitted.uniq();splitted=splitted.sort();users.value = splitted.join(', '); 
+            }
+            
+        // document.getElementById("<?php echo $input; ?>autocomplete").value="";
+        
+        return false;
+        }
+        
+    jQuery(document).ready(function () {
+	jQuery('#<?php echo $input; ?>_autocomplete').autocomplete(
+		    {
+		    source: "<?php echo $baseurl_short?>pages/ajax/autocomplete_user.php?getrefs=true",
+            select: <?php echo $input; ?>addUser,
+            classes: {
+                "ui-autocomplete": "userselect"
+                }
+		    });
+        });
+    
+    </script>
+
 	<?php
 	}
 
@@ -5362,7 +5406,7 @@ function render_message($message="")
         {
         // Template
         $msgdata[] = "%%CLASSES%%"; // %%CLASSES%%
-        $msgdata[] = " id='user_message_template' style='display:none;'"; // EXTRA 
+        $msgdata[] = ""; // EXTRA 
         $msgdata[] = "%%PROFILEIMAGE%%";  // %%PROFILEIMAGE%%
         $msgdata[] = "%%MESSAGE%%"; // %%MESSAGE%%
         }

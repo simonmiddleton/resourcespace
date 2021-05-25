@@ -531,13 +531,12 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
  */
 function send_user_message($users,$text)
     {
-    global $userref;
-    //debug("BANG " . print_r($users, true));
+    global $userref, $lang;
     for($n=0;$n<count($users);$n++)
         {
         if(!is_int_loose($users[$n]))
             {
-            $uref = get_user_by_username($users[$n]);
+            $uref = get_user_by_username(trim($users[$n]));
             if (!$uref)
                 {
                 return $lang["error_invalid_user"];

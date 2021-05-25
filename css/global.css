@@ -789,6 +789,10 @@ div.autocomplete ul li {
     -webkit-transform: translateZ(0);
     }
 
+    .ui-layout-pane-north {
+        overflow: auto
+    }
+
 .InfoBoxResourceTypeIcon
     {
     float:right;clear:right;padding:10px 0 10px 10px;
