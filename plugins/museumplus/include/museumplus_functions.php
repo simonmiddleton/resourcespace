@@ -583,7 +583,7 @@ function mplus_validate_association(array $ramc, bool $use_technical_id)
 
                     foreach($resources_to_validate as $r_ref => $r_mpid)
                         {
-                        if($r_mpid != $vrt_field_value)
+                        if(mb_strtolower($r_mpid) != mb_strtolower($vrt_field_value))
                             {
                             continue;
                             }
