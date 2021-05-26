@@ -502,6 +502,7 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
                         message.expires,
                         message.type,
                         user_message.user,
+                        user_message.ref,
                         user_message.seen
                    FROM message
               LEFT JOIN user_message ON user_message.message=message.ref

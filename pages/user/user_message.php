@@ -180,7 +180,7 @@ else
 
 $links_trail[] = array(
     'title' => $lang["new_message"],
-    'help'  => "resourceadmin/user-communication",
+    'help'  => "user/messaging",
     )
  
 ?>
@@ -216,7 +216,8 @@ renderBreadcrumbs($links_trail);
     // Render in reverse order
     for($n=count($messages)-1;$n>=0;$n--)
         {
-        render_message($messages[$n]);    
+        render_message($messages[$n]);
+        message_seen($messages[$n]['ref']);    
         }
     // Add template for new messages
     echo "\n<template id='user_message_template'>";
