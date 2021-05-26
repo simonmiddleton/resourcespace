@@ -1202,7 +1202,7 @@ renderBreadcrumbs($links_trail);
                     <div class="clearerleft"></div>
                 </div>
                 <?php
-                render_text_question($lang["slideshowsequencenumber"],"sequence",'',true);
+                render_text_question($lang["slideshowsequencenumber"],"sequence",'',true,'',$manage_slideshow_id);
                 ?>
                 <div class="QuestionSubmit">
                     <label></label>
