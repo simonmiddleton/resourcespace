@@ -318,7 +318,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             $mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
             $mptext = $mpcalc == 0 ? "" : " ($mpcalc " . $lang["megapixel-short"] . ")";
             
-            $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " " . $mptext;
+            $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . "&nbsp;" . $lang['pixels'] . " " . $mptext;
                         
             $newfile = add_alternative_file($ref,$name,$description,$filename,$new_ext,$newfilesize,$alt_type);
             $altpath = get_resource_path($ref, true, "", true, $new_ext, -1, 1, false, "", $newfile);
@@ -528,7 +528,7 @@ renderBreadcrumbs($links_trail);
                     document.imagetools_form.lastHeightSetting.value = document.getElementById('new_height').value;
                     
                     this.removeCropper();
-                    console.log("attaching cropper");
+                    //console.log("attaching cropper");
                     this.curCrop = jQuery('#cropimage').Jcrop(
                         {
                         onRelease: onEndCrop ,
@@ -777,8 +777,8 @@ renderBreadcrumbs($links_trail);
                 imgwidth = jQuery('#cropimage').width();
                 }
 
-            console.log("afterload imgheight " + imgheight);
-            console.log("afterload imgwidth " + imgwidth);
+            // console.log("afterload imgheight " + imgheight);
+            // console.log("afterload imgwidth " + imgwidth);
             
             // Adjust padding and image to match new size
             lpad = imgheight > imgwidth ? ((imgheight-imgwidth)/2) : 0;
@@ -795,10 +795,6 @@ renderBreadcrumbs($links_trail);
                 cury = curCoords["y"];
                 curx2 = curCoords["x2"];
                 cury2 = curCoords["y2"];
-                // console.log("curx: " + curx);
-                // console.log("cury: " + cury);
-                // console.log("curx2: " + curx2);
-                // console.log("cury2 " + cury2);
                 // Transform based on action
                 if (typeof flippedx !== "undefined" && flippedx==true)
                     {
@@ -854,10 +850,6 @@ renderBreadcrumbs($links_trail);
                     newy2 = cury2;
                     }
 
-                console.log("newx: " + newx);
-                console.log("newy: " + newy);
-                console.log("newx2: " + newx2);
-                console.log("newy2 " + newy2);
                 CropManager.attachCropper();
                 console.log('Re-adding selection jcrop_api.setSelect([' + newx + ',' + newy + ',' + newx2 + ',' + newy2 + ']);');
                 jcrop_api.setSelect([newx,newy,newx2,newy2]);
@@ -876,6 +868,14 @@ renderBreadcrumbs($links_trail);
                 {
                 CropManager.attachCropper();
                 }
+            }
+
+        function setCropperSize(sizestring)
+            {
+            cropdims = sizestring.split("x");
+            jQuery('#new_width').val(cropdims[0]);
+            jQuery('#new_height').val(cropdims[1]);
+            evaluate_values();
             }
 
         <?php 
@@ -1046,7 +1046,7 @@ renderBreadcrumbs($links_trail);
         
         echo $lang['originalsize'] . ": ";
         echo htmlspecialchars($origwidth) . "x" . htmlspecialchars($origheight);
-        echo $lang['pixels'] . " $orig_mptext";
+        echo "&nbsp;" . $lang['pixels'] . " $orig_mptext";
         ?>
     </p>
     </div>
@@ -1184,6 +1184,27 @@ renderBreadcrumbs($links_trail);
                 <label for="new_height"><?php echo $lang["height"]; ?></label>
                 <input type="number" class="stdwidth" id="new_height" name="new_height" onblur="evaluate_values();">
                 <?php echo $lang['px'] ;?>
+                <div class="clearerleft"></div>
+            </div>
+
+            <div class="Question">
+                <label for="preset"><?php echo $lang["transform_preset_sizes"]; ?></label>
+                <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
+                    <option value=""><?php echo $lang["select"]?></option>
+                    <?php
+                    foreach($cropper_preset_sizes as $category=>$categorysizes)
+                            {
+                            echo "<optgroup label='" . htmlspecialchars($category) . "'>\n";
+                            foreach($categorysizes as $description=>$size)
+                                {
+                                echo "<option value='" . htmlspecialchars($size)  . "'>" .htmlspecialchars($description) . "</option>\n";
+                                }
+
+                            echo "</optgroup>";
+                            }
+                    
+                    ?>
+                </select>
                 <div class="clearerleft"></div>
             </div>
         </div>
