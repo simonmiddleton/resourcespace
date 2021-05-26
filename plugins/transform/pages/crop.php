@@ -492,7 +492,7 @@ else
     {
     $links_trail = array(
         array(
-            'title' => $resource["field" . $view_title_field],
+            'title' => $lang["backtoview"] . " #" . $ref,
             'href'  => $view_url,
         )
     );
