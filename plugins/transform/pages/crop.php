@@ -318,7 +318,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             $mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
             $mptext = $mpcalc == 0 ? "" : " ($mpcalc " . $lang["megapixel-short"] . ")";
             
-            $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . "&nbsp;" . $lang['pixels'] . " " . $mptext;
+            $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " " . $mptext;
                         
             $newfile = add_alternative_file($ref,$name,$description,$filename,$new_ext,$newfilesize,$alt_type);
             $altpath = get_resource_path($ref, true, "", true, $new_ext, -1, 1, false, "", $newfile);
@@ -378,13 +378,48 @@ if ($saveaction != '' && enforcePostRequest(false))
             {
             // we are supposed to download
             # Output file, delete file and exit
-            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-            header("Content-Type: application/octet-stream");
-            daily_stat('Resource download', $ref);
-            resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
+            // Redirect to terms page if necessary
+            if ($terms_download)
+                {
+                $terms_accepted=getvalescaped('iaccept', '');
+                if('on'!=$terms_accepted)
+                    {
+                    $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
+                    $url_params["url"]=$crop_url;
+                    $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
+                    redirect($redirect_to_terms_url);
+                    exit();
+                    }
+                }
+// Download file
+$filesize=filesize_unlimited($newpath);
+ob_flush();
 
-            readfile($newpath);
-            unlink($newpath);
+header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+header("Content-Length: " . $filesize);
+set_time_limit(0);
+
+$sent = 0;
+$handle = fopen($newpath, "r");
+
+// Now we need to loop through the file and echo out chunks of file data
+while($sent < $filesize)
+    {
+    echo fread($handle, $download_chunk_size);
+    ob_flush();
+    $sent += $download_chunk_size;
+    }
+#Delete File:
+unlink($newpath);
+            
+            // header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+            // header("Content-Type: application/octet-stream");
+            // daily_stat('Resource download', $ref);
+            // resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
+            // debug("BANG readfile " . $newpath);
+            // readfile($newpath);
+            // debug("BANG unlinking");
+            // unlink($newpath);
             exit();
             }
         elseif ($saveaction == "preview")
@@ -632,23 +667,34 @@ renderBreadcrumbs($links_trail);
 
         function check_cropper_selection()
             {
-            var curCoords = jcrop_api.tellSelect();
-            if(curCoords.w === 0 && curCoords.h === 0)
+            if(typeof jcrop_active != 'undefined' && jcrop_active)
                 {
-                styledalert('Warning!', 'Please select an appropriate size!');
-
-                return false;
+                var curCoords = jcrop_api.tellSelect();
+                if(curCoords.w === 0 && curCoords.h === 0)
+                    {
+                    styledalert('Warning!', 'Please select an appropriate size!');
+                    return false;
+                    }
                 }
 
             return true;
             }
 
-        function postCrop()
+        function postCrop(download=false)
             {
             cropform = document.getElementById('imagetools_form');
             if(check_cropper_selection() && validate_transform(cropform))
                 {
-                CentralSpacePost(cropform);
+                if(download)
+                    {
+                    console.log("submitting");
+                    cropform.submit();
+                    }
+                else
+                    {
+                    console.log("CentralSpacePost");
+                    return CentralSpacePost(cropform,false);
+                    }
                 }
             }
 
@@ -1053,13 +1099,12 @@ renderBreadcrumbs($links_trail);
 </div>
 
 
-<form name='imagetools_form' id="imagetools_form" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
+<form name='imagetools_form' id="imagetools_form" method="POST" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
         <!-- Standard form inputs -->
-        <!--<input type='hidden' name='action' value='docrop' />-->
         <input type='hidden' name='xcoord' id='xcoord' value='0' />
         <input type='hidden' name='ycoord' id='ycoord' value='0' />
-        <input type='hidden' name='width' id='width' value='<?php echo $origprewidth ?>' />
-        <input type='hidden' name='height' id='height'  value='<?php echo $origpreheight ?>' />
+        <input type='hidden' name='width' id='width' value='<?php echo $origwidth ?>' />
+        <input type='hidden' name='height' id='height'  value='<?php echo $origheight ?>' />
         <input type='hidden' name='ref' id='ref' value='<?php echo $ref; ?>' />
         <input type='hidden' name='cropsize' id='cropsize' value='<?php echo $cropper_cropsize; ?>' />
         <input type='hidden' name='lastWidthSetting' id='lastWidthSetting' value='' />
@@ -1120,7 +1165,7 @@ renderBreadcrumbs($links_trail);
                 ?>
                 <div class="QuestionSubmit">
                     <label for="submit">&nbsp;</label>
-                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop();return false;" />
+                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop(true);return false;" />
                 
                     <div class="clearerleft"></div>
                 </div>
