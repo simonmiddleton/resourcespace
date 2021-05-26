@@ -11,7 +11,11 @@ function perform_login($loginuser="",$loginpass="")
     $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
 
     $result = [];
-    $result['valid'] = false;
+    $result['valid'] = $valid = false;
+
+    // If an issue is detected, mark this as such and let it continue. This is used as a security measure to prevent
+    // leaking information.
+    $issue_detected = false;
 
     debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
 
@@ -27,26 +31,33 @@ function perform_login($loginuser="",$loginpass="")
 
     // Get user record
     $user_ref = get_user_by_username($username);
-    $user_data = ($user_ref !== false ? get_user($user_ref) : []);
-    if(empty($user_data))
+    $found_user_record = ($user_ref !== false);
+    if(!$found_user_record)
         {
-        $result['error'] = $lang["loginincorrect"];
-        return $result;
+        $issue_detected = true;
+        }
+    else
+        {
+        $user_data = ($found_user_record ? get_user($user_ref) : []);
+        $user_hash_info = password_get_info($user_data['password']);
+
+        // Prevent hashes being entered directly while still supporting direct entry of plain text passwords (for systems that 
+        // were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the 
+        // username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for 
+        // the 'log in as this user' feature.
+        $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
+        $is_v1_hash = (mb_strlen($password) === 32);
+        $is_v2_hash = (mb_strlen($password) === 64);
+        $v3_hash_info = password_get_info($password);
+        $is_v3_hash = ($user_hash_info['algo'] === $v3_hash_info['algo'] && $user_hash_info['algoName'] !== 'unknown');
+        if(!$impersonate_user && ($is_v3_hash || $is_v2_hash || $is_v1_hash))
+            {
+            $issue_detected = true;
+            debug(sprintf('q10529: [line=%s fct=%s] Hash provided and impersonate_user = %s', __LINE__, __FUNCTION__, json_encode($impersonate_user)));
+            }
         }
 
-    // Prevent hashes being entered directly while still supporting direct entry of plain text passwords (for systems that 
-    // were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the 
-    // username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for 
-    // the 'log in as this user' feature.
-    $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
-    if(!$impersonate_user && $password === $user_data['password'])
-        {
-        $result['error'] = $lang["loginincorrect"];
-        return $result;
-        }
-
-    $rs_password_verify = rs_password_verify("RS{$username}{$password}", $user_data['password']);
-    if($rs_password_verify)
+    if(!$issue_detected && !$impersonate_user && rs_password_verify($password, $user_data['password'], ['username' => $username]))
         {
         $password_hash_info = get_password_hash_info();
         $algo = $password_hash_info['algo'];
@@ -55,6 +66,11 @@ function perform_login($loginuser="",$loginpass="")
         if(password_needs_rehash($user_data['password'], $algo, $options))
             {
             $password_hash = rs_password_hash("RS{$username}{$password}");
+            if($password_hash === false)
+                {
+                trigger_error('Failed to rehash password!');
+                }
+
             sql_query(sprintf("UPDATE user SET `password` = '%s' WHERE ref = '%s'", escape_check($password_hash), escape_check($user_ref)));
             debug(sprintf('q10529: [line=%s fct=%s] rehashed... %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
             }
@@ -63,54 +79,25 @@ function perform_login($loginuser="",$loginpass="")
             $password_hash = $user_data['password'];
             }
 
-        $result['valid'] = true;
+        $valid = true;
+        }
+    else if(!$issue_detected && $impersonate_user && $user_data['password'] === $password)
+        {
+        $password_hash = $user_data['password'];
+        $valid = true;
         }
 
-
-var_dump($rs_password_verify);
-var_dump($password_hash);
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
-
-	if (strlen($password)!=64)
-		{
-		# Provided password is not a hash, so generate a hash.
-		$password_hash=hash('sha256', md5("RS" . $username . $password));				
-        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
-		}
-	else
-		{
-		$password_hash=$password;
-        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
-		}
-
-	// ------- Automatic migration of md5 hashed or plain text passwords to SHA256 hashed passwords ------------
-	// This is necessary because older systems being upgraded may still have passwords stored using md5 hashes or even possibly stored in plain text.
-	// Updated March 2015 - select password_reset_hash to force dbstruct that will update password column varchar(100) if not already
-	$accountstoupdate=sql_query("select username, password, password_reset_hash from user where length(password)<>64");
-	foreach($accountstoupdate as $account)
-		{
-		$oldpassword=$account["password"];
-		if(strlen($oldpassword)!=32){$oldpassword=md5("RS" . $account["username"] . $oldpassword);} // Needed if we have a really old password, or if password has been manually reset in db for some reason
-		$new_password_hash=hash('sha256', $oldpassword);
-        sql_query("update user set password='" . $new_password_hash . "' where username='".escape_check($account["username"]) . "'");
-		}
-	$ip=get_ip();
+    $ip = get_ip();
 
 	# This may change the $username, $password, and $password_hash
-        $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
+    $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
 
-	# Generate a new session hash.
-	$session_hash=generate_session_hash($password_hash);
-
-    # Check the provided credentials
-	$valid=sql_query("select ref,usergroup,account_expires,approved from user where username='".escape_check($username)."' and password='".escape_check($password_hash)."'");
-	if (count($valid)>=1)
-		{
-		# Account expiry
-		$userref=$valid[0]["ref"];
-		$usergroup=$valid[0]["usergroup"];
-		$expires=$valid[0]["account_expires"];
-        $approved=$valid[0]["approved"];
+    if($valid)
+        {
+        $userref = $user_data['ref'];
+        $usergroup = $user_data['usergroup'];
+        $expires = $user_data['account_expires'];
+        $approved = $user_data['approved'];
 
         if ($approved == 2)
             {
@@ -124,16 +111,15 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
 			return $result;
 			}
 
-		$result['valid']=true;
-		$result['session_hash']=$session_hash;
-		$result['password_hash']=$password_hash;
-		$result['ref']=$userref;
+        $session_hash = generate_session_hash($password_hash);
 
-		# Update the user record.
-		$session_hash_sql="session='".escape_check($session_hash)."',";
+        $result['valid'] = true;
+        $result['session_hash'] = $session_hash;
+        $result['password_hash'] = $password_hash;
+        $result['ref'] = $userref;
 
+        $session_hash_sql="session='".escape_check($session_hash)."',";
         $language = getvalescaped("language", "");
-
 		sql_query("
             UPDATE user
                SET {$session_hash_sql}
@@ -147,16 +133,15 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
         $get_user_local_timezone = getval('user_local_timezone', null);
         set_config_option($userref, 'user_local_timezone', $get_user_local_timezone);
 
-		# Log this
-		daily_stat("User session",$userref);
-		
+        # Log this
+        daily_stat("User session", $userref);
         log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
 
-		# Blank the IP address lockout counter for this IP
-		sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
+        # Blank the IP address lockout counter for this IP
+        sql_query("DELETE FROM ip_lockout WHERE ip = '" . escape_check($ip) . "'");
 
-		return $result;
-		}
+        return $result;
+        }
 
 	# Invalid login
 	if(isset($externalresult["error"])){$result['error']=$externalresult["error"];} // We may have been given a better error to display
@@ -290,14 +275,18 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
 * 
 * @param string $password Password
 * 
-* @return string Password hash
+* @return string|false Password hash or false on failure
 */
 function rs_password_hash(string $password)
     {
     $phi = get_password_hash_info();
     $algo = $phi['algo'];
     $options = $phi['options'];
-    return password_hash($password, $algo, $options);
+
+    // Pepper password with a known (by the application) secret.
+    $hmac = hash_hmac('sha256', $password, $GLOBALS['scramble_key']);
+
+    return password_hash($hmac, $algo, $options);
     }
 
 /**
@@ -305,16 +294,19 @@ function rs_password_hash(string $password)
 * 
 * @param string $password Password
 * @param string $hash     Password hash
+* @param array  $data     Extra data required for matching hash expectations (e.g username). Key is the variable name,
+*                         value is the actual value for that variable.
 * 
 * @return boolean
 */
-function rs_password_verify(string $password, string $hash)
+function rs_password_verify(string $password, string $hash, array $data)
     {
-    $hash_v1 = md5($password);
+    $RS_madeup_pass = "RS{$data['username']}{$password}";
+    $hash_v1 = md5($RS_madeup_pass);
     $hash_v2 = hash('sha256', $hash_v1);
 
     // Most common case: hash is at version 3 (ie. hash generated using password_hash from PHP)
-    if(password_verify($password, $hash))
+    if(password_verify(hash_hmac('sha256', $RS_madeup_pass, $GLOBALS['scramble_key']), $hash))
         {
         return true;
         }
