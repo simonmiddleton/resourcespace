@@ -3150,3 +3150,7 @@ $ffmpeg_std_frame_rate_options= array(
     "60(fps)"=>array(
         "value"=>"60")
     ); 
+
+// Folder location used for video exports in video track and video splice plugins. Video tracks will use its own config if provided to keep
+// backwards compatibility
+$video_export_folder = $baseurl . "/filestore/video_exports";

@@ -32,4 +32,5 @@ $lang["video_splice_save_export"]="Export folder";
 $lang['video_splice_transcode_now_or_notify_me_label']='Check to start the transcode now. If unchecked you will receive a notification when the file is ready';
 $lang['video_splice_transcode_now_label']='Transcode now';
 $lang["video_splice_offline_notice"]="Your request has been queued. A new resource will be created, this will be updated with the merged video upon completion and you will additionally be notified. Job ID [ %job ]";
-$lang["video_splice_completed"]="Video splice completed. A new resource has been made with the ID [ %ref ]";
+$lang["video_splice_new_completed"]="Video splice completed. A new resource has been made with the ID [ %link ]";
+$lang["video_splice_export_completed"]="Video splice completed. You can find your new file in your designated video export location [ %location ]";

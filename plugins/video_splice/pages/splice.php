@@ -71,7 +71,8 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
                     'target_frame_rate' => $target_frame_rate,
                     'description' => $description
                 );
-                $generate_merged_video_job_success_text = "success";
+                $link_holder = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a> ';
+                $generate_merged_video_job_success_text = str_replace("%link", $link_holder, $lang["video_splice_new_completed"]);;
                 $generate_merged_video_job_failure_text = "fail";
 
                 $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
@@ -92,7 +93,109 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
                     $description
                     ); 
 
-                $message = str_replace("%ref", $ref, $lang["video_splice_completed"]);         
+                $link_holder = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a> ';
+                $message = str_replace("%link", $link_holder, $lang["video_splice_new_completed"]);         
+                }
+            }
+        elseif($video_splice_type == "video_splice_save_export")
+            {
+            // If $video_export_folder is set use it.
+            if(isset($video_export_folder))
+                {
+                // Make sure the video_export_folder dir exists.
+                if(!is_dir($video_export_folder))
+                    {
+                    // If it does not exist, create it.
+                    mkdir($video_export_folder, 0777);
+                    }
+                }
+            else
+                {
+                return false;
+                }
+
+            if($offline)
+                { 
+                // Add this to the job queue for offline processing
+                $generate_merged_video_job_data = array(
+                    'videos' => $videos,
+                    'video_splice_type' => $video_splice_type,
+                    'target_video_command' => $target_video_command,
+                    'target_video_extension' => $target_video_extension,
+                    'target_audio' => $target_audio,
+                    'target_width' => $target_width,
+                    'target_height' => $target_height,
+                    'target_frame_rate' => $target_frame_rate,
+                    'description' => $description
+                );
+                $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
+                $generate_merged_video_job_failure_text = "fail";
+
+                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
+
+                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
+                }
+            else
+                {               
+                $success = generate_merged_video(
+                    $videos,
+                    $video_splice_type,
+                    $target_video_command,
+                    $target_video_extension,
+                    $target_audio,
+                    $target_width,
+                    $target_height,
+                    $target_frame_rate,
+                    $description
+                    ); 
+
+                if($success)
+                    {
+                    $message = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);   
+                    }      
+                }
+            }
+        elseif($video_splice_type == "video_splice_download")
+            {
+            if($offline)
+                { 
+                // Add this to the job queue for offline processing
+                $generate_merged_video_job_data = array(
+                    'videos' => $videos,
+                    'video_splice_type' => $video_splice_type,
+                    'target_video_command' => $target_video_command,
+                    'target_video_extension' => $target_video_extension,
+                    'target_audio' => $target_audio,
+                    'target_width' => $target_width,
+                    'target_height' => $target_height,
+                    'target_frame_rate' => $target_frame_rate,
+                    'description' => $description
+                );
+                $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
+                $generate_merged_video_job_failure_text = "fail";
+
+                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
+
+                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
+                }
+            else
+                {               
+                $success = generate_merged_video(
+                    $videos,
+                    $video_splice_type,
+                    $target_video_command,
+                    $target_video_extension,
+                    $target_audio,
+                    $target_width,
+                    $target_height,
+                    $target_frame_rate,
+                    $description
+                    ); 
+
+                if($success)
+                    {
+                    $message = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);   
+                    }      
                 }
             }
         }
@@ -108,7 +211,7 @@ include "../../../include/header.php";
 <?php
     if ($message!="")
         {
-        echo "<div class=\"PageInformal\">" . $message . "</div>";
+        echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . $message . "</div>";
         }
 ?>
 <div class="RecordBox">
