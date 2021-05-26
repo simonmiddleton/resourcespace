@@ -7,6 +7,26 @@ include_once "../../../include/authenticate.php";
 include_once "../../../include/search_do.php";
 include_once "../include/search_notifications_functions.php";
 
+
+global $active_plugins, $default_home_page;
+
+$plugin_name            = "rse_search_notifications";
+$enabled_groups         = array();
+$active_plugins_name    = array_column($active_plugins, "name");
+$plugin_active          = in_array($plugin_name, $active_plugins_name); // is the plugin active?
+
+if ($plugin_active)
+    {
+    $plugin_key         = array_search($plugin_name, $active_plugins_name);
+    $enabled_groups     = explode(",", $active_plugins[$plugin_key]["enabled_groups"]);
+    }   
+
+// if the plugin isn't active or the user does not have permission to view page, redirect to home page
+if (!$plugin_active || !in_array($usergroup, $enabled_groups) )
+    {
+    redirect("pages/".$default_home_page);
+    }
+    
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");
 $find=getvalescaped("find","");
 $callback=getvalescaped("callback","");

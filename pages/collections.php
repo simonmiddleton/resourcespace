@@ -694,7 +694,7 @@ $result  = do_search("!collection{$usercollection}", '', $default_collection_sor
 $count_result = count($result);
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
-$feedback=$cinfo["request_feedback"];
+$feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
 # E-commerce functionality. Work out total price, if $basket_stores_size is enabled so that they've already selected a suitable size.
 $totalprice=0;
@@ -791,7 +791,11 @@ else if ($basket)
         
 		<?php if (!hook("rendercollectionthumb")){?>
         <?php
-        
+        if (isset($result[$n]["access"]) && $result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
+            {
+            # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
+            $result[$n]["access"]=1; 
+            }
         $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
@@ -907,7 +911,7 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
     <h2><?php echo i18n_get_collection_name($tempcol)?></h2>
         <br />
         <div class="CollectionStatsAnon">
-        <?php echo $lang["created"] . " " . nicedate($tempcol["created"])?><br />
+        <?php echo ($tempcol) ?  $lang["created"] . " " . nicedate($tempcol["created"]) : "" ?><br />
         <?php echo $count_result . " " . $lang["youfoundresources"]?><br />
         </div>
         <?php
@@ -1152,6 +1156,11 @@ else
 		<?php if (!hook("rendercollectionthumb")){?>
         <?php
         
+        if (isset($result[$n]["access"]) && $result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
+            {
+            # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
+            $result[$n]["access"]=1; 
+            }
         $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>

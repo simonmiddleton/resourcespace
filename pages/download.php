@@ -77,7 +77,6 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     }
 
 // Is this a user specific download?
-;
 if('' != $userfiledownload)
     {
     $noattach       = '';
@@ -381,6 +380,9 @@ if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpf
     delete_exif_tmpfile($tmpfile);
     }
 
-hook('beforedownloadresourceexit', '', array($download_extra));
+if (isset($download_extra)) 
+    {
+    hook('beforedownloadresourceexit', '', array($download_extra));
+    }
 
 exit();

@@ -135,15 +135,18 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow metadata to be passed here.
     if ($metadata!="")
         {
-        $metadata=json_decode($metadata);
-        foreach ($metadata as $field=>$value)
+        $metadata=json_decode($metadata, true);
+        if (is_array($metadata))
             {
-            // check $value is not an array
-            if (is_array($value))
+            foreach ($metadata as $field=>$value)
                 {
-                return false;
+                // check $value is not an array
+                if (is_array($value))
+                    {
+                    return false;
+                    }
+                update_field($ref,$field,$value);
                 }
-            update_field($ref,$field,$value);
             }
         }
     
@@ -391,7 +394,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
-    $refs = json_decode($ref, JSON_OBJECT_AS_ARRAY);
+    $refs = json_decode($ref, true);
     if(is_array($refs))
         {
         $return = array();

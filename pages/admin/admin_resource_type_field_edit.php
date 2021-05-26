@@ -84,7 +84,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 		<?php
 	}
 	
-function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
+function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type,$currentvalue,$fieldtype,$system_date_field)
 	{
     debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
 
@@ -251,9 +251,15 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			}
 		elseif($type==1)
 			{
-			?>
-			<input name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>>
-			<?php
+			if ($propertyname=="advanced_search" && $system_date_field)
+                {
+                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                $helptext=$lang["property-system_date_help_text"];
+                }
+            else
+                {
+                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                }
 			}
 		elseif($type==2)
 			{
@@ -618,7 +624,7 @@ else
     </div>
     
     <?php
-    
+    $system_date_field = $ref==$date_field?true:false;
     foreach ($fieldcolumns as $column=>$column_detail)		
 	    {
 	    if ($column=="partial_index") // Start the hidden advanced section here
@@ -627,7 +633,7 @@ else
 			<div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
 			<?php
 			}
-	    admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"]);
+	    admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
 	    }
     ?>
     

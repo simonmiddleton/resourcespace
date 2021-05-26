@@ -82,7 +82,6 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
-$email_from_user=true; #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
@@ -1033,6 +1032,9 @@ $basic_simple_search=false;
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
 
+# Hide the resource type selector on the simple search and advanced search pages
+$hide_search_resource_types = false;
+
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
 
@@ -1520,9 +1522,6 @@ $enable_find_similar=true;
 
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
-
-# Allow multiple collections to be e-mailed at once
-$email_multi_collections = false;
 
 #  Link back to collections from log page - if "" then link is ignored.
 #  suggest 
@@ -2519,9 +2518,6 @@ $site_text_use_ckeditor=false;
 
 # Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top=false;
-
-# option to always send emails from the logged in user
-$always_email_from_user=false;
 
 # option to always cc admin on emails from the logged in user
 $always_email_copy_admin=false;
