@@ -495,8 +495,6 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
             $$validfilterop = NULL;
             }
         }
-        // debug("BANG ==" . $user . "==");
-        // debug("BANG " . print_r($msgusers,true));
     $msgquery = "SELECT message.created,
                         message.owner,
                         message.message,

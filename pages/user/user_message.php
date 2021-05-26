@@ -23,28 +23,57 @@ else
     $to_username= "";
     }
 
-    //print_r($messages);
 
 include "../../include/header.php";
 
+$userimage      = get_profile_image($userref);
+$usertoimage    = get_profile_image($msgto)
 // The 'msgto' variable below is  used by message polling to detect and intercept messages from this user to show on this page
 ?>
 <script>
 msgto = <?php echo $msgto; ?>;
-userimghtml =  jQuery("<img />", {
+
+defaultimghtml =  jQuery("<i />", {
+    title           : '<?php echo htmlspecialchars($userfullname); ?>',
+    alt             : '<?php echo htmlspecialchars($userfullname); ?>',
+    'class'         : 'fa fa-user fa-lg fa-fw ProfileImage',
+    'aria-hidden'   : true
+    });
+
+<?php
+if($userimage != "")
+    {
+    ?>
+    userimghtml =  jQuery("<img />", {
         title   : '<?php echo htmlspecialchars($userfullname); ?>',
         alt     : '<?php echo htmlspecialchars($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo htmlspecialchars(get_profile_image($userref)); ?>'
+        src     : '<?php echo htmlspecialchars($userimage); ?>'
         });
-
-usertoimghtml =  jQuery("<img />", {
-        id      : 'msgtoimage',
-        title   : '<?php echo htmlspecialchars($to_username); ?>',
-        alt     : '<?php echo htmlspecialchars($to_username); ?>',
+    <?php
+    }
+else
+    {?>    
+    userimghtml = defaultimghtml;
+    <?php 
+    }
+if($usertoimage != "")
+    {
+    ?>
+    usertoimghtml =  jQuery("<img />", {
+        title   : '<?php echo htmlspecialchars($userfullname); ?>',
+        alt     : '<?php echo htmlspecialchars($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo htmlspecialchars(get_profile_image($msgto)); ?>'
+        src     : '<?php echo htmlspecialchars($usertoimage); ?>'
         });
+    <?php
+    }
+else
+    {?>    
+    usertoimghtml = defaultimghtml;
+    <?php 
+    }
+?>    
 
 function sendMessage()
     {
@@ -54,7 +83,7 @@ function sendMessage()
         'users': users,
         'text': messagetext,
         }
-console.log(users);
+
     if(users.length == 1 && msgto == 0)
         {
         // Get details of selected recipient to show conversation
@@ -70,9 +99,6 @@ console.log(users);
                     tofullname = response[0]['username'];
                     }
 
-                    // usertoimghtml
-                // jQuery('#msgtoimage').attr('title',tofullname);
-                // jQuery('#msgtoimage').attr('alt',tofullname);
                 jQuery(usertoimghtml).attr('title',tofullname);
                 jQuery(usertoimghtml).attr('alt',tofullname);
                 touserid = response[0]['ref'];
@@ -95,35 +121,24 @@ console.log(users);
 function showUserMessage(message,fromself)
     {
     // show new message in line
-    //msgtemp = document.getElementById("user_message_template").outerHTML;
     msgtemp = document.getElementById("user_message_template").innerHTML;
-
-    console.log(usertoimghtml);
-    
     if(fromself)
         {
         classtxt = "user_message own_message";
         msgtemp = msgtemp.replace("%%PROFILEIMAGE%%", userimghtml[0].outerHTML);
-        //jQuery(msgtemp + ' >.profileimage').html(userimghtml[0]);
-
         jQuery('#messagetext').val('');
         }
     else
         {
         classtxt = "user_message";
         msgtemp = msgtemp.replace("%%PROFILEIMAGE%%", usertoimghtml[0].outerHTML);
-        //jQuery(msgtemp + ' >.profileimage').html(usertoimghtml[0]);
         }
 
-    console.log(msgtemp);
-    
     msgtemp = msgtemp.replace("%%CLASSES%%", classtxt);
     msgtemp = msgtemp.replace("%%MESSAGE%%", message);
-    console.log(msgtemp);
-
+    
     jQuery('#message_conversation').append(msgtemp);
     
-    //jQuery('.user_message').show();
     if(jQuery('.user_message').length > 3)
         {
         jQuery('.user_message').first().slideUp().remove();
@@ -133,16 +148,34 @@ function showUserMessage(message,fromself)
 </script>
 <?php
 
-$links_trail = array(
-    array(
+$links_trail = array();
+if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"team_user") !== false)
+    {    
+    $links_trail[] = array(
+        'title' => $lang["teamcentre"],
+        'href'  => $baseurl_short . "pages/team/team_home.php"
+        );
+    $links_trail[] = array(
+        'title' => $lang["manageusers"],
+        'href'  => $baseurl_short . "pages/team/team_user.php",
+        );
+    if($msgto != 0)
+        {
+        $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/team/team_user_edit.php?ref=" . htmlspecialchars($to_user["ref"]));
+        $links_trail[] = $links_trail_user;
+        }
+    }
+else
+    {
+    $links_trail[] = array(
         'title' => $lang["mymessages"],
         'href'  => $baseurl_short . "pages/user/user_messages.php",
-        )
-    );
-if($msgto != 0)
-    {
-    $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]));
-    $links_trail[] = $links_trail_user;
+        );        
+    if($msgto != 0)
+        {
+        $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]));
+        $links_trail[] = $links_trail_user;
+        }
     }
 
 $links_trail[] = array(
@@ -156,7 +189,7 @@ $links_trail[] = array(
 renderBreadcrumbs($links_trail);
 
 ?>
-<form id="myform" method="post" class = "FormWide" action="<?php echo $baseurl_short?>pages/user/user_message.php">
+<form id="user_message_form" method="post" class = "FormWide" action="<?php echo $baseurl_short?>pages/user/user_message.php">
     <?php
     generateFormToken("myform");
 
@@ -166,14 +199,11 @@ renderBreadcrumbs($links_trail);
 
     if($msgto == 0)
         {
-        render_user_select_question($lang["message_recipients"],"users","","","",array("input_class"=>array("stdwidth")));
-
-
-
-        // echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
-        // $user_select_internal = true;
-        // include "../../include/user_select.php";
-        // echo "<div class='clearerleft'> </div></div>";
+        echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
+        $user_select_internal = true;
+        $user_select_class = "medwidth";
+        include "../../include/user_select.php";
+        echo "<div class='clearerleft'> </div></div>";
         }
     else
         {
@@ -195,8 +225,6 @@ renderBreadcrumbs($links_trail);
     echo "<div class='clearer'> </div>";
     echo "</div>";
     ?>
-
-
     <div class="Question"><label><?php echo $lang["message"]?></label>
         <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
         <div class="clearerleft"> </div></div>

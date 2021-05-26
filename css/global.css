@@ -2037,6 +2037,14 @@ a.BrowseRefresh{
     position: relative;
   }
 
+.FormWide .Question .user_select_table {
+    width: 70%;
+    table-layout:fixed;
+    }
+
+.FormWide .Question .user_select_table .stdwidth {
+    width: 100%;
+    }
 
 .message_conversation {width: 100%; font-size: 1em;}
 .user_message {
@@ -2061,9 +2069,11 @@ a.BrowseRefresh{
     {
     width: 90%;
     }
+    
 
 .profileimage {margin-right: 10px; margin-left: 10px;}
-
+.user_message .profileimage i.fa {margin-top: 15px;}
 .user_message, .message_content .profileimage, .message_content {float: left;}
 
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
+

@@ -27,7 +27,7 @@ include "../../include/header.php";
 
   <?php if ($profile_image) { ?><p><img src="<?php echo $profile_image ?>" alt="Current profile image"></p><?php }
   echo "<p>" . nl2br(htmlspecialchars($profile_text)) . "</p>";
-  echo "<p><a href='" . $baseurl_short . "pages/user/user_message.php?recipient=" . (int)$user . "' >" . LINK_CARET . $lang["new_message"] . "</a></p>";
+  echo "<p><a href='" . $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$user . "' >" . LINK_CARET . $lang["new_message"] . "</a></p>";
 
   ?>
 </div>

@@ -187,7 +187,7 @@
                             message_refs.push(ref);
                             var message = nl2br(messages[i]['message']);
                             var url = messages[i]['url'];
-                            if(messages[i]['type'] && <?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE ?> && pagename =='user_message' && parseInt(messages[i]['ownerid']) == parseInt(msgto))
+                            if(messages[i]['type'] & <?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE ?> && pagename =='user_message' && parseInt(messages[i]['ownerid']) == parseInt(msgto))
                                 {
                                 // Show the message directly on the page if on user_message.php and communicating with this user
                                 showUserMessage(messages[i]['message'],false);
