@@ -70,7 +70,7 @@ else
 			# At this point the custom passthrough variable contains a user reference and collection reference separated by a space
 			# This collection is the basket which contains the resources just purchased
 			$paypalcustom_variable=getvalescaped("custom","");
-			$paypalcustom_array=explode(" ",$paypalcustom_variable);
+			$paypalcustom_array=explode(" ",urldecode($paypalcustom_variable));
 			$paypalcustom_userref=$paypalcustom_array[0];
 			$paypalcustom_basket=$paypalcustom_array[1];
 
