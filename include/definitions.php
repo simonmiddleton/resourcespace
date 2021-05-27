@@ -434,6 +434,3 @@ $MARKER_COLORS = array(
     7 => 'Violet',
     8 => 'Gold'
     );
-
-// define ('MESSAGE_TYPE_NOTIFICATION',    0);
-// define ('MESSAGE_TYPE_USER_MESSAGE',    1);
