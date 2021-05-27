@@ -78,21 +78,25 @@ else
 function sendMessage()
     {
     messagetext = jQuery('#messagetext').val();
+    if(messagetext.trim() == '')
+        {
+        return false;
+        }
     users = document.getElementById('message_users').value.replace(/"/g, "").split(",");
     postdata = {
         'users': users,
         'text': messagetext,
         }
 
-    if(users.length == 1 && users[0].indexOf('<?php echo $lang["group"] ?> :') == -1 && msgto == 0)
+    if(users.length == 1 && users[0].indexOf('<?php echo $lang["group"] ?>: ') == -1 && msgto == 0)
         {
-        // Get details of selected recipient to show conversation
+        // Get details of selected recipient to reload and show conversation
         touser = api("get_users",{'find':  users[0],'exact_username_match': true},function(response)
             {
             if(response.length == 1)
                 {
                 msgto = parseInt(response[0]['ref']);
-                api("send_user_message",postdata,CentralSpaceLoad(window.location + "?msgto=" + msgto));
+                api("send_user_message",postdata,reloadMessages());
                 return true;
                 }
             });
@@ -101,6 +105,7 @@ function sendMessage()
         {
         api("send_user_message",postdata,showUserMessage(messagetext,true));
         }
+
     // Speed up message checking whilst on this page
     message_timer = window.setTimeout(message_poll,5);
     }
@@ -128,6 +133,11 @@ function showUserMessage(message,fromself)
     jQuery('#message_conversation').scrollTop(jQuery('#message_conversation').prop('scrollHeight'));
     }
 
+function reloadMessages()
+    {
+    // Reload page with selected user set
+    setTimeout(function(){CentralSpaceLoad(window.location + '?msgto=' + msgto);}, 1000);
+    }
 </script>
 <?php
 

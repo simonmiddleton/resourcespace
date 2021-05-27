@@ -54,6 +54,13 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		$users=array($users);
 		}
 
+    if(checkperm('E'))
+        {
+        $validusers = get_users(0,"","u.username",true,1);
+        $validuserrefs = array_column($validusers,"ref");
+        $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
+        }
+
 	if(is_null($owner) || (isset($userref) && $userref != $owner))
 		{
         // Can't send messages from another user
@@ -532,7 +539,6 @@ function send_user_message($users,$text)
     {
     global $userref, $lang;
     $users=explode(",",resolve_userlist_groups($users));
-    //print_r($users);
     for($n=0;$n<count($users);$n++)
         {
         if(!is_int_loose($users[$n]))
