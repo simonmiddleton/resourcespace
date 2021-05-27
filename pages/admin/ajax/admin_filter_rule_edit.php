@@ -157,12 +157,21 @@ function processFilterRules()
     rule_elements = new Array();
     jQuery('.filter_rule_question').each(function () {
         rule_nodes = jQuery(this).children('.filter_rule_nodes').val();
-        rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
-        rule_element = [rule_condition,rule_nodes];
-        rule_elements.push(rule_element);
+        // Empty rule because no nodes selected, so skip this and move onto next filter rule in case there is one further down
+        if (rule_nodes.length!=0) {
+            rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
+            rule_element = [rule_condition,rule_nodes];
+            rule_elements.push(rule_element);
+        }
         });        
-        
+
     jQuery ('#filter_rule_data').val(JSON.stringify(rule_elements));
+
+    // No rules present
+    if (rule_elements.length==0) {
+        return false;
+    }
+
     }
 
 function updateFieldOptions(question)
