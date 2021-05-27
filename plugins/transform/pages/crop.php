@@ -391,35 +391,28 @@ if ($saveaction != '' && enforcePostRequest(false))
                     exit();
                     }
                 }
-// Download file
-$filesize=filesize_unlimited($newpath);
-ob_flush();
 
-header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-header("Content-Length: " . $filesize);
-set_time_limit(0);
+            // Download file
+            $filesize=filesize_unlimited($newpath);
+            ob_flush();
 
-$sent = 0;
-$handle = fopen($newpath, "r");
+            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+            header("Content-Length: " . $filesize);
+            set_time_limit(0);
 
-// Now we need to loop through the file and echo out chunks of file data
-while($sent < $filesize)
-    {
-    echo fread($handle, $download_chunk_size);
-    ob_flush();
-    $sent += $download_chunk_size;
-    }
-#Delete File:
-unlink($newpath);
-            
-            // header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-            // header("Content-Type: application/octet-stream");
-            // daily_stat('Resource download', $ref);
-            // resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
-            // debug("BANG readfile " . $newpath);
-            // readfile($newpath);
-            // debug("BANG unlinking");
-            // unlink($newpath);
+            $sent = 0;
+            $handle = fopen($newpath, "r");
+
+            // Now we need to loop through the file and echo out chunks of file data
+            while($sent < $filesize)
+                {
+                echo fread($handle, $download_chunk_size);
+                ob_flush();
+                $sent += $download_chunk_size;
+                }
+            #Delete File:
+            unlink($newpath);
+
             exit();
             }
         elseif ($saveaction == "preview")
