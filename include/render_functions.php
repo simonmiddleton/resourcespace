@@ -5318,3 +5318,125 @@ function render_share_password_question($blank=true)
     </div>
     <?php
     }
+
+    
+/**
+ * Get required rows and columns for use when displaying radio buttons in a table 
+ *
+ * @param  array $options   Array of text options
+ * @return array            (Number of rows, number of columns)
+ */
+function radio_get_layout($options)
+    {
+    $l = average_length($options);
+    
+    $cols = 10;
+    if($l > 5) 
+        {
+        $cols = 6;
+        }
+
+    if($l > 10)
+        {
+        $cols = 4;
+        }
+
+    if($l > 15)
+        {
+        $cols = 3;
+        }
+
+    if($l > 25)
+        {
+        $cols = 2;
+        }
+
+    $rows = ceil(count($options) / $cols);
+    return array($rows, $cols);
+    }
+
+
+/**
+* render_radio_buttons_question - Used to display a question with radio buttons
+* 
+* @param string $label	   Label of question
+* @param string $inputname Name of input field
+* @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
+* @param string $current   The current selected value
+* @param string $extra     Extra attributes used on the selector element
+* @param bool   $listview  Show as vertical list? (false for table view)
+* @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onclick for select)
+* 
+* @return void
+*/
+function render_radio_buttons_question($label, $inputname, $options = array(), $current="", $extra="", $listview=false, array $ctx = array())
+    {
+    $div_class = array("Question");
+    if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
+        {
+        $div_class = array_merge($div_class, $ctx["div_class"]);
+        }
+    $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
+
+    $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
+    $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
+
+    $extra .= " {$onchange}";
+
+    list($rows,$cols) = radio_get_layout(array_values($options));
+    if($listview)
+        {
+        $cols=1;
+        }
+	?>
+    <div class="<?php echo implode(" ", $div_class); ?>">
+        <label><?php echo $label; ?></label>
+        
+        <table id="<?php echo $inputname  . "_radio_table"; ?>" class="radioOptionTable" cellpadding="3" cellspacing="3">                    
+            <tbody>
+                <tr>
+                <?php 
+                $row = 1;
+                $col = 1;
+
+                foreach($options as $optionvalue=>$optiontext)
+                    {
+                    if($col > $cols) 
+                        {
+                        $col = 1;
+                        $row++; ?>
+                        </tr>
+                        <tr>
+                        <?php 
+                        }
+                    $col++;
+                    ?>
+                    <td width="10" valign="middle">
+                        <input type="radio"
+                            id="radio_<?php echo htmlspecialchars($optionvalue); ?>"
+                            name="<?php echo $inputname; ?>"
+                            value="<?php echo htmlspecialchars($optionvalue); ?>"
+                        <?php
+                        if($current == $optionvalue)
+                                {
+                                ?>
+                                checked
+                                <?php
+                                }?>>
+                    </td>
+                    <td align="left" valign="middle">
+                        <label class="customFieldLabel"
+                            for="radio_<?php echo htmlspecialchars($optionvalue); ?>"
+                            ><?php echo htmlspecialchars($optiontext); ?></label>
+                    </td>
+                    <?php 
+                    } 
+                    ?>
+                </tr>
+            </tbody>
+        </table>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    return;
+    }

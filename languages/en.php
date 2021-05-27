@@ -831,7 +831,7 @@ $lang["backtohome"]="Back to the home page";
 $lang["continuetohome"]="Continue to the home page";
 $lang["backtohelphome"]="Back to help home";
 $lang["backtosearch"]="Back to my search results";
-$lang["backtoview"]="Resource View";
+$lang["backtoview"]="Resource view";
 $lang["backtoeditmetadata"]="Back to edit metadata";
 $lang["backtouser"]="Back to user login";
 $lang["continuetouser"]="Continue to user login";
@@ -3108,4 +3108,6 @@ $lang["share_type_upload"]                  = "Upload";
 $lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";
 $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
-$lang["log_value"]                          = "Value";
+$lang["log_value"]                          = "Value";$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
+$lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+

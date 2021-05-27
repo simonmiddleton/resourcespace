@@ -46,7 +46,7 @@ input[readonly] {background: none;}
 input.defaultbutton {position: absolute; left: -100%; width: 0; height: 0;}
 
 /* Form elements */
-input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .sp-replacer {
+input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .sp-replacer, .toolbox{
     font-size: 0.875rem;
     border-radius: 4px;
 }
@@ -544,7 +544,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel.RecordPanelLarge .RecordDownloadSpace {
     padding: 6px 1rem;
 }
-.RecordPanelLarge #ResourceToolsContainer {
+.RecordPanelLarge #ResourceToolsContainer, .FloatingOptions {
     display: inline-grid;
 }
 
@@ -2073,3 +2073,11 @@ a.BrowseRefresh{
     margin-left: -30px;
     position: relative;
   }
+
+  .toolbox {
+    border: 1px solid transparent;
+    background-image: none;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: normal;
+}

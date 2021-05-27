@@ -8,12 +8,16 @@ include_once "../include/transform_functions.php";
 
 global $cropper_allowed_extensions;
 
-$ref        = getval("ref",0);
+$ref        = getval("ref",0,true);
 $search     = getval("search","");
 $offset     = getval("offset",0,true);
 $order_by   = getval("order_by","");
 $sort       = getval("sort","");
 $k          = getval("k","");
+
+$reload_image   = getval('reload_image','') != '';
+$reset          = getval('reset','') != '';
+$saveaction     = getval("saveaction","");
 
 // Build view url for redirect
 $urlparams = array(
@@ -23,37 +27,38 @@ $urlparams = array(
     "order_by"  =>  $order_by,
     "sort"      =>  $sort,
     "k"         =>  $k
-);
+    );
 $view_url = generateURL($baseurl_short . 'pages/view.php',$urlparams);
 
-if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
-if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
+if ($resource===false || $ref <= 0)
+    {    
+    error_alert($lang['resourcenotfound']);
+    exit();
+    }
 
 if (in_array(strtoupper($resource['file_extension']), $cropper_allowed_extensions)==false) 
     {
-    exit($lang['error_resource_not_image_extension'] . ' (' . implode(', ', $cropper_allowed_extensions) . ')');
+    error_alert($lang['error_resource_not_image_extension'] . ' (' . implode(', ', $cropper_allowed_extensions) . ')');
+    exit();
     }
 
 # Load edit access level
 $edit_access=get_edit_access($ref);
+$access     =get_resource_access($ref);
 
-# Load download access level
-$access=get_resource_access($ref);
+$cropperestricted = in_array($usergroup,$cropper_restricteduse_groups);
 
-$cropperestricted=in_array($usergroup,$cropper_restricteduse_groups);
+$sswidth = isset($home_slideshow_width) ? $home_slideshow_width : 517; 
+$ssheight = isset($home_slideshow_height) ? $home_slideshow_height : 350;
 
-// are they requesting to change the original?
-if (isset($_REQUEST['mode']) && strtolower($_REQUEST['mode']) == 'original'){
-    $original = true;
-} else {
-    $original = false;
-}
+// Create array to hold errors
+$errors = array();
 
 $blockcrop = false;
 
 // Check sufficient access
-if ($access!=0 || ($original && !$edit_access))
+if ($access!=0 || ($saveaction =="original" && !$edit_access))
     {
     $blockcrop= true;
     $error = $lang['error-permissiondenied'];
@@ -86,59 +91,100 @@ if($blockcrop)
 
 $imversion = get_imagemagick_version();
 
-// generate a preview image for the operation if it doesn't already exist
-$crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date(time()) . $scramble_key) . ".jpg";
-$crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date(time()) . ".jpg";
-if (!file_exists($crop_pre_file))
+// retrieve image paths for preview image and original file
+$orig_ext = $resource["file_extension"];
+hook('transformcropbeforegetsize');
+$originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+if(file_exists($originalpath))
     {
-	//echo  "generating preview";
-	//exit($crop_pre_file);
-	if(!generate_transform_preview($ref,$crop_pre_file))
+    // For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
+    // Note: if getSvgSize() can extract the width and height then the crop will work as expected, otherwise the output will
+    // be the full size (ie. not cropped)
+    if(strtoupper($orig_ext) == 'SVG')
         {
-        error_alert($lang["transform_preview_gen_error"]);
+        list($origwidth, $origheight) = getSvgSize($originalpath);
+        $usesize    = "";
+        $useext     = $orig_ext;
+        }
+    else
+        {
+        $origsizes  = getimagesize($originalpath);        
+        $origwidth  = $origsizes[0];
+        $origheight = $origsizes[1];
+        $usesize    = "scr";
+        $useext     = "jpg";
         }
     }
-# Locate imagemagick.
-if (!isset($imagemagick_path))
+else
     {
-	echo "Error: ImageMagick must be configured for crop functionality. Please contact your system administrator.";
-	exit;
+    $errors[] = "Unable to find original file";
+    }
+    
+$previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
+if(!file_exists($previewsourcepath))
+    {
+    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,trim($resource["file_path"]) != "");
     }
 
-$command = get_utility_path("im-convert");
-if ($command==false) {exit("Could not find ImageMagick 'convert' utility.");}
+// Get the actions that have been requested
+$imgactions = array();
+// Transformations must be carried out in the order the user performed them
+$tfactions = getval("tfactions","");
+$imgactions["tfactions"] = explode(",",$tfactions);
 
-// retrieve file extensions
-$orig_ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
-$preview_ext = sql_value("select preview_extension value from resource where ref = '$ref'",'');
+$imgactions["quality"] = getval("quality",100,TRUE);
+$imgactions["resolution"] = getval("resolution",0,TRUE);
+$imgactions["gamma"] = getval("gamma",50,TRUE);
+$imgactions["srgb"] = ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""));
 
-// retrieve image paths for preview image and original file
-$originalpath= get_resource_path($ref,true,'',false,$orig_ext);
+// Generate a preview image for the operation if it doesn't already exist
+$crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date("Ymd",time()) . $scramble_key) . ".jpg";
+$crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date("Ymd",time()) . ".jpg";
 
-hook('transformcropbeforegetsize');
+$preview_actions = $imgactions;
+$preview_actions["new_width"] = 450;
+$preview_actions["new_height"] = 450;
+$preview_actions["preview"] = true;
 
-// retrieve image sizes for original image and preview used for cropping
-$cropsizes  = @getimagesize($crop_pre_file);
-$origsizes  = @getimagesize($originalpath);
+$generated = transform_file($previewsourcepath,$crop_pre_file, $preview_actions);
+
+if($reload_image)
+    {
+    if($generated)
+        {
+        $response['message'] = "SUCCESS";
+        }
+    else
+        {
+        $response['message'] = $lang["transform_preview_gen_error"];            
+        }
+    exit(json_encode($response));            
+    }
+elseif(!$generated)
+    {
+    error_alert($lang["transform_preview_gen_error"]);
+    exit();
+    }
+    
+if(file_exists($crop_pre_file))
+    {
+    $cropsizes  = getimagesize($crop_pre_file);
+    }
+else
+    {
+    $errors[] = "Unable to find preview image";
+    }
+
 $cropwidth  = $cropsizes[0];
 $cropheight = $cropsizes[1];
 
 # check that crop width and crop height are > 0
 if ($cropwidth == 0 || $cropheight == 0)
     {
-    die($lang['error-dimension-zero']);    
+    error_alert($lang['error-dimension-zero'], false); 
+    exit();   
     }
-    
-$origwidth  = $origsizes[0];
-$origheight = $origsizes[1];
 
-// For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
-// Note: if getSvgSize() can extract the width and height then the crop will work as expected, otherwise the output will
-// be the full size (ie. not cropped)
-if($orig_ext == 'svg')
-    {
-    list($origwidth, $origheight) = getSvgSize($originalpath);
-    }
 
 // Get parameters from Manage slideshow page
 $manage_slideshow_action = getvalescaped('manage_slideshow_action', '');
@@ -148,476 +194,254 @@ $return_to_url = getvalescaped('return_to_url', '');
 
 $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
-// if we've been told to do something
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'docrop'){
+if ($saveaction != '' && enforcePostRequest(false))
+    {
+    $actions["repage"] = $cropper_use_repage;
 
-$width       = getvalescaped('width','',true);
-$height      = getvalescaped('height','',true);
-$xcoord      = getvalescaped('xcoord','',true);
-$ycoord      = getvalescaped('ycoord','',true);
-$description = getvalescaped('description','');
-$cropsize    = getvalescaped('cropsize','',true);
-$new_width   = getvalescaped('new_width','',true);
-$new_height  = getvalescaped('new_height','',true);
-$alt_type    = getvalescaped('alt_type','');
+    // Get values from jcrop selection
+    $width       = getvalescaped('width',0,true);
+    $height      = getvalescaped('height',0,true);
+    $xcoord      = getvalescaped('xcoord',0,true);
+    $ycoord      = getvalescaped('ycoord',0,true);
+    // Get required size
+    $new_width   = getvalescaped('new_width',0,true);
+    $new_height  = getvalescaped('new_height',0,true);
 
-
-if (isset($_REQUEST['flip']) && $_REQUEST['flip'] == 1 && !$cropperestricted){
-    $flip = true;
-} else {
-    $flip = false;
-}
-
-if (isset($_REQUEST['rotation']) && is_numeric($_REQUEST['rotation']) && $_REQUEST['rotation'] > 0 && $_REQUEST['rotation'] < 360 && !$cropperestricted){
-    $rotation = $_REQUEST['rotation'];
-}else{
-    $rotation = 0;
-}
-
-if (isset($_REQUEST['filename']) && $cropper_custom_filename){
-	$filename = $_REQUEST['filename'];
-} else {
-	$filename = '';
-}
-
-// verify that all crop parameters are numeric - just a precaution
-if (!is_numeric($width) || !is_numeric($height) || !is_numeric($xcoord) || !is_numeric($ycoord)){
-	// should never happen, but if it does, could be bad news
-	echo $lang['nonnumericcrop'];
-	exit;
-}
-
-// Verify crop height - prevent divide by zero
-if($height == 0) {
-    echo($lang['error-dimension-zero']);
-    exit;
-}
-
-if ($cropper_debug){
-	error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
-}
-
-if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted)
-	{
-	// the user did not indicate a crop. presumably they are scaling
-	$verb = $lang['scaled'];
-	$crop_necessary = false;
-	}
-else if (!$cropperestricted)
-	{
-	$crop_necessary = true;
-	$verb = $lang['cropped'];
-	// now we need to mathematically convert to the original size
-	$finalxcoord = round ((($origwidth  * $xcoord)/$cropwidth),0);
-	$finalycoord = round ((($origheight * $ycoord)/$cropheight),0);	
-	
-	// Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
-	// If landscape crop, set the width first, then base the height on that
-	$desiredratio = $width / $height;
-	if($desiredratio > 1)
-		{
-		$finalwidth  = round ((($origwidth  * $width)/$cropwidth),0);
-		$finalheight = round ($finalwidth / $desiredratio,0);
-		}
-	else
-		{
-		$finalheight = round ((($origheight * $height)/$cropheight),0);
-		$finalwidth= round($finalheight *  $desiredratio,0);			
-		}
-	}
-	
-
-
-// determine output format
-// prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
-if (getval("slideshow","")!=""  && !$cropperestricted){$new_ext="jpg";}
-else if (isset($_REQUEST['new_ext']) && strlen($_REQUEST['new_ext']) == 3){
-	// is this an allowed extension?
-	$new_ext = strtolower($_REQUEST['new_ext']);
-	if (!in_array(strtoupper($new_ext),$cropper_formatarray)){
-		$new_ext = strtolower($orig_ext);
-	}
-} elseif (isset($cropper_default_target_format)) {
-	$new_ext = strtolower($cropper_default_target_format);
-} else {
-	$new_ext = strtolower($orig_ext);
-}
-
-if ( $cropper_custom_filename && strlen($filename) > 0){
-	$mytitle = $filename;
-} else{
-	$mytitle = escape_check("$verb " . str_replace("?",strtoupper($new_ext),$lang["fileoftype"]));
-}
-
-if (strlen($alt_type)>0){ $mytitle .= " - $alt_type"; }
-
-$mydesc = escape_check($description);
-
-# Is this a download only?
-$download=(getval("download","")!="");
-
-if (!$download && !$edit_access){
-	include "../../../include/header.php";
-	echo "Permission denied.";
-	include "../../../include/footer.php";
-	exit;
-}
-
-// Redirect to terms page if necessary
-if ($download && $terms_download){
-    $terms_accepted=getvalescaped('iaccept', '');
-    if('on'!=$terms_accepted)
+    if ($width == 0 && $height == 0)
         {
-        $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
-        $url_params["url"]=$crop_url;
-        $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
-        redirect($redirect_to_terms_url);
+        if (($new_width > 0 || $new_height > 0) || $cropperestricted)
+            {
+            // the user did not indicate a crop. presumably they are scaling
+            $verb = $lang['scaled'];
+            }
+        elseif($new_width == 0 && $new_height == 0)
+            {
+            // No scaling - maybe just rotation/image tweaks
+            $verb = $lang['tweaked'];
+            }
         }
-}
+    else if (!$cropperestricted)
+        {
+        $verb = $lang['cropped'];	
 
+        $imgactions["crop"]        = true;
+        // Get jCrop selection info
+        $imgactions["xcoord"]      = $xcoord;
+        $imgactions["ycoord"]      = $ycoord;
+        $imgactions["height"]      = $height;
+        $imgactions["width"]       = $width;
+        // Required dimensions for new image
+        $imgactions["new_height"]  = $new_height;
+        $imgactions["new_width"]   = $new_width;
+        // Pass dimensions of crop preview to allow calculations
+        $imgactions["cropheight"]  = $cropheight; 
+        $imgactions["cropwidth"]   = $cropwidth; 
+        }
 
-if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="")
-	{
-	$newfile=add_alternative_file($ref,$mytitle,$mydesc,'','',0,escape_check($alt_type));
-	$newpath = get_resource_path($ref, true, "", true, $new_ext, -1, 1, false, "", $newfile);
-	}
-else
-	{
-	$tmpdir = get_temp_dir();
-	if(!is_dir("$tmpdir/transform_plugin"))
+    // Determine output format
+    // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
+    $new_ext = getval("new_ext","");
+    if ($saveaction == "slideshow" || $saveaction == "preview")
+        {
+        $new_ext = "jpg";
+        }
+    elseif ($new_ext != "")
+        {
+        // is this an allowed extension?
+        if (!in_array(strtoupper($new_ext),$cropper_formatarray))
+            {
+            $new_ext = strtolower($orig_ext);
+            }
+        }
+    elseif (isset($cropper_default_target_format))
+        {
+        $new_ext = strtolower($cropper_default_target_format);
+        }
+    else
+        {
+        $new_ext = strtolower($orig_ext);
+        }   
+
+    if (($saveaction == "original" && !$edit_access) || ($saveaction == "slideshow" && !checkperm('a')))
+        {
+        error_alert($lang['error-permissiondenied'], true,200);
+        exit();
+        }
+
+    // Redirect to terms page if necessary
+    if ($saveaction =="download" && $terms_download)
+        {
+        $terms_accepted=getvalescaped('iaccept', '');
+        if('on'!=$terms_accepted)
+            {
+            $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
+            $urlparams["url"]=$crop_url;
+            $redirect_to_terms_url=generateURL("pages/terms.php",$urlparams);
+            redirect($redirect_to_terms_url);
+            }
+        }
+
+    // Set path to output file
+    $tmpdir = get_temp_dir();
+    if(!is_dir("$tmpdir/transform_plugin"))
         {
         // If it does not exist, create it.
         mkdir("$tmpdir/transform_plugin", 0777);
         }
-	
-	$newpath = "$tmpdir/transform_plugin/download_$ref." . $new_ext;
-	}
+    
+    $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
-// workaround for weird change in colorspace command in ImageMagick 6.7.5
-if ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""))
-    {
-    if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+
+    // Perform the actual transformation
+    $transformed = transform_file($originalpath, $newpath, $imgactions);
+
+    if($transformed)
         {
-        $colorspace1 = " -colorspace sRGB ";
-        $colorspace2 =  " -colorspace RGB ";
+        // get final pixel dimensions of resulting file
+        $newfilesize = filesize_unlimited($newpath);
+        $newfiledimensions = getimagesize($newpath);
+        $newfilewidth = $newfiledimensions[0];
+        $newfileheight = $newfiledimensions[1];
+
+        $name       = getval("filename","");
+        $filename   = safe_file_name($name);
+        if (trim($filename) == "")
+            {
+            $filename = $ref . "_" . strtolower($lang['transformed']);
+            }
+        $filename .= "." . $new_ext;
+
+        // Use the resultant file as requested
+        if ($saveaction == "alternative" && $cropper_enable_alternative_files)
+            {
+            $description    = getval("description","");
+            $alt_type       = getval('alt_type','');
+            $mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
+            $mptext = $mpcalc == 0 ? "" : " ($mpcalc " . $lang["megapixel-short"] . ")";
+            
+            $description .= (trim($description) == "" ? "": " - " ) . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " " . $mptext;
+                        
+            $newfile = add_alternative_file($ref,$name,$description,$filename,$new_ext,$newfilesize,$alt_type);
+            $altpath = get_resource_path($ref, true, "", true, $new_ext, -1, 1, false, "", $newfile);
+            rename($newpath,$altpath);
+            resource_log($ref,'b','',"$new_ext " . strtolower($verb) . " to $newfilewidth x $newfileheight");
+            create_previews($ref,false,$new_ext,false,false,$newfile);
+            redirect($view_url);
+            exit();
+            }
+        elseif ($saveaction == "original" && $cropper_transform_original && $editaccess && !$cropperestricted)
+            {
+            // Replace the original file
+            $keep_original = getval("keep_original", "") != "";
+            $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
+            if (!$success)
+                {
+                $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));
+                }
+            hook("transformcropafterreplaceoriginal");
+
+            if('' !== $return_to_url)
+                {
+                redirect($return_to_url);
+                }
+
+            redirect($view_url);
+            exit();
+            }
+        elseif ($saveaction == "slideshow" && !$cropperestricted && checkperm('a'))
+            {
+            # Produce slideshow.
+            $sequence = getval("sequence", 0, true);
+            if ($sequence == 0)
+                {
+                error_alert($lang['error_slideshow_invalid'], false);
+                exit();
+                }
+
+            if(!checkperm('a'))
+                {
+                $onload_message = array("title" => $lang["error"],"text" =>$lang['error-permissiondenied']);
+                }
+
+            if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
+                !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
+                {
+                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder)), $lang['error-file-permissions']);
+                exit();
+                }
+            rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
+            set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
+            unlink($crop_pre_file);
+            redirect($baseurl_short . "pages/home.php");
+            exit();
+            }
+        elseif ($saveaction == "download")
+            {
+            // we are supposed to download
+            # Output file, delete file and exit
+            // Redirect to terms page if necessary
+            if ($terms_download)
+                {
+                $terms_accepted=getvalescaped('iaccept', '');
+                if('on'!=$terms_accepted)
+                    {
+                    $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
+                    $url_params["url"]=$crop_url;
+                    $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
+                    redirect($redirect_to_terms_url);
+                    exit();
+                    }
+                }
+
+            // Download file
+            $filesize=filesize_unlimited($newpath);
+            ob_flush();
+
+            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+            header("Content-Length: " . $filesize);
+            set_time_limit(0);
+
+            $sent = 0;
+            $handle = fopen($newpath, "r");
+
+            // Now we need to loop through the file and echo out chunks of file data
+            while($sent < $filesize)
+                {
+                echo fread($handle, $download_chunk_size);
+                ob_flush();
+                $sent += $download_chunk_size;
+                }
+            #Delete File:
+            unlink($newpath);
+
+            exit();
+            }
+        elseif ($saveaction == "preview")
+            {
+            $pretmp = get_resource_path($ref,true,"tmp",true,"jpg");
+            $result = rename($newpath, $pretmp);
+            # Create previews
+            create_previews($ref,false,"jpg",true);
+            redirect($view_url);
+            exit();
+            }
+        hook("aftercropfinish");
+
+        // If other pages request us to go back to them rather then on the view page, do so
+        if('' !== $return_to_url)
+            {
+            redirect($return_to_url);
+            }
+
+        // send user back to view page
+        redirect($view_url);
+        exit();
         }
     else
         {
-        $colorspace1 = " -colorspace RGB ";
-        $colorspace2 =  " -colorspace sRGB ";
+        $onload_message = array("title" => $lang["error"],"text" =>str_replace("%res",$ref,$lang['error-transform-failed']));
         }
     }
-else
-    {
-    $colorspace1 = '';
-    $colorspace2 = '';
-    }
-
-$commandprefix="";
-$keep_transparency=false;
-if (strtoupper($new_ext)=="PNG" || strtoupper($new_ext)=="GIF")
-    {
-    $commandprefix = " -background transparent ";
-    $keep_transparency=true;
-    $command .= $commandprefix . " \"$originalpath\" ";
-    
-    }
-else
-    {
-    $command .= $commandprefix . " \"$originalpath\"[0] ";
-    }
-
-    
-$quality = getval("quality","",TRUE);
-if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($new_ext) , array("PNG","JPG")))
-	{
-	$command .= " -quality " .  $quality . "% ";
-	}
-
-
-$resolution=getval("resolution","",TRUE);
-if ($resolution!="")
-	{
-	$command .= " -units PixelsPerInch -density " .  $resolution . " ";
-	}
-	
-	
-// below is a hack to make this work with multilayer images
-// the result will always be a flattened single-layer image
-if ($orig_ext=="psd" && !$keep_transparency){$command .= " -alpha Off ";}
-$command .= "-flatten ";
-
-$command .= $colorspace1;
-
-if ($crop_necessary  && !$cropperestricted){
-	$command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+$finalycoord ";
-}
-
-if ($cropper_use_repage){
-	$command .= " +repage "; // force imagemagick to repage image to fix canvas and offset info
-}
-
-// did the user request a width? If so, tack that on
-if (is_numeric($new_width)||is_numeric($new_height)){
-	
-	
-	$scalewidth = is_numeric($new_width)?true:false;
-	$scaleheight = is_numeric($new_height)?true:false;
-	
-	if (!$cropper_allow_scale_up){
-		// sanity checks
-		// don't allow a specified size larger than the natural crop size
-		// or the original size of the image
-		if ($crop_necessary) {
-			$checkwidth = $finalwidth;
-			$checkheight = $finalheight;
-		} else {
-			$checkwidth = $origwidth;
-			$checkheight = $origheight;
-		}
-		
-		if (is_numeric($new_width) && $new_width > $checkwidth){
-			// if the requested width is greater than the original or natural size, ignore
-			$new_width = '';
-			$scalewidth = false;
-		}
-	
-		if (is_numeric($new_height) && $new_height > $checkheight){
-			// if the requested height is greater than original or natural size, ignore
-			$new_height = '';
-			$scaleheight = false;
-		}
-	
-	}
-
-	if ($scalewidth || $scaleheight){
-		// add scaling command
-		// note that there is a minor issue here: may be rounding
-		// errors when the crop box is scaled up from preview size to original	 size
-		// if so and the resulting match doesn't quite match the required width and 
-		// height, there may be a tiny amount of distortion introduced as the
-		// program scales up or down by a few pixels. This should be
-		// imperceptible, but perhaps worth revisiting at some point.
-		
-		$command .= " -scale $new_width";
-		
-		if ($new_height > 0){
-			$command .= "x$new_height";
-		}
-		
-		$command .= " ";
-	}
-	
-}
-
-if ($flip  && !$cropperestricted){
-    $command .= " -flop ";
-}
-
-if ($rotation > 0 && !$cropperestricted){
-    $command .= " -rotate $rotation ";
-}
-
-
-if ($flip || $rotation > 0 && !$cropperestricted){
-    // assume we should reset exif orientation flag since they have rotated to another orientation
-    $command .= " -orient undefined ";
-}
-
-
-$command .= $colorspace2;
-
-$command .= " \"$newpath\"";
-
-if ($cropper_debug && !$download && getval("slideshow","")==""){
-	debug($command);
-	if (isset($_REQUEST['showcommand'])){
-		echo htmlspecialchars($command);
-		delete_alternative_file($ref,$newfile);
-		exit;
-	}
-}
-
-$shell_result = run_command($command);
-if ($cropper_debug){
-	error_log("SHELL RESULT: $shell_result");
-}
-
-if ($resolution!="")
-        {
-        // See if we have got exiftool, in which case we can target the Photoshop specific PPI data
-        $exiftool_fullpath = get_utility_path("exiftool");
-        global $exiftool_no_process;
-        if (($exiftool_fullpath!=false) && !in_array($new_ext,$exiftool_no_process))
-                {
-                $command = $exiftool_fullpath . " -m -overwrite_original -E ";
-                $command.= "-Photoshop:XResolution=$resolution -Photoshop:YResolution=$resolution";
-                $command.= " " . escapeshellarg($newpath);
-                $output = run_command($command);
-                }
-        }
-
-
-// get final pixel dimensions of resulting file
-$newfilesize = filesize_unlimited($newpath);
-$newfiledimensions = getimagesize($newpath);
-$newfilewidth = $newfiledimensions[0];
-$newfileheight = $newfiledimensions[1];
-
-// generate previews if needed
-global $alternative_file_previews;
-if ($cropper_enable_alternative_files && $alternative_file_previews && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted)
-	{
-	create_previews($ref,false,$new_ext,false,false,$newfile);
-	}
-
-// strip of any extensions from the filename, since we'll provide that
-if(preg_match("/(.*)\.\w\w\w\\$/",$filename,$matches)){
-	$filename = $matches[1];
-}
-
-// avoid bad characters in filenames
-$filename = preg_replace("/[^A-Za-z0-9_\- ]/",'',$filename);
-//$filename = str_replace(' ','_',trim($filename));
-
-// if there is not a filename, create one
-if ( $cropper_custom_filename && strlen($filename) > 0){
-	$filename = "$filename";
-} else {
-	if (!$alternative_file_previews || $download || getval("slideshow","")!="")
-		{
-		$filename=$ref . "_" . strtolower($lang['transformed']);
-		}
-	elseif ($original && !$cropperestricted)
-		{
-                // fixme
-                }
-        else
-                {
-		$filename = "alt_$newfile";
-		}
-}
-
-$filename = escape_check($filename);
-
-$lcext = strtolower($new_ext);
-
-$mpcalc = round(($newfilewidth*$newfileheight)/1000000,1);
-
-// don't show  a megapixel count if it rounded down to 0
-if ($mpcalc > 0){
-	$mptext = " ($mpcalc " . $lang["megapixel-short"] . ")";
-} else {
-	$mptext = '';
-}
-
-if (strlen($mydesc) > 0){ $deschyphen = ' - '; } else { $deschyphen = ''; }
-	
-// Do something with the final file:
-if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="" && !$cropperestricted){
-    // we are supposed to make an alternative
-    
-	// note that we will now record transformation applied to alt files for future use
-    $sql  = "update resource_alt_files set file_name='{$filename}.".$lcext."',file_extension='$lcext', file_size = '$newfilesize', description = concat(description,'" . $deschyphen . $newfilewidth . " x " . $newfileheight . " " . $lang['pixels'] . " $mptext') ";
-	$sql .= ", transform_scale_w=" . ($new_width>0?"'$new_width'":"null") . ", transform_scale_h=" . ($new_height>0?"'$new_height'":"null") . "";
-	$sql .= ", transform_crop_w=" . ($finalwidth>0?"'$finalwidth'":"null") . ", transform_crop_h=" . ($finalheight>0?"'$finalheight'":"null") . ", transform_crop_x=" . ($finalxcoord>0?"'$finalxcoord'":"null") . ", transform_crop_y=" . ($finalycoord>0?"'$finalycoord'":"null") . "";
-	$sql .= ", transform_flop=" . ($flip?"'1'":"null") . ", transform_rotation=" . ($rotation>0?"'$rotation'":"null") . "";
-    $sql .= " where ref='$newfile'";
-
-	$result = sql_query($sql);
-	resource_log($ref,'b','',"$new_ext " . strtolower($verb) . " to $newfilewidth x $newfileheight");
-
-} elseif ($original && getval("slideshow","")=="" && !$cropperestricted) {
-    // we are supposed to replace the original file
-
-    $origalttitle = $lang['priorversion'];
-    $origaltdesc = $lang['replaced'] . " " . strftime("%Y-%m-%d, %H:%M");
-    $origfilename = sql_value("select value from resource_data left join resource_type_field on resource_data.resource_type_field = resource_type_field.ref where resource = '$ref' and name = 'original_filename'",$ref . "_original.$orig_ext");
-    $origalt  = add_alternative_file($ref,$origalttitle,$origaltdesc);
-    $origaltpath = get_resource_path($ref, true, "", true, $orig_ext, -1, 1, false, "", $origalt);
-    $mporig =  round(($origwidth*$origheight)/1000000,2);
-    $filesizeorig = filesize_unlimited($originalpath);
-    rename($originalpath,$origaltpath);
-    $result = sql_query("update resource_alt_files set file_name='{$origfilename}',file_extension='$orig_ext',file_size = '$filesizeorig' where ref='$origalt'");
-    $neworigpath = get_resource_path($ref,true,'',false,$new_ext);
-    rename($newpath,$neworigpath);
-    $result = sql_query("update resource set file_extension = '$new_ext' where ref = '$ref' limit 1"); // update extension
-    resource_log($ref,'t','','original transformed');
-    create_previews($ref, false, $orig_ext, false, false, $origalt);
-    create_previews($ref,false,$new_ext);
-
-    # delete existing resource_dimensions
-    sql_query("delete from resource_dimensions where resource='$ref'");
-    sql_query("insert into resource_dimensions (resource, width, height, file_size) values ('$ref', '$newfilewidth', '$newfileheight', '" . (int)$newfilesize . "')");
-
-    # call remove annotations, since they will not apply to transformed
-    hook("removeannotations","",array($ref));
-
-	hook("transformcropafterreplaceoriginal");
-
-    if('' !== $return_to_url)
-        {
-        redirect($return_to_url);
-        }
-
-    redirect($view_url);
-    exit;
-
-} elseif (getval("slideshow","")!="" && !$cropperestricted)
-	{
-	# Produce slideshow.
-	$sequence = getval("sequence", "");
-
-	if (!is_numeric($sequence)) {exit("Invalid sequence number. Please enter a numeric value.");}
-
-    if(!checkperm('t'))
-        {
-        exit('Permission denied.');
-        }
-
-	if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
-        !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
-		{
-        exit ("Unable to replace existing slideshow image. Please check file permissions or use different slideshow sequence number");
-        }
-
-	copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-    set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
-
-	unlink($newpath);
-	unlink($crop_pre_file);
-	}
-else
-    {
-    // we are supposed to download
-    # Output file, delete file and exit
-    $filename.="." . $new_ext;
-    header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-    header("Content-Type: application/octet-stream");
-
-    set_time_limit(0);
-
-    daily_stat('Resource download', $ref);
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['transformimage'], '',  $lang['cropped'] . ": " . (string)$newfilewidth . "x" . (string)$newfileheight);
-
-    readfile($newpath);
-    unlink($newpath);	
-    unlink($crop_pre_file);
-
-    exit();
-    }
-hook("aftercropfinish");
-
-// If other pages request us to go back to them rather then on the view page, do so
-if('' !== $return_to_url)
-    {
-    redirect($return_to_url);
-    }
-
-// send user back to view page
-redirect($view_url);
-
-} else {
 
 // get resource info
 $resource = get_resource_data($ref);
@@ -627,8 +451,8 @@ if ($resource["has_image"]==1)
     {
     if (!file_exists($crop_pre_file))
         {
-        echo $lang['noimagefound'];
-        exit;
+        error_alert($lang['noimagefound']);
+        exit();
         }
     $origpresizes = getimagesize($crop_pre_file);
     $origprewidth = $origpresizes[0];
@@ -650,16 +474,27 @@ if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
         ),
         array(
             'title' => $lang["manage_slideshow"],
-            'href'  => $baseurl_short . "pages/admin/admin_manage_slideshow.php"
+            'href'  => $baseurl_short . "pages/admin/admin_manage_slideshow.php",
+        )
+    );
+    }
+else
+    {
+    $links_trail = array(
+        array(
+            'title' => $lang["backtoview"] . " #" . $ref,
+            'href'  => $view_url,
         )
     );
     }
 
-$links_trail[] = array('title' => $original ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']);
+$links_trail[] = array('title' => $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform'],   
+    'help'  => "plugins/transform_new",
+    );
 
 renderBreadcrumbs($links_trail);
 
@@ -671,431 +506,832 @@ renderBreadcrumbs($links_trail);
       }
   else
       {
-      echo ($original ? $lang['transformblurb-original'] : $lang['transformblurb']);
+      echo ($saveaction == "original" ? $lang['transformblurb-original'] : $lang['transformblurb']);
       }?>
 </p>
-<?php
 
-if (file_exists($crop_pre_file))
-    {
-    ?>
-    <div id='cropimgdiv' style='float:left;padding:0;margin:0;' onmouseover='unfocus_widths();' ><img src="<?php echo $crop_pre_url?>" id='cropimage' /></div>
+
+<div id="cropdiv">
+    <div id='cropimgdiv' onmouseover='unfocus_widths();' >
+        
+        <div id='crop_imgholder'>
+            <img src="<?php echo $crop_pre_url?>" id='cropimage' />
+        </div>
+    </div>
     <?php
-    }
 		
-		
-if(!$cropperestricted)
-    {
-    ?>
-    <script type="text/javascript" language="javascript">
+    if(!$cropperestricted)
+        {
+        ?>
+        <script>
         function onEndCrop( coords )
             {
-            document.dimensionsform.xcoord.value=coords.x;
-            document.dimensionsform.ycoord.value=coords.y;
-            document.dimensionsform.width.value=coords.w;
-            document.dimensionsform.height.value=coords.h;
+            document.imagetools_form.xcoord.value=coords.x;
+            document.imagetools_form.ycoord.value=coords.y;
+            document.imagetools_form.width.value=coords.w;
+            document.imagetools_form.height.value=coords.h;
             }
 
         var jcrop_api;
-    
-		    /**
-		     * A little manager that allows us to reset the options dynamically
-		     */
-		    var CropManager = {
-			    /**
-			     * Holds the current Cropper.Img object
-			     * @var obj
-			     */
-			    curCrop: null,
-									    
-			    /** 
-			     * Attaches/resets the image cropper
-			     *
-			     * @access private
-			     * @param obj Event object
-			     * @return void
-			     */
-			    attachCropper: function( e ) {
-				    document.dimensionsform.lastWidthSetting.value = document.getElementById('new_width').value;
-				    document.dimensionsform.lastHeightSetting.value = document.getElementById('new_height').value;
-    
-    
-				    this.removeCropper();
-				    this.curCrop = jQuery('#cropimage').Jcrop(
+
+            /**
+             * A little manager that allows us to reset the options dynamically
+             */
+            var CropManager = {
+                /**
+                 * Holds the current Cropper.Img object
+                 * @var obj
+                 */
+                curCrop: null,
+                                        
+                /** 
+                 * Attaches/resets the image cropper
+                 *
+                 * @access private
+                 * @param obj Event object
+                 * @return void
+                 */
+                attachCropper: function( e ) {
+
+                    document.imagetools_form.lastWidthSetting.value = document.getElementById('new_width').value;
+                    document.imagetools_form.lastHeightSetting.value = document.getElementById('new_height').value;
+                    
+                    this.removeCropper();
+                    //console.log("attaching cropper");
+                    this.curCrop = jQuery('#cropimage').Jcrop(
                         {
-                            onRelease: onEndCrop ,
-                            onChange: onEndCrop ,
-                            onSelect: onEndCrop ,
-                            aspectRatio: jQuery('#new_width').val()/jQuery('#new_height').val()
+                        onRelease: onEndCrop ,
+                        onChange: onEndCrop ,
+                        onSelect: onEndCrop ,
+                        aspectRatio: jQuery('#new_width').val()/jQuery('#new_height').val()
                         },
                         function()
                             {
                             jcrop_api = this;
+                            jcrop_active=true;
                             }
                     );
     
-				    if( e != null ) Event.stop( e );
-			    },
-			    
-			    /**
-			     * Removes the cropper
-			     *
-			     * @access public
-			     * @return void
-			     */
-			    removeCropper: function() {
-				    if( this.curCrop != null ) {
-					    this.curCrop = null;
-				    }
-			    },
-			    
-			    /**
-			     * Resets the cropper, either re-setting or re-applying
-			     *
-			     * @access public
-			     * @return void
-			     */
-			    resetCropper: function() {
-				    this.attachCropper();
-			    }
-		    };	
-	    
-		    
-		    
-		    
-		    function unfocus_widths(){
-			    document.getElementById('new_width').blur();
-			    document.getElementById('new_height').blur();
-		    }
-		    
-		    function evaluate_values(){
-			    // do we need to redraw the cropper?
-			    if (
-				    (document.getElementById('new_width').value == document.getElementById('lastWidthSetting').value && document.getElementById('new_height').value == document.getElementById('lastHeightSetting').value) 
-				    || (document.getElementById('lastWidthSetting').value == '' && document.getElementById('new_width').value == '') 
-				    || (document.getElementById('lastHeightSetting').value == '' && document.getElementById('new_height').value == '') 
-				    )
-			    {
-				    return true;
-			    } else {
-				    CropManager.attachCropper();
-				    return true;
-			    }
-			    
-		    
-		    }
-		    
+                    if( e != null ) Event.stop( e );
+                },
+                
+                /**
+                 * Removes the cropper
+                 *
+                 * @access public
+                 * @return void
+                 */
+                removeCropper: function() {
+                    if( this.curCrop != null ) {
+                        this.curCrop = null;
+                    }
+                    },
+                
+                /**
+                 * Resets the cropper, either re-setting or re-applying
+                 *
+                 * @access public
+                 * @return void
+                 */
+                resetCropper: function() {
+                    this.attachCropper();
+                }
+            };
+
+            // Set defaults
+            clear_jcrop();
+            
+            function unfocus_widths()
+                {
+                document.getElementById('new_width').blur();
+                document.getElementById('new_height').blur();
+                }
+
+            function clear_jcrop()
+                {
+                imgheight = <?php echo (int)$cropheight ?>;
+                imgwidth  = <?php echo (int)$cropwidth?>;
+                tfactions = [];
+                rotated   = false;
+                flippedx  = false;
+                flippedy  = false;
+                imgloadinprogress = false;
+                if (typeof curCoords !== "undefined")
+                    {
+                    delete curCoords;
+                    }
+                if(typeof jcrop_active != 'undefined' && jcrop_active)
+                    {
+                    delete jcrop_active;
+                    }
+                }
+            
+            function evaluate_values()
+                {
+                // do we need to redraw the cropper?
+                if (
+                    (document.getElementById('new_width').value == document.getElementById('lastWidthSetting').value && document.getElementById('new_height').value == document.getElementById('lastHeightSetting').value) 
+                    || (document.getElementById('lastWidthSetting').value == '' && document.getElementById('new_width').value == '') 
+                    || (document.getElementById('lastHeightSetting').value == '' && document.getElementById('new_height').value == '') 
+                    )
+                    {
+                    return true;
+                    }
+                else
+                    {
+                    CropManager.attachCropper();
+                    return true;
+                    }
+                }
+            
             function validate_transform(theform)
                 {
-			    // make sure that this is a reasonable transformation before we submit the form.
-                // fixme - could add more sophisticated validation here
                 <?php
-				if ($cropper_force_original_format)
-					{
-					// Ignore valid dimension check as user may just want to download a different file format
-					?> 
-					if (theform.xcoord.value == 0 && theform.ycoord.value == 0 && theform.new_width.value == '' && theform.new_height.value == '' <?php if ($cropper_rotation) { ?>&& theform.rotation.value == 0 & !theform.flip.checked <?php } ?>){
-				    alert('<?php echo addslashes($lang['errormustchoosecropscale']); ?>');
-				    return false;
-					}
-					<?php 
-					}
-	    
-			    if (!$cropper_allow_scale_up) { ?>
-				    if (Number(theform.new_width.value) > Number(theform.origwidth.value) || Number(theform.new_height.value) > Number(theform.origheight.value)){
-					    alert('<?php echo addslashes($lang['errorspecifiedbiggerthanoriginal']); ?>');
-					    return false;
-				    }
-                <?php } ?>
-                
+                if (!$cropper_allow_scale_up) 
+                    { ?>
+                    if (Number(theform.new_width.value) > Number(theform.origwidth.value) || Number(theform.new_height.value) > Number(theform.origheight.value))
+                        {
+                        alert('<?php echo addslashes($lang['errorspecifiedbiggerthanoriginal']); ?>');
+                        return false;
+                        }
+                    <?php
+                    }?>
                 return true;
-		        }
+                }
 
-    // Function used to set the information needed by the cropper and to display/ hide transform options & actions
-    function replace_slideshow_set_information(replace_slideshow_checkbox)
-        {
-        if(replace_slideshow_checkbox.checked)
+        function check_cropper_selection()
             {
-            document.getElementById('new_width').value  = '<?php if(isset($home_slideshow_width)) { echo $home_slideshow_width; } else { echo "517"; } ?>';
-            document.getElementById('new_height').value = '<?php if(isset($home_slideshow_height)) { echo $home_slideshow_height; } else { echo "350"; } ?>';
+            if(typeof jcrop_active != 'undefined' && jcrop_active)
+                {
+                var curCoords = jcrop_api.tellSelect();
+                if(curCoords.w === 0 && curCoords.h === 0)
+                    {
+                    styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['error_crop_invalid'] ?>');
+                    return false;
+                    }
+                }
+
+            return true;
+            }
+
+        function postCrop(download=false)
+            {
+            cropform = document.getElementById('imagetools_form');
+            if(check_cropper_selection() && validate_transform(cropform))
+                {
+                if(download)
+                    {
+                    console.log("submitting");
+                    cropform.submit();
+                    }
+                else
+                    {
+                    console.log("CentralSpacePost");
+                    return CentralSpacePost(cropform,false);
+                    }
+                }
+            }
+
+        function cropReload(action)
+            {
+            console.log('cropReload');
+
+            // Get current settings
+            imgheight = jQuery('#cropimage').height();
+            imgwidth = jQuery('#cropimage').width();
+            jcropreload = false;
+            flippedx = false;
+            flippedy = false;
+            rotated = false;
+            lastaction = (tfactions.length > 0 ? tfactions[tfactions.length - 1] : "");
+
+            console.log("before load imgheight " + imgheight);
+            console.log("before load imgwidth " + imgwidth); 
+            if(typeof jcrop_active != 'undefined' && jcrop_active)
+                {
+                // Disable cropper but record co-ordinates
+                curCoords = jcrop_api.tellSelect();
+                jcrop_api.destroy();
+                console.log('killed jcrop');
+                jcrop_active=false;
+                jcropreload = true;
+                }
+            if(action=="reset")
+                {
+                tfactions = [];
+                imgheight = <?php echo $origpreheight ?>;
+                imgwidth = <?php echo $origprewidth ?>;
+                document.imagetools_form.lastWidthSetting.value = "";
+                document.imagetools_form.lastHeightSetting.value ="";
+                document.imagetools_form.gamma.value = "50";
+                jcropreload = cropper_always;
+                console.log("jcropreload " + jcropreload);
+                jQuery('#croptools').hide();
+                }
+            else if(action == "rotate")
+                {
+                console.log("last action: " + lastaction);
+                // If last action was also rotation just change the value
+                if(lastaction.substring(0,1) == "r")
+                    {
+                    lastrotation = parseInt(lastaction.substring(1));
+                    newrotation = lastrotation + 90;
+                    if (newrotation == 360)
+                        {
+                        tfactions.pop();
+                        }
+                    else
+                        {
+                        tfactions[tfactions.length - 1] = "r" + newrotation;
+                        }
+                    }
+                else
+                    {
+                    tfactions.push("r90");
+                    console.log("standard rotate");  
+                    }
+                // Set the width to height and vice-versa so that new co-ordinates can be calculated
+                imgheight = jQuery('#cropimage').width();
+                imgwidth  = jQuery('#cropimage').height();
+                rotated=true;
+                }
+            else if(action == "flipx")
+                {
+                tfactions.push("x"); 
+                imgheight = jQuery('#cropimage').height();
+                imgwidth = jQuery('#cropimage').width();
+                if(jcropreload)
+                    {
+                    flippedx = true;
+                    }
+                }
+            else if(action == "flipy")
+                {
+                tfactions.push("y"); 
+                imgheight = jQuery('#cropimage').height();
+                imgwidth = jQuery('#cropimage').width();
+                if(jcropreload)
+                    {
+                    flippedy = true;
+                    }
+                }
+            // Update form input
+            jQuery("#tfactions").val(tfactions.join());
+            var crop_data = {
+                ref: '<?php echo $ref; ?>',
+                reload_image: 'true',
+                gamma: jQuery('#gamma').val(),
+                tfactions: tfactions.join(),
+                ajax: true,
+                <?php echo generateAjaxToken('crop_reload'); ?>
+                };
+            cropdate = new Date();
+            CentralSpaceShowLoading();
+            jQuery.ajax({
+                type: 'POST',
+                url: baseurl_short + 'plugins/transform/pages/crop.php',
+                data: crop_data,
+                dataType: "json",
+                success: function(data) {
+                    if (data.message.trim() == "SUCCESS")
+                        {
+                        console.log('Replacing image');
+                        jQuery('#cropimage').attr('src','<?php echo $crop_pre_url ?>&' + cropdate/1000);
+                        }
+                    },
+                error: function (err) {
+                    console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                    styledalert("Unable to modify image");
+                    }
+                }); 
+            }
+        
+        jQuery('#cropimage').on("load", function() 
+            {
+            CentralSpaceHideLoading();
+            console.log("cropimage loaded");
+            if(typeof imgwidth === "undefined")
+                {
+                console.log("getting new size");
+                imgheight = jQuery('#cropimage').height();
+                imgwidth = jQuery('#cropimage').width();
+                }
+
+            // console.log("afterload imgheight " + imgheight);
+            // console.log("afterload imgwidth " + imgwidth);
             
-            document.getElementById('transform_options').style.display = 'none';
-            document.getElementById('transform_actions').style.display = 'none';
-            document.getElementById('transform_slideshow_options').style.display = 'block';
+            // Adjust padding and image to match new size
+            lpad = imgheight > imgwidth ? ((imgheight-imgwidth)/2) : 0;
+            tpad = imgwidth > imgheight ? ((imgwidth-imgheight)/2) : 0;
+            jQuery('#crop_imgholder').css("padding-left",lpad);
+            jQuery('#crop_imgholder').css("padding-top",tpad);
+            jQuery('#cropimage').height(imgheight);
+            jQuery('#cropimage').width(imgwidth);
+            // re-attach cropper if we have saved co-ordinates
+            if (typeof jcropreload !== "undefined" && jcropreload==true && typeof curCoords !== "undefined")
+                {
+                // Get current preview image co-ordinates
+                curx = curCoords["x"];
+                cury = curCoords["y"];
+                curx2 = curCoords["x2"];
+                cury2 = curCoords["y2"];
+                // Transform based on action
+                if (typeof flippedx !== "undefined" && flippedx==true)
+                    {
+                    newx = imgwidth - curx2;
+                    newy = cury;
+                    newx2 = imgwidth - curx;
+                    newy2 = cury2;
+                    }
+                else if (typeof flippedy !== "undefined" && flippedy==true)
+                    {
+                    newx = curx;
+                    newy = imgheight - cury2;
+                    newx2 = curx2;
+                    newy2 = imgheight - cury;
+                    }
+                else if (typeof rotated !== "undefined" && rotated==true)
+                    {
+                    if(!slideshow_edit)
+                        {
+                        newx = imgwidth - cury2;
+                        newy = curx;
+                        newx2 = imgwidth - cury;
+                        newy2 = curx2;
+                        neww = jQuery('#new_width').val();
+                        newh = jQuery('#new_height').val();
+                        jQuery('#new_width').val(newh);
+                        jQuery('#new_height').val(neww);
+                        }
+                    else if(slideshow_edit)
+                        {
+                        curw = curx2 - curx;
+                        curh = cury2 - cury;
+                        newx = 0;
+                        newy = 0;
+                        newx2 = curw;
+                        newy2 = curh;
+                        if(newx2 > imgheight)
+                            {
+                            newx2 = imgheight;
+                            }
+                        if(newy2 > imgwidth)
+                            {
+                            newy = imgwidth - curheight;
+                            }
+                        }
+                    }
+                else
+                    {
+                    // Same as before
+                    newx = curx;
+                    newy = cury;
+                    newx2 = curx2;
+                    newy2 = cury2;
+                    }
+
+                CropManager.attachCropper();
+                console.log('Re-adding selection jcrop_api.setSelect([' + newx + ',' + newy + ',' + newx2 + ',' + newy2 + ']);');
+                jcrop_api.setSelect([newx,newy,newx2,newy2]);
+                }            
+            });
+            
+
+        function toggleCropper()
+            {
+            if(typeof jcrop_active != 'undefined' && jcrop_active)
+                {
+                jcrop_api.destroy();
+                jcrop_active=false;
+                }
+            else
+                {
+                CropManager.attachCropper();
+                }
+            }
+
+        function setCropperSize(sizestring)
+            {
+            cropdims = sizestring.split("x");
+            jQuery('#new_width').val(cropdims[0]);
+            jQuery('#new_height').val(cropdims[1]);
             evaluate_values();
+            }
+
+        <?php 
+        if('' === trim($manage_slideshow_action))
+            {?>
+            slideshow_edit  = false;
+            cropper_always  = false;
+            jQuery(document).ready(function ()
+                {
+                jQuery('input[type=radio][name=saveaction]').change(function()
+                    {                
+                    jQuery('.imagetools_save_action').hide();
+                    if(this.value=='alternative')
+                        {
+                        slideshow_edit=false;
+                        jQuery('#imagetools_alternative_actions').show();
+                        jQuery('#new_width').val('');
+                        jQuery('#new_height').val('');
+                        evaluate_values();
+                        cropper_always=false;
+                        }
+                    else if(this.value=='download')
+                        {
+                        slideshow_edit=false;
+                        jQuery('#imagetools_download_actions').show();
+                        jQuery('#new_width').val('');
+                        jQuery('#new_height').val('');
+                        evaluate_values();
+                        cropper_always=false;
+                        }
+                    else if(this.value=='slideshow')
+                        {
+                        slideshow_edit=true;
+                        jQuery('#imagetools_slideshow_actions').show();
+                        jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
+                        jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+                        if(typeof jcrop_active == 'undefined' || !jcrop_active)
+                            {
+                            CropManager.attachCropper();
+                            }
+                        evaluate_values();
+                        cropper_always=true;
+                        }
+                    else if(this.value=='original')
+                        {
+                        slideshow_edit=false;
+                        jQuery('#imagetools_original_actions').show();
+                        jQuery('#new_width').val('');
+                        jQuery('#new_height').val('');
+                        evaluate_values();
+                        cropper_always=false;
+                        }
+                    else if(this.value=='preview')
+                        {
+                        slideshow_edit=false;
+                        jQuery('#imagetools_preview_actions').show();
+                        jQuery('#new_width').val('');
+                        jQuery('#new_height').val('');
+                        evaluate_values();
+                        cropper_always=false;
+                        }
+                    });
+                });
+            <?php
             }
         else
             {
-            document.getElementById('transform_options').style.display = 'block';
-            document.getElementById('transform_actions').style.display = 'block';
-            document.getElementById('transform_slideshow_options').style.display = 'none';
-            }
-
-        return;
-        }
-
-    function check_cropper_selection()
-        {
-        var curCoords = jcrop_api.tellSelect();
-        if(curCoords.w === 0 && curCoords.h === 0)
-            {
-            styledalert('Warning!', 'Please select an appropriate size!');
-
-            return false;
-            }
-
-        return true;
-        }
-
-    </script>
-    <?php
-    }
-    ?>	
-    <div id="cropbox"  style='float:left; margin-left:20px'>
-      <form name='dimensionsform' id="dimensionsForm" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
-	<input type='hidden' name='action' value='docrop' />
-	<input type='hidden' name='xcoord' id='xcoord' value='0' />
-	<input type='hidden' name='ycoord' id='ycoord' value='0' />
-	<input type='hidden' name='width' id='width' value='<?php echo $origprewidth ?>' />
-	<input type='hidden' name='height' id='height'  value='<?php echo $origpreheight ?>' />
-	<input type='hidden' name='ref' id='ref' value='<?php echo $ref; ?>' />
-	<input type='hidden' name='cropsize' id='cropsize' value='<?php echo $cropper_cropsize; ?>' />
-	<input type='hidden' name='lastWidthSetting' id='lastWidthSetting' value='' />
-	<input type='hidden' name='lastHeightSetting' id='lastHeightSetting' value='' />
-	<input type='hidden' name='origwidth' id='origwidth'  value='<?php echo $origwidth ?>' />
-	<input type='hidden' name='origheight' id='origheight'  value='<?php echo $origheight ?>' />
-    <?php
-    if('' !== $return_to_url)
-        {
-        ?>
-        <input name="return_to_url" type="hidden" value="<?php echo $return_to_url; ?>">
-        <?php
-        }
-    ?>
-	<?php
-	hook("cropafterhiddeninputs");
-	if(is_writable(dirname(__FILE__)."/../../../" . $homeanim_folder)){echo "<!-- File Permissions Error-->";} //Notify of file permissions error
-	if ($original && !$cropperestricted){ ?> <input type='hidden' name='mode' id='mode'  value='original' /> <?php }
-	if ($cropper_enable_replace_slideshow && !$cropperestricted && checkperm('t') && is_writable(dirname(__FILE__)."/../../../" . $homeanim_folder)) 
-        {
-        echo $lang['replaceslideshowimage']; ?>
-        <input type="checkbox" name='slideshow' id='slideshow' value="1" onClick="replace_slideshow_set_information(this);"
-        <?php if('' !== trim($manage_slideshow_action)) { ?> checked<?php } ?> />
-        <?php
-        }
-        ?>
-	<table id="transform_slideshow_options"<?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
-		<tr><td colspan="4"><p><?php echo $lang['transformcrophelp'] ?></p></td></tr>
-	    <tr>
-		    <td style='text-align:right'><?php echo $lang["slideshowmakelink"]; ?>: </td>
-		    <td><input type="checkbox" name='linkslideshow' id='linkslideshow' value="1" checked></td>
-	    </tr>
-	    <tr>
-	    	<td style='text-align:right'><?php echo $lang["slideshowsequencenumber"]; ?>: </td>
-	    	<td><input type='text' name='sequence' id='sequence' value="<?php if('' !== trim($manage_slideshow_id)) { echo $manage_slideshow_id; } ?>" size='4' /></td>
-		</tr>
-	    <tr>
-            <td colspan="4">
-                <input type="submit"
-                       name="submitTransformAction"
-                       value="<?php echo $lang['replaceslideshowimage']; ?>"
-                       onclick="
-                       if(check_cropper_selection() && validate_transform(jQuery('#dimensionsForm')))
-                            {
-                            CentralSpacePost(jQuery('#dimensionsForm'));
-                            };
-
-                        return false;">
-            </td>
-        </tr>
-	</table>
-    <table id="transform_options"<?php if('' !== trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
-      <tr>
-        <td style='text-align:right'><?php echo $lang["width"]; ?>: </td>
-        <td><input type='text' name='new_width' id='new_width' value='' size='4' <?php ($cropperestricted)?"onblur='evaluate_values()'":"" ?> />
-          <?php echo $lang['px']; ?></td>
-        <td style='text-align:right'><?php echo $lang["height"]; ?>: </td>
-        <td><input type='text' name='new_height'  id='new_height' value='' size='4'  onblur='evaluate_values()' />
-          <?php echo $lang['px']; ?></td>
-      </tr>
-      <?php if ($cropper_rotation && !$cropperestricted){ ?>
-      <tr>
-        <td style='text-align:right'><?php echo $lang['rotation']; ?>: </td>
-        <td colspan='3'>
-          <select name='rotation'>
-              <option value="0"><?php echo $lang['rotation0']; ?>&nbsp;</option>
-              <option value="90"><?php echo $lang['rotation90']; ?>&nbsp;</option>
-              <option value="180"><?php echo $lang['rotation180']; ?>&nbsp;</option>
-              <option value="270"><?php echo $lang['rotation270']; ?>&nbsp;</option>
-          </select>
-
-          &nbsp;&nbsp;&nbsp; <?php echo $lang['fliphorizontal']; ?> <input type="checkbox" name='flip' value="1" />
-        </td>
-      </tr>
-      <?php }
-      if (!$original) { ?>
-      <?php if ($cropper_custom_filename){ ?>
-      <tr>
-        <td style='text-align:right'><?php echo $lang["name"]; ?>: </td>
-        <td colspan='3'><input type='text' name='filename' value='' size='30'/></td>
-      </tr>
-      <?php }
-		if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted) { ?>
-      <tr>
-        <td style='text-align:right'><?php echo $lang["description_for_alternative_file"]; ?>: </td>
-        <td colspan='3'><input type='text' name='description' value='' size='30'/></td>
-      </tr>
-      <?php
-		}
-	  } else { ?>
-      <input type='hidden' name='filename' value=''/>
-      <input type='hidden' name='description' value=''/>
-      <?php }
-      
-
-        // if the system is configured to support a type selector for alt files, show it
-        if (isset($alt_types) && count($alt_types) > 1){
-                echo "<tr><td style='text-align:right'>\n<label for='alt_type'>".$lang["alternatetype"].":</label></td><td colspan='3'><select name='alt_type' id='alt_type'>";
-                foreach($alt_types as $thealttype){
-                        $thealttype = htmlspecialchars($thealttype,ENT_QUOTES);
-                        echo "\n   <option value='$thealttype' >$thealttype</option>";
-                }
-                echo "</select>\n</td></tr>";
-        } else {
-		echo "<input type='hidden' name='alt_type' value='' />\n";
-	}
-?>
-       <tr>
-        <td style='text-align:right'><?php echo $lang['type']; ?>: </td>
-        <td colspan='3'><?php
-			if ($cropper_force_original_format==true){
-				echo "<input type='hidden' name='new_ext' value='";
-				echo strtoupper($orig_ext) . "' />" . strtoupper($orig_ext);
-			} else {
-			?>
-          <select name='new_ext'>
-            <?php 
-				foreach ($cropper_formatarray as $theformat){
-					echo "<option value='$theformat'";
-					
-					if (strtolower($theformat) == strtolower($orig_ext)) {
-						echo " selected";
-					}
-					echo ">" . str_replace_formatted_placeholder("%extension", $theformat, $lang["field-fileextension"]) . "&nbsp;</option>\n";
-				}
-				?>
-          </select>
-          <?php } // end of if force_original_format ?></td>
-      </tr>
-	  	  
-	  <?php      
-      if($cropper_quality_select && count($image_quality_presets) > 0)
-        {?>
-        <tr>
-        <td style='text-align:right'><?php echo $lang['property-quality']; ?>: </td>
-        <td colspan='3'>
-          <select name='quality'>
-                <?php 
-                foreach ($image_quality_presets as $image_quality_preset) 
-                    {
-                    echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
-                    }
-                    ?>
-          </select>
-        </td>
-        </tr>
-        <?php
-        }
-    
-     if (!$cropper_jpeg_rgb && $cropper_srgb_option)
-			{?>
-            <tr>
-                <td style='text-align:right'><?php echo $lang["cropper_use_srgb"]; ?>: </td>
-                <td><input type="checkbox" name='use_srgb' id='use_srgb' value="1" checked="checked"></td>
-            </tr>
+            ?> 
+            jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
+            jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+            CropManager.attachCropper();
+            cropper_always=true;
+            slideshow_edit=true;
             <?php
-            }
-      
-	  if (count($cropper_resolutions)>0)
-			{?>
-		    <tr>
-			<td style='text-align:right'><?php echo $lang['cropper_resolution_select']; ?>: </td>
-			<td colspan='3'>
-			  <select name='resolution'>
-				<option value='' selected></option>
-					<?php 
-					foreach ($cropper_resolutions as $cropper_resolution)
-						{
-						echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
-						}
-						?>
-			  </select>
-			</td>
-		    </tr>
-			<?php
-			}
-			?>
-	  
-	  
-	  
-    </table>
-    <?php
-if ($cropper_debug){
-	echo "<input type='checkbox'  name='showcommand' value='1'>Debug IM Command</checkbox>";
-}
-?>
-    <p style='text-align:right;margin-top:15px;' id='transform_actions'>
-      <input type='button' value="<?php echo $lang['cancel']; ?>" onclick="javascript:return CentralSpaceLoad('<?php echo $view_url ?>',true);" />
-      <?php if ($original){ ?>
-             <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>" />
-      <?php } else { ?>
-        <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" />
-        <?php if ($edit_access && $cropper_enable_alternative_files && !$cropperestricted) { ?><input type='submit' name='submit' value="<?php echo $lang['savealternative']; ?>" /><?php } ?>
-      <?php } // end of if $original ?>
-    </p>
-  </form>
-  <p>
-    <?php
+            }?>
 
-		# MP calculation
-		$mp=round(($origwidth*$origheight)/1000000,1);
-		if ($mp > 0){
-			$orig_mptext = "($mp  " . $lang["megapixel-short"] . ")";
-		} else {
-			$orig_mptext = '';
-		}
-		
-		echo $lang['originalsize'];
-		echo ": $origwidth x $origheight ";
-		echo $lang['pixels'];
-		echo " $orig_mptext";
+        </script>
+        <?php
+        }
+        ?>	
 
-		?>
-  </p>
-</div>
-<?php
-if(!$cropperestricted && '' === trim($manage_slideshow_action))
-    {
+    <?php
+    // Set up available actions 
+    $saveactions = array("download"=>$lang["download"]);
+    if ($cropper_enable_replace_slideshow && !$cropperestricted && checkperm('t') && is_writable(dirname(__FILE__)."/../../../" . $homeanim_folder)) 
+        {
+        $saveactions["slideshow"] = $lang['replaceslideshowimage'];
+        }
+    if ($cropper_enable_alternative_files && $edit_access && !$cropperestricted)
+        {
+        $saveactions["alternative"] = $lang['savealternative'];
+        }
+    if($cropper_transform_original && !$cropperestricted)
+        {
+        $saveactions["original"] = $lang['transform_original'];
+        }
+    if($edit_access)
+        {
+        $saveactions["preview"] = $lang['useaspreviewimage'];
+        }
+
+    $imagetools = array();
+    if('' === trim($manage_slideshow_action))
+        {
+        // No need to show other options or crop link if coming from manage slideshow
+        // $imagetools[] = array(
+        //     "name"      => "Save",
+        //     "action"    => "jQuery('#imagetools_save_actions').show();return false;",
+        //     "icon"      => "far fa-fw fa-save",
+        //     );
+        $imagetools[] = array(
+            "name"      => "Crop",
+            "action"    => "toggleCropper();jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_crop_actions').show();return false;",
+            "icon"      => "fa fa-fw fa-crop",
+            );
+        }
+    $imagetools[] = array(
+        "name"      => "Reset",
+        "action"    => "cropReload('reset');return false;",
+        "icon"      => "fa fa-fw fa-undo",
+        );
+    if($cropper_rotation)
+        {
+        $imagetools[] = array(
+            "name"      => "Rotate",
+            "action"    => "cropReload('rotate');return false;",
+            "icon"      => "fa fa-fw fa-rotate-right",
+            );
+        }
+    $imagetools[] = array(
+        "name"      => "Flip horizontally",
+        "action"    => "cropReload('flipx');return false;",
+        "icon"      => "fas fa-fw fa-arrows-alt-h",
+        );
+    $imagetools[] = array(
+        "name"      => "Flip vertically",
+        "action"    => "cropReload('flipy');return false;",
+        "icon"      => "fas fa-fw fa-arrows-alt-v",
+        );
+    $imagetools[] = array(
+        "name"      => "Adjustments",
+        "action"    => "jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_corrections_actions').show();return false;",
+        "icon"      => "fa fa-fw fa-sliders-h",
+        );
+
+    hook("imagetools_extra");
+    
     ?>
-    <script>CropManager.attachCropper();</script>
-    <?php	
-    }
-else if(!$cropperestricted && '' !== trim($manage_slideshow_action))
-    {
-    ?>
-    <script>
-    jQuery(document).ready(function() {
-        if(jQuery('#slideshow').is(':checked'))
+    <div id="imagetool-toolbar">
+        <table style="margin:auto;">
+        <?php
+        foreach($imagetools as $imagetool)
             {
-            replace_slideshow_set_information(jQuery('#slideshow').get(0))
+            echo "<tr class='toolbar-icon'>";
+            echo "<td>";
+            echo "<a href=\"#\" onclick=\"" . htmlspecialchars($imagetool["action"]) . "\" title=\"" . htmlspecialchars($imagetool["name"]) . "\">";
+            echo "<span class=\"" . htmlspecialchars($imagetool["icon"]) . "\"></span>";
+            echo "</a></td>";
+            echo "</tr>";
             }
-    });
-    </script>
-    <?php
-    }
+            ?>            
+        </table>
+    </div>
+    <div>
+    <p>
+        <?php
+        # MP calculation
+        $mp=round(($origwidth*$origheight)/1000000,1);
+        if ($mp > 0){
+                $orig_mptext = "($mp  " . $lang["megapixel-short"] . ")";
+        } else {
+                $orig_mptext = '';
+        }
+        
+        echo $lang['originalsize'] . ": ";
+        echo htmlspecialchars($origwidth) . "x" . htmlspecialchars($origheight);
+        echo "&nbsp;" . $lang['pixels'] . " $orig_mptext";
+        ?>
+    </p>
+    </div>
+</div>
+
+
+<form name='imagetools_form' id="imagetools_form" method="POST" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
+        <!-- Standard form inputs -->
+        <input type='hidden' name='xcoord' id='xcoord' value='0' />
+        <input type='hidden' name='ycoord' id='ycoord' value='0' />
+        <input type='hidden' name='width' id='width' value='' />
+        <input type='hidden' name='height' id='height'  value='' />
+        <input type='hidden' name='ref' id='ref' value='<?php echo $ref; ?>' />
+        <input type='hidden' name='cropsize' id='cropsize' value='<?php echo $cropper_cropsize; ?>' />
+        <input type='hidden' name='lastWidthSetting' id='lastWidthSetting' value='' />
+        <input type='hidden' name='lastHeightSetting' id='lastHeightSetting' value='' />
+        <input type='hidden' name='origwidth' id='origwidth'  value='<?php echo $origwidth ?>' />
+        <input type='hidden' name='origheight' id='origheight'  value='<?php echo $origheight ?>' />
+        <input type='hidden' name='tfactions' id='tfactions'  value='<?php echo $tfactions ?>' />
+        <?php echo generateFormToken("imagetools_form"); ?>
+
+    <div class="FloatingOptions">
+        <?php
+        hook("cropafterhiddeninputs");
+        ?>
+
+        <!-- Save actions -->
+        <div id="imagetools_save_actions">
+            <?php
+            if('' === trim($manage_slideshow_action))
+                {
+                render_radio_buttons_question($lang["action"],"saveaction",$saveactions,'download','',true);
+                }
+            else
+                {?>
+                <input type='hidden' name='saveaction' id='saveaction_slideshow' value='slideshow' />
+                <?php
+                }
+
+            if($cropper_enable_alternative_files)
+                {
+                ?>
+                <div class="imagetools_save_action"  id='imagetools_alternative_actions' style="display:none;">
+                    <?php
+                    render_text_question($lang["name"],"filename");
+                    render_text_question($lang["description_for_alternative_file"],"description");
+                    // if the system is configured to support a type selector for alt files, show it
+                    if (isset($alt_types) && count($alt_types) > 1)
+                        {
+                        echo "<tr><td style='text-align:right'>\n<label for='alt_type'>".$lang["alternatetype"].":</label></td><td colspan='3'><select name='alt_type' id='alt_type'>";
+                        foreach($alt_types as $thealttype)
+                            {
+                            $thealttype = htmlspecialchars($thealttype,ENT_QUOTES);
+                            echo "\n   <option value='$thealttype' >$thealttype</option>";
+                            }
+                        echo "</select>\n</td></tr>";
+                        }
+                    else
+                        {
+                        echo "<input type='hidden' name='alt_type' value='' />\n";
+                        }
+                    ?>
+                    <div class="QuestionSubmit">
+                        <label for="submit">&nbsp;</label>
+                        <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>"  onclick="postCrop();return false;" />
+                        <div class="clearerleft"></div>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+
+            <div class="imagetools_save_action" id="imagetools_download_actions" <?php if('' !== trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
+                <?php
+                render_dropdown_question($lang["format"],"new_ext",array_combine($cropper_formatarray , $cropper_formatarray),strtoupper($orig_ext));
+                ?>
+                <div class="QuestionSubmit">
+                    <label for="submit">&nbsp;</label>
+                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop(true);return false;" />
+                
+                    <div class="clearerleft"></div>
+                </div>
+               
+            </div>
+            <?php
+            if($cropper_transform_original)
+                {?>
+                <div class="imagetools_save_action" id="imagetools_original_actions" style="display:none;">
+                    <div class="Question">
+                        <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+                        <input type='checkbox' name='keep_original' value="1" checked />
+                        <div class="clearerleft"></div>
+                    </div>
+                    <div class="Question">
+                        <label for="submit">&nbsp;</label>
+                        <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>"  onclick="postCrop();return false;" />
+                        <div class="clearerleft"></div>
+                    </div>
+                </div>
+                <?php
+                }?>
+
+            <div class="imagetools_save_action" id="imagetools_preview_actions" style="display:none;">
+                <div class="QuestionSubmit">
+                    <label for="submit">&nbsp;</label>
+                    <input type='submit' name='preview' value="<?php echo $lang['useaspreviewimage']; ?>"   onclick="postCrop();return false;"/>
+                    <div class="clearerleft"></div>
+                </div>
+            </div>
+
+            <div class="imagetools_save_action" id="imagetools_slideshow_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
+
+                <div class="Question textcenter"><strong><?php echo $lang['transformcrophelp'] ?></strong></div>
+
+                <div class="Question">
+                    <label><?php echo  $lang["slideshowmakelink"]; ?></label>
+                    <input type="checkbox" name='linkslideshow' id='linkslideshow' value="1" checked>
+                    <div class="clearerleft"></div>
+                </div>
+                <?php
+                render_text_question($lang["slideshowsequencenumber"],"sequence",'',true,'',$manage_slideshow_id);
+                ?>
+                <div class="QuestionSubmit">
+                    <label></label>
+                    <input type="submit"
+                        name="submitTransformAction"
+                        value="<?php echo $lang['replaceslideshowimage']; ?>" onclick="postCrop();return false;" >
+                    <div class="clearerleft"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="croptools" class="toolbox" style="display:none;">
+        <!-- Crop actions -->
+        <div class="imagetools_actions" id="imagetools_crop_actions" style="display:none;">
+            
+            <div class="Question">
+                <label for="new_width"><?php echo $lang["width"]; ?></label>
+                <input type="number" class="stdwidth" id="new_width" name="new_width" onblur="evaluate_values();">
+                <?php echo $lang['px'] ;?>
+                <div class="clearerleft"></div>
+            </div>
+            <div class="QuestionSubmit">
+                <label for="new_height"><?php echo $lang["height"]; ?></label>
+                <input type="number" class="stdwidth" id="new_height" name="new_height" onblur="evaluate_values();">
+                <?php echo $lang['px'] ;?>
+                <div class="clearerleft"></div>
+            </div>
+
+            <div class="Question">
+                <label for="preset"><?php echo $lang["transform_preset_sizes"]; ?></label>
+                <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
+                    <option value=""><?php echo $lang["select"]?></option>
+                    <?php
+                    foreach($cropper_preset_sizes as $category=>$categorysizes)
+                            {
+                            echo "<optgroup label='" . htmlspecialchars($category) . "'>\n";
+                            foreach($categorysizes as $description=>$size)
+                                {
+                                echo "<option value='" . htmlspecialchars($size)  . "'>" .htmlspecialchars($description) . "</option>\n";
+                                }
+
+                            echo "</optgroup>";
+                            }
+                    
+                    ?>
+                </select>
+                <div class="clearerleft"></div>
+            </div>
+        </div>
+
+        <!-- Correction actions -->
+        <div class="imagetools_actions" id="imagetools_corrections_actions" style="display:none;">
+            <div class="Question">
+                <label for="gamma">Gamma</label>
+                <input type="range" class="stdwidth" id="gamma" name="gamma" min="0" max="100">
+                <div class="clearerleft"></div>
+            </div>
+
+            <?php
+            if($cropper_quality_select && count($image_quality_presets) > 0)
+                {?>
+                <div class="Question">
+                    <label for="quality"><?php echo $lang['property-quality']; ?></label>
+                    <select name='quality'  class="stdwidth" >
+                    <?php 
+                    foreach ($image_quality_presets as $image_quality_preset) 
+                        {
+                        echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
+                        }
+                        ?>
+                    </select>
+                    <div class="clearerleft"></div>
+                </div>
+                <?php
+                }        
+            if (!$cropper_jpeg_rgb && $cropper_srgb_option)
+                {?>
+                <div class="Question">
+                    <label for="use_srgb"><?php echo $lang["cropper_use_srgb"]; ?>:</label>
+                    <input type="checkbox" id="use_srgb" name="use_srgb" val="1" checked>
+                    <div class="clearerleft"></div>
+                </div>        
+                <?php
+                }
+                
+            if (count($cropper_resolutions)>0)
+                {?>
+                <div class="Question">
+                    <label for="resolution"><?php echo $lang['cropper_resolution_select']; ?></label>
+                    <select name='resolution' class="stdwidth" >
+                    <option value='' selected></option>
+                    <?php 
+                    foreach ($cropper_resolutions as $cropper_resolution)
+                        {
+                        echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
+                        }
+                        ?>
+                    </select>
+                    <div class="clearerleft"></div>
+                </div>
+                <?php
+                }
+            ?>
+            <div class="QuestionSubmit">
+                <label for="submit">&nbsp;</label>
+                <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo $lang['transform_update_preview']; ?>" />
+                <div class="clearerleft"></div>
+            </div>
+        </div>
+    </div>
+
+             
+</form>
+
+<?php  
+
     
 include "../../../include/footer.php";
 
-} // end of if action docrop
 
-?>
