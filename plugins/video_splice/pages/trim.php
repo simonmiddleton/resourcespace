@@ -87,7 +87,7 @@ if(!$video_preview_original && ($preview_duration < $original_duration))
     $preview_cap = $preview_duration;
     }
 
-if(isset($start_time) && isset($end_time) && isset($upload_type)) 
+if(isset($start_time) && isset($end_time) && isset($upload_type))
     {
     global $ffmpeg_preview_extension, $videosplice_description_field, $alternative_file_previews, $notify_on_resource_change_days, $usercollection;
 
@@ -101,7 +101,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     $ffmpeg_fullpath = get_utility_path("ffmpeg");
     $use_avconv = false;
     if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
- 
+
     // create new resource
     if ($upload_type == "new")
         {
@@ -125,7 +125,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Start time from original: " . $ffmpeg_start_time . "
             End time from original: " . $ffmpeg_end_time . "
             Total duration: " . $ffmpeg_duration_time);
-        
+
         // Set created_by, archive and extension
         sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
 
@@ -150,7 +150,6 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         else
             {
             $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            debug("jacktest: \$shell_exec_cmd = {$shell_exec_cmd}");
             $output = exec($shell_exec_cmd);
             }
 
@@ -167,13 +166,13 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         }
     elseif ($upload_type == "alt")
         {
-        // Upload an alternative file 
+        // Upload an alternative file
         $resource_data = get_resource_data($ref);
 
         // Add a new alternative file
         $alt_filename = "Video trim for resource " . $ref . ": " . $ffmpeg_start_time . "-" . $ffmpeg_end_time;
         $alt_ref=add_alternative_file($ref,$alt_filename);
-   
+
         // Find the path for this resource.
         $target=get_resource_path(
             $ref,
@@ -187,7 +186,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             "",
             $alt_ref
         );
-      
+
         // Set created_by, archive and extension
         sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$alt_ref'");
 
@@ -212,7 +211,6 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         else
             {
             $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            debug("jacktest: \$shell_exec_cmd = {$shell_exec_cmd}");
             $output = exec($shell_exec_cmd);
             }
 
@@ -221,27 +219,27 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
 
         // Save alternative file data.
         sql_query("update resource_alt_files set file_name='" . escape_check($alt_filename) . "',file_extension='" . escape_check($ffmpeg_preview_extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$ref' and ref='$alt_ref'");
-      
+
         if ($alternative_file_previews)
             {
             create_previews($ref,false,$ffmpeg_preview_extension,false,false,$alt_ref);
             }
-  
+
         hook('after_alt_upload','',array($ref,array("ref"=>$alt_ref,"file_size"=>$file_size,"extension"=>$ffmpeg_preview_extension,"name"=>$alt_filename,"altdescription"=>"","path"=>$target,"basefilename"=>str_ireplace("." . $ffmpeg_preview_extension, '', $alt_filename))));
-  
-        // Check to see if we need to notify users of this change                           
+
+        // Check to see if we need to notify users of this change
         if($notify_on_resource_change_days!=0)
-            {                               
+            {
             // we don't need to wait for this..
             ob_flush();flush();
             notify_resource_change($ref);
             }
-    
+
         // Update disk usage
         update_disk_usage($ref);
 
         // add ref to list
-        $trimmed_resources_alt[] = $alt_ref; 
+        $trimmed_resources_alt[] = $alt_ref;
         }
     }
 ?>
@@ -270,7 +268,7 @@ elseif($previous_page_modal)
     ?>
     <div class="RecordHeader">
         <div class="BackToResultsContainer">
-            <div class="backtoresults"> 
+            <div class="backtoresults">
             <?php
             if($modal)
                 {
@@ -316,12 +314,12 @@ if(!empty($trimmed_resources_alt))
             // Include the player if a video preview file exists for this resource.
             ?>
             <div id="previewimagewrapper">
-                <?php 
+                <?php
                 include dirname (__FILE__, 4) . "/pages/video_player.php";;
                 ?>
             </div>
-            <?php    
-            }    
+            <?php
+            }
         ?>
         </div>
     </div>
@@ -344,7 +342,7 @@ if(!empty($trimmed_resources_alt))
         {
         $autorotate = false;
         }
-        
+
     $collection_add = getvalescaped("collection_add", "");
     if($embedded_data_user_select)
       {
@@ -356,7 +354,7 @@ if(!empty($trimmed_resources_alt))
       }
 
     $form_action = generateURL($baseurl_short . "plugins/video_splice/pages/trim.php",$urlparams);
-    ?>  
+    ?>
     <form method="post"
           action="<?php echo $form_action; ?>"
           id="trimform"
@@ -401,7 +399,7 @@ if(!empty($trimmed_resources_alt))
                     if (file_exists($wmpath))
                         { ?>
                         <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
-                        <?php 
+                        <?php
                         }
                     } ?>
                 <br />
@@ -415,22 +413,22 @@ if(!empty($trimmed_resources_alt))
                 <br />
                 <?php
                 }
-            if ($resource["file_extension"]!="") 
-                { ?>           
+            if ($resource["file_extension"]!="")
+                { ?>
                 <strong>
-                <?php 
+                <?php
                 echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize(@filesize_unlimited(get_resource_path($ref,true,"",false,$resource["file_extension"]))) . ")";
                 ?>
                 </strong>
-                <?php 
+                <?php
                 if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
-                    {?> 
+                    {?>
                     &nbsp;&nbsp;
                     <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo $lang["showwatermark"]?>"){jQuery(this).text("<?php echo $lang["hidewatermark"]?>");} else {jQuery(this).text("<?php echo $lang["showwatermark"]?>");}'><?php echo $lang["showwatermark"]?></a>
-                    <?php 
+                    <?php
                     }?>
                 <br />
-                <?php 
+                <?php
                 }
             ?>
             </div>
@@ -536,7 +534,7 @@ function startCalculatedPreviewPlayback(start, end){
     preview.currentTime = start;
 
     // if preview file duration smaller then original file the start or end of trim preview needs to be capped
-    if (start > <?php echo $preview_cap ?> || end > <?php echo $preview_cap ?>) 
+    if (start > <?php echo $preview_cap ?> || end > <?php echo $preview_cap ?>)
         {
         styledalert("<?php echo $lang["video-trim-warning"] ?>", "<?php echo $lang["video-trim-warning-text"]; ?>", 500);
 

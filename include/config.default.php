@@ -3069,47 +3069,47 @@ $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
 
-// Used for video track and video splice plugins to decide commands used for output. Video tracks will use its own config if provided to keep
-// backwards compatibility
+// Used for video splice plugins to decide commands used for video output.
 $ffmpeg_std_video_options= array(
     "MP4 700(kbps)"=>array(
         "command"=>"mp4 -b:v 700k -crf 20",
-        "extension"=>"mp4"), 
+        "extension"=>"mp4"),
     "MP4 1500(kbps)"=>array(
         "command"=>"mp4 -b:v 1500k -crf 20",
-        "extension"=>"mp4"), 
+        "extension"=>"mp4"),
     "MP4 2500(kbps)"=>array(
         "command"=>"mp4 -b:v 2500k -crf 20",
         "extension"=>"mp4",
-        "default"=>true), 
+        "default"=>true),
     "MP4 4000(kbps)"=>array(
         "command"=>"mp4 -b:v 4000k -crf 20",
-        "extension"=>"mp4"),     
-        ); 
+        "extension"=>"mp4"),
+        );
 
+// Used for video splice plugins to decide commands used for audio output.
 $ffmpeg_std_audio_options= array(
     "AAC 32 kbps 22.05 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 32k -ar 22050 -ac 1"),   
+        "command"=>"-acodec aac -b:a 32k -ar 22050 -ac 1"),
     "AAC 64 kbps 44.1 kHz Mono"=>array(
         "command"=>"-acodec aac -b:a 64k -ar 44100 -ac 1",
         "default"=>true),
     "AAC 64 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 64k -ar 48000 -ac 1"),   
+        "command"=>"-acodec aac -b:a 64k -ar 48000 -ac 1"),
     "AAC 96 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 96k -ar 44000 -ac 1"),   
+        "command"=>"-acodec aac -b:a 96k -ar 44000 -ac 1"),
     "AAC 96 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 96k -ar 48000 -ac 1"),  
+        "command"=>"-acodec aac -b:a 96k -ar 48000 -ac 1"),
     "MP3 64 kbps 22.05 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 64k -ar 22050 -ac 1"),   
+        "command"=>"-acodec mp3 -b:a 64k -ar 22050 -ac 1"),
     "MP3 96 kbps 44.1 kHz Mono"=>array(
         "command"=>"-acodec mp3 -b:a 96k -ar 44100 -ac 1"),
     "MP3 96 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 96k -ar 48000 -ac 1"),   
+        "command"=>"-acodec mp3 -b:a 96k -ar 48000 -ac 1"),
     "MP3 128 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 128k -ar 44100 -ac 1"),   
+        "command"=>"-acodec mp3 -b:a 128k -ar 44100 -ac 1"),
     "MP3 128 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 128k -ar 48000 -ac 1")  
-        ); 
+        "command"=>"-acodec mp3 -b:a 128k -ar 48000 -ac 1")
+        );
 
 // Used by video splice plugin to decide common resolution for all video files to be merged
 $ffmpeg_std_resolution_options= array(
@@ -3138,7 +3138,7 @@ $ffmpeg_std_resolution_options= array(
     "270 x 480(vertical)"=>array(
         "width"=>"480",
         "height"=>"270")
-    ); 
+    );
 
 // Used by video splice plugin to decide common frame rate for all video files to be merged
 $ffmpeg_std_frame_rate_options= array(
@@ -3149,8 +3149,8 @@ $ffmpeg_std_frame_rate_options= array(
         "default"=>true),
     "60(fps)"=>array(
         "value"=>"60")
-    ); 
+    );
 
 // Folder location used for video exports in video track and video splice plugins. Video tracks will use its own config if provided to keep
 // backwards compatibility
-$video_export_folder = $baseurl . "/filestore/video_exports";
+$video_export_folder = "";

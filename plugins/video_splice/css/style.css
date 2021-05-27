@@ -73,7 +73,7 @@
 .video-trim-slider > .handle.hover {
     filter: brightness(1.08);
     -moz-filter: brightness(1.08);
-    -webkit-filter: brightness(1.08);    
+    -webkit-filter: brightness(1.08);
 	box-shadow: 0 0 0 5px #1988d7;
 }
 

@@ -6,10 +6,9 @@ include "../../../include/authenticate.php";
 include "../include/splice_functions.php";
 
 // Fetch videos and process...
-$message = "";
+$notification = "";
 $videos = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC", false, 0, false, false, '', false, true, true);
 $videos_data = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC");
-$offline = $offline_job_queue;
 $splice_order = getval("splice_order", null);
 $video_splice_video = getval("video_splice_video", null);
 $video_splice_resolution = getval("video_splice_resolution", null);
@@ -17,17 +16,35 @@ $video_splice_frame_rate = getval("video_splice_frame_rate", null);
 $video_splice_audio = getval("video_splice_audio", null);
 $video_splice_type = getval("video_splice_type", null);
 $description = getval("video_splice_new_desc", "");
+$auto_populate_video_info = getval("auto_populate", "");
+$offline = $offline_job_queue;
 
-// The user can decide if he/ she wants to wait for the file to be transcoded or be notified when ready
+$error = false;
+
+// Remove resources with incorrect file extensions
+global $videosplice_allowed_extensions;
+
+foreach ($videos_data as $key => $video)
+    {
+    if(!in_array($video["file_extension"], $videosplice_allowed_extensions))
+        {
+        unset($videos_data[$key]);
+        unset($videos[$key]);
+        $videos_data = array_values($videos_data);
+        $videos = array_values($videos);
+        }
+    }
+
+// The user can decide if they want to wait for the file to be transcoded or be notified when ready when offline jobs enabled
 $transcode_now = (getval('transcode_now', '') == 'yes' ? true : false);
 if($offline && $transcode_now)
     {
     $offline = false;
     }
 
+// Get the correct splice_order and put it into an array $videos_reordered
 if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest(false))
     {
-    // Lets get the correct splice_order and put it into an array '$videos_reordered'
     $explode_splice = explode(",", $splice_order);
     $videos_reordered = array();
     $videos_data_reordered = array();
@@ -40,168 +57,129 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
         $videos_reordered[] = $videos[$the_key_i_need];
         $videos_data_reordered[] = $videos_data[$the_key_i_need];
         }
-    
-    # Reset $videos to the correct order from $videos_reordered
+
+    // Reset $videos to the correct order from $videos_reordered
     $videos = $videos_reordered;
     $videos_data = $videos_data_reordered;
 
+    // Process chosen options and generate merged video
     if($video_splice_video!=null && $video_splice_resolution!=null && $video_splice_frame_rate!=null)
-        {       
-        // Build the chosen ffmpeg command as set in the config
+        {
+        // Build the chosen ffmpeg commands as set in the config
         $target_video_command = $ffmpeg_std_video_options[$video_splice_video]["command"];
         $target_video_extension = $ffmpeg_std_video_options[$video_splice_video]["extension"];
         $target_audio = $ffmpeg_std_audio_options[$video_splice_audio]["command"];
         $target_width = $ffmpeg_std_resolution_options[$video_splice_resolution]["width"];
         $target_height = $ffmpeg_std_resolution_options[$video_splice_resolution]["height"];
         $target_frame_rate = $ffmpeg_std_frame_rate_options[$video_splice_frame_rate]["value"];
-        
-        if ($video_splice_type == "video_splice_save_new") 
+
+        // Check if video export folder set and created
+        if($video_splice_type == "video_splice_save_export")
+        {
+        if(isset($video_export_folder))
             {
-            if($offline)
-                { 
-                // Add this to the job queue for offline processing
-                $generate_merged_video_job_data = array(
-                    'videos' => $videos,
-                    'video_splice_type' => $video_splice_type,
-                    'target_video_command' => $target_video_command,
-                    'target_video_extension' => $target_video_extension,
-                    'target_audio' => $target_audio,
-                    'target_width' => $target_width,
-                    'target_height' => $target_height,
-                    'target_frame_rate' => $target_frame_rate,
-                    'description' => $description
-                );
-                $link_holder = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a> ';
-                $generate_merged_video_job_success_text = str_replace("%link", $link_holder, $lang["video_splice_new_completed"]);;
-                $generate_merged_video_job_failure_text = "fail";
-
-                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
-
-                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
-                }
-            else
-                {               
-                $ref = generate_merged_video(
-                    $videos,
-                    $video_splice_type,
-                    $target_video_command,
-                    $target_video_extension,
-                    $target_audio,
-                    $target_width,
-                    $target_height,
-                    $target_frame_rate,
-                    $description
-                    ); 
-
-                $link_holder = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a> ';
-                $message = str_replace("%link", $link_holder, $lang["video_splice_new_completed"]);         
+            if(!is_dir($video_export_folder))
+                {
+                mkdir($video_export_folder, 0777);
                 }
             }
-        elseif($video_splice_type == "video_splice_save_export")
+        else
             {
-            // If $video_export_folder is set use it.
-            if(isset($video_export_folder))
+            return false;
+            }
+        }
+
+        if($offline)
+            {
+            // Process offline job and pick matching success/failure/notification strings
+            $generate_merged_video_job_data = array(
+                'videos' => $videos,
+                'video_splice_type' => $video_splice_type,
+                'target_video_command' => $target_video_command,
+                'target_video_extension' => $target_video_extension,
+                'target_audio' => $target_audio,
+                'target_width' => $target_width,
+                'target_height' => $target_height,
+                'target_frame_rate' => $target_frame_rate,
+                'description' => $description,
+                'auto_populate_video_info' => $auto_populate_video_info,
+                'offline' => $offline
+            );
+
+            $generate_merged_video_job_failure_text = $lang["video_splice_failure"];
+
+            switch ($video_splice_type)
                 {
-                // Make sure the video_export_folder dir exists.
-                if(!is_dir($video_export_folder))
+                case "video_splice_save_new":
+                    $generate_merged_video_job_success_text = $lang["video_splice_new_offline_message"];
+                    $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
+                    $notification = str_replace("%job", $jobadded, $lang["video_splice_new_offline"]);
+                    break;
+
+                case "video_splice_save_export":
+                    $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
+                    $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
+                    $notification = str_replace("%job", $jobadded, $lang["video_splice_export_offline"]);
+                    break;
+
+                case "video_splice_download":
+                    $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_download_offline_message"]);
+                    $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
+                    $notification = str_replace("%job", $jobadded, $lang["video_splice_download_offline"]);
+                    break;
+                }
+            }
+        else
+            {
+            // Process standard function and pick matching success/failure/notification strings
+            $return_info = generate_merged_video(
+                $videos,
+                $video_splice_type,
+                $target_video_command,
+                $target_video_extension,
+                $target_audio,
+                $target_width,
+                $target_height,
+                $target_frame_rate,
+                $description,
+                $auto_populate_video_info,
+                $offline
+                );
+
+            if($return_info)
+            {
+                switch ($video_splice_type)
                     {
-                    // If it does not exist, create it.
-                    mkdir($video_export_folder, 0777);
+                    case "video_splice_save_new":
+
+                        $link_holder = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $return_info)) . '">' . $return_info . '</a> ';
+                        $notification = str_replace("%link", $link_holder, $lang["video_splice_new_completed"]);
+
+                        break;
+
+                    case "video_splice_save_export":
+
+                        $notification = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
+
+                        break;
+
+                    case "video_splice_download":
+
+                        $notification = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
+
+                        break;
                     }
                 }
             else
                 {
-                return false;
-                }
-
-            if($offline)
-                { 
-                // Add this to the job queue for offline processing
-                $generate_merged_video_job_data = array(
-                    'videos' => $videos,
-                    'video_splice_type' => $video_splice_type,
-                    'target_video_command' => $target_video_command,
-                    'target_video_extension' => $target_video_extension,
-                    'target_audio' => $target_audio,
-                    'target_width' => $target_width,
-                    'target_height' => $target_height,
-                    'target_frame_rate' => $target_frame_rate,
-                    'description' => $description
-                );
-                $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
-                $generate_merged_video_job_failure_text = "fail";
-
-                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
-
-                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
-                }
-            else
-                {               
-                $success = generate_merged_video(
-                    $videos,
-                    $video_splice_type,
-                    $target_video_command,
-                    $target_video_extension,
-                    $target_audio,
-                    $target_width,
-                    $target_height,
-                    $target_frame_rate,
-                    $description
-                    ); 
-
-                if($success)
-                    {
-                    $message = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);   
-                    }      
-                }
-            }
-        elseif($video_splice_type == "video_splice_download")
-            {
-            if($offline)
-                { 
-                // Add this to the job queue for offline processing
-                $generate_merged_video_job_data = array(
-                    'videos' => $videos,
-                    'video_splice_type' => $video_splice_type,
-                    'target_video_command' => $target_video_command,
-                    'target_video_extension' => $target_video_extension,
-                    'target_audio' => $target_audio,
-                    'target_width' => $target_width,
-                    'target_height' => $target_height,
-                    'target_frame_rate' => $target_frame_rate,
-                    'description' => $description
-                );
-                $generate_merged_video_job_success_text = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);
-                $generate_merged_video_job_failure_text = "fail";
-
-                $jobadded = job_queue_add('generate_merged_video', $generate_merged_video_job_data, '', '', $generate_merged_video_job_success_text, $generate_merged_video_job_failure_text);
-
-                $message = str_replace("%job", $jobadded, $lang["video_splice_offline_notice"]);  
-                }
-            else
-                {               
-                $success = generate_merged_video(
-                    $videos,
-                    $video_splice_type,
-                    $target_video_command,
-                    $target_video_extension,
-                    $target_audio,
-                    $target_width,
-                    $target_height,
-                    $target_frame_rate,
-                    $description
-                    ); 
-
-                if($success)
-                    {
-                    $message = str_replace("%location", $video_export_folder, $lang["video_splice_export_completed"]);   
-                    }      
+                $error = true;
+                $notification = str_replace("%location", $video_export_folder, $lang["video_splice_failure"]);
                 }
             }
         }
     }
 
-// Header and splice page
+// Generate front end page
 include "../../../include/header.php";
 
 ?>
@@ -209,18 +187,27 @@ include "../../../include/header.php";
 <h1><?php echo $lang["video-splice"]; render_help_link("plugins/video-splice");?></h1>
 <p><?php echo $lang["video-splice-intro"]?></p>
 <?php
-    if ($message!="")
+    // Holder/area for message feedback
+    if ($notification!="")
         {
-        echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . $message . "</div>";
+        if($error)
+            {
+            echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-times-circle'></i>&nbsp;" . $notification . "</div>";
+            }
+        else
+            {
+            echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . $notification . "</div>";
+            }
         }
 ?>
 <div class="RecordBox">
+    <!--Section for video preview drag and drop to reorder-->
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
             <div id="splice_scroll">
                 <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo ((count($videos)+2) * 180);?>px">
                 <?php
-                
+
                     foreach ($videos_data as $video_data)
                         {
                         if ($video_data["has_image"])
@@ -231,7 +218,7 @@ include "../../../include/header.php";
                             {
                             $img = "../../../gfx/" . get_nopreview_icon($video_data["resource_type"], $video_data["file_extension"], true);
                             }
-                            
+
                 ?>
                 <img src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
                 <?php } ?>
@@ -241,7 +228,8 @@ include "../../../include/header.php";
     </div>
     <?php
     $form_action = generateURL($baseurl_short . "plugins/video_splice/pages/splice.php");
-    ?>  
+    ?>
+    <!--Form information-->
     <form method="post"
           action="<?php echo $form_action; ?>"
           id="spliceform"
@@ -307,17 +295,18 @@ include "../../../include/header.php";
                 <tbody>
                     <tr>
                         <td>
-                            <input type="radio" 
-                                   id="video_splice_save_new" 
-                                   class="Inline video_splice_save_option" 
-                                   name="video_splice_type" 
-                                   value="video_splice_save_new" 
+                            <input type="radio"
+                                   id="video_splice_save_new"
+                                   class="Inline video_splice_save_option"
+                                   name="video_splice_type"
+                                   value="video_splice_save_new"
                                    checked
                                    onClick="
                                         jQuery('#video_splice_download').prop('checked', false);
                                         jQuery('#video_splice_save_export').prop('checked', false);
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                                         jQuery('#question_description').slideDown();
+                                        jQuery('#question_auto_populate_video_info').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
                                    for="video_splice_save_new"><?php echo $lang['video_splice_create_new']; ?></label>
@@ -334,6 +323,7 @@ include "../../../include/header.php";
                                         jQuery('#video_splice_save_new').prop('checked', false);
                                         jQuery('#video_splice_download').prop('checked', false);
                                         jQuery('#question_description').slideUp();
+                                        jQuery('#question_auto_populate_video_info').slideUp();
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                             ">
                             <label class="customFieldLabel Inline"
@@ -349,6 +339,7 @@ include "../../../include/header.php";
                                         jQuery('#video_splice_save_export').prop('checked', false);
                                         jQuery('#video_splice_save_new').prop('checked', false);
                                         jQuery('#question_description').slideUp();
+                                        jQuery('#question_auto_populate_video_info').slideUp();
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
@@ -359,38 +350,62 @@ include "../../../include/header.php";
             </table>
             <div class="clearerleft"></div>
         </div>
+        <!--Create new specific questions-->
         <div class="Question" id="question_description">
             <label for="video_splice_new_desc" ><?php echo $lang["description"]; ?></label>
             <input type="text" class="stdwidth" id="video_splice_new_desc" name="video_splice_new_desc" value="" />
             <div class="clearerleft"></div>
         </div>
+        <div class="Question" id="question_auto_populate_video_info">
+            <label><?php echo $lang['video_splice_auto_populate_video_info_label']; ?></label>
+            <table cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   id="auto_populate"
+                                   class="Inline"
+                                   name="auto_populate"
+                                   value="yes"
+                                   checked
+                                   ">
+                            <label class="customFieldLabel Inline"
+                                   for="auto_populate"><?php echo $lang['video_splice_auto_populate_label']; ?></label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clearerleft"></div>
+        </div>
+        <!--Download specific question-->
+        <?php
+        if($offline)
+            {
+            ?>
+            <div class="Question" id="question_transcode_now_or_notify_me" style="display:none;">
+                <label><?php echo $lang['video_splice_transcode_now_or_notify_me_label']; ?></label>
+                <table cellpadding="5" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       id="transcode_now"
+                                       class="Inline"
+                                       name="transcode_now"
+                                       value="yes"
+                                       ">
+                                <label class="customFieldLabel Inline"
+                                       for="transcode_now"><?php echo $lang['video_splice_transcode_now_label']; ?></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="clearerleft"></div>
+            </div>
             <?php
-            if($offline)
-                {
-                ?>
-                <div class="Question" id="question_transcode_now_or_notify_me" style="display:none;">
-                    <label><?php echo $lang['video_splice_transcode_now_or_notify_me_label']; ?></label>
-                    <table cellpadding="5" cellspacing="0">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input type="checkbox"
-                                           id="transcode_now"
-                                           class="Inline"
-                                           name="transcode_now"
-                                           value="yes"
-                                           ">
-                                    <label class="customFieldLabel Inline"
-                                           for="transcode_now"><?php echo $lang['video_splice_transcode_now_label']; ?></label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="clearerleft"></div>
-                </div>
-                <?php
-                }
-                ?>
+            }
+            ?>
+        <!--Hidden value to track new order to post on submit-->
         <input type="hidden" name="splice_order" id="splice_reel_order" />
         <div class="QuestionSubmit">
              <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo $lang["action-splice"]?>" onclick="CentralSpaceShowLoading();">
@@ -404,22 +419,22 @@ include "../../../include/header.php";
     function ReorderResourcesInCollectionSplice(idsInOrder)
         {
         var newOrder = [];
-        
-        jQuery.each(idsInOrder, function() 
+
+        jQuery.each(idsInOrder, function()
             {
             newOrder.push(this.substring(7));
             });
-        
+
         jQuery.ajax(
             {
             type: 'POST',
             url: '<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo urlencode($usercollection) ?>&reorder=true',
-            data: 
+            data:
                 {
                 order:JSON.stringify(newOrder),
                 <?php echo generateAjaxToken('ReorderResourcesInCollectionSplice'); ?>
                 },
-            success: function() 
+            success: function()
                 {
                 var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
                 var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
@@ -441,7 +456,7 @@ include "../../../include/header.php";
     jQuery("#splice_reel").sortable({ axis: "x" });
 
     /* Re-order collections */
-    jQuery(document).ready(function() 
+    jQuery(document).ready(function()
         {
         var idsInOrder = jQuery('#splice_reel').sortable("toArray");
         jQuery('#splice_reel_order').val(idsInOrder);
@@ -453,7 +468,7 @@ include "../../../include/header.php";
             axis: "x",
             helper:"clone",
             items: ".splice_item",
-            stop: function(event, ui) 
+            stop: function(event, ui)
                 {
                 var idsInOrder = jQuery('#splice_reel').sortable("toArray");
                 jQuery('#splice_reel_order').val(idsInOrder);
@@ -463,7 +478,7 @@ include "../../../include/header.php";
                 }
             });
         jQuery('.CollectionPanelShell').disableSelection();
-        jQuery("#CollectionDiv").on("click",".CollectionResourceRemove",function() 
+        jQuery("#CollectionDiv").on("click",".CollectionResourceRemove",function()
             {
             var splice_id = "#splice_"+jQuery(this).closest(".CollectionPanelShell").attr("id").replace(/[^0-9]/gi,"");
             jQuery(splice_id).remove();

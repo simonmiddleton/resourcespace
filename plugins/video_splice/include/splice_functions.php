@@ -1,37 +1,38 @@
 <?php
-function generate_merged_video($videos, $video_splice_type, $target_video_command, $target_video_extension, $target_audio, $target_width, $target_height, $target_frame_rate, $description)
+function generate_merged_video($videos, $video_splice_type, $target_video_command, $target_video_extension, $target_audio, $target_width, $target_height, $target_frame_rate, $description, $auto_populate_video_info, $offline)
     {
     include_once __DIR__ . "/../../../include/image_processing.php";
 
-    global $ffmpeg_global_options, $videosplice_description_field, $username, $scramble_key, $ffmpeg_std_video_options, $ffmpeg_std_audio_options, $ffmpeg_std_frame_rate_options, $video_export_folder, $offline_job_queue, $download_chunk_size;
+    global $ffmpeg_global_options, $videosplice_resourcetype, $videosplice_description_field, $videosplice_video_bitrate_field, $videosplice_video_size_field, $videosplice_frame_rate_field, $videosplice_aspect_ratio_field, $username, $scramble_key, $ffmpeg_std_video_options, $ffmpeg_std_audio_options, $ffmpeg_std_frame_rate_options, $video_export_folder, $download_chunk_size, $userref, $lang;
 
-    // Build up the ffmpeg command
+    // Grab ffmpeg and ffprobe paths
     $ffmpeg_fullpath = get_utility_path("ffmpeg");
     $ffprobe_fullpath = get_utility_path("ffprobe");
+
+    // Generate random string for filename usage
     $randstring=md5(rand() . microtime());
 
     $target_order_count = 0;
     $target_completed_locations = array();
 
     $video_refs = array_column($videos, 'ref');
+
+    // Generate temp location to do re encoding, adding blank audio and splicing
     $target_temp_location = get_temp_dir(false,"splice/" . implode("-", $video_refs) . "_" . md5($username . $randstring . $scramble_key));
 
-    if(!empty($description))
-    {
-    update_field($ref, $videosplice_description_field, $description);
-    }
-
-    foreach ($videos as $video) 
+    // Loop through original videos creating new ones encoding as per options
+    foreach ($videos as $video)
         {
         $filesource = get_resource_path($video["ref"],true,"",false,get_resource_data($video["ref"])["file_extension"]);
-        $has_no_audio = empty(run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource) . " -show_streams -select_streams a -loglevel error", true))?"_noaudio":"";  
-        $target_completed_location = $target_temp_location . "/" . $target_order_count . $has_no_audio . "." . $target_video_extension; 
+        $has_no_audio = empty(run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource) . " -show_streams -select_streams a -loglevel error", true))?"_noaudio":"";
+        $target_completed_location = $target_temp_location . "/" . $target_order_count . $has_no_audio . "." . $target_video_extension;
 
         $video_splice_options = '-f ' . $target_video_command . ' ' . $target_audio . ' -vf "fps=' . $target_frame_rate . ',scale=' . $target_width . ':' . $target_height . ':force_original_aspect_ratio=decrease,pad=' . $target_width . ':' . $target_height . ':(ow-iw)/2:(oh-ih)/2" -sws_flags lanczos';
         $video_splice_command = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . escapeshellarg($filesource) . " " . $video_splice_options . " " . $target_completed_location;
 
         $output=run_command($video_splice_command);
 
+        // If file has no audio channels create blank audio channel to ensure all video files contain audio thus wont loose audio on videos that have it
         if(!empty($has_no_audio))
             {
             $no_audio_command = $ffmpeg_fullpath . " -i " . escapeshellarg($target_completed_location) . " -f lavfi -i anullsrc -vcodec copy " . $target_audio . " -shortest " . str_replace("_noaudio","",$target_completed_location);
@@ -45,29 +46,30 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
 
     $list_file_command = "";
 
-    foreach ($target_completed_locations as $target_completed_location) 
+    foreach ($target_completed_locations as $target_completed_location)
         {
-        // Build list file contents
+        // Build list file contents (easiest way to merge videos)
         $list_file_command .= "file '" . $target_completed_location . "'\n";
         }
 
     file_put_contents($target_temp_location . "/list.txt", $list_file_command);
 
+    // Merge video files using list file
     $merge_command = "ffmpeg -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . $target_video_extension . "'";
 
     $output=run_command($merge_command);
 
     // Tidy up as we go along now final file created
     unlink($target_temp_location . "/list.txt");
-    foreach ($target_completed_locations as $target_completed_location) 
+    foreach ($target_completed_locations as $target_completed_location)
         {
         unlink($target_completed_location);
         }
 
-    if ($video_splice_type == "video_splice_save_new") 
+    if ($video_splice_type == "video_splice_save_new")
         {
-        // Create new resource based around the first resources metadata
-        $ref = copy_resource($videos[0]["ref"]);
+        // Create new blank resource with the type specified in the config
+        $ref = create_resource($videosplice_resourcetype, 0);
         $resource_location = get_resource_path(
             $ref,
             true,
@@ -87,60 +89,76 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         rmdir($target_temp_location);
         create_previews($ref,false,$target_video_extension);
 
+        // If description provided add it
+        if(!empty($description))
+        {
+        update_field($ref, $videosplice_description_field, $description);
+        }
+
+        // If user wants video information auto populated then add it
+        if($auto_populate_video_info)
+            {
+            update_field($ref, $videosplice_video_bitrate_field, array_keys($ffmpeg_std_video_options)[array_search($target_video_command, array_column($ffmpeg_std_video_options, 'command'))]);
+            update_field($ref, $videosplice_video_size_field, $target_width . "x" . $target_height);
+            update_field($ref, $videosplice_frame_rate_field, array_keys($ffmpeg_std_frame_rate_options)[array_search($target_frame_rate, array_column($ffmpeg_std_frame_rate_options, 'value'))]);
+
+            // Quick way to figure out standard ratios
+            $ratio = substr($target_width > $target_height?$target_width / $target_height:$target_height / $target_width, 0, 3);
+            switch ($ratio)
+                {
+                case 1.3:
+                    $aspect_ratio = "4:3";
+                    break;
+
+                case 1.6:
+                    $aspect_ratio = "16:10";
+                    break;
+
+                case 1.7:
+                    $aspect_ratio = "16:9";
+                    break;
+                }
+
+            if(isset($aspect_ratio))
+                {
+                update_field($ref, $videosplice_aspect_ratio_field, $aspect_ratio);
+                }
+            }
+
         return $ref;
         }
 
-    if ($video_splice_type == "video_splice_save_export") 
+    if ($video_splice_type == "video_splice_save_export")
         {
-        // Get parent array keys as they are shorter and tidier
-        $filename_video = array_keys($ffmpeg_std_video_options)[array_search($target_video_command, array_column($ffmpeg_std_video_options, 'command'))];
-        $filename_audio = array_keys($ffmpeg_std_audio_options)[array_search($target_audio, array_column($ffmpeg_std_audio_options, 'command'))];
-        $filename_framerate = array_keys($ffmpeg_std_frame_rate_options)[array_search($target_frame_rate, array_column($ffmpeg_std_frame_rate_options, 'value'))];
-
         // Save into export directory
-        $export_folder_location = $video_export_folder . DIRECTORY_SEPARATOR . implode("-", $video_refs) . "_" . safe_file_name($filename_video . "_" . $filename_audio . "_" . $target_width . "x" . $target_height . "_" . str_replace(".", "-", $filename_framerate)) . "." . $target_video_extension;  
+        $export_filename = implode("-", $video_refs) . "_" . md5($username . $randstring . $scramble_key) . "." . $target_video_extension;
+        $export_folder_location = $video_export_folder . DIRECTORY_SEPARATOR . $export_filename;
         rename($target_temp_location . "/merged." . $target_video_extension, $export_folder_location);
         rmdir($target_temp_location);
 
         return true;
         }
 
-    if ($video_splice_type == "video_splice_download") 
+    if ($video_splice_type == "video_splice_download")
         {
-        // Move to download directory 
-        $filename = implode("-", $video_refs) . "_" . md5($username . $randstring . $scramble_key) . "." . $target_video_extension;
-        $download_file_location = get_temp_dir(false,"user_downloads/") . $filename;
+        // Move to download directory
+        $download_filename = $userref . "_" . md5($username . $randstring . $scramble_key) . "." . $target_video_extension;
+        $download_file_location = get_temp_dir(false,"user_downloads/") . $download_filename;
         rename($target_temp_location . "/merged." . $target_video_extension, $download_file_location);
         rmdir($target_temp_location);
 
-        if($offline_job_queue)
-            { 
-            // $job_data=array();
-            // $job_success_lang=$lang["download_file_created"]  . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
-            // $job_failure_lang=$lang["download_file_creation_failed"] . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
-            // $job_data["resource"]=$ref;
-            // $job_data["command"]=$shell_exec_cmd;    
-            // $job_data["outputfile"]=$download_file_location;    
-            // $job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randstring . "." . $video_track_command["extension"];
-            // $job_data["lifetime"]=$download_file_lifetime;
-            // $job_code=$ref . $userref . md5($job_data["command"]); // unique code for this job, used to prevent duplicate job creation
-            // $jobadded=job_queue_add("create_download_file",$job_data,$userref,'',$job_success_lang,$job_failure_lang,$job_code);
-            // if($jobadded!==true)
-            //     {
-            //     $message =  $jobadded;  
-            //     }
-            // else
-            //     {
-            //     $message=$lang["video_tracks_offline_notice"];
-            //     }
+        if($offline)
+            {
+            // For offline we want to return the location of the file so it can be added as a link in the user message
+            return $userref . "_" . $randstring . "." . $target_video_extension;
             }
         else
-            {  
+            {
             // Download file
             $filesize = filesize_unlimited($download_file_location);
             ob_flush();
-            
-            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
+
+            header(sprintf('Content-Disposition: attachment; filename="%s"', $download_filename));
             header("Content-Length: " . $filesize);
             set_time_limit(0);
 
@@ -154,10 +172,14 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
                 ob_flush();
                 $sent += $download_chunk_size;
                 }
-            #Delete File:
+            // Delete File
+            fclose($handle);
             unlink($download_file_location);
             }
 
         return true;
         }
+
+    // if one of the above options has not worked then return false
+    return false;
     }

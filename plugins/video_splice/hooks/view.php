@@ -1,14 +1,14 @@
 <?php
-	
+
 function HookVideo_spliceViewAfterresourceactions()
 	{
-    global $videosplice_resourcetype,$resource,$baseurl,$urlparams,$lang;
+    global $videosplice_allowed_extensions,$resource,$baseurl,$urlparams,$lang;
 
-   	if ($resource["resource_type"]!=$videosplice_resourcetype) {return false;}
+   	if (!in_array($resource["file_extension"], $videosplice_allowed_extensions)) {return false;}
 
     if (!resource_download_allowed($resource['ref'], "scr", $resource['resource_type']) )
         {
-        return false;   
+        return false;
         }
 	?>
 
