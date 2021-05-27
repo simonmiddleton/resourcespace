@@ -76,6 +76,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
+        ini_set("zend.exception_ignore_args","Off");
         $backtrace = json_encode(
             array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
             JSON_PRETTY_PRINT);
@@ -146,20 +147,12 @@ function db_use_multiple_connection_modes()
 * 
 * @return void
 */
-function db_set_connection_mode($name)
+function db_set_connection_mode(string $name)
     {
-    if(
-        !(is_string($name) && trim($name) !== "")
-        || !db_use_multiple_connection_modes()
-        || !array_key_exists($name, $GLOBALS["db"])
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db'][$name]) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        $GLOBALS['db_connection_mode'] = $name;
         }
-
-    // IMPORTANT: It is the responsibility of each function to clear the current db mode once it finished running the 
-    // query as the variable is not meant to persist between queries.
-    $GLOBALS["db_connection_mode"] = $name;
 
     return;
     }
@@ -172,15 +165,12 @@ function db_set_connection_mode($name)
 */
 function db_get_connection_mode()
     {
-    if(
-        !db_use_multiple_connection_modes()
-        || !(isset($GLOBALS["db_connection_mode"]) && trim($GLOBALS["db_connection_mode"]) !== "")
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']))
         {
-        return "";
+        return trim($GLOBALS['db_connection_mode']);
         }
 
-    return $GLOBALS["db_connection_mode"];
+    return '';
     }
 
 
@@ -192,12 +182,10 @@ function db_get_connection_mode()
 */
 function db_clear_connection_mode()
     {
-    if(!db_use_multiple_connection_modes() || !isset($GLOBALS["db_connection_mode"]))
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        unset($GLOBALS['db_connection_mode']);
         }
-
-    unset($GLOBALS["db_connection_mode"]);
 
     return;
     }
@@ -303,6 +291,9 @@ function db_begin_transaction($name)
 
 	if(function_exists('mysqli_begin_transaction'))
 		{
+        db_set_connection_mode('read_write');
+        $GLOBALS['sql_transaction_in_progress'] = true;
+
         debug("SQL: begin transaction '{$name}'");
 		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
@@ -367,6 +358,9 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
+        unset($GLOBALS['sql_transaction_in_progress']);
+        db_clear_connection_mode();
+
         debug("SQL: commit transaction '{$name}'");
 		return mysqli_commit($db["read_write"], 0, $name);
 		}
@@ -392,6 +386,9 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
+        unset($GLOBALS['sql_transaction_in_progress']);
+        db_clear_connection_mode();
+
         debug("SQL: rollback transaction '{$name}'");
 		return mysqli_rollback($db["read_write"], 0, $name);
 		}
@@ -512,18 +509,16 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.
-    $db_connection_mode = "read_write";
-    $db_connection = $db["read_write"];
-    
-    if(db_use_multiple_connection_modes()
-        && (
-            db_get_connection_mode() == "read_only"
-            || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-        )
+    $db_connection_mode = 'read_write';
+    $db_connection = $db['read_write'];
+    if(
+        db_use_multiple_connection_modes()
+        && !isset($GLOBALS['sql_transaction_in_progress'])
+        && (db_get_connection_mode() === 'read_only' || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) === 'SELECT'))
     )
         {
-        $db_connection_mode = "read_only";
-        $db_connection = $db["read_only"];
+        $db_connection_mode = 'read_only';
+        $db_connection = $db['read_only'];
 
         // In case it needs to retry and developer has forced a read-only
         $logthis = 2;

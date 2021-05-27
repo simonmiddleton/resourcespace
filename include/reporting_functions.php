@@ -239,7 +239,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 * Creates a new automatic periodic e-mail report
 *
 */
-function create_periodic_email($user, $report, $period, $email_days, $send_all_users, array $user_groups)
+function create_periodic_email($user, $report, $period, $email_days, array $user_groups)
     {
     # Delete any matching rows for this report/period.
     $query = sprintf("
@@ -281,11 +281,6 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
     # Send to all users?
     if (checkperm('m'))
         {
-        if($send_all_users)
-            {
-            sql_query("UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = '" . escape_check($ref) . "';");
-            }
-
         if(!empty($user_groups))
             {
 
@@ -315,7 +310,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
 function send_periodic_report_emails($echo_out = true, $toemail=true)
     {
     # For all configured periodic reports, send a mail if necessary.
-    global $lang,$baseurl, $report_rows_zip_limit;
+    global $lang,$baseurl, $report_rows_zip_limit, $email_notify_usergroups;
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
@@ -414,11 +409,31 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             continue;
             }
 
-        # Send to all other active users, if configured.
-        # Send the report to all active users.
-        $users = get_users(0,"","u.username",false,-1,1);
+
+        $users = array();
 
         // Send e-mail reports to users belonging to the specific user groups
+        if(empty($report['user_groups']))
+            {
+            if ($report['send_all_users'])
+                {
+                // Send to all users is depricated. Send to $email_notify_usergroups or Super Admin if not set
+                if (!empty($email_notify_usergroups))
+                    {
+                    foreach ($email_notify_usergroups as $usergroup)
+                        {
+                        if(get_usergroup($usergroup)!==false){$report['user_groups'][]=$usergroup;}
+                        }
+                    $report['user_groups']=implode(',',$report['user_groups']);
+                    }
+
+                else if(get_usergroup(3)!==false)
+                    {
+                    $report['user_groups']=3;
+                    }
+                }
+            }
+
         if(!empty($report['user_groups']))
             {
             $users = get_users($report['user_groups'],"","u.username",false,-1,1);

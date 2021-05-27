@@ -20,3 +20,16 @@ function HookSimpleldapTeam_user_editPassword()
         }
     return false;
     }
+
+function HookSimpleldapTeam_user_editTicktoemailpassword()
+    {
+    global $user;
+    if (isset($user["origin"]) && $user["origin"] == "simpleldap")
+        {
+        return true;
+        }
+    return false;
+    }
+
+
+    
