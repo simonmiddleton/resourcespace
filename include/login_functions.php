@@ -13,10 +13,6 @@ function perform_login($loginuser="",$loginpass="")
     $result = [];
     $result['valid'] = $valid = false;
 
-    // If an issue is detected, mark this as such and let it continue. This is used as a security measure to prevent
-    // leaking information.
-    $issue_detected = false;
-
     debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
 
     if(trim($loginpass) != "")
@@ -29,35 +25,20 @@ function perform_login($loginuser="",$loginpass="")
         $username = trim($loginuser); 
         }
 
+    // If a special key is sent, which is the MD5 hash of the username and the secret scramble key, then allow a login 
+    // using the MD5 password hash as the password. This is for the 'log in as this user' feature.
+    $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
+
     // Get user record
     $user_ref = get_user_by_username($username);
     $found_user_record = ($user_ref !== false);
-    if(!$found_user_record)
+    if($found_user_record)
         {
-        $issue_detected = true;
-        }
-    else
-        {
-        $user_data = ($found_user_record ? get_user($user_ref) : []);
-        $user_hash_info = password_get_info($user_data['password']);
-
-        // Prevent hashes being entered directly while still supporting direct entry of plain text passwords (for systems that 
-        // were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the 
-        // username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for 
-        // the 'log in as this user' feature.
-        $impersonate_user = (getval('userkey', '') === md5($username . $scramble_key));
-        $is_v1_hash = (mb_strlen($password) === 32);
-        $is_v2_hash = (mb_strlen($password) === 64);
-        $v3_hash_info = password_get_info($password);
-        $is_v3_hash = ($user_hash_info['algo'] === $v3_hash_info['algo'] && $user_hash_info['algoName'] !== 'unknown');
-        if(!$impersonate_user && ($is_v3_hash || $is_v2_hash || $is_v1_hash))
-            {
-            $issue_detected = true;
-            debug(sprintf('q10529: [line=%s fct=%s] Hash provided and impersonate_user = %s', __LINE__, __FUNCTION__, json_encode($impersonate_user)));
-            }
+        $user_data = get_user($user_ref);
         }
 
-    if(!$issue_detected && !$impersonate_user && rs_password_verify($password, $user_data['password'], ['username' => $username]))
+    // User logs in
+    if($found_user_record && rs_password_verify($password, $user_data['password'], ['username' => $username]))
         {
         $password_hash_info = get_password_hash_info();
         $algo = $password_hash_info['algo'];
@@ -81,7 +62,12 @@ function perform_login($loginuser="",$loginpass="")
 
         $valid = true;
         }
-    else if(!$issue_detected && $impersonate_user && $user_data['password'] === $password)
+    // An admin logs in as this user
+    else if(
+        $found_user_record
+        && $impersonate_user
+        && rs_password_verify($password, $user_data['password'], ['username' => $username, 'impersonate_user' => true])
+    )
         {
         $password_hash = $user_data['password'];
         $valid = true;
@@ -294,13 +280,28 @@ function rs_password_hash(string $password)
 * 
 * @param string $password Password
 * @param string $hash     Password hash
-* @param array  $data     Extra data required for matching hash expectations (e.g username). Key is the variable name,
+* @param array  $data     Extra data required for matching hash expectations (e.g username, impersonate_user). Key is the variable name,
 *                         value is the actual value for that variable.
 * 
 * @return boolean
 */
 function rs_password_verify(string $password, string $hash, array $data)
     {
+    // Prevent hashes being entered directly while still supporting direct entry of plain text passwords (for systems that 
+    // were set up prior to MD5 password encryption was added). If a special key is sent, which is the MD5 hash of the 
+    // username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for 
+    // the 'log in as this user' feature.
+    $impersonate_user = $data['impersonate_user'] ?? false;
+    $hash_info = password_get_info($hash);
+    $pass_info = password_get_info($password);
+    $is_like_v1_hash = (mb_strlen($password) === 32);
+    $is_like_v2_hash = (mb_strlen($password) === 64);
+    $is_v3_hash = ($hash_info['algo'] === $pass_info['algo'] && $hash_info['algoName'] !== 'unknown');
+    if(!$impersonate_user && ($is_v3_hash || $is_like_v2_hash || $is_like_v1_hash))
+        {
+        return false;
+        }
+
     $RS_madeup_pass = "RS{$data['username']}{$password}";
     $hash_v1 = md5($RS_madeup_pass);
     $hash_v2 = hash('sha256', $hash_v1);

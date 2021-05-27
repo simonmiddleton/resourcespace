@@ -55,13 +55,7 @@ hook("pageevaluation");
 
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
-    $delete_pass = getval('password', '');
-    // User provided hash instead of the password
-    if($delete_requires_password && $userpassword === $delete_pass)
-        {
-        $error = $lang['wrongpassword'];
-        }
-    else if($delete_requires_password && $userpassword !== $delete_pass && !rs_password_verify($delete_pass, $userpassword, ['username' => $username]))
+    if($delete_requires_password && !rs_password_verify(getval('password', ''), $userpassword, ['username' => $username]))
         {
         $error = $lang['wrongpassword'];
         }

@@ -510,7 +510,7 @@ function get_usergroup($ref)
  * Return the user group record matching $ref
  *
  * @param  integer $ref
- * @return array
+ * @return array|bool
  */
 function get_user($ref)
     {

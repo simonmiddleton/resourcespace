@@ -75,8 +75,40 @@ if(rs_password_verify('some bad password', $pass_hash_v3, $pass_data))
     }
 
 
+// User provided a password hash - by default this should return FALSE
+if(rs_password_verify($pass_hash_v3, $pass_hash_v3, $pass_data))
+    {
+    echo 'Verify password hash when user input hash - ';
+    return false;
+    }
+
+// User provided an old password hash - by default this should return FALSE
+if(rs_password_verify($pass_hash_v2, $pass_hash_v2, $pass_data))
+    {
+    echo 'Verify password hash when user input old v2 hash - ';
+    return false;
+    }
+
+
+// User provided a password hash - in a login context where we can impersonate a user (ie using the hash) - should return TRUE
+$extra_pass_data = ['impersonate_user' => true];
+if(!rs_password_verify($pass_hash_v3, $pass_hash_v3, array_merge($pass_data, $extra_pass_data)))
+    {
+    echo 'Verify password hash when user input hash (impersonating user) - ';
+    return false;
+    }
+
+// User provided a plain text password - in a login context where we can impersonate a user (ie using the hash) - should return TRUE
+if(!rs_password_verify($plaintext_pass, $plaintext_pass, array_merge($pass_data, $extra_pass_data)))
+    {
+    echo 'Verify password hash when user input plain text password (impersonating user) - ';
+    return false;
+    }
+
+
 
 // Tear down
 unset($test_user_name, $plaintext_pass, $RS_madeup_pass, $pass_hash_v1, $pass_hash_v2, $pass_hash_v3, $pass_hmac_v3);
+unset($rs_password_hash, $rs_password_hmac, $pass_data, $extra_pass_data);
 
 return true;
