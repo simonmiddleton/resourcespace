@@ -808,21 +808,26 @@ else if(1 == $resource['has_image'])
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools">
             <script>
-            function showHidePreviewTools()
+            function is_another_tool_option_enabled(element)
                 {
-                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
-                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+                var current_selected_tool = jQuery(element);
+                var tool_options_enabled = jQuery('#PreviewToolsOptionsWrapper')
+                    .find('.ToolsOptionLink.Enabled')
+                    .not(current_selected_tool);
 
-                tools_wrapper.toggleClass('Hidden');
+                if(tool_options_enabled.length === 0)
+                    {
+                    return false;
+                    }
 
-                return false;
+                styledalert('<?php echo $lang['not_allowed']; ?>', '<?php echo $lang['error_multiple_preview_tools']; ?>');
+                return true;
                 }
 
             function toggleMode(element)
                 {
                 jQuery(element).toggleClass('Enabled');
                 }
-            </script>
             </script>
             <div id="PreviewToolsOptionsWrapper">
             <?php
@@ -900,6 +905,12 @@ else if(1 == $resource['has_image'])
                         return false;
                         }
 
+                    // Always check no other conflicting preview tool option is enabled
+                    if(is_another_tool_option_enabled(element))
+                        {
+                        return false;
+                        }
+
                     // Enable feature
                     // Hide the linked image for now and use a copy of it to annotate
                     var preview_image_copy = preview_image.clone(true);
@@ -927,43 +938,131 @@ else if(1 == $resource['has_image'])
                 <?php
                 }
 			
-			// Swap the image with the 'lpr' size when hoverable image zooming is enabled in config. If 'lpr' size not available then use the 'scr' size.
             if($image_preview_zoom)
                 {
-				$pathtofile = get_resource_path($ref, true,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-				if (file_exists($pathtofile))
-				    {
-				    $previewurl = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-					}
-					else
-					{
-					$previewurl = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
-					}
+                $tile_region_support = false;
+                $imagepath = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, $use_watermark);
+                if($preview_tiles && file_exists($imagepath) && resource_download_allowed($ref, '', $resource['resource_type']))
+                    {
+                    $image_size = get_original_imagesize($ref, $imagepath);
+                    $image_width = (int) $image_size[1];
+                    $image_height = (int) $image_size[2];
+
+                    $tiles = compute_tiles_at_scale_factor(1, $image_width, $image_height);
+                    $first_tile = (isset($tiles[0]['id']) ? $tiles[0]['id'] : '');
+                    $last_tile = (isset($tiles[count($tiles) - 1]['id']) ? $tiles[count($tiles) - 1]['id'] : '');
+                    if(
+                        $first_tile !== '' && $last_tile !== ''
+                        && file_exists(get_resource_path($ref, true, $first_tile, false))
+                        && file_exists(get_resource_path($ref, true, $last_tile, false))
+                    )
+                        {
+                        $tile_region_support = true;
+                        }
+                    }
+
+
+                if($tile_region_support)
+                    {
+                    // Force $hide_real_filepath temporarily to get the download URL
+                    $orig_hrfp = $hide_real_filepath;
+                    $hide_real_filepath = true;
+                    $tile_url = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, $use_watermark);
+                    $hide_real_filepath = $orig_hrfp;
+
+                    // Generate the custom tile source object for OpenSeadragon
+                    ?>
+                    <script>
+                    var openseadragon_custom_tile_source = {
+                        height: <?php echo $image_height; ?>,
+                        width:  <?php echo $image_width; ?>,
+                        tileSize: <?php echo $preview_tile_size; ?>,
+                        minLevel: 11,
+                        getTileUrl: function(level, x, y)
+                            {
+                            var scale_factor = Math.pow(2, this.maxLevel - level);
+                            var tile_url = '<?php echo $tile_url; ?>';
+                                tile_url += '&tile_region=1';
+                                tile_url += '&tile_scale=' + scale_factor;
+                                tile_url += '&tile_row=' + y;
+                                tile_url += '&tile_col=' + x;
+
+                            console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
+                            console.debug('[OpenSeadragon] tile_url = %o', tile_url);
+                            return tile_url;
+                            }
+                    };
+                    </script>
+                    <?php
+                    }
+                else
+                    {
+                    // Use static image of a higher resolution (lpr/scr) preview
+                    $imagepath = get_resource_path($ref, true, 'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
+                    if(file_exists($imagepath))
+                        {
+                        $preview_url = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
+                        }
+                    else
+                        {
+                        $preview_url = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], true, 1, $use_watermark);
+                        }
+
+                    // Generate the custom tile source object for OpenSeadragon
+                    ?>
+                    <script>
+                    var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
+                    </script>
+                    <?php
+                    }
                 ?>
-                <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
                 </a>
                 <script>
+                var openseadragon_viewer = null;
                 function toggleImagePreviewZoomOption(element)
                     {
-                    var option = jQuery(element);
+                    var zoom_option_enabled = jQuery(element).hasClass('Enabled');
 
-                    // Feature enabled? Then disable it.
-                    if(option.hasClass('Enabled'))
+                    if(!zoom_option_enabled && is_another_tool_option_enabled(element))
                         {
-                        jQuery('#previewimage').trigger('zoom.destroy');
-
-                        toggleMode(element);
-
+                        // Don't enable the tool while a conflicting preview tool is enabled
                         return false;
                         }
+                    else if(!zoom_option_enabled)
+                        {
+                        console.debug('Enabling image zoom with OpenSeadragon');
 
-                    // Enable
-                    jQuery('#previewimage')
-                        .wrap('<span style="display: inline-block;"></span>')
-                        .css('display', 'block')
-                        .parent()
-                        .zoom({url: '<?php echo $previewurl; ?>'});
+                        jQuery('#previewimagewrapper').prepend('<div id="openseadragon_viewer"></div>');
+
+                        // Hide the usual preview image of the resource
+                        jQuery('#previewimagelink').toggleClass('DisplayNone');
+
+                        openseadragon_viewer = OpenSeadragon({
+                            id: "openseadragon_viewer",
+                            prefixUrl: "<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/images/",
+
+                            // debugMode: true,
+                            // debugGridColor: ['red'],
+
+                            tileSources: openseadragon_custom_tile_source
+                        });
+                        }
+                    else if(zoom_option_enabled)
+                        {
+                        console.debug('Disabling image zoom with OpenSeadragon');
+                        openseadragon_viewer.destroy();
+                        openseadragon_viewer = null;
+                        jQuery('#openseadragon_viewer').remove();
+
+                        // Show the usual preview image of the resource
+                        jQuery('#previewimagelink').toggleClass('DisplayNone');
+                        }
+                    else
+                        {
+                        console.error('Something went wrong with toggleImagePreviewZoomOption');
+                        }
 
                     toggleMode(element);
 
@@ -976,7 +1075,6 @@ else if(1 == $resource['has_image'])
                     ?>
                     jQuery(document).ready(function ()
                         {
-                        showHidePreviewTools();
                         toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
                         });
                     <?php
@@ -2219,6 +2317,13 @@ if($annotate_enabled)
     <!-- End of Annotorious -->
     <?php
 	}
+
+if($image_preview_zoom)
+    {
+    ?>
+    <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+    <?php
+    }
 	?>
 
 <script>
