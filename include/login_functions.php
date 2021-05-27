@@ -318,7 +318,8 @@ function rs_password_verify(string $password, string $hash, array $data)
         {
         return true;
         }
-    // Plain text password hash - when passwords were not hashed at all (very old code - should really not be the case anymore)
+    // Legacy: Plain text password - when passwords were not hashed at all (very old code - should really not be the 
+    // case anymore) -or- when someone resets it manually in the database
     else if($password === $hash)
         {
         return true;

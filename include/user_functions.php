@@ -1,10 +1,9 @@
 <?php
-
-
-
-
 # User functions
 # Functions to create, edit and generally deal with user accounts
+
+include_once __DIR__ . '/login_functions.php';
+
 
 /**
 * Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
