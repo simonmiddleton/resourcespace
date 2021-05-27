@@ -1708,11 +1708,18 @@ if($search_anchors && $display != 'map')
     }
     ?>
 <script>
-function toggle_addremove_to_collection_icon(el)
+function toggle_addremove_to_collection_icon(plus_minus_link)
     {
-    var icon = jQuery(el);
-    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref'));
+    // The plus minus link can be from the collection bar or from the resource shell in centralspace  
+    var icon = jQuery(plus_minus_link);
 
+    // Use the link to locate the resource shell in centralspace  
+    var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref') + ".ResourcePanel");
+
+    // Each resource shell has one plus icon for addition and one minus icon for removal
+    // Each collection bar resource has only one minus icon for removal
+
+    // If its a plus icon then it must be from centralspace, so hide it and then show its minus icon sibling
     if(icon.hasClass('addToCollection'))
         {
         icon.addClass('DisplayNone');
@@ -1722,19 +1729,14 @@ function toggle_addremove_to_collection_icon(el)
             jQuery(rfc[0]).removeClass('DisplayNone');
             }
         }
+    // If its a minus icon then it can be from the collection bar or centralspace
     else if(icon.hasClass('removeFromCollection'))
         {
-        var atc = resource_shell.find('div.ResourcePanelIcons > a.addToCollection');
-        if(atc.length > 0)
-            {
-            jQuery(atc[0]).removeClass('DisplayNone');
-            }
+        // If there is a plus icon then it must be in centralspace and so show it
+        resource_shell.find('div.ResourcePanelIcons > a.addToCollection').removeClass('DisplayNone');
 
-        var rfc = atc.siblings('.removeFromCollection');
-        if(rfc.length > 0)
-            {
-            jQuery(rfc[0]).addClass('DisplayNone');
-            }
+        // Now hide the minus icon in centralspace
+        resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').addClass('DisplayNone');
         }
 
     return;

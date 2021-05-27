@@ -1107,7 +1107,8 @@ else
       ">
     <?php generateFormToken("mainform"); ?>
     <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
-    <div class="BasicsBox">
+    <div class="BasicsBox BasicsBoxEdit">
+    <div class="BasicsBoxLeft">
         <input type="hidden" name="submitted" value="true">
     <?php 
     if ($multiple) 
@@ -1157,93 +1158,19 @@ else
             </div><!-- end of RecordHeader -->
             <?php
             if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
+
+            }
             
-            if (!$upload_review_mode)
-                { ?>
-                <div class="Question" id="resource_ref_div" style="border-top:none;">
-                <label><?php echo $lang["resourceid"]?></label>
-                <div class="Fixed"><?php echo urlencode($ref) ?></div>
-                <div class="clearerleft"> </div>
-                </div>
-                <?php
-                }
+        if (!$upload_review_mode)
+            { ?>
+            <div class="Question" id="resource_ref_div" style="border-top:none;">
+            <label><?php echo $lang["resourceid"]?></label>
+            <div class="Fixed"><?php echo urlencode($ref) ?></div>
+            <div class="clearerleft"> </div>
+            </div>
+            <?php
             }
         
-        global $custompermshowfile;
-        hook('custompermshowfile');
-        if(     (
-                (!$is_template && !checkperm('F*'))
-                    ||
-                $custompermshowfile
-                    ||
-                $external_upload
-                )
-            &&
-                !hook('replaceeditpreview')
-            )
-            { ?>
-            <div class="Question" id="question_file">
-                <label><?php echo $lang["file"]?></label>
-            <div class="Fixed">
-            <?php
-            if ($resource["has_image"]==1)
-                { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
-                <?php // check for watermarked version and show it if it exists
-                if (checkperm("w"))
-                    {
-                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
-                    if (file_exists($wmpath))
-                        { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
-                        <?php 
-                        }
-                    } ?>
-                <br />
-                <?php
-                }
-            else
-                {
-                # Show the no-preview icon
-                ?>
-                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
-                <br />
-                <?php
-                }
-            if ($resource["file_extension"]!="") 
-                { ?>           
-                <strong>
-                <?php 
-                $orig_path = get_resource_path($ref,true,"",false,$resource["file_extension"]);
-                if(file_exists($orig_path))
-                    {
-                    $filesize = filesize_unlimited($orig_path);
-                    echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize($filesize) . ")";
-                    }                
-                ?>
-                </strong>
-                <?php 
-                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
-                    {?> 
-                    &nbsp;&nbsp;
-                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo $lang['showwatermark']?>'){jQuery(this).text('<?php echo $lang['hidewatermark']?>');} else {jQuery(this).text('<?php echo $lang['showwatermark']?>');}"><?php echo $lang['showwatermark']?></a>
-                    <?php 
-                    }?>
-                <br />
-                <?php 
-                }
-
-            if ($allow_metadata_revert)
-                {?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
-                <?php
-                }
-            hook("afterfileoptions"); ?>
-            </div>
-            <div class="clearerleft"> </div>
-        </div>
-    <?php }
     hook("beforeimagecorrection");
 
     if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode)
@@ -2298,6 +2225,89 @@ if(!hook('replacesubmitbuttons'))
 
 hook('aftereditcollapsiblesection');
 ?>
+</div><!-- end of BasicsBoxLeft -->
+<?php
+if ($ref>0)
+    { ?>
+<div class="BasicsBoxRight">
+    <?php
+    global $custompermshowfile;
+        hook('custompermshowfile');
+        if(     (
+                (!$is_template && !checkperm('F*'))
+                    ||
+                $custompermshowfile
+                    ||
+                $external_upload
+                )
+            &&
+                !hook('replaceeditpreview')
+            )
+            { ?>
+            <div class="Question QuestionStickyRight" id="question_file">
+            <div class="FloatingPreviewContainer">
+            <?php
+            if ($resource["has_image"]==1)
+                { ?>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
+                <?php // check for watermarked version and show it if it exists
+                if (checkperm("w"))
+                    {
+                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    if (file_exists($wmpath))
+                        { ?>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <?php 
+                        }
+                    } ?>
+                <br />
+                <?php
+                }
+            else
+                {
+                # Show the no-preview icon
+                ?>
+                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+                <br />
+                <?php
+                }
+            if ($resource["file_extension"]!="") 
+                { ?>           
+                <strong>
+                <?php 
+                $orig_path = get_resource_path($ref,true,"",false,$resource["file_extension"]);
+                if(file_exists($orig_path))
+                    {
+                    $filesize = filesize_unlimited($orig_path);
+                    echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize($filesize) . ")";
+                    }                
+                ?>
+                </strong>
+                <?php 
+                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
+                    {?> 
+                    &nbsp;&nbsp;
+                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo $lang['showwatermark']?>'){jQuery(this).text('<?php echo $lang['hidewatermark']?>');} else {jQuery(this).text('<?php echo $lang['showwatermark']?>');}"><?php echo $lang['showwatermark']?></a>
+                    <?php 
+                    }?>
+                <br />
+                <?php 
+                }
+
+            if ($allow_metadata_revert)
+                {?>
+                <br />
+                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
+                <?php
+                }
+            hook("afterfileoptions"); ?>
+            </div>
+            <div class="clearerleft"> </div>
+        </div>
+    <?php }
+    ?>
+</div><!-- end of BasicsBoxRight-->
+<?php } ?>
 </div><!-- end of BasicsBox -->
 </form>
 
@@ -2356,6 +2366,12 @@ jQuery('document').ready(function()
 	/* Call SelectTab upon page load to select first tab*/
     SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
     registerCollapsibleSections(true);
+
+    // Move the preview image to the top of the page on smaller devices
+    if (jQuery(document).width() < 850)
+        {
+        jQuery('#question_file').insertAfter(jQuery('.RecordHeader'));
+        }
     });
 </script>
 <?php

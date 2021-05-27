@@ -8300,7 +8300,7 @@ function canSeePreviewTools($edit_access)
 
 /**
 * Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)
-* is the only one enababled.
+* is the only one enabled.
 * 
 * IMPORTANT: When adding new preview tool options, make sure to check if you need to add a new type check (at the 
 * moment it only checks for boolean config options and anything else is seen as enabled).

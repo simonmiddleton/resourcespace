@@ -35,9 +35,9 @@ else
 
 $ttl = 86400; //cache timeout in seconds
 
-$x = intval($_GET['x']);
-$y = intval($_GET['y']);
-$z = intval($_GET['z']);
+$x = intval(getval('x',0,true));
+$y = intval(getval('y',0,true));
+$z = intval(getval('z',0,true));
 
 $file = $tilecache."/${z}_${x}_$y.png";
 $gettile = true;
