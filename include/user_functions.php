@@ -1310,20 +1310,23 @@ function get_user_log($user, $fetchrows=-1)
 
 
 /**
- * Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+ * Given an array or comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
  * Note that this function can't decode default groupnames containing special characters.
  *
- * @param  string $userlist
+ * @param  string|array $userlist
  * @return string The resolved list
  */
 function resolve_userlist_groups($userlist)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["group"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1393,11 +1396,14 @@ function resolve_userlist_groups($userlist)
 function resolve_userlist_groups_smart($userlist,$return_usernames=false)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["groupsmart"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1461,14 +1467,18 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
 /**
  * Remove smart lists from the provided user lists.
  *
- * @param  string $ulist    Comma separated list of user list names
+ * @param  string|array $ulist    Comma separated list of user list names
  * @return string   The updated list with smart groups removed.
  */
 function remove_groups_smart_from_userlist($ulist)
     {
     global $lang;
     
-    $ulist=explode(",",$ulist);
+    if(!is_array($ulist))
+        {
+        $ulist=explode(",",$ulist);
+        }
+    
     $new_ulist='';
     foreach($ulist as $option)
         {

@@ -78,42 +78,29 @@ else
 function sendMessage()
     {
     messagetext = jQuery('#messagetext').val();
-    users = document.getElementById('users').value.replace(/"/g, "").split(",");
+    users = document.getElementById('message_users').value.replace(/"/g, "").split(",");
     postdata = {
         'users': users,
         'text': messagetext,
         }
 
-    if(users.length == 1 && msgto == 0)
+    if(users.length == 1 && users[0].indexOf('<?php echo $lang["group"] ?> :') == -1 && msgto == 0)
         {
         // Get details of selected recipient to show conversation
         touser = api("get_users",{'find':  users[0],'exact_username_match': true},function(response)
             {
-            console.log(response);
             if(response.length == 1)
                 {
                 msgto = parseInt(response[0]['ref']);
-                tofullname = response[0]['fullname'];
-                if(response[0]['fullname'] != '')
-                    {
-                    tofullname = response[0]['username'];
-                    }
-
-                jQuery(usertoimghtml).attr('title',tofullname);
-                jQuery(usertoimghtml).attr('alt',tofullname);
-                touserid = response[0]['ref'];
-                toimage = api("get_profile_image",{'user': touserid},function(imgresponse)
-                    {
-                    console.log(imgresponse);
-                    if(imgresponse != "")
-                        {
-                        jQuery(usertoimghtml).attr("src",imgresponse);
-                        }
-                    });
+                api("send_user_message",postdata,CentralSpaceLoad(window.location + "?msgto=" + msgto));
+                return true;
                 }
             });
         }
-    api("send_user_message",postdata,showUserMessage(messagetext,true));
+    else
+        {
+        api("send_user_message",postdata,showUserMessage(messagetext,true));
+        }
     // Speed up message checking whilst on this page
     message_timer = window.setTimeout(message_poll,5);
     }
@@ -138,11 +125,7 @@ function showUserMessage(message,fromself)
     msgtemp = msgtemp.replace("%%MESSAGE%%", message);
     
     jQuery('#message_conversation').append(msgtemp);
-    
-    if(jQuery('.user_message').length > 3)
-        {
-        jQuery('.user_message').first().slideUp().remove();
-        }
+    jQuery('#message_conversation').scrollTop(jQuery('#message_conversation').prop('scrollHeight'));
     }
 
 </script>
@@ -173,15 +156,21 @@ else
         );        
     if($msgto != 0)
         {
-        $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]));
+        $links_trail_user = array(
+            "title" => $to_username,
+            "href"  => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]),
+            "help"  => "user/messaging",
+            );
         $links_trail[] = $links_trail_user;
         }
+    else
+        {
+        $links_trail[] = array(
+            'title' => $lang["new_message"],
+            'help'  => "user/messaging",
+            );
+        }
     }
-
-$links_trail[] = array(
-    'title' => $lang["new_message"],
-    'help'  => "user/messaging",
-    )
  
 ?>
 <div class="BasicsBox">
@@ -202,12 +191,13 @@ renderBreadcrumbs($links_trail);
         echo "<div class='Question'><label>" . $lang["message_recipients"] . "</label>";
         $user_select_internal = true;
         $user_select_class = "medwidth";
+        $autocomplete_user_scope = "message_";
         include "../../include/user_select.php";
         echo "<div class='clearerleft'> </div></div>";
         }
     else
         {
-        echo "<input type='hidden' id='users' name='users' value='" . $msgto . "'/>";
+        echo "<input type='hidden' id='message_users' name='message_users' value='" . $msgto . "'/>";
         }
     
 

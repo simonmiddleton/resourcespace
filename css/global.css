@@ -2046,7 +2046,12 @@ a.BrowseRefresh{
     width: 100%;
     }
 
-.message_conversation {width: 100%; font-size: 1em;}
+.message_conversation {
+    width: 100%;
+    font-size: 1em;
+    max-height: 250px;
+    overflow-y: scroll;
+    }
 .user_message {
     width: 85%;
     padding: 8px;

@@ -524,13 +524,15 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
 /**
  * Send a user to user(s) message
  *
- * @param  array $users     Array of user IDs or usernames
+ * @param  array $users     Array of user IDs or usernames/groupnames from user select
  * @param  string $text     Message text
  * @return bool|string      True if sent ok or error message
  */
 function send_user_message($users,$text)
     {
     global $userref, $lang;
+    $users=explode(",",resolve_userlist_groups($users));
+    //print_r($users);
     for($n=0;$n<count($users);$n++)
         {
         if(!is_int_loose($users[$n]))
@@ -540,7 +542,7 @@ function send_user_message($users,$text)
                 {
                 return $lang["error_invalid_user"];
                 }
-            $users[$n] = $uref;
+            $users[$n] = $uref; 
             }
         }
     message_add($users,$text,"",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE + MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,30*24*60*60);
