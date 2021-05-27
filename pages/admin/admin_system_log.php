@@ -275,9 +275,9 @@ $select_table_url = generateURL(
 
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">&nbsp;</div>
-        <span class="TopInpageNavRight">
+       
         <?php pager(false); ?>
-        </span>
+       
         <div class="clearerleft"></div>
     </div>
     <div class="Listview">
