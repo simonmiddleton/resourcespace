@@ -17,7 +17,7 @@ $order_by=getval("orderby","name");
 $url_params = array("find" => $find, "orderby" => $order_by);
 $url=generateURL($baseurl . "/pages/admin/admin_report_management.php", $url_params);
 
-$reports=sql_query("select ref, name from report" . ($find=="" ? "" : " where ref like '%{$find}%' or name like '%{$find}%'") . " order by {$order_by}");
+$reports=sql_query("select ref, `name`, support_non_correlated_sql from report" . ($find=="" ? "" : " where ref like '%{$find}%' or name like '%{$find}%'") . " order by {$order_by}");
 
 ?><div class="BasicsBox"> 
 	
@@ -83,13 +83,17 @@ function addColumnHeader($orderName, $labelKey)
 	<div class="Listview">
 		<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 			<tr class="ListviewTitleStyle">
-				<?php addColumnHeader("ref", "property-reference"); ?>
-				<?php addColumnHeader("name", "property-name"); ?>
+				<?php
+                addColumnHeader("ref", "property-reference");
+                addColumnHeader("name", "property-name");
+                addColumnHeader('support_non_correlated_sql', 'property-support_non_correlated_sql');
+                ?>
 				<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 			</tr>
 <?php
 		foreach ($reports as $report)
 			{
+            $support_non_correlated_sql = ($report['support_non_correlated_sql'] === '1');
             $edit_url_extra = array();
             $edit_url_extra = ($find == "" ? $edit_url_extra : array_merge($edit_url_extra, array("find" => $find)));
             $edit_url_extra = ($order_by == "name" ? $edit_url_extra : array_merge($edit_url_extra, array("orderby" => $order_by)));
@@ -100,14 +104,19 @@ function addColumnHeader($orderName, $labelKey)
             <tr>
 				<td>
 					<a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
-				</td>					
+				</td>
 				<td>
 					<a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
 				</td>
+                <td><?php echo ($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
 				<td>
 					<div class="ListView" align="right">
-						<?php echo LINK_CARET ?><a href="<?php echo $view_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-view"]?></a>
 						<?php
+                        if(!$support_non_correlated_sql)
+                            {
+                            echo LINK_CARET; ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-view"]; ?></a><?php
+                            }
+
                         if(db_use_multiple_connection_modes() || !$execution_lockout)
                             {
                             echo LINK_CARET; ?><a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-edit"]; ?></a>
