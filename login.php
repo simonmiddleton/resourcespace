@@ -2,9 +2,6 @@
 include "include/db.php";
 include_once "include/login_functions.php";
 
-debug('q10529: ');
-debug('q10529: ');
-debug(sprintf('q10529: [line=%s] %s', __LINE__, __FILE__));
 $url=getval("url","index.php");
 
 $modifiedurl=hook("modifyloginurl","",array($url));
@@ -77,7 +74,6 @@ if ($lockouts>0 || $ulockouts>0)
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
     $password=trim(getvalescaped("password",""));
-    debug(sprintf('q10529: [line=%s] %s = %s', __LINE__, 'password', json_encode($password)));
 	$result=perform_login();
 	if ($result['valid'])
 		{

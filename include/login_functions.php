@@ -13,12 +13,9 @@ function perform_login($loginuser="",$loginpass="")
     $result = [];
     $result['valid'] = $valid = false;
 
-    debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
-
     if(trim($loginpass) != "")
         {
         $password = trim($loginpass); 
-        debug(sprintf('q10529: [line=%s fct=%s] %s = %s', __LINE__, __FUNCTION__, 'password', json_encode($password)));
         }
     if(trim($loginuser) != "")
         {
@@ -53,7 +50,6 @@ function perform_login($loginuser="",$loginpass="")
                 }
 
             sql_query(sprintf("UPDATE user SET `password` = '%s' WHERE ref = '%s'", escape_check($password_hash), escape_check($user_ref)));
-            debug(sprintf('q10529: [line=%s fct=%s] rehashed... %s = %s', __LINE__, __FUNCTION__, 'password_hash', json_encode($password_hash)));
             }
         else
             {
