@@ -3,7 +3,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
     {
     include_once __DIR__ . "/../../../include/image_processing.php";
 
-    global $ffmpeg_global_options, $videosplice_resourcetype, $videosplice_description_field, $videosplice_video_bitrate_field, $videosplice_video_size_field, $videosplice_frame_rate_field, $videosplice_aspect_ratio_field, $username, $scramble_key, $ffmpeg_std_video_options, $ffmpeg_std_audio_options, $ffmpeg_std_frame_rate_options, $video_export_folder, $download_chunk_size, $userref, $lang;
+    global $ffmpeg_global_options, $videosplice_resourcetype, $videosplice_description_field, $videosplice_video_bitrate_field, $videosplice_video_size_field, $videosplice_frame_rate_field, $videosplice_aspect_ratio_field, $username, $scramble_key, $ffmpeg_std_video_options, $ffmpeg_std_audio_options, $ffmpeg_std_frame_rate_options, $video_export_folder, $download_chunk_size, $userref, $date_field, $lang;
 
     // Grab ffmpeg and ffprobe paths
     $ffmpeg_fullpath = get_utility_path("ffmpeg");
@@ -87,6 +87,12 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         rename($target_temp_location . "/merged." . $target_video_extension, $resource_location);
         rmdir($target_temp_location);
         create_previews($ref,false,$target_video_extension);
+
+        // Add file extension to db so front end recognises the file
+        sql_query("update resource set file_extension='" . $target_video_extension . "' where ref='$ref'");
+
+        // Add current date to date field
+        update_field($ref, $date_field, date("Y-m-d H:i:s"));
 
         // If description provided add it
         if(!empty($description))
