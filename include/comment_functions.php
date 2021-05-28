@@ -140,7 +140,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		return false;
 		}
 		
-	global $baseurl, $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
+	global $baseurl_short, $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
 	
 	$anonymous_mode = (empty ($username) || $username == $anonymous_login);		// show extra fields if commenting anonymously
 	
@@ -166,7 +166,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		
 		echo<<<EOT
 
-		<script src="${baseurl}/lib/js/tagging.js"></script>
+		<script src="${baseurl_short}lib/js/tagging.js"></script>
 		<script type="text/javascript">
 		
 			var regexEmail = new RegExp ("${regex_email}");
@@ -197,7 +197,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		
 			function submitForm(obj) {				
 				jQuery.post(
-					'${baseurl}/pages/ajax/comments_handler.php?ref={$ref}&collection_mode={$collection_mode}',
+					'${baseurl_short}pages/ajax/comments_handler.php?ref={$ref}&collection_mode={$collection_mode}',
 					jQuery(obj).serialize(),
 					function(data)
 					{
@@ -274,7 +274,7 @@ EOT;
 			if (empty($comment['name'])) $comment['name'] = $comment['username'];
 			if (!hook("commentername", "all",array("ref"=>$comment["ref"])))
 			
-			echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";		
+			echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";		
 			
 			if ($comments_show_anonymous_email_address && !empty($comment['email']))
 				{

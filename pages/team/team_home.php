@@ -134,9 +134,7 @@ include "../../include/header.php";
     
     <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
 
-    <?php if (checkperm("m")) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_mail.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-envelope"></i><br /><?php echo $lang["sendbulkmail"]?></a></li><?php } ?>
-
-    	<?php hook("customteamfunction")?>
+   	<?php hook("customteamfunction")?>
 
 	<?php
 	# Include a link to the System Setup area for those with the appropriate permissions.

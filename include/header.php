@@ -188,6 +188,8 @@ var branch_limit_field = new Array();
 var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 var TileNav = <?php echo ($tilenav?"true":"false") ?>;
+var errornotloggedin = '<?php echo htmlspecialchars($lang["error_not_logged_in"]) ?>';
+var login = '<?php echo htmlspecialchars($lang["login"]) ?>';
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
     {
@@ -435,7 +437,7 @@ if($responsive_ui)
                 <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
                 <?php if ($user_profile_image != "")
                     {
-                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon'  id='UserProfileImage'> <?php
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> <?php
                     }
                 else
                     {
@@ -519,7 +521,7 @@ else
                 {
                 if ($user_profile_image != "")
                     {                    
-                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' id='UserProfileImage'> &nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
                     <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                     <?php
                     }
@@ -535,7 +537,7 @@ else
                 {
                 if ($user_profile_image != "")
                     {
-                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon'  id='UserProfileImage'> <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                    ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                     <?php
                     }
                 else

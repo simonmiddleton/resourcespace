@@ -5440,3 +5440,61 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
     <?php
     return;
     }
+/**
+ * Render a user message for use in conversation view
+ *
+ * @param array $message  Message data from message_get_conversation()
+ * @return void
+ */
+function render_message($message="")
+    {
+    global $userref;
+    $msgdata = array();
+    if($message == "")
+        {
+        // Template
+        $msgdata[] = "%%CLASSES%%"; // %%CLASSES%%
+        $msgdata[] = ""; // EXTRA 
+        $msgdata[] = "%%PROFILEIMAGE%%";  // %%PROFILEIMAGE%%
+        $msgdata[] = "%%MESSAGE%%"; // %%MESSAGE%%
+        }
+    else
+        {
+        $udata = get_user($message["owner"]);
+        if($udata["ref"] == $userref)
+            {
+            $msgdata[] = "user_message own_message"; // %%CLASSES%%
+            }
+        else
+            {
+            $msgdata[] = "user_message"; // %%CLASSES%%
+            }
+        $sendername = isset($udata["fullname"]) && trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+
+        $msgdata[] = ""; // EXTRA 
+
+        $pimage = get_profile_image($message["owner"]);
+        if($pimage == "")
+            {
+            $msgdata[] = "<i title='" . htmlspecialchars($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw fa-lg ProfileImage'></i>";  // %%PROFILEIMAGE%%
+            }
+        else
+            {
+            $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
+            }  
+        $msgdata[] = $message["message"];  // %%MESSAGE%%     
+        }
+
+    $messagehtml = "<div class='%%CLASSES%%' %%EXTRA%%>
+        <div class='message_content'>
+            <div class='profileimage'>
+            %%PROFILEIMAGE%%
+            </div>
+            <div class='user_message_text'>%%MESSAGE%%</div>
+        </div>
+        <div class='clearerleft'></div>
+    </div>";
+
+
+    echo str_replace(array("%%CLASSES%%","%%EXTRA%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
+    }

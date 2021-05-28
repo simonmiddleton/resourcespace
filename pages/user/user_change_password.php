@@ -1,5 +1,6 @@
 <?php
 include "../../include/db.php";
+include_once dirname(__DIR__, 2) . '/include/login_functions.php';
 
 $password_reset_mode=false;
 $resetvalues=getvalescaped("rp","");
@@ -66,10 +67,10 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 		{
 		# The above hook may return true in order to prevent the password from being updated
 		}
-	else if (!$password_reset_mode && hash('sha256', md5("RS" . $username . getvalescaped("currentpassword","")))!=$userpassword)
-		{
-		$error3=$lang["wrongpassword"];
-		}
+    else if(!$password_reset_mode && !rs_password_verify(getval('currentpassword', ''), $userpassword, ['username' => $username]))
+        {
+        $error3 = $lang['wrongpassword'];
+        }
 	else {
         if (getval("password","")!=getval("password2","")) {$error2=true;}
     	else

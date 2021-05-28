@@ -86,7 +86,7 @@ function execute_api_call($query,$pretty=false)
             }
         else if(array_key_exists($param_name, $params))
             {
-            debug("API: {$param_name} - value has been passed (by name): '{$params[$param_name]}'");
+            debug("API: {$param_name} - value has been passed (by name): '{" . print_r($params[$param_name], true) . "}'");
 
             // Check if array;
             $type = $fparam->getType();

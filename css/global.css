@@ -209,7 +209,7 @@ select::-ms-expand
 .RecordBox {margin: 10px 20px 10px 0;}
 h2#CollectionsPanelHeader {display:none;}
 
-#UserProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
+.ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
 
 /* Header size variants */
 .HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
@@ -789,6 +789,10 @@ div.autocomplete ul li {
     overflow: auto;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    }
+
+    .ui-layout-pane-north {
+        overflow: auto
     }
 
 .InfoBoxResourceTypeIcon
@@ -2074,10 +2078,56 @@ a.BrowseRefresh{
     position: relative;
   }
 
-  .toolbox {
+.toolbox {
     border: 1px solid transparent;
     background-image: none;
     text-decoration: none;
     cursor: pointer;
     font-weight: normal;
-}
+    }
+
+.FormWide .Question .user_select_table {
+    width: 70%;
+    table-layout:fixed;
+    }
+
+.FormWide .Question .user_select_table .stdwidth {
+    width: 100%;
+    }
+
+.message_conversation {
+    width: 100%;
+    font-size: 1em;
+    max-height: 250px;
+    overflow-y: scroll;
+    }
+.user_message {
+    width: 85%;
+    padding: 8px;
+    clear:both;
+    /* padding:5px 0 60px 0; */
+    }
+
+.user_message_text {
+    padding: 10px;
+    background: #fff;
+    color: #000000;
+    border: 1px solid lightgray;
+    width: 85%;
+    float: left;
+    border-radius: 8px;
+    white-space: pre-line;
+    }
+
+.message_content
+    {
+    width: 90%;
+    }
+    
+
+.profileimage {margin-right: 10px; margin-left: 10px;}
+.user_message .profileimage i.fa {margin-top: 15px;}
+.user_message, .message_content .profileimage, .message_content {float: left;}
+
+.own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
+

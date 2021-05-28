@@ -1,6 +1,5 @@
 <?php
 include "../include/db.php";
-
 include "../include/authenticate.php";
 
 $ref=getvalescaped("ref","",true);
@@ -51,15 +50,15 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     error_alert($error,!$modal);
     exit();
     }
-    
+
 hook("pageevaluation");
 
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
-	if ($delete_requires_password && hash('sha256', md5('RS' . $username . getvalescaped('password', ''))) != $userpassword)
-		{
-		$error=$lang["wrongpassword"];
-		}
+    if($delete_requires_password && !rs_password_verify(getval('password', ''), $userpassword, ['username' => $username]))
+        {
+        $error = $lang['wrongpassword'];
+        }
 	else
 		{
 		hook("custompredeleteresource");

@@ -275,7 +275,7 @@ $lang["managecontent"]="Site content";
 $lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
-$lang["sendbulkmail"]="Bulk mail";
+$lang["sendbulkmail"]="Send bulk mail";
 $lang["systemsetup"]="System";
 $lang["systemlog"]="Log";
 $lang["usersonline"]="Users currently online (idle time minutes)";
@@ -1889,7 +1889,7 @@ $lang["can_access_system_setup"]="Can access the System Setup area";
 $lang["can_change_own_password"]="Can change own account password. Unchecking this <strong>adds</strong> the 'p' permission";
 $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_users_in_children_groups"]="Can manage users in children groups to the user's group only";
-$lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can email resources to users in the user's own group, children groups and parent group only";
+$lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can only message and share resources with other users in child, parent and own groups";
 $lang["permission_nolock"] = "Disable locking of editable resources (locking is used to prevent resources being edited by other users)";
 $lang["nodownloadcollection"]="You do not have access to download any of the resources in this collection.";
 
@@ -3110,4 +3110,12 @@ $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
 $lang["log_value"]                          = "Value";$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
 $lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+
+$lang["log_value"]                          = "Value";
+$lang["new_message"]                        ="New message";
+$lang["message_recipients"]                 = "Recipient(s)";
+$lang["error_invalid_user"]                 = "Invalid user specified";
+$lang["error_not_logged_in"]                = "You are not logged in";
+$lang["reply"]                              = "Reply";
+
 

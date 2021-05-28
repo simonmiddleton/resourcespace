@@ -1,10 +1,9 @@
 <?php
-
-
-
-
 # User functions
 # Functions to create, edit and generally deal with user accounts
+
+include_once __DIR__ . '/login_functions.php';
+
 
 /**
 * Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
@@ -421,6 +420,10 @@ function get_user_by_email($email)
  */
 function get_user_by_username($username)
     {
+    if(!is_string($username))
+        {
+        return false;
+        }
     return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
     }
 
@@ -511,7 +514,7 @@ function get_usergroup($ref)
  * Return the user group record matching $ref
  *
  * @param  integer $ref
- * @return array
+ * @return array|bool
  */
 function get_user($ref)
     {
@@ -607,7 +610,7 @@ function save_user($ref)
             # Save password.
             if($suggest == '')
                 {
-                $password = hash('sha256', md5('RS' . $username . $password));
+                $password = rs_password_hash("RS{$username}{$password}");
                 }
 
             $passsql = ",password='" . $password . "',password_last_change=now()";
@@ -834,7 +837,7 @@ function auto_create_user_account($hash="")
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
     $password=make_password();
-    $password = hash('sha256', md5('RS' . $newusername . $password));
+    $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve=false;
@@ -1169,8 +1172,8 @@ function change_password($password)
     if ($message!==true) {return $message;}
 
     # Generate new password hash
-    $password_hash=hash('sha256', md5("RS" . $username . $password));
-    
+    $password_hash = rs_password_hash("RS{$username}{$password}");
+
     # Check password is not the same as the current
     if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
     
@@ -1327,20 +1330,23 @@ function get_user_log($user, $fetchrows=-1)
 
 
 /**
- * Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+ * Given an array or comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
  * Note that this function can't decode default groupnames containing special characters.
  *
- * @param  string $userlist
+ * @param  string|array $userlist
  * @return string The resolved list
  */
 function resolve_userlist_groups($userlist)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["group"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1410,11 +1416,14 @@ function resolve_userlist_groups($userlist)
 function resolve_userlist_groups_smart($userlist,$return_usernames=false)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["groupsmart"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1478,14 +1487,18 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
 /**
  * Remove smart lists from the provided user lists.
  *
- * @param  string $ulist    Comma separated list of user list names
+ * @param  string|array $ulist    Comma separated list of user list names
  * @return string   The updated list with smart groups removed.
  */
 function remove_groups_smart_from_userlist($ulist)
     {
     global $lang;
     
-    $ulist=explode(",",$ulist);
+    if(!is_array($ulist))
+        {
+        $ulist=explode(",",$ulist);
+        }
+    
     $new_ulist='';
     foreach($ulist as $option)
         {
