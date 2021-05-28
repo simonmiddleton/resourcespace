@@ -5,18 +5,21 @@ include "../include/authenticate.php";
 
 if (getval("purchaseonaccount","")!="" && $userrequestmode==3 && enforcePostRequest(false))
 	{
-	# Invoice mode.
-	# Mark as payment complete.
-	payment_set_complete($usercollection);
+	# Invoice Mode
+	# Note that terms basket and collection are interchangeable in this context
+
+	# At this point the user collection is the basket which contains the resources just purchased
+	$paidcollection=$usercollection;
+
+	# Mark the payment flags for each resource in the basket as 'paid' and rename it to datetime format
+	payment_set_complete($paidcollection);
 	
-	# Set new user collection to empty the basket (without destroying the old basket which contains the 'paid' flag to enable the download).
-	$oldcollection=$usercollection;
-	$name=get_mycollection_name($userref);
-	$newcollection=create_collection ($userref,$name,0,1); // make not deletable
+	# Setup a new user collection which will be the new empty basket 
+	$newcollection=create_collection($userref,"Default Collection",0,1); # 0=allowchanges 1=preventdelete
 	set_user_collection($userref,$newcollection);
 	
-	# Redirect to basket (old) collection for download.
-	redirect($baseurl_short."pages/purchase_download.php?collection=" . $oldcollection);
+	# Redirect to the paid basket for the purpose of downloading
+	redirect($baseurl_short."pages/purchase_download.php?collection=" . $paidcollection);
 	}
 
 
@@ -197,7 +200,7 @@ else
 			<input type="hidden" name="cancel_return" value="<?php echo $baseurl?>">
 			<input type="hidden" name="notify_url" value="<?php echo $baseurl?>/pages/purchase_callback.php">
 			<input type="hidden" name="return" value="<?php echo $baseurl?>/pages/purchase_download.php?collection=<?php echo urlencode($usercollection) ?>&emailconfirmation=<?php echo urlencode(getval("email_confirmation","")); ?>">
-			<input type="hidden" name="custom" value="<?php echo urlencode($usercollection) ?>">
+			<input type="hidden" name="custom" value="<?php echo urlencode($userref." ".$usercollection); ?>">
 			<input type="hidden" name="charset" value="utf-8">
 			<?php echo $paypal ?>
 			<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["proceedtocheckout"]?>&nbsp;&nbsp;&nbsp;"></p>

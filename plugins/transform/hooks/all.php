@@ -2,9 +2,10 @@
 
 function HookTransformAllAdditionalheaderjs()
     {
-    global $baseurl,$baseurl_short;?>
-    <link rel="stylesheet" href="<?php echo $baseurl_short?>plugins/transform/lib/jcrop/css/jquery.Jcrop.min.css" type="text/css" />
-    <script type="text/javascript" src="<?php echo $baseurl?>/plugins/transform/lib/jcrop/js/jquery.Jcrop.min.js" language="javascript"></script>
+    global $baseurl,$baseurl_short, $css_reload_key;?>
+    <link rel="stylesheet" href="<?php echo $baseurl_short?>plugins/transform/lib/jcrop/css/jquery.Jcrop.min.css?css_reload_key=<?php echo $css_reload_key; ?>" type="text/css" />
+    <script type="text/javascript" src="<?php echo $baseurl_short ?>plugins/transform/lib/jcrop/js/jquery.Jcrop.min.js?css_reload_key=<?php echo $css_reload_key; ?>" language="javascript"></script>
+    <script type="text/javascript" src="<?php echo $baseurl_short?>lib/jQueryRotate/jQueryRotate.js?css_reload_key=<?php echo $css_reload_key; ?>" language="javascript"></script>
     <?php
     }
 

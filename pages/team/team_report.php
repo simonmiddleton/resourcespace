@@ -64,23 +64,18 @@ include "../../include/header.php";
 
 if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 	{
-	$send_all_users       = false;
 	$report_receiver      = getval('report_receiver', '');
 	$user_group_selection = array();
 
 	switch($report_receiver)
 		{
-		case 'all_users':
-			$send_all_users       = true;
-			break;
-
 		case 'specific_user_groups':
 			$user_group_selection = getval('user_group_selection', array());
 			break;
 		}
 
 	# Create a new periodic e-mail report
-	create_periodic_email($userref, $report, $period, getval('email_days', ''), $send_all_users, $user_group_selection);
+	create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection);
 	?>
 	<script type="text/javascript">
 	alert("<?php echo $lang["newemailreportcreated"] ?>");
@@ -268,10 +263,6 @@ for($n=0;$n<count($reports);$n++)
 			if (checkperm('m'))
 				{
 				?>
-				<br />
-				<label for="send_all_users">
-					<input id="send_all_users" type="radio" name="report_receiver" value="all_users" onClick="document.getElementById('user_group_selection').style.display = 'none';" /> <?php echo $lang['report_periodic_email_option_all_users']; ?>
-				</label>
 				<br />
 				<label for="selected_user_groups">
 					<input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo $lang['report_periodic_email_option_selected_user_groups']; ?>

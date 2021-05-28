@@ -71,7 +71,7 @@ function get_resource_path(
            $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if(!$getfilepath && $hide_real_filepath)
+    if(!$getfilepath && $hide_real_filepath && !in_array($size,array("col","thm","pre")))
         {
         global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
@@ -4394,7 +4394,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
 
-	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check((int)$file_size) . "','" . escape_check($alt_type) . "')");
+	sql_query("INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check((int)$file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
 	
@@ -6927,7 +6927,7 @@ function get_default_archive_state($requestedstate = "")
 * Save the original file being replaced, as an alternative file 
 *
 * @param integer    $ref      (required) ID of original resource
-* @return boolean             true = file saved successfully; false = file not saved
+* @return boolean | int       int = id of new alternative file; false = file not saved
 */    
 
 function save_original_file_as_alternative($ref)
@@ -6999,7 +6999,7 @@ function save_original_file_as_alternative($ref)
             }
         }
     debug("save_original_file_as_alternative() completed");
-    return true;
+    return $newaref;
     }
 
 
@@ -7055,9 +7055,9 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         }
 
     hook('replace_resource_file_extra', '', array($resource));
-    resource_log($ref,LOG_CODE_REPLACED,'','','');
+    $log_ref = resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
-    hook("additional_replace_existing");        
+    hook("additional_replace_existing","",array($ref,$log_ref));      
 						
     if($notify_on_resource_change_days != 0)
         {								
@@ -8300,7 +8300,7 @@ function canSeePreviewTools($edit_access)
 
 /**
 * Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)
-* is the only one enababled.
+* is the only one enabled.
 * 
 * IMPORTANT: When adding new preview tool options, make sure to check if you need to add a new type check (at the 
 * moment it only checks for boolean config options and anything else is seen as enabled).

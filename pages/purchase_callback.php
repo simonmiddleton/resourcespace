@@ -63,10 +63,24 @@ else
 			{
 			echo "Verified.";
 			
-			// Mark these items as purchase complete
 			$emailconfirmation=getvalescaped("emailconfirmation","");
-			payment_set_complete(getvalescaped("custom",""),$emailconfirmation);
-			
+
+			# Note that terms basket and collection are interchangeable in this context
+
+			# At this point the custom passthrough variable contains a user reference and collection reference separated by a space
+			# This collection is the basket which contains the resources just purchased
+			$paypalcustom_variable=getvalescaped("custom","");
+			$paypalcustom_array=explode(" ",urldecode($paypalcustom_variable));
+			$paypalcustom_userref=$paypalcustom_array[0];
+			$paypalcustom_basket=$paypalcustom_array[1];
+
+			# Mark the payment flags for each resource in the basket as 'paid' and rename it to datetime stamp
+			payment_set_complete($paypalcustom_basket);
+
+			# Setup a new user collection which will be the new empty basket 
+			$newcollection=create_collection($paypalcustom_userref,"Default Collection",0,1); # Make not deletable
+			set_user_collection($paypalcustom_userref,$newcollection);
+
 			hook("payment_complete");
 			} 
 		else

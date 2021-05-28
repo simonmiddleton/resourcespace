@@ -5,6 +5,7 @@ we will clear the buffer and start over right before we download the file*/
 ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/db.php';
 include_once dirname(__FILE__) . '/../include/resource_functions.php';
+include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
 
 $k="";
@@ -51,7 +52,6 @@ $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $tempfile == ""
     && $slideshow == 0
     && $userfiledownload == ""
-    && !($userrequestmode == 2 || $userrequestmode == 3)
     ;
 if($terms_download && $checktermsusage)
     {
@@ -158,11 +158,36 @@ else
 
     // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
     if ($size == 'videojs' && $ext == 'mp3')
-    {
+        {
         $size="";
-    }
-    
-    $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+        }
+
+    // Provide a tile region if enabled and requested for the main resource.
+    if($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
+        {
+        $tile_scale = (int) getval('tile_scale', 1, true);
+        $tile_row = (int) getval('tile_row', 0, true);
+        $tile_col = (int) getval('tile_col', 0, true);
+
+        $image_size = get_original_imagesize($ref, get_resource_path($ref, true, $size, false));
+        $image_width = (int) $image_size[1];
+        $image_height = (int) $image_size[2];
+
+        debug(sprintf('PAGES/DOWNLOAD.PHP: Requesting a tile region with scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
+
+        $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
+        foreach($tiles as $tile)
+            {
+            if($tile['column'] == $tile_col && $tile['row'] == $tile_row)
+                {
+                $size = $tile['id'];
+                $ext = 'jpg';
+                break;
+                }
+            }
+        }
+
+    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
     $download_extra = hook('download_resource_extra', '', array($path));
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file

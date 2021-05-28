@@ -1101,6 +1101,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false)
     $keywords = split_keywords($node['name'], true, $partial_index);
     add_verbatim_keywords($keywords, $node['name'], $node['resource_type_field']);
 
+    db_begin_transaction("add_node_keyword_mappings");
     for($n = 0; $n < count($keywords); $n++)
         {
         unset($keyword_position);
@@ -1118,6 +1119,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false)
 
         add_node_keyword($node['ref'], $keywords[$n], $keyword_position);
         }
+    db_end_transaction("add_node_keyword_mappings");
     clear_query_cache("schema");
 
     return true;

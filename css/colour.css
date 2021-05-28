@@ -147,7 +147,7 @@ div.autocomplete ul li {color: #000;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend {background: #fff; border-color: #6D6D6D;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}
 .ArchiveResourceTitle, .ResourcePendingSubmissionTitle, .ResourcePendingReviewTitle {color: #888;}
 .DeletedResourceTitle {color: #FF0000;}
 .RecordStory{color: #000000;background: #FFFFFF; .Rec border-top : 1px solid #ddd;}
@@ -303,7 +303,7 @@ div.MessageBox a {
 }
 
 /* Login box */
-#login_box {background: rgba(0, 0, 0, 0.52)}
+#login_box {background: rgba(0, 0, 0, 0.6)}
 #login_box .Question {border-bottom: none; padding: 0.6em 0 0 0;}
 #login_box .QuestionSubmit {background:none; border: none;}
 #login_box .Question .stdwidth {width: 550px; border-radius: 6px; min-height: 32px;}
@@ -426,4 +426,3 @@ a.ui-button.plupload_button.ui-button-disabled {
 .SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited { color: #474747; }
 .ClearSelectedButton { background-color: #ff2b2b; }
 .ClearSelectedButton:hover { background-color: #b71c1c; }
-

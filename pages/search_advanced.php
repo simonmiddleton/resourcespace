@@ -3,8 +3,6 @@ include_once "../include/db.php";
 
 include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission denied.");}
 
-
-
 $selected_archive_states=array();
 
 $archivechoices=getvalescaped("archive",getvalescaped("saved_archive",get_default_search_states()));
@@ -33,15 +31,29 @@ $edit_autosave=false;
 if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	{
 	$restypes="";
-	reset($_POST);foreach ($_POST as $key=>$value)
+	reset($_POST);
+    foreach ($_POST as $key=>$value)
 		{
-		if (substr($key,0,12)=="resourcetype") {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,12);}
-		if ($key=="hiddenfields") 
+		if (substr($key,0,12)=="resourcetype")
+            {
+            if ($restypes != "")
+                {
+                $restypes .= ",";
+                }
+            $restypes .= substr($key,12);
+            }
+
+		if ($key == "hiddenfields") 
 		    {
 		    $hiddenfields=$value;
 		    }
 		}
 	rs_setcookie('restypes', $restypes,0,"","",false,false);
+
+    if ($hide_search_resource_types)
+        {
+        $restypes = '';
+        }
 		
 	# advanced search - build a search query and redirect
 	$fields=array_merge(get_advanced_search_fields(false, $hiddenfields ),get_advanced_search_collection_fields(false, $hiddenfields ));
@@ -419,7 +431,7 @@ if($advanced_search_buttons_top)
  render_advanced_search_buttons();
  }
 
-if($search_includes_resources && !hook("advsearchrestypes"))
+if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_resource_types)
  {?>
  <div class="Question">
  <label><?php echo $lang["search-mode"]?></label><?php

@@ -139,6 +139,7 @@ $lang["property-shorthand_name"]="Shorthand name";
 $lang["property-display_field"]="Display field";
 $lang['property-field_full_width'] = "Display full width on view page";
 $lang["property-enable_advanced_search"]="Enable advanced search";
+$lang["property-system_date_help_text"]="Unable to disable this as this field is set as the system specific date field, you can change this via configuration or asking an administrator";
 $lang["property-enable_simple_search"]="Enable simple search";
 $lang["property-use_for_find_similar_searching"]="Use for find similar searching";
 $lang["property-iptc_equiv"]="Iptc equiv";
@@ -830,7 +831,7 @@ $lang["backtohome"]="Back to the home page";
 $lang["continuetohome"]="Continue to the home page";
 $lang["backtohelphome"]="Back to help home";
 $lang["backtosearch"]="Back to my search results";
-$lang["backtoview"]="Resource View";
+$lang["backtoview"]="Resource view";
 $lang["backtoeditmetadata"]="Back to edit metadata";
 $lang["backtouser"]="Back to user login";
 $lang["continuetouser"]="Continue to user login";
@@ -890,6 +891,7 @@ $lang["warning_duplicate_shortname_fields"] = "There is already a resource type 
 $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
 $lang["counting_resources"] = "counting resources...";
+$lang["not_allowed"] = "Not allowed";
 
 # Pager
 $lang["next"]="Next";
@@ -2437,7 +2439,9 @@ $lang["notify_resource_change_notification"]="A resource that you downloaded in 
 $lang["passwordresetemail"]="Please click on the link below to reset your password.";
 $lang['password_reset_email_html'] = 'Username: [username]<br /><br />Please click on the link below to reset your password.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]="Please click on the link below to set a new password for your account.";
+$lang["passwordresetexternalauth"]="Your account is not authenticated by ResourceSpace. Please contact your system administrator for login instructions";
 $lang["passwordlinkexpired"]="Password reset link has either expired or been used. Please log in or request a new link."; 
+$lang["passwordresetnotpossible"]="Your password reset request could not be completed.";
 $lang["done__user_password_link_sent"]="If your email address was recognised as belonging to a valid account then an e-mail containing a link to reset your password has been sent.<br /><br /> If you do not receive an email and you believe your account is valid please check your email filters before contacting your system administrator.";
 $lang["user_password__introtextreset"]="Enter your e-mail address and a link you can use to reset your password will be sent to you.";
 $lang["ticktoemaillink"]="E-mail user a link so that they can reset their password";
@@ -2591,6 +2595,7 @@ $lang['userpreference_resource_view_modal_label'] = 'Resource view modal';
 $lang["userpreference_modal_default"] = "Show standard pages in a modal (popup) window where enabled?";
 $lang['userpreference_thumbs_default_label'] = 'Default collection bar display';
 $lang['userpreference_basic_simple_search_label'] = 'Basic simple search';
+$lang['userpreference_hide_search_resource_types'] = 'Hide resource types on simple and advanced search';
 $lang['userpreference_cc_me_label'] = 'CC me when sending resources and collections';
 $lang['userpreference_email_me_label'] = 'Send me emails instead of system notifications where possible';
 $lang['userpreference_email_digest_label'] = 'Send me a daily digest of notifications, instead of separate emails';
@@ -2875,6 +2880,7 @@ $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your
 $lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
 $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
+$lang["error_multiple_preview_tools"] = "Please disable the curent preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 
 $lang['image_quality_100'] = "Maximum";
@@ -3102,4 +3108,6 @@ $lang["share_type_upload"]                  = "Upload";
 $lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";
 $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
-$lang["log_value"]                          = "Value";
+$lang["log_value"]                          = "Value";$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
+$lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+

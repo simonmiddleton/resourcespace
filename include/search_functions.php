@@ -2181,49 +2181,51 @@ function add_partial_index($keywords)
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
     {
     # do not highlight if the field is not indexed, so it is clearer where results came from.   
-    if ($keywords_index!=1){return $text;}
+    if ($keywords_index!=1)
+        {
+        return $text;
+        }
 
     # Highlight searched keywords in $text
     # Optional - depends on $highlightkeywords being set in config.php.
-    global $highlightkeywords;
+    global $highlightkeywords, $stemming;
     # Situations where we do not need to do this.
     if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
-
 
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
         # a search is a small array so I don't think there is much to lose by processing it.
         $hlkeycache=array();
-        $wildcards_found=false;
         $s=split_keywords($search);
         for ($n=0;$n<count($s);$n++)
+            {
+            if (strpos($s[$n],":")!==false)
                 {
-                if (strpos($s[$n],":")!==false) {
-                        $c=explode(":",$s[$n]);
-                        # only add field specific keywords
-                        if($field_name!="" && $c[0]==$field_name){
-                                $hlkeycache[]=$c[1];            
-                        }   
+                $c=explode(":",$s[$n]);
+                // Only add field specific keywords
+                if($field_name!="" && $c[0]==$field_name)
+                    {
+                    $hlkeycache[]=$c[1];
+                    }
                 }
-                # else add general keywords
-                else {
-                        $keyword=$s[$n];
-            
-                        global $stemming;
-                        if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
-                            {
-                            $keyword=GetStem($keyword);
-                            }
-                        
-                        if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
-                        $hlkeycache[]=$keyword;
-                }   
+            else
+                {
+                // Add general keywords
+                $keyword=$s[$n];
+                if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
+                    {
+                    $keyword=GetStem($keyword);
+                    }
+                if (strpos($keyword,"*")!==false)
+                    {
+                    $keyword=str_replace("*","",$keyword);
+                    }
+                $hlkeycache[]=$keyword;
                 }
-        
+            }
     # Parse and replace.
     return str_highlight($text, $hlkeycache, $str_highlight_options);
     }
  
-
 /**
  * Highlight the relevant text in a string
  *

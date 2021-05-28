@@ -38,6 +38,11 @@ if($basic_simple_search)
     $starsearch  = '';
     }
 
+if ($hide_search_resource_types)
+    {
+    $restypes = '';
+    }
+
 if(!isset($internal_share_access))
     {
     // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
@@ -316,7 +321,7 @@ $types=get_resource_types();
 
 $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
 
-if (!$basic_simple_search)
+if (!$basic_simple_search && !$hide_search_resource_types)
     {
     
     # More than 5 types? Always display the 'select all' option.
@@ -415,7 +420,7 @@ elseif($restypes=='')
         <?php
         }
 
-    if(!$basic_simple_search)
+    if(!$basic_simple_search && !$hide_search_resource_types)
         {
         ?>
         </div>
