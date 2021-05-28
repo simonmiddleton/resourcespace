@@ -1,9 +1,9 @@
 <?php
 
-include "../../../include/db.php";
+include_once "../../../include/db.php";
 
-include "../../../include/authenticate.php";
-include "../include/splice_functions.php";
+include_once "../../../include/authenticate.php";
+include_once "../include/splice_functions.php";
 
 // Fetch videos and process...
 $notification = "";
@@ -78,6 +78,15 @@ if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest
         $target_width = $ffmpeg_std_resolution_options[$video_splice_resolution]["width"];
         $target_height = $ffmpeg_std_resolution_options[$video_splice_resolution]["height"];
         $target_frame_rate = $ffmpeg_std_frame_rate_options[$video_splice_frame_rate]["value"];
+
+        // Check if video export folder set and created
+        if($video_splice_type == "video_splice_save_export")
+        {
+        if(isset($video_export_folder) && !is_dir($video_export_folder))
+            {
+            mkdir($video_export_folder, 0777);
+            }
+        }
 
         if($offline)
             {

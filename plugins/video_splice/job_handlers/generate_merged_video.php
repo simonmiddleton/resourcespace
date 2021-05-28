@@ -15,7 +15,7 @@ $job_data['auto_populate_video_info'] - whether the user wants the video informa
 $offline = $job_data['offline'] - if the jobs offline or not as function works for both
 */
 
-include __DIR__ . "/../include/splice_functions.php";
+include_once __DIR__ . "/../include/splice_functions.php";
 
 global $offline_job_delete_completed, $baseurl;
 
