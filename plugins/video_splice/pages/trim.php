@@ -282,10 +282,6 @@ elseif($previous_page_modal)
         </div>
     </div>
 <?php
-if(isset($resource["field".$view_title_field]))
-    {
-    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
-    }
 if(!empty($trimmed_resources_new))
     {
     $links_holder = "";
@@ -305,6 +301,12 @@ if(!empty($trimmed_resources_alt))
     }
     ?>
 <h1><?php echo $lang["video-trim"]; render_help_link("plugins/video-splice");?></h1>
+<?php
+if(isset($resource["field".$view_title_field]))
+    {
+    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
+    }
+?>
 <div class="RecordBox">
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
