@@ -12,7 +12,7 @@
  */
 function message_get(&$messages,$user,$get_all=false,$sort_desc=false)
 	{
-	$messages=sql_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url " .
+	$messages=sql_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
 		"FROM `user_message`
 		INNER JOIN `message` ON user_message.message=message.ref " .
 		"LEFT OUTER JOIN `user` ON message.owner=user.ref " .
@@ -40,7 +40,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 	{
 	global $userref,$applicationname,$lang, $baseurl, $baseurl_short;
 	
-	if(!is_int($notification_type))
+	if(!is_int_loose($notification_type))
 		{
 		$notification_type=intval($notification_type); // make sure this in an integer
 		}
@@ -54,8 +54,16 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		$users=array($users);
 		}
 
-	if(is_null($owner))
+    if(checkperm('E'))
+        {
+        $validusers = get_users(0,"","u.username",true,1);
+        $validuserrefs = array_column($validusers,"ref");
+        $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
+        }
+
+	if(is_null($owner) || (isset($userref) && $userref != $owner))
 		{
+        // Can't send messages from another user
 		$owner=$userref;
 		}
 
@@ -67,8 +75,9 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		{
 		$owner_escaped = "'" . escape_check($owner) . "'";
 		}
+    
 
-	sql_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`) VALUES ({$owner_escaped}, NOW(), DATE_ADD(NOW(), INTERVAL {$ttl_seconds} SECOND), '{$text}', '{$url}', '{$related_activity}', '{$related_ref}' )");
+	sql_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES ({$owner_escaped}, NOW(), DATE_ADD(NOW(), INTERVAL {$ttl_seconds} SECOND), '{$text}', '{$url}', '{$related_activity}', '{$related_ref}', {$notification_type} )");
 	$message_ref = sql_insert_id();
 
 	foreach($users as $user)
@@ -455,4 +464,93 @@ function system_notification($message, $url="")
         {
         message_add($admin_notify_users,escape_check($message),$url, 0);
         }
+    }
+
+/**
+ * Get all messages between the given user IDs
+ *  
+ * @param  int        $users    User ID
+ * @param  array      $msgusers Array of other user IDs
+ * 
+ * @param  array    $filteropts Array of extra options to filter and sort messages returned
+ *                              "msgfind"    - (string) Text to find
+ *                              "sort_desc"  - (bool) Sort by message ID in descending order? False = Ascending
+ *                              "msglimit"   - (int) Maximum number of messages to return
+ * 
+ * @return array   Array of messages
+ */
+function message_get_conversation(int $user, $msgusers = array(),$filteropts = array())
+	{
+    array_map("is_int_loose",$msgusers);
+    if(count($msgusers) == 0 || !is_int_loose($user))
+        {
+        return array();
+        }
+    $validfilterops = array(
+        "msgfind",
+        "sort_desc",
+        "limit",
+    );
+    foreach($validfilterops as $validfilterop)
+        {
+        if(isset($filteropts[$validfilterop]))
+            {
+            $$validfilterop = $filteropts[$validfilterop];
+            }
+        else
+            {
+            $$validfilterop = NULL;
+            }
+        }
+    $msgquery = "SELECT message.created,
+                        message.owner,
+                        message.message,
+                        message.url,
+                        message.expires,
+                        message.type,
+                        user_message.user,
+                        user_message.ref,
+                        user_message.seen
+                   FROM message
+              LEFT JOIN user_message ON user_message.message=message.ref
+                  WHERE ((owner IN('" . implode("','",$msgusers) . "') AND user_message.user = '" . $user . "')
+                     OR (owner = '" . $user . "' AND user_message.user IN('" . implode("','",$msgusers) . "')))"
+           .  ($msgfind != "" ? (" AND message.message LIKE '%" . escape_check($msgfind) . "%'") : " " )
+           . " AND type & '" . MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE . "'"
+		   . " ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC")
+           . ($limit != "" ? (" LIMIT " . (int)$limit) : "");
+	
+    $messages = sql_query($msgquery);
+    
+    return $messages;
+	}
+
+
+
+
+/**
+ * Send a user to user(s) message
+ *
+ * @param  array $users     Array of user IDs or usernames/groupnames from user select
+ * @param  string $text     Message text
+ * @return bool|string      True if sent ok or error message
+ */
+function send_user_message($users,$text)
+    {
+    global $userref, $lang;
+    $users=explode(",",resolve_userlist_groups($users));
+    for($n=0;$n<count($users);$n++)
+        {
+        if(!is_int_loose($users[$n]))
+            {
+            $uref = get_user_by_username(trim($users[$n]));
+            if (!$uref)
+                {
+                return $lang["error_invalid_user"];
+                }
+            $users[$n] = $uref; 
+            }
+        }
+    message_add($users,$text,"",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE + MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,30*24*60*60);
+    return true;
     }

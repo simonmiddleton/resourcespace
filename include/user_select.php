@@ -10,7 +10,7 @@ if ($userstring=="") {$userstring=$default_user_select;}
 if(!isset($autocomplete_user_scope)){$autocomplete_user_scope = "";} 
 
 ?>
-<table cellpadding="0" cellspacing="0" width="300">
+<table class="user_select_table" cellpadding="0" cellspacing="0">
 
 <!-- autocomplete -->
 

@@ -249,7 +249,13 @@ include "../../include/header.php";
 		<a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>
 		&nbsp;
 		<a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
-		<?php hook("usertool")?>
+        <?php
+        if($userref != $users[$n]["ref"])
+            {
+            // Add mesage link
+            echo '<a href="' . $baseurl_short . 'pages/user/user_message.php?msgto=' . $users[$n]["ref"] . '"  onClick="return CentralSpaceLoad(this,true);">' .  LINK_CARET . $lang["message"] . '</a>';
+            }       
+		hook("usertool")?>
 		</div><?php } ?>
 		</td>
 		</tr>

@@ -25,13 +25,11 @@ include "../../include/header.php";
 
   <h1><?php echo htmlspecialchars($userdetails["fullname"]) ?></h1>
 
-  <?php if ($profile_image) { ?><p><img src="<?php echo $profile_image ?>" alt="Current profile image"></p><?php } ?>
+  <?php if ($profile_image) { ?><p><img src="<?php echo $profile_image ?>" alt="Current profile image"></p><?php }
+  echo "<p>" . nl2br(htmlspecialchars($profile_text)) . "</p>";
+  echo "<p><a href='" . $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$user . "' >" . LINK_CARET . $lang["new_message"] . "</a></p>";
 
-  <p><?php echo nl2br(htmlspecialchars($profile_text)) ?></p>
-
-  </form>
-  </div>
-
+  ?>
 </div>
 
 <?php

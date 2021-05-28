@@ -396,6 +396,18 @@ if ($user_edit_approved_by && $user["approved"]==1)
 <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewlog"]?></a></div>
 <div class="clearerleft"> </div></div>
 
+<?php
+if($userref != $ref)
+    {
+    // Add message link
+    ?>
+    <div class="Question"><label><?php echo $lang["new_message"]?></label>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["message"]?></a></div>
+    <div class="clearerleft"> </div></div>
+    <?php
+    }  
+hook("usertool")?>
+
 <?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
 <div class="Question"><label><?php echo $lang["login"]?></label>
 <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>

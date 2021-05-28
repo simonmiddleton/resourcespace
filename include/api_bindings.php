@@ -839,12 +839,12 @@ function api_get_collections_resource_count(string $refs)
     return get_collections_resource_count($cols);
     }
 
-function api_get_users($find="")
+function api_get_users($find="", $exact_username_match=false)
     {
     // Forward to the internal function - with "usepermissions" locked to TRUE.
     // Return specific columns only as there's sensitive information in the others such as password/session key.
     $return=array();
-    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup");
+    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup",$exact_username_match);
     }
 
 function api_save_collection(int $ref, array $coldata)
@@ -901,4 +901,15 @@ function api_get_collection(int $ref)
         return false;
         }
     return get_collection($ref);
+    }
+
+function api_send_user_message($users,$text)
+    {
+    $success = send_user_message($users,$text);
+    return $success;
+    }
+
+function api_get_profile_image($user)
+    {
+    return get_profile_image($user);
     }
