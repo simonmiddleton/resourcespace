@@ -796,7 +796,7 @@ else if(1 == $resource['has_image'])
 
     hook('previewextras');
 ?>
-
+</div>
 <?php
     if(canSeePreviewTools($edit_access))
         {
@@ -1089,7 +1089,6 @@ else if(1 == $resource['has_image'])
         <?php
         } /* end of canSeePreviewTools() */
         ?>
-        </div>
     <?php
     }
 else
