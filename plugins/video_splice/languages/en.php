@@ -46,3 +46,4 @@ $lang["video_splice_download_completed"] = "Once the video merge process is comp
 $lang["video_splice_download_offline"] = "Your request has been queued. Once the file has been created and ready to download you will be notified. Job ID [ %job ]";
 $lang["video_splice_download_offline_message"] = "Video splice completed. Your merged video is ready to download";
 $lang["video_splice_failure"] = "Video splice: Something has gone wrong. Please contact an administrator for further assistance";
+$lang["video_splice_no_export_folder"] = "Unable to perform export as no filepath to video export folder set in configuration file.";
