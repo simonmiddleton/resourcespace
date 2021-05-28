@@ -434,7 +434,6 @@ include "../../../include/header.php";
         }
 
     function generateOrderString(orderArray){
-        console.log(orderArray);
         var orderString = "";
         orderArray.forEach((ref) => { orderString = orderString + ref.substring(7) + ", "});
         // remove final ", "
