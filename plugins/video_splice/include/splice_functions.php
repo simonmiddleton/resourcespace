@@ -55,8 +55,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
     file_put_contents($target_temp_location . "/list.txt", $list_file_command);
 
     // Merge video files using list file
-    $merge_command = "ffmpeg -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . $target_video_extension . "'";
-
+    $merge_command = $ffmpeg_fullpath . " -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . $target_video_extension . "'";
     $output=run_command($merge_command);
 
     // Tidy up as we go along now final file created
@@ -128,7 +127,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         return $ref;
         }
 
-    if ($video_splice_type == "video_splice_save_export")
+    elseif ($video_splice_type == "video_splice_save_export")
         {
         // Save into export directory
         $export_filename = implode("-", $video_refs) . "_" . md5($username . $randstring . $scramble_key) . "." . $target_video_extension;
@@ -139,7 +138,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         return true;
         }
 
-    if ($video_splice_type == "video_splice_download")
+    elseif ($video_splice_type == "video_splice_download")
         {
         // Move to download directory
         $download_filename = $userref . "_" . md5($username . $randstring . $scramble_key) . "." . $target_video_extension;
