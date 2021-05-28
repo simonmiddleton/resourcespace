@@ -437,3 +437,6 @@ $MARKER_COLORS = array(
     7 => 'Violet',
     8 => 'Gold'
     );
+
+// Reports
+const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';
