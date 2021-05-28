@@ -528,7 +528,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {margin: 0 15px 15px 0; position: relative; min-width: 720px;}
+#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;}
 #openseadragon_viewer { width: 100%; height: 600px; } /* width and height in line with #previewimagewrapper and #previewimage, as best as it can. */
 
 /* Larger layout changes */
@@ -1621,8 +1621,9 @@ form.FormFilter button.ClearButton {
 
 #PreviewTools {
     height: 41px;
-    width: 100%;
     position: relative;
+    width: 100%;
+    margin-top:3px;
 }
 
 #PreviewToolsOptionsWrapper {
