@@ -1714,6 +1714,7 @@ $lang["autorotate"]="Autorotate images?";
 $lang["user_pref_autorotate"]="Automatically rotate images at upload?";
 
 # Reports
+$lang['run_report_on_search_results'] = "Run report on these results";
 # Report names (for the default reports)
 $lang["report-keywords_used_in_resource_edits"]="Keywords used in resource edits";
 $lang["report-keywords_used_in_searches"]="Keywords used in searches";
