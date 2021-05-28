@@ -3625,9 +3625,12 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Request all
-    if($count_result > 0 && ($k == '' || $internal_share_access))
+    if($count_result > 0 && ($k == '' || $internal_share_access) && checkperm("q"))
         {
 		# Ability to request a whole collection 
+
+        # This option should only be rendered if at least one of the resources is not downloadable
+
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
         $options[$o]['value']='request_all';
         $options[$o]['label']=$lang['requestall'];
