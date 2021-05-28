@@ -30,11 +30,6 @@ $edit_access                 = get_edit_access($ref, $resource['archive']);
 $offline                     = ($offline_job_queue && $resource['file_size'] >= ($video_tracks_process_size_limit * 1024 * 1024));
 $generate                    = (getval('generate', '') == 'yes' ? true : false);
 
-if (empty($video_tracks_output_formats)) 
-    {
-    $video_tracks_output_formats = $ffmpeg_std_output_options;
-    }
-
 // The user can decide if he/ she wants to wait for the file to be transcoded or be notified when ready
 $transcode_now = (getval('transcode_now', '') == 'yes' ? true : false);
 if($generate && $offline && $transcode_now)
