@@ -1,10 +1,9 @@
 <?php
-
-
-
-
 # User functions
 # Functions to create, edit and generally deal with user accounts
+
+include_once __DIR__ . '/login_functions.php';
+
 
 /**
 * Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
@@ -511,7 +510,7 @@ function get_usergroup($ref)
  * Return the user group record matching $ref
  *
  * @param  integer $ref
- * @return array
+ * @return array|bool
  */
 function get_user($ref)
     {
@@ -607,7 +606,7 @@ function save_user($ref)
             # Save password.
             if($suggest == '')
                 {
-                $password = hash('sha256', md5('RS' . $username . $password));
+                $password = rs_password_hash("RS{$username}{$password}");
                 }
 
             $passsql = ",password='" . $password . "',password_last_change=now()";
@@ -834,7 +833,7 @@ function auto_create_user_account($hash="")
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
     $password=make_password();
-    $password = hash('sha256', md5('RS' . $newusername . $password));
+    $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve=false;
@@ -1169,8 +1168,8 @@ function change_password($password)
     if ($message!==true) {return $message;}
 
     # Generate new password hash
-    $password_hash=hash('sha256', md5("RS" . $username . $password));
-    
+    $password_hash = rs_password_hash("RS{$username}{$password}");
+
     # Check password is not the same as the current
     if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
     

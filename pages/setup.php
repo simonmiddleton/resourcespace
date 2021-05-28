@@ -10,6 +10,7 @@ include_once '../include/file_functions.php';
 include_once '../include/definitions.php';
 include_once '../include/general_functions.php';
 include_once '../include/user_functions.php';
+include_once '../include/login_functions.php';
 
 /**
  * Santitizes input from a given request key.
@@ -982,7 +983,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     // Create user
     
     // Set a password
-    $password_hash = hash('sha256', md5('RS' . $admin_username . $admin_password));
+    $password_hash = rs_password_hash("RS{$admin_username}{$admin_password}");
 
     // Existing user?
     $user_count = sql_value("SELECT count(*) value FROM user WHERE username = '" . escape_check($admin_username) . "'", 0);

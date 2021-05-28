@@ -1,4 +1,6 @@
 <?php
+include_once __DIR__ . '/login_functions.php';
+
 # authenticate user based on cookie
 
 $valid=true;
@@ -124,13 +126,12 @@ if (!$valid && isset($anonymous_autouser_group))
 	$email=trim(getvalescaped("email","")) ;
     $username="anonymous" . sql_value("select max(ref)+1 value from user",0); # Make up a username.
 	$password=make_password();
-	$password_hash = hash('sha256', md5('RS' . $username . $password));
-    
+    $password_hash = rs_password_hash("RS{$username}{$password}");
+
     # Create the user
 	sql_query("insert into user (username,password,fullname,email,usergroup,approved) values ('" . $username . "','" . $password_hash . "','" . $username . "','','" . $anonymous_autouser_group . "',1)");
 	$new = sql_insert_id();
    
-    include_once ("login_functions.php");
     $login_data = perform_login();
     rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
 
