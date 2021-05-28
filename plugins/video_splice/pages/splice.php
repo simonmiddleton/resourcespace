@@ -9,7 +9,7 @@ include_once "../include/splice_functions.php";
 $notification = "";
 $videos = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC", false, 0, false, false, '', false, true, true);
 $videos_data = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC");
-$splice_order = getval("splice_order", null);
+$splice_order = explode(",", getval("splice_order", null));
 $video_splice_video = getval("video_splice_video", null);
 $video_splice_resolution = getval("video_splice_resolution", null);
 $video_splice_frame_rate = getval("video_splice_frame_rate", null);
@@ -42,17 +42,22 @@ if($offline && $transcode_now)
     $offline = false;
     }
 
-// Get the correct splice_order and put it into an array $videos_reordered
-if (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest(false))
+// Assure that no new valid resources added or removed from collection
+if (getval("splice_submit","") != "" && (count($splice_order) != count($videos))) 
     {
-    $explode_splice = explode(",", $splice_order);
+    $error = true;
+    $notification = $lang["video_splice_incorrect_quantity"];
+    }
+// Get the correct splice_order and put it into an array $videos_reordered
+elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest(false))
+    {
     $videos_reordered = array();
     $videos_data_reordered = array();
 
-    foreach($explode_splice as $key => $splice_ref)
+    foreach($splice_order as $key => $splice_ref)
         {
-        $explode_splice[$key] = ltrim($splice_ref, 'splice_');
-        $this_key = $explode_splice[$key];
+        $splice_order[$key] = ltrim($splice_ref, 'splice_');
+        $this_key = $splice_order[$key];
         $the_key_i_need = array_search($this_key, array_column($videos, 'ref'));
         $videos_reordered[] = $videos[$the_key_i_need];
         $videos_data_reordered[] = $videos_data[$the_key_i_need];

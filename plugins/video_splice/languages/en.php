@@ -47,3 +47,4 @@ $lang["video_splice_download_offline"] = "Your request has been queued. Once the
 $lang["video_splice_download_offline_message"] = "Video splice completed. Your merged video is ready to download";
 $lang["video_splice_failure"] = "Video splice: Something has gone wrong. Please contact an administrator for further assistance";
 $lang["video_splice_no_export_folder"] = "Unable to perform export as no filepath to video export folder set in configuration file.";
+$lang["video_splice_incorrect_quantity"] = "A valid resource has either been removed or added to the collection since this page has been loaded. Please try again.";
