@@ -325,31 +325,6 @@ function rs_password_verify(string $password, string $hash, array $data)
     return false;
     }
 
-/**
-* ResourceSpace check if password hash needs rehashing. For old password hashes (e.g plain text or MD5 or SHA256 of MD5,
-* this means generating a new hash with rs_password_hash(). For password hashes that already use it, this checks the password
-* hash configuration (algorithm and hash options) and updates the hash based on new configuration, if required.
-* 
-* @uses password_needs_rehash - @see https://www.php.net/manual/en/function.password-needs-rehash.php
-* 
-* @param string $password Password
-* @param string $hash     Password hash
-* 
-* @return string Password hash
-*/
-function rs_password_needs_rehash(string $password, string $hash)
-    {
-    $phi = get_password_hash_info();
-    $algo = $phi['algo'];
-    $options = $phi['options'];
-
-    if(password_needs_rehash($hash, $algo, $options))
-        {
-        return rs_password_hash($password);
-        }
-
-    return $hash;
-    }
 
 /**
 * Helper function to get the password hash information (algorithm and options) from the global scope.
