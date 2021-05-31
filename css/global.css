@@ -436,6 +436,10 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
 .Listview .IconStar {width:11px;height:12px;padding: 0;display: block;float:left;}
+.ListViewBulkActions {margin-bottom: 15px;}
+.ListViewBulkActions a {margin-right: 5px; margin-left: 5px; text-decoration: none;}
+.ListViewBulkActions i {padding-right: 8px;}
+.ListViewBulkActions .DisabledLink:hover {color: #474747;}
 
 /*Search Panel layout*/
 .SearchSpace {padding: 15px;width: auto;}
@@ -598,7 +602,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
 .BasicsBox .HorizontalNav li {display:inline;padding:0 0.9em 0 0;margin:0 0.5em 0 0;}
 .BasicsBox .VerticalNav ul {padding:0.2em 0;margin:0 0 1em;list-style:none;}
-.BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.75em 0;}
+.BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.5em 0;}
 .nopadding,.nopadding .VerticalNav ul {padding:0;margin:0;}
 .nopad, .BasicsBox .nopad {padding:0;}
 

@@ -29,11 +29,14 @@
             exit();
             }
 
-        $user         = getvalescaped('user', 0, true);
-        $seen         = getvalescaped('seen', 0, true);
-        $unseen       = getvalescaped('unseen', 0, true);
-        $allseen      = getvalescaped('allseen', 0, true);
-        $deleteusrmsg = getvalescaped('deleteusrmsg', 0, true);
+        $user            = getvalescaped('user', 0, true);
+        $seen            = getvalescaped('seen', 0, true);
+        $unseen          = getvalescaped('unseen', 0, true);
+        $allseen         = getvalescaped('allseen', 0, true);
+        $deleteselusrmsg = getvalescaped('deleteselusrmsg', "");
+        $selectedseen    = getvalescaped('selectedseen', "");
+        $selectedunseen  = getvalescaped('selectedunseen', "");
+        $getrefs         = getvalescaped('getrefs', 0, true);
 
 		if(0 < $user)
 			{
@@ -75,12 +78,33 @@
 			return;
 			}
 
-		// Delete a specific message from a single user
-		if (0 < $deleteusrmsg)
-			{
-			message_user_remove($deleteusrmsg);
-			return;
-			}
+        // Delete all selected messages
+        if ($deleteselusrmsg != "")
+            {
+            message_deleteselusrmsg($deleteselusrmsg);
+            return;
+            }
+ 
+        // Mark all selected messages as seen
+        if ($selectedseen != "")
+            {
+            message_selectedseen($selectedseen);
+            return;
+            }
+ 
+        // Mark all selected messages as unseen
+        if ($selectedunseen != "")
+            {
+            message_selectedunseen($selectedunseen);
+            return;
+            }
+ 
+        // Return list of references of all messages
+        if ($getrefs > 0)
+            {
+            message_getrefs($getrefs);
+            return;
+            }
 
 		// Check if there are messages
 		$messages = array();
