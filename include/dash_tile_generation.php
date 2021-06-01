@@ -84,12 +84,12 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 
 function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	{
-	global $lang,$pagename,$baseurl_short,$dash_tile_shadows, $theme_direct_jump;
+	global $lang,$pagename,$baseurl_short, $theme_direct_jump;
     
     $url = "{$baseurl_short}pages/collections_featured.php";
 	?>
 	<div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" tile="<?php echo $tile["ref"]?>" id="<?php echo str_replace("contents_","",$tile_id);?>" >
-		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN <?php echo ($dash_tile_shadows)? "TileContentShadow":""; ?>" >
+		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
 				<span class="theme-icon"></span>
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]?></h2></a>
 				<p>
@@ -238,7 +238,7 @@ function tile_freetext($tile,$tile_id,$tile_width,$tile_height)
  */
 function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_image=false)
 	{
-	global $baseurl_short,$lang,$dash_tile_shadows;
+	global $baseurl_short,$lang;
 	$tile_type="srch";
 	$tile_style="thmbs";
 	$search_string = explode('?',$tile["link"]);
@@ -365,19 +365,12 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		</p>
 		<?php
 		}
-	if(!$dash_tile_shadows)
-		{ ?>
-		<script>
-			jQuery("#<?php echo $tile_id;?>").addClass("TileContentShadow");
-		</script>
-		<?php
-		}
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	{
-	global $baseurl_short,$lang,$dash_tile_shadows;
+	global $baseurl_short,$lang;
 
 	$tile_type="srch";
 	$tile_style="multi";
@@ -467,19 +460,12 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		</p>
 		<?php
 		}
-	if(!$dash_tile_shadows)
-		{ ?>
-		<script>
-			jQuery("#<?php echo $tile_id;?>").addClass("TileContentShadow");
-		</script>
-		<?php
-		}
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 	{
-	global $baseurl_short,$lang,$dash_tile_shadows;
+	global $baseurl_short,$lang;
 	$tile_type="srch";
 	$tile_style="blank";
 	$search_string = explode('?',$tile["link"]);
@@ -546,20 +532,13 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		</p>
 		<?php
 		}
-	if(!$dash_tile_shadows)
-		{ ?>
-		<script>
-			jQuery("#<?php echo $tile_id;?>").addClass("TileContentShadow");
-		</script>
-		<?php
-		}
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 
 function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, $promoted_image)
     {
-    global $baseurl_short, $lang, $dash_tile_shadows;
+    global $baseurl_short, $lang;
 
     if($promoted_image > 0)
         {
@@ -664,12 +643,6 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
         <?php
         }
 
-    if(!$dash_tile_shadows)
-        {
-        ?>
-        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
-        <?php
-        }
 	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }
@@ -677,7 +650,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
 
 function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_height,$promoted_image)
     {
-    global $baseurl_short, $lang, $dash_tile_shadows;
+    global $baseurl_short, $lang;
 
     $link_parts = explode('?', $tile['link']);
     parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
@@ -742,12 +715,6 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
         <?php
         }
 
-    if(!$dash_tile_shadows)
-        {
-        ?>
-        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
-        <?php
-        }
 	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }
@@ -755,7 +722,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
 
 function tile_featured_collection_blank($tile, $tile_id)
     {
-    global $baseurl_short, $lang, $dash_tile_shadows;
+    global $baseurl_short, $lang;
     ?>
     <h2>
         <span class='fa fa-folder'></span>
@@ -778,12 +745,6 @@ function tile_featured_collection_blank($tile, $tile_id)
         <?php
         }
 
-    if(!$dash_tile_shadows)
-        {
-        ?>
-        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
-        <?php
-        }
 	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }

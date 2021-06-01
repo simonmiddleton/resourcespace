@@ -309,8 +309,6 @@ $tile_styles['ftxt']  = array('ftxt');
 $tile_styles['conf']  = array('blank');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
-# use shadows on all tile content (Built in support for transparent tiles)
-$dash_tile_shadows=false;
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
 # Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;

@@ -4664,7 +4664,6 @@ function render_featured_collection(array $ctx, array $fc)
     if(!empty($theme_images))
         {
         $html_container_class[] = "FeaturedSimpleTileImage";
-        $html_contents_class[] = "TileContentShadow";
 
         if(count($theme_images) == 1)
             {

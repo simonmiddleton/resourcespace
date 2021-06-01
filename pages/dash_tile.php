@@ -484,7 +484,7 @@ if(!$validpage)
         </label>
         <br />
         <div class="HomePanel DashTile">
-        <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>">
+        <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash">
         </div>
         </div>
         <div class="clearerleft"></div>

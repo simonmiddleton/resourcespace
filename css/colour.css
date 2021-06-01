@@ -232,14 +232,8 @@ div.autocomplete ul li {color: #000;}
 }
 .dash_tile_bin_text {color: #fff;}
 
-/* Shadowy Styling */
-.HomePanelDynamicDash.TileContentShadow h2, .HomePanelDynamicDash.TileContentShadow p, .HomePanelDynamicDash.TileContentShadow,
-.TileContentShadow {
-    text-shadow: 1px 1px 8px #090909;
-    color:#fff;
-}
 .HomePanel h2.title {background: transparent;color:#fff;}
-.HomePanel .HomePanelDynamicDash h2{background:transparent;}
+.HomePanel .HomePanelDynamicDash h2{background: rgba(0,0,0,0.4); text-shadow: 0px 1px 5px #000000;}
 .HomePanelDynamicDash p.tile_corner_box {background: rgba(19, 19, 19, 0.67);border-top-left-radius: 5px;color:#fff;}
 
 /* Delete Dialog */
@@ -419,6 +413,7 @@ a.ui-button.plupload_button.ui-button-disabled {
     {
     background-color: rgba(0,0,0,0.4);
     padding-bottom: 5px;
+    text-shadow: 0px 1px 5px #000000;
     }
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents .FeaturedSimpleTileText h2 {
