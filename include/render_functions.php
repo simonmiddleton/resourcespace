@@ -595,7 +595,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         {
                         # ---------------- Vertical Ordering (only if configured) -----------
                         ?>
-                        <table cellpadding=2 cellspacing=0>
+                        <table cellpadding=4 cellspacing=0>
                             <tbody>
                                 <tr>
                                 <?php
@@ -615,10 +615,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                                         $node = $field['nodes'][$node_index_to_be_reshuffled];
                                         ?>
                                         <td valign=middle>
-                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
-                                        </td>
-                                        <td valign=middle>
-                                            <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
+                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" class="nodes_input_checkbox" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                            <label class="customFieldLabel" for="nodes_searched_<?php echo $node['ref']; ?>">
+                                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
+                                            </label>
                                         </td>
                                         <?php
                                         }
@@ -637,7 +637,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                     {
                     # ---------------- Horizontal Ordering (Standard) ---------------------             
                     ?>
-                    <table cellpadding=2 cellspacing=0>
+                    <table cellpadding=4 cellspacing=0>
                         <tr>
                     <?php
                     foreach($field['nodes'] as $node)
@@ -657,11 +657,11 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             {
                             ?>
                             <td valign=middle>
-                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" class="nodes_input_checkbox" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                             </td>
-                            <td valign=middle>
-                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
-                            </td>
+                            <label class="customFieldLabel" for="nodes_searched_<?php echo $field['ref']; ?>">
+                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
+                            </label>
                             <?php
                             }
                         }

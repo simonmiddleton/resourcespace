@@ -1604,6 +1604,15 @@ form.FormFilter button.ClearButton {
     border-radius:4px;
     padding:3px 6px;
     margin-left:5px;
+    vertical-align: text-bottom;
+}
+
+.AdvancedSection .Question .customFieldLabel {
+    margin-left: 0;
+}
+
+.AdvancedSection .Question .nodes_input_checkbox {
+    margin: 3px 0 0 0;
 }
 
 .keywordselected {
