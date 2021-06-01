@@ -428,3 +428,49 @@ ORDER BY req.created desc;",0
      AND sl.logged >= date('[from-y]-[from-m]-[from-d]')
      AND sl.logged <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
 ORDER BY ref DESC;",0
+22,"Resource download detail (search results)","
+         SELECT rl.date AS 'Date / Time',
+                concat(u.username,' (',u.fullname,' )') AS 'Downloaded By User',
+                g.name AS 'User Group',
+                r.ref AS 'Resource ID',
+                (SELECT rd.value FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Resource Title',
+                rt.name AS 'Resource Type'
+
+           FROM resource_log rl
+           JOIN resource r ON r.ref = rl.resource
+LEFT OUTER JOIN user u ON rl.user = u.ref
+LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref
+LEFT OUTER JOIN resource_type rt ON r.resource_type = rt.ref
+
+          WHERE rl.type = 'd'
+            AND rl.date >= date('[from-y]-[from-m]-[from-d]') AND rl.date <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
+            AND r.ref IN [non_correlated_sql]
+       ORDER BY rl.date;",1
+23,"Resource download summary (search results)","
+  SELECT r.ref AS 'Resource ID',
+         (SELECT `value` FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Title', 
+         count(*) AS 'Downloads' 
+    FROM resource_log rl
+    JOIN resource r on rl.resource = r.ref
+   WHERE rl.type = 'd'
+     AND rl.date >= date('[from-y]-[from-m]-[from-d]') AND rl.date <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
+     AND r.ref IN [non_correlated_sql]
+GROUP BY r.ref
+ORDER BY 'Downloads' DESC;",1
+24,"Resources created - with thumbnails (search results)","
+         SELECT r.ref AS 'thumbnail',
+                rl.date AS 'Date / Time',
+                concat(u.username,' (',u.fullname,' )') AS 'Created By User',
+                g.name AS 'User Group',
+                r.ref AS 'Resource ID',
+                (SELECT rd.value FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Resource Title'
+
+           FROM resource_log AS rl
+           JOIN resource AS r ON r.ref = rl.resource
+LEFT OUTER JOIN user AS u ON rl.user  =  u.ref
+LEFT OUTER JOIN usergroup AS g ON u.usergroup = g.ref
+
+          WHERE rl.type = 'c'
+            AND rl.date >= date('[from-y]-[from-m]-[from-d]') AND rl.date <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
+            AND r.ref IN [non_correlated_sql]
+       ORDER BY rl.date;",1
