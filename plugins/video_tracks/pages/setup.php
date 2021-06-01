@@ -38,6 +38,10 @@ if (getval("submit","")!="" || getval("save","")!="" && !$execution_lockout)
 				$video_tracks_output_formats_new[$video_tracks_index[$i]]["extension"]=$video_tracks_extension[$i];
 				}	
 			}
+            else
+                {
+                $video_tracks_output_formats_new = array();
+                }
 		}
 	// Re-encode the mappings variable so we can post it with the form
 	$video_tracks_output_formats = $video_tracks_output_formats_new;
