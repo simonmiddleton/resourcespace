@@ -67,7 +67,7 @@ if("{$baseurl_short}pages/search.php" === $backurl_path)
 if ($report!="" && (getval("createemail","")==""))
 	{
 	$download=getval("download","")!="";
-	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, $search_params);
+	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, false, false, $search_params);
 	}
 
 include "../../include/header.php";	
@@ -211,6 +211,7 @@ else
   
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>
+    <input type="hidden" name="backurl" value="<?php echo generateURL("{$baseurl_short}pages/search.php", $search_params); ?>">
 <div class="Question">
 <label for="report"><?php echo $lang["viewreport"]?></label>
 <select id="report" name="report" class="stdwidth">

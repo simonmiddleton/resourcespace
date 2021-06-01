@@ -50,15 +50,22 @@ function get_reports()
  * @param  mixed $download          Output as CSV attachment (default)/output directly to client
  * @param  mixed $add_border        Optional table border (not for download)
  * @param  mixed $foremail          Sending as email?
+ * @param  array $search_params     Search parameters - {@see get_search_params()} - will run the report on the search 
+ *                                  results and replace the '[non_correlated_sql]' placeholder with the search query.
+ * 
  * @return void | string | array    Outputs CSV file, returns HTML table or returns an array with path to the CSV file, rows and filename
  */
-function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false)
+function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false, array $search_params)
     {
     # Run report with id $ref for the date range specified. Returns a result array.
     global $lang, $baseurl, $report_rows_attachment_limit;
 
-    $report=sql_query("select * from report where ref='$ref'");$report=$report[0];
+    $ref_escaped = escape_check($ref);
+
+    $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+    $report=$report[0];
     $report['name'] = get_report_name($report);
+
     if($download || $foremail)
         {
         $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
@@ -81,7 +88,34 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 
         global $view_title_field;
         $sql=str_replace("[title_field]",$view_title_field,$sql);
-        $results=sql_query($sql);
+
+        // IF report supports being run on search results
+        if($report['support_non_correlated_sql'] === '1')
+            {
+            $search_sql = do_search(
+                $search_params['search'],
+                $search_params['restypes'],
+                $search_params['order_by'],
+                $search_params['archive'],
+                -1, # fetchrows
+                $search_params['sort'],
+                false, # access_override
+                $search_params['starsearch'],
+                false, # ignore_filters
+                false, # return_disk_usage
+                $search_params['recentdaylimit'],
+                false, # go
+                false, # stats_logging
+                true, # return_refs_only
+                false, # editable_only
+                true # returnsql
+            );
+            $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
+
+            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
+            }
+
+        $results = sql_query($sql);
         }
     
     $resultcount = count($results);
