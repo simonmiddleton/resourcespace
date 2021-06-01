@@ -219,12 +219,16 @@ else
 <?php
 $ref = getval('ref', 0, true);
 $reports = get_reports();
-if($run_report_on_search_results)
-    {
-    $reports = array_filter($reports, function($v) { return $v['support_non_correlated_sql'] === '1'; });
-    }
 foreach($reports as $report_opt)
     {
+    // Filter out reports not valid for the context you're in:
+    // - if running report on search results, then drop the ones that don't have support for non-correlated SQL
+    // - if viewing reports normally (from team centre), then remove the ones that support search results
+    if($run_report_on_search_results != $report_opt['support_non_correlated_sql'])
+        {
+        continue;
+        }
+
     echo sprintf(
         '<option value="%s"%s>%s</option>',
         $report_opt['ref'],
@@ -321,7 +325,6 @@ var do_download=false;
 <?php echo $output; ?>
 
 </div>
-
 <?php
 }
 include "../../include/footer.php";
