@@ -211,7 +211,7 @@ else
   
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>
-    <input type="hidden" name="backurl" value="<?php echo generateURL("{$baseurl_short}pages/search.php", $search_params); ?>">
+    <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
 <div class="Question">
 <label for="report"><?php echo $lang["viewreport"]?></label>
 <select id="report" name="report" class="stdwidth">
