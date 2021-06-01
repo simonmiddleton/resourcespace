@@ -3071,17 +3071,17 @@ $upload_link_workflow_state = -1;
 
 // Used for video splice plugins to decide commands used for video output.
 $ffmpeg_std_video_options= array(
-    "MP4 700(kbps)"=>array(
+    "MP4 700kbps"=>array(
         "command"=>"mp4 -b:v 700k -crf 20",
         "extension"=>"mp4"),
-    "MP4 1500(kbps)"=>array(
+    "MP4 1500kbps"=>array(
         "command"=>"mp4 -b:v 1500k -crf 20",
         "extension"=>"mp4"),
-    "MP4 2500(kbps)"=>array(
+    "MP4 2500kbps"=>array(
         "command"=>"mp4 -b:v 2500k -crf 20",
         "extension"=>"mp4",
         "default"=>true),
-    "MP4 4000(kbps)"=>array(
+    "MP4 4000kbps"=>array(
         "command"=>"mp4 -b:v 4000k -crf 20",
         "extension"=>"mp4"),
         );
@@ -3113,31 +3113,31 @@ $ffmpeg_std_audio_options= array(
 
 // Used by video splice plugin to decide common resolution for all video files to be merged
 $ffmpeg_std_resolution_options= array(
-    "1920 x 1080(horizontal)"=>array(
+    "2560 x 1440"=>array(
+        "width"=>"2560",
+        "height"=>"1440"),
+    "1920 x 1080"=>array(
         "width"=>"1920",
         "height"=>"1080"),
-    "1080 x 1920(vertical)"=>array(
-        "width"=>"1080",
-        "height"=>"1920"),
-    "1280 x 720(horizontal)"=>array(
+    "1280 x 720"=>array(
         "width"=>"1280",
         "height"=>"720",
         "default"=>true),
-    "720 x 1280(vertical)"=>array(
-        "width"=>"720",
-        "height"=>"1280"),
-    "960 x 540(horizontal)"=>array(
+    "960 x 540"=>array(
         "width"=>"960",
         "height"=>"540"),
-    "540 x 960(vertical)"=>array(
-        "width"=>"540",
-        "height"=>"960"),
-    "480 x 270(horizontal)"=>array(
+    "854 x 480"=>array(
+        "width"=>"854",
+        "height"=>"480"),
+    "640 x 360"=>array(
+        "width"=>"640",
+        "height"=>"360"),
+    "480 x 270"=>array(
         "width"=>"480",
         "height"=>"270"),
-    "270 x 480(vertical)"=>array(
-        "width"=>"480",
-        "height"=>"270")
+    "426 x 240"=>array(
+        "width"=>"426",
+        "height"=>"240")
     );
 
 // Used by video splice plugin to decide common frame rate for all video files to be merged
