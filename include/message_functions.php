@@ -7,11 +7,37 @@
  * @param  array $messages  Array that will be populated by messages. Passed by reference
  * @param  int $user        User ID
  * @param  bool $get_all    Retrieve all messages? Setting to TRUE will include all seen and expired messages
- * @param  bool $sort_desc  Sort by message ID in descending order? False = Ascending
+ * @param  bool $sort       Sort by message ID in ascending or descending order
+ * @param  string $order_by Order of messages returned
  * @return bool             Flag to indicate if any messages exist
  */
-function message_get(&$messages,$user,$get_all=false,$sort_desc=false)
+function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref")
 	{
+	switch ($order_by)
+        {
+        case "ref":
+            $sql_order_by = "user_message.ref";
+            break;
+        case "created":
+            $sql_order_by = "message.created";
+            break;
+        case "from":
+            $sql_order_by = "owner";
+            break;
+        case "fullname":
+            $sql_order_by = "user.fullname";
+            break;
+        case "message":
+            $sql_order_by = "message.message";
+            break;
+        case "expires":
+            $sql_order_by = "message.expires";
+            break;
+        case "seen":
+            $sql_order_by = "user_message.seen";
+            break;  
+        }
+
 	$messages=sql_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
 		"FROM `user_message`
 		INNER JOIN `message` ON user_message.message=message.ref " .
@@ -19,7 +45,7 @@ function message_get(&$messages,$user,$get_all=false,$sort_desc=false)
 		"WHERE user_message.user='{$user}'" .
 		($get_all ? " " : " AND message.expires > NOW()") .
 		($get_all ? " " : " AND user_message.seen='0'") .
-		" ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC"));
+		" ORDER BY " . $sql_order_by . " " . $sort);
 	return(count($messages) > 0);
 	}
 
@@ -180,6 +206,54 @@ function message_purge()
 	sql_query("DELETE FROM message where expires < NOW()");
 	}
 
+/**
+ * Delete all selected messages
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_deleteselusrmsg($messages)
+    {
+    global $userref;
+ 
+    $userref = escape_check($userref);
+    $refs_list = escape_check(str_replace(array('[',']'), '' , $messages));
+ 
+    sql_query("DELETE FROM user_message WHERE user = {$userref} AND ref IN (" . $refs_list . ")");
+    }
+ 
+/**
+ * Mark all selected messages as seen
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_selectedseen($messages)
+    {
+    global $userref;
+ 
+    $userref = escape_check($userref);
+    $refs_list = escape_check(str_replace(array('[',']'), '' , $messages));
+ 
+    sql_query("UPDATE user_message SET seen='1' WHERE user = {$userref} AND ref IN (" . $refs_list . ")");
+    }
+ 
+/**
+ * Mark all selected messages as unseen
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_selectedunseen($messages)
+    {
+    global $userref;
+ 
+    $userref = escape_check($userref);
+    $refs_list = escape_check(str_replace(array('[',']'), '' , $messages));
+ 
+    sql_query("UPDATE user_message SET seen='0' WHERE user = {$userref} AND ref IN (" . $refs_list . ")");
+    }
+ 
 
 /**
  * Send a summary of all unread notifications as an email
@@ -405,22 +479,6 @@ function message_remove_related($remote_activity=0,$remote_refs=array())
 	}
 
 /**
- * Remove an instance of a message from user_message table 
- *
- * @param  int $usermessage Message ID
- * @return void
- */
-function message_user_remove($usermessage)
-    {
-    global $userref;
-
-    $userref     = escape_check($userref);
-    $usermessage = escape_check($usermessage);
-
-    sql_query("DELETE FROM user_message WHERE user = {$userref} AND ref = '{$usermessage}'");
-    }
-
-/**
 * Send a system notification or email to the system administrators according to preference
 * 
 * @param string  $message      Message text
@@ -464,6 +522,24 @@ function system_notification($message, $url="")
         {
         message_add($admin_notify_users,escape_check($message),$url, 0);
         }
+    }
+
+/**
+* Get all message refs for a given user
+* 
+* @param string  $user      User ID
+* 
+* @return void
+*/ 
+function message_getrefs($user)
+    {
+    $user = escape_check($user);
+ 
+    $user_messages = sql_query("SELECT ref FROM user_message WHERE user = {$user}");
+ 
+    $js_array = array_values($user_messages);
+ 
+    echo json_encode($js_array);
     }
 
 /**

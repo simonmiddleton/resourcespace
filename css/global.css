@@ -436,6 +436,10 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
 .Listview .IconStar {width:11px;height:12px;padding: 0;display: block;float:left;}
+.ListViewBulkActions {margin-bottom: 15px;}
+.ListViewBulkActions a {margin-right: 5px; margin-left: 5px; text-decoration: none;}
+.ListViewBulkActions i {padding-right: 8px;}
+.ListViewBulkActions .DisabledLink:hover {color: #474747;}
 
 /*Search Panel layout*/
 .SearchSpace {padding: 15px;width: auto;}
@@ -528,7 +532,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {margin: 0 15px 15px 0; position: relative; min-width: 720px;}
+#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;margin-top:40px}
 #openseadragon_viewer { width: 100%; height: 600px; } /* width and height in line with #previewimagewrapper and #previewimage, as best as it can. */
 
 /* Larger layout changes */
@@ -598,7 +602,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
 .BasicsBox .HorizontalNav li {display:inline;padding:0 0.9em 0 0;margin:0 0.5em 0 0;}
 .BasicsBox .VerticalNav ul {padding:0.2em 0;margin:0 0 1em;list-style:none;}
-.BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.75em 0;}
+.BasicsBox .VerticalNav li {padding:0 0.35em 0 0;margin:0 0.5em 0.5em 0;}
 .nopadding,.nopadding .VerticalNav ul {padding:0;margin:0;}
 .nopad, .BasicsBox .nopad {padding:0;}
 
@@ -1621,8 +1625,9 @@ form.FormFilter button.ClearButton {
 
 #PreviewTools {
     height: 41px;
-    width: 100%;
     position: relative;
+    width: 100%;
+    margin-top:3px;
 }
 
 #PreviewToolsOptionsWrapper {

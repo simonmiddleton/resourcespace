@@ -806,7 +806,7 @@ else if(1 == $resource['has_image'])
     		}
         	?>
         <!-- Available tools to manipulate previews -->
-        <div id="PreviewTools">
+        <div id="PreviewTools" >
             <script>
             function is_another_tool_option_enabled(element)
                 {

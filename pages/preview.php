@@ -446,7 +446,7 @@ if($annotate_enabled)
         preview_image_copy.width(<?php echo $image_width; ?>);
         preview_image_copy.height(<?php echo $image_height; ?>);
 
-        preview_image_copy.appendTo(preview_image_link.parent());
+        preview_image_copy.prependTo(preview_image_link.parent());
         preview_image_link.hide();
 
         anno.makeAnnotatable(document.getElementById(img_copy_id));
