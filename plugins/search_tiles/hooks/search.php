@@ -23,7 +23,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
             
             echo "<a href=\"" . $baseurl_short . "pages/search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]) . "\" onClick=\"return CentralSpaceLoad(this,true);\" 
 			class=\"HomePanel DashTile\" id=\"search_tile_col" . $collections[$n]['ref'] . "\">
-			<div id=\"contents_search_tile_col" . $collections[$n]['ref'] . "\" class=\"HomePanelIN HomePanelDynamicDash " . (($search_tiles_text_shadow)? "TileContentShadow":"") . "\">
+			<div id=\"contents_search_tile_col" . $collections[$n]['ref'] . "\" class=\"HomePanelIN HomePanelDynamicDash\">
 			";
             $count=count($resources);
             if($count>0)

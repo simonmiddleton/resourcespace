@@ -1046,28 +1046,29 @@ a.HomePanel:hover {
     padding: 0;
     overflow: hidden;
     position: relative;
-    height: 180px;
+    height: 160px;
     width: 100%;
 }
 .HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
     float: none;
     position: relative;
-    padding: 8px 15px 0 15px;
+    padding: 5px 15px 5px 15px;
     margin-bottom: 0;
     font-size: 1.2em;
 }
 .HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
-    padding-right: 8px;
+    padding-right: 5px;
     font-size: 1.2em;
+    vertical-align: text-bottom;
 }
 .HomePanelDynamicDash p, .HomePanelThemes p {
     float: none;
     position: relative;
     padding-left: 15px;
     padding-right: 15px;
-    margin-top: 5px;
     clear: left;
     font-size:1em;
+    text-shadow: 0px 1px 5px #000000, 0px 1px 10px #000000;
 }
 .DoubleWidthDashTile {
     /*Note: check .HomePanel width to be sure it is ok*/
@@ -1310,7 +1311,7 @@ div.MessageBox a {
 .FeaturedSimpleTile {
     position: relative;
     margin-top: 10px;
-    height: 150px;
+    height: 160px;
     border-radius:5px;
     overflow: hidden;
 }
@@ -1328,6 +1329,10 @@ div.MessageBox a {
 .FeaturedSimpleTileText {
     vertical-align: middle;
     display: table-cell;
+}
+
+.FeaturedSimpleTileText h2 span{
+    text-shadow: none;
 }
    
 .FeaturedSimpleLink{
