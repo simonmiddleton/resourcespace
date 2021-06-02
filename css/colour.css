@@ -234,7 +234,7 @@ div.autocomplete ul li {color: #000;}
 
 .HomePanel h2.title {background: transparent;color:#fff;}
 .HomePanel .HomePanelDynamicDash h2{background: rgba(0,0,0,0.4); text-shadow: 0px 1px 5px #000000;}
-.HomePanelDynamicDash p.tile_corner_box {background: rgba(19, 19, 19, 0.67);border-top-left-radius: 5px;color:#fff;}
+.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);border-top-left-radius: 5px;color:#fff;}
 
 /* Delete Dialog */
 .delete-dialog .ui-dialog-titlebar,  .ui-dialog-titlebar{
