@@ -114,7 +114,8 @@ function addColumnHeader($orderName, $labelKey)
 						<?php
                         if(!$support_non_correlated_sql)
                             {
-                            echo LINK_CARET; ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-view"]; ?></a><?php
+                            echo LINK_CARET; ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-view"]; ?></a>
+                            <?php
                             }
 
                         if(db_use_multiple_connection_modes() || !$execution_lockout)
