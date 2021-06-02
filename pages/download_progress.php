@@ -13,6 +13,7 @@ $search=getvalescaped("search","");
 $iaccept=getvalescaped("iaccept","off");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
+$email       = getvalescaped('email', '');
 
 $download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) 
 					. "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative) . "&iaccept=" . urlencode($iaccept);
@@ -25,7 +26,7 @@ if ($download_usage && getval("usage","")=="" && $terms_download)
 
 if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative)))) // used in remotedownload-plugin
 	{
-	$download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment);
+	$download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment) . "&email=" . urlencode($email);
 	$url=$baseurl."/pages/download.php" . $download_url_suffix;
 	}
 
