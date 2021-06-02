@@ -106,6 +106,7 @@ $lang["information-ip_address_restriction"]="Wildcards are supported for IP addr
 $lang["property-ip_address_restriction"]="IP address restriction";
 $lang["property-request_mode"]="Request mode";
 $lang["property-allow_registration_selection"]="Allow registration selection";
+$lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
 $lang["information-allowed_extensions"]="If set, only files with the specified extensions are allowed upon upload to this type, e.g. jpg,gif";
@@ -1713,6 +1714,7 @@ $lang["autorotate"]="Autorotate images?";
 $lang["user_pref_autorotate"]="Automatically rotate images at upload?";
 
 # Reports
+$lang['run_report_on_search_results'] = "Run report on these results";
 # Report names (for the default reports)
 $lang["report-keywords_used_in_resource_edits"]="Keywords used in resource edits";
 $lang["report-keywords_used_in_searches"]="Keywords used in searches";

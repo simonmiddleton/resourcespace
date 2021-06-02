@@ -649,31 +649,6 @@ function compile_search_actions($top_actions)
             $o++;
             }
 
-        /*// Wasn't able to see this working even in the old code
-        // so I left it here for reference. Just uncomment it and it should work
-        global $smartsearch;
-        if($allow_smart_collections && substr($search, 0, 11) == '!collection' && (is_array($smartsearch[0]) && !empty($smartsearch[0])))
-            {
-            $smartsearch = $smartsearch[0];
-
-            $extra_tag_attributes = sprintf('
-                    data-url="%spages/search.php?search=%s&restypes=%s&archive=%s&starsearch=%s&daylimit=%s"
-                ',
-                $baseurl_short,
-                urlencode($smartsearch['search']),
-                urlencode($smartsearch['restypes']),
-                urlencode($smartsearch['archive']),
-                urlencode($smartsearch['starsearch']),
-                urlencode($daylimit)
-            );
-
-            $options[$o]['value']='do_saved_search';
-            $options[$o]['label']=$lang['dosavedsearch'];
-            $options[$o]['data_attr']=array();
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-            $o++;
-            }*/
-
         if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
@@ -736,7 +711,7 @@ function compile_search_actions($top_actions)
         $options[$o]['order_by']  = 130;
         $o++;
         }
-        
+
     if($top_actions && ($k == '' || $internal_share_access))
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
@@ -752,6 +727,19 @@ function compile_search_actions($top_actions)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
+        $o++;
+        }
+
+    // Run report on search results
+    if($top_actions && checkperm('t'))
+        {
+        $backurl_to_search = generateURL("{$baseurl_short}pages/search.php", get_search_params(), $urlparams);
+
+        $options[$o]['value'] = 'run_report_on_search_results';
+        $options[$o]['label'] = $lang['run_report_on_search_results'];
+        $options[$o]['data_attr']['url'] = generateURL("{$baseurl_short}pages/team/team_report.php", ['backurl' => $backurl_to_search]);
+        $options[$o]['category'] = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 280;
         $o++;
         }
 

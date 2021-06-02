@@ -62,8 +62,17 @@ if (getval("save",false))
 		{
 		log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
 		log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
-		sql_query("update report set query='" . $query . "',name='{$name}' where ref={$ref}");
-		redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
+
+        $support_non_correlated_sql = (int) (mb_strpos($query, REPORT_PLACEHOLDER_NON_CORRELATED_SQL) !== false);
+
+        sql_query(sprintf(
+            "UPDATE report SET name = '%s', query = '%s', support_non_correlated_sql = '%s' WHERE ref = '%s'",
+            $name,
+            $query,
+            $support_non_correlated_sql,
+            escape_check($ref)
+        ));
+		redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");
 		exit;
 		}
 	}
