@@ -76,6 +76,12 @@ function do_search(
         return $alternativeresults;
         }
 
+    if(!is_not_wildcard_only($search))
+        {
+        $search = '';
+        debug('do_search(): User searched only for "*". Converting this into an empty search instead.');
+        }
+
     $modifyfetchrows = hook("modifyfetchrows", "", array($fetchrows));
     if ($modifyfetchrows)
         {
@@ -207,8 +213,7 @@ function do_search(
         }
 
     $search=trim($search);
-    # Dedupe keywords 
-    $keywords=array_values(array_unique($keywords));
+    $keywords = array_values(array_filter(array_unique($keywords), 'is_not_wildcard_only'));
 
     $modified_keywords=hook('dosearchmodifykeywords', '', array($keywords, $search));
     if ($modified_keywords)
@@ -218,7 +223,7 @@ function do_search(
 
     # -- Build up filter SQL that will be used for all queries
     $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
-    debug("do_search: \$sql_filter = {$sql_filter}");
+    debug("do_search(): \$sql_filter = {$sql_filter}");
 
     # Initialise variables.
     $sql="";

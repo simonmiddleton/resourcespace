@@ -3051,3 +3051,16 @@ function get_search_params()
         }
     return $requestparams;
     }
+
+
+/**
+* Helper function to check a string is not just the asterisk.
+* 
+* @param string $str The string to be checked.
+* 
+* @return boolean
+*/
+function is_not_wildcard_only(string $str)
+    {
+    return trim($str) !== '*';
+    }
