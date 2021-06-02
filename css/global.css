@@ -1046,28 +1046,29 @@ a.HomePanel:hover {
     padding: 0;
     overflow: hidden;
     position: relative;
-    height: 180px;
+    height: 160px;
     width: 100%;
 }
 .HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
     float: none;
     position: relative;
-    padding: 8px 15px 0 15px;
+    padding: 5px 15px 5px 15px;
     margin-bottom: 0;
     font-size: 1.2em;
 }
 .HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
-    padding-right: 8px;
+    padding-right: 5px;
     font-size: 1.2em;
+    vertical-align: text-bottom;
 }
 .HomePanelDynamicDash p, .HomePanelThemes p {
     float: none;
     position: relative;
     padding-left: 15px;
     padding-right: 15px;
-    margin-top: 5px;
     clear: left;
     font-size:1em;
+    text-shadow: 0px 1px 5px #000000, 0px 1px 10px #000000;
 }
 .DoubleWidthDashTile {
     /*Note: check .HomePanel width to be sure it is ok*/
@@ -1310,8 +1311,8 @@ div.MessageBox a {
 .FeaturedSimpleTile {
     position: relative;
     margin-top: 10px;
-    height: 150px;
-    border-radius:5px;
+    height: 160px;
+    border-radius:4px;
     overflow: hidden;
 }
 
@@ -1328,6 +1329,10 @@ div.MessageBox a {
 .FeaturedSimpleTileText {
     vertical-align: middle;
     display: table-cell;
+}
+
+.FeaturedSimpleTileText h2 span{
+    text-shadow: none;
 }
    
 .FeaturedSimpleLink{
@@ -1604,6 +1609,15 @@ form.FormFilter button.ClearButton {
     border-radius:4px;
     padding:3px 6px;
     margin-left:5px;
+    vertical-align: text-bottom;
+}
+
+.AdvancedSection .Question .customFieldLabel {
+    margin-left: 0;
+}
+
+.AdvancedSection .Question .nodes_input_checkbox {
+    margin: 3px 0 0 0;
 }
 
 .keywordselected {
@@ -2060,7 +2074,7 @@ a.BrowseRefresh{
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0 0 10px 0;}
-.TileNav li {padding:10px 0;margin:0;width:110px;float:left;height:110px;text-align:center;position:relative;word-break:break-word}
+.TileNav li {padding:10px 5px;margin:0;width:100px;float:left;height:110px;text-align:center;position:relative;word-break:break-word}
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:48px;padding-bottom:15px;}
 .TileNav .Pill {position:absolute; top:10px; right:25px;border-radius:10px;font-size:115%;}

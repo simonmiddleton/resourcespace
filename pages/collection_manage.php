@@ -10,6 +10,7 @@ $offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
 $col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
 $sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
+if (!in_array(mb_strtoupper($sort), array('ASC','DESC'))) {$sort = "ASC";}
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);

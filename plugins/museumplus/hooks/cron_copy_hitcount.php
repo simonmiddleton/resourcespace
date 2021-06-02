@@ -43,6 +43,12 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
         echo nl2br(PHP_EOL . 'MuseumPlus script failed - $php_fullpath variable must be set in config.php', !$cli);
         return false;
         }
+        
+    function suppress_warning($errno, $errstr) 
+        { 
+        // Handle warnings from unlink() and mkdir()
+        return true;
+        }
 
     // Deal with log directory now so that scripts can just use it if they need to
     global $museumplus_log_directory;
@@ -50,7 +56,9 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
         {
         if(!is_dir($museumplus_log_directory))
             {
-            @mkdir($museumplus_log_directory, 0755, true);
+            set_error_handler("suppress_warning", E_WARNING);
+            mkdir($museumplus_log_directory, 0755, true);
+            restore_error_handler();
 
             if(!is_dir($museumplus_log_directory))
                 {
@@ -76,7 +84,9 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
             // Delete log file if it is older than its expiration time
             if('mplus_script_log' == substr($filename, 0, 16) && $file_info->getMTime() < $log_expiry_time)
                 {
-                @unlink($file_info->getPathName());
+                set_error_handler("suppress_warning", E_WARNING);
+                unlink($file_info->getPathName());
+                restore_error_handler();
                 }
             }
         }

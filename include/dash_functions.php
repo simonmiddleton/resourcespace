@@ -382,7 +382,7 @@ function get_alluser_available_tiles($tile="null")
  */
 function get_default_dash($user_group_id = null, $edit_mode = false)
 	{
-	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $dash_tile_colour, $dash_tile_colour_options;
+	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $dash_tile_colour, $dash_tile_colour_options;
 
 	#Build Tile Templates
 	$tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by',dash_tile.allow_delete FROM dash_tile WHERE dash_tile.all_users = 1 AND dash_tile.ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
@@ -466,7 +466,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 			class="HomePanel DashTile DashTileDraggable <?php echo $tile["allow_delete"]? "":"conftile";?>" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
-			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo $contents_tile_class; ?> <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>" style="<?php echo $tile_custom_style; ?>">
+			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo $contents_tile_class; ?>" style="<?php echo $tile_custom_style; ?>">
 				<?php
                 if (strpos($tile["url"],"dash_tile.php")!==false)
                     {
@@ -590,7 +590,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
 	{
-	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup;
+	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $anonymous_default_dash, $userref, $usergroup;
     global $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash, $help_modal;
 	#Build Tile Templates
 	if(checkPermission_anonymoususer() && !$anonymous_default_dash)
@@ -674,7 +674,7 @@ function get_managed_dash()
 			class="HomePanel DashTile DashTileDraggable <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
-			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>" style="<?php echo $tile_custom_style; ?>">
+			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
 				<?php if (strpos($tile["url"],"dash_tile.php")!==false) 
 					{
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
@@ -1106,7 +1106,7 @@ function get_user_available_tiles($user,$tile="null")
  */
 function get_user_dash($user)
 	{
-	global $baseurl,$baseurl_short,$lang,$dash_tile_shadows,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
+	global $baseurl,$baseurl_short,$lang,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
 
 	#Build User Dash and recalculate order numbers on display
 	$user_tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
@@ -1152,7 +1152,7 @@ function get_user_dash($user)
 			tile="<?php echo $tile['tile']; ?>"
 			id="user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>"
 		>
-			<div id="contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>" style="<?php echo $tile_custom_style; ?>">
+			<div id="contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
 				<script>
 				jQuery(function(){
 					var height = jQuery("#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>").height();

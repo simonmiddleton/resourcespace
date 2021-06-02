@@ -35,7 +35,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     hook("formatchooserbeforedownloads");
     $sizes = get_image_sizes($ref, false, $resource['file_extension'], false);
     $downloadCount = 0;
-    $originalSize = -1;
+    $originalSize = array();
     # Show original file download
 	for ($n = 0; $n < count($sizes); $n++)
         {
