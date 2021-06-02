@@ -6,6 +6,7 @@ include_once __DIR__ . '/../../include/csv_export_functions.php';
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 $resourcec=create_resource(2,0);
+$resources_list = [$resourcea, $resourceb, $resourcec];
 
 debug("Resource A: " . $resourcea);
 debug("Resource B: " . $resourceb);
@@ -99,11 +100,13 @@ $csvh=fopen($tempcsv,"r");
 while (($row = fgetcsv($csvh,5000)) !== false)
     {
     if(
-        ($row[0] == $resourcea && !in_array("Boring",$row))
-        ||
-        ($row[0] == $resourceb && !in_array("Mundane",$row))
-        ||
-        ($row[0] == $resourcec && !in_array("Unimportant",$row))
+        // Resource property
+        (in_array($row[0], $resources_list) && !in_array($lang['status0'], $row))
+
+        // Metadata fields
+        || ($row[0] == $resourcea && !in_array("Boring",$row))
+        || ($row[0] == $resourceb && !in_array("Mundane",$row))
+        || ($row[0] == $resourcec && !in_array("Unimportant",$row))
     )
         {
         echo "ERROR - SUBTEST C\n";
@@ -113,3 +116,5 @@ while (($row = fgetcsv($csvh,5000)) !== false)
 
 fclose($csvh);
 unlink($tempcsv);
+
+return true;
