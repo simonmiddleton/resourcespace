@@ -3430,7 +3430,7 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
     $debug_id = uniqid();
     debug(sprintf('[fct=compute_tiles_at_scale_factor id=%s] Computing tiles for image with size: width = %s x height = %s and scale_factor = %s', $debug_id, $sw, $sh, $sf));
 
-    if(!(in_array($sf, $preview_tile_scale_factors) && $sw > 0 && $sh > 0))
+    if(!($sf > 0 && in_array($sf, $preview_tile_scale_factors) && $sw > 0 && $sh > 0))
         {
         return [];
         }
