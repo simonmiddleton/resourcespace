@@ -206,20 +206,10 @@ else
 
 	$links_trail[] = ['title' => $lang['viewreports']];
 	renderBreadcrumbs($links_trail);
-	?>
- 	<p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
-  
-<form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
-    <?php generateFormToken("team_report"); ?>
-    <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
-<div class="Question">
-<label for="report"><?php echo $lang["viewreport"]?></label>
-<select id="report" name="report" class="stdwidth">
-    <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
-<?php
-$ref = getval('ref', 0, true);
-$reports = get_reports();
-foreach($reports as $report_opt)
+
+    $reports = get_reports();
+    $report_options = [];
+    foreach($reports as $report_opt)
     {
     // Filter out reports not valid for the context you're in:
     // - if running report on search results, then drop the ones that don't have support for non-correlated SQL
@@ -228,7 +218,22 @@ foreach($reports as $report_opt)
         {
         continue;
         }
-
+    $report_options[] = $report_opt;
+    }
+    $error = (empty($report_options) ? $lang['report_error_no_reports_supporting_search_results'] : '');
+	?>
+ 	<p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
+<?php render_top_page_error_style($error); ?>
+<form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
+    <?php generateFormToken("team_report"); ?>
+    <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
+<div class="Question">
+<label for="report"><?php echo $lang["viewreport"]?></label>
+<select id="report" name="report" class="stdwidth">
+    <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
+<?php
+foreach($report_options as $report_opt)
+    {
     echo sprintf(
         '<option value="%s"%s>%s</option>',
         $report_opt['ref'],
