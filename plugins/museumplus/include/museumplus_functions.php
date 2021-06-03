@@ -378,7 +378,8 @@ function mplus_get_cfg_by_module_name(string $n)
 * Validate a modules' record ID (technical or virtual)
 * 
 * @param array   $ramc             Resources associated module configurations. {@see mplus_get_associated_module_conf()}
-* @param boolean $use_technical_id Force validating using the technical ID (ie __id) fieldPath.
+* @param boolean $use_technical_id Validate using the technical ID (ie __id) fieldPath.
+* @param boolean $force            Force re-validation even if association state is already known.
 * 
 * @return array Returns the valid resources that have a valid combination of "module name - MpID (virtual or technical)".
 * IMPORTANT: Each returned resource associated module configuration will get mutated with an additional "__id" key 
@@ -386,7 +387,7 @@ function mplus_get_cfg_by_module_name(string $n)
 *            MPLUS_FIELD_ID constant to find this key.
 * An optional "errors" key may be added to the return array to hold any errors the end user should be aware of.
 */
-function mplus_validate_association(array $ramc, bool $use_technical_id)
+function mplus_validate_association(array $ramc, bool $use_technical_id, bool $force)
     {
     debug(sprintf("mplus_validate_association(): mplus_validate_association(use_technical_id = %s)", json_encode($use_technical_id)));
     mplus_log_event('Called mplus_validate_association()', ['use_technical_id' => $use_technical_id], 'debug');
@@ -445,14 +446,14 @@ function mplus_validate_association(array $ramc, bool $use_technical_id)
 
             // Validation failed previously for this resource-module association (one validation attempt has been made) and
             // no changes have been recorded to the "module name - MpID" combo
-            if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id === '')
+            if(!$force && $r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id === '')
                 {
                 unset($computed_md5s[$r_ref]);
                 continue;
                 }
             // No changes have been recorded to the "module name - MpID" combo and this resource-module association is valid
             // and we have a technical (ie. "__id") ID to use for further processing (e.g syncing data from M+)
-            else if($r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
+            else if(!$force && $r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
                 {
                 $valid_ramc[$r_ref] = $ramc[$r_ref] + [MPLUS_FIELD_ID => $r_technical_id];
                 unset($computed_md5s[$r_ref]);
@@ -622,7 +623,7 @@ function mplus_validate_association(array $ramc, bool $use_technical_id)
     // One last attempt to validate the resource-module associations, this time using the technical ID (__id).
     if(!empty($ramc_to_retry))
         {
-        $valid_ramc += mplus_validate_association($ramc_to_retry, true);
+        $valid_ramc += mplus_validate_association($ramc_to_retry, true, $force);
         }
 
     if(!empty($errors))

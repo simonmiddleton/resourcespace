@@ -72,16 +72,19 @@ $mplus_long_options  = array(
     'help',
     'clear-lock',
     'filter:',
+    'revalidate',
 );
 
 // Script options defaults (if applicable)
 $filter = [];
+$revalidate = false;
 foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $option_value)
     {
     if(in_array($option_name, array('h', 'help')))
         {
         logScript('[museumplus] To clear the lock after a failed run, pass either the "-c" -or- "--clear-lock" option.', $mplus_log_file);
         logScript('[museumplus] To filter the resources that should be processed, use the "--filter" option and use the "new_and_changed_associations" filter. This will process resources that have just been assocciated with a module or that had their association changed since the last time they\'ve been validated.', $mplus_log_file);
+        logScript('[museumplus] To force a re-validation, use the "--revalidate" flag. This will revalidate even when the association is already determined to be valid.', $mplus_log_file);
         exit();
         }
 
@@ -108,6 +111,11 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
         array_walk($raw_filter, function(&$v, $i) { $v = null; }); # convert to the correct struct of a "flag" filter
         $filter = mplus_validate_resource_association_filters($raw_filter);
         logScript('[museumplus] Additional valid filters: ' . implode(', ', array_keys($filter)), $mplus_log_file);
+        }
+    else if($option_name === 'revalidate')
+        {
+        $revalidate = true;
+        logScript('[museumplus] Set to force re-validation.', $mplus_log_file);
         }
     }
 
@@ -182,7 +190,7 @@ foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
     logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);
     mplus_resource_clear_metadata(array_keys($ramcs));
 
-    $valid_associations = mplus_validate_association($ramcs, false);
+    $valid_associations = mplus_validate_association($ramcs, false, $revalidate);
     logScript('[museumplus] Total resources with a valid module association: ' . count(array_keys($valid_associations)), $mplus_log_file);
 
     logScript('[museumplus] Attempting to sync MuseumPlus data...', $mplus_log_file);

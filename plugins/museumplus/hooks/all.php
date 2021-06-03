@@ -146,7 +146,7 @@ function HookMuseumplusAllAftersaveresourcedata($R)
     $refs_list = array_keys($ramcs);
     mplus_log_event('Running MuseumPlus process (i.e. validating "module name - MpID" combination and syncing data...', ['resources' => $refs_list]);
     mplus_resource_clear_metadata($refs_list);
-    $errors = mplus_sync(mplus_validate_association($ramcs, false));
+    $errors = mplus_sync(mplus_validate_association($ramcs, false, false));
 
     if(is_array($errors) && !empty($errors))
         {
