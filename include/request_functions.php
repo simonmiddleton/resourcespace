@@ -905,7 +905,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  */
 function email_resource_request($ref,$details)
     {
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days, $k, $user_is_anon;
     
     if(intval($user_dl_limit) > 0)
         {
@@ -933,9 +933,19 @@ function email_resource_request($ref,$details)
     $templatevars['url']=$baseurl."/?r=".$ref;
     $templatevars["requesturl"]=$templatevars['url'];
     
-    $userdata=get_user($userref);
-    $templatevars["fullname"]=$userdata["fullname"];
     
+    // for anon user access use form vars
+    if ($k!="" || $user_is_anon)
+        {
+        $templatevars["fullname"] = getvalescaped("fullname","");
+        $useremail = getvalescaped("email","");
+        }
+    else 
+        {
+        $userdata=get_user($userref);
+        $templatevars["fullname"]= isset($userdata["fullname"]) ? $userdata["fullname"] : ""; 
+        }
+
     $htmlbreak="";
     global $use_phpmailer;
     if ($use_phpmailer){$htmlbreak="<br /><br />";}
