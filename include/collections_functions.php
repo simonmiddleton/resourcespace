@@ -5872,3 +5872,25 @@ function purge_expired_shares($filteropts)
     $deleted = sql_affected_rows();
     return $deleted;
     }
+
+    
+    /**
+     * Check if user has the appropriae access to delete a collection.
+     *
+     * @param   array     $collection_data   Array of collection details, typically from get_collection()
+     * @param   int       $userref           Id of user
+     * @param   int       $k                 External access key value
+     * 
+     * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
+     */
+    function can_delete_collection($collection_data, $userref, $k = "")
+        {
+        if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
+		    {
+	        return false;
+		    }
+        else
+            {
+            return true;
+            }
+        }

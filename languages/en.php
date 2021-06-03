@@ -456,6 +456,9 @@ $lang["background_manual_selection"] = "Choose an image";
 $lang["background_manual_selection_resource_label"] = "Background image - resource ID";
 $lang["share_fc_warning"] = "Please note that when sharing a featured collection category only featured collections that contain resources will be externally shared.";
 $lang["featured_collection_root_category"] = "(top level)";
+$lang["delete_multiple_collections"] = "Are you sure you wish to delete the selected collections?";
+$lang["page_collections_message"] = "Continuing will deselect the collections marked for deletion on this page";
+$lang["delete_all_selected"] = "Delete all selected";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";
