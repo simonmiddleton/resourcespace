@@ -160,7 +160,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                                     this.form.submit();
                                     }
                                     
-                                    else if ((jQuery.inArray(newval,text_fields) > -1) &amp;&amp; (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
+                                    else if ((jQuery.inArray(newval,text_fields) > -1) && (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
                                 {
                                     if(confirm('<?php echo $lang["admin_resource_type_field_cannot_migrate_data_prompt"] ?>'))
                                         {
