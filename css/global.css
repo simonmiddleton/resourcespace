@@ -1367,7 +1367,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     bottom: 0;
     width: 100%;
     background: #000;
-    height: 20px;
     text-align: right;
     z-index:2;
 }
