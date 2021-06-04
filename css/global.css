@@ -2073,7 +2073,7 @@ a.BrowseRefresh{
 /* Tile navigation used on top menus */
 
 .TileNav ul {list-style:none;padding:0;margin:0;}
-.TileNav li {padding:5px;margin:0;width:105px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
+.TileNav li {padding:5px 5px 10px 5px;margin:0;width:105px;float:left;height:100px;text-align:center;position:relative;word-break:break-word}
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:48px;padding-bottom:10px;}
 .TileNav .Pill {position:absolute; top:0; right:25px;border-radius:10px;font-size:115%;}
