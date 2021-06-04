@@ -5,7 +5,7 @@ include "../../include/authenticate.php";
 
 $offset=getvalescaped("offset",0,true);
 $msg_order_by = getvalescaped("msg_order_by",getvalescaped("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
-$sort = getvalescaped("sort",getvalescaped("saved_msg_sort", "ASC"));rs_setcookie('saved_msg_sort', $sort);
+$sort = getvalescaped("sort",getvalescaped("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 $per_page = getvalescaped("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
 
