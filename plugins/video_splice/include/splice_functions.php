@@ -1,5 +1,5 @@
 <?php
-function generate_merged_video($videos, $video_splice_type, $target_video_command, $target_video_extension, $target_audio, $target_width, $target_height, $target_frame_rate, $description, $auto_populate_video_info, $offline)
+function generate_merged_video($videos, $video_splice_type, $target_video_command, $target_video_extension, $target_audio_command, $target_width, $target_height, $target_frame_rate, $description, $auto_populate_video_info, $offline)
     {
     include_once __DIR__ . "/../../../include/image_processing.php";
 
@@ -24,18 +24,19 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
     foreach ($videos as $video)
         {
         $filesource = get_resource_path($video["ref"],true,"",false,get_resource_data($video["ref"])["file_extension"]);
-        $has_no_audio = empty(run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource) . " -show_streams -select_streams a -loglevel error", true))?"_noaudio":"";
+        $has_no_audio = empty(run_command($ffprobe_fullpath . " -i " . $filesource . " -show_streams -select_streams a -loglevel error", true))?"_noaudio":"";
         $target_completed_location = $target_temp_location . "/" . $target_order_count . $has_no_audio . "." . $target_video_extension;
 
-        $video_splice_options = '-f ' . $target_video_command . ' ' . $target_audio . ' -vf "fps=' . $target_frame_rate . ',scale=' . $target_width . ':' . $target_height . ':force_original_aspect_ratio=decrease,pad=' . $target_width . ':' . $target_height . ':(ow-iw)/2:(oh-ih)/2" -sws_flags lanczos';
-        $video_splice_command = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . escapeshellarg($filesource) . " " . $video_splice_options . " " . $target_completed_location;
+        // SECURITY NOTE: The target_video_command and target_audio_command are not escaped as they contain multiple option/value combinations thus cannot be escaped
+        $video_splice_options = '-f ' . $target_video_command . ' ' . $target_audio_command . ' -vf "fps=' . escapeshellarg($target_frame_rate) . ',scale=' . escapeshellarg($target_width) . ':' . escapeshellarg($target_height) . ':force_original_aspect_ratio=decrease,pad=' . escapeshellarg($target_width) . ':' . escapeshellarg($target_height) . ':(ow-iw)/2:(oh-ih)/2" -sws_flags lanczos';
+        $video_splice_command = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . $filesource . " " . $video_splice_options . " " . escapeshellarg($target_completed_location);
 
         $output=run_command($video_splice_command);
 
         // If file has no audio channels create blank audio channel to ensure all video files contain audio thus wont loose audio on videos that have it
         if(!empty($has_no_audio))
             {
-            $no_audio_command = $ffmpeg_fullpath . " -i " . escapeshellarg($target_completed_location) . " -f lavfi -i anullsrc -vcodec copy " . $target_audio . " -shortest " . str_replace("_noaudio","",$target_completed_location);
+            $no_audio_command = $ffmpeg_fullpath . " -i " . escapeshellarg($target_completed_location) . " -f lavfi -i anullsrc -vcodec copy " . $target_audio_command . " -shortest " . str_replace("_noaudio","",escapeshellarg($target_completed_location));
             $output=run_command($no_audio_command);
             unlink($target_completed_location);
             $target_completed_location = str_replace("_noaudio","",$target_completed_location);
@@ -55,7 +56,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
     file_put_contents($target_temp_location . "/list.txt", $list_file_command);
 
     // Merge video files using list file
-    $merge_command = $ffmpeg_fullpath . " -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . $target_video_extension . "'";
+    $merge_command = $ffmpeg_fullpath . " -f concat -safe 0 -i '" . $target_temp_location . "/list.txt" . "' -c copy '" . $target_temp_location . "/merged." . escapeshellarg($target_video_extension) . "'";
     $output=run_command($merge_command);
 
     // Tidy up as we go along now final file created

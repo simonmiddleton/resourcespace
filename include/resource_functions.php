@@ -8838,9 +8838,12 @@ function get_external_shares(array $filteropts)
 */
 function get_video_duration(string $file_path)
     {
-        if(!empty(run_command("exiftool -duration {$file_path}")))
+        // Escape file_path
+        $file_path_escaped = escapeshellarg($file_path);
+
+        if(!empty(run_command("exiftool -duration {$file_path_escaped}")))
             {
-            $duration_tag = run_command("exiftool -n -duration {$file_path}");
+            $duration_tag = run_command("exiftool -n -duration {$file_path_escaped}");
             $duration = str_replace(" s", "", substr($duration_tag, strpos($duration_tag, ":") + 2));
             return floatval($duration);
             }

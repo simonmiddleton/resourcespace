@@ -3228,6 +3228,7 @@ $upload_link_workflow_state = -1;
 
 // Video splice configurations
 // Used for video splice plugins to decide commands used for video output.
+// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
 $ffmpeg_std_video_options= array(
     "MP4 700kbps"=>array(
         "command"=>"mp4 -b:v 700k -crf 20",
@@ -3245,6 +3246,7 @@ $ffmpeg_std_video_options= array(
         );
 
 // Used for video splice plugins to decide commands used for audio output.
+// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
 $ffmpeg_std_audio_options= array(
     "AAC 32 kbps 22.05 kHz Mono"=>array(
         "command"=>"-acodec aac -b:a 32k -ar 22050 -ac 1"),
