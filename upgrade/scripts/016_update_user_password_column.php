@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . '/../../include/db.php';
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Started upgrade script - update "user" table, column "password" ...');
 

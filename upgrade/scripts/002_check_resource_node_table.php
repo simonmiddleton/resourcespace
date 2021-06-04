@@ -1,8 +1,5 @@
 <?php
 
-include_once __DIR__ . "/../../include/db.php";
-
-
 
 set_time_limit(0);
 

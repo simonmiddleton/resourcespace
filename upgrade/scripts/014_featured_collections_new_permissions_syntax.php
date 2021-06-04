@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . "/../../include/db.php";
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Started migrating featured collections permissions from the old format to the new one (e.g j[ID], -j[ID]) ...");
 

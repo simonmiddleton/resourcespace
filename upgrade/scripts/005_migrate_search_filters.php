@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . "/../../include/db.php";
 include_once __DIR__ . "/../../include/migration_functions.php";
 
 
