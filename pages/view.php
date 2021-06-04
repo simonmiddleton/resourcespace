@@ -1754,7 +1754,7 @@ hook ("resourceactions") ?>
 	if (checkperm('v')) 
 		{ ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["log"]?>
+		<?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 

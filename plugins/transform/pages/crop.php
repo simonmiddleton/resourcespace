@@ -142,8 +142,8 @@ $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($user
 $crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date("Ymd",time()) . ".jpg";
 
 $preview_actions = $imgactions;
-$preview_actions["new_width"] = 450;
-$preview_actions["new_height"] = 450;
+$preview_actions["new_width"] = 600;
+$preview_actions["new_height"] = 600;
 $preview_actions["preview"] = true;
 
 $generated = transform_file($previewsourcepath,$crop_pre_file, $preview_actions);
@@ -1035,7 +1035,7 @@ renderBreadcrumbs($links_trail);
     $imagetools[] = array(
         "name"      => "Reset",
         "action"    => "cropReload('reset');return false;",
-        "icon"      => "fa fa-fw fa-undo",
+        "icon"      => "fa fa-fw fa-history",
         );
     if($cropper_rotation)
         {
