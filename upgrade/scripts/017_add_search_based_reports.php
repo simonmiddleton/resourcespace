@@ -3,6 +3,8 @@
 // Add the new reports created for report-from-search functionality
 $path=dirname(__FILE__)."/../../dbstruct/data_report.txt";
 
+sql_query("select ref,support_non_correlated_sql from report limit 1"); // Ensure new column created first.
+
 $f=fopen($path,"r");
 while (($row = fgetcsv($f,5000)) !== false)
     {
