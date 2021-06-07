@@ -140,7 +140,7 @@ else
     <?php if ($type!="summary") { ?><div id="placeholder<?php echo $type . $n ?>"
     
     <?php if ($from_dash) { ?>
-    style="width:220px;height:120px;"
+    style="width:220px;height:105px;"
     <?php } else { ?>
     style="width:100%;height:80%;"
     <?php } ?>
