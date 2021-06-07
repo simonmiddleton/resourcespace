@@ -53,7 +53,7 @@ $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $tempfile == ""
     && $slideshow == 0
     && $userfiledownload == ""
-    ;
+    && (!$video_preview_original && get_resource_access($ref));
 if($terms_download && $checktermsusage)
     {
     if ($iaccept != 'on')

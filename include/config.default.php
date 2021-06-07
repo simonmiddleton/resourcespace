@@ -583,7 +583,7 @@ $ffmpeg_snapshot_frames = 20;
 $ffmpeg_preview_force = true;
 
 # Option to always try and play the original file instead of preview - useful if recent change to $ffmpeg_preview_force doesn't suit e.g. if all users are
-# on internal network and want to see HQ video
+# on internal network and want to see HQ video. Setting this config will override $download_usage=true; for the purpose of displaying the video preview.
 $video_preview_original=false;
 
 # Encode preview asynchronous?
