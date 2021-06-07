@@ -1,7 +1,7 @@
 <?php
 include "../include/db.php";
 
-if (getval("user","")!="" || isset($anonymous_login) || hook('provideusercredentials'))
+if ((getval("user","")!="" || isset($anonymous_login) || hook('provideusercredentials')) && getval("k","")=="")
     {
     // Authenticate if already logged in, so the correct theme is displayed when using user group specific themes.
     include "../include/authenticate.php";
