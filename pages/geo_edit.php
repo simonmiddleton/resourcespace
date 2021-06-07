@@ -26,18 +26,16 @@ if ($map_zoomslider)
     }
 
 // Fetch the resource data.
-$ref = getvalescaped('ref', '', true);
+$ref = getvalescaped('ref', 0, true);
 
 // See if we came from the ../pages/geolocate_collection.php page.
 $geocol = getvalescaped('geocol', '', true);
-if ($ref == '')
-    {
-    die;
-    }
 $resource = get_resource_data($ref);
 if ($resource == false)
     {
-    die;
+    $onload_message = array("title" => $lang["error"],"text" => $lang['resourcenotfound']);
+    include "../include/footer.php";
+    exit();
     }
 
 // Check if the user is allowed to edit this resource.
@@ -145,7 +143,7 @@ if($leaflet_maps_enable)
         <?php include '../include/map_basemaps.php'; 
         // Get the resource type to determine the icon to use   
         $maprestype = get_resource_types($resource['resource_type']);
-        $markercolour = isset($maprestype[0]) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
+        $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
         $markercolourjs =  strtolower($MARKER_COLORS[$markercolour])  . "Icon";
         ?>
 

@@ -34,6 +34,7 @@ if(!collection_readable($ref))
 $all_resources = get_collection_resources($ref);
 $collection = get_collection($ref);
 $collectionname = $collection['name'];
+$markers = array();
 $check = false;
 
 //If the collection is empty stop here and provide a message
