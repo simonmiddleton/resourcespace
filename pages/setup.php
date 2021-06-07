@@ -759,6 +759,12 @@ h2#dbaseconfig{  min-height: 32px;}
             else
                 $config_output .= "\$pdftotext_path = '$pdftotext_path';\r\n\r\n";
             }
+
+        if (isset($_REQUEST['applicationname']))
+            {
+            $applicationname = get_post('applicationname');
+            $config_output .= "\$applicationname = '$applicationname';\r\n";
+            }
 	
 		if ($config_windows)
 			$config_output .= "\$config_windows = true;\r\n";
