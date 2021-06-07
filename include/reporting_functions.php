@@ -55,7 +55,7 @@ function get_reports()
  * 
  * @return void | string | array    Outputs CSV file, returns HTML table or returns an array with path to the CSV file, rows and filename
  */
-function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false, array $search_params)
+function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false, array $search_params=array())
     {
     # Run report with id $ref for the date range specified. Returns a result array.
     global $lang, $baseurl, $report_rows_attachment_limit;
@@ -90,7 +90,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         $sql=str_replace("[title_field]",$view_title_field,$sql);
 
         // IF report supports being run on search results
-        if($report['support_non_correlated_sql'] === '1')
+        if($report['support_non_correlated_sql'] === '1' && !empty($search_params))
             {
             $search_sql = do_search(
                 $search_params['search'],
