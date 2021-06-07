@@ -69,7 +69,7 @@ function transform_file($sourcepath, $outputpath, $actions)
     $quality = isset($actions["quality"]) ? $actions["quality"] : "";
     if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($of_parts["extension"]) , array("PNG","JPG")))
         {
-        $command .= " -quality " .  $quality . "% ";
+        $command .= " -quality " .  (int)$quality . "% ";
         }
 
     $colorspace1 = "";

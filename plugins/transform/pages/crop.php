@@ -1020,12 +1020,6 @@ renderBreadcrumbs($links_trail);
     $imagetools = array();
     if('' === trim($manage_slideshow_action))
         {
-        // No need to show other options or crop link if coming from manage slideshow
-        // $imagetools[] = array(
-        //     "name"      => "Save",
-        //     "action"    => "jQuery('#imagetools_save_actions').show();return false;",
-        //     "icon"      => "far fa-fw fa-save",
-        //     );
         $imagetools[] = array(
             "name"      => "Crop",
             "action"    => "toggleCropper();jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_crop_actions').show();return false;",
