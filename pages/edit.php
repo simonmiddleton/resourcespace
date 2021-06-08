@@ -628,7 +628,20 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 }
                             else
                                 {
-                                $url = generateURL($baseurl . "/pages/search.php",array("search"=>"!contributions" . $userref,"order_by"=>"resourceid","sort"=>"DESC","archive"=>$setarchivestate,"refreshcollectionframe"=>"true","resetlockedfields"=>"true"));                                
+                                $redirectparams = array(
+                                    "search"=>"!contributions" . $userref,
+                                    "order_by"=>"resourceid",
+                                    "sort"=>"DESC",
+                                    "archive"=>$setarchivestate,
+                                    "refreshcollectionframe"=>"true",
+                                    "resetlockedfields"=>"true"
+                                    );
+                                if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+                                    {
+                                    $redirectparams["promptsubmit"] = 'true';
+                                    }
+                                
+                                $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
