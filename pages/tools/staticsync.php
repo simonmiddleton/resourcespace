@@ -271,7 +271,7 @@ function ProcessFolder($folder)
 
             # Work out extension
             $fileparts  = pathinfo($file);
-            $extension  = isset($fileparts["extension"]) ? mb_substr($fileparts["extension"], 0, 10) : '';
+            $extension  = isset($fileparts["extension"]) ? mb_strcut($fileparts["extension"], 0, 10) : '';
             $filename   = $fileparts["filename"];
 
             if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false && !$staticsync_ingest_force)
