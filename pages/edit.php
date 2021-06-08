@@ -2227,7 +2227,7 @@ hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php
-if ($ref>0)
+if ($ref>0 && !$multiple)
     { ?>
 <div class="BasicsBoxRight">
     <?php
