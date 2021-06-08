@@ -188,8 +188,17 @@ select::-ms-expand
 #custom_access .radiooptions{margin: 5px;}
 
 /*General layout*/
+#Header {
+    padding: 5px 25px 5px 25px;
+    margin:0;
+    text-align:left;
+    background-image:none;
+    display: block !important;
+    /* z-index and overflow are required for MessageBox to appear */
+    z-index: 1 !important;
+    overflow: visible;
+    }
 
-#Header {padding: 5px 25px 5px 25px;margin:0;text-align:left;background-image:none;display: block !important;}
 #TextHeader{font-size:25px;float:left;}
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
@@ -1286,6 +1295,7 @@ span.Pill {
 div#MessageContainer {
     width: 200px;
     z-index: 90;
+    right: 10px;
 }
 div.MessageBox {
     border-radius: 4px;
@@ -1295,6 +1305,7 @@ div.MessageBox {
     min-height: 50px;
     cursor: pointer;
     line-height: 120%;
+    white-space: break-spaces;
 }
 div.MessageBox a {
     margin-top: 1vh;
@@ -1959,11 +1970,6 @@ a.BrowseRefresh{
 }
 .ui-layout-west{overflow-x: hidden;}
 .ui-layout-resizer-west{transform: translateX(-37px);} 
-
-/* Fix scrollbars on Header */
-#Header {
-    overflow: hidden;
-}
 
 .RecordPanelLarge #ResourceWorkflowActions, .RecordPanelLarge #RecordDownloadSummary {
     width: 100%;
