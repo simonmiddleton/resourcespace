@@ -796,8 +796,10 @@ function email_reset_link($email,$newuser=false)
     }
 
 /**
- * Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
- *
+ * Automatically creates a user account
+ *   The request can be auto approved if $auto_approve_accounts is true
+ *   Otherwise the approval is managed by admins via notification messages and/or emails
+ * 
  * @param  string $hash
  * @return boolean Success?
  */
@@ -935,7 +937,7 @@ function auto_create_user_account($hash="")
         }
     else
         {
-        # Not auto approving.
+        # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
         
@@ -958,10 +960,13 @@ function auto_create_user_account($hash="")
          
         foreach($approval_notify_users as $approval_notify_user)
             {
+            // Is notification required
             get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
-            if(!$send_message){continue;} 
+            if(!$send_message) { continue; } // Skip this user 
             
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications); 
+            // Is an email required
+            get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications); 
+            get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications); 
             
             // get preferred language for approval_notify_user
             $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
@@ -969,27 +974,25 @@ function auto_create_user_account($hash="")
             // get preferred language for approval_notify_user
             $lang_pref = $language_strings_all[$message_language];
 
-            if($send_email && $approval_notify_user["email"]!="")
-                {
+            // Send email if required
+            if( ($approval_notify_user["email"]!="") && ($email_user_notifications || $email_and_user_notifications) ) {
                 $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
                 send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
                 }        
-            else
-                {
-                $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
-                message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
-          
-                }
+
+            // Send notification because it is required
+            $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
+            message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
             }
 
-             // set language back to cookie setting
-          $language = setLanguage();
-          $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
-          if(file_exists($langfile))
-              {
-              include $langfile;
-              }
-      
+        // set language back to cookie setting
+        $language = setLanguage();
+        $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        if(file_exists($langfile))
+            {
+            include $langfile;
+            }
+    
         }
 
     return true;
@@ -997,7 +1000,8 @@ function auto_create_user_account($hash="")
 
 
 /**
-* Email user request to admins
+* Send user request to admins in form of notification messages and/or emails
+* Send email confirmation to requesting user
 * 
 * @return boolean
 */
@@ -1029,14 +1033,13 @@ function email_user_request()
 
     foreach($approval_notify_users as $approval_notify_user)
         {
+        // Is notification required
         get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
+        if(!$send_message) { continue; } // Skip this user
 
-        if(false == $send_message)
-            {
-            continue;
-            }
-
-        get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
+        // Is an email required
+        get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications);
+        get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications);
 
         // get preferred language for approval_notify_user
         $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
@@ -1044,11 +1047,9 @@ function email_user_request()
         // get preferred language for approval_notify_user
         $lang_pref = $language_strings_all[$message_language];
 
-        if($send_email && '' != $approval_notify_user['email'])
-            {
-            // Build a message
+        // Send email if required
+        if( ($approval_notify_user['email'] != '') && ($email_user_notifications || $email_and_user_notifications) ) {
             $message = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-       
             send_mail(
                 $approval_notify_user['email'],
                 "{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",
@@ -1059,13 +1060,12 @@ function email_user_request()
                 '',
                 $name);
             }
-        else
-            {
-            $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
 
-            message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
-            }
+        // Send notification because it is required
+        $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
+        message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
         }
+
     // set language back to cookie setting
     $language = setLanguage();
     $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
