@@ -163,6 +163,12 @@ body {
     #login_box .Question.KeepLoggedIn {
         margin-left: 3px;
     }
+    .CommentFormBody {
+        width: 100%;
+    }
+    .RecordBox {
+        margin: 20px 0 15px 0;
+    }
 }
 @media(max-width:700px) {
     .FormHelp {
