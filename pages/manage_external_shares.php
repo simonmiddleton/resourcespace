@@ -103,7 +103,7 @@ foreach($sharedcols as $sharedcol)
 //echo "<pre>" . print_r($shares) . "</pre>";
 $expiredshares = 0;
 $per_page =getvalescaped("per_page",$default_perpage, true); 
-$per_page = (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
+$per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage_list : $per_page;
 $sharecount   = count($shares);
 $totalpages = ceil($sharecount/$per_page);
 $offset     = getval("offset",0,true);
@@ -154,6 +154,7 @@ if(!checkperm('a'))
     {
     unset($tabledata["headers"]["fullname"]);
     }
+
 for($n=0;$n<$sharecount;$n++)
     {
     if($n >= $offset && ($n < $offset + $per_page))

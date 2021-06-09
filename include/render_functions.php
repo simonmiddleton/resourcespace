@@ -5005,7 +5005,7 @@ function render_table($tabledata)
         $pageroptions = array(
             "curpage" => $tabledata["pager"]["current"],
             "totalpages" => $tabledata["pager"]["total"],
-            "per_page" => isset($tabledata["pager"]["per_page"]) ? $tabledata["pager"]["per_page"] : $default_perpage,
+            "per_page" => isset($tabledata["pager"]["per_page"]) ? $tabledata["pager"]["per_page"] : $default_perpage_list,
             "break" => isset($tabledata["pager"]["break"]) ? $tabledata["pager"]["break"] : true,
             "scrolltotop" => isset($tabledata["pager"]["scrolltotop"]) ? $tabledata["pager"]["scrolltotop"] : true,
             "url" => $tabledata["defaulturl"],
