@@ -18,6 +18,7 @@ if (!checkperm("a") && $callback!="activitylog")		// currently only activity log
 	{
 	exit ("Permission denied.");
 	}
+include_once '../../include/stream_filters.php';
 
 if (!checkperm_user_edit($userref))	// if not an admin then force act as user as current user
 	{
@@ -455,11 +456,24 @@ switch ($callback)
                 }
             else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000));
+                if(stream_filter_register('find_in_log_file_tail', '\ResourceSpace\Stream\Filter\find_in_log_file_tail'))
+                    {
+                    echo 'stream filter registered OK';
+                    }
+                else
+                    {
+                    echo 'stream filter registered - NOT';
+                    }
+
+                $filters = [
+                    ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:'],
+                    // ['name' => 'find_in_log_file_tail', 'params' => $filter],
+                ];
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000, 4096, $filters));
                 foreach($lines as $line)
                     {
                     $line = trim($line);
-                    if($line === '' || strpos($line, 'tracking var:') === false)
+                    if($line === '')
                         {
                         continue;
                         }

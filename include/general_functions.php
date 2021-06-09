@@ -2843,9 +2843,18 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
  * @param  integer $buffer
  * @return string
  */
-function tail($filename, $lines = 10, $buffer = 4096)
+function tail($filename, $lines = 10, $buffer = 4096, array $filters)
     {
     $f = fopen($filename, "rb");        // Open the file
+    foreach($filters as $filter)
+        {
+        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '')
+            {
+            stream_filter_append($f, $filter['name'], STREAM_FILTER_READ , $filter['params']);
+            }
+        }
+
+
     fseek($f, -1, SEEK_END);        // Jump to last character
 
     // Read it and adjust line number if necessary
@@ -2862,6 +2871,9 @@ function tail($filename, $lines = 10, $buffer = 4096)
         $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
         fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
         $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
+        echo sprintf('<hr>chunk = "%s"', nl2br($chunk));
+        // var_dump($output);
+        // var_dump(substr($output, strpos($output, "\n") + 1));die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
         fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
         $lines -= substr_count($chunk, "\n");       // Decrease our line counter
         }
