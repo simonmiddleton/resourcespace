@@ -164,6 +164,10 @@ if ($chosen_dropdowns || $chosen_dropdowns_collection)
         
 global $not_authenticated_pages;
 $not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
+if(isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS['modify_header_not_authenticated_pages']))
+    {
+    $not_authenticated_pages = array_filter($GLOBALS['modify_header_not_authenticated_pages']);
+    }
 
 $browse_on = has_browsebar();
 if($browse_on)
@@ -627,10 +631,15 @@ if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset
     else 
     {
     # Include simple search sidebar?
-   
-    $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
+
+    if(isset($GLOBALS['modify_header_omit_searchbar_pages']) && is_array($GLOBALS['modify_header_omit_searchbar_pages']))
+        {
+        $omit_searchbar_pages = array_filter($GLOBALS['modify_header_omit_searchbar_pages']);
+        }
+
+    $modified_omit_searchbar_pages = hook('modifyomitsearchbarpages');
     if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
-        
+
     if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
         {
         ?>
@@ -647,7 +656,12 @@ if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset
 
 <?php
 # Determine which content holder div to use
-if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request") || ($pagename=="user_change_password"))
+if(
+    $pagename == "login"
+    || $pagename == "user_password"
+    || $pagename == "user_request"
+    || ($pagename == "user_change_password" && !is_authenticated())
+)
     {
     $div="CentralSpaceLogin";
     $uicenterclass="NoSearch";
