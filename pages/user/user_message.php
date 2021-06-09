@@ -217,7 +217,10 @@ renderBreadcrumbs($links_trail);
     for($n=count($messages)-1;$n>=0;$n--)
         {
         render_message($messages[$n]);
-        message_seen($messages[$n]['ref']);    
+        if($messages[$n]['user'] == $userref)
+            {
+            message_seen($messages[$n]['ref']);    
+            }
         }
     // Add template for new messages
     echo "\n<template id='user_message_template'>";
