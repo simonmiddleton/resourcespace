@@ -53,7 +53,8 @@ set_process_lock("checkmail");
 $config = sql_value("select config value from plugins where name='checkmail'","");
 include_plugin_config("checkmail",$config);
 
-$temp_dir=$storagedir."/tmp/checkmail_in";
+if (!isset($temp_dir) || $temp_dir=''){$temp_dir=$storagedir."/tmp/checkmail_in";}
+else {$temp_dir .= "/checkmail_in";}
 if (!is_dir($temp_dir)){mkdir($temp_dir,0777);}
 
 
@@ -70,7 +71,7 @@ try
     }
 catch (Exception $e)
     {
-    die("can't open IMAP connection");
+    die("can't open IMAP connection" . PHP_EOL);
     }
 unset($GLOBALS["use_error_exception"]);
 
