@@ -2843,18 +2843,9 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
  * @param  integer $buffer
  * @return string
  */
-function tail($filename, $lines = 10, $buffer = 4096, array $filters)
+function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
     {
     $f = fopen($filename, "rb");        // Open the file
-    foreach($filters as $filter)
-        {
-        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '')
-            {
-            stream_filter_append($f, $filter['name'], STREAM_FILTER_READ , $filter['params']);
-            }
-        }
-
-
     fseek($f, -1, SEEK_END);        // Jump to last character
 
     // Read it and adjust line number if necessary
@@ -2865,15 +2856,50 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters)
     $output = '';
     $chunk = '';
 
+
+    // Create a temp output file pointer so we can attach the stream filters for whatever reason the calling code needs to
+    $output_fp = fopen('php://temp','r+');
+    foreach($filters as $filter)
+        {
+        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '')
+            {
+            stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
+            }
+        }
+    fwrite($output_fp, "first line\n");
+    fwrite($output_fp, "second line" . PHP_EOL);
+    fwrite($output_fp, "third line" . PHP_EOL);
+    rewind($output_fp);
+    $new_chunk = "line after rewind" . PHP_EOL . stream_get_contents($output_fp);
+    ftruncate($output_fp, 0);
+    rewind($output_fp);
+    fwrite($output_fp, $new_chunk);
+    rewind($output_fp);
+
+    echo '<hr>' . nl2br(stream_get_contents($output_fp));
+    fclose($output_fp);
+die;
+
+
     // While we would like more
     while(ftell($f) > 0 && $lines >= 0)
         {
         $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
         fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
         $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
+
+
+
         echo sprintf('<hr>chunk = "%s"', nl2br($chunk));
         // var_dump($output);
         // var_dump(substr($output, strpos($output, "\n") + 1));die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+
+        // chunk is one stream, output is another. TODO: use stream_copy_to_stream() keep prepending data that then will get filtered when read
+
+
+
+
+
         fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
         $lines -= substr_count($chunk, "\n");       // Decrease our line counter
         }
