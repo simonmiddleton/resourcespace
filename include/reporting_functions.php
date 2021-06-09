@@ -451,7 +451,8 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             {
             if ($report['send_all_users'])
                 {
-                // Send to all users is depricated. Send to $email_notify_usergroups or Super Admin if not set
+                $admin_notification_usergroup = get_notification_users("SYSTEM_ADMIN");
+                // Send to all users is deprecated. Send to $email_notify_usergroups or Super Admin if not set
                 if (!empty($email_notify_usergroups))
                     {
                     foreach ($email_notify_usergroups as $usergroup)
@@ -461,9 +462,9 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
                     $report['user_groups']=implode(',',$report['user_groups']);
                     }
 
-                else if(get_usergroup(3)!==false)
+                else if($admin_notification_usergroup!==false)
                     {
-                    $report['user_groups']=3;
+                    $report['user_groups']=$admin_notification_usergroup;
                     }
                 }
             }
