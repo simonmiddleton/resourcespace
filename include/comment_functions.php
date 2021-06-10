@@ -110,18 +110,17 @@ function comments_submit()
  * @return void
  */
 function comments_tags_to_links($text)
-	{
-	global $baseurl_short;
-    $text=preg_replace('/@(\S+)/s', '<a href="' . $baseurl_short . 'pages/user/user_profile.php?username=$1">@$1</a>', $text);
+    {
+    global $baseurl_short;
+    $text=preg_replace('/@(\S+)/s', '<a href="[BASEURLSHORT]pages/user/user_profile.php?username=$1">@$1</a>', $text);
 
-    $text=preg_replace('/r([0-9]{1,})/si', '<a href="' . $baseurl_short . '?r=$1">r$1</a>', $text); # r12345 to resource link
+    $text=preg_replace('/r([0-9]{1,})/si', '<a href="[BASEURLSHORT]?r=$1">r$1</a>', $text); # r12345 to resource link
 
-    $text=preg_replace('/c([0-9]{1,})/si', '<a href="' . $baseurl_short . '?c=$1">c$1</a>', $text); # c12345 to collection link
+    $text=preg_replace('/c([0-9]{1,})/si', '<a href="[BASEURLSHORT]?c=$1">c$1</a>', $text); # c12345 to collection link
 
-	return $text;
-	}
-
-
+    $text = str_replace("[BASEURLSHORT]",$baseurl_short,$text); // Replacing this earlier can cause issues
+    return $text;
+    }
 
 /**
  * Display all comments for a resource or collection
