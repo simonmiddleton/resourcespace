@@ -30,3 +30,11 @@ $lang['action_dates_remove_from_collection']="Remove resources from all associat
 $lang['action_dates_email_for_state']="Send notification email for resources changing state. Requires change of state fields above to be configured.";
 $lang['action_dates_email_for_restrict']="Send notification email for resources to be restricted. Requires restrict resource fields above to be configured.";
 
+$lang['action_dates_weekdays']="Select the weekdays when actions be processed.";
+$lang["weekday-0"]="Sunday";
+$lang["weekday-1"]="Monday";
+$lang["weekday-2"]="Tuesday";
+$lang["weekday-3"]="Wednesday";
+$lang["weekday-4"]="Thursday";
+$lang["weekday-5"]="Friday";
+$lang["weekday-6"]="Saturday";

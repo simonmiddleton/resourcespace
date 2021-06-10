@@ -11,12 +11,13 @@ function HookAction_datesCronCron()
 	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
-           $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state, $action_dates_email_for_restrict;
-
-    global $action_dates_eligible_states;
+           $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state, $action_dates_email_for_restrict, $action_dates_eligible_states, $action_dates_weekdays;
 	
 	echo "action_dates: running cron tasks" . PHP_EOL;
     
+    // Check for correct day of week
+    if (!in_array(date("w"),$action_dates_weekdays)) {echo "action_dates: not correct weekday to run" . PHP_EOL;return true;}
+
     # Reset any residual userref from earlier cron tasks
     global $userref;
     $userref=0;

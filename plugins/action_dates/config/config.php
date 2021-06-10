@@ -13,3 +13,6 @@ $action_dates_extra_config        = array();
 // Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
 // These are added in hooks/all.php
 $action_dates_fieldvars = array("action_dates_deletefield","action_dates_restrictfield");
+
+$action_dates_weekdays=array(0,1,2,3,4,5,6); // Which days to run on - 0=Sunday, 1=Monday etc.
+
