@@ -43,30 +43,24 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
         echo nl2br(PHP_EOL . 'MuseumPlus script failed - $php_fullpath variable must be set in config.php', !$cli);
         return false;
         }
-        
-    function suppress_warning($errno, $errstr) 
-        { 
-        // Handle warnings from unlink() and mkdir()
-        return true;
-        }
 
     // Deal with log directory now so that scripts can just use it if they need to
     global $museumplus_log_directory;
     if('' != trim($museumplus_log_directory))
         {
         if(!is_dir($museumplus_log_directory))
-            {
-            set_error_handler("suppress_warning", E_WARNING);
-            mkdir($museumplus_log_directory, 0755, true);
-            restore_error_handler();
-
-            if(!is_dir($museumplus_log_directory))
-                {
-                echo nl2br(PHP_EOL . 'MuseumPlus: Unable to create log directory: "' . htmlspecialchars($museumplus_log_directory) . '"', !$cli);
-                return false;
-                }
+           {
+            $GLOBALS["use_error_exception"] = true;
+            // If it does not exist, create it.
+            try {
+                mkdir($museumplus_log_directory, 0755, true);
             }
-
+            catch (Exception $e) {
+                echo nl2br(PHP_EOL . 'MuseumPlus: Unable to create log directory: "' . htmlspecialchars($museumplus_log_directory) . "Reason: {$e->getMessage()}" .'"', !$cli);
+            }
+            unset($GLOBALS["use_error_exception"]);
+            }
+            
         // Clean up old files
         $dir_iterator    = new DirectoryIterator($museumplus_log_directory);
         // @todo: potentially we can have the expiry time multiplier as a variable
@@ -84,9 +78,15 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
             // Delete log file if it is older than its expiration time
             if('mplus_script_log' == substr($filename, 0, 16) && $file_info->getMTime() < $log_expiry_time)
                 {
-                set_error_handler("suppress_warning", E_WARNING);
-                unlink($file_info->getPathName());
-                restore_error_handler();
+                $GLOBALS["use_error_exception"] = true;
+                // If it does not exist, create it.
+                try {
+                    unlink($file_info->getPathName());
+                }
+                catch (Exception $e) {
+                    echo nl2br(PHP_EOL . "MuseumPlus: Cannot remove expired mplus_script_log  Reason: {$e->getMessage()}" .'"', !$cli);
+                }
+                unset($GLOBALS["use_error_exception"]);
                 }
             }
         }
