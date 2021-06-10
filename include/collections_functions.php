@@ -5875,7 +5875,7 @@ function purge_expired_shares($filteropts)
 
     
     /**
-     * Check if user has the appropriae access to delete a collection.
+     * Check if user has the appropriate access to delete a collection.
      *
      * @param   array     $collection_data   Array of collection details, typically from get_collection()
      * @param   int       $userref           Id of user

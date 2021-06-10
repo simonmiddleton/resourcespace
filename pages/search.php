@@ -1767,7 +1767,7 @@ if($use_selection_collection)
                 resource_ending=null;
             } else {
                 if (!resource_starting) {
-                    alert('Cannot end range without a start.\nPlease release the shift key.');
+                    styledalert('<?php echo $lang["range_no_start_header"]; ?>', '<?php echo $lang["range_no_start"]; ?>');
                     if(jQuery(input).prop("checked")) {
                         this.removeAttribute("checked");
                         } 

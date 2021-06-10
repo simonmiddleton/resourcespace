@@ -459,6 +459,8 @@ $lang["featured_collection_root_category"] = "(top level)";
 $lang["delete_multiple_collections"] = "Are you sure you wish to delete the selected collections?";
 $lang["page_collections_message"] = "Continuing will deselect the collections marked for deletion on this page";
 $lang["delete_all_selected"] = "Delete all selected";
+$lang["range_no_start_header"] = "Range Error";
+$lang["range_no_start"] = "Cannot end range without a start. Please release the shift key.";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";
