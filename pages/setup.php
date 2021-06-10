@@ -438,11 +438,14 @@ h2#dbaseconfig{  min-height: 32px;}
 			$search_paths[]='/opt/local/bin';
 		}
 		//Check if we're on windows and set config_windows if we are.
-		elseif(stristr($os,'windows')){
+		elseif(stristr($os,'windows'))
+		    {
 			$config_windows = true;
-		}
-		if (isset($search_paths)){
-			foreach($search_paths as $path){
+		    }
+		if (isset($search_paths))
+		    {
+			foreach($search_paths as $path)
+			    {
 				if (file_exists($path.'/convert'))
 					$imagemagick_path = $path;
 				if (file_exists($path.'/gs'))
@@ -455,8 +458,18 @@ h2#dbaseconfig{  min-height: 32px;}
 					$antiword_path= $path;
 				if (file_exists($path.'/pdftotext'))
 					$pdftotext_path = $path;
+			    }
 			}
-		}
+		else
+		    {
+            $imagemagick_path = "";
+			$ghostscript_path = "";
+			$ffmpeg_path      = "";
+			$exiftool_path    = "";
+			$antiword_path    = "";
+			$pdftotext_path   = "";		
+            $mysql_bin_path	  = "";
+			}
 
         $admin_fullname = 'Admin user';
         $admin_email    = '';

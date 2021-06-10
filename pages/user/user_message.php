@@ -241,4 +241,3 @@ renderBreadcrumbs($links_trail);
 
 <?php		
 include "../../include/footer.php";
-?>
