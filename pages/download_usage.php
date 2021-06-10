@@ -169,6 +169,7 @@ include "../include/footer.php";
 function html_usagecomments($usagecomment,$error)
     {
     global $lang;
+    
 
     $html = '<div class="Question"><label>{label}</label>
             <textarea rows="5" name="usagecomment" id="usagecomment" type="text" class="stdwidth">{value}</textarea>
@@ -179,7 +180,7 @@ function html_usagecomments($usagecomment,$error)
         (
         "{label}"   => $lang["usagecomments"],
         "{error}"   => isset($error["usagecomment"]) ?  $error["usagecomment"] : "",
-        "{value}"   => $usagecomment
+        "{value}"   => htmlspecialchars($usagecomment)
         );
 
     $html = str_replace(array_keys($replace),array_values($replace), $html );
