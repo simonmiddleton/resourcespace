@@ -256,7 +256,7 @@ if($editsearch)
     $items       = array_column($edititems,"ref");
     if(count($searchitems) != count($edititems) || count($items) == 0)
         {
-        $error = $lang['error-permissiondenied'];
+        $error = $lang['error-editpermissiondenied'];
         error_alert($error);
         exit();
         }
