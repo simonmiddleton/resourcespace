@@ -293,7 +293,11 @@ if(
                         $admin_notify_users[]=$notify_user["ref"];
                         }
 					}
-				}
+                }
+                
+            $admin_notify_emails = array_unique($admin_notify_emails);
+            $admin_notify_users = array_unique($admin_notify_users);
+            
              foreach($admin_notify_emails as $admin_notify_email)
                     {
 					if(filter_var($admin_notify_email, FILTER_VALIDATE_EMAIL))
