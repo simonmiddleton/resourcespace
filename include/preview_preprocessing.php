@@ -99,44 +99,71 @@ if ($exiftool_fullpath!=false)
     if ($extension=="indd" && !isset($newfile))
         {
         $indd_thumbs = extract_indd_pages ($file);
+        $filesize_indd=filesize_unlimited($file); 
         $pagescommand="";
         if (is_array($indd_thumbs))
             {
-            
             $n=0;
-            foreach ($indd_thumbs as $indd_page){
-                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
-                $pagescommand.=" " . $target_pg;
-                base64_to_jpeg( str_replace("base64:","",$indd_page), $target_pg);
-                
+            foreach ($indd_thumbs as $indd_page)
+                {
                 $n++;
-            }
-        } 
-        
-        
-        // process jpgs as a pdf so the existing pdf paging code can be used.   
-        if (is_array($indd_thumbs)){
-            $file=get_resource_path($ref,true,"",false,"pdf");      
-            $jpg2pdfcommand = $convert_fullpath . " " . $pagescommand . " " . escapeshellarg($file);
+                # Set up target file and create a jpg for each preview embedded in indd file.
+                $size="";if ($n>1) {$size="scr";} # Use screen size for other previews.
+                $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative); 
+                if (file_exists($target)) {unlink($target);}   
 
-            $output=run_command($jpg2pdfcommand);
+                base64_to_jpeg( str_replace("base64:","",$indd_page), $target);
 
-            $n=0;
-            foreach ($indd_thumbs as $indd_page){
-                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
-                if (file_exists($target_pg)){   
-                    unlink($target_pg);
+                if (file_exists($target) && $n==1)
+                    {
+                    # Set the first preview to be the cover preview image.
+                    $newfile=$target;
+                    }
+                else
+                    {
+                    # Watermark creation for additional pages.
+                    global $watermark;
+                    $preview_quality=get_preview_quality($size);
+                    $scr_size=sql_query("select width,height from preview_size where id='scr'");
+                    if(empty($scr_size))
+                        {
+                        # since this is not an application required size we can't assume there's a record for it
+                        $scr_size=sql_query("select width,height from preview_size where id='pre'");
+                        }
+                    $scr_width=$scr_size[0]['width'];
+                    $scr_height=$scr_size[0]['height'];            
+                    if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative)))
+                        {
+                        if (isset($watermark) && $alternative==-1)
+                            {
+                            $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
+                            if (file_exists($path)) {unlink($path);}
+                            $watermarkreal=dirname(__FILE__). "/../" . $watermark;
+                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $preview_quality -resize ".$scr_width."x".$scr_height. " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                            $output=run_command($command2);
+                            }
+                        }
+                    }
                 }
-                $n++;
-            }
-            
-            $extension="pdf";
-            $dUseCIEColor=false;
-            $n=0;   
-            }
+
+                # Set (new resource) / update (recreate previews) page count for multi page preview if more than one preview present.
+                $ref_escaped = escape_check($ref);
+                $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = '$ref_escaped'";
+                $query = sql_value($sql, 0);
+        
+                if($query == 0)
+                    {
+                    sql_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES ('{$ref_escaped}', '{$n}', '{$filesize_indd}')");
+                    }
+                else
+                    {
+                    sql_query("UPDATE resource_dimensions SET page_count = '{$n}' WHERE resource = '{$ref_escaped}'");
+                    } 
+
+                $n=0;
+            } 
         }
     }   
-    
     
 /* ----------------------------------------
     Try PhotoshopThumbnail
