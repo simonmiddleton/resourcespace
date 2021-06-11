@@ -87,7 +87,7 @@
     transform: translate(90px, -5px);
 }
 
-input[type=range] {
+.video-trim-tool input[type=range] {
 	position: absolute;
 	pointer-events: none;
 	-webkit-appearance: none;
