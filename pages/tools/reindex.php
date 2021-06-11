@@ -17,10 +17,13 @@ if (!(PHP_SAPI == 'cli'))
 	}
 elseif(isset($argv[1]) && is_numeric($argv[1]))
 	{
-	$start = $argv[1];
-	if(isset($argv[2]) && is_numeric($argv[2]))
-	$end = $argv[2];
+    $start = $argv[1];
+	if(isset($argv[2]) && is_numeric($argv[2])){$end   = $argv[2];} else {$end  =0;}
 	}
+else{
+    $start=0;
+    $end=0;
+}
 	
 
 
