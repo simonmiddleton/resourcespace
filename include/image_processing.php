@@ -2857,6 +2857,9 @@ function extract_text($ref,$extension,$path="")
         $modified_text=hook("modifiedextractedtext",'',array($text));
         if(!empty($modified_text)){$text=$modified_text;}
         
+        # Final trim to tidy
+        $text=trim($text);
+
         # Save text
         update_field($ref,$extracted_text_field,$text);
         }
