@@ -53,7 +53,7 @@ function getImageFormat($size)
  */
 function convertImage($resource, $page, $alternative, $target, $width, $height, $profile)
 	{
-    global $exiftool_write, $username, $scramble_key;
+    global $exiftool_write, $exiftool_write_option, $username, $scramble_key;
  
 	$command = get_utility_path("im-convert");
 	if (!$command)
@@ -70,7 +70,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	$originalPath = get_resource_path($resource['ref'], true, '', false,
 				$requested_extension, -1, $page, false, '', $alternative);
 
-    if($exiftool_write)
+    if($exiftool_write && $exiftool_write_option)
         {
 	    $randstring=md5(rand() . microtime());
 	    $target_temp_id = $resource['ref'] . "_" . md5($username . $randstring . $scramble_key);
