@@ -2866,19 +2866,6 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
             stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
             }
         }
-    fwrite($output_fp, "first line\n");
-    fwrite($output_fp, "second line" . PHP_EOL);
-    fwrite($output_fp, "third line" . PHP_EOL);
-    rewind($output_fp);
-    $new_chunk = "line after rewind" . PHP_EOL . stream_get_contents($output_fp);
-    ftruncate($output_fp, 0);
-    rewind($output_fp);
-    fwrite($output_fp, $new_chunk);
-    rewind($output_fp);
-
-    echo '<hr>' . nl2br(stream_get_contents($output_fp));
-    fclose($output_fp);
-die;
 
 
     // While we would like more
@@ -2887,22 +2874,19 @@ die;
         $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
         fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
         $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
+        // echo sprintf('<hr>chunk = "%s"', nl2br($chunk));
 
+        ftruncate($output_fp, 0);
+        rewind($output_fp);
+        fwrite($output_fp, $output);
 
-
-        echo sprintf('<hr>chunk = "%s"', nl2br($chunk));
-        // var_dump($output);
-        // var_dump(substr($output, strpos($output, "\n") + 1));die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
-
-        // chunk is one stream, output is another. TODO: use stream_copy_to_stream() keep prepending data that then will get filtered when read
-
-
-
-
+        // TODO: lines needs to take into account how many filtered lines we've processed and determine if we need to continue
 
         fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
         $lines -= substr_count($chunk, "\n");       // Decrease our line counter
         }
+    rewind($output_fp);
+    echo '<hr><h3>output_fp</h3>' . nl2br(stream_get_contents($output_fp));
 
     // While we have too many lines
     // (Because of buffer size we might have read too many)
@@ -2912,8 +2896,8 @@ die;
         $output = substr($output, strpos($output, "\n") + 1);
         }
 
-    // Close file and return
     fclose($f);
+    fclose($output_fp);
     return $output;
     }   
     

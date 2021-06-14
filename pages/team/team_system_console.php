@@ -470,7 +470,8 @@ switch ($callback)
                     $filters = [];
                     }
 
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000, 4096, $filters));
+                // TODO: once done, put back the buffer to be 4096
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 10, 512, $filters));
                 foreach($lines as $line)
                     {
                     $line = trim($line);
