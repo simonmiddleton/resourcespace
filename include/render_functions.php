@@ -1975,7 +1975,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $labelname .= '-d';
         }
         ?>
-     <label for="<?php echo htmlspecialchars($labelname)?>" >
+     <label for="<?php echo htmlspecialchars($labelname)?>" <?php if($field['type']==FIELD_TYPE_DATE_RANGE) {echo " class='daterangelabel'";} ?> >
      <?php 
      if (!$multiple) 
         {
@@ -2366,7 +2366,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     <div class="clearerleft"> </div>
     
     <!--- to date -->
-    <label></label>
+    <label  class='daterangelabel'></label>
     
     
     

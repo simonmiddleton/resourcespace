@@ -424,7 +424,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelTools a  {;margin-left: 3px;margin-right:2px; text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a  {margin-left: 3px;margin-right:2px; text-decoration:none;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a    {float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
@@ -1615,19 +1615,11 @@ form.FormFilter button.ClearButton {
 /* Pill-like display for keywords */
 .ResponsiveViewFullSite { display: none; }
 .Question .customFieldLabel {
-    float:none;
+    float: left;
     border-radius:4px;
-    padding:3px 6px;
     margin-left:5px;
     vertical-align: text-bottom;
-}
-
-.AdvancedSection .Question .customFieldLabel {
-    margin-left: 0;
-}
-
-.AdvancedSection .Question .nodes_input_checkbox {
-    margin: 3px 0 0 0;
+    max-width: 1000px;
 }
 
 .keywordselected {
@@ -1638,7 +1630,6 @@ form.FormFilter button.ClearButton {
     padding: 2px 6px;
     line-height: 20px;
 }
-.customFieldset input[type=checkbox] {margin:0 2px 0 0;}
 .keywordselected a {padding-left:8px;}
 .RemoveKeyword {font-weight: bold; font-size: 1.2em;}
 
@@ -2155,3 +2146,12 @@ a.BrowseRefresh{
 
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
 
+/* Fixes for form checkboxes and date range fields */
+#modal .Question label:not(.customFieldLabel) {width: 200px;}
+#modal .Question label.InnerLabel {width: 150px;}
+
+.nodes_input_checkbox {float:left;}
+
+.Question table td {
+    vertical-align: top;
+}

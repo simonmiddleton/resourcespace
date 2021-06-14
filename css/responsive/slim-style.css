@@ -343,6 +343,10 @@ body {
         color: #ffffff;
         border: #1378BF;        
     }
+
+    .Question .customFieldLabel {
+        max-width: 600px;
+    }
 }
 @media(max-width:990px) {
     #HeaderButtons {
