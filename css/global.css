@@ -2148,6 +2148,7 @@ a.BrowseRefresh{
 
 /* Fixes for form checkboxes and date range fields */
 #modal .Question label:not(.customFieldLabel) {width: 200px;}
+#modal .FormHelp{margin: 0 0 10px 210px;}
 #modal .Question label.InnerLabel {width: 150px;}
 
 .nodes_input_checkbox {float:left;}
