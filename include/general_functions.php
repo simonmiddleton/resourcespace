@@ -2884,7 +2884,6 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
 
         // Read a chunk and prepend it to our output
         $chunk = fread($f, $seek);
-        // echo sprintf('<hr>chunk = "%s"<br>', nl2br($chunk));
         ftruncate($output_fp, 0);
         rewind($output_fp);
         fwrite($output_fp, $chunk);

@@ -18,7 +18,13 @@ if (!checkperm("a") && $callback!="activitylog")		// currently only activity log
 	{
 	exit ("Permission denied.");
 	}
+
+$error = '';
 include_once '../../include/stream_filters.php';
+if(!stream_filter_register('find_in_log_file_tail', '\ResourceSpace\Stream\Filter\find_in_log_file_tail'))
+    {
+    $error = str_replace('%FILTER_NAME', 'find_in_log_file_tail', $lang['error-unable_to_register_filter']);
+    }
 
 if (!checkperm_user_edit($userref))	// if not an admin then force act as user as current user
 	{
@@ -32,6 +38,7 @@ if ($callback == "")
 	if ($same_page_callback)
 		{
 		include "../../include/header.php";
+        render_top_page_error_style($error);
 		}
 	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
@@ -112,7 +119,14 @@ if(strlen($sortby) > 1)
 		}
 	}
 
-$filter = getval("filter","");
+$filters = [];
+$filter = trim(getval('filter', ''));
+if($filter !== '')
+    {
+    $filters = [
+        ['name' => 'find_in_log_file_tail', 'params' => $filter],
+    ];
+    }
 
 $results = array();
 $actions = array();
@@ -456,22 +470,10 @@ switch ($callback)
                 }
             else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
-                if(stream_filter_register('find_in_log_file_tail', '\ResourceSpace\Stream\Filter\find_in_log_file_tail'))
-                    {
-                    echo 'stream filter registered OK';
-                    $filters = [
-                        ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:'],
-                        // ['name' => 'find_in_log_file_tail', 'params' => $filter],
-                    ];
-                    }
-                else
-                    {
-                    echo 'stream filter registered - NOT';
-                    $filters = [];
-                    }
+                // Prepend filter specific to tracking vars so we can expect the right log format being in place
+                array_unshift($filters, ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:']);
 
-                // TODO: once done, put back the buffer to be 4096
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 10, 512, $filters));
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 100, 4096, $filters));
                 foreach($lines as $line)
                     {
                     $line = trim($line);
