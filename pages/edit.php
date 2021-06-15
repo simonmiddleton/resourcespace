@@ -133,12 +133,28 @@ if ($upload_review_mode)
             delete_collection($collection);
             external_upload_notify($external_upload, $k, $collection);
             $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k, "collection"=>$external_upload));
-            redirect($url);
             }
         else
             {
-            redirect("pages/search.php?search=!last1000");
+            // Redirect to recent user uploads
+            $defaultarchivestate = get_default_archive_state();
+            $redirectparams = array(
+                "search"=>"!contributions" . $userref,
+                "order_by"=>"resourceid",
+                "sort"=>"DESC",
+                "archive"=>$defaultarchivestate,
+                "refreshcollectionframe"=>"true",
+                "resetlockedfields"=>"true"
+                );
+                
+            if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+                {
+                $redirectparams["promptsubmit"] = 'true';
+                }
+            
+            $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
             }
+        redirect($url);
         exit();
         }
     }
