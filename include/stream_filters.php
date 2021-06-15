@@ -10,7 +10,7 @@ class find_in_log_file_tail extends \php_user_filter
             $consumed += $bucket->datalen;
 
             $lines = preg_split('/' . PHP_EOL . '/', $bucket->data);
-            echo "<pre>";echo print_r($lines, true);echo "</pre>";
+            // echo "<pre>";echo print_r($lines, true);echo "</pre>";
 
             $filtered_data = '';
 

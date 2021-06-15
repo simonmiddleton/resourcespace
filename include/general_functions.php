@@ -2841,23 +2841,24 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
  * @param  string $filename
  * @param  integer $lines
  * @param  integer $buffer
+ * @param  array   $filters  List of stream filters. Each value is an array containing the "name" and "params" keys. These
+ *                           represent the filter name and its params.
+ *                           Example: tail($track_vars_dbg_log_path, 10, 4096, ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:']);
  * @return string
  */
 function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
     {
-    $f = fopen($filename, "rb");        // Open the file
-    fseek($f, -1, SEEK_END);        // Jump to last character
+    $f = fopen($filename, "rb");
 
-    // Read it and adjust line number if necessary
+    // Jump to the last character, read it and adjust line number if necessary
     // (Otherwise the result would be wrong if file doesn't end with a blank line)
-    if(fread($f, 1) != "\n") $lines -= 1;
+    fseek($f, -1, SEEK_END);
+    if(fread($f, 1) != "\n")
+        {
+        $lines -= 1;
+        }
 
-    // Start reading
-    $output = '';
-    $chunk = '';
-
-
-    // Create a temp output file pointer so we can attach the stream filters for whatever reason the calling code needs to
+    // Create a temp output file resource so we can attach stream filters for whatever reason the calling code needs to
     $output_fp = fopen('php://temp','r+');
     foreach($filters as $filter)
         {
@@ -2867,26 +2868,35 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
             }
         }
 
+    // Start reading
+    $output = '';
+    $chunk = '';
+    $lines_pre_filtering = $lines;
 
     // While we would like more
     while(ftell($f) > 0 && $lines >= 0)
         {
-        $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
-        fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
-        $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
-        // echo sprintf('<hr>chunk = "%s"', nl2br($chunk));
+        // Figure out how far back we should jump
+        $seek = min(ftell($f), $buffer);
 
+        // Do the jump (backwards, relative to where we are)
+        fseek($f, -$seek, SEEK_CUR);
+
+        // Read a chunk and prepend it to our output
+        $chunk = fread($f, $seek);
+        // echo sprintf('<hr>chunk = "%s"<br>', nl2br($chunk));
         ftruncate($output_fp, 0);
         rewind($output_fp);
+        fwrite($output_fp, $chunk);
         fwrite($output_fp, $output);
+        rewind($output_fp);
+        $output = stream_get_contents($output_fp);
 
-        // TODO: lines needs to take into account how many filtered lines we've processed and determine if we need to continue
+        // Jump back to where we started reading
+        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
 
-        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
-        $lines -= substr_count($chunk, "\n");       // Decrease our line counter
+        $lines = $lines_pre_filtering - substr_count($output, "\n");
         }
-    rewind($output_fp);
-    echo '<hr><h3>output_fp</h3>' . nl2br(stream_get_contents($output_fp));
 
     // While we have too many lines
     // (Because of buffer size we might have read too many)
