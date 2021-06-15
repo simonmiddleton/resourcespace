@@ -21,8 +21,11 @@ function HookAction_datesCronCron()
     # Reset any residual userref from earlier cron tasks
     global $userref;
     $userref=0;
-            
-    $eligible_states_list = implode(",",$action_dates_eligible_states);
+
+    $eligible_states_list="";
+    if (isset($action_dates_eligible_states) && is_array($action_dates_eligible_states)) {
+        $eligible_states_list = implode(",",$action_dates_eligible_states);
+    }
 
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
     
@@ -30,7 +33,7 @@ function HookAction_datesCronCron()
     $email_restrict_refs=array();
 
     # Process resource access restriction if a restriction date has been configured
-    # The restriction date will be processed if it is a valid date field
+    # The restriction date will be processed if it is full date or a partial date because either will yield viable timestamps
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         echo "action_dates: Checking field " . $action_dates_restrictfield . PHP_EOL;

@@ -8,8 +8,8 @@
 $lang['action_dates_configuration']="Select the fields that will be used to automatically perform the actions specified.";
 $lang['action_dates_deletesettings']="Automatic resource primary action settings - use with caution";
 $lang['action_dates_delete']="Automatically delete or change state of resources when the date in this field is reached";
-$lang['action_dates_eligible_states']="States which are eligible for primary automatic action";
-$lang['action_dates_restrict']="Automatically restrict access to resources when the date in this field is reached. This will only apply to resources currently in the open state.";
+$lang['action_dates_eligible_states']="States which are eligible for primary automatic action. If no states are selected then all states are eligible.";
+$lang['action_dates_restrict']="Automatically restrict access to resources when the date in this field is reached. This only applies to resources whose access is currently open.";
 $lang['action_dates_delete_logtext']=" - Automatically actioned by action_dates plugin";
 $lang['action_dates_restrict_logtext']=" - Automatically restricted by action_dates plugin";
 $lang['action_dates_reallydelete']="Fully delete resource when action date passed? If set to false resources will be moved to the configured resource_deletion_state and thus recoverable";
