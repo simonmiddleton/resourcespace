@@ -1111,11 +1111,11 @@ if($responsive_ui)
                 {
                 if ($display == 'map')
                     { ?>
-                    <span class="Selected"><?php echo $lang['maptitle']?></span><?php
+                    &nbsp;|&nbsp;<span class="Selected"><?php echo $lang['maptitle']?></span><?php
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
+                    &nbsp;|&nbsp;<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
                     if($resources_count > $search_map_max_results)
                         {
                         echo "return false;";
