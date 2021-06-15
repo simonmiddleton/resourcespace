@@ -472,8 +472,10 @@ switch ($callback)
                 {
                 // Prepend filter specific to tracking vars so we can expect the right log format being in place
                 array_unshift($filters, ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:']);
+                // $filters = [];
 
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 100, 4096, $filters));
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 100, 512, $filters));
+                echo "<pre>";print_r($lines);echo "</pre>";echo(" in file " . __FILE__ . " at line " . __LINE__);
                 foreach($lines as $line)
                     {
                     $line = trim($line);
