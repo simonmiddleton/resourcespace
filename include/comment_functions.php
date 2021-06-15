@@ -273,7 +273,14 @@ EOT;
 			if (empty($comment['name'])) $comment['name'] = $comment['username'];
 			if (!hook("commentername", "all",array("ref"=>$comment["ref"])))
 			
-			echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";		
+			if ($anonymous_mode == true) 
+				{
+				echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";		
+				}
+			else
+				{
+				echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";		
+				}
 			
 			if ($comments_show_anonymous_email_address && !empty($comment['email']))
 				{
