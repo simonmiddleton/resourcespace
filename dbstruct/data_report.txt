@@ -355,6 +355,8 @@ select
 (select count(*) from resource) as 'Total resources',
 (select count(*) from keyword) 'Total keywords',
 (select count(*) from resource_keyword) as 'Resource keyword relationships',
+(select count(*) from node) as 'Total nodes (field options)',
+(select count(*) from resource_node) as 'Resource - node (field option) relationships',
 (select count(*) from collection) as 'Total collections',
 (select count(*) from collection_resource) as 'Collection resource relationships',
 (select count(*) from user) as 'Total users';
