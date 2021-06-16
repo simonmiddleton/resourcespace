@@ -139,7 +139,7 @@ if ($exiftool_fullpath!=false)
                             $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                             if (file_exists($path)) {unlink($path);}
                             $watermarkreal=dirname(__FILE__). "/../" . $watermark;
-                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $preview_quality -resize ".$scr_width."x".$scr_height. " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
                             $output=run_command($command2);
                             }
                         }
@@ -989,7 +989,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         # resize directly to the screen size (no other sizes needed)
          if (file_exists($target)&& $n!=1)
             {
-            $command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $preview_quality -resize ".$scr_width."x".$scr_height . " ".escapeshellarg($target);
+            $command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " ".escapeshellarg($target);
             $output=run_command($command2); $pagecount=$n;
 
             # Add a watermarked image too?
@@ -1001,7 +1001,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
                 if (file_exists($path)) {unlink($path);}
                     $watermarkreal=dirname(__FILE__). "/../" . $watermark;
                     
-                $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $preview_quality -resize ".$scr_width."x".$scr_height. " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
                     $output=run_command($command2);
                 }
             }
