@@ -1832,6 +1832,8 @@ function strip_extension($name,$use_ext_list=false)
 function is_process_lock($name)
     { 
     global $storagedir,$process_locks_max_seconds;
+    debug(sprintf('is_process_lock: storagedir:%s = "%s"', gettype($storagedir), $storagedir));
+    debug(sprintf('is_process_lock: get_temp_dir() . "/process_locks":%s = "%s"', gettype(get_temp_dir() . "/process_locks"), get_temp_dir() . "/process_locks"));
     
     # Check that tmp/process_locks exists, create if not.
     # Since the get_temp_dir() method does this checking, omit: if(!is_dir($storagedir . "/tmp")){mkdir($storagedir . "/tmp",0777);}
@@ -2012,6 +2014,8 @@ function get_temp_dir($asUrl = false,$uniqid="")
         $result = convert_path_to_url($result);
     $result = str_replace('\\','/',$result);
     }
+
+    debug(sprintf('get_temp_dir: result:%s = "%s"', gettype($result), $result));
     return $result;
     }
 
