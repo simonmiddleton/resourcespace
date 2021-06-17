@@ -630,17 +630,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     if($cache_write)
         {
-        if(!file_exists($storagedir . "/tmp"))
-            {
-            mkdir($storagedir . "/tmp", 0777, true);
-            }
-
-        if(!file_exists($cache_location))
-            {
-            mkdir($cache_location, 0777);
-            debug("SQL_CACHE: @sql_query: cache_location = '{$cache_location}'");
-            }
-
         $cachedata = array();
         $cachedata["query"] = $sql;
         $cachedata["time"] = time();
@@ -649,6 +638,17 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         $GLOBALS["use_error_exception"] = true;
         try
             {
+            if(!file_exists($storagedir . "/tmp"))
+                {
+                mkdir($storagedir . "/tmp", 0777, true);
+                }
+
+            if(!file_exists($cache_location))
+                {
+                debug("SQL_CACHE: @sql_query: cache_location = '{$cache_location}'");
+                mkdir($cache_location, 0777);
+                }
+
             file_put_contents($cache_file, json_encode($cachedata));
             }
         catch(Exception $e)
