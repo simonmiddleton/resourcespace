@@ -6496,7 +6496,14 @@ function copyResourceDataValues($from, $to, $resource_type = "")
     if($from > 0)
         {
         $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
-        $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+        if (count($omitfields) > 0)
+            {
+            $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+            }
+        else
+            {
+            $omit_fields_sql = "";
+            }
         }
     
     $resource_type_sql = "AND (rtf.resource_type = r.resource_type OR rtf.resource_type = 999 OR rtf.resource_type = 0)";
