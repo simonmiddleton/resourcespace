@@ -203,7 +203,7 @@ $baseurl=str_replace(" ","%20",$baseurl);
 $bs=explode("/",$baseurl);
 $bs=array_slice($bs,3);
 $baseurl_short="/" . join("/",$bs) . (count($bs)>0?"/":"");
-debug(sprintf('db.php: baseurl:%s = %s', gettype($baseurl), $baseurl));
+
 
 # statistics
 $querycount=0;

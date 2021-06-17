@@ -423,7 +423,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         $cache_write=true;
         $cache_location=get_query_cache_location();
         $cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
-        debug("SQL_CACHE: @sql_query: cache_file = '{$cache_file}'");
         if (file_exists($cache_file))
             {
             $cachedata=json_decode(file_get_contents($cache_file),true);
@@ -645,7 +644,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
             if(!file_exists($cache_location))
                 {
-                debug("SQL_CACHE: @sql_query: cache_location = '{$cache_location}'");
                 mkdir($cache_location, 0777);
                 }
 
@@ -759,8 +757,6 @@ function sql_insert_id()
 function get_query_cache_location()
 	{
 	global $storagedir,$tempdir;
-    debug(sprintf('SQL_CACHE: @get_query_cache_location: storagedir:%s = %s', gettype($storagedir), $storagedir));
-    debug(sprintf('SQL_CACHE: @get_query_cache_location: tempdir:%s = %s', gettype($tempdir), $tempdir));
     if(!is_null($tempdir))
         {
         return $tempdir . "/querycache";
