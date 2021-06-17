@@ -659,10 +659,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             ?>
                             <td valign=middle>
                                 <input id="nodes_searched_<?php echo $node['ref']; ?>" class="nodes_input_checkbox" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <label class="customFieldLabel" for="nodes_searched_<?php echo $field['ref']; ?>">
+                                    <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
+                                </label>
                             </td>
-                            <label class="customFieldLabel" for="nodes_searched_<?php echo $field['ref']; ?>">
-                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
-                            </label>
                             <?php
                             }
                         }
