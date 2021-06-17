@@ -4,7 +4,7 @@ include "../include/db.php";
 $ref=getval("ref","",true);
 $k=getvalescaped("k","");if ($k=="" || !check_access_key_collection($ref,$k)) {include "../include/authenticate.php";}
 
-if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
+if (!checkperm('q')){exit("<br /><br /><strong>".$lang["error-permissiondenied"]."</strong>");}
 
 include "../include/request_functions.php";
 
@@ -21,6 +21,15 @@ if($ref=="" && isset($usercollection))
   
 $cinfo=get_collection($ref);
 $error=false;
+
+# Determine the minimum access across all of the resources in the collection being requested
+$collection_request_min_access=collection_min_access($ref);
+
+# Prevent "request all" resources in a collection if the user has access to all of its resources
+if ($collection_request_min_access == 0)
+	{
+	exit("<br /><br /><strong>".$lang["error-cant-request-all-are-open"]."</strong>");
+	}
 
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
