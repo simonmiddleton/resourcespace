@@ -2862,7 +2862,7 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
     $output_fp = fopen('php://temp','r+');
     foreach($filters as $filter)
         {
-        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '')
+        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '' && is_array($filter['params']))
             {
             stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
             }
@@ -2874,11 +2874,8 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
     $lines_pre_filtering = $lines;
 
     // While we would like more
-        echo str_repeat('###', 10);
     while(ftell($f) > 0 && $lines >= 0)
         {
-        echo '<hr>';
-
         // Figure out how far back we should jump
         $seek = min(ftell($f), $buffer);
 
@@ -2893,14 +2890,12 @@ function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
         fwrite($output_fp, $output);
         rewind($output_fp);
         $output = stream_get_contents($output_fp);
-        // echo sprintf('<br>output = "%s"', nl2br($output));
 
         // Jump back to where we started reading
         fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
 
         $lines = $lines_pre_filtering - substr_count($output, "\n");
         }
-        echo str_repeat('===', 10);
 
     // While we have too many lines
     // (Because of buffer size we might have read too many)

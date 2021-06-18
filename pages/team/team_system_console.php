@@ -21,9 +21,9 @@ if (!checkperm("a") && $callback!="activitylog")		// currently only activity log
 
 $error = '';
 include_once '../../include/stream_filters.php';
-if(!stream_filter_register('find_in_log_file_tail', '\ResourceSpace\Stream\Filter\find_in_log_file_tail'))
+if(!stream_filter_register('resourcespace.log_tail_find', '\ResourceSpace\Stream\Filter\find_in_log_file_tail'))
     {
-    $error = str_replace('%FILTER_NAME', 'find_in_log_file_tail', $lang['error-unable_to_register_filter']);
+    $error = str_replace('%FILTER_NAME', 'resourcespace.log_tail_find', $lang['error-unable_to_register_filter']);
     }
 
 if (!checkperm_user_edit($userref))	// if not an admin then force act as user as current user
@@ -124,7 +124,7 @@ $filter = trim(getval('filter', ''));
 if($filter !== '')
     {
     $filters = [
-        ['name' => 'find_in_log_file_tail', 'params' => $filter],
+        ['name' => 'resourcespace.log_tail_find', 'params' => $filter],
     ];
     }
 
@@ -471,10 +471,27 @@ switch ($callback)
             else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
                 // Prepend filter specific to tracking vars so we can expect the right log format being in place
-                array_unshift($filters, ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:']);
+                array_unshift($filters, ['name' => 'resourcespace.log_tail_find', 'params' => 'tracking var:']);
                 // $filters = [];
+                if(stream_filter_register('resourcespace.filter_t', '\ResourceSpace\Stream\Filter\filter_test'))
+                    {
+                    $filters = [
+                        // ['name' => 'resourcespace.log_tail_find', 'params' => 'tracking var:'],
+                        // ['name' => 'resourcespace.filter_t', 'params' => 'tracking var:'],
+                        // ['name' => 'resourcespace.filter_t', 'params' => 'cff2fd70e093a2b1523200fa21d496c1'],
+                        [
+                            'name' => 'resourcespace.filter_t',
+                            'params' => [
+                                'search_terms' => [
+                                    'tracking var',
+                                    'cff2fd70e093a2b1523200fa21d496c1',
+                                ]
+                            ]
+                        ],
+                    ];
+                    }
 
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 100, 512, $filters));
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 10, 512, $filters));
                 echo "<pre>";print_r($lines);echo "</pre>";echo(" in file " . __FILE__ . " at line " . __LINE__);
                 foreach($lines as $line)
                     {
