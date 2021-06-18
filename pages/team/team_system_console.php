@@ -476,19 +476,17 @@ switch ($callback)
             else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
                 // Prepend filter specific to tracking vars so we can expect the right log format being in place
-                $track_vars_filter = [
-                    'name' => 'resourcespace.tail_search',
-                    'params' => [
-                        'search_terms' => [
-                            'tracking var',
-                            $filter,
+                array_unshift(
+                    $filters,
+                    [
+                        'name' => 'resourcespace.tail_search',
+                        'params' => [
+                            'search_terms' => ['tracking var', $filter]
                         ]
                     ]
-                ];
-                array_unshift($filters, $track_vars_filter);
+                );
 
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 10, 512, $filters));
-                echo "<pre>";print_r($lines);echo "</pre>";echo(" in file " . __FILE__ . " at line " . __LINE__);
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, $default_perpage_list, 4096, $filters));
                 foreach($lines as $line)
                     {
                     $line = trim($line);
