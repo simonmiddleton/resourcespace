@@ -1821,3 +1821,35 @@ function dash_tile_featured_collection_get_resources($c, array $ctx)
 
     return $resources;
     }
+
+/**
+ * Validate the type of dash tile and check that the style provided is valid for it.
+ *
+ * @param  string  $type   Tile type name.
+ * @param  string  $style  Tile style name.
+ * 
+ * @return string  Will return the style value provided if correct, the first defined style or blank if no styles defined.
+ */
+function validate_tile_style(string $type, string $style) 
+    {
+    global $tile_styles;
+    if (isset($tile_styles) && array_key_exists($type, $tile_styles))
+        {
+        if (count($tile_styles[$type]) === 0)
+            {
+            return '';
+            }
+        if (in_array($style,$tile_styles[$type]))
+            {
+            return $style;
+            }
+        else
+            {
+            return $tile_styles[$type][0];
+            }
+        }
+    else
+        {
+        return '';
+        }
+    }
