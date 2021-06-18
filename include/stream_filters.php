@@ -39,8 +39,7 @@ class FindInFileTail extends \php_user_filter
         {
         while($bucket = stream_bucket_make_writeable($in))
             {
-            ++$this->i;
-            // echo sprintf('<h2>Filter %s - bucket #%s</h2>%s', $this->filtername, $this->i, nl2br($bucket->data));
+            // echo sprintf('<h2>Filter %s - bucket #%s</h2>%s', $this->filtername, ++$this->i, nl2br($bucket->data));
             $consumed += $bucket->datalen;
             array_unshift($this->data_queue, $bucket->data);
             }
