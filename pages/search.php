@@ -1563,6 +1563,9 @@ if($responsive_ui)
             {
             $startresource = max($offset-$colcount,0);
             $endresource = $result_count-$colcount;
+
+            // This is used to ensure that all resource panels are the same height 
+            $resource_panel_height_max = 0;            
             for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
                 {
                 # Allow alternative configuration settings for this resource type.

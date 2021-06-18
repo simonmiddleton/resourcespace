@@ -59,6 +59,8 @@ if (!hook("renderresultthumb"))
         {
         $class[] = "Selected";
         }
+
+    $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displayed_fields_height,$resource_panel_height_max);
     ?>
 
     <!--Resource Panel -->    
