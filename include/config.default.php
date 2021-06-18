@@ -1756,6 +1756,8 @@ $themes_show_background_image = false;
 
 # Ask the user the intended usage when downloading
 $download_usage=false;
+# include email address field in download usage form
+$download_usage_email=false;
 $download_usage_options=array("Press","Print","Web","TV","Other");
 # Option to block download (hide the button) if user selects specific option(s). Only used as a guide for the user e.g. to indicate that permission should be sought.
 #$download_usage_prevent_options=array("Press");

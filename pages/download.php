@@ -272,7 +272,8 @@ if('' == $noattach)
     {
     daily_stat('Resource download', $ref);
 
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . ' Downloaded by ' . $email, '', '', $usage, ($alternative != -1 ? $alternative : $size));
+    $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email: "";
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, ($alternative != -1 ? $alternative : $size));
 
     hook('moredlactions');
 
