@@ -5493,7 +5493,7 @@ function can_share_upload_link($collection_data)
         {
         $collection_data = get_collection($collection_data);
         }
-    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup") || in_array($usergroup,$upload_link_usergroups));
+    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup"));
     }
     
 /**
