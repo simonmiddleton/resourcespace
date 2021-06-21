@@ -1617,6 +1617,7 @@ form.FormFilter button.ClearButton {
 .Question .customFieldLabel {
     float: left;
     border-radius:4px;
+    padding:3px 6px;
     margin-left:5px;
     vertical-align: text-bottom;
     max-width: 1000px;
@@ -2054,7 +2055,7 @@ a.BrowseRefresh{
 
 .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
 .BasicsBoxEdit .RecordHeader {
-    width: calc(100% + 250px);
+    width: calc(100% + 270px);
 }
 
 .BasicsBoxLeft {
@@ -2151,9 +2152,9 @@ a.BrowseRefresh{
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
 
 /* Fixes for form checkboxes and date range fields */
-#modal .Question label:not(.customFieldLabel) {width: 200px;}
-#modal .FormHelp{margin: 0 0 10px 210px;}
-#modal .Question label.InnerLabel {width: 150px;}
+.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 200px;}
+.BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
+.BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
 
 .nodes_input_checkbox {float:left;}
 
