@@ -1617,8 +1617,8 @@ form.FormFilter button.ClearButton {
 .Question .customFieldLabel {
     float: left;
     border-radius:4px;
-    padding:3px 6px;
-    margin-left:5px;
+    padding:2px 6px;
+    margin-left:3px;
     vertical-align: text-bottom;
     max-width: 1000px;
 }
@@ -2156,7 +2156,7 @@ a.BrowseRefresh{
 .BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
 .BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
 
-.nodes_input_checkbox {float:left;}
+.nodes_input_checkbox {float:left; margin-top: 5px}
 
 .Question table td {
     vertical-align: top;
