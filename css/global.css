@@ -2057,6 +2057,10 @@ a.BrowseRefresh{
     width: calc(100% + 250px);
 }
 
+.BasicsBoxLeft {
+    padding-right: 20px;
+}
+
 .BasicsBoxRight {
     margin-top: 75px;
 }

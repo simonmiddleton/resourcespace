@@ -2258,10 +2258,12 @@ if($disablenavlinks)
         }
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
-?>
-</div>
 
-<?php 
+if (!$external_upload)
+    {
+    ?></div><?php
+    }
+
 if(!hook('replacesubmitbuttons'))
     {
     SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
