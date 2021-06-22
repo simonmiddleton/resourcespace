@@ -488,9 +488,6 @@ $search_anchors_highlight=false;
 # Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
 $search_filter_strict=true;
 
-# Set to false to omit results for public collections on numeric searches.
-$search_public_collections_ref=true;
-
 # Show an edit icon/link in the search results.
 $search_results_edit_icon=true;
 

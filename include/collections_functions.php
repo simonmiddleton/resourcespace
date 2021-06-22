@@ -814,16 +814,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     }
 			    }
 			}
-        
-        global $search_public_collections_ref;
-        if ($search_public_collections_ref && is_numeric($search))
-            {
-            $spcr="or c.ref='" . escape_check($search) . "'";
-            }
-        else
-            {
-            $spcr="";
-            }    
         }
 	
 	# Restrict to parent, child and sibling groups?
