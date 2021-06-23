@@ -51,7 +51,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
             <span style="font-size:30px;color:black;padding:14px;"><?php echo $error_note; ?></span>
             <p style="font-size:14px;color:black;margin-top:20px;">Please <a href="#" onClick="history.go(-1)">go back</a> and try something else.</p>
             <?php 
-            if ($show_error_messages) 
+            if (true) 
                 { 
                 if (checkperm('a')) //Only show check installtion if you have permissions for that page.
                     {?>
@@ -60,7 +60,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                     } ?>
                 <hr style="margin-top:20px;">
                 <?php
-                if ($show_detailed_errors===true)
+                if (true)
                     {?>
                     <p style="font-size:11px;color:black;"><?php echo htmlspecialchars($error_info); ?></p>
                     <?php

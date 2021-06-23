@@ -30,3 +30,5 @@ $simplesaml_multiple_email_notify = "";
 // the user is allowed to log in to ResourceSpace or not
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
+
+$simplesaml_rsconfig = false;

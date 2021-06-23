@@ -7,6 +7,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
+//exit(($simplesaml_rsconfig ? "TRUE" : "FALSE"));
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
@@ -36,6 +37,7 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_lib_path'] = getvalescaped('simplesaml_lib_path', '');
     $simplesaml['simplesaml_authorisation_claim_name'] = getvalescaped('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getvalescaped('simplesaml_authorisation_claim_value', '');
+    $simplesaml['simplesaml_rsconfig'] = getvalescaped('simplesaml_rsconfig','');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -67,13 +69,17 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 
 global $baseurl;
 
-
 // Retrieve list of groups for use in mapping dropdown
 $rsgroups = sql_query('select ref, name from usergroup order by name asc');
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables
-foreach (array('simplesaml_create_new_match_email','simplesaml_allow_duplicate_email','simplesaml_multiple_email_notify') as $thefield)
+foreach (array(
+    'simplesaml_create_new_match_email',
+    'simplesaml_allow_duplicate_email',
+    'simplesaml_multiple_email_notify',
+    'simplesaml_rsconfig'
+    ) as $thefield)
 	{
 	if (!isset($simplesaml[$thefield]))
 		{
@@ -88,7 +94,7 @@ include '../../../include/header.php';
   <h1><?php echo $lang['simplesaml_configuration'] ?></h1>
   
 <?php
- if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
+ if(($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfig && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))))
     {
     echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . ". <a href='" . $baseurl . "/plugins/simplesaml/pages/about.php'>" . $baseurl . "/plugins/simplesaml/pages/about.php</a></div>";
     }
@@ -109,6 +115,8 @@ else
 generateFormToken("simplesaml_form");
 echo config_section_header($lang['systemsetup'], '');
 echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
+echo config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig,30);
+
 echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);
 ?>
 <div class="Question">
