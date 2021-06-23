@@ -5499,3 +5499,65 @@ function render_message($message="")
 
     echo str_replace(array("%%CLASSES%%","%%EXTRA%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
     }
+
+
+/**
+ * Render the antispam Question form section
+ */
+function render_antispam_question()
+    {
+    global $scramble_key, $lang;
+
+    $rndword = array_merge(range('0', '9'), range('A', 'Z'));
+    shuffle($rndword);
+    $timestamp=time();
+    $rndwordarray=  array_slice ($rndword , 0,6);
+    $rndcode= hash("SHA256",implode("",$rndwordarray) .  $scramble_key . $timestamp);
+    $height = 50; //CAPTCHA image height
+    $width = 160; //CAPTCHA image width
+    $font_size = 25; //CAPTCHA Font size
+    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
+
+    $capimage = imagecreate($width, $height);
+    $graybg = imagecolorallocate($capimage, 245, 245, 245);
+    $textcolor = imagecolorallocate($capimage, 34, 34, 34);
+    $green = ImageColorAllocate($capimage, 121, 188, 65); 
+    ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
+    imageline($capimage, 0, $height/2, $width, $height/2, $green); 
+    imageline($capimage, $width*4/5, 2, $width*4/5, $height, $green);
+    imageline($capimage, $width*3/5, 2, $width*3/5, $height, $green);
+    imageline($capimage, $width*2/5, 2, $width*2/5, $height, $green);
+    imageline($capimage, $width/5, 2, $width/5, $height, $green);
+    
+    $n=0;
+    foreach($rndwordarray as $rndletter)
+        {
+        imagefttext($capimage, $font_size,rand(-20, 20), 10 + (24*$n), rand(25, 45), $textcolor, $font, $rndletter);
+        $n++;
+        }
+        
+    ob_start();
+    imagegif($capimage);
+    $imagedata = ob_get_contents();
+    ob_end_clean();
+
+    ?>
+    <div class="Question">
+        <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
+        <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
+        <label for="antispam"><?php echo $lang["enterantispamcode"]; ?></label> 
+        <div class="clearerleft"></div>
+        <div id="AntiSpamImage" style="
+        margin: 0 0 .1em;
+        background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+        height: 50px;
+        width: 160px;
+        border-radius: 6px;
+        display: inline-block;
+        ">    
+        </div>
+        <input type=text name="antispam" class="stdwidth" value="">
+    <div class="clearerleft"></div>        
+    </div>
+    <?php
+    }
