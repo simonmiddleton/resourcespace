@@ -76,7 +76,13 @@ function perform_login($loginuser="",$loginpass="")
     if($externalresult)
         {
         // Get user data as per old method
-        $valid=sql_query("select ref,usergroup,account_expires,approved from user where username='".escape_check($username)."' and password='".escape_check($password_hash)."'");
+        $user_ref = get_user_by_username($username);
+        $found_user_record = ($user_ref !== false);
+        if($found_user_record)
+            {
+            $user_data = get_user($user_ref);
+            $valid = true;
+            }
         }
 
     if($valid)
