@@ -72,8 +72,7 @@ if (getval("save","")!="")
         $error=$lang["expiredantispam"];    
         }
 	# Check the anti-spam code is correct
-	//elseif (!hook('replaceantispam_check') && getval("antispamcode","") != hash("SHA256",strtoupper(getval("antispam","")) . $scramble_key . getval("antispamtime",0)))
-	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode,$usercode,$spamtime))
+	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode, $usercode, $spamtime))
 		{
 		$error=$lang["requiredantispam"];
 		}
@@ -305,17 +304,15 @@ $groups=get_registration_selectable_usergroups();
 <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
 <div class="clearerleft"> </div>
 </div>	
-<?php } /* END hook replaceuserrequestcomment */ ?>
+<?php } /* END hook replaceuserrequestcomment */
 
-<?php hook("userrequestadditional");?>
+hook("userrequestadditional");
 
-<?php
 if(!hook("replaceantispam"))
 	{
     render_antispam_question();
 	}
 ?>
-
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
@@ -333,4 +330,3 @@ if(!hook("replace_user_request_required_key"))
 <div> <!-- end of login_box -->
 <?php
 include "../include/footer.php";
-

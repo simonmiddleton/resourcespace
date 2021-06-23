@@ -2161,3 +2161,5 @@ a.BrowseRefresh{
 .Question table td {
     vertical-align: top;
 }
+
+.Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }

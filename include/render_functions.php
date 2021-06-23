@@ -5540,7 +5540,6 @@ function render_antispam_question()
     imagegif($capimage);
     $imagedata = ob_get_contents();
     ob_end_clean();
-
     ?>
     <div class="Question">
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
@@ -5550,12 +5549,13 @@ function render_antispam_question()
         <div id="AntiSpamImage" style="
         margin: 0 0 .1em;
         background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
-        height: 50px;
-        width: 160px;
+        height: <?php echo $height; ?>px;
+        width: <?php echo $width; ?>px;
         border-radius: 6px;
         display: inline-block;
         ">    
         </div>
+        <input type="text" name="antispam_user_code" class="stdwidth" value="">
         <input type=text name="antispam" class="stdwidth" value="">
     <div class="clearerleft"></div>        
     </div>
