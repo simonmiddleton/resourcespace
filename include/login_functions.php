@@ -73,6 +73,11 @@ function perform_login($loginuser="",$loginpass="")
 
 	# This may change the $username, $password, and $password_hash
     $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
+    if($externalresult)
+        {
+        // Get user data as per old method
+        $valid=sql_query("select ref,usergroup,account_expires,approved from user where username='".escape_check($username)."' and password='".escape_check($password_hash)."'");
+        }
 
     if($valid)
         {

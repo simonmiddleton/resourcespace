@@ -31,7 +31,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
         $usersuffix    = $simpleldap['usersuffix'];
         $addsuffix     = ($usersuffix=="") ? "" : (substr($usersuffix,0,1)=="." ? "" : ".") . $usersuffix;
         $username      = escape_check($uname . $addsuffix);
-        $password_hash = md5('RS' . $username . generateSecureKey());
+        $password_hash = rs_password_hash("RSLDAP" . $uname . $addsuffix . $pword);
         $user          = sql_query("SELECT ref, approved, account_expires FROM user WHERE username = '{$username}'");
 		
         $email         = escape_check($userinfo["email"]);
