@@ -5544,20 +5544,20 @@ function render_antispam_question()
     <div class="Question">
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
         <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
-        <label for="antispam"><?php echo $lang["enterantispamcode"]; ?></label> 
-        <div class="clearerleft"></div>
-        <div id="AntiSpamImage" style="
-        margin: 0 0 .1em;
-        background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
-        height: <?php echo $height; ?>px;
-        width: <?php echo $width; ?>px;
-        border-radius: 6px;
-        display: inline-block;
-        ">    
-        </div>
+        <label for="antispam"><?php echo $lang["enterantispamcode"]; ?><br>
+            <div id="AntiSpamImage" style="
+            margin: 0 0 .1em;
+            background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+            height: <?php echo $height; ?>px;
+            width: <?php echo $width; ?>px;
+            border-radius: 6px;
+            display: inline-block;
+            ">    
+            </div>
+        </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
         <input type=text name="antispam" class="stdwidth" value="">
-    <div class="clearerleft"></div>        
+        <div class="clearerleft"></div>        
     </div>
     <?php
     }
