@@ -785,7 +785,7 @@ if('' != $tile_type && $tile_type !== "conf")
         // Some tile types don't have style
         if(typeof prevstyle === 'undefined')
             {
-            prevstyle = '<?php echo validate_tile_style($tile_type, $tile_style); ?>';
+            prevstyle = '<?php echo validate_tile_style($tile_type, (isset($tile_style)?$tile_style:"")); ?>';
             }
 		<?php
 		if($tile_type=="srch")
