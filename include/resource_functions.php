@@ -3108,21 +3108,32 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Add category tree values, reflecting tree structure
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
-    $alltreenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
+
+    // Construct an array of the selected tree nodes across all resource ids
+    $selected_treenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
+
     foreach($tree_fields as $tree_field)
         {
+        // We need to determine the tree strings for all nodes belonging to the tree field
+        $tree_field_nodes = get_nodes($tree_field["ref"],'', true); # where '' is parent and true is recursive
+        $tree_field_options = get_tree_strings($tree_field_nodes, true); # where true is full path
+
         $addfield = $tree_field;
+        // Now for each resource, build an array consisting of all of the paths for the selected nodes 
         foreach($getresources as $getresource)
             {
-            if(isset($alltreenodes[$getresource["ref"]][$tree_field["ref"]]) && is_array($alltreenodes[$getresource["ref"]][$tree_field["ref"]]))
+            $treetext_arr = array();
+            $valstring = "";
+            // Are there any selected tree nodes on the resource? 
+            if(isset($selected_treenodes[$getresource["ref"]][$tree_field["ref"]]) && is_array($selected_treenodes[$getresource["ref"]][$tree_field["ref"]]))
                 {
-                $treetext_arr = get_tree_strings($alltreenodes[$getresource["ref"]][$tree_field["ref"]]);
+                // So for each selected tree node, add its corresponding path to the path array
+                foreach($selected_treenodes[$getresource["ref"]][$tree_field["ref"]] as $selected_resource_treenode) 
+                    {
+                    $treetext_arr[]=$tree_field_options[$selected_resource_treenode["ref"]];
+                    }
                 // Quoting each element is required for csv export
                 $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
-                }
-            else
-                {
-                $treetext_arr = array();
                 }
             $addfield["resource"] = $getresource["ref"];
             $addfield["value"] = count($treetext_arr) > 0 ? $valstring : "";
