@@ -73,6 +73,17 @@ function perform_login($loginuser="",$loginpass="")
 
 	# This may change the $username, $password, and $password_hash
     $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
+    if($externalresult)
+        {
+        // Get user data as per old method
+        $user_ref = get_user_by_username($username);
+        $found_user_record = ($user_ref !== false);
+        if($found_user_record)
+            {
+            $user_data = get_user($user_ref);
+            $valid = true;
+            }
+        }
 
     if($valid)
         {
