@@ -201,10 +201,14 @@ function html_usagecomments($usagecomment,$error)
     
 function validate_input_download_usage($fields)
     {
-    global $lang, $usage_comment_blank, $download_usage_email;
+    global $lang, $usage_comment_blank, $download_usage_email, $remove_usage_textbox;
     $error = array();
     $error["usage"] = $fields["usage"] == "" ? $lang["usageincorrect"] : ""; 
+
+if (!$remove_usage_textbox)
+    {
     $error["usagecomment"] = $fields["usagecomment"] == "" && !$usage_comment_blank ? $lang["usageincorrect"]: "";
+    }
 
 if ($download_usage_email)
     {
