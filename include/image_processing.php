@@ -1656,11 +1656,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
                 if($extension=="svg")
                     {
-                    $addcheckbdpre = "-transparent white " .  $addcheckbdpre  . " -scale " . $cb_scale . "% tile:pattern:checkerboard ";
+                    $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% tile:pattern:checkerboard -modulate 150,100 ";
                     }
                 else
                     {
-                    $addcheckbdpre .= " tile:pattern:checkerboard -scale " . $cb_scale . "% ";
+                    $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% ";
                     }
                 $addcheckbdafter = "-compose over -composite ";
                 }            
@@ -1669,7 +1669,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
        
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] ' . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent white \)") . ' ' . $flatten . ' -quality ' . $preview_quality;
                 }
 
             # fetch target width and height
@@ -2084,7 +2084,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $command_parts[$p]['targetpath']=str_replace($extension,"jpg",$command_parts[$p]['targetpath']);
                     if($p==0)
                         {
-                        $command.=" \( -size " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . " tile:pattern:checkerboard \) +swap -compose over -composite";
+                        $command.=" \( -size " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . " tile:pattern:checkerboard -modulate 150,100 \) +swap -compose over -composite";
                         }
                     }
                 $command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '');
