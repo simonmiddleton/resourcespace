@@ -5877,7 +5877,17 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 	$fileinfo=array();
 	if($ref=="" || $path==""){return false;}
 	global $imagemagick_path, $imagemagick_calculate_sizes;
-	$file=$path;
+    $file=$path;
+    
+    // check for valid image
+    $mime_content_type = mime_content_type($file);
+    $is_image = strpos($mime_content_type, "image/");
+    if ($is_image === false)
+        {
+        return false;
+        }
+
+
     $ref_escaped = escape_check($ref);
 	$o_size=sql_query("select * from resource_dimensions where resource='{$ref_escaped}'");
 	if(!empty($o_size))
