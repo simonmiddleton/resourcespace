@@ -77,3 +77,6 @@ if(!isset($html_field, $stripped_field))
     }
 
 fwrite(STDOUT, "Removing HTML from field #{$html_field} and saving result in field #{$stripped_field}" . PHP_EOL);
+
+$data = get_data_by_field(null, $html_field);
+print_r($data);
