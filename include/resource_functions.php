@@ -2207,6 +2207,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * @param integer $field    Field ID
 * @param string  $value    The new value
 * @param array   &$errors  Any errors that may occur during update
+* @param boolean $log      Log this change in the resource log?
 * 
 * @return boolean
 */
