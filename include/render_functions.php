@@ -5011,10 +5011,8 @@ function render_table($tabledata)
             "url" => $tabledata["defaulturl"],
             "url_params" => $tabledata["params"],
             );
-        ?>
-        <div class="TopInpageNav">
-        <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
-        <?php
+        echo '<div class="TopInpageNav">';
+        echo '<div class="InpageNavLeftBlock">' . $lang["resultsdisplay"] . ': ';
         // Show per page options
         $list_display_array["all"] = 99999;
         $pplinks = array();
@@ -5023,7 +5021,7 @@ function render_table($tabledata)
             $lpp_name = isset($lang[$ldopt]) ? $lang[$ldopt] : $ldnum;
             if ($pageroptions["per_page"] == $ldnum)
                 {
-                $pplinks[] =  "<span class='Selected'>" . $lpp_name . "</span>";
+                $pplinks[] =  "<span class='Selected'>" . htmlspecialchars($lpp_name) . "</span>";
                 }
             else
                 {
@@ -5037,10 +5035,9 @@ function render_table($tabledata)
         echo "<div class='TablePagerHolder'>";
         pager(true, true,$pageroptions);
         echo "</div>";
-        }?>
-    </div><?php
-
-    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
+        }
+    echo '</div>';
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? htmlspecialchars($tabledata["class"]) : "") . "'>\n";
     echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
     echo "<tbody><tr class='ListviewTitleStyle'>\n";
     if($alertcolumn)
@@ -5079,7 +5076,7 @@ function render_table($tabledata)
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            $rowid = isset($rowdata["rowid"]) ? " id='" . $rowdata["rowid"]  . "'" : "";
+            $rowid = isset($rowdata["rowid"]) ? " id='" . htmlspecialchars($rowdata["rowid"])  . "'" : "";
             if(isset($rowdata["rowlink"]))
                 {
                 $rowid .=  " class='row_clickable' data-link='" . htmlspecialchars($rowdata["rowlink"]) . "'";
@@ -5088,7 +5085,7 @@ function render_table($tabledata)
 
             if(isset($rowdata['alerticon']))
                 {
-                echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
+                echo "<td><i class='" . htmlspecialchars($rowdata['alerticon']) . "'></i></td>";
                 }
             elseif($alertcolumn)
                 {
@@ -5108,7 +5105,7 @@ function render_table($tabledata)
                             echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
                             if(isset($toolitem["onclick"]))
                                 {
-                                echo $toolitem["onclick"];
+                                echo htmlspecialchars($toolitem["onclick"]);
                                 }
                             else
                                 {
@@ -5132,8 +5129,7 @@ function render_table($tabledata)
             echo "</tr>\n";
             }
         }
-    ?>
-    </tbody>
+    echo '</tbody>
     </table>
     </div>
     
@@ -5142,11 +5138,10 @@ function render_table($tabledata)
         {
         jQuery(".row_clickable").click(function (e, row, $element)
             {
-            return ModalLoad(jQuery(this).data('link'), true);
+            return ModalLoad(jQuery(this).data(\'link\'), true);
             });
         });
-    </script>
-    <?php
+    </script>';
     }
 
 /**
