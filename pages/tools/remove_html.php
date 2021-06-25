@@ -78,15 +78,33 @@ if(!isset($html_field, $plaintext_field))
 
 fwrite(STDOUT, "Removing HTML from field #{$html_field} and saving result in field #{$plaintext_field}" . PHP_EOL);
 
-$html_data = array_column(get_data_by_field(null, $html_field), 'value', 'resource');
-// print_r($html_data);
-// die;
-foreach($html_data as $resource_ref => $html_value)
+$html_rtf = get_resource_type_field($html_field);
+if($html_rtf === false)
     {
-    // echo "======\nResource #$resource_ref\n";
-    // printf('HTML = %s %s', $html_value, PHP_EOL);
+    fwrite(STDERR, 'ERROR: Invalid metadata field for html-field option!' . PHP_EOL);
+    exit(1);
+    }
+
+if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
+    {
+    $html_rtf_ref = escape_check($html_field);
+    $q = "  SELECT rn.resource,
+                   group_concat(n.`name` SEPARATOR ', ') AS `value`
+              FROM resource_node AS rn
+        INNER JOIN node AS n ON rn.node = n.ref
+             WHERE n.resource_type_field = '{$html_rtf_ref}'
+          GROUP BY rn.resource";
+    $html_data = sql_query($q);
+    }
+else
+    {
+    $html_data = get_data_by_field(null, $html_field);
+    }
+$results = array_column($html_data, 'value', 'resource');
+
+foreach($results as $resource_ref => $html_value)
+    {
     $plaintxt_val = strip_tags($html_value);
-    // printf('plain text = %s %s', $plaintxt_val, PHP_EOL);
 
     if($html_value === $plaintxt_val)
         {
@@ -112,3 +130,5 @@ foreach($html_data as $resource_ref => $html_value)
         );
         }
     }
+
+fwrite(STDOUT, 'Successfully processed all records.' . PHP_EOL);
