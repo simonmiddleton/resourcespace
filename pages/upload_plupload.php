@@ -1210,7 +1210,7 @@ var pluploadconfig = {
                                         }
                                     else
                                         { <?php
-                                        if(hook('replace_upload_log_text'))
+                                        if(!hook('replace_upload_log_text'))
                                             { ?>
                                         jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                                         if(resource_keys===processed_resource_keys){resource_keys=[];}
