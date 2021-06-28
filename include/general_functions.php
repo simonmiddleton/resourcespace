@@ -2124,6 +2124,8 @@ function run_external($command)
     # Pipes for stdin, stdout and stderr
     $descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("pipe", "w"));
 
+    debug("CLI command: $command");
+
     # Execute the command
     $process = proc_open($command, $descriptorspec, $pipes);
 
@@ -2180,10 +2182,7 @@ function run_external($command)
     fclose($pipes[1]);
     fclose($pipes[2]);
     
-    if ($debug_log)
-        {
-        debug("CLI output: ". implode("\n", $output));
-        }
+    debug("CLI output: ". implode("\n", $output));
  
     proc_close($process);
  
