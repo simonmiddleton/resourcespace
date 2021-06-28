@@ -85,6 +85,13 @@ if($html_rtf === false)
     exit(1);
     }
 
+$plain_rtf = get_resource_type_field($plaintext_field);
+if($plain_rtf === false || !in_array($plain_rtf["type"],$TEXT_FIELD_TYPES))
+    {
+    fwrite(STDERR, 'ERROR: Invalid metadata field for plaintext-field option!' . PHP_EOL);
+    exit(1);
+    }
+
 if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
     {
     $html_rtf_ref = escape_check($html_field);
