@@ -369,6 +369,19 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     $cmd=($config_windows ? escapeshellarg($cmd_uno_python_path) . ' ' : '') . escapeshellarg($unocommand) . " --format=pdf " . escapeshellarg($file);
     $output=run_command($cmd);
 
+    # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
+    global $extracted_text_field;
+    $extract_pdf_text = false;
+    if (isset($extracted_text_field))
+        {
+        $extract_pdf_text = true;
+        $current_extracted_text = sql_value("select value from resource_data where resource='$ref' and resource_type_field='$extracted_text_field'","");
+        if (!empty($current_extracted_text))
+            {
+            $extract_pdf_text = false;    
+            }
+        }
+
     $path_parts=pathinfo($file);
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
@@ -388,21 +401,23 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
         // includes preview_preprocessing.php.
-        global $offline_job_queue, $offline_job_in_progress;
-
-        if($offline_job_queue && !$offline_job_in_progress)
+        if ($extract_pdf_text)
             {
-            $extract_text_job_data = array(
-                'ref'       => $ref,
-                'extension' => $extension,
-                'path'      => $file,
-            );
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $ref,
+                    'extension' => $extension,
+                    'path'      => $file,
+                );
 
-            job_queue_add('extract_text', $extract_text_job_data);
-            }
-        else
-            {
-            extract_text($ref, $extension, $pdffile);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($ref, $extension, $pdffile);
+                }
             }
         }
     else if (file_exists($pdffile))
@@ -422,21 +437,23 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
         // includes preview_preprocessing.php.
-        global $offline_job_queue, $offline_job_in_progress;
-
-        if($offline_job_queue && !$offline_job_in_progress)
+        if ($extract_pdf_text)
             {
-            $extract_text_job_data = array(
-                'ref'       => $ref,
-                'extension' => $extension,
-                'path'      => $alt_path,
-            );
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $ref,
+                    'extension' => $extension,
+                    'path'      => $alt_path,
+                );
 
-            job_queue_add('extract_text', $extract_text_job_data);
-            }
-        else
-            {
-            extract_text($ref, $extension, $alt_path);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($ref, $extension, $alt_path);
+                }
             }
         }
     }
