@@ -6,8 +6,6 @@ define('SYSVAR_UPGRADE_PROGRESS_SCRIPT','upgrade_progress_script');
 define('SYSVAR_CURRENT_UPGRADE_LEVEL','upgrade_system_level');
 
 $cli=PHP_SAPI=='cli';
-$ajax = (!$cli ? getval("ajax", false) : false);
-$ajax = filter_var($ajax, FILTER_VALIDATE_BOOLEAN);
 
 // if running from the command line or called somewhere within RS check to see if we need to include db.php
 if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_files()))
@@ -15,6 +13,8 @@ if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_fil
     include_once __DIR__ . '/../include/db.php';
     }
 
+$ajax = (!$cli ? getval("ajax", false) : false);
+$ajax = filter_var($ajax, FILTER_VALIDATE_BOOLEAN);
 // Don't trigger upgrade if request is done via ajax or requests are done via no upgrade routes. Checking if upgrade is 
 // in progress can be done through ajax
 $no_upgrade_routes = array("setup", "healthcheck");

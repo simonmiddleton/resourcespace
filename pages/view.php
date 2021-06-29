@@ -1750,16 +1750,22 @@ hook ("resourceactions") ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
-		} 
+		}
+
+    $overrideparams= array(
+        'search_offset'     => $offset,
+        'offset'            => 0
+    );
+
 	if (checkperm('v')) 
 		{ ?>
-		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
+		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 
 		{ ?>
-		<li><a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
+		<li><a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}

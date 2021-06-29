@@ -57,6 +57,8 @@ input {
     min-width: initial;
     padding: 0 5px;
     margin-bottom: 0;
+    color: #fff;
+    opacity: 0.7;
   }
   .HorizontalNav ul {
     padding: 0 0;

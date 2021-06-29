@@ -55,6 +55,7 @@ input[type="text"], input[type=submit], input[type=button], input[type="password
     padding: 4px 6px 4px 6px;
     vertical-align: middle;
     min-height: 28px;
+    margin: 3px 0;
 }
 
 input[type="text"], input[type="password"], input[type="number"], textarea, select, .sp-replacer {
@@ -490,13 +491,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
-.Question .Lineup {margin: 3px 0;}
-.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;margin: 3px 0;}
-.Question select {margin: 3px 0;}
-.Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0;}
+.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;}
+.Question .medwidth,.medwidth{width: 285px;font-size: 1em;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0;}
-.Question .vshrtwidth{width: 93px;font-size: 0.9em;margin: 3px 0;}
-.Question .medcomplementwidth{width: 105px;font-size: 1em;margin: 3px 0 0 2px;}
+.Question .vshrtwidth{width: 93px;font-size: 0.9em;}
+.Question .medcomplementwidth{width: 105px;font-size: 1em;}
 .Question .Inline {float: left;margin: 0 10px 0 0;vertical-align: middle;}
 .Question .Inline label { float: none; font-weight: normal; margin-top: 0; width: auto; }
 .Question .tickset {float: left;}
