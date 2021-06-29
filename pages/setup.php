@@ -444,6 +444,12 @@ h2#dbaseconfig{  min-height: 32px;}
 		    }
 		if (isset($search_paths))
 		    {
+		    $imagemagick_path = "";
+		    $ghostscript_path = "";
+		    $ffmpeg_path = "";
+		    $exiftool_path = "";
+		    $antiword_path = "";
+		    $pdftotext_path = "";
 			foreach($search_paths as $path)
 			    {
 				if (file_exists($path.'/convert'))
