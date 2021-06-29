@@ -6,7 +6,7 @@ include_once "../../../include/image_processing.php";
 include_once "../../../include/slideshow_functions.php";
 include_once "../include/transform_functions.php";
 
-global $cropper_allowed_extensions;
+global $cropper_allowed_extensions, $custom_cropper_preset_sizes;
 
 $ref        = getval("ref",0,true);
 $search     = getval("search","");
@@ -1242,6 +1242,11 @@ renderBreadcrumbs($links_trail);
                 <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
                     <option value=""><?php echo $lang["select"]?></option>
                     <?php
+                    if(isset($custom_cropper_preset_sizes))
+                        {
+                        $cropper_preset_sizes = array_merge($cropper_preset_sizes,$custom_cropper_preset_sizes);
+                        }
+
                     foreach($cropper_preset_sizes as $category=>$categorysizes)
                             {
                             echo "<optgroup label='" . htmlspecialchars($category) . "'>\n";
