@@ -807,6 +807,7 @@ function clear_query_cache($cache)
  */
 function check_db_structs($verbose=false)
 	{
+    global $lang;
     // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
     if(is_process_lock('database_update_in_progress'))
         {
