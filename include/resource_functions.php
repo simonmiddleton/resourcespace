@@ -2207,6 +2207,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * @param integer $field    Field ID
 * @param string  $value    The new value
 * @param array   &$errors  Any errors that may occur during update
+* @param boolean $log      Log this change in the resource log?
 * 
 * @return boolean
 */
@@ -7577,13 +7578,10 @@ function get_data_by_field($resource, $field)
     $return              = '';
     $resource_type_field = escape_check($field);
 
-    $sql_select   = 'SELECT *';
-    $sql_from     = 'FROM resource_data AS rd';
-    $sql_join     = '';
-    // $sql_join     = 'LEFT JOIN resource AS r ON rd.resource = r.ref';
-    $sql_where    = 'WHERE';
-    $sql_order_by = '';
-    $sql_limit    = '';
+    $sql_select = 'SELECT resource, resource_type_field, `value`';
+    $sql_from = 'FROM resource_data AS rd';
+    $sql_where = 'WHERE';
+    $sql_where_resource = '';
 
         // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
@@ -7593,26 +7591,30 @@ function get_data_by_field($resource, $field)
 
     if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
         {
+        // When we're looking for the metadata field value of a particular resource, we can skip getting back already known data (e.g resource and rtf)
+        if(!is_null($resource))
+            {
+            $sql_select = 'SELECT rd.`value`';
+            $sql_where_resource = sprintf(' AND rd.resource = \'%s\'', escape_check($resource));
+            }
+
         // Let's first check how we deal with the field value we've got
         // Integer values => search for a specific ID
         // String values => search by using a shortname
         if(is_numeric($field))
             {
-            $sql_select = 'SELECT rd.`value`';
-            $sql_where .= " rd.resource = '{$resource}'";
-            $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
+            $sql_where .= " rd.resource_type_field = '{$resource_type_field}'";
             }
         else
             {
-            $sql_select = 'SELECT rd.`value`';
-            $sql_where .= " rd.resource = '{$resource}'";
-            $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
+            $sql_where .= " rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
             }
-        
-        $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
+        $sql_where .= $sql_where_resource;
+
+        $results = sql_query("{$sql_select} {$sql_from} {$sql_where}");
         if(0 !== count($results))
             {
-            $return = !is_null($resource) ? $results[0]['value'] : $return;
+            $return = !is_null($resource) ? $results[0]['value'] : $results;
             }
         // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
         else
