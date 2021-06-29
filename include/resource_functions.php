@@ -3117,6 +3117,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         {
         // We need to determine the tree strings for all nodes belonging to the tree field
         $tree_field_nodes = get_nodes($tree_field["ref"],'', true); # where '' is parent and true is recursive
+        // Each tree field option is the canonical path to a node
         $tree_field_options = get_tree_strings($tree_field_nodes, true); # where true is full path
 
         $addfield = $tree_field;
@@ -3133,6 +3134,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                     {
                     $treetext_arr[]=$tree_field_options[$selected_resource_treenode["ref"]];
                     }
+                sort($treetext_arr);
                 // Quoting each element is required for csv export
                 $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
                 }
