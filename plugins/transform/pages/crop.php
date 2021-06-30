@@ -329,7 +329,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             redirect($view_url);
             exit();
             }
-        elseif ($saveaction == "original" && $cropper_transform_original && $editaccess && !$cropperestricted)
+        elseif ($saveaction == "original" && $cropper_transform_original && $edit_access && !$cropperestricted)
             {
             // Replace the original file
             $keep_original = getval("keep_original", "") != "";
