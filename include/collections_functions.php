@@ -4870,8 +4870,13 @@ function featured_collection_check_access_control(int $c_ref)
 */
 function order_featured_collections(array $a, array $b)
     {
+    global $descthemesorder;
     if($a["has_resources"] == $b["has_resources"])
         {
+        if ($descthemesorder)
+            {
+            return strnatcasecmp($b["name"],$a["name"]);
+            }
         return strnatcasecmp($a["name"],$b["name"]);
         }
 
