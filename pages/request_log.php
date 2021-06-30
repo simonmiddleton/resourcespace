@@ -6,7 +6,7 @@ include "../include/authenticate.php";if (!checkperm("R")) {exit ("Permission de
 $ref=getvalescaped("ref","",true);
 $k=getvalescaped("k","");
 
-# fetch the current search (for finding simlar matches)
+# fetch the current search
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
 $offset=getvalescaped("offset",0,true);
@@ -15,10 +15,17 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive",0,true);
 $starsearch=getvalescaped("starsearch","");
 $default_sort_direction="DESC";
+$per_page=getvalescaped("per_page",0,true);
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $curpos=getvalescaped("curpos",'');
 $modal=(getval("modal", "") == "true");
+
+$urlparams = get_search_params();
+$urlparams["ref"] = $ref;
+$urlparams["modal"] = $modal ? "true" : "";
+$urlparams["curpos"] = $curpos;
+
 if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
 else {$previous_page_modal = false;}
 
@@ -29,51 +36,49 @@ if ($go!="")
 	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
 	
 	# Re-run the search and locate the next and previous records.
-	$result=do_search($search,$restypes,$order_by,$archive,240+$offset+1,$sort,false,$starsearch);
+	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch);
 	if (is_array($result))
 		{
-		# Locate this resource
-		$pos=-1;
-		for ($n=0;$n<count($result);$n++)
-			{
-			if ($result[$n]["ref"]==$ref) {$pos=$n;}
-			}
-		if ($pos!=-1)
-			{
-			if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];}
-			if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+72)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
-			}
-		else
-			{
-			?>
-			<script type="text/javascript">
-			alert('<?php echo $lang["resourcenotinresults"] ?>');
-			</script>
-			<?php
-			}
+        # Locate this resource
+        $pos=-1;
+        for ($n=0;$n<count($result);$n++)
+            {
+            if ($result[$n]["ref"]==$ref) {$pos=$n;}
+            }
+        if ($pos!=-1)
+            {
+            if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
+            if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+$per_page)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
+            }
+        elseif($curpos!="")
+            {
+            if (($go=="previous") && ($curpos>0) && isset($result[$curpos-1]["ref"])) {$ref=$result[$curpos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
+            if (($go=="next") && ($curpos<($n)) && isset($result[$curpos]["ref"])) {$ref=$result[$curpos]["ref"];if (($curpos)>=($offset+$per_page)) {$offset=$curpos+1;}}  # move to next page if we've advanced far enough
+            }
+        else
+            {
+            ?>
+            <script type="text/javascript">
+            alert('<?php echo $lang["resourcenotinresults"] ?>');
+            </script>
+            <?php
+            }
 		}
-	# Check access permissions for this new resource, if an external user.
+    # Check access permissions for this new resource, if an external user.
 	$newkey=hook("nextpreviewregeneratekey");
 	if (is_string($newkey)) {$k=$newkey;}
 	if ($k!="" && !check_access_key($ref,$k)) {$ref=$origref;} # cancel the move.
-	}
 
-$urlparams= array(
-    'resource' => $ref,
-    'ref' => $ref,
-    'search' => $search,
-    'order_by' => $order_by,
-    'offset' => $offset,
-    'restypes' => $restypes,
-    'archive' => $archive,
-    'default_sort_direction' => $default_sort_direction,
-    'sort' => $sort,
-    'curpos' => $curpos,
-    "modal" => ($modal ? "true" : "")
-);
+    $urlparams["curpos"] = $curpos;
+    $urlparams["ref"] = $ref;
+    $urlparams["offset"] = $offset;
+	}
+$extraparams = hook("nextpreviousextraurl");
+
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
+
 <?php
 if($previous_page_modal)
     {?>
@@ -82,26 +87,25 @@ if($previous_page_modal)
     }
 else
     {?>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a onClick="ModalClose();return false;" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
     <?php
     }
 ?>
 
 <div class="backtoresults">
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/request_log.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k) ?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
+<a onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"previous")) . htmlspecialchars($extraparams) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
 <?php 
 hook("viewallresults");
-if ($k=="") { ?>
+if ($k=="" && !$modal) { ?>
 |
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>"><?php echo $lang["viewallresults"]?></a>
+<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/search.php",$urlparams); ?>"><?php echo $lang["viewallresults"]?></a>
 <?php } ?>
 |
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/request_log.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>"><?php echo $lang["nextresult"]?>&nbsp;&gt;</a>
+<a onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"next")) . htmlspecialchars($extraparams) ?>"><?php echo $lang["nextresult"]?>&nbsp;&gt;</a>
 </div>
 
 <h1><?php echo $lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref;render_help_link("resourceadmin/user-resource-requests");?></h1>
 
-</div>
 
 
 <div class="Listview">
@@ -148,6 +152,7 @@ for ($n=0;$n<count($log);$n++)
 	}
 ?>
 </table>
+</div>
 </div>
 <?php
 include "../include/footer.php";
