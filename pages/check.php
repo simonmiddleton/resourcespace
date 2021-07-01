@@ -254,7 +254,6 @@ $extensions_required["curl"] = "curl_init";
 $extensions_required["gd"] = "imagecrop";
 $extensions_required["xml"] = "xml_parser_create";
 $extensions_required["mbstring"] = "mb_strtoupper";
-$extensions_required["ldap"] = "ldap_bind";
 $extensions_required["intl"] = "locale_get_default";
 $extensions_required["json"] = "json_decode";
 $extensions_required["zip"] = "zip_open";
