@@ -53,7 +53,16 @@ $check=file_get_contents($file);
 
 if(file_exists($file))
     {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
     unlink($file);
+        } 
+    catch (exception $e)
+        {
+        debug("Unable to delete file: " . $file);
+        }
+    $GLOBALS["use_error_exception"] = false;
     }
 
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
