@@ -163,7 +163,7 @@ if($video_preview_hls_support!=0)
           if ($hlswidth % 2){$hlswidth++;}
           if ($hlsheight % 2) {$hlsheight++;}
           }
-          $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " .  $hlswidth . "x" . $hlsheight . " " . "-start_number 0 -hls_time 10 -hls_list_size 0" . " " . escapeshellarg($hlsfile);
+          $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " .  $hlswidth . "x" . $hlsheight . " " . "-start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " " . escapeshellarg($hlsfile);
         if (isset($ffmpeg_command_prefix))
         {$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
 
