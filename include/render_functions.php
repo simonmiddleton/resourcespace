@@ -55,6 +55,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             $s=explode("=",$condition);
             # Process each field to see if it is being referenced in the current test
             global $fields;
+            if (!is_array($fields))
+                {
+                return false;
+                }
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
                 {
                 # If the field being processed is referenced in the current test 
