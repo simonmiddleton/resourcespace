@@ -10,13 +10,14 @@
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
 * advanced search page. Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 *
-* $field    an associative array of field data, i.e. a row from the resource_type_field table.
+* $field    the field being rendered as an associative array of field data, i.e. one row from the resource_type_field table.
+* $fields   the array of fields data, i.e. multiple rows from the resource_type_field table.
 * $name     the input name to use in the form (post name)
 * $value    the default value to set for this field, if any
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
+function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
     {
     node_field_options_override($field);
 	
@@ -53,8 +54,8 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             # Assume that the current test does not need to be checked
             $displayconditioncheck=false;
             $s=explode("=",$condition);
+            
             # Process each field to see if it is being referenced in the current test
-            global $fields;
             if (!is_array($fields))
                 {
                 return false;
@@ -818,7 +819,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
                         
                         return false;"><?php echo $lang['showhidetree']; ?></a>
-                        <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
+                        <div id="cattree_<?php echo $field['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
 
