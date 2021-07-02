@@ -122,7 +122,7 @@ function HookTransformAllAfteruilayout()
             return false;
             }
 
-        var crop_url = url + '&iaccept=on';
+        var crop_url = url + '?iaccept=on';
 
         var form = jQuery('<form id="TransformDownloadFile"></form>')
             .attr("action", crop_url)
