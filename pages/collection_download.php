@@ -575,13 +575,13 @@ function ajax_download(download_offline, tar)
 
     if(download_offline && !tar)
         {
-        styledalert('<?php echo $lang['collection_download']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
+        styledalert("<?php echo $lang['collection_download']; ?>", "<?php echo $lang['jq_notify_user_preparing_archive']; ?>");
         document.getElementById('downloadbuttondiv').style.display='none';
         return false;
         }
 
 	document.getElementById('downloadbuttondiv').style.display='none';	
-	document.getElementById('progress').innerHTML='<br /><br /><?php echo $lang["collectiondownloadinprogress"];?>';
+	document.getElementById('progress').innerHTML="<br /><br /><?php echo $lang['collectiondownloadinprogress'];?>";
 	document.getElementById('progress3').style.display='none';
 	document.getElementById('progressdiv').style.display='block';
 
