@@ -19,6 +19,13 @@ if (!checkperm("a") && $callback!="activitylog")		// currently only activity log
 	exit ("Permission denied.");
 	}
 
+$error = '';
+include_once '../../include/stream_filters.php';
+if(!stream_filter_register('resourcespace.tail_search', '\ResourceSpace\Stream\Filter\FindInFileTail'))
+    {
+    $error = str_replace('%FILTER_NAME', 'resourcespace.tail_search', $lang['error-unable_to_register_filter']);
+    }
+
 if (!checkperm_user_edit($userref))	// if not an admin then force act as user as current user
 	{
 	$actasuser=$userref;
@@ -31,6 +38,7 @@ if ($callback == "")
 	if ($same_page_callback)
 		{
 		include "../../include/header.php";
+        render_top_page_error_style($error);
 		}
 	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
@@ -111,7 +119,19 @@ if(strlen($sortby) > 1)
 		}
 	}
 
-$filter = getval("filter","");
+$filters = [];
+$filter = trim(getval('filter', ''));
+if($filter !== '')
+    {
+    $filters = [
+        [
+            'name' => 'resourcespace.tail_search',
+            'params' => [
+                'search_terms' => [$filter]
+            ]
+        ],
+    ];
+    }
 
 $results = array();
 $actions = array();
@@ -455,11 +475,22 @@ switch ($callback)
                 }
             else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
                 {
-                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, 1000));
+                // Prepend filter specific to tracking vars so we can expect the right log format being in place
+                array_unshift(
+                    $filters,
+                    [
+                        'name' => 'resourcespace.tail_search',
+                        'params' => [
+                            'search_terms' => ['tracking var', $filter]
+                        ]
+                    ]
+                );
+
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, $default_perpage_list, 4096, $filters));
                 foreach($lines as $line)
                     {
                     $line = trim($line);
-                    if($line === '' || strpos($line, 'tracking var:') === false)
+                    if($line === '' || strpos($line, 'tracking var') === false)
                         {
                         continue;
                         }

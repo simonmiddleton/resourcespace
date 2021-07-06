@@ -2837,33 +2837,69 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
  * 
  * As of 2020-06-29 the website is showing that all contents/code are CC BY 3.0
  * https://creativecommons.org/licenses/by/3.0/
+ * 
+ * Example:
+ *   tail($file_path, 10, 4096, [
+ *       'name' => 'resourcespace.tail_search',
+ *       'params' => ['search_terms' => ['term1', 'term2']]
+ *   ]);
  *
  * @param  string $filename
  * @param  integer $lines
  * @param  integer $buffer
+ * @param  array   $filters  List of stream filters. Each value is an array containing the "name" and "params" keys. These
+ *                           represent the filter name and its params.
  * @return string
  */
-function tail($filename, $lines = 10, $buffer = 4096)
+function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
     {
-    $f = fopen($filename, "rb");        // Open the file
-    fseek($f, -1, SEEK_END);        // Jump to last character
+    $f = fopen($filename, "rb");
 
-    // Read it and adjust line number if necessary
+    // Jump to the last character, read it and adjust line number if necessary
     // (Otherwise the result would be wrong if file doesn't end with a blank line)
-    if(fread($f, 1) != "\n") $lines -= 1;
+    fseek($f, -1, SEEK_END);
+    if(fread($f, 1) != "\n")
+        {
+        $lines -= 1;
+        }
+
+    // Create a temp output file resource so we can attach stream filters for whatever reason the calling code needs to
+    $output_fp = fopen('php://temp','r+');
+    foreach($filters as $filter)
+        {
+        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '' && is_array($filter['params']))
+            {
+            stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
+            }
+        }
 
     // Start reading
     $output = '';
     $chunk = '';
+    $lines_pre_filtering = $lines;
 
     // While we would like more
     while(ftell($f) > 0 && $lines >= 0)
         {
-        $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
-        fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
-        $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
-        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
-        $lines -= substr_count($chunk, "\n");       // Decrease our line counter
+        // Figure out how far back we should jump
+        $seek = min(ftell($f), $buffer);
+
+        // Do the jump (backwards, relative to where we are)
+        fseek($f, -$seek, SEEK_CUR);
+
+        // Read a chunk and prepend it to our output
+        $chunk = fread($f, $seek);
+        ftruncate($output_fp, 0);
+        rewind($output_fp);
+        fwrite($output_fp, $chunk);
+        fwrite($output_fp, $output);
+        rewind($output_fp);
+        $output = stream_get_contents($output_fp);
+
+        // Jump back to where we started reading
+        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
+
+        $lines = $lines_pre_filtering - substr_count($output, "\n");
         }
 
     // While we have too many lines
@@ -2874,8 +2910,8 @@ function tail($filename, $lines = 10, $buffer = 4096)
         $output = substr($output, strpos($output, "\n") + 1);
         }
 
-    // Close file and return
     fclose($f);
+    fclose($output_fp);
     return $output;
     }   
     

@@ -1979,6 +1979,7 @@ $lang["error-failed-to-move"] = "Failed to move";
 $lang["error-type-mismatch"] = "Argument '%arg' must be of type %expected-type, %type given";
 $lang["error-request-missing-key"] = "Request missing the '%key' parameter."; # %key will be replaced with the missing POST param name required
 $lang["error-collection-unreadable"] = "Your user doesn't have read access to collection #%ref."; # %ref will be replaced with the actual collection ref
+$lang['error-unable_to_register_filter'] = "Unable to register stream filter '%FILTER_NAME'! Filtering may not work properly.";
 
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
