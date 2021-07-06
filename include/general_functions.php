@@ -2837,13 +2837,18 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
  * 
  * As of 2020-06-29 the website is showing that all contents/code are CC BY 3.0
  * https://creativecommons.org/licenses/by/3.0/
+ * 
+ * Example:
+ *   tail($file_path, 10, 4096, [
+ *       'name' => 'resourcespace.tail_search',
+ *       'params' => ['search_terms' => ['term1', 'term2']]
+ *   ]);
  *
  * @param  string $filename
  * @param  integer $lines
  * @param  integer $buffer
  * @param  array   $filters  List of stream filters. Each value is an array containing the "name" and "params" keys. These
  *                           represent the filter name and its params.
- *                           Example: tail($track_vars_dbg_log_path, 10, 4096, ['name' => 'find_in_log_file_tail', 'params' => 'tracking var:']);
  * @return string
  */
 function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
