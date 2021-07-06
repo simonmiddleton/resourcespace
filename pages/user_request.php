@@ -72,8 +72,7 @@ if (getval("save","")!="")
         $error=$lang["expiredantispam"];    
         }
 	# Check the anti-spam code is correct
-	//elseif (!hook('replaceantispam_check') && getval("antispamcode","") != hash("SHA256",strtoupper(getval("antispam","")) . $scramble_key . getval("antispamtime",0)))
-	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode,$usercode,$spamtime))
+	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode, $usercode, $spamtime))
 		{
 		$error=$lang["requiredantispam"];
 		}
@@ -305,69 +304,15 @@ $groups=get_registration_selectable_usergroups();
 <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
 <div class="clearerleft"> </div>
 </div>	
-<?php } /* END hook replaceuserrequestcomment */ ?>
+<?php } /* END hook replaceuserrequestcomment */
 
-<?php hook("userrequestadditional");?>
+hook("userrequestadditional");
 
-<?php
 if(!hook("replaceantispam"))
 	{
-    $rndword = array_merge(range('0', '9'), range('A', 'Z'));
-    shuffle($rndword);
-    $timestamp=time();
-    $rndwordarray=  array_slice ($rndword , 0,6);
-    $rndcode= hash("SHA256",implode("",$rndwordarray) .  $scramble_key . $timestamp);
-    $height = 50; //CAPTCHA image height
-    $width = 160; //CAPTCHA image width
-    $font_size = 25; //CAPTCHA Font size
-    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
-    
-    $capimage = imagecreate($width, $height);
-    $graybg = imagecolorallocate($capimage, 245, 245, 245);
-    $textcolor = imagecolorallocate($capimage, 34, 34, 34);
-    $green = ImageColorAllocate($capimage, 121, 188, 65); 
-    ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
-    imageline($capimage, 0, $height/2, $width, $height/2, $green); 
-    imageline($capimage, $width*4/5, 2, $width*4/5, $height, $green);
-    imageline($capimage, $width*3/5, 2, $width*3/5, $height, $green);
-    imageline($capimage, $width*2/5, 2, $width*2/5, $height, $green);
-    imageline($capimage, $width/5, 2, $width/5, $height, $green);
-    
-    $n=0;
-    foreach($rndwordarray as $rndletter)
-        {
-        imagefttext($capimage, $font_size,rand(-20, 20), 10 + (24*$n), rand(25, 45), $textcolor, $font, $rndletter);
-        $n++;
-        }
-        
-    ob_start();
-    imagegif($capimage);
-    $imagedata = ob_get_contents();
-    ob_end_clean();
-
-   	?>
-	<input type="hidden" name="antispamcode" value="<?php echo $rndcode ?>">
-	<input type="hidden" name="antispamtime" value="<?php echo $timestamp ?>">
-	<div class="Question">
-        <label for="antispam"><?php echo $lang["enterantispamcode"] ?></label> 
-        <div class="clearerleft"> </div>
-        <div style="
-        margin: 0 0 .1em;
-        background: url(data:image/gif;base64,<?php echo base64_encode($imagedata) ?>) top left no-repeat;
-        height: 50px;
-        width: 160px;
-        border-radius: 6px;
-        display: inline-block;
-        " id="AntiSpamImage">    
-        </div>
-        <input type=text name="antispam" class="stdwidth" value="">
-        
-	<div class="clearerleft"> </div>    	
-	</div>
-	<?php
+    render_antispam_question();
 	}
 ?>
-
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
@@ -385,4 +330,3 @@ if(!hook("replace_user_request_required_key"))
 <div> <!-- end of login_box -->
 <?php
 include "../include/footer.php";
-

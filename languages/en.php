@@ -459,6 +459,8 @@ $lang["featured_collection_root_category"] = "(top level)";
 $lang["delete_multiple_collections"] = "Are you sure you wish to delete the selected collections?";
 $lang["page_collections_message"] = "Continuing will deselect the collections marked for deletion on this page";
 $lang["delete_all_selected"] = "Delete all selected";
+$lang["range_no_start_header"] = "Range Error";
+$lang["range_no_start"] = "Cannot end range without a start. Please release the shift key.";
 
 # Lightbox
 $lang["lightbox-image"] = "Image";
@@ -1961,6 +1963,8 @@ $lang["emptycollectionareyousure"]="Are you sure you want to remove all resource
 
 $lang["error-cannoteditemptycollection"]="You cannot edit an empty collection.";
 $lang["error-permissiondenied"]="Permission denied.";
+$lang["error-cant-request-all-are-open"]="You cannot request all resources because you have access to download them all.";
+$lang["error-editpermissiondenied"]="You do not have edit permissions for some or all of the resources.";
 $lang["error-permissions-login"]="Please log in to access this page";
 $lang["error-oldphp"] = "Requires PHP version %version or higher."; # %version will be replaced with, e.g., "5.2"
 $lang["error-collectionnotfound"]="Collection not found.";

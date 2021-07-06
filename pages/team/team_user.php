@@ -252,7 +252,7 @@ include "../../include/header.php";
         <?php
         if($userref != $users[$n]["ref"])
             {
-            // Add mesage link
+            // Add message link
             echo '<a href="' . $baseurl_short . 'pages/user/user_message.php?msgto=' . $users[$n]["ref"] . '"  onClick="return CentralSpaceLoad(this,true);">' .  LINK_CARET . $lang["message"] . '</a>';
             }       
 		hook("usertool")?>

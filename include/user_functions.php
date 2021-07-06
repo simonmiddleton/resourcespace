@@ -2300,22 +2300,37 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
  */ 
 function verify_antispam($spamcode="",$usercode="",$spamtime=0)
     {
-    global $scramble_key,$password_brute_force_delay;
-    if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
-    if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
+    global $scramble_key, $password_brute_force_delay;
+
+    $data_valid = ($usercode !== '' || $spamcode !== '' || (int) $spamtime > 0);
+    $honeypot_intact = (isset($_REQUEST['antispam_user_code']) && $_REQUEST['antispam_user_code'] === '');
+    $antispam_code_valid = ($spamcode === hash("SHA256", strtoupper($usercode) . $scramble_key . $spamtime));
+    $previous_hash = in_array(
+        md5($usercode . $spamtime),
+        sql_array("SELECT unique_hash AS `value` FROM user WHERE unique_hash IS NOT null", '')
+    );
+
+    if($data_valid && $honeypot_intact && $antispam_code_valid && !$previous_hash)
         {
-        debug("antispam failed: invalid code entered. IP: " . get_ip());
-        sleep($password_brute_force_delay);
-        return false;
+        return true;
         }
-    $prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
-    if(in_array(md5($usercode . $spamtime),$prevhashes))
+
+    if(!$antispam_code_valid)
         {
-        debug("antispam failed: code has previously been used  IP: " . get_ip());
-        sleep($password_brute_force_delay);
-        return false;
+        $dbgr = 'invalid code entered';
         }
-    return true;
+    else if($previous_hash)
+        {
+        $dbgr = 'code has previously been used';
+        }
+    else
+        {
+        $dbgr = 'unknown';
+        }
+    debug(sprintf('antispam failed: Reason: %s. IP: %s', $dbgr, get_ip()));
+
+    sleep($password_brute_force_delay);
+    return false;
     }
 
 /**

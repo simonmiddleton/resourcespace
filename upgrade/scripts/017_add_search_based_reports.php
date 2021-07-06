@@ -22,7 +22,7 @@ while (($row = fgetcsv($f,5000)) !== false)
         }
     if (in_array($ref,array(22,23,24)))
         {
-        $sql="insert into report values (null," . join (",",$row) . ")";
+        $sql="insert into report (ref, name, query, support_non_correlated_sql) values (null," . join (",",$row) . ")";
         sql_query($sql,false,-1,false);
         }
     }

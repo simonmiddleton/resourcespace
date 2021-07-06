@@ -515,7 +515,7 @@ elseif($restypes=='')
                 $has_value[]=$fields[$n]['ref'];
                 }
 
-            render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes, false, $simpleSearchFieldsAreHidden);
+            render_search_field($fields[$n], $fields, $value, false, 'SearchWidth', true, array(), $searched_nodes, false, $simpleSearchFieldsAreHidden);
             }
         }
     ?>

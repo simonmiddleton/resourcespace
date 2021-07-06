@@ -10,13 +10,14 @@
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
 * advanced search page. Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 *
-* $field    an associative array of field data, i.e. a row from the resource_type_field table.
+* $field    the field being rendered as an associative array of field data, i.e. one row from the resource_type_field table.
+* $fields   the array of fields data, i.e. multiple rows from the resource_type_field table.
 * $name     the input name to use in the form (post name)
 * $value    the default value to set for this field, if any
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
+function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
     {
     node_field_options_override($field);
 	
@@ -53,8 +54,12 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
             # Assume that the current test does not need to be checked
             $displayconditioncheck=false;
             $s=explode("=",$condition);
+            
             # Process each field to see if it is being referenced in the current test
-            global $fields;
+            if (!is_array($fields))
+                {
+                return false;
+                }
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
                 {
                 # If the field being processed is referenced in the current test 
@@ -659,10 +664,10 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                             ?>
                             <td valign=middle>
                                 <input id="nodes_searched_<?php echo $node['ref']; ?>" class="nodes_input_checkbox" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <label class="customFieldLabel" for="nodes_searched_<?php echo $node['ref']; ?>">
+                                    <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
+                                </label>
                             </td>
-                            <label class="customFieldLabel" for="nodes_searched_<?php echo $field['ref']; ?>">
-                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>
-                            </label>
                             <?php
                             }
                         }
@@ -814,7 +819,7 @@ function render_search_field($field,$value="",$autoupdate=false,$class="stdwidth
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
                         
                         return false;"><?php echo $lang['showhidetree']; ?></a>
-                        <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
+                        <div id="cattree_<?php echo $field['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
 
@@ -1975,7 +1980,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $labelname .= '-d';
         }
         ?>
-     <label for="<?php echo htmlspecialchars($labelname)?>" >
+     <label for="<?php echo htmlspecialchars($labelname)?>" <?php if($field['type']==FIELD_TYPE_DATE_RANGE) {echo " class='daterangelabel'";} ?> >
      <?php 
      if (!$multiple) 
         {
@@ -2366,7 +2371,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     <div class="clearerleft"> </div>
     
     <!--- to date -->
-    <label></label>
+    <label  class='daterangelabel'></label>
     
     
     
@@ -5011,10 +5016,8 @@ function render_table($tabledata)
             "url" => $tabledata["defaulturl"],
             "url_params" => $tabledata["params"],
             );
-        ?>
-        <div class="TopInpageNav">
-        <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
-        <?php
+        echo '<div class="TopInpageNav">';
+        echo '<div class="InpageNavLeftBlock">' . $lang["resultsdisplay"] . ': ';
         // Show per page options
         $list_display_array["all"] = 99999;
         $pplinks = array();
@@ -5023,7 +5026,7 @@ function render_table($tabledata)
             $lpp_name = isset($lang[$ldopt]) ? $lang[$ldopt] : $ldnum;
             if ($pageroptions["per_page"] == $ldnum)
                 {
-                $pplinks[] =  "<span class='Selected'>" . $lpp_name . "</span>";
+                $pplinks[] =  "<span class='Selected'>" . htmlspecialchars($lpp_name) . "</span>";
                 }
             else
                 {
@@ -5037,10 +5040,9 @@ function render_table($tabledata)
         echo "<div class='TablePagerHolder'>";
         pager(true, true,$pageroptions);
         echo "</div>";
-        }?>
-    </div><?php
-
-    echo "<div class='Listview " . (isset($tabledata["class"]) ? $tabledata["class"] : "") . "'>\n";
+        }
+    echo '</div>';
+    echo "<div class='Listview " . (isset($tabledata["class"]) ? htmlspecialchars($tabledata["class"]) : "") . "'>\n";
     echo "<table border='0' cellspacing='0' cellpadding='0' class='ListviewStyle'>\n";
     echo "<tbody><tr class='ListviewTitleStyle'>\n";
     if($alertcolumn)
@@ -5079,7 +5081,7 @@ function render_table($tabledata)
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            $rowid = isset($rowdata["rowid"]) ? " id='" . $rowdata["rowid"]  . "'" : "";
+            $rowid = isset($rowdata["rowid"]) ? " id='" . htmlspecialchars($rowdata["rowid"])  . "'" : "";
             if(isset($rowdata["rowlink"]))
                 {
                 $rowid .=  " class='row_clickable' data-link='" . htmlspecialchars($rowdata["rowlink"]) . "'";
@@ -5088,7 +5090,7 @@ function render_table($tabledata)
 
             if(isset($rowdata['alerticon']))
                 {
-                echo "<td><i class='" . $rowdata['alerticon'] . "'></i></td>";
+                echo "<td><i class='" . htmlspecialchars($rowdata['alerticon']) . "'></i></td>";
                 }
             elseif($alertcolumn)
                 {
@@ -5108,7 +5110,7 @@ function render_table($tabledata)
                             echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
                             if(isset($toolitem["onclick"]))
                                 {
-                                echo $toolitem["onclick"];
+                                echo htmlspecialchars($toolitem["onclick"]);
                                 }
                             else
                                 {
@@ -5132,8 +5134,7 @@ function render_table($tabledata)
             echo "</tr>\n";
             }
         }
-    ?>
-    </tbody>
+    echo '</tbody>
     </table>
     </div>
     
@@ -5142,11 +5143,10 @@ function render_table($tabledata)
         {
         jQuery(".row_clickable").click(function (e, row, $element)
             {
-            return ModalLoad(jQuery(this).data('link'), true);
+            return ModalLoad(jQuery(this).data(\'link\'), true);
             });
         });
-    </script>
-    <?php
+    </script>';
     }
 
 /**
@@ -5498,4 +5498,66 @@ function render_message($message="")
 
 
     echo str_replace(array("%%CLASSES%%","%%EXTRA%%","%%PROFILEIMAGE%%","%%MESSAGE%%"),$msgdata,$messagehtml);
+    }
+
+
+/**
+ * Render the antispam Question form section
+ */
+function render_antispam_question()
+    {
+    global $scramble_key, $lang;
+
+    $rndword = array_merge(range('0', '9'), range('A', 'Z'));
+    shuffle($rndword);
+    $timestamp=time();
+    $rndwordarray=  array_slice ($rndword , 0,6);
+    $rndcode= hash("SHA256",implode("",$rndwordarray) .  $scramble_key . $timestamp);
+    $height = 50; //CAPTCHA image height
+    $width = 160; //CAPTCHA image width
+    $font_size = 25; //CAPTCHA Font size
+    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
+
+    $capimage = imagecreate($width, $height);
+    $graybg = imagecolorallocate($capimage, 245, 245, 245);
+    $textcolor = imagecolorallocate($capimage, 34, 34, 34);
+    $green = ImageColorAllocate($capimage, 121, 188, 65); 
+    ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
+    imageline($capimage, 0, $height/2, $width, $height/2, $green); 
+    imageline($capimage, $width*4/5, 2, $width*4/5, $height, $green);
+    imageline($capimage, $width*3/5, 2, $width*3/5, $height, $green);
+    imageline($capimage, $width*2/5, 2, $width*2/5, $height, $green);
+    imageline($capimage, $width/5, 2, $width/5, $height, $green);
+    
+    $n=0;
+    foreach($rndwordarray as $rndletter)
+        {
+        imagefttext($capimage, $font_size,rand(-20, 20), 10 + (24*$n), rand(25, 45), $textcolor, $font, $rndletter);
+        $n++;
+        }
+        
+    ob_start();
+    imagegif($capimage);
+    $imagedata = ob_get_contents();
+    ob_end_clean();
+    ?>
+    <div class="Question">
+        <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
+        <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
+        <label for="antispam"><?php echo $lang["enterantispamcode"]; ?><br>
+            <div id="AntiSpamImage" style="
+            margin: 0 0 .1em;
+            background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
+            height: <?php echo $height; ?>px;
+            width: <?php echo $width; ?>px;
+            border-radius: 6px;
+            display: inline-block;
+            ">    
+            </div>
+        </label> 
+        <input type="text" name="antispam_user_code" class="stdwidth" value="">
+        <input type=text name="antispam" class="stdwidth" value="">
+        <div class="clearerleft"></div>        
+    </div>
+    <?php
     }

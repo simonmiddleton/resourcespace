@@ -38,7 +38,9 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 $offset=getvalescaped("offset",0,true);
-$per_page=getvalescaped("per_page", $default_perpage_list);rs_setcookie('per_page', $per_page);
+$per_page=getvalescaped("per_page", $default_perpage_list,true);
+$per_page = ($per_page == 0) ? $default_perpage_list : $per_page;
+rs_setcookie('per_page', $per_page);
 // When filtering by download records only the table output will be slightly different, showing only the following columns:
 // date, user, usage option and usage reason
 $filter_dld_records_only = ($filter_by_type == LOG_CODE_DOWNLOADED);

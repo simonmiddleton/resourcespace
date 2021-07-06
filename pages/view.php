@@ -50,43 +50,43 @@ $curpos=getvalescaped("curpos","");
 $go=getval("go","");
 
 if ($go!="") 
-	{
-	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
+    {
+    $origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
 
-	# Re-run the search and locate the next and previous records.
-	$modified_result_set=hook("modifypagingresult"); 
-	if ($modified_result_set){
-		$result=$modified_result_set;
-	} else {
-		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"", getvalescaped("go",""));
-	}
-	if (is_array($result))
-		{
-		# Locate this resource
-		$pos=-1;
-		for ($n=0;$n<count($result);$n++)
-			{
-			if ($result[$n]["ref"]==$ref) {$pos=$n;}
-			}
-		if ($pos!=-1)
-			{
-			if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
-			if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+$per_page)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
-			}
-		elseif($curpos!="")
-			{
-			if (($go=="previous") && ($curpos>0) && isset($result[$curpos-1]["ref"])) {$ref=$result[$curpos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
-			if (($go=="next") && ($curpos<($n)) && isset($result[$curpos]["ref"])) {$ref=$result[$curpos]["ref"];if (($curpos)>=($offset+$per_page)) {$offset=$curpos+1;}}  # move to next page if we've advanced far enough
-			}
-		else
-			{
-			?>
-			<script type="text/javascript">
-			alert('<?php echo $lang["resourcenotinresults"] ?>');
-			</script>
-			<?php
- 			}
-		}
+    # Re-run the search and locate the next and previous records.
+    $modified_result_set=hook("modifypagingresult"); 
+    if ($modified_result_set){
+        $result=$modified_result_set;
+    } else {
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"", getvalescaped("go",""));
+    }
+    if (is_array($result))
+        {
+        # Locate this resource
+        $pos=-1;
+        for ($n=0;$n<count($result);$n++)
+            {
+            if ($result[$n]["ref"]==$ref) {$pos=$n;}
+            }
+        if ($pos!=-1)
+            {
+            if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
+            if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+$per_page)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
+            }
+        elseif($curpos!="")
+            {
+            if (($go=="previous") && ($curpos>0) && isset($result[$curpos-1]["ref"])) {$ref=$result[$curpos-1]["ref"];if (($pos-1)<$offset) {$offset=$offset-$per_page;}}
+            if (($go=="next") && ($curpos<($n)) && isset($result[$curpos]["ref"])) {$ref=$result[$curpos]["ref"];if (($curpos)>=($offset+$per_page)) {$offset=$curpos+1;}}  # move to next page if we've advanced far enough
+            }
+        else
+            {
+            ?>
+            <script type="text/javascript">
+            alert('<?php echo $lang["resourcenotinresults"] ?>');
+            </script>
+            <?php
+            }
+        }
     # Option to replace the key via a plugin (used by resourceconnect plugin).
     $newkey = hook("nextpreviewregeneratekey");
     if (is_string($newkey)) {$k = $newkey;}
@@ -798,6 +798,89 @@ else if(1 == $resource['has_image'])
 ?>
 </div>
 <?php
+if($image_preview_zoom)
+    {
+    $image_preview_zoom = false;
+    $tile_region_support = false;
+    $zoom_image_path = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, $use_watermark);
+    if($preview_tiles && file_exists($zoom_image_path) && resource_download_allowed($ref, '', $resource['resource_type']))
+        {
+        $image_size = get_original_imagesize($ref, $zoom_image_path);
+        $image_width = (int) $image_size[1];
+        $image_height = (int) $image_size[2];
+
+        $tiles = compute_tiles_at_scale_factor(1, $image_width, $image_height);
+        $first_tile = (isset($tiles[0]['id']) ? $tiles[0]['id'] : '');
+        $last_tile = (isset($tiles[count($tiles) - 1]['id']) ? $tiles[count($tiles) - 1]['id'] : '');
+        if(
+            $first_tile !== '' && $last_tile !== ''
+            && file_exists(get_resource_path($ref, true, $first_tile, false))
+            && file_exists(get_resource_path($ref, true, $last_tile, false))
+        )
+            {
+            $tile_region_support = true;
+            }
+        }
+
+
+    if($tile_region_support)
+        {
+        // Force $hide_real_filepath temporarily to get the download URL
+        $orig_hrfp = $hide_real_filepath;
+        $hide_real_filepath = true;
+        $tile_url = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, $use_watermark);
+        $hide_real_filepath = $orig_hrfp;
+
+        // Generate the custom tile source object for OpenSeadragon
+        ?>
+        <script>
+        var openseadragon_custom_tile_source = {
+            height: <?php echo $image_height; ?>,
+            width:  <?php echo $image_width; ?>,
+            tileSize: <?php echo $preview_tile_size; ?>,
+            minLevel: 11,
+            getTileUrl: function(level, x, y)
+                {
+                var scale_factor = Math.pow(2, this.maxLevel - level);
+                var tile_url = '<?php echo $tile_url; ?>';
+                    tile_url += '&tile_region=1';
+                    tile_url += '&tile_scale=' + scale_factor;
+                    tile_url += '&tile_row=' + y;
+                    tile_url += '&tile_col=' + x;
+
+                console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
+                console.debug('[OpenSeadragon] tile_url = %o', tile_url);
+                return tile_url;
+                }
+        };
+        </script>
+        <?php
+        $image_preview_zoom = true;
+        }
+    else
+        {
+        // Use static image of a higher resolution (lpr/scr) preview
+        foreach(['lpr', 'scr'] as $hrs)
+            {
+            $zoom_image_path = get_resource_path($ref, true, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
+            if(file_exists($zoom_image_path))
+                {
+                $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
+
+                // Generate the custom tile source object for OpenSeadragon
+                ?>
+                <script>
+                var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
+                </script>
+                <?php
+                $image_preview_zoom = true;
+                break;
+                }
+            }
+        }
+
+    }
+
     if(canSeePreviewTools($edit_access))
         {
     	if($annotate_enabled)
@@ -940,81 +1023,6 @@ else if(1 == $resource['has_image'])
 			
             if($image_preview_zoom)
                 {
-                $tile_region_support = false;
-                $imagepath = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, $use_watermark);
-                if($preview_tiles && file_exists($imagepath) && resource_download_allowed($ref, '', $resource['resource_type']))
-                    {
-                    $image_size = get_original_imagesize($ref, $imagepath);
-                    $image_width = (int) $image_size[1];
-                    $image_height = (int) $image_size[2];
-
-                    $tiles = compute_tiles_at_scale_factor(1, $image_width, $image_height);
-                    $first_tile = (isset($tiles[0]['id']) ? $tiles[0]['id'] : '');
-                    $last_tile = (isset($tiles[count($tiles) - 1]['id']) ? $tiles[count($tiles) - 1]['id'] : '');
-                    if(
-                        $first_tile !== '' && $last_tile !== ''
-                        && file_exists(get_resource_path($ref, true, $first_tile, false))
-                        && file_exists(get_resource_path($ref, true, $last_tile, false))
-                    )
-                        {
-                        $tile_region_support = true;
-                        }
-                    }
-
-
-                if($tile_region_support)
-                    {
-                    // Force $hide_real_filepath temporarily to get the download URL
-                    $orig_hrfp = $hide_real_filepath;
-                    $hide_real_filepath = true;
-                    $tile_url = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, $use_watermark);
-                    $hide_real_filepath = $orig_hrfp;
-
-                    // Generate the custom tile source object for OpenSeadragon
-                    ?>
-                    <script>
-                    var openseadragon_custom_tile_source = {
-                        height: <?php echo $image_height; ?>,
-                        width:  <?php echo $image_width; ?>,
-                        tileSize: <?php echo $preview_tile_size; ?>,
-                        minLevel: 11,
-                        getTileUrl: function(level, x, y)
-                            {
-                            var scale_factor = Math.pow(2, this.maxLevel - level);
-                            var tile_url = '<?php echo $tile_url; ?>';
-                                tile_url += '&tile_region=1';
-                                tile_url += '&tile_scale=' + scale_factor;
-                                tile_url += '&tile_row=' + y;
-                                tile_url += '&tile_col=' + x;
-
-                            console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
-                            console.debug('[OpenSeadragon] tile_url = %o', tile_url);
-                            return tile_url;
-                            }
-                    };
-                    </script>
-                    <?php
-                    }
-                else
-                    {
-                    // Use static image of a higher resolution (lpr/scr) preview
-                    $imagepath = get_resource_path($ref, true, 'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
-                    if(file_exists($imagepath))
-                        {
-                        $preview_url = get_resource_path($ref, false,'lpr', false, $resource['preview_extension'], true, 1, $use_watermark);
-                        }
-                    else
-                        {
-                        $preview_url = get_resource_path($ref, false,'scr', false, $resource['preview_extension'], true, 1, $use_watermark);
-                        }
-
-                    // Generate the custom tile source object for OpenSeadragon
-                    ?>
-                    <script>
-                    var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
-                    </script>
-                    <?php
-                    }
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1750,16 +1758,22 @@ hook ("resourceactions") ?>
 		<li><a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
-		} 
+		}
+
+    $overrideparams= array(
+        'search_offset'     => $offset,
+        'offset'            => 0
+    );
+
 	if (checkperm('v')) 
 		{ ?>
-		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
+		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 
 		{ ?>
-		<li><a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
+		<li><a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}

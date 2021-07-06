@@ -1111,11 +1111,11 @@ if($responsive_ui)
                 {
                 if ($display == 'map')
                     { ?>
-                    <span class="Selected"><?php echo $lang['maptitle']?></span><?php
+                    &nbsp;|&nbsp;<span class="Selected"><?php echo $lang['maptitle']?></span><?php
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
+                    &nbsp;|&nbsp;<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
                     if($resources_count > $search_map_max_results)
                         {
                         echo "return false;";
@@ -1563,6 +1563,9 @@ if($responsive_ui)
             {
             $startresource = max($offset-$colcount,0);
             $endresource = $result_count-$colcount;
+
+            // This is used to ensure that all resource panels are the same height 
+            $resource_panel_height_max = 0;            
             for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
@@ -1767,7 +1770,7 @@ if($use_selection_collection)
                 resource_ending=null;
             } else {
                 if (!resource_starting) {
-                    alert('Cannot end range without a start.\nPlease release the shift key.');
+                    styledalert('<?php echo $lang["range_no_start_header"]; ?>', '<?php echo $lang["range_no_start"]; ?>');
                     if(jQuery(input).prop("checked")) {
                         this.removeAttribute("checked");
                         } 

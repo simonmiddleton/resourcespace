@@ -590,7 +590,7 @@ for ($n=0;$n<count($fields);$n++)
 		$value="";
 		}
 	# Render this field
-    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
+    render_search_field($fields[$n], $fields, $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
 	}
 ?>
 </div>
@@ -759,7 +759,7 @@ if (!$collection_search_includes_resource_metadata)
 		$value="";
 		}
 	 # Render this field
-	 render_search_field($fields[$n],$value,true,"SearchWidth",false,array(),$searched_nodes,$resetform);
+	 render_search_field($fields[$n], $fields, $value, true, "SearchWidth", false, array(), $searched_nodes, $resetform);
 	 }
    }
 ?>

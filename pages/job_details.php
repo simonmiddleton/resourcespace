@@ -8,6 +8,7 @@ if(!checkperm('a'))
 $job = getval("job",0,true);
 
 $job_details = job_queue_get_job($job);
+$hide_data = array("failure_text","success_text");
 
 if(!is_array($job_details) || count($job_details) == 0)
     {
@@ -38,6 +39,10 @@ if(!is_array($job_details) || count($job_details) == 0)
                 </tr>
                 <?php foreach($job_details as $name => $value)
                     {
+                    if(in_array($name,$hide_data))
+                        {
+                        continue;
+                        }
                     echo "<tr><td width='50%'>";
                     echo htmlspecialchars($name);
                     echo "</td><td width='50%'>";

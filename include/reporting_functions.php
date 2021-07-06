@@ -443,33 +443,31 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             continue;
             }
 
-
         $users = array();
-
         // Send e-mail reports to users belonging to the specific user groups
         if(empty($report['user_groups']))
             {
             if ($report['send_all_users'])
                 {
-                $admin_notification_usergroup = get_notification_users("SYSTEM_ADMIN");
                 // Send to all users is deprecated. Send to $email_notify_usergroups or Super Admin if not set
                 if (!empty($email_notify_usergroups))
                     {
                     foreach ($email_notify_usergroups as $usergroup)
                         {
-                        if(get_usergroup($usergroup)!==false){$report['user_groups'][]=$usergroup;}
+                        if(get_usergroup($usergroup)!==false)
+                            {
+                            $addusers = get_users($usergroup,"","u.username",false,-1,1);
+                            $users = array_merge($users,$addusers);
+                            }
                         }
-                    $report['user_groups']=implode(',',$report['user_groups']);
                     }
-
-                else if($admin_notification_usergroup!==false)
+                else
                     {
-                    $report['user_groups']=$admin_notification_usergroup;
+                    $users = get_notification_users("SYSTEM_ADMIN");
                     }
                 }
             }
-
-        if(!empty($report['user_groups']))
+        else
             {
             $users = get_users($report['user_groups'],"","u.username",false,-1,1);
             }

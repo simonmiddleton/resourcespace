@@ -12,7 +12,6 @@ $extensions_required["curl"] = "curl_init";
 $extensions_required["gd"] = "imagecrop";
 $extensions_required["xml"] = "xml_parser_create";
 $extensions_required["mbstring"] = "mb_strtoupper";
-$extensions_required["ldap"] = "ldap_bind";
 $extensions_required["intl"] = "locale_get_default";
 $extensions_required["json"] = "json_decode";
 $extensions_required["zip"] = "zip_open";
@@ -54,7 +53,16 @@ $check=file_get_contents($file);
 
 if(file_exists($file))
     {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
     unlink($file);
+        } 
+    catch (exception $e)
+        {
+        debug("Unable to delete file: " . $file);
+        }
+    $GLOBALS["use_error_exception"] = false;
     }
 
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}

@@ -101,7 +101,6 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		{
 		$owner_escaped = "'" . escape_check($owner) . "'";
 		}
-    
 
 	sql_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES ({$owner_escaped}, NOW(), DATE_ADD(NOW(), INTERVAL {$ttl_seconds} SECOND), '{$text}', '{$url}', '{$related_activity}', '{$related_ref}', {$notification_type} )");
 	$message_ref = sql_insert_id();
@@ -145,7 +144,6 @@ function message_remove($message)
 	sql_query("DELETE FROM user_message WHERE message='{$message}'");
 	sql_query("DELETE FROM message WHERE ref='{$message}'");	
 	}
-
 
 /**
  * Mark a message as seen
@@ -254,7 +252,6 @@ function message_selectedunseen($messages)
     sql_query("UPDATE user_message SET seen='0' WHERE user = {$userref} AND ref IN (" . $refs_list . ")");
     }
  
-
 /**
  * Send a summary of all unread notifications as an email
  * from the standard cron_copy_hitcount
@@ -600,9 +597,6 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
     
     return $messages;
 	}
-
-
-
 
 /**
  * Send a user to user(s) message

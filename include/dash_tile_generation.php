@@ -87,24 +87,31 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 	global $lang,$pagename,$baseurl_short, $theme_direct_jump;
     
     $url = "{$baseurl_short}pages/collections_featured.php";
+    $fc_categories = get_featured_collection_categories(0, []);
 	?>
 	<div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" tile="<?php echo $tile["ref"]?>" id="<?php echo str_replace("contents_","",$tile_id);?>" >
 		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
 				<span class="theme-icon"></span>
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]?></h2></a>
 				<p>
-					<select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
-					<option value=""><?php echo $lang["select"] ?></option>
-					<?php
-                    foreach(get_featured_collection_categories(0, array()) as $header)
+                <?php
+                if(!empty($fc_categories))
+                    {
+                    ?>
+                    <select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
+                    <option value=""><?php echo $lang["select"] ?></option>
+                    <?php
+                    foreach($fc_categories as $header)
                         {
                         ?>
                         <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo htmlspecialchars(i18n_get_translated($header["name"])); ?></option>
                         <?php
                         }
-					?>
-					</select>
-					<?php
+                    ?>
+                    </select>
+                    <?php
+                    }
+
 				if(!$theme_direct_jump)
 					{
 					?>

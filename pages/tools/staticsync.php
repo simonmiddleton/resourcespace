@@ -202,7 +202,7 @@ function ProcessFolder($folder)
     
     $collection = 0;
     $treeprocessed=false;
-    $skipfc_create = false; // Flag to prevent creation of new FC
+   
     
     if(!file_exists($folder))
         {
@@ -212,6 +212,11 @@ function ProcessFolder($folder)
     echo "Processing Folder: " . $folder . PHP_EOL;
     
     # List all files in this folder.
+    
+    $directories_arr = array();
+    $files_arr = array();
+    $import_paths = array();
+
     $dh = opendir($folder);
     while (($file = readdir($dh)) !== false)
         {
@@ -221,12 +226,29 @@ function ProcessFolder($folder)
             }
 
         $fullpath = "{$folder}/{$file}";
+        $filetype = filetype($fullpath);
+        
+        # Sort directory content so files are processed first.
+        if ($filetype == 'dir' || $filetype == 'link')
+            {
+            $directories_arr[] = $fullpath;
+            }
+        if ($filetype == 'file')
+            {
+            $files_arr[] = $fullpath;
+            }
+        }
+        $import_paths = array_merge($files_arr, $directories_arr);
+        $fullpath = '';
+    
+    foreach ($import_paths as $fullpath)
+        {
         if(!is_readable($fullpath))
             {
             echo "Warning: File '{$fullpath}' is unreadable!" . PHP_EOL;
             continue;
             }
-
+        $skipfc_create = false; // Flag to prevent creation of new FC
         $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
             
@@ -256,10 +278,15 @@ function ProcessFolder($folder)
         )
             {
             // Recurse
-            ProcessFolder("{$folder}/{$file}");
+            ProcessFolder("{$fullpath}");
             }
 
         # -------FILES---------------
+        if ($filetype == "file") 
+            {
+            $file = basename($fullpath);
+            }
+            
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
             {
             if (isset($staticsync_file_minimum_age) && (time() -  filectime($folder . "/" . $file) < $staticsync_file_minimum_age))

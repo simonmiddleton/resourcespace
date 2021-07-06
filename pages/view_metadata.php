@@ -37,13 +37,17 @@ if ($sort_tabs)
     sort($fields_tab_names);
     }
 
+// Related resources can be rendered in tabs shown alongside the regular data tabs instead of in their usual position lower down the page 
 if(isset($related_type_show_with_data)) {
-	// Get resource type tab names, excluding the current resource type (if any set):
-	$resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type WHERE ref<>'" . $resource['resource_type'] . "'", "schema");
-	$resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
+    // Fetch the tab names for the resource types which have been specifed for rendering in related tabs
+    // Exclude the current resource type 
+    $show_related_type_tab_list = implode(",",$related_type_show_with_data);
+    $resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type 
+                                           WHERE ref IN(".$show_related_type_tab_list.") and ref<>'" . $resource['resource_type'] . "'", "schema");
+    $resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
 
-	// These are the tab names which will be rendered for the resource specified:
-	$fields_tab_names = array_values(array_unique((array_merge($fields_tab_names, $resource_type_tab_names))));
+    // This is the list of tab names which will be rendered for the resource specified
+    $fields_tab_names = array_values(array_unique((array_merge($fields_tab_names, $resource_type_tab_names))));
 }
 
 // Make sure the fields_tab_names is empty if there are no values:

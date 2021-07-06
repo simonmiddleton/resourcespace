@@ -14,6 +14,7 @@ $fetchrows = -1;
 $original_public_collections_confine_group = $public_collections_confine_group;
 
 
+// --- Setup
 // Create users in other user groups
 $general_user = new_user('test_002501_general', 2);
 $super_admin_user = new_user('test_002501_super_admin', 3);
@@ -47,6 +48,9 @@ save_collection($fc_b, ['featured_collections_changes' => ['update_parent' => $f
 
 $public_col = create_collection($userref, 'User public collection (at user level)', 1, 0, 0, true);
 $private_col = create_collection($userref, 'Private collection');
+
+$public_col_genuser = create_collection($general_user, 'General User public collection', 1, 0, 0, true);
+$private_col_genuser = create_collection($general_user, 'General User Private collection');
 
 // Create some resources and give them a title
 $resource_a = create_resource(1, 0);
@@ -141,14 +145,20 @@ if($found_col_refs_no_confinment != $found_col_refs_override_group_restrict)
     echo 'Override group confinment - ';
     return false;
     }
+$public_collections_confine_group = false;
 unset($spc_result_no_confinment, $found_col_refs_no_confinment, $spc_result_override_group_restrict, $found_col_refs_override_group_restrict);
 
 
-// TODO: args $search_user_collections
-
-// TODO test behaviour determined by the following globals:
-// - $search_public_collections_ref
-
+// Search for public collections or collections belonging to the user - $search_user_collections arg = true
+$spc_result = search_public_collections('', $order_by, $sort, true, false, $include_resources, false, true);
+foreach($spc_result as $spc)
+    {
+    if(!($spc['type'] == COLLECTION_TYPE_PUBLIC || $spc['user'] == $userref))
+        {
+        echo 'Search user collections - ';
+        return false;
+        }
+    }
 
 
 // Tear down

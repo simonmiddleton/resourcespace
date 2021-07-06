@@ -20,7 +20,7 @@ $job_data['include_csv_file'] - User input opting to include the CSV file in the
 include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
 
-global $lang, $baseurl, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
+global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
 $text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
 $collection_download_settings,$restricted_full_download, $download_file_lifetime;
 

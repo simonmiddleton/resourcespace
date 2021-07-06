@@ -2207,6 +2207,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * @param integer $field    Field ID
 * @param string  $value    The new value
 * @param array   &$errors  Any errors that may occur during update
+* @param boolean $log      Log this change in the resource log?
 * 
 * @return boolean
 */
@@ -3108,21 +3109,34 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Add category tree values, reflecting tree structure
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
-    $alltreenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
+
+    // Construct an array of the selected tree nodes across all resource ids
+    $selected_treenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
+
     foreach($tree_fields as $tree_field)
         {
+        // We need to determine the tree strings for all nodes belonging to the tree field
+        $tree_field_nodes = get_nodes($tree_field["ref"],'', true); # where '' is parent and true is recursive
+        // Each tree field option is the canonical path to a node
+        $tree_field_options = get_tree_strings($tree_field_nodes, true); # where true is full path
+
         $addfield = $tree_field;
+        // Now for each resource, build an array consisting of all of the paths for the selected nodes 
         foreach($getresources as $getresource)
             {
-            if(isset($alltreenodes[$getresource["ref"]][$tree_field["ref"]]) && is_array($alltreenodes[$getresource["ref"]][$tree_field["ref"]]))
+            $treetext_arr = array();
+            $valstring = "";
+            // Are there any selected tree nodes on the resource? 
+            if(isset($selected_treenodes[$getresource["ref"]][$tree_field["ref"]]) && is_array($selected_treenodes[$getresource["ref"]][$tree_field["ref"]]))
                 {
-                $treetext_arr = get_tree_strings($alltreenodes[$getresource["ref"]][$tree_field["ref"]]);
+                // So for each selected tree node, add its corresponding path to the path array
+                foreach($selected_treenodes[$getresource["ref"]][$tree_field["ref"]] as $selected_resource_treenode) 
+                    {
+                    $treetext_arr[]=$tree_field_options[$selected_resource_treenode["ref"]];
+                    }
+                sort($treetext_arr);
                 // Quoting each element is required for csv export
                 $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
-                }
-            else
-                {
-                $treetext_arr = array();
                 }
             $addfield["resource"] = $getresource["ref"];
             $addfield["value"] = count($treetext_arr) > 0 ? $valstring : "";
@@ -5866,7 +5880,17 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 	$fileinfo=array();
 	if($ref=="" || $path==""){return false;}
 	global $imagemagick_path, $imagemagick_calculate_sizes;
-	$file=$path;
+    $file=$path;
+    
+    // check for valid image
+    $mime_content_type = mime_content_type($file);
+    $is_image = strpos($mime_content_type, "image/");
+    if ($is_image === false)
+        {
+        return false;
+        }
+
+
     $ref_escaped = escape_check($ref);
 	$o_size=sql_query("select * from resource_dimensions where resource='{$ref_escaped}'");
 	if(!empty($o_size))
@@ -6496,7 +6520,14 @@ function copyResourceDataValues($from, $to, $resource_type = "")
     if($from > 0)
         {
         $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
-        $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+        if (count($omitfields) > 0)
+            {
+            $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+            }
+        else
+            {
+            $omit_fields_sql = "";
+            }
         }
     
     $resource_type_sql = "AND (rtf.resource_type = r.resource_type OR rtf.resource_type = 999 OR rtf.resource_type = 0)";
@@ -7549,13 +7580,10 @@ function get_data_by_field($resource, $field)
     $return              = '';
     $resource_type_field = escape_check($field);
 
-    $sql_select   = 'SELECT *';
-    $sql_from     = 'FROM resource_data AS rd';
-    $sql_join     = '';
-    // $sql_join     = 'LEFT JOIN resource AS r ON rd.resource = r.ref';
-    $sql_where    = 'WHERE';
-    $sql_order_by = '';
-    $sql_limit    = '';
+    $sql_select = 'SELECT resource, resource_type_field, `value`';
+    $sql_from = 'FROM resource_data AS rd';
+    $sql_where = 'WHERE';
+    $sql_where_resource = '';
 
         // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
@@ -7565,26 +7593,30 @@ function get_data_by_field($resource, $field)
 
     if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
         {
+        // When we're looking for the metadata field value of a particular resource, we can skip getting back already known data (e.g resource and rtf)
+        if(!is_null($resource))
+            {
+            $sql_select = 'SELECT rd.`value`';
+            $sql_where_resource = sprintf(' AND rd.resource = \'%s\'', escape_check($resource));
+            }
+
         // Let's first check how we deal with the field value we've got
         // Integer values => search for a specific ID
         // String values => search by using a shortname
         if(is_numeric($field))
             {
-            $sql_select = 'SELECT rd.`value`';
-            $sql_where .= " rd.resource = '{$resource}'";
-            $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
+            $sql_where .= " rd.resource_type_field = '{$resource_type_field}'";
             }
         else
             {
-            $sql_select = 'SELECT rd.`value`';
-            $sql_where .= " rd.resource = '{$resource}'";
-            $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
+            $sql_where .= " rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
             }
-        
-        $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
+        $sql_where .= $sql_where_resource;
+
+        $results = sql_query("{$sql_select} {$sql_from} {$sql_where}");
         if(0 !== count($results))
             {
-            $return = !is_null($resource) ? $results[0]['value'] : $return;
+            $return = !is_null($resource) ? $results[0]['value'] : $results;
             }
         // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
         else

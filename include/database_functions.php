@@ -629,16 +629,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     if($cache_write)
         {
-        if(!file_exists($storagedir . "/tmp"))
-            {
-            mkdir($storagedir . "/tmp", 0777, true);
-            }
-
-        if(!file_exists($cache_location))
-            {
-            mkdir($cache_location, 0777);
-            }
-
         $cachedata = array();
         $cachedata["query"] = $sql;
         $cachedata["time"] = time();
@@ -647,6 +637,16 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         $GLOBALS["use_error_exception"] = true;
         try
             {
+            if(!file_exists($storagedir . "/tmp"))
+                {
+                mkdir($storagedir . "/tmp", 0777, true);
+                }
+
+            if(!file_exists($cache_location))
+                {
+                mkdir($cache_location, 0777);
+                }
+
             file_put_contents($cache_file, json_encode($cachedata));
             }
         catch(Exception $e)
@@ -757,8 +757,14 @@ function sql_insert_id()
 function get_query_cache_location()
 	{
 	global $storagedir,$tempdir;
-    if(!is_null($tempdir)){return $tempdir . "/querycache";}
-    else {return $storagedir . "/tmp/querycache";}
+    if(!is_null($tempdir))
+        {
+        return $tempdir . "/querycache";
+        }
+    else
+        {
+        return $storagedir . "/tmp/querycache";
+        }
 	}
 
 	
@@ -801,6 +807,7 @@ function clear_query_cache($cache)
  */
 function check_db_structs($verbose=false)
 	{
+    global $lang;
     // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
     if(is_process_lock('database_update_in_progress'))
         {

@@ -133,12 +133,28 @@ if ($upload_review_mode)
             delete_collection($collection);
             external_upload_notify($external_upload, $k, $collection);
             $url = generateURL($baseurl . "/pages/done.php",array("text" => "upload_share_complete", "k"=> $k, "collection"=>$external_upload));
-            redirect($url);
             }
         else
             {
-            redirect("pages/search.php?search=!last1000");
+            // Redirect to recent user uploads
+            $defaultarchivestate = get_default_archive_state();
+            $redirectparams = array(
+                "search"=>"!contributions" . $userref,
+                "order_by"=>"resourceid",
+                "sort"=>"DESC",
+                "archive"=>$defaultarchivestate,
+                "refreshcollectionframe"=>"true",
+                "resetlockedfields"=>"true"
+                );
+                
+            if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+                {
+                $redirectparams["promptsubmit"] = 'true';
+                }
+            
+            $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
             }
+        redirect($url);
         exit();
         }
     }
@@ -256,7 +272,7 @@ if($editsearch)
     $items       = array_column($edititems,"ref");
     if(count($searchitems) != count($edititems) || count($items) == 0)
         {
-        $error = $lang['error-permissiondenied'];
+        $error = $lang['error-editpermissiondenied'];
         error_alert($error);
         exit();
         }
@@ -520,6 +536,14 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // Process all remaining resources in the collection
                         $autosave_errors = false; 
                         $lastedited = $ref;
+                        $restypearr = get_resource_types();
+                        $resource_types = array();
+                        // Sort into array with ids as keys
+                        foreach($restypearr as $restype)
+                            {
+                            $resource_types[$restype["ref"]] = $restype;
+                            }
+
                         $review_collection_contents_count = count($review_collection_contents);
                         for($n=1;$n<$review_collection_contents_count;$n++)
                             {
@@ -527,7 +551,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             $ref = $review_collection_contents[$n]["ref"];
                             # Fetch resource data.
                             $resource=get_resource_data($ref);
-                            
+
                             // If the metadata template has been locked, copy the metadata from this first
                             if(in_array("metadatatemplate",$locked_fields) && $metadatatemplate > 0)
                                 {
@@ -535,7 +559,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 }
                                 
                             // Load resource metadata
-                            $fields=get_resource_field_data($ref,$multiple,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
+                            $fields=get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
                             $all_selected_nodes = get_resource_nodes($ref);
                             
                             // Update resource data with locked resource data from last edited resource
@@ -556,24 +580,31 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             foreach($fields as $field)
                                 {
                                 $fielderror = false;
-                                if($field['required'] == 1 && $field['hide_when_uploading'] != 1)
+                                if($field['required'] == 1
+                                    && $field['hide_when_uploading'] != 1
+                                    &&  (
+                                        $field["resource_type"] == $resource["resource_type"]
+                                        ||
+                                        ($field["resource_type"] == 0 && (bool)$resource_types[$resource["resource_type"]]["inherit_global_fields"])
+                                        )
+                                    )
                                     {
                                     $displaycondition = check_display_condition(0, $field, $fields, false); 
                                     if($displaycondition)
                                         {
                                         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
-                                            $field_nodes = get_resource_nodes($ref, $field['ref']);                                
+                                            $field_nodes = get_resource_nodes($ref, $field['ref']);                        
                                             if(count($field_nodes) == 0)
                                                 {
-                                                $fielderror = true;
+                                                $fielderror = true;  
                                                 }
                                             }
                                         else
                                             {
                                             if (trim(strip_leading_comma($field["value"]) == ''))
                                                 {
-                                                $fielderror = true;
+                                                $fielderror = true;  
                                                 }
                                             }
                                         }
@@ -592,7 +623,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     {
                                     $auto_errors[$field['ref']] = i18n_get_translated($field['title']) . ": {$lang['requiredfield']}";
                                     }
-                                }              
+                                }
                             
                             // If no errors, remove from collection and continue
                             if(count($auto_errors) == 0)
@@ -2227,10 +2258,12 @@ if($disablenavlinks)
         }
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
-?>
-</div>
 
-<?php 
+if (!$external_upload)
+    {
+    ?></div><?php
+    }
+
 if(!hook('replacesubmitbuttons'))
     {
     SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);

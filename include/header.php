@@ -115,13 +115,13 @@ if ($enable_ckeditor){?>
 <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <?php } ?>
 
-<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/plupload_2.1.8/plupload.full.min.js?<?php echo $css_reload_key;?>"></script>
+<script type="text/javascript" src="<?php echo $baseurl . LIB_PLUPLOAD; ?>/plupload.full.min.js?<?php echo $css_reload_key;?>"></script>
 <?php if ($plupload_widget){?>
-	<link href="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.ui.plupload/css/jquery.ui.plupload.css?<?php echo $css_reload_key;?>" rel="stylesheet" type="text/css" media="screen,projection,print"  />	
-	<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.ui.plupload/jquery.ui.plupload.min.js?<?php echo $css_reload_key;?>"></script>
+	<link href="<?php echo $baseurl . LIB_PLUPLOAD; ?>/jquery.ui.plupload/css/jquery.ui.plupload.css?<?php echo $css_reload_key;?>" rel="stylesheet" type="text/css" media="screen,projection,print"  />	
+	<script type="text/javascript" src="<?php echo $baseurl . LIB_PLUPLOAD; ?>/jquery.ui.plupload/jquery.ui.plupload.min.js?<?php echo $css_reload_key;?>"></script>
 <?php } else { ?>
-	<link href="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.plupload.queue/css/jquery.plupload.queue.css?<?php echo $css_reload_key;?>" rel="stylesheet" type="text/css" media="screen,projection,print"  />
-	<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.plupload.queue/jquery.plupload.queue.min.js?<?php echo $css_reload_key;?>"></script>
+	<link href="<?php echo $baseurl . LIB_PLUPLOAD; ?>/jquery.plupload.queue/css/jquery.plupload.queue.css?<?php echo $css_reload_key;?>" rel="stylesheet" type="text/css" media="screen,projection,print"  />
+	<script type="text/javascript" src="<?php echo $baseurl . LIB_PLUPLOAD; ?>/jquery.plupload.queue/jquery.plupload.queue.min.js?<?php echo $css_reload_key;?>"></script>
 <?php } ?>
 <?php
 if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview)

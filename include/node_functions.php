@@ -1437,7 +1437,14 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     if($resourcefrom > 0)
         {
         $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
-        $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+        if (count($omitfields) > 0)
+            {
+            $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+            }
+        else
+            {
+            $omit_fields_sql = "";
+            }
         }
 
     sql_query("

@@ -55,6 +55,7 @@ input[type="text"], input[type=submit], input[type=button], input[type="password
     padding: 4px 6px 4px 6px;
     vertical-align: middle;
     min-height: 28px;
+    margin: 3px 0;
 }
 
 input[type="text"], input[type="password"], input[type="number"], textarea, select, .sp-replacer {
@@ -424,7 +425,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelTools a  {;margin-left: 3px;margin-right:2px; text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a  {margin-left: 3px;margin-right:2px; text-decoration:none;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a    {float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
@@ -490,13 +491,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
-.Question .Lineup {margin: 3px 0;}
-.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;margin: 3px 0;}
-.Question select {margin: 3px 0;}
-.Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0;}
+.Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;}
+.Question .medwidth,.medwidth{width: 285px;font-size: 1em;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0;}
-.Question .vshrtwidth{width: 93px;font-size: 0.9em;margin: 3px 0;}
-.Question .medcomplementwidth{width: 105px;font-size: 1em;margin: 3px 0 0 2px;}
+.Question .vshrtwidth{width: 93px;font-size: 0.9em;}
+.Question .medcomplementwidth{width: 105px;font-size: 1em;}
 .Question .Inline {float: left;margin: 0 10px 0 0;vertical-align: middle;}
 .Question .Inline label { float: none; font-weight: normal; margin-top: 0; width: auto; }
 .Question .tickset {float: left;}
@@ -1615,19 +1614,12 @@ form.FormFilter button.ClearButton {
 /* Pill-like display for keywords */
 .ResponsiveViewFullSite { display: none; }
 .Question .customFieldLabel {
-    float:none;
+    float: left;
     border-radius:4px;
-    padding:3px 6px;
-    margin-left:5px;
+    padding:2px 6px;
+    margin-left:3px;
     vertical-align: text-bottom;
-}
-
-.AdvancedSection .Question .customFieldLabel {
-    margin-left: 0;
-}
-
-.AdvancedSection .Question .nodes_input_checkbox {
-    margin: 3px 0 0 0;
+    max-width: 1000px;
 }
 
 .keywordselected {
@@ -1638,7 +1630,6 @@ form.FormFilter button.ClearButton {
     padding: 2px 6px;
     line-height: 20px;
 }
-.customFieldset input[type=checkbox] {margin:0 2px 0 0;}
 .keywordselected a {padding-left:8px;}
 .RemoveKeyword {font-weight: bold; font-size: 1.2em;}
 
@@ -2063,7 +2054,11 @@ a.BrowseRefresh{
 
 .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
 .BasicsBoxEdit .RecordHeader {
-    width: calc(100% + 250px);
+    width: calc(100% + 270px);
+}
+
+.BasicsBoxLeft {
+    padding-right: 20px;
 }
 
 .BasicsBoxRight {
@@ -2155,3 +2150,15 @@ a.BrowseRefresh{
 
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
 
+/* Fixes for form checkboxes and date range fields */
+.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 200px;}
+.BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
+.BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
+
+.nodes_input_checkbox {float:left; margin-top: 5px}
+
+.Question table td {
+    vertical-align: top;
+}
+
+.Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }

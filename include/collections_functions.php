@@ -814,16 +814,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     }
 			    }
 			}
-        
-        global $search_public_collections_ref;
-        if ($search_public_collections_ref && is_numeric($search))
-            {
-            $spcr="or c.ref='" . escape_check($search) . "'";
-            }
-        else
-            {
-            $spcr="";
-            }    
         }
 	
 	# Restrict to parent, child and sibling groups?
@@ -4880,8 +4870,13 @@ function featured_collection_check_access_control(int $c_ref)
 */
 function order_featured_collections(array $a, array $b)
     {
+    global $descthemesorder;
     if($a["has_resources"] == $b["has_resources"])
         {
+        if ($descthemesorder)
+            {
+            return strnatcasecmp($b["name"],$a["name"]);
+            }
         return strnatcasecmp($a["name"],$b["name"]);
         }
 
@@ -5493,7 +5488,7 @@ function can_share_upload_link($collection_data)
         {
         $collection_data = get_collection($collection_data);
         }
-    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup") || in_array($usergroup,$upload_link_usergroups));
+    return allow_upload_to_collection($collection_data) && (checkperm('a') || checkperm("exup"));
     }
     
 /**
@@ -5875,7 +5870,7 @@ function purge_expired_shares($filteropts)
 
     
     /**
-     * Check if user has the appropriae access to delete a collection.
+     * Check if user has the appropriate access to delete a collection.
      *
      * @param   array     $collection_data   Array of collection details, typically from get_collection()
      * @param   int       $userref           Id of user

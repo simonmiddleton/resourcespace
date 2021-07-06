@@ -24,12 +24,15 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $k = getval("k","");
 
+$text = getvalescaped("text","");
+$text = (is_array($text)) ? $text[0] : $text;
+
 include "../include/header.php";
 ?>
 
 <div class="BasicsBox">
     <h1><?php echo $lang["complete"]?></h1>
-    <p><?php echo text(htmlspecialchars(getvalescaped("text",""))) ?></p>
+    <p><?php echo text(htmlspecialchars($text)) ?></p>
    
     <?php
     if ((getval("user","")!="" || $k!="" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin","")=="")

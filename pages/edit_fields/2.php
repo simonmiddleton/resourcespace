@@ -1,4 +1,5 @@
 <?php
+
 /* -------- Check box list ------------------ */
 if(!hook('customchkboxes', '', array($field)))
     {
@@ -27,12 +28,11 @@ if(!hook('customchkboxes', '', array($field)))
     $l = average_length($node_options);
     switch($l)
         {
-        case($l > 40): $cols = 1; break; 
-        case($l > 25): $cols = 2; break;
-        case($l > 15): $cols = 3; break;
-        case($l > 10): $cols = 4; break;
-        case($l > 5):  $cols = 5; break;
-        default:       $cols = 10;
+        case($l > 25): $cols = 1; break;
+        case($l > 15): $cols = 2; break;
+        case($l > 10): $cols = 3; break;
+        case($l > 5):  $cols = 4; break;
+        default:       $cols = 8;
         }
 
     if((bool) $field['automatic_nodes_ordering'])
@@ -84,6 +84,7 @@ if(!hook('customchkboxes', '', array($field)))
                         <td>
                             <input type="checkbox"
                                    id="nodes_<?php echo $node['ref']; ?>"
+                                   class="nodes_input_checkbox" 
                                    name="<?php echo $name; ?>"
                                    value="<?php echo $node['ref']; ?>"
                                 <?php
@@ -139,6 +140,7 @@ if(!hook('customchkboxes', '', array($field)))
             <td>
                 <input type="checkbox"
                        name="<?php echo $name; ?>"
+                       class="nodes_input_checkbox"
                        value="<?php echo $node['ref']; ?>"
 					   id="nodes_<?php echo $node['ref']; ?>"
                     <?php

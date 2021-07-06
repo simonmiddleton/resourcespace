@@ -100,7 +100,7 @@ if(isset($download_usage_prevent_options))
 
 <div class="BasicsBox">
 
-    <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>" onSubmit="return CentralSpacePost(this,true);}">
+    <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>" onSubmit="return CentralSpacePost(this,true);">
         <?php
         generateFormToken("download_usage");
 
@@ -118,13 +118,14 @@ if(isset($download_usage_prevent_options))
         <p><?php echo $lang["indicateusage"]?></p>
 
 
-        <div class="Question">
-        
-	<label><?php echo $lang["emailaddress"]?></label>
-	<input name="email" class="stdwidth" value="<?php echo $email ?>">
-    <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
-	<div class="clearerleft"> </div>
+<?php if ($download_usage_email){ ?>
+    <div class="Question">
+	    <label><?php echo $lang["emailaddress"]?></label>
+	    <input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars($email) ?>">
+        <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
+	    <div class="clearerleft"> </div>
 	</div>
+<?php } ?>
    
         <?php  if(!$remove_usage_textbox && !$usage_textbox_below)  {  echo html_usagecomments($usagecomment,$error);   }   ?>
 
@@ -169,6 +170,7 @@ include "../include/footer.php";
 function html_usagecomments($usagecomment,$error)
     {
     global $lang;
+    
 
     $html = '<div class="Question"><label>{label}</label>
             <textarea rows="5" name="usagecomment" id="usagecomment" type="text" class="stdwidth">{value}</textarea>
@@ -179,7 +181,7 @@ function html_usagecomments($usagecomment,$error)
         (
         "{label}"   => $lang["usagecomments"],
         "{error}"   => isset($error["usagecomment"]) ?  $error["usagecomment"] : "",
-        "{value}"   => $usagecomment
+        "{value}"   => htmlspecialchars($usagecomment)
         );
 
     $html = str_replace(array_keys($replace),array_values($replace), $html );
@@ -199,12 +201,20 @@ function html_usagecomments($usagecomment,$error)
     
 function validate_input_download_usage($fields)
     {
-    global $lang, $usage_comment_blank;
+    global $lang, $usage_comment_blank, $download_usage_email, $remove_usage_textbox;
     $error = array();
     $error["usage"] = $fields["usage"] == "" ? $lang["usageincorrect"] : ""; 
+
+if (!$remove_usage_textbox)
+    {
     $error["usagecomment"] = $fields["usagecomment"] == "" && !$usage_comment_blank ? $lang["usageincorrect"]: "";
+    }
+
+if ($download_usage_email)
+    {
     $error["email"] = !filter_var($fields["email"], FILTER_VALIDATE_EMAIL) ? $lang["error_invalid_email"] : ""; 
-        
+    }
+     
     $error = array_filter($error);
 
     return $error;

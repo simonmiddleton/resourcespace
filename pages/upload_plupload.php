@@ -1210,7 +1210,7 @@ var pluploadconfig = {
                                         }
                                     else
                                         { <?php
-                                        if(hook('replace_upload_log_text'))
+                                        if(!hook('replace_upload_log_text'))
                                             { ?>
                                         jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                                         if(resource_keys===processed_resource_keys){resource_keys=[];}
@@ -1785,21 +1785,21 @@ if ($status!="") { ?><?php echo $status?><?php } ?>
 </div>
 
 <?php 
-if(hook('upload_log'))
+if(!hook('upload_log'))
     {
-if ($show_upload_log)
-    {
-    ?>
-    <div class="BasicsBox">
-    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo $lang["log"]; ?></h2>
-    <div class="CollapsibleSection" id="UploadLogSection">
+    if ($show_upload_log)
+        {
+        ?>
+        <div class="BasicsBox">
+        <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo $lang["log"]; ?></h2>
+        <div class="CollapsibleSection" id="UploadLogSection">
         <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
-    </div> <!-- End of UploadLogSection -->
-    </div>
-    <?php
+        </div> <!-- End of UploadLogSection -->
+        </div>
+        <?php
+        }
     }
-    }
-    ?>    
+?>    
 </div>
 
 

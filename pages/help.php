@@ -3,8 +3,8 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$section=getvalescaped("section","");
-$page   =getvalescaped("page"   ,"");
+$section=getval("section","");
+$page   =getval("page"   ,"");
 
 include "../include/header.php";
 ?>
@@ -43,7 +43,7 @@ if('' == $section)
         if ($page != "")
             {
             // Build link for the specified KnowlegeBase page
-            echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . $page . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+            echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . htmlspecialchars($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
             }
         else
             {

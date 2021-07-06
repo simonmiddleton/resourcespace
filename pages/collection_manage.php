@@ -396,7 +396,7 @@ function delete_collections()
                 collection_ending=null;
             } else {
                 if (!collection_starting) {
-                    alert('Cannot end range without a start.\nPlease release the shift key.');
+                    styledalert('<?php echo $lang["range_no_start_header"]; ?>', '<?php echo $lang["range_no_start"]; ?>');
                     if(jQuery(input).prop("checked")) {
                         this.removeAttribute("checked");
                         } 

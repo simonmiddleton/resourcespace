@@ -343,6 +343,10 @@ body {
         color: #ffffff;
         border: #1378BF;        
     }
+
+    .Question .customFieldLabel {
+        max-width: 600px;
+    }
 }
 @media(max-width:990px) {
     #HeaderButtons {
@@ -1188,7 +1192,7 @@ body {
 }
 
 /* Edit page preview */
-@media (max-width: 1280px) {
+@media (max-width: 1366px) {
     .BasicsBoxEdit {
         grid-template-columns: 1fr 200px;
     }
@@ -1199,8 +1203,16 @@ body {
     .BasicsBoxEdit .RecordHeader {
         width: calc(100% + 200px);
     }
-    #CentralSpace .Question select {
-        width: 97%;
+}
+@media (max-width:  1280px) {
+    .BasicsBoxEdit .Question .stdwidth,
+    .BasicsBoxEdit .stdwidth, 
+    .BasicsBoxEdit .dynamickeywords,
+    .BasicsBox .CategoryBox {
+        width: 380px;
+    }
+    .FormHelpInner {
+        width: 368px;
     }
 }
 @media (max-width: 850px) {

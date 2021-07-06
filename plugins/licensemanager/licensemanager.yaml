@@ -5,3 +5,5 @@ version: 1.0
 desc: Adds the capability to manage resource licensing
 icon: fa fa-id-card
 category: user interface
+info_url: https://www.resourcespace.com/knowledge-base/plugins/license-manager
+

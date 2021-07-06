@@ -4,7 +4,7 @@ access_key,char(10),External access key
 user,int(11),
 usergroup,int(11),
 collection,int(11),
-request_feedback,int(11),When emailing external contacts, allow recipients to select resources and add feedback when accessing share
+request_feedback,int(11),(boolean) When emailing external contacts, allow recipients to select resources and add feedback when accessing share
 email,varchar(100),Email address share was created for
 date,datetime,Date share created
 lastused,datetime,Date share was last accessed

@@ -23,9 +23,14 @@ function HookFormat_chooserViewReplacedownloadoptions()
 	if (is_ecommerce_user()) { return false; }
 
     $inputFormat = $resource['file_extension'];
+    $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
 
-    if ($resource["has_image"] != 1 || !$download_multisize || $save_as
-            || !supportsInputFormat($inputFormat))
+    if ($resource["has_image"] != 1
+        || !$download_multisize
+        || $save_as
+        || !supportsInputFormat($inputFormat)
+        || !file_exists($origpath)
+        )
         return false;
 
     $defaultFormat = getDefaultOutputFormat($inputFormat);
