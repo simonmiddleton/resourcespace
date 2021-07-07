@@ -206,7 +206,7 @@ if ($submitted != "")
             $lang["oj-collection-download-success-text"],
             $lang["oj-collection-download-failure-text"]);
 
-        exit();
+        exit("HERE");
         }
 
 	# Estimate the total volume of files to zip

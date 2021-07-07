@@ -8,11 +8,12 @@ if($job_user != $userref && !checkperm('a'))
     // User does not have permission to see other user's jobs
     $job_user = $userref;
     }
-$job_status  = getval("job_status",-1,true);
-$job_type    = getval("job_type","");
-$job_orderby = getval("job_orderby","ref");
-$job_sort    = (strtoupper(getval("job_sort","ASC")) == "ASC") ? "ASC" : "DESC";
-$job_find    = getval("job_find","");
+$job_status     = getval("job_status",-1,true);
+$job_type       = getval("job_type","");
+$job_orderby    = getval("job_orderby","priority");
+$job_boost      = getval("job_boost",0,true);
+$job_sort       = (strtoupper(getval("job_sort","ASC")) == "DESC") ? "DESC" : "ASC";
+$job_find       = getval("job_find","");
 
 if(!checkperm('a') || $job_user == $userref)
     {
@@ -27,14 +28,27 @@ $deletejob = getval("delete_job",0,true);
 $resetjob = getval("reset_job",0,true);
 if($deletejob > 0 && enforcePostRequest(true))
     {
-    job_queue_delete($deletejob);
+    $deletejobdetail = job_queue_get_job($deletejob);
+    if(checkperm('a') || $deletejob["user"] == $userref)
+        {
+        job_queue_delete($deletejob);
+        }
     }
 elseif($resetjob > 0 && enforcePostRequest(true))
     {
-    clear_process_lock("job_{$resetjob}");
-    job_queue_update($resetjob,array(),1);
+    $resetjobdetail = job_queue_get_job($resetjob);
+    if(checkperm('a') || $resetjobdetail["user"] == $userref)
+        {
+        clear_process_lock("job_{$resetjob}");
+        job_queue_update($resetjob,array(),1,,'',get_job_type_priority($resetjobdetail["type"])));
+        }
     }
-elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true))
+elseif($job_boost > 0 && enforcePostRequest(true) && checkperm('a'))
+    {
+    clear_process_lock("job_{$job_boost}");
+    job_queue_update($job_boost,array(),1,date('Y-m-d H:i:s'),0);
+    }
+elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true) && checkperm('a'))
     {
     job_queue_purge(STATUS_COMPLETE);
     job_queue_purge(STATUS_ERROR);
@@ -115,15 +129,22 @@ for($n=0;$n<$jobcount;$n++)
         if(checkperm('a'))
             {
             $tablejob["tools"][] = array(
-                "icon"=>"fa fa-info",
+                "icon"=>"fa fa-fw fa-info",
                 "text"=>$lang["job_details"],
                 "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+                "modal"=>true,
+                );
+            $tablejob["tools"][] = array(
+                "icon"=>"fa fa-fw fa-rocket",
+                "text"=>$lang["job_boost"],
+                "url"=>"#",
+                "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"job_boost\");return false;",
                 "modal"=>true,
                 );
             }
 
         $tablejob["tools"][] = array(
-            "icon"=>"fa fa-trash",
+            "icon"=>"fa fa-fw fa-trash",
             "text"=>$lang["action-delete"],
             "url"=>"#",
             "modal"=>false,
@@ -133,7 +154,7 @@ for($n=0;$n<$jobcount;$n++)
         if(checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE)
             {
             $tablejob["tools"][] = array(
-                "icon"=>"fas fa-undo",
+                "icon"=>"fas fa-fw fa-undo",
                 "text"=>$lang["job_reset"],
                 "url"=>"#",
                 "modal"=>false,
