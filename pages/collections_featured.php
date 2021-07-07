@@ -51,18 +51,10 @@ if($enable_theme_breadcrumbs && $parent > 0)
         )
     );
 
-    $node_branch_path = compute_node_branch_path($all_fcs, $parent);
-    if($featured_collections_root_collection > 0)
+    $fc_branch_path = move_featured_collection_branch_path_root(compute_node_branch_path($all_fcs, $parent));
+    if(empty($fc_branch_path))
         {
-        $fc_root_col_position = array_search($featured_collections_root_collection, array_column($node_branch_path, 'ref'));
-        if($fc_root_col_position !== false)
-            {
-            $node_branch_path = array_slice($node_branch_path, ++$fc_root_col_position);
-            if(empty($node_branch_path))
-                {
-                $links_trail = [];
-                }
-            }
+        $links_trail = [];
         }
 
     $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
@@ -71,7 +63,7 @@ if($enable_theme_breadcrumbs && $parent > 0)
             "title" => strip_prefix_chars(i18n_get_translated($branch["name"]),"*"),
             "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
-        }, $node_branch_path);
+        }, $fc_branch_path);
 
     renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");
     }
