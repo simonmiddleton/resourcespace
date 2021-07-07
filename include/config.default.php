@@ -1745,6 +1745,10 @@ $themes_simple_images=true;
 # Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
+// Change featured collections root by pointing at a new featured collection (preferably a category).
+// Used mainly in combination with "$use_theme_as_home = true;"
+$featured_collections_root_collection = 0;
+
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
 # If a theme header contains a single collection, allow the title to be a direct link to the collection.

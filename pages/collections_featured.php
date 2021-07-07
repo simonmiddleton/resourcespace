@@ -2,7 +2,7 @@
 include_once "../include/db.php";
 
 $k = trim(getval("k", ""));
-$parent = (int) getval("parent", 0, true);
+$parent = (int) getval("parent", $featured_collections_root_collection, true);
 if($k == "" || !check_access_key_collection($parent, $k))
     {
     include "../include/authenticate.php";
