@@ -203,7 +203,7 @@ if ($search_titles)
             );
 
             // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
-            // If we were use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
+            // If we were to use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
             // collections_featured.php which we don't want
             $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
                 {
