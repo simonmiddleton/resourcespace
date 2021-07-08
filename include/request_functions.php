@@ -302,6 +302,7 @@ function email_collection_request($ref,$details,$external_email)
     
     $templatevars['username']=$username . " (" . $useremail . ")";
     $userdata=get_user($userref);
+    if($userdata===false){return false;} # Unable to get user credentials
     $templatevars["fullname"]=$userdata["fullname"];
     
     reset ($_POST);
