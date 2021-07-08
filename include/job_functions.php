@@ -108,7 +108,7 @@ function job_queue_delete($ref)
  * @param  string $find
  * @return array
  */
-function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="")
+function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="")
     {
     global $userref;
     $condition=array();
@@ -123,15 +123,44 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
         $hiddentypes[] = "delete_file";
         $condition[] = " type NOT IN ('" . implode("','",$hiddentypes) . "')";  
         }
-    if($status != "" && (int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
-    if($user!="" && (int)$user > 0 && ($user == $userref || checkperm_user_edit($user)))
+        
+    if((int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
+    if((int)$user > 0)
         {
-        $condition[] = " user ='" . escape_check($user) . "'";
+        // Has user got access to see this user's jobs?
+        if($user == $userref || checkperm_user_edit($user))
+            {             
+            $condition[] = " user ='" . (int)$user . "'";
+            }
+        elseif(isset($userref))
+            {
+            // Only show own jobs
+            $condition[] = " user ='" . (int)$userref . "'";
+            }
+        else
+            {
+            // No access - return empty array
+            return array();
+            }
         }
-    elseif(PHP_SAPI != "CLI" && isset($userref))
+    else
         {
-        $condition[] = " user ='" . $userref . "'";
+        // Requested jobs for all users - only possible for cron or system admin, set condition otherwise
+        if(PHP_SAPI != "cli" && !checkperm('a'))
+            {
+            if(isset($userref))
+                {
+                // Only show own jobs
+                $condition[] = " user ='" . (int)$userref . "'";
+                }
+            else
+                {
+                // No access - return nothing
+                return array();
+                }
+            }
         }
+
     if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
     if($find!="")
         {
@@ -247,7 +276,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $offline_job_in_progress = true;
         include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
         // Update to mark job as complete and reset priority to the default according to job type
-        job_queue_update($jobref, $job_data,STATUS_COMPLETE,'',get_job_type_priority($job["type"]));
+        job_queue_update($jobref, $job_data,STATUS_COMPLETE,date('Y-m-d H:i:s'),JOB_PRIORITY_COMPLETED);
         }
     else
         {
@@ -274,7 +303,7 @@ function job_queue_run_job($job, $clear_process_lock)
                 job_queue_update($jobref, $job_data,STATUS_INPROGRESS);
                 $offline_job_in_progress = true;
                 include __DIR__ . "/../plugins/" . $plugin . "/job_handlers/" . $job["type"] . ".php";
-                job_queue_update($jobref, $job_data,STATUS_COMPLETE,'',get_job_type_priority($job["type"]));
+                job_queue_update($jobref, $job_data,STATUS_COMPLETE,date('Y-m-d H:i:s'),JOB_PRIORITY_COMPLETED);
                 break;
                 }
             }
@@ -285,7 +314,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $logmessage="Unable to find handlerfile: " . $job["type"]. PHP_EOL;
         echo $logmessage;
         debug($logmessage);
-        job_queue_update($jobref,$job_data,STATUS_ERROR);
+        job_queue_update($jobref,$job_data,STATUS_ERROR,date('Y-m-d H:i:s'));
         }
     
     $logmessage =  " - Finished job #" . $jobref . PHP_EOL;

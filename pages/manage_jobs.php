@@ -10,7 +10,7 @@ if($job_user != $userref && !checkperm('a'))
     }
 $job_status     = getval("job_status",-1,true);
 $job_type       = getval("job_type","");
-$job_orderby    = getval("job_orderby","priority");
+$job_orderby    = getval("job_orderby","priority ASC, start_date ");
 $job_boost      = getval("job_boost",0,true);
 $job_sort       = (strtoupper(getval("job_sort","ASC")) == "DESC") ? "DESC" : "ASC";
 $job_find       = getval("job_find","");
@@ -40,13 +40,13 @@ elseif($resetjob > 0 && enforcePostRequest(true))
     if(checkperm('a') || $resetjobdetail["user"] == $userref)
         {
         clear_process_lock("job_{$resetjob}");
-        job_queue_update($resetjob,array(),1,,'',get_job_type_priority($resetjobdetail["type"])));
+        job_queue_update($resetjob,array(),1,'',get_job_type_priority($resetjobdetail["type"]));
         }
     }
 elseif($job_boost > 0 && enforcePostRequest(true) && checkperm('a'))
     {
     clear_process_lock("job_{$job_boost}");
-    job_queue_update($job_boost,array(),1,date('Y-m-d H:i:s'),0);
+    job_queue_update($job_boost,array(),1,date('Y-m-d H:i:s'),JOB_PRIORITY_IMMEDIATE);
     }
 elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true) && checkperm('a'))
     {
@@ -121,11 +121,21 @@ for($n=0;$n<$jobcount;$n++)
             }
         $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
         $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
-        if($jobs[$n]["status"] == STATUS_ERROR || $jobs[$n]["status"] !== STATUS_COMPLETE && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60))
+        if($jobs[$n]["status"] == STATUS_ERROR || (!in_array($jobs[$n]["status"],array(STATUS_COMPLETE,STATUS_INPROGRESS)) && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60)))
             {
             $tablejob["alerticon"] = "fas fa-exclamation-triangle";
             }
         $tablejob["tools"] = array();
+
+
+        $tablejob["tools"][] = array(
+            "icon"=>"fa fa-fw fa-trash",
+            "text"=>$lang["action-delete"],
+            "url"=>"#",
+            "modal"=>false,
+            "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
+            );
+
         if(checkperm('a'))
             {
             $tablejob["tools"][] = array(
@@ -141,15 +151,32 @@ for($n=0;$n<$jobcount;$n++)
                 "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"job_boost\");return false;",
                 "modal"=>true,
                 );
+            switch ($jobs[$n]["priority"])
+                {
+                case JOB_PRIORITY_IMMEDIATE:
+                    $priorityicon = "fas fa-fw fa-bolt";
+                break;
+                
+                case JOB_PRIORITY_USER:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                break;
+                
+                case JOB_PRIORITY_SYSTEM:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                break;
+                
+                case JOB_PRIORITY_COMPLETED:
+                default:
+                $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                break;
+                }
+            $tablejob["tools"][] = array(
+                "icon"=> $priorityicon,
+                "text"=>$lang["job_priority"],
+                "url"=>"#",
+                "modal"=>false,
+                );
             }
-
-        $tablejob["tools"][] = array(
-            "icon"=>"fa fa-fw fa-trash",
-            "text"=>$lang["action-delete"],
-            "url"=>"#",
-            "modal"=>false,
-            "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
-            );
 
         if(checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE)
             {
@@ -199,7 +226,7 @@ include '../include/header.php';
             ?>
         
         document.getElementById('job_list_container').appendChild(temp_form);
-        CentralSpacePost(document.getElementById('jobform'),true);
+        CentralSpacePost(document.getElementById('jobform'),false);
 
         }
 </script>

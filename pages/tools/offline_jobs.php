@@ -107,7 +107,6 @@ if($offline_job_queue)
         }
 
     $offlinejobs=job_queue_get_jobs("", STATUS_ACTIVE, "","","priority,ref", "ASC");
-
     foreach($offlinejobs as $offlinejob)
         {
         if(!empty($jobs) && !in_array($offlinejob["ref"], $jobs))

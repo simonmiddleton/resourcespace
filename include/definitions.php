@@ -176,6 +176,7 @@ define ('STATUS_ERROR',					5);
 define ('JOB_PRIORITY_IMMEDIATE',   0);
 define ('JOB_PRIORITY_USER',		1);
 define ('JOB_PRIORITY_SYSTEM',		2);
+define ('JOB_PRIORITY_COMPLETED', 999);
 
 // -------------------- General definitions --------------------
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry

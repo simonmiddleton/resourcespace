@@ -5051,7 +5051,7 @@ function render_table($tabledata)
         }
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
-        echo "<th " . (isset($headerdetails["width"]) ? ("style='width:" . htmlspecialchars($headerdetails["width"]) . "'") : "") . ">";
+        echo "<th " . ($headerdetails["name"]==$lang["tools"] ? "class='ListTools'" : "") . (isset($headerdetails["width"]) ? ("style='width:" . htmlspecialchars($headerdetails["width"]) . "'") : "") . ">";
         if($headerdetails["sortable"])
             {
             $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
