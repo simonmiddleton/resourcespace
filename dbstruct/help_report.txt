@@ -1,4 +1,4 @@
 Reports as listed in the admin area.
 ref,int(11),
-name,varchar(100),
+name,varchar(100),Report name.
 query,text,SQL defining the report.
