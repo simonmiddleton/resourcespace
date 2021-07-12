@@ -17,7 +17,7 @@ $cli_long_options  = array(
     'html-field:',
     'plaintext-field:',
     'encoding:',
-    'html-decode'
+    'html-entity-decode'
 );
 $help_text = "NAME
     remove_html - a script to help administrators remove HTML from existing fields' values for all resources.
@@ -32,15 +32,17 @@ DESCRIPTION
 
 OPTIONS SUMMARY
 
-    -h, --help          Display this help text and exit
-    -d, --html-decode   Optional parameter. If specified, html encoded characters will be decoded. This will apply PHP's default_charset value, normally UTF 8.
-    --html-field        Metadata field ID storing HTML content. Value must be a positive number. REQUIRED
-    --plaintext-field   Metadata field ID to save the content after being processed. Value must be a positive number. REQUIRED
-    --encoding          Optional parameter. If -d is included, an encoding value can be specified e.g. --encoding:\"ISO-8859-1\" For values available 
-                        see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
+    -h, --help                 Display this help text and exit
+    -d, --html-entity-decode   Optional parameter. If specified, html encoded characters will be decoded. This will apply PHP's default_charset value, normally UTF 8.
+    --html-field               Metadata field ID storing HTML content. Value must be a positive number. REQUIRED
+    --plaintext-field          Metadata field ID to save the content after being processed. Value must be a positive number. REQUIRED
+    --encoding                 Optional parameter. If -d is included, an encoding value can be specified e.g. --encoding:\"ISO-8859-1\" For values available 
+                               see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
 
 EXAMPLES
     php remove_html.php --html-field=\"87\" --plaintext-field=\"88\"
+    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\"
+    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\" --encoding:\"ISO-8859-1\"
 ";
 $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
@@ -52,7 +54,7 @@ foreach($options as $option_name => $option_value)
         exit(0);
         }
     
-    if(in_array($option_name, ['d','html-decode']))
+    if(in_array($option_name, ['d','html-entity-decode']))
         {
         $html_decode = true;
         continue;
@@ -60,7 +62,7 @@ foreach($options as $option_name => $option_value)
     
     if(in_array($option_name, ['encoding']))
         {
-        $$option_name = $option_value;
+        $$option_name = $option_value[0];
         continue;
         }
 
