@@ -2259,7 +2259,7 @@ if($disablenavlinks)
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
 
-if (!$external_upload)
+if (!$external_upload && !$edit_upload_options_at_top)
     {
     ?></div><?php
     }
