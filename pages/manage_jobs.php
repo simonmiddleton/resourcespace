@@ -10,7 +10,7 @@ if($job_user != $userref && !checkperm('a'))
     }
 $job_status     = getval("job_status",-1,true);
 $job_type       = getval("job_type","");
-$job_orderby    = getval("job_orderby","priority ASC, start_date ");
+$job_orderby    = getval("job_orderby","priority");
 $job_boost      = getval("job_boost",0,true);
 $job_sort       = (strtoupper(getval("job_sort","ASC")) == "DESC") ? "DESC" : "ASC";
 $job_find       = getval("job_find","");
@@ -98,6 +98,12 @@ $tabledata = array(
     "data"=>array()
     );
 
+if(checkperm('a'))
+    {
+    $priorityheader = array("name"=>$lang["job_priority"],"sortable"=>false,"html"=>true, "width" => "40px", "sortable"=>true);
+    $tabledata["headers"] = array_merge(array("priority" => $priorityheader),$tabledata["headers"]);
+    }
+
 if(!checkperm('a'))
     {
     unset($tabledata["headers"]["fullname"]);
@@ -118,6 +124,28 @@ for($n=0;$n<$jobcount;$n++)
             {
             // Only required if can see jobs for different users
             $tablejob["fullname"] = $jobs[$n]["fullname"];
+
+            // Add priority column
+            switch ($jobs[$n]["priority"])
+                {
+                case JOB_PRIORITY_IMMEDIATE:
+                    $priorityicon = "fas fa-fw fa-bolt";
+                break;
+                
+                case JOB_PRIORITY_USER:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                break;
+                
+                case JOB_PRIORITY_SYSTEM:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                break;
+                
+                case JOB_PRIORITY_COMPLETED:
+                default:
+                $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                break;
+                }
+            $tablejob["priority"] = "<span class='" . $priorityicon . "'></span>";
             }
         $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
         $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
@@ -125,9 +153,11 @@ for($n=0;$n<$jobcount;$n++)
             {
             $tablejob["alerticon"] = "fas fa-exclamation-triangle";
             }
+
+        
+        
+
         $tablejob["tools"] = array();
-
-
         $tablejob["tools"][] = array(
             "icon"=>"fa fa-fw fa-trash",
             "text"=>$lang["action-delete"],
@@ -150,31 +180,6 @@ for($n=0;$n<$jobcount;$n++)
                 "url"=>"#",
                 "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"job_boost\");return false;",
                 "modal"=>true,
-                );
-            switch ($jobs[$n]["priority"])
-                {
-                case JOB_PRIORITY_IMMEDIATE:
-                    $priorityicon = "fas fa-fw fa-bolt";
-                break;
-                
-                case JOB_PRIORITY_USER:
-                    $priorityicon = "fa fa-fw fa-arrow-circle-up";
-                break;
-                
-                case JOB_PRIORITY_SYSTEM:
-                    $priorityicon = "fa fa-fw fa-arrow-circle-right";
-                break;
-                
-                case JOB_PRIORITY_COMPLETED:
-                default:
-                $priorityicon = "fa fa-fw fa-arrow-circle-down";
-                break;
-                }
-            $tablejob["tools"][] = array(
-                "icon"=> $priorityicon,
-                "text"=>$lang["job_priority"],
-                "url"=>"#",
-                "modal"=>false,
                 );
             }
 
@@ -296,8 +301,8 @@ include '../include/header.php';
 
             <div class="Question"  id="QuestionJobFilterSubmit">
                 <label></label>
-                <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
-                <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="filter" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="clearfilter" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
                 <div class="clearerleft"></div>
             </div>
         </div>
