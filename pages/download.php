@@ -114,6 +114,20 @@ elseif($tempfile != "")
 else
     {
     $resource_data = get_resource_data($ref);
+    if (!is_array($resource_data)){
+        $error = $lang["resourcenotfound"];
+        if(getval("ajax","") != "")
+            {
+            error_alert($error, true,200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = array("title" => $lang["error"],"text" => $error);
+            include "../include/footer.php";
+            }
+        exit();
+    }
 
     resource_type_config_override($resource_data['resource_type']);
 

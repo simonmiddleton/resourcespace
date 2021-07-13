@@ -3,7 +3,7 @@ ref,int(11),
 name,varchar(100),The collection display name.
 user,int(11),User ID
 created,datetime,
-public,int(11),Set to '1' for public collections and featured collections.
+public,int(11),Set to '1' for public collections and featured collections (deprecated - use type instead).
 theme,varchar(100),The first level theme category. Defined for multi-level featured collections.
 theme2,varchar(100),The second level theme category. Defined for multi-level featured collections.
 theme3,varchar(100),The third level theme category. Defined for multi-level featured collections.
@@ -16,7 +16,7 @@ home_page_text,text,(legacy) used if $home_dash=false
 home_page_image,int(11),(legacy) used if $home_dash=false
 session_id,int(11),Used for anonymous access with collections enabled - the session ID cookie used by the anonymous user, as a single user is used for all accesses.
 description,text,Textual description.
-type,int(11),Collection type such as Featured / Upload / Select
+type,int(11),Collection type such as Public / Featured / Upload / Select (see include/definition.php)
 parent,int(11),The parent collection for collections existing within a tree structure such as Featured Collections.
 thumbnail_selection_method,int(11),How do we select the thumbnails to show on the tile for this collection?
 bg_img_resource_ref,int(11),The resource ID of the preview image.
