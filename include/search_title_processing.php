@@ -202,15 +202,19 @@ if ($search_titles)
                 "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params)
             );
 
-            // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
-            // If we were use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
-            // collections_featured.php which we don't want
+            $fc_branch_path = move_featured_collection_branch_path_root(
+                // We ask for the branch up from the parent as we want to generate a different link for the actual collection.
+                // If we were to use the $collectiondata["ref"] then the generated link for the collection would've pointed at 
+                // collections_featured.php which we don't want
+                get_featured_collection_category_branch_by_leaf((int) $collectiondata["parent"], [])
+            );
+
             $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
                 {
                 return array(
                     "title" => i18n_get_translated($branch["name"]),
                     "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"])));
-                }, get_featured_collection_category_branch_by_leaf((int) $collectiondata["parent"], array()));
+                }, $fc_branch_path);
             }
 
         $full_collection_trail = array_merge($collection_trail, $branch_trail);

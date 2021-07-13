@@ -5096,6 +5096,39 @@ function get_featured_collection_ref_by_name(string $name, $parent)
 
 
 /**
+ * Move a featured collection branch paths' root to the node determined by the global configuration option $featured_collections_root_collection.
+ * 
+ * This temporarily moves the root of the featured collection branch, removing any nodes on the branch from the real root 
+ * up to the new root.
+ * 
+ * @see $featured_collections_root_collection configuration option
+ * 
+ * @param array $branch_path List of branch path nodes as returned by {@see compute_node_branch_path()}
+ * 
+ * @return array
+ */
+function move_featured_collection_branch_path_root(array $branch_path)
+    {
+    global $featured_collections_root_collection;
+
+    if($featured_collections_root_collection > 0)
+        {
+        $fc_root_col_position = array_search($featured_collections_root_collection, array_column($branch_path, 'ref'));
+        if($fc_root_col_position !== false)
+            {
+            $branch_path = array_slice($branch_path, ++$fc_root_col_position);
+            if(empty($branch_path))
+                {
+                $links_trail = [];
+                }
+            }
+        }
+
+    return $branch_path;
+    }
+
+
+/**
 * Check if user is allowed to share collection
 * 
 * @param array $c Collection data 
