@@ -1853,3 +1853,81 @@ function validate_tile_style(string $type, string $style)
         return '';
         }
     }
+
+
+/**
+ * Sanitise the url provided when saving a dash tile. This function will take the value obtained by the form and pass it through if valid. 
+ * If the url supplied is invalid, a blank value will be returned allowing the default standard tile type to be used.
+ *
+ * @param   string  $buildurl   url supplied when dash tile is edited, containing a number of optional parameters.
+ * 
+ * @return  string  A valid url or empty string if invalid.  
+ */
+function validate_build_url($buildurl)
+    {
+    if ($buildurl != "")
+        {
+        # Sanitise the url provided.
+        $build_url_parts = explode('?',$buildurl);
+        if ($build_url_parts[0] != 'pages/ajax/dash_tile.php')
+            {
+            // url is wrong - build standard tile
+            $buildurl = "";
+            }
+        else
+            {
+            $build_url_parts_param = explode('&',$build_url_parts[1]);
+            foreach ($build_url_parts_param as $url_part_param)
+                {
+                $build_url_param = explode('=',$url_part_param);
+                if (in_array($build_url_param[0],array('tltype','tlsize','tlstyle','promimg')))
+                    {
+                    global $tile_styles;
+                    switch ($build_url_param[0])
+                        {
+                        case 'tltype':
+                            # type checks
+                            if (!array_key_exists($build_url_param[1],$tile_styles))
+                                {
+                                $buildurl = "";
+                                }
+                            break;
+                        case 'tlsize':
+                            # size checks
+                            if (!in_array($build_url_param[1],array('single','double','')))
+                                {
+                                $buildurl = "";
+                                }
+                            break;
+                        case 'tlstyle':
+                            # style checks
+                            $all_tile_styles = array();
+                            foreach ($tile_styles as $tile_type_style)
+                                {
+                                $all_tile_styles = array_merge($all_tile_styles, $tile_type_style);
+                                }
+                            if (!in_array($build_url_param[1],$all_tile_styles))
+                                {
+                                $buildurl = "";
+                                }
+                            break;
+                        case 'promimg':
+                            # img checks
+                            if (!is_numeric($build_url_param[1]) && !is_bool($build_url_param[1]))
+                                {							    
+                                $buildurl = "";
+                                }
+                            break;
+                        }
+                    }
+                else 
+                    {
+                    // parameter is wrong - build standard tile
+                    $buildurl = "";
+                    break;
+                    }
+                }
+            }
+        }
+    return $buildurl;
+    }

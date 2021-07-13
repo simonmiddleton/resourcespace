@@ -26,6 +26,8 @@ if($submitdashtile && enforcePostRequest(false))
 	{
 	$buildurl = getvalescaped("url","");
     $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+	
+	$buildurl = validate_build_url($buildurl);
 
 	if ($buildurl=="")
 		{
