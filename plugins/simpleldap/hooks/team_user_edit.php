@@ -11,9 +11,8 @@ function HookSimpleldapTeam_user_editAdditionaluserfields()
         }
     }
 
-function HookSimpleldapTeam_user_editPassword()
+function HookSimpleldapTeam_user_editPassword($user)
     {
-    global $user;
     if (isset($user["origin"]) && $user["origin"] == "simpleldap")
         {
         return true;
