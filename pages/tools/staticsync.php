@@ -92,6 +92,7 @@ foreach($syncedresources as $syncedresource)
     
 // Set up an array to monitor processing of new alternative files
 $alternativefiles=array();
+$restypes = get_resource_types();
 
 if (isset($numeric_alt_suffixes) && $numeric_alt_suffixes > 0)
     {
@@ -198,11 +199,10 @@ function ProcessFolder($folder)
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
            $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
            $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref,
-           $resource_type_extension_mapping_default, $resource_type_extension_mapping;
+           $resource_type_extension_mapping_default, $resource_type_extension_mapping, $restypes;
     
     $collection = 0;
-    $treeprocessed=false;
-   
+    $treeprocessed=false;   
     
     if(!file_exists($folder))
         {
@@ -550,7 +550,6 @@ function ProcessFolder($folder)
                             $match = $mapfolder["match"];
                             $field = $mapfolder["field"];
                             $level = $mapfolder["level"];
-
                             if (strpos("/" . $shortpath, $match) !== false)
                                 {
                                 # Match. Extract metadata.
@@ -562,9 +561,7 @@ function ProcessFolder($folder)
                                         {
                                         # access level is a special case
                                         # first determine if the value matches a defined access level
-
                                         $value = $path_parts[$level-1];
-
                                         for ($n=0; $n<3; $n++){
                                             # if we get an exact match or a match except for case
                                             if ($value == $lang["access" . $n] || strtoupper($value) == strtoupper($lang['access' . $n]))
@@ -573,23 +570,30 @@ function ProcessFolder($folder)
                                                 echo "Will set access level to " . $lang['access' . $n] . " ($n)" . PHP_EOL;
                                                 }
                                             }
-
                                         }
                                     else if ($field == 'archive')
-										{
-										# archive level is a special case
-										# first determine if the value matches a defined archive level
-										
-										$value = $mapfolder["archive"];
-										$archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);
-										
-										if(in_array($value,$archive_array))
-											{
-											$archiveval = $value;
-											echo "Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
-											}
-										
-										}
+                                        {
+                                        # archive level is a special case
+                                        # first determine if the value matches a defined archive level                                        
+                                        $value = $mapfolder["archive"];
+                                        $archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);                                        
+                                        if(in_array($value,$archive_array))
+                                            {
+                                            $archiveval = $value;
+                                            echo "Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
+                                            }                                        
+                                        }
+                                    else if ($field == 'resource_type')
+                                        {
+                                        # first determine if the value matches a valid resource type                                        
+                                        $value = $path_parts[$level-1];
+                                        $typeidx = array_search($value,array_column($restypes,"name"));                                        
+                                        if($typeidx !== false)
+                                            {
+                                            $maprestype = $restypes[$typeidx]["ref"];
+                                            echo "\$staticsync_mapfolders - set resource type to " . $value . " ($maprestype)". PHP_EOL;
+                                            }                                        
+                                        }
                                     else 
                                         {
                                         # Save the value
@@ -681,8 +685,26 @@ function ProcessFolder($folder)
 						update_field($r,$staticsync_filepath_to_field,$shortpath);
 						}
 
-                    # update access level
-                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' " . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref = '$r'");
+                    # Update resource table
+                    $setvals = array();
+                    $setvals["access"] = $accessval;
+                    $setvals["archive"] = $staticsync_defaultstate;
+                    if(isset($maprestype) && $maprestype != $type)
+                        {
+                        $setvals["resource_type"] = $maprestype;
+                        }
+                    if(!$enable_thumbnail_creation_on_upload)
+                        {                        
+                        $setvals["has_image"] = 0;
+                        $setvals["preview_attempts"] = 0;
+                        }
+                    $updatesql = array();
+                    foreach($setvals as $name => $val)
+                        {
+                        $updatesql[] = $name . "='" . escape_check($val) . "'";
+                        }
+
+                    sql_query("UPDATE resource SET " . implode(",",$updatesql) . " WHERE ref = '" . $r . "'");
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
