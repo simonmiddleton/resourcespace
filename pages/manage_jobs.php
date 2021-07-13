@@ -40,13 +40,13 @@ elseif($resetjob > 0 && enforcePostRequest(true))
     if(checkperm('a') || $resetjobdetail["user"] == $userref)
         {
         clear_process_lock("job_{$resetjob}");
-        job_queue_update($resetjob,array(),1,'',get_job_type_priority($resetjobdetail["type"]));
+        job_queue_update($resetjob,array(),1,date('Y-m-d H:i:s'),get_job_type_priority($resetjobdetail["type"]));
         }
     }
 elseif($job_boost > 0 && enforcePostRequest(true) && checkperm('a'))
     {
     clear_process_lock("job_{$job_boost}");
-    job_queue_update($job_boost,array(),1,date('Y-m-d H:i:s'),JOB_PRIORITY_IMMEDIATE);
+    job_queue_update($job_boost,array(),1,'',JOB_PRIORITY_IMMEDIATE);
     }
 elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true) && checkperm('a'))
     {
