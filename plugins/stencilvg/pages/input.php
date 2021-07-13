@@ -38,24 +38,29 @@ foreach ($params as $param)
     {
     ?>
     <p><?php echo htmlspecialchars($param) ?><br />
-    <input type="text" class="stdwidth" name="<?php echo base64_encode($param) ?>" id="<?php echo base64_encode($param) ?>" onKeyUp="UpdateSVG();" onChange="onKeyUp="UpdateSVG();" />
+    <input type="text" class="stdwidth" name="<?php echo base64_encode($param) ?>" id="<?php echo base64_encode($param) ?>" value="<?php echo htmlspecialchars($param) ?>" onKeyUp="UpdateSVG();" onChange="onKeyUp="UpdateSVG();" />
     </p>
     <?php
     }
-
-
 ?>
+<input type="button" onclick="PrintSVG();" value="Print" />
+<input type="button" onclick="" value="Download as SVG" />
+<input type="button" onclick="" value="Download as PDF" />
+<input type="button" onclick="" value="Save as new resource" />
+
+
 <style>
-.svg {float:right;}
-.svg svg {background-color:white;max-width:50%;max-height:600px;}
+.svg {float:right;width:50%;margin-top:50px;}
+.svg svg {background-color:white;xmax-width:50%;xmax-height:600px;transform:scale(1.5);box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);}
 </style>
 
 <script>
 var svg_source=<?php echo json_encode($svg_source) ?>;
+var svg_new;
 
 function UpdateSVG()
     {
-    var svg_new=svg_source;
+    svg_new=svg_source;
 
     <?php
     // For each parameter, find and replace it in the SVG source.
@@ -67,7 +72,16 @@ function UpdateSVG()
     console.log(svg_new);
     document.getElementById('svgpreview').innerHTML=svg_new;
     }
-    UpdateSVG();
+
+function PrintSVG()
+    {
+    var printsvg=window.open();printsvg.document.body.innerHTML=svg_new;
+    printsvg.print();printsvg.close();
+    }
+
+
+// Start up
+UpdateSVG();
 </script>
 
 
