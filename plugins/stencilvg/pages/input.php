@@ -57,6 +57,8 @@ foreach ($params as $param)
 <p>
 <input type="radio" name="filetype" value="SVG" id="filetype-svg" checked /><label for="filetype-svg">SVG</label>
 <input type="radio" name="filetype" value="PDF" id="filetype-pdf" disabled /><label for="filetype-pdf">PDF</label>
+<input type="radio" name="filetype" value="EPS" id="filetype-eps" disabled /><label for="filetype-EPS">EPS</label>
+
 </p>
 
 <p>
