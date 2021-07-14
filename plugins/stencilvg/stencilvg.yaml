@@ -1,0 +1,9 @@
+name    : stencilvg
+title   : StencilVG
+author  : Dan Huby
+version : 1.0
+desc    : Web to print (W2P) / Dynamic Publishing functionality using SVG template files
+icon    : fa fa-hat-wizard
+default_priority: 998
+category: Asset processing
+config_url: /plugins/stencilvg/pages/setup.php
