@@ -15,6 +15,9 @@ $page_intro = "<p></p>";
 
 $page_def[] = config_add_single_rtype_select("stencilvg_resource_type_for_new", $lang["stencilvg_resource_type_for_new"]);
 
+$page_def[] = config_add_text_input("stencilvg_dpi", $lang["stencilvg_dpi"]);
+
+
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

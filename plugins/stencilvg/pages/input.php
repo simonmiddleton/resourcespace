@@ -11,6 +11,10 @@ $order_by   = getval("order_by","");
 $sort       = getval("sort","");
 $k          = getval("k","");
 
+// Test for presence of rsvg-convert and warn if not installed.
+$rsvg_version=join("\n",run_external("rsvg-convert -v"));
+$rsvg_installed=(strpos($rsvg_version,"version")!==false);
+
 $resource_data=get_resource_data($ref);
 ?>
 <div class="BasicsBox">
@@ -56,9 +60,13 @@ foreach ($params as $param)
 
 <p>
 <input type="radio" name="filetype" value="SVG" id="filetype-svg" checked /><label for="filetype-svg">SVG</label>
-<input type="radio" name="filetype" value="PDF" id="filetype-pdf" disabled /><label for="filetype-pdf">PDF</label>
-<input type="radio" name="filetype" value="EPS" id="filetype-eps" disabled /><label for="filetype-EPS">EPS</label>
-
+<?php foreach ($stencilvg_rsvg_supported_output_formats as $format)
+    {
+    ?>
+    <input type="radio" name="filetype" value="<?php echo $format ?>" id="filetype-<?php echo $format ?>" <?php if (!$rsvg_installed) { ?>disabled<?php } ?> /><label for="filetype-<?php echo $format ?>"><?php echo strtoupper($format) ?></label>
+    <?php
+    }
+?>
 </p>
 
 <p>
@@ -113,6 +121,7 @@ function DownloadSVG(save)
     document.getElementById('downloadsvg_save').value=save;
     document.getElementById('downloadsvg_svg').value=svg_new;
     document.getElementById('downloadsvg_filename').value=<?php echo json_encode(safe_file_name($resource_data["field" . $view_title_field]) . ".svg") ?>;
+    document.getElementById('downloadsvg_filetype').value=jQuery('input[name="filetype"]:checked').val();
     document.getElementById('downloadsvg').submit();
     }
 
@@ -124,9 +133,21 @@ UpdateSVG();
 <?php generateFormToken("downloadsvg") ?>
 <input type="hidden" id="downloadsvg_filename" name="filename" />
 <input type="hidden" id="downloadsvg_svg" name="svg" />
+<input type="hidden" id="downloadsvg_filetype" name="filetype" />
 <input type="hidden" id="downloadsvg_save" name="save" />
-
 </form>
+
+<?php
+// Display RSVG status.
+if (!$rsvg_installed)
+    {
+    echo "<p>" . $lang["stencilvg-rsvg-not-installed"] . "</p>";
+    }
+else    
+    {
+    // echo "<p>" . $rsvg_version . "</p>"; 
+    }
+?>
 
 </div> <!-- End of BasicsBox -->
 <?php
