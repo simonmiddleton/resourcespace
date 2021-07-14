@@ -6,3 +6,4 @@ desc    : Web to print (W2P) / Dynamic Publishing functionality using SVG templa
 icon    : fa fa-hat-wizard
 default_priority: 998
 category: Asset processing
+config_url: /plugins/stencilvg/pages/setup.php

@@ -53,11 +53,18 @@ foreach ($params as $param)
     <?php
     }
 ?>
-<button  onclick="PrintSVG();">Print</button>
-<button onclick="DownloadSVG();">Download as SVG</button>
-<input type="button" onclick="" value="Download as PDF" />
-<input type="button" onclick="" value="Save as new resource" />
 
+<p>
+<input type="radio" name="filetype" value="SVG" id="filetype-svg" checked /><label for="filetype-svg">SVG</label>
+<input type="radio" name="filetype" value="PDF" id="filetype-pdf" disabled /><label for="filetype-pdf">PDF</label>
+</p>
+
+<p>
+<button  onclick="PrintSVG();">Print</button>
+<button onclick="DownloadSVG(0);">Download</button>
+<!--<input type="button" onclick="" value="Download as PDF" />-->
+<button onclick="DownloadSVG(1);">Save as new resource</button>
+</p>
 
 <style>
 .svgouter {float:right;width:50%;}
@@ -95,11 +102,13 @@ function ZoomSVG(zoom)
     {
     svg_zoom+=zoom;
     if (svg_zoom>100) {svg_zoom=100;}
+    if (svg_zoom<10) {svg_zoom=10;}
     jQuery("svg").css('width', svg_zoom + '%');
     }
 
-function DownloadSVG(zoom)
+function DownloadSVG(save)
     {
+    document.getElementById('downloadsvg_save').value=save;
     document.getElementById('downloadsvg_svg').value=svg_new;
     document.getElementById('downloadsvg_filename').value=<?php echo json_encode(safe_file_name($resource_data["field" . $view_title_field]) . ".svg") ?>;
     document.getElementById('downloadsvg').submit();
@@ -113,6 +122,8 @@ UpdateSVG();
 <?php generateFormToken("downloadsvg") ?>
 <input type="hidden" id="downloadsvg_filename" name="filename" />
 <input type="hidden" id="downloadsvg_svg" name="svg" />
+<input type="hidden" id="downloadsvg_save" name="save" />
+
 </form>
 
 </div> <!-- End of BasicsBox -->
