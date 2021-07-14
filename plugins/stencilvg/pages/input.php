@@ -11,6 +11,7 @@ $order_by   = getval("order_by","");
 $sort       = getval("sort","");
 $k          = getval("k","");
 
+$resource_data=get_resource_data($ref);
 ?>
 <div class="BasicsBox">
 <?php
@@ -52,16 +53,16 @@ foreach ($params as $param)
     <?php
     }
 ?>
-<input type="button" onclick="PrintSVG();" value="Print" />
-<input type="button" onclick="" value="Download as SVG" />
+<button  onclick="PrintSVG();">Print</button>
+<button onclick="DownloadSVG();">Download as SVG</button>
 <input type="button" onclick="" value="Download as PDF" />
 <input type="button" onclick="" value="Save as new resource" />
 
 
 <style>
 .svgouter {float:right;width:50%;}
-.svg {overflow-x:auto;}
-.svg svg {background-color:white;max-width:80%;width:70%;height:auto;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);}
+.svg {overflow-x:auto;padding:20px;}
+.svg svg {background-color:white;max-width:100%;width:70%;height:auto;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);}
 </style>
 
 <script>
@@ -97,10 +98,22 @@ function ZoomSVG(zoom)
     jQuery("svg").css('width', svg_zoom + '%');
     }
 
+function DownloadSVG(zoom)
+    {
+    document.getElementById('downloadsvg_svg').value=svg_new;
+    document.getElementById('downloadsvg_filename').value=<?php echo json_encode(safe_file_name($resource_data["field" . $view_title_field]) . ".svg") ?>;
+    document.getElementById('downloadsvg').submit();
+    }
+
 // Start up
 UpdateSVG();
 </script>
 
+<form id="downloadsvg" action="download_svg.php" method="post">
+<?php generateFormToken("downloadsvg") ?>
+<input type="hidden" id="downloadsvg_filename" name="filename" />
+<input type="hidden" id="downloadsvg_svg" name="svg" />
+</form>
 
 </div> <!-- End of BasicsBox -->
 <?php
