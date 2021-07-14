@@ -12,14 +12,23 @@ $sort       = getval("sort","");
 $k          = getval("k","");
 
 ?>
-<div class="BasicsBox"><h1><?php echo $lang["stencilvg-go"] ?></h1>
+<div class="BasicsBox">
 <?php
 
 // Load SVG source
 $svg_path=get_resource_path($ref,true,"",false,"svg");
 $svg_source=file_get_contents($svg_path);
 
-echo "<div class='svg' id='svgpreview'></div>";
+?>
+<div class="svgouter">
+<p>
+    <a href="#" onClick="ZoomSVG(10);return false;"><i class="fa fa-2x fa-search-plus"></i></a>
+    <a href="#" onClick="ZoomSVG(-10);return false;"><i class="fa fa-2x fa-search-minus"></i></a>
+</p>
+    <div class="svg" id="svgpreview"></div>
+</div>
+<h1><?php echo $lang["stencilvg-go"] ?></h1>
+<?php
 
 # Fetch parameters
 $e=0;$params=array();
@@ -50,13 +59,15 @@ foreach ($params as $param)
 
 
 <style>
-.svg {float:right;width:50%;margin-top:50px;}
-.svg svg {background-color:white;xmax-width:50%;xmax-height:600px;transform:scale(1.5);box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);}
+.svgouter {float:right;width:50%;}
+.svg {overflow-x:auto;}
+.svg svg {background-color:white;max-width:80%;width:70%;height:auto;box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);}
 </style>
 
 <script>
 var svg_source=<?php echo json_encode($svg_source) ?>;
 var svg_new;
+var svg_zoom=70;
 
 function UpdateSVG()
     {
@@ -79,6 +90,12 @@ function PrintSVG()
     printsvg.print();printsvg.close();
     }
 
+function ZoomSVG(zoom)
+    {
+    svg_zoom+=zoom;
+    if (svg_zoom>100) {svg_zoom=100;}
+    jQuery("svg").css('width', svg_zoom + '%');
+    }
 
 // Start up
 UpdateSVG();
