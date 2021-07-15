@@ -669,9 +669,38 @@ function api_add_resource_nodes($resource,$nodestring)
     {
     // This is only for super admins
     if(!checkperm('a'))
-        {return false;}        
+        {
+        return false;
+        }        
     $nodes = explode(",",$nodestring);
-    return add_resource_nodes($resource,$nodes);
+    if (!add_resource_nodes($resource,$nodes))
+        {
+        return false;
+        }
+
+    # If this is a 'joined' field we need to add it to the resource column
+    $joins = get_resource_table_joins();
+    $joined_fields_to_update = array();
+    foreach ($nodes as $newnode)
+        {
+        $returned_node = array();
+        if (!get_node($newnode, $returned_node))
+            {
+            return false;
+            }
+        if(in_array($returned_node['resource_type_field'],$joins) && !in_array($returned_node['resource_type_field'],$joined_fields_to_update))
+            {
+            $joined_fields_to_update[] = $returned_node['resource_type_field'];
+            }
+        }
+    //$joined_fields_to_update = array_unique($joined_fields_to_update);
+    foreach ($joined_fields_to_update as $field_update)
+        {
+        $resource_node_data = get_data_by_field($resource, $field_update);
+        sql_query("UPDATE resource SET field".$field_update."='" . $resource_node_data . "' WHERE ref='$resource'");
+        }
+    
+    return true;
     }
     
  function api_add_resource_nodes_multi($resources,$nodestring)
