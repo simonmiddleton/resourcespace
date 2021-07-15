@@ -5561,3 +5561,19 @@ function render_antispam_question()
     </div>
     <?php
     }
+
+/**
+ * Renders a 'fixed' text question - not an inpout but to display information or values that cannot be changed
+ *
+ * @param  string $label
+ * @param  string $text
+ * @return void
+ */
+function render_fixed_text_question($label, $text)
+    {   
+    echo "<div class='Question'>
+        <label>" . htmlspecialchars($label) . "</label>
+        <div class='Fixed'>" . htmlspecialchars($text) . "</div>
+        <div class='clearerleft'></div>
+        </div>";
+    }

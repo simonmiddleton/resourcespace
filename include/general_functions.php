@@ -536,7 +536,8 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 
         $i++;
         }
-    $return = array_values($unique_returned_records);
+    // Reverse again so that the default lanaguage appears first in results
+    $return = array_values(array_reverse($unique_returned_records));
 
     return $return;
     }

@@ -2059,7 +2059,7 @@ $lang["changessaved"]="Changes Saved";
 
 $lang["resourceids"]="Resource ID(s)";
 
-$lang["warningrequestapprovalfield"]="!!! Warning - resource ID % - please take note of the following before approving !!!";
+$lang["warningrequestapprovalfield"]="Warning - resource ID % - please take note of the following before approving";
 
 $lang["yyyy-mm-dd"]="YYYY-MM-DD";
 
@@ -2087,7 +2087,7 @@ $lang["ascending"] = "Ascending";
 $lang["descending"] = "Descending";
 $lang["sort-type"] = "Sort type";
 $lang["collection-order"] = "Collection order";
-$lang["save-error"]="!! Error auto saving - please save manually !!";
+$lang["save-error"]="Error auto saving - please save manually";
 $lang["save-conflict-error"]="Edit conflict. Please reload the page";
 $lang["save-conflict-multiple"]="Edit conflict. Please reload the page";
 $lang["save-conflict-title"]="Edit conflict"; 
@@ -2588,7 +2588,7 @@ $lang['trash_bin_delete_dialog_title'] = 'Remove resource?';
 /* End of Global Trash Bin strings */
 
 /* My Account Strings */
-$lang["managecontent_defaulttextused"]="!! The text for the default language (?) is currently being used. Edit the text below to create an alternative version for this language / user group selection !!";
+$lang["managecontent_defaulttextused"]="The text for the default language (?) is currently being used. Edit the text below to create an alternative version for this language / user group selection";
 $lang["myaccount"]="My account";
 $lang["userpreferences"]="Preferences";
 $lang["modifyuserpreferencesintro"]="Options on this page allow you to make changes to some of the functionality  and interface that are available to you.";
