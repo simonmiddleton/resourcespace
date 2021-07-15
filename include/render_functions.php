@@ -5563,7 +5563,7 @@ function render_antispam_question()
     }
 
 /**
- * Renders a 'fixed' text question - not an inpout but to display information or values that cannot be changed
+ * Renders a 'fixed' text question - not an input but to display information or values that cannot be changed
  *
  * @param  string $label
  * @param  string $text

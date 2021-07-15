@@ -268,19 +268,6 @@ if ($saveaction != '' && enforcePostRequest(false))
         exit();
         }
 
-    // Redirect to terms page if necessary
-    if ($saveaction =="download" && $terms_download)
-        {
-        $terms_accepted=getvalescaped('iaccept', '');
-        if('on'!=$terms_accepted)
-            {
-            $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
-            $urlparams["url"]=$crop_url;
-            $redirect_to_terms_url=generateURL("pages/terms.php",$urlparams);
-            redirect($redirect_to_terms_url);
-            }
-        }
-
     // Set path to output file
     $tmpdir = get_temp_dir();
     if(!is_dir("$tmpdir/transform_plugin"))
@@ -377,43 +364,21 @@ if ($saveaction != '' && enforcePostRequest(false))
             }
         elseif ($saveaction == "download")
             {
-            // we are supposed to download
-            # Output file, delete file and exit
-            // Redirect to terms page if necessary
-            if ($terms_download)
-                {
-                $terms_accepted=getvalescaped('iaccept', '');
-                if('on'!=$terms_accepted)
-                    {
-                    $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
-                    $url_params["url"]=$crop_url;
-                    $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
-                    redirect($redirect_to_terms_url);
-                    exit();
-                    }
-                }
+            // Move file to user's temp location and then redirect to download via terms/usage
+            $randstring=md5(rand() . microtime());
+            $dlfile = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $new_ext;
+            rename($newpath,$dlfile);
+            
+            $dlparams = array(
+                "userfile" => $ref . "_" . $randstring . "." . $new_ext,
+                "filename" => strip_extension($filename)
+                );
 
-            // Download file
-            $filesize=filesize_unlimited($newpath);
-            ob_flush();
-
-            header(sprintf('Content-Disposition: attachment; filename="%s"', $filename));
-            header("Content-Length: " . $filesize);
-            set_time_limit(0);
-
-            $sent = 0;
-            $handle = fopen($newpath, "r");
-
-            // Now we need to loop through the file and echo out chunks of file data
-            while($sent < $filesize)
-                {
-                echo fread($handle, $download_chunk_size);
-                ob_flush();
-                $sent += $download_chunk_size;
-                }
-            #Delete File:
-            unlink($newpath);
-
+            $dlurl = generateURL($baseurl_short . "pages/download.php", $dlparams);
+            $url_params["url"]=$dlurl;
+            
+            $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
+            redirect($redirect_to_terms_url);
             exit();
             }
         elseif ($saveaction == "preview")

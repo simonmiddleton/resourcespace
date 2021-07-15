@@ -536,7 +536,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 
         $i++;
         }
-    // Reverse again so that the default lanaguage appears first in results
+    // Reverse again so that the default language appears first in results
     $return = array_values(array_reverse($unique_returned_records));
 
     return $return;
