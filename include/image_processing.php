@@ -1608,6 +1608,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     {
                     $file=file_exists($hpr_path)?$hpr_path:$origfile;
                     $using_original = true;
+                    if($file == $origfile)
+                        {
+                        // Reset icc flag as still required when using original as source
+                        $icc_transform_complete = false;
+                        }
                     }
                 }
 
