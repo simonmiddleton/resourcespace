@@ -485,12 +485,15 @@ else
 						$iiif_results[$n]["iiif_position"] = $position;
 						}
 
-					// Sort by position
-					usort($iiif_results, function($a, $b)
-						{
-						return $a['iiif_position'] - $b['iiif_position'];
-						});
-
+                    // Sort by position
+                    usort($iiif_results, function($a, $b)
+                        {
+                        if(is_int_loose($a['iiif_position']) && is_int_loose($b['iiif_position']))
+                            {
+                            return $a['iiif_position'] - $b['iiif_position'];
+                            }
+                        return strcmp($a['iiif_position'],$b['iiif_position']);                        
+                        });
 					if($xpath[1] == "manifest" || $xpath[1] == "")
 						{
 						/* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */

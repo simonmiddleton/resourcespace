@@ -11,13 +11,14 @@ include_once "{$webroot}/include/db.php";
 
 
 // Script options @see https://www.php.net/manual/en/function.getopt.php
-$cli_short_options = 'dh';
+$cli_short_options = 'cdh';
 $cli_long_options  = array(
     'help',
     'html-field:',
     'plaintext-field:',
     'encoding:',
-    'html-entity-decode'
+    'html-entity-decode',
+    'copy-all'
 );
 $help_text = "NAME
     remove_html - a script to help administrators remove HTML from existing fields' values for all resources.
@@ -38,6 +39,8 @@ OPTIONS SUMMARY
     --plaintext-field          Metadata field ID to save the content after being processed. Value must be a positive number. REQUIRED
     --encoding                 Optional parameter. If -d is included, an encoding value can be specified e.g. --encoding:\"ISO-8859-1\" For values available 
                                see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
+    -c, --copy-all             Optional parameter. By default this script will only output to the --plaintext-field if html was found in the --html-field. Adding -c will
+                               force the script to copy the data regardless of if any change has occurred. Useful if the --plaintext-field is to replace the --html-field.
 
 EXAMPLES
     php remove_html.php --html-field=\"87\" --plaintext-field=\"88\"
@@ -46,6 +49,7 @@ EXAMPLES
 ";
 $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
+$copy_all = false;
 foreach($options as $option_name => $option_value)
     {
     if(in_array($option_name, ['h', 'help']))
@@ -63,6 +67,12 @@ foreach($options as $option_name => $option_value)
     if(in_array($option_name, ['encoding']))
         {
         $$option_name = $option_value[0];
+        continue;
+        }
+
+    if(in_array($option_name, ['c','copy-all']))
+        {
+        $copy_all = true;
         continue;
         }
 
@@ -145,9 +155,12 @@ foreach($results as $resource_ref => $html_value)
             }
         }
 
-    if($html_value === $plaintxt_val)
+    if (!$copy_all)
         {
-        continue;
+        if($html_value === $plaintxt_val)
+            {
+            continue;
+            }
         }
 
     if(trim($plaintxt_val) === '')

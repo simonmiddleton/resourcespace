@@ -151,9 +151,9 @@ function mplus_generate_module_record_url(string $module, int $id)
     {
     global $museumplus_host, $museumplus_application;
 
-    $host = trim($museumplus_host);
-    $application = trim($museumplus_application);
-    $module = trim($module);
+    $host = trim($museumplus_host, " \n\r\t\v\0/");
+    $application = trim($museumplus_application, " \n\r\t\v\0/");
+    $module = trim($module, " \n\r\t\v\0/");
     $id = ($id > 0 ? $id : '');
 
     if($host == '' || $application == '' || $module == '' || $id == '')

@@ -32,6 +32,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
 
+    # An array of conditions spanning all governed fields and all governing fields
     $scriptconditions=array();
         
     # Assume the field being rendered should be displayed
@@ -60,16 +61,18 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 {
                 return false;
                 }
-            for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
+            for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if it is a governing field whose value needs to be checked
                 {
-                # If the field being processed is referenced in the current test 
+                # If the field being processed is referenced in the current test, then it is a governing field 
                 if ($s[0]==$fields[$cf]["name"]) 
                     {
                     # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
                     # The script conditions array contains an entry for each governing field
-                    $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # governing field
+                    $scriptconditions[$condref]["governedfield"]       = $field["ref"];  # governed field
+                    
                     $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
@@ -252,27 +255,12 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         $function_has_category_tree_check=false;
         ?>
         <script type="text/javascript">
-        
-        <?php 
-        if(!$displaycondition && $forsearchbar)
-            {
-            // Create or add to array of fields to hide when clearing search
-            ?>
-            if(typeof clearhiddenfields == "object")
-                {
-                clearhiddenfields.push('<?php echo $field["ref"]; ?>');
-                }
-            else
-                {
-                clearhiddenfields = new Array('<?php echo $field["ref"]; ?>');
-                }
-            <?php
-            }?>
 
         checkSearchDisplayCondition<?php echo $field["ref"];?> = function ()   
 			{
             // Check the node passed in from the changed governing field
             var idname<?php echo $field['ref']; ?>     = "<?php echo $forsearchbar?"#simplesearch_".$field['ref']:"#question_".$n; ?>";
+            var ixThisField;
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery(idname<?php echo $field['ref']; ?>).css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
@@ -384,10 +372,28 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
             ?>
 
+                // If not yet defined, initialise an array of governed fields to be hidden when resetting simple search
+                if(typeof fieldsToHideOnClear == "undefined")
+                    {
+                    fieldsToHideOnClear = new Array();
+                    }
+    
                 // If the governed field is enabled then set it to display
                 if(field<?php echo $field['ref']; ?>visibility)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
+                    // This governed field will be shown, so remove it from array of fields to hide when resetting simple search
+                    ixThisField = fieldsToHideOnClear.indexOf('<?php echo $field["ref"]; ?>');
+                    fieldsToHideOnClear.splice(ixThisField,1);
+                    }
+                else
+                    {
+                    // This governed field will be hidden, so add it to array of fields to hide when resetting simple search
+                    ixThisField = fieldsToHideOnClear.indexOf('<?php echo $field["ref"]; ?>');
+                    if (ixThisField < 0) 
+                        { 
+                        fieldsToHideOnClear.push('<?php echo $field["ref"]; ?>'); 
+                        }
                     }
 
                 // If the governed field display state has changed then enact the change by sliding
@@ -430,7 +436,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     		// add the display condition check to the clear function
     		$clear_function.="checkSearchDisplayCondition".$field['ref']."();";
     		}
-        }
+
+        } // Endif rendered field with a display condition
 
     $is_search = true;
 

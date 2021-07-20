@@ -2197,7 +2197,6 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
     sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
     }
 
-
 /**
 * Updates resource field. Works out the previous value, so this is
 * not efficient if we already know what this previous value is (hence
@@ -2393,6 +2392,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
     else
         {
+        if (trim($value) == trim($existing))
+            {
+            // Nothing to do
+            return true;
+            }
         if ($fieldinfo["keywords_index"])
             {
             $is_html=($fieldinfo["type"]==8);	
