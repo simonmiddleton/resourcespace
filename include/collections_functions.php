@@ -4537,7 +4537,7 @@ function relate_all_collection($collection, $checkperms = true)
 * 
 * @return boolean
 */
-function update_collection_type($cid, $type)
+function update_collection_type($cid, $type, $log = true)
     {
     debug_function_call("update_collection_type", func_get_args());
 
@@ -4558,11 +4558,14 @@ function update_collection_type($cid, $type)
         return false;
         }
 
-    foreach($cid as $ref)
+    if($log)
         {
-        collection_log($ref, LOG_CODE_EDITED, "", "Update collection type to '{$type}'");
+        foreach($cid as $ref)
+            {
+            collection_log($ref, LOG_CODE_EDITED, "", "Update collection type to '{$type}'");
+            }
         }
-
+        
     $cid_list = "'" . implode("', '", $cid) . "'";
 
     sql_query("UPDATE collection SET `type` = '{$type}' WHERE ref IN ({$cid_list})");

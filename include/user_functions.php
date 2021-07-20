@@ -202,7 +202,7 @@ function setup_user($userdata)
         {
         // Don't create a new collection on every anonymous page load, it will be created when an action is performed
         $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
-        update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
+        update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION, false);
         }
 
     $newfilter = false;
