@@ -112,7 +112,7 @@ if($csvuploaded)
     {
     $messages = array();
     $csv_info = csv_upload_get_info($csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv",$messages);
-    $offline_limit = $csv_info["row_count"] > 100;
+    $offline_limit = $csv_info["row_count"] > 1000;
     $force_offline = $offline_limit && $offline_job_queue;
     $offline_text = $force_offline ? $lang["csv_upload_force_offline"] : $lang["csv_upload_recommend_offline"];
     unset($csv_info["row_count"]); // No longer needed
