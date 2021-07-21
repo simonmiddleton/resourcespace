@@ -3763,8 +3763,22 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             }
         }
 
-    $command .= $profile  . " \"$outputpath\"";
+    if(
+        isset($actions['resize']['width'], $actions['resize']['height'])
+        && is_numeric($actions['resize']['width']) && is_numeric($actions['resize']['height'])
+        && $actions['resize']['width'] > 0
+    )
+        {
+        # Apply resize ('>' means: never enlarge)
+        $command .= sprintf(' -resize "%s%s>"',
+            $actions['resize']['width'],
+            $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : ''
+        );
+        }
 
+    $command .= $profile . " \"$outputpath\"";
+    echo "transform_file_command = $command<br>";
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
     $shell_result = run_command($command);
 
     if (file_exists($outputpath))

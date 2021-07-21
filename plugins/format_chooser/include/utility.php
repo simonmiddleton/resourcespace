@@ -1,4 +1,5 @@
 <?php
+include_once dirname(__DIR__, 3) . '/include/image_processing.php';
 
 /**
  * Returns the default output file format to use given an optional input format.
@@ -67,8 +68,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $requested_extension = $alt_file['file_extension'];
 	    }
 
-	$originalPath = get_resource_path($resource['ref'], true, '', false,
-				$requested_extension, -1, $page, false, '', $alternative);
+	$originalPath = get_resource_path($resource['ref'], true, '', false, $requested_extension, -1, $page, false, '', $alternative);
 
     if($exiftool_write && $exiftool_write_option)
         {
@@ -102,6 +102,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         $command .= ' -background white -flatten';
         }
 
+    // TODO: remove once testing is done
 	if ($width != 0 && $height != 0)
 		{
 		# Apply resize ('>' means: never enlarge)
@@ -128,7 +129,23 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 		}
 
 	$command .= " \"$target\"";
+echo "convertImage_command = $command<br>";
 
+
+    // Profiles:
+    // keep profile:   convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" +profile * "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
+    // remove profile: convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -background white -flatten -resize "1400x800>" +profile * "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png0"
+    // RGB profile:    convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
+    // CMYK profile:   convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/ISOcoated_v2_bas.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
+
+    $transform_actions = [
+        'tfactions' => [],
+        'resize' => ['width' => $width, 'height' => $height],
+        'background' => '',
+    ];
+
+
+    transform_file($path, $target, $transform_actions);
 	run_command($command);
 
     //remove temp once completed
