@@ -37,10 +37,6 @@ abstract class Provider
         $this->temp_dir_path = $temp_dir_path;
         }
 
-    abstract public function getId();
-    abstract public function getName();
-    abstract public function getAllowedDownloadEndpoint();
-
     abstract public function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
 
@@ -179,5 +175,20 @@ abstract class Provider
         fclose($fh);
 
         return;
+        }
+
+    public function getId()
+        {
+        return $this->id;
+        }
+
+    public final function getName()
+        {
+        return $this->name;
+        }
+
+    public final function getAllowedDownloadEndpoint()
+        {
+        return $this->download_endpoint;
         }
     }

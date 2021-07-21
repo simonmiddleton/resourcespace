@@ -134,6 +134,7 @@ foreach($results as $result)
         </div>
         <div class="clearer"></div>
 
+        <?php if ($result->getOriginalFileUrl()!="") { ?>
         <div class="ResourcePanelIcons">
             <a href="<?php echo $result->getOriginalFileUrl(); ?>"
                class="fa fa-download"
@@ -156,6 +157,7 @@ foreach($results as $result)
             ?>
             <div class="clearer"></div>
         </div>
+        <?php } ?>
     </div>
     <?php
     }
