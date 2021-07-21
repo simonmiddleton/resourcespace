@@ -4,6 +4,9 @@ include_once "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
 
+// Ensure POST request.
+enforcePostRequest(false);
+
 $save=(getval("save","0")==1);
 $svg=getval("svg","");
 $filename=getvalescaped("filename","");
