@@ -16,7 +16,7 @@ class Pixabay extends Provider
         {
             if (!function_exists('curl_version'))
             {
-            return $this->lang["image_banks_pixabay_error_detail_curl"];
+            return $this->lang["image_banks_error_detail_curl"];
             }
             else
             {
