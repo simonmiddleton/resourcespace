@@ -77,6 +77,9 @@ class Shutterstock extends Provider
 
         $provider_results = new ProviderSearchResults();
 
+        // More cleanly handle an unexpected result.
+        if (!isset($search_results["data"])) {echo "<h1>Sorry, your query could not be completed.</h1><pre>Provider said: " . json_encode($search_results,JSON_PRETTY_PRINT) . "</pre>";exit();}
+
         foreach($search_results["data"] as $result)
             {
             $width=$result['assets']['large_thumb']['width'];

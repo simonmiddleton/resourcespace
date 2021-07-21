@@ -74,6 +74,9 @@ class Pixabay extends Provider
 
         $provider_results = new ProviderSearchResults();
 
+        // More cleanly handle an unexpected result.
+        if (!isset($search_results["hits"])) {echo "<h1>Sorry, your query could not be completed.</h1><pre>Provider said: " . json_encode($search_results,JSON_PRETTY_PRINT) . "</pre>";exit();}
+
         foreach($search_results["hits"] as $result)
             {
             // As per https://pixabay.com/api/docs/ , imageURL key/value pair is only available if the account has been 
