@@ -12,28 +12,11 @@ class Pixabay extends Provider
     );
     protected $warning = "";
 
-
-    public function getId()
-        {
-        return $this->id;
-        }
-
-    public function getName()
-        {
-        return $this->name;
-        }
-
-    public function getAllowedDownloadEndpoint()
-        {
-        return $this->download_endpoint;
-        }
-
-
     public function checkDependencies()
         {
             if (!function_exists('curl_version'))
             {
-            return $this->lang["image_banks_pixabay_error_detail_curl"];
+            return $this->lang["image_banks_error_detail_curl"];
             }
             else
             {
