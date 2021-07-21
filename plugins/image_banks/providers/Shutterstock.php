@@ -8,7 +8,8 @@ class Shutterstock extends Provider
     protected $download_endpoint = "https://api.shutterstock.com/v2/images/";
     
     protected $configs = array(
-        "shutterstock_token" => "ENTER_TOKEN_HERE"
+        "shutterstock_token" => "ENTER_TOKEN_HERE",
+        "shutterstock_result_limit" => "1000"
     );
     protected $warning = "";
 
@@ -29,6 +30,7 @@ class Shutterstock extends Provider
         {
         $page_def[] = \config_add_section_header($this->name);
         $page_def[] = \config_add_text_input('shutterstock_token', $this->lang["image_banks_shutterstock_token"],false,800,true);
+        $page_def[] = \config_add_text_input('shutterstock_result_limit', $this->lang["image_banks_shutterstock_result_limit"]);
 
         return $page_def;
         }
@@ -106,7 +108,9 @@ class Shutterstock extends Provider
         $provider_results->total = count($provider_results);
         if(isset($search_results["total_count"]))
             {
-            $provider_results->total = $search_results["total_count"];
+            global $shutterstock_result_limit;
+            // Cap at the configured total if the results are more than that.
+            $provider_results->total = ($search_results["total_count"]>$shutterstock_result_limit?$shutterstock_result_limit:$search_results["total_count"]);
             }
 
         return $provider_results;
