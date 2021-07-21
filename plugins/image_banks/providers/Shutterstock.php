@@ -77,14 +77,21 @@ class Shutterstock extends Provider
 
         foreach($search_results["data"] as $result)
             {
+            $width=$result['assets']['large_thumb']['width'];
+            $height=$result['assets']['large_thumb']['height'];
+
+            // Allow for the so-called "whitestrip" which is not included in the returned dimensions.
+            $whitestrip_size=17;
+            if ($width>$height) {$height+=$whitestrip_size;} else {$width+=$whitestrip_size;}
+
             $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
             $provider_result
                 ->setTitle($result['description'])
                 ->setOriginalFileUrl("")
                 ->setProviderUrl("https://www.shutterstock.com/image-illustration/" . $result['id'])
                 ->setPreviewUrl($result['assets']['large_thumb']['url'])
-                ->setPreviewWidth($result['assets']['large_thumb']['width'])
-                ->setPreviewHeight($result['assets']['large_thumb']['height']);
+                ->setPreviewWidth($width)
+                ->setPreviewHeight($height);
 
             $provider_results[] = $provider_result;
             }
