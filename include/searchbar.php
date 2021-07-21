@@ -592,8 +592,24 @@ elseif($restypes=='')
                         {
                         case FIELD_TYPE_CATEGORY_TREE:
                             ?>
-                            document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_category').value='';
-                            document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_statusbox').innerHTML='<?php echo $lang["nocategoriesselected"]?>';
+                            var ref = <?php echo htmlspecialchars($fields[$n]["ref"]) ?>;
+                            jQuery('#search_tree_' + ref).jstree(true).deselect_all();
+
+                            /* remove the hidden inputs */
+                            var elements = document.getElementsByName('nodes_searched[' + ref + ']');
+                            while(elements[0])
+                                {
+                                elements[0].parentNode.removeChild(elements[0]);
+                                }
+
+                            /* update status box */
+                            var node_statusbox = document.getElementById('nodes_searched_' + ref + '_statusbox');
+                            while(node_statusbox.lastChild)
+                                {
+                                node_statusbox.removeChild(node_statusbox.lastChild);
+                                }
+                            
+                            jQuery('.search_tree_' + ref + '_nodes').remove();
                             <?php
                             break;
                         case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
