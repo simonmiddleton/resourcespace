@@ -26,4 +26,5 @@ $lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource 
 
 $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
 $lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
+$lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 

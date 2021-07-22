@@ -89,11 +89,16 @@ class Shutterstock extends Provider
             $whitestrip_size=17;
             if ($width>$height) {$height+=$whitestrip_size;} else {$width+=$whitestrip_size;}
 
+            global $baseurl_short;
             $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
             $provider_result
                 ->setTitle($result['description'])
                 ->setOriginalFileUrl("")
-                ->setProviderUrl("https://www.shutterstock.com/image-illustration/" . $result['id'])
+                ->setProviderUrl($baseurl_short . "plugins/image_banks/pages/shutterstock_license.php?id=" . urlencode($result['id']) 
+                . "&preview=" . urlencode(isset($result['assets']['preview_1500']['url'])?$result['assets']['preview_1500']['url']:'')
+                . "&description=" . urlencode(isset($result['description'])?$result['description']:'')
+                . "&filename=" . urlencode(isset($result['original_filename'])?$result['original_filename']:'')
+                )
                 ->setPreviewUrl($result['assets']['large_thumb']['url'])
                 ->setPreviewWidth($width)
                 ->setPreviewHeight($height);
