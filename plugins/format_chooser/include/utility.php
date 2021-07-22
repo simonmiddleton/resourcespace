@@ -54,7 +54,7 @@ function getImageFormat($size)
  */
 function convertImage($resource, $page, $alternative, $target, $width, $height, $profile)
 	{
-    global $exiftool_write, $exiftool_write_option, $username, $scramble_key;
+    global $exiftool_write, $exiftool_write_option, $username, $scramble_key, $preview_no_flatten_extensions;
  
 	$command = get_utility_path("im-convert");
 	if (!$command)
@@ -83,34 +83,31 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $path = $originalPath;
 	    }
 
+    $transform_actions = [
+        'tfactions' => [],
+        'resize' => ['width' => $width, 'height' => $height],
+    ];
+
+
 	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
 	if ($resource['file_extension'] == "eps")		
         {
 		$command .= " \"$path\"[0] -transparent -auto-orient";
+        $transform_actions['transparent'] = '';
+        $transform_actions['auto_orient'] = null;
 		}
 	else
 	    {
 	    $command .= " \"$path\"[0] -auto-orient";
+        $transform_actions['auto_orient'] = null;
 	    }
 	
     // Handle alpha/ matte channels
-    $extensions_no_alpha_off = array('png', 'gif', 'tif');
-    $target_extension        = pathinfo($target, PATHINFO_EXTENSION);
-
-    if(!in_array($target_extension, $extensions_no_alpha_off))
+    $target_extension = pathinfo($target, PATHINFO_EXTENSION);
+    if(!in_array($target_extension, $preview_no_flatten_extensions))
         {
-        $command .= ' -background white -flatten';
+        $transform_actions['background'] = 'white';
         }
-
-    // TODO: remove once testing is done
-	if ($width != 0 && $height != 0)
-		{
-		# Apply resize ('>' means: never enlarge)
-		$command .= " -resize \"$width";
-		if ($height > 0)
-			$command .= "x$height";
-		$command .= '>"';
-		}
 
 	if($profile === '')
 		{
@@ -138,11 +135,7 @@ echo "convertImage_command = $command<br>";
     // RGB profile:    convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
     // CMYK profile:   convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/ISOcoated_v2_bas.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
 
-    $transform_actions = [
-        'tfactions' => [],
-        'resize' => ['width' => $width, 'height' => $height],
-        'background' => '',
-    ];
+
 
 
     transform_file($path, $target, $transform_actions);

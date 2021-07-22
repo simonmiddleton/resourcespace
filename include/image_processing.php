@@ -3565,7 +3565,15 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $keep_transparency=false;
-    if (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
+    if(isset($actions['background']) && $actions['background'] !== '')
+        {
+        $command .= sprintf('%s -background %s %s[0]',
+            $commandprefix,
+            escapeshellarg($actions['background']),
+            escapeshellarg($sourcepath)
+        );
+        }
+    else if (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
         {
         $commandprefix = " -background transparent ";
         $keep_transparency=true;
@@ -3575,7 +3583,17 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $command .= $commandprefix . " \"$sourcepath\"[0] ";
         }
-     
+
+    if(isset($actions['transparent']))
+        {
+        $command .= sprintf(' -transparent%s', $actions['transparent'] === '' ?: escapeshellarg($actions['transparent']));
+        }
+
+    if(array_key_exists('auto_orient', $actions))
+        {
+        $command .= ' -auto-orient';
+        }
+
     $quality = isset($actions["quality"]) ? $actions["quality"] : "";
     if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($of_parts["extension"]) , array("PNG","JPG")))
         {
@@ -3612,10 +3630,10 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
     else
         {
-        $flatten = "-flatten";
+        $flatten = ' -flatten';
         }
 
-    $command .= $colorspace1;
+    $command .= $colorspace1 . $flatten;
 
     if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]) && $actions["gamma"] <> 50)
         {
