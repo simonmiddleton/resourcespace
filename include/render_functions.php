@@ -4577,7 +4577,7 @@ function render_featured_collections(array $ctx, array $items)
                 $render_ctx["tools"][] = $tool_select;
                 }
 
-            if($enable_theme_category_edit && checkperm("t"))
+            if($enable_theme_category_edit && checkperm("h") || checkperm("t"))
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
