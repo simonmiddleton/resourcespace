@@ -356,7 +356,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
                     }	
 
-                sql_query("UPDATE resource SET field".$field."='" . $truncated_value . "' WHERE ref='$resource'");
+                sql_query("UPDATE resource SET field".$field."='" . $truncated_value . "' WHERE ref='" . escape_check($resource) . "'");
                 }
             }
 
