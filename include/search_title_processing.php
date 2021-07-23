@@ -8,6 +8,9 @@ global $baseurl_short, $filename_field, $archive_standard;
 
 # Display a title of the search (if there is a title)
 $searchcrumbs="";
+// Get search URL, resetting pager
+$search_params = get_search_params();
+$search_url = generateURL($baseurl_short . 'pages/search.php', $search_params, array("offset"=>0, "go"=>""));
 
 if ($search_titles_searchcrumbs && $use_refine_searchstring)
     {
@@ -25,20 +28,6 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
 
     if ($refinements[0]!="")
         {
-        function search_title_node_processing($string)
-            {
-            if(substr(ltrim($string), 0, 2)=='@@')
-                {
-                # convert to shortname:value
-                $node_id=substr(ltrim($string), 2);
-                $node_data=array();
-                get_node($node_id, $node_data);
-                $field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
-                return $field_title . ":" . $node_data['name'];
-                }
-            return $string;
-            }
-
         for ($n=$startsearchcrumbs;$n<count($refinements);$n++)
             {
             # strip the first semi-colon so it's not swapped with an " OR "
@@ -51,7 +40,6 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
 		
             $search_title_element=str_replace(";"," OR ",$refinements[$n]);
             $search_title_element=search_title_node_processing($search_title_element);
-
             if ($n!=0 || !$archive_standard)
                 {
                 $searchcrumbs.=" > </count> </count> </count> ";
@@ -133,15 +121,6 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
 
 if ($search_titles)
     {
-    $extra_search_parameters = array(
-        "order_by" => $order_by,
-        "sort" => $sort,
-        "offset" => $offset,
-        "archive" => $archive,
-        "k" => $k,
-    );
-    $parameters_string = join("&amp;", array_map("urlencode", $extra_search_parameters));
-
     if(substr($search, 0, 11) == "!collection")
         {
         $col_title_ua = "";
@@ -220,7 +199,7 @@ if ($search_titles)
         $full_collection_trail = array_merge($collection_trail, $branch_trail);
         $full_collection_trail[] = array(
             "title" => i18n_get_collection_name($collectiondata) . $col_title_ua,
-            "href"  => generateURL("{$baseurl_short}pages/search.php", $extra_search_parameters, array('search' => "!collection{$collectiondata["ref"]}")),
+            "href"  => generateURL($baseurl_short . "pages/search.php", $search_params),
             "attrs" => array($alt_text),
         );
 
@@ -305,137 +284,150 @@ if ($search_titles)
             }
 
         $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=" onClick="return CentralSpaceLoad(this,true);">'.$searchtitle.'</a></div></div> ';
-        } 
-    elseif (substr($search,0,5)=="!last")
-        {
-		$searchq=substr($search,5);
-		$searchq=explode(",",$searchq);
-		$searchq=$searchq[0];
-		if (!is_numeric($searchq)){$searchq=1000;}  # 'Last' must be a number. SQL injection filter.
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!last'.$searchq.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.str_replace('%qty',$searchq,$lang["n_recent"]).'</a>'.$searchcrumbs.'</div></div> ';
         }
-    elseif (substr($search,0,8)=="!related")
+    elseif (substr($search,0,1)=="!")
         {
-        $resource=substr($search,8);
-		$resource=explode(",",$resource);
-		$resource=$resource[0];
-		$displayfield=get_data_by_field($resource,$related_search_searchcrumb_field);
-		if($displayfield==''){
-			$displayfield=get_data_by_field($resource,$filename_field);
-		}
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!related'.$resource.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.str_replace('%id%', $displayfield, $lang["relatedresources-id"]).'</a>'.$searchcrumbs.'</div></div> ';
-        }
-    elseif (substr($search,0,7)=="!unused")
-        {
-		$refinements=str_replace(","," / ",substr($search,7,strlen($search)));	
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!unused'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["uncollectedresources"].'</a>'.$searchcrumbs.'</div></div>';
-        }
-    elseif (substr($search,0,11)=="!duplicates")
-        {
-        $ref=explode(" ",$search);$ref=str_replace("!duplicates","",$ref[0]);
-		$ref=explode(",",$ref);// just get the number
-		$ref=escape_check($ref[0]);
-		$filename=get_data_by_field($ref,$filename_field);
-		if ($ref!="") {
-			$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href='.$baseurl_short.'pages/search.php?search=!duplicates'.$ref.$parameters_string.' onClick="return CentralSpaceLoad(this,true);">'.$lang["duplicateresourcesfor"].$filename.'</a>'.$searchcrumbs.'</div></div> ';
-        	}
-        else {
-        	$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href='.$baseurl_short.'pages/search.php?search=!duplicates'.$parameters_string.' onClick="return CentralSpaceLoad(this,true);">'.$lang["duplicateresources"].'</a>'.$searchcrumbs.'</div></div> ';
-        	}
-        }
-    elseif (substr($search,0,5)=="!list")
-        {
-		$resources=substr($search,5);
-		$resources=explode(",",$resources);
-		$resources=$resources[0];	
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!list'.$resources.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["listresources"]." ".$resources.'</a>'.$searchcrumbs.'</div></div> ';
-        }    
-    elseif (substr($search,0,15)=="!archivepending")
-        {
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!archivepending'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["resourcespendingarchive"].'</a>'.$searchcrumbs.'</div></div> ';
-        }
-    elseif (substr($search,0,12)=="!userpending")
-		{
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!userpending'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["userpending"].'</a>'.$searchcrumbs.'</div></div> ';
-		}
-	elseif (substr($search,0,10)=="!nopreview")
-		{
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!nopreview'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["nopreviewresources"].'</a>'.$searchcrumbs.'</div></div> ';
-		}
-	elseif (substr($search,0,4)=="!geo")
-		{
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=' . getvalescaped("search", "!geo"). '" onClick="return CentralSpaceLoad(this,true);">'.$lang["geographicsearchresults"].'</a>'.$searchcrumbs.'</div></div> ';
-        }
-    elseif (substr($search,0,14)=="!contributions")
-        {
-		$cuser=substr($search,14);
-		$cuser=explode(",",$cuser);
-		$cuser=$cuser[0];	
-
-        if ($cuser==$userref)
+        // Special searches
+        if (substr($search,0,5)=="!last")
             {
-            switch ($archive)
+            $searchq=substr($search,5);
+            $searchq=explode(",",$searchq);
+            $searchq=$searchq[0];
+            if (!is_numeric($searchq)){$searchq=1000;}  # 'Last' must be a number. SQL injection filter.
+            $title_string = str_replace('%qty',$searchq,$lang["n_recent"]);
+            }
+        elseif (substr($search,0,8)=="!related")
+            {
+            $resource=substr($search,8);
+            $resource=explode(",",$resource);
+            $resource=$resource[0];
+            $displayfield=get_data_by_field($resource,$related_search_searchcrumb_field);
+            if($displayfield=='')
                 {
-                case -2:
-                    $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedps"].'</a>'.$searchcrumbs.'</div></div> ';
-                    break;
-                case -1:
-                    $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedpr"].'</a>'.$searchcrumbs.'</div></div> ';
-                    break;
-                case -0:
-                    $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedsubittedl"].'</a>'.$searchcrumbs.'</div></div> ';
-                    break;
+                $displayfield=get_data_by_field($resource,$filename_field);
+                }
+            $title_string = str_replace('%id%', $displayfield, $lang["relatedresources-id"]);
+            }
+        elseif (substr($search,0,7)=="!unused")
+            {
+            $title_string = $lang["uncollectedresources"];
+            }
+        elseif (substr($search,0,11)=="!duplicates")
+            {
+            $ref=explode(" ",$search);$ref=str_replace("!duplicates","",$ref[0]);
+            $ref=explode(",",$ref);// just get the number
+            $ref=escape_check($ref[0]);
+            $filename=get_data_by_field($ref,$filename_field);
+            if ($ref!="")
+                {
+                $title_string = $lang["duplicateresourcesfor"] . $filename ;
+                }
+            else
+                {
+                $title_string = $lang["duplicateresources"];
                 }
             }
-            else 
+        elseif (substr($search,0,5)=="!list")
             {
-            $udata=get_user($cuser);
-            $displayname=htmlspecialchars($udata["fullname"]);
-            if (trim($displayname)=="") $displayname=htmlspecialchars($udata["username"]);
-            $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedby"]." ".$displayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"") .'</a>'.$searchcrumbs.'</div></div> ';
+            $resources=substr($search,5);
+            $resources=explode(",",$resources);
+            $resources=$resources[0];
+            $title_string = $lang["listresources"] . " " . $resources;
+            }    
+        elseif (substr($search,0,15)=="!archivepending")
+            {
+            $title_string = $lang["resourcespendingarchive"];
             }
-        }
-	 elseif (substr($search,0,8)=="!hasdata")
-        {		
-		$fieldref=intval(trim(substr($search,8)));        
-		$fieldinfo=get_resource_type_field($fieldref);
-		$displayname=i18n_get_translated($fieldinfo["title"]);
-		if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!hasdata'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["search_title_hasdata"]." ".$displayname.'</a>'.$searchcrumbs.'</div></div> ';            
+        elseif (substr($search,0,12)=="!userpending")
+            {
+            $title_string = $lang["userpending"];
+            }
+        elseif (substr($search,0,10)=="!nopreview")
+            {
+            $title_string = $lang["nopreviewresources"];
+            }
+        elseif (substr($search,0,4)=="!geo")
+            {
+            $title_string = $lang["geographicsearchresults"];
+            }
+        elseif (substr($search,0,14)=="!contributions")
+            {
+            $cuser=substr($search,14);
+            $cuser=explode(",",$cuser);
+            $cuser=$cuser[0];	
+
+            if ($cuser==$userref)
+                {
+                switch ($archive)
+                    {
+                    case -2:
+                        $title_string = $lang["contributedps"];
+                        break;
+                    case -1:
+                        $title_string = $lang["contributedpr"];
+                        break;
+                    case 0:
+                        $title_string = $lang["contributedsubittedl"];
+                        break;
+                    default:
+                        $title_string = $lang["mycontributions"];
+                        break;
+                    }
+                }
+            else 
+                {
+                $udata = get_user($cuser);
+                $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+                $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                }
+            }
+        elseif (substr($search,0,8)=="!hasdata")
+            {		
+            $fieldref=intval(trim(substr($search,8)));        
+            $fieldinfo=get_resource_type_field($fieldref);
+            $fdisplayname = trim($fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldinfo["ref"];
+            $title_string = $lang["search_title_hasdata"] . " " . $fdisplayname;
+            }
+        elseif (substr($search,0,6)=="!empty")
+            { 
+            $fieldref=intval(trim(substr($search,6)));
+            $fieldinfo=get_resource_type_field($fieldref);
+            $displayname=i18n_get_translated($fieldinfo["title"]);
+            if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
+            $title_string = $lang["search_title_empty"] . ' ' . $displayname;
+            }
+        elseif (substr($search,0,14)=="!integrityfail")
+            {
+            $title_string = $lang["file_integrity_fail_search"];
+            }
+        elseif (substr($search,0,14)=="!locked")
+            {
+            $title_string = $lang["locked_resource_search"];
+            }
+
+        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . $searchcrumbs . '</div></div> ';
         }
     elseif (!$archive_standard && strpos($archive,",")===false) // Don't construct title if more than one archive state is selected
         {
         switch ($archive)
             {
             case -2:
-                $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["userpendingsubmission"].'</a>'.$searchcrumbs.'</div></div> ';
+                $title_string = $lang["userpendingsubmission"];
                 break;
             case -1:
-                $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["userpending"].'</a>'.$searchcrumbs.'</div></div> ';
+                $title_string = $lang["userpending"];
                 break;
             case 2:
-                $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["archiveonlysearch"].'</a>'.$searchcrumbs.'</div></div> ';
+                $title_string = $lang["archiveonlysearch"];
                 break;
             case 3:
-                $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["deletedresources"].'</a>'.$searchcrumbs.'</div></div> ';
+                $title_string = $lang["deletedresources"];
+                break;
+            default: 
+                $title_string = $lang["archive"] . ": " . $archive;
                 break;
             }
-        }
-    elseif (substr($search,0,6)=="!empty")
-		{ 
-        $fieldref=intval(trim(substr($search,6)));
-        $fieldinfo=get_resource_type_field($fieldref);
-        $displayname=i18n_get_translated($fieldinfo["title"]);
-        if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
-		$search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!empty'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'. $lang["search_title_empty"] . ' ' . $displayname . '</a>'.$searchcrumbs.'</div></div> '; 
-		}
-    elseif (substr($search,0,14)=="!integrityfail")
-        {
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!integrityfail'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["file_integrity_fail_search"].'</a>'.$searchcrumbs.'</div></div> ';
-        }
-    elseif (substr($search,0,14)=="!locked")
-        {
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!locked'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["locked_resource_search"].'</a>'.$searchcrumbs.'</div></div> ';
+        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . $searchcrumbs . '</div></div> ';
         }
 	
 	hook("addspecialsearchtitle");
@@ -447,6 +439,6 @@ if (!hook("replacenoresourcesfoundsearchtitle"))
     {
     if (!is_array($result) && empty($collections) && getvalescaped("addsmartcollection","") == '')
         {
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $baseurl_short . 'pages/search.php">'.$lang["noresourcesfound"].'</a></div></div>';
+        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $search_url . '">'.$lang["noresourcesfound"].'</a></div></div>';
         }
     }

@@ -3043,6 +3043,7 @@ function get_search_params()
         "access"        =>"",
         "foredit"       =>"",
         "recentdaylimit"=>"",
+        "go"            =>"",
         );
     $requestparams = array();
     foreach($searchparams as $searchparam => $default)
@@ -3063,4 +3064,25 @@ function get_search_params()
 function is_not_wildcard_only(string $str)
     {
     return trim($str) !== '*';
+    }
+
+
+/**
+ * Convert node searches into a friendly syntax. Used by search_title_processing.php
+ *
+ * @param  string $string   Search string
+ * @return string
+ */
+function search_title_node_processing($string)
+    {
+    if(substr(ltrim($string), 0, 2)==NODE_TOKEN_PREFIX)
+        {
+        # convert to shortname:value
+        $node_id=substr(ltrim($string), 2);
+        $node_data=array();
+        get_node($node_id, $node_data);
+        $field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
+        return $field_title . ":" . $node_data['name'];
+        }
+    return $string;
     }
