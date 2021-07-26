@@ -55,11 +55,7 @@ function getImageFormat($size)
 function convertImage($resource, $page, $alternative, $target, $width, $height, $profile)
 	{
     global $exiftool_write, $exiftool_write_option, $username, $scramble_key, $preview_no_flatten_extensions;
- 
-	$command = get_utility_path("im-convert");
-	if (!$command)
-		die("Could not find ImageMagick 'convert' utility.");
-    
+
 	$requested_extension = $resource['file_extension'];
 	# If downloading alternative file, lookup its file extension before preparing resource path as it may differ from the resource.
 	if ($alternative > 0)
@@ -86,21 +82,15 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
     $transform_actions = [
         'tfactions' => [],
         'resize' => ['width' => $width, 'height' => $height],
+        'auto_orient' => null,
     ];
 
 
 	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
 	if ($resource['file_extension'] == "eps")		
         {
-		$command .= " \"$path\"[0] -transparent -auto-orient";
         $transform_actions['transparent'] = '';
-        $transform_actions['auto_orient'] = null;
 		}
-	else
-	    {
-	    $command .= " \"$path\"[0] -auto-orient";
-        $transform_actions['auto_orient'] = null;
-	    }
 	
     // Handle alpha/ matte channels
     $target_extension = pathinfo($target, PATHINFO_EXTENSION);
@@ -111,35 +101,28 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 
 	if($profile === '')
 		{
-		$command .= ' +profile *';
+        $transform_actions['profile'][] = ['strip' => true, 'path' => '*'];
 		}
 	elseif(!empty($profile))
 		{
 		// Find out if the image does already have a profile
 		$identify = get_utility_path("im-identify");
 		$identify .= ' -verbose "' . $path . '"';
-		$info = run_command($command);
-		$basePath = dirname(__FILE__) . '/../../../';
-		if (preg_match("/Profile-icc:/", $info) != 1)
-			$command .= ' -profile "' . $basePath . 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc"';
-		$command .= ' -profile "' . $basePath . $profile . '"';
+		$info = run_command($identify);
+
+        $basePath = dirname(__FILE__, 4) . '/';
+        if(preg_match("/Profile-icc:/", $info) != 1)
+            {
+            $transform_actions['profile'][] = ['strip' => false, 'path' => $basePath . 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc'];
+            }
+
+        $transform_actions['profile'][] = ['strip' => false, 'path' => $basePath . $profile];
 		}
 
-	$command .= " \"$target\"";
-echo "convertImage_command = $command<br>";
-
-
-    // Profiles:
-    // keep profile:   convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" +profile * "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
-    // remove profile: convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -background white -flatten -resize "1400x800>" +profile * "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png0"
-    // RGB profile:    convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
-    // CMYK profile:   convert "filestorePath/1_c197a336e4e282f.jpg"[0] -auto-orient -resize "1400x800>" -profile "iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc" -profile "iccprofiles/ISOcoated_v2_bas.icc" "tmpPath/format_chooser/1_65e9fa134c26568a02de7d395fd96bfe.png"
-
-
-
-
-    transform_file($path, $target, $transform_actions);
-	run_command($command);
+    if(!transform_file($path, $target, $transform_actions))
+        {
+        die('Unable to transform file!');
+        }
 
     //remove temp once completed
     if(isset($temp_path))

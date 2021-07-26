@@ -3544,13 +3544,23 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $of_parts = pathinfo($outputpath);
     $commandprefix="";
 
-    if(!isset($actions["rgb"]))
+    $profile = '';
+    if(isset($actions['profile']) && is_array($actions['profile']) && !empty($actions['profile']))
+        {
+        foreach($actions['profile'] as $profile_data)
+            {
+            if(is_bool($profile_data['strip']) && trim($profile_data['path']) !== '')
+                {
+                $profile .= sprintf(' %sprofile %s',
+                    ($profile_data['strip'] ? '+' : '-'),
+                    escapeshellarg($profile_data['path'])
+                );
+                }
+            }
+        }
+    else if(!isset($actions["rgb"]) && !$imagemagick_preserve_profiles)
         {
         $profile=" +profile icc -colorspace " . $imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-        if ($imagemagick_preserve_profiles)
-            {
-            $profile="";
-            }
         }
 
     if(strtoupper($sf_parts["extension"]) == 'SVG')
@@ -3584,9 +3594,9 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= $commandprefix . " \"$sourcepath\"[0] ";
         }
 
-    if(isset($actions['transparent']))
+    if(array_key_exists('transparent', $actions))
         {
-        $command .= sprintf(' -transparent%s', $actions['transparent'] === '' ?: escapeshellarg($actions['transparent']));
+        $command .= sprintf(' -transparent%s', $actions['transparent'] ?? escapeshellarg($actions['transparent']));
         }
 
     if(array_key_exists('auto_orient', $actions))
@@ -3795,8 +3805,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $command .= $profile . " \"$outputpath\"";
-    echo "transform_file_command = $command<br>";
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
     $shell_result = run_command($command);
 
     if (file_exists($outputpath))
