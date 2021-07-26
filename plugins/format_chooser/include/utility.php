@@ -138,20 +138,30 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         }
 	}
 
-function sendFile($filename)
+function sendFile($filename, string $download_filename)
 	{
 	$suffix = pathinfo($filename, PATHINFO_EXTENSION);
 	$size = filesize_unlimited($filename);
 
-	header('Content-Transfer-Encoding: binary');
-	header('Content-Disposition: attachment; filename="' . str_replace(array("\n","\r"),"",mb_basename($filename)) . '"');
-	header('Content-Type: ' . get_mime_type($filename, $suffix));
-	header('Content-Length: ' . $size);
-	header("Content-Type: application/octet-stream");
+    global $baseurl, $username, $scramble_key;
 
-	ob_end_flush();
+    list($resource_ref, $download_key) = explode('_', pathinfo($filename, PATHINFO_FILENAME));
+    $user_downloads_path = sprintf('%s/%s_%s.%s',
+        get_temp_dir(false, 'user_downloads'),
+        $resource_ref,
+        md5($username . $download_key . $scramble_key),
+        $suffix
+    );
+    copy($filename, $user_downloads_path);
 
-	readfile($filename);
+    $user_download_url = generateURL(
+        $baseurl . '/pages/download.php',
+        [
+            'userfile' => pathinfo($filename, PATHINFO_BASENAME),
+            'filename' => $download_filename,
+        ]
+    );
+    redirect($user_download_url);
 	}
 
 function showProfileChooser($class = '', $disabled = false)

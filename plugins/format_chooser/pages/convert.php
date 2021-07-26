@@ -55,6 +55,6 @@ resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['format_chooser'], '',  $size);
 
 if(file_exists($target))
     {
-    sendFile($target);
+    sendFile($target, get_download_filename($ref, $size, $alternative, $ext));
     unlink($target);
     }
