@@ -1,6 +1,6 @@
 <?php
 include(dirname(__FILE__)."/../../../include/db.php");
-include(dirname(__FILE__)."/../../../include/image_processing.php");
+include_once(dirname(__FILE__)."/../../../include/image_processing.php");
 
 if(!function_exists("get_api_key"))
 	{
