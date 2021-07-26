@@ -40,10 +40,17 @@ function getImageFormat($size)
 	if (empty($size))
 		return array('width' => 0, 'height' => 0);
 
-	$results = sql_query("select * from preview_size where id='" . escape_check($size) . "'");
-	if (empty($results))
-		die('Unknown size: "' . $size . '"');
-	return $results[0];
+    $sizes = get_all_image_sizes();
+    $found_idx = array_search($size, array_column($sizes, 'id'));
+    if($found_idx === false)
+        {
+        die('Unknown size: "' . $size . '"');
+        }
+
+    return [
+        'width' => $sizes[$found_idx]['width'],
+        'height' => $sizes[$found_idx]['height'],
+    ];
 	}
 
 /**
