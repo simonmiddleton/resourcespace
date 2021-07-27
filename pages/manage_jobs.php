@@ -8,11 +8,12 @@ if($job_user != $userref && !checkperm('a'))
     // User does not have permission to see other user's jobs
     $job_user = $userref;
     }
-$job_status  = getval("job_status",-1,true);
-$job_type    = getval("job_type","");
-$job_orderby = getval("job_orderby","ref");
-$job_sort    = (strtoupper(getval("job_sort","ASC")) == "ASC") ? "ASC" : "DESC";
-$job_find    = getval("job_find","");
+$job_status     = getval("job_status",-1,true);
+$job_type       = getval("job_type","");
+$job_orderby    = getval("job_orderby","priority");
+$job_boost      = getval("job_boost",0,true);
+$job_sort       = (strtoupper(getval("job_sort","ASC")) == "DESC") ? "DESC" : "ASC";
+$job_find       = getval("job_find","");
 
 if(!checkperm('a') || $job_user == $userref)
     {
@@ -27,14 +28,27 @@ $deletejob = getval("delete_job",0,true);
 $resetjob = getval("reset_job",0,true);
 if($deletejob > 0 && enforcePostRequest(true))
     {
-    job_queue_delete($deletejob);
+    $deletejobdetail = job_queue_get_job($deletejob);
+    if(checkperm('a') || $deletejob["user"] == $userref)
+        {
+        job_queue_delete($deletejob);
+        }
     }
 elseif($resetjob > 0 && enforcePostRequest(true))
     {
-    clear_process_lock("job_{$resetjob}");
-    job_queue_update($resetjob,array(),1);
+    $resetjobdetail = job_queue_get_job($resetjob);
+    if(checkperm('a') || $resetjobdetail["user"] == $userref)
+        {
+        clear_process_lock("job_{$resetjob}");
+        job_queue_update($resetjob,array(),1,date('Y-m-d H:i:s'),get_job_type_priority($resetjobdetail["type"]));
+        }
     }
-elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true))
+elseif($job_boost > 0 && enforcePostRequest(true) && checkperm('a'))
+    {
+    clear_process_lock("job_{$job_boost}");
+    job_queue_update($job_boost,array(),1,'',JOB_PRIORITY_IMMEDIATE);
+    }
+elseif(getval("purge_jobs",'') != '' && enforcePostRequest(true) && checkperm('a'))
     {
     job_queue_purge(STATUS_COMPLETE);
     job_queue_purge(STATUS_ERROR);
@@ -84,6 +98,12 @@ $tabledata = array(
     "data"=>array()
     );
 
+if(checkperm('a'))
+    {
+    $priorityheader = array("name"=>$lang["job_priority"],"sortable"=>false,"html"=>true, "width" => "40px", "sortable"=>true);
+    $tabledata["headers"] = array_merge(array("priority" => $priorityheader),$tabledata["headers"]);
+    }
+
 if(!checkperm('a'))
     {
     unset($tabledata["headers"]["fullname"]);
@@ -104,36 +124,69 @@ for($n=0;$n<$jobcount;$n++)
             {
             // Only required if can see jobs for different users
             $tablejob["fullname"] = $jobs[$n]["fullname"];
+
+            // Add priority column
+            switch ($jobs[$n]["priority"])
+                {
+                case JOB_PRIORITY_IMMEDIATE:
+                    $priorityicon = "fas fa-fw fa-bolt";
+                break;
+                
+                case JOB_PRIORITY_USER:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                break;
+                
+                case JOB_PRIORITY_SYSTEM:
+                    $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                break;
+                
+                case JOB_PRIORITY_COMPLETED:
+                default:
+                $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                break;
+                }
+            $tablejob["priority"] = "<span class='" . $priorityicon . "'></span>";
             }
         $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
         $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
-        if($jobs[$n]["status"] == STATUS_ERROR || $jobs[$n]["status"] !== STATUS_COMPLETE && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60))
+        if($jobs[$n]["status"] == STATUS_ERROR || (!in_array($jobs[$n]["status"],array(STATUS_COMPLETE,STATUS_INPROGRESS)) && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60)))
             {
             $tablejob["alerticon"] = "fas fa-exclamation-triangle";
             }
-        $tablejob["tools"] = array();
-        if(checkperm('a'))
-            {
-            $tablejob["tools"][] = array(
-                "icon"=>"fa fa-info",
-                "text"=>$lang["job_details"],
-                "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
-                "modal"=>true,
-                );
-            }
 
+        
+        
+
+        $tablejob["tools"] = array();
         $tablejob["tools"][] = array(
-            "icon"=>"fa fa-trash",
+            "icon"=>"fa fa-fw fa-trash",
             "text"=>$lang["action-delete"],
             "url"=>"#",
             "modal"=>false,
             "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"delete_job\");return false;"
             );
 
+        if(checkperm('a'))
+            {
+            $tablejob["tools"][] = array(
+                "icon"=>"fa fa-fw fa-info",
+                "text"=>$lang["job_details"],
+                "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+                "modal"=>true,
+                );
+            $tablejob["tools"][] = array(
+                "icon"=>"fa fa-fw fa-rocket",
+                "text"=>$lang["job_boost"],
+                "url"=>"#",
+                "onclick"=>"update_job(\"" . $jobs[$n]["ref"] . "\",\"job_boost\");return false;",
+                "modal"=>true,
+                );
+            }
+
         if(checkperm('a') && $jobs[$n]["status"] != STATUS_ACTIVE)
             {
             $tablejob["tools"][] = array(
-                "icon"=>"fas fa-undo",
+                "icon"=>"fas fa-fw fa-undo",
                 "text"=>$lang["job_reset"],
                 "url"=>"#",
                 "modal"=>false,
@@ -178,7 +231,7 @@ include '../include/header.php';
             ?>
         
         document.getElementById('job_list_container').appendChild(temp_form);
-        CentralSpacePost(document.getElementById('jobform'),true);
+        CentralSpacePost(document.getElementById('jobform'),false);
 
         }
 </script>
@@ -248,8 +301,8 @@ include '../include/header.php';
 
             <div class="Question"  id="QuestionJobFilterSubmit">
                 <label></label>
-                <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
-                <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="filter" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="clearfilter" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
                 <div class="clearerleft"></div>
             </div>
         </div>
