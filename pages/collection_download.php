@@ -206,7 +206,7 @@ if ($submitted != "")
             $lang["oj-collection-download-success-text"],
             $lang["oj-collection-download-failure-text"],
             '',
-            JOB_PRIORITY_USER,
+            JOB_PRIORITY_USER
             );
 
         exit();
