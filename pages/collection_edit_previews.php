@@ -59,46 +59,43 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
 		break;
         case "restore":
         
-        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > $preview_generate_max_file_size))        
-            {
-            foreach ($resources as $resource)
-                {
-                $ref=$resource['ref'];
-                delete_previews($ref);
-                if(!empty($resource['file_path'])){$ingested=false;}
-                else{$ingested=true;}
-                create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
-                }            
-            refresh_collection_frame();
-            }
-        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
-            {
-            foreach ($resources as $resource)
-                {
-                $create_previews_job_data = array(
-                    'resource' => $resource['ref'],
-                    'thumbonly' => false,
-                    'extension' => $resource["file_extension"],
-                    'previewonly' => false,
-                    'previewbased' => false,
-                    'alternative' => -1,
-                    'ignoremaxsize' => true,
-                );
-                $create_previews_job_success_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_success_text']);
-                $create_previews_job_failure_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_failure_text']);
-                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-                }
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-        else
-            {
-            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref IN ('" . implode("','",array_column($resources,"ref")) . "')");
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-            
-        $ref=$collection_ref; // restore collection id because tweaking resets $ref to resource ids
-        break;
-		}
+	    foreach ($resources as $resource)
+	        {
+	        if ($enable_thumbnail_creation_on_upload && (!isset($preview_generate_max_file_size) || (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB'))))
+	            {
+	            $ref=$resource['ref'];
+	            delete_previews($ref);
+	            if(!empty($resource['file_path'])){$ingested=false;}
+	            else{$ingested=true;}
+	            create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
+	            }
+	        else if ($offline_job_queue && (!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))))
+	            {
+	            $create_previews_job_data = array(
+	            'resource' => $resource['ref'],
+	            'thumbonly' => false,
+	            'extension' => $resource["file_extension"],
+	            'previewonly' => false,
+	            'previewbased' => false,
+	            'alternative' => -1,
+	            'ignoremaxsize' => true,
+	                );
+	            $create_previews_job_success_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_success_text']);
+	            $create_previews_job_failure_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_failure_text']);
+	            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+	            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = '" . $resource['ref'] . "'");
+	            $onload_message["text"] = $lang["recreatepreviews_pending"];
+	            }
+	        else
+	            {
+	            // Previews to be created asynchronously, not using offline jobs - requires script batch/create_previews.php -ignoremaxsize
+	            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = '" . $resource['ref'] . "'");
+	            $onload_message["text"] = $lang["recreatepreviews_pending"];
+	            }
+	        }
+	    $ref=$collection_ref; // restore collection id because tweaking resets $ref to resource ids
+	    break;
+	    }
 	refresh_collection_frame();
 	$done=true;
 	}
