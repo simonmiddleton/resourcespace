@@ -7,11 +7,11 @@ search_filter,text,Deprecated - string form of filters, being replace by search_
 edit_filter,text,Deprecated - string form of filters, being replace by edit_filter_id and the filter table
 derestrict_filter,text,Deprecated - string form of filters, being replace by derestrict_filter_id and the filter table
 ip_restrict,text,A list of IP addresses that the users can log in from (optional)
-resource_defaults,Default metadata values for created resources. Uses fieldname=value syntax,
+resource_defaults,text,Default metadata values for created resources. Uses fieldname=value syntax
 config_options,text,Additional configuration options that apply to this user group - like include/config.php - accepts PHP
 welcome_message,text,Welcome message text
 request_mode,int(11),A code indicating how resource requests are handled for this group: 0 = unmanaged/e-mail only, 1 = managed via the admin UI, 2 = payment via PayPal, 3 = payment but they pay later via a manual/offline process
-allow_registration_selection,int(11),
+allow_registration_selection,int(11),Allow selection of group for user account requests?
 group_specific_logo,text,An optional header logo to use instead for this user group only
 inherit_flags,text,Comma separated list of column names that will be inherited from parent groups
 search_filter_id,int(11),The metadata filter to apply to determine if users in this usergroup can see a resource in search results

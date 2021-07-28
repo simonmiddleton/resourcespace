@@ -6,7 +6,7 @@ fullname,varchar(100),User full name - used for display purposes
 email,varchar(100),Email address
 usergroup,int(11),
 last_active,datetime,Date of last ResourceSpace activity
-logged_in,int(11),Is use rcurrently logged in?
+logged_in,int(11),Is user currently logged in?
 last_browser,text,Browser user agent string
 last_ip,varchar(100),Client IP last used to access ResourceSpace
 current_collection,int(11),ID of current selected collection
