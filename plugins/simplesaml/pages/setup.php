@@ -87,16 +87,31 @@ foreach (array(
 		}
 	}
 
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => "{$baseurl_short}pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["pluginmanager"],
+        'href'  => "{$baseurl_short}pages/team/team_plugins.php"
+    ),
+    array(
+        'title' => $lang['simplesaml_configuration'],
+        'help'  => 'plugins/simplesaml'
+    ),
+);
 include '../../../include/header.php';
+
+renderBreadcrumbs($links_trail);
+
 ?>
 <div class="BasicsBox"> 
-  <h2>&nbsp;</h2>
-  <h1><?php echo $lang['simplesaml_configuration'] ?></h1>
   
 <?php
  if(($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfig && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))))
     {
-    echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . ". <a href='" . $baseurl . "/plugins/simplesaml/pages/about.php'>" . $baseurl . "/plugins/simplesaml/pages/about.php</a></div>";
+    echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . "</div>";
     }
 else
     {
@@ -110,14 +125,44 @@ else
     }
   
 ?>
-<form id="form1" name="form1" method="post" action="">
+<form id="simplesaml_setup_form" name="simplesaml_setup_form" method="post" action="">
 <?php
 generateFormToken("simplesaml_form");
-echo config_section_header($lang['systemsetup'], '');
-echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
+echo config_section_header($lang['simplesaml_sp_config'], '');
+
+
 echo config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig,30);
 
-echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);
+?>
+
+<script>
+jQuery("#simplesaml_rsconfig").change(function(event)
+    {
+    console.log(jQuery(this).val());
+    if(jQuery(this).val()=="1")
+        {
+        jQuery("#question_simplesaml_lib_path").slideUp(0);
+        jQuery("#question_simplesaml_sp").slideUp(0);
+        jQuery("#generate_sp_config_link").slideUp(0);
+        }
+    else
+        {
+        jQuery("#question_simplesaml_lib_path").slideDown(0);
+        jQuery("#question_simplesaml_sp").slideDown(0);
+        jQuery("#generate_sp_config_link").slideDown(0);
+        }
+    });
+
+</script>
+<?php
+if($simplesaml_rsconfig)
+    {
+    echo "<div class='Question' id='generate_sp_config_link'><a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></div>";
+    }
+
+echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path,false,420,false,null,false,$simplesaml_rsconfig);
+echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false,$simplesaml_rsconfig);
+
 ?>
 <div class="Question">
     <br>

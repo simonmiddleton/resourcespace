@@ -277,3 +277,43 @@ function simplesaml_is_configured()
         }
     return true;
     }
+
+
+/**
+ * Generate a key/certificate pair
+ * 
+ * @param  array $dn    Array of certificate attributes with named indexes as below
+ *                      - "countryName"
+ *                      - "stateOrProvinceName"
+ *                      - "localityName"
+ *                      - "organizationName"
+ *                      - "commonName"
+ *                      - "emailAddress"
+ * 
+ *
+ * @return array      Array containing paths to private key (.pem) and certificate (.crt) files
+ */
+function simplesaml_generate_keypair($dn)
+	{
+    global $storagedir;
+    // Generate key pair
+    $privkey = openssl_pkey_new(array(
+        "private_key_bits" => 4096,
+        "private_key_type" => OPENSSL_KEYTYPE_RSA,
+    ));
+
+    // Generate CSR and certificate
+    $csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'AES-128-CBC'));
+    $x509 = openssl_csr_sign($csr, null, $privkey, $days=3650, array('digest_alg' => 'AES-128-CBC'));
+    
+    // Save key and certificate
+    $pempath = $storagedir . "/system/" . uniqid("saml_") . ".pem";
+    $crtpath = $storagedir . "/system/" . uniqid("saml_") . ".crt";
+    openssl_x509_export_to_file($x509, $crtpath);
+    openssl_pkey_export_to_file($privkey, $pempath);
+    
+    return array(
+        'privatekey' => $pempath,
+        'certificate' => $crtpath
+        );
+	}

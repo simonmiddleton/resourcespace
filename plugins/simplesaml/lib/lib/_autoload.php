@@ -19,10 +19,11 @@ if (file_exists(dirname(dirname(__FILE__)) . '/vendor/autoload.php')) {
         throw new Exception('Unable to load Composer autoloader');
     }
 }
+
 # Load ResourceSpace configuration if not already loaded so that all SP and IdP details can be set in ResourceSpace config
 $rsconfigloaded = getenv('SIMPLESAMLPHP_RESOURCESPACE_CONFIG_LOADED');
 
-if(!$rsconfigloaded)
+if(!$rsconfigloaded  && file_exists(__DIR__ .'/../../../../include/db.php'))
     {
     $suppress_headers = true;
     include __DIR__ . '/../../../../include/db.php';
@@ -37,5 +38,5 @@ if(isset($simplesaml_rsconfig) && $simplesaml_rsconfig)
     $rsmetadir = realpath(__DIR__ . '/../resourcespace/metadata/');
     // Set to use the ResourceSpace files load the config and metadata into SimpleSAML 
     putenv('SIMPLESAMLPHP_CONFIG_DIR=' . $rsconfigdir);
-    $simplesamlconfig["metadatadir"] = $rsmetadir;
+    $simplesamlconfig["config"]["metadatadir"] = $rsmetadir;
     }

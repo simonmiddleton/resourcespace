@@ -54,7 +54,6 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
         } else {
             $this->directory = $globalConfig->getString('metadatadir', 'metadata/');
         }
-
         /* Resolve this directory relative to the SimpleSAMLphp directory (unless it is
          * an absolute path).
          */
@@ -78,7 +77,7 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
     private function load($set)
     {
         $metadatasetfile = $this->directory . $set . '.php';
-
+echo "Getting $set <br/>";
         if (!file_exists($metadatasetfile)) {
             return null;
         }
