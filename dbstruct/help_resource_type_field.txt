@@ -25,20 +25,20 @@ external_user_access,int(11),
 autocomplete_macro,text,Macro used to autocomplete field if when saving it's empty (ie no value)
 hide_when_uploading,int(11),Do not show when uploading
 hide_when_restricted,int(11),Do not show when restricted access.
-value_filter,text,
-exiftool_filter,text,
-omit_when_copying,int(11),
-tooltip_text,text,
-regexp_filter,varchar(400),
-sync_field,int(11),
-display_condition,varchar(400),
-onchange_macro,text,
-linked_data_field,text,
-automatic_nodes_ordering,tinyint(1),
-fits_field,varchar(255),
-personal_data,tinyint(1),
-include_in_csv_export,tinyint(1),
-browse_bar,tinyint(1),
-read_only,tinyint(1),
-active,tinyint(1),
-full_width,tinyint(1),
+value_filter,text,PHP code snippet which allows the transformation of $value to modify the display of a field value in search display fields or resource view.
+exiftool_filter,text,PHP code to modify extracted exiftool $value upon import into the database.
+omit_when_copying,int(11),Specifies that the field should not be copied when using the resource copy function.
+tooltip_text,text,Text that will appear in simple/advanced search when the cursor hovers over the field.
+regexp_filter,varchar(400),Regular expression used to add constraints on the values input to the field.
+sync_field,int(11),Ability to keep the settings of this field in sync with the ones of another one.
+display_condition,varchar(400),Adding dependencies on other field values for displaying the current field.
+onchange_macro,text,PHP code to be executed when updating the field value.
+linked_data_field,text,Used for date range fields
+automatic_nodes_ordering,tinyint(1),If 1, nodes get ordered by translated names, otherwise uses the order_by column.
+fits_field,varchar(255),FITS values for extracting from embedded metadata.
+personal_data,tinyint(1),If 1, field may contain personal data.
+include_in_csv_export,tinyint(1),If 1, field can be included in CSV exports.
+browse_bar,tinyint(1),Set to 1 to show field in the browse bar
+read_only,tinyint(1),Set to 1 to make field read-only and not write back to the file on download.
+active,tinyint(1),Set to 1 to have field active, 0 to be disabled.
+full_width,tinyint(1),Set to 1 to have the field be displayed full width on the view page.
