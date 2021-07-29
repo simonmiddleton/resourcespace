@@ -12,9 +12,11 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 		// Check whether download file extension matches
     if(!in_array(strtoupper($ext),$format_chooser_output_formats))
         {return false;}
-    
+
+    $resource_data = get_resource_data($ref);
+
     // Check whether original resource file extension matches    
-    $original_ext = sql_value("select file_extension value from resource where ref = '".escape_check($ref)."'",'');    
+    $original_ext = $resource_data['file_extension'] ?? '';
     if(!in_array(strtoupper($original_ext),$format_chooser_input_formats))
         {return false;}
     
