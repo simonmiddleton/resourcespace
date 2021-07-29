@@ -3603,7 +3603,8 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 						break;
 					}
 					if($numeric_key){
-						$GLOBALS['hook_return_value'] = array_values(array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR));
+						$merged_arrays = array_merge($GLOBALS['hook_return_value'], $function_return_value);
+						$GLOBALS['hook_return_value'] = array_intersect_key($merged_arrays,array_unique(array_column($merged_arrays,'value'),SORT_REGULAR));
 					}
 					else{
 						$GLOBALS['hook_return_value'] = array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR);
