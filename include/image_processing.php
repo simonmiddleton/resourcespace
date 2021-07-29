@@ -1420,7 +1420,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         # Set thumbonly=true to (re)generate thumbnails only.
 
         $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
-        $origfile=$file;
+        $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
         
         $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
         if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}  
@@ -1586,32 +1586,48 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # If we've already made the LPR or SCR then use those for the remaining previews.
             # As we start with the large and move to the small, this will speed things up.
             $using_original = false;
-            if ($extension!="png" && $extension!="gif")
+            if(in_array($extension, $preview_keep_alpha_extensions)) // These need to use original source for transparency
                 {
-                if(file_exists($hpr_path))
+                $file = $origfile;
+                $using_original = true;
+                // Reset icc flag as still required when using original as source
+                $icc_transform_complete = false;
+                }
+            else
+                {
+                if (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")
                     {
-                    $file=$hpr_path;
-                    }
-                if(file_exists($lpr_path))
-                    {
-                    $file=$lpr_path;
-                    }
-                if(file_exists($scr_path))
-                    {
-                    $file=$scr_path;
-                    }
-                
-                # Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
-                # mean that the height/width of the larger sizes is less than the required target height/width
-                list($checkw,$checkh) = @getimagesize($file);
-                if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
-                    {
-                    $file=file_exists($hpr_path)?$hpr_path:$origfile;
-                    $using_original = true;
+                    // Alway use original or HPR size as source
+                    $file=file_exists($hpr_path) ? $hpr_path : $origfile;
                     if($file == $origfile)
                         {
-                        // Reset icc flag as still required when using original as source
+                        $using_original = true;
                         $icc_transform_complete = false;
+                        }
+                    }
+                elseif ($file!=$hpr_path)
+                    {
+                    # Get a source file with dimensions sufficient to create the required size. Unusually wide
+                    # or tall images can mean that the height/width of the larger sizes is less than the required
+                    # target height/width
+                    foreach(array($scr_path,$lpr_path,$hpr_path,$origfile) as $pre_source)
+                        {
+                        if(file_exists($pre_source))
+                            {
+                            list($checkw,$checkh) = @getimagesize($pre_source);
+                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'])
+                                {
+                                $file = $pre_source;
+                                if($file == $origfile)
+                                    {
+                                    $using_original = true;
+                                    // Reset icc flag as still required when using original as source
+                                    $icc_transform_complete = false;
+                                    }
+                                debug("Using source file : '" . $pre_source  . "'"); 
+                                break;
+                                }
+                            }
                         }
                     }
                 }
@@ -2402,8 +2418,7 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
 
     # Save source image and fetch new dimensions
 
-    imagejpeg($source,$file,95);
-        
+    imagejpeg($source,$file,95);        
 
     list($tw,$th) = @getimagesize($file);   
     

@@ -259,7 +259,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             // Check that this is a valid resource type    
             if(trim($resource_type_set) != "" && !in_array($resource_type_set,array_keys($resource_types)))
                 {
-                $logtext = "Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . count($line);
+                $logtext = "Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . $line_count;
                 csv_upload_log($logfile,$logtext);
                 array_push ($messages,$logtext);
 			    $error_count++;
@@ -337,7 +337,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $resource_id = isset($line[$id_column]) ? $line[$id_column] : "";
                 if(!in_array($resource_id,$replaceresources))
                     {
-                    $logtext = "Error: Invalid resource id: '" . $resource_id . "' specified in line " . count($line);
+                    $logtext = "Error: Invalid resource id: '" . $resource_id . "' specified in line " .$line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     
@@ -354,7 +354,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $match_val = isset($line[$id_column]) ? $line[$id_column]: "";
                 if(trim($match_val) == "")
                     {
-                    $logtext = "Error: Invalid resource identifier specified in line " . count($line);
+                    $logtext = "Error: Invalid resource identifier specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
@@ -372,7 +372,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                 if(!is_array($allmatches))
                     {
-                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
@@ -382,7 +382,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
                 if(count($validmatches) == 0)
                     {
-                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
@@ -390,21 +390,21 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     }
                 elseif(count($validmatches) == 1)
                     {
-                    $logtext = "Found resource ID : " . $validmatches[0] . " matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Found resource ID : " . $validmatches[0] . " matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $resourcerefs = $validmatches;
                     }
                 elseif($csv_set_options["multiple_match"])
                     {
-                    $logtext = "Processing multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Processing multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $resourcerefs = $validmatches;
                     }
                 else
                     {
-                    $logtext = "Error: Multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . count($line);
+                    $logtext = "Error: Multiple matching resources (" . implode(",",$validmatches) . ") found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
@@ -934,18 +934,24 @@ function csv_upload_get_info($filename, &$messages)
 
     $row = 0;
     $founddata = array();
-    while ((($data= fgetcsv($file)) != false) && count($founddata) < $headercount)
+    while (($data = fgetcsv($file)) != false)
         {
-        for($c=0;$c<$headercount;$c++)
+        // Get a sample of data here from the first 100 rows
+        if (count($founddata) < $headercount && $row < 100)
             {
-            if(isset($data[$c]) && trim($data[$c]) != "")
+            for($c=0;$c<$headercount;$c++)
                 {
-                $csv_data[$c]["values"][$row] = mb_substr($data[$c],0,30) . (mb_strlen($data[$c]) > 30 ? "..." : "");
-                $founddata[$c] = true;
+                if(isset($data[$c]) && trim($data[$c]) != "")
+                    {
+                    $csv_data[$c]["values"][$row] = mb_substr($data[$c],0,30) . (mb_strlen($data[$c]) > 30 ? "..." : "");
+                    $founddata[$c] = true;
+                    }
                 }
             }
         $row++;
         }
+    // Return row count
+    $csv_data["row_count"] = $row;
 
     return $csv_data;
     }

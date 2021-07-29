@@ -57,7 +57,7 @@ $lang["csv_upload_mapping_ignore"]              = "DO NOT USE";
 $lang["csv_upload_mapping_header"]              = "Column Header";
 $lang["csv_upload_mapping_csv_data"]            = "Sample data from CSV";
 $lang["csv_upload_using_config"]                = "Using existing CSV configuration";
-$lang["csv_upload_process_offline"]             = "Process CSV file offline? This should be used for large CSV files. You will be notified via a ResourceSpace message once the upload is complete";
+$lang["csv_upload_process_offline"]             = "Process CSV file offline? This should be used for large CSV files. You will be notified via a ResourceSpace message once the processing is complete";
 $lang["csv_upload_oj_created"]                  = "CSV upload job created with job ID # %%JOBREF%%. <br/>You will receive a ResourceSpace system message once the job has completed";
 $lang["csv_upload_oj_complete"]                 = "CSV upload job complete. Click the link to view the full log file";
 $lang["csv_upload_oj_failed"]                   = "CSV upload job failed";
@@ -68,3 +68,5 @@ $lang["csv_upload_full_messages_link"]          = "Showing only the first 1000 l
 $lang["csv_upload_full_messages_link"]          = "Showing only the first 1000 lines, to download the full log file please click <a href='%%LOG_URL%%' target='_blank'>here</a>";
 $lang["csv_upload_ignore_errors"]               = "Ignore errors and process file anyway";
 $lang["csv_upload_process_offline_quick"]       = "Skip validation and process CSV file offline? This should only be used for large CSV files when testing on smaller files has been completed. You will be notified via a ResourceSpace message once the upload is complete";
+$lang["csv_upload_force_offline"]               = "This large CSV may take a long time to process so will be run offline. You will be notified via a ResourceSpace message once the processing is complete";
+$lang["csv_upload_recommend_offline"]           = "This large CSV may take a very long time to process. It is recommended that offline jobs are enabled if you need to process large CSVs";

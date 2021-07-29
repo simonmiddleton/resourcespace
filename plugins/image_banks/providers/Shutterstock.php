@@ -8,7 +8,8 @@ class Shutterstock extends Provider
     protected $download_endpoint = "https://api.shutterstock.com/v2/images/";
     
     protected $configs = array(
-        "shutterstock_token" => "ENTER_TOKEN_HERE"
+        "shutterstock_token" => "ENTER_TOKEN_HERE",
+        "shutterstock_result_limit" => "1000"
     );
     protected $warning = "";
 
@@ -29,6 +30,7 @@ class Shutterstock extends Provider
         {
         $page_def[] = \config_add_section_header($this->name);
         $page_def[] = \config_add_text_input('shutterstock_token', $this->lang["image_banks_shutterstock_token"],false,800,true);
+        $page_def[] = \config_add_text_input('shutterstock_result_limit', $this->lang["image_banks_shutterstock_result_limit"]);
 
         return $page_def;
         }
@@ -75,6 +77,9 @@ class Shutterstock extends Provider
 
         $provider_results = new ProviderSearchResults();
 
+        // More cleanly handle an unexpected result.
+        if (!isset($search_results["data"])) {echo "<h1>Sorry, your query could not be completed.</h1><pre>Provider said: " . json_encode($search_results,JSON_PRETTY_PRINT) . "</pre>";exit();}
+
         foreach($search_results["data"] as $result)
             {
             $width=$result['assets']['large_thumb']['width'];
@@ -84,11 +89,16 @@ class Shutterstock extends Provider
             $whitestrip_size=17;
             if ($width>$height) {$height+=$whitestrip_size;} else {$width+=$whitestrip_size;}
 
+            global $baseurl_short;
             $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
             $provider_result
                 ->setTitle($result['description'])
                 ->setOriginalFileUrl("")
-                ->setProviderUrl("https://www.shutterstock.com/image-illustration/" . $result['id'])
+                ->setProviderUrl($baseurl_short . "plugins/image_banks/pages/shutterstock_license.php?id=" . urlencode($result['id']) 
+                . "&preview=" . urlencode(isset($result['assets']['preview_1500']['url'])?$result['assets']['preview_1500']['url']:'')
+                . "&description=" . urlencode(isset($result['description'])?$result['description']:'')
+                . "&filename=" . urlencode(isset($result['original_filename'])?$result['original_filename']:'')
+                )
                 ->setPreviewUrl($result['assets']['large_thumb']['url'])
                 ->setPreviewWidth($width)
                 ->setPreviewHeight($height);
@@ -106,7 +116,9 @@ class Shutterstock extends Provider
         $provider_results->total = count($provider_results);
         if(isset($search_results["total_count"]))
             {
-            $provider_results->total = $search_results["total_count"];
+            global $shutterstock_result_limit;
+            // Cap at the configured total if the results are more than that.
+            $provider_results->total = ($search_results["total_count"]>$shutterstock_result_limit?$shutterstock_result_limit:$search_results["total_count"]);
             }
 
         return $provider_results;

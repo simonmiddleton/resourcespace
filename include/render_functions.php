@@ -4577,7 +4577,7 @@ function render_featured_collections(array $ctx, array $items)
                 $render_ctx["tools"][] = $tool_select;
                 }
 
-            if($enable_theme_category_edit && checkperm("t"))
+            if($enable_theme_category_edit && checkperm("h") || checkperm("t"))
                 {
                 $render_ctx["tools"][] = $tool_edit;
                 }
@@ -5058,11 +5058,11 @@ function render_table($tabledata)
         }
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
-        echo "<th " . (isset($headerdetails["width"]) ? ("style='width:" . htmlspecialchars($headerdetails["width"]) . "'") : "") . ">";
+        echo "<th " . ($headerdetails["name"]==$lang["tools"] ? "class='ListTools'" : "") . (isset($headerdetails["width"]) ? ("style='width:" . htmlspecialchars($headerdetails["width"]) . "'") : "") . ">";
         if($headerdetails["sortable"])
             {
             $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
-            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return " . ($modal ? "Modal" : "CentralSpace") . "SpaceLoad(this, true);'>" . htmlspecialchars($headerdetails["name"]);
+            echo "<a href='" . generateurl($tabledata["defaulturl"],$tabledata["params"],array($tabledata["orderbyname"]=>$header,$tabledata["sortname"]=>($tabledata["orderby"] == $header ? $revsort : $tabledata["sort"]))) . "' onclick='return " . ($modal ? "Modal" : "CentralSpace") . "Load(this, true);'>" . htmlspecialchars($headerdetails["name"]);
             if($tabledata["orderby"] == $header)
                 {
                 // Currently sorted by this column

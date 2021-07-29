@@ -25,4 +25,6 @@ $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' us
 $lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource with '%FILE' file using the ImageBank plugin by pointing to a system which is not part of allowed providers";
 
 $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
+$lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
+$lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 

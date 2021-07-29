@@ -3068,6 +3068,8 @@ $lang["job_filter_user"]                    = "Filter by user";
 $lang["job_confirm_purge"]                  = "Are you sure you want to delete all completed or failed jobs?";
 $lang["job_data"]                           = "Job data";
 $lang["job_value"]                          = "Value";
+$lang["job_boost"]                          = "Boost job";
+$lang["job_priority"]                       = "Priority";
 
 $lang['csv_export_offline_option']          = "Generate CSV file offline? This should be used for large result sets. You will be notified via a ResourceSpace message once the CSV is available";
 $lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME%%";
