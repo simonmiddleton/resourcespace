@@ -1677,7 +1677,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
                 if($extension=="svg")
                     {
-                    $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% tile:pattern:checkerboard -modulate 150,100 ";
+                    $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
                     }
                 else
                     {
@@ -1687,10 +1687,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }            
 
             $preview_quality=get_preview_quality($ps[$n]['id']);
-       
+
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent white \)") . ' ' . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $preview_quality;
                 }
 
             # fetch target width and height
