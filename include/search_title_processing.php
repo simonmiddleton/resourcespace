@@ -382,7 +382,7 @@ if ($search_titles)
                 }
             }
         elseif (substr($search,0,8)=="!hasdata")
-            {		
+            {
             $fieldref=intval(trim(substr($search,8)));        
             $fieldinfo=get_resource_type_field($fieldref);
             $fdisplayname = trim($fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldinfo["ref"];
@@ -400,12 +400,14 @@ if ($search_titles)
             {
             $title_string = $lang["file_integrity_fail_search"];
             }
-        elseif (substr($search,0,14)=="!locked")
+        elseif (substr($search,0,7)=="!locked")
             {
             $title_string = $lang["locked_resource_search"];
+            } 
+        if(isset($title_string))
+            {
+            $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . $searchcrumbs . '</div></div> ';
             }
-
-        $search_title = '<div class="BreadcrumbsBox"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . $searchcrumbs . '</div></div> ';
         }
     elseif (!$archive_standard && strpos($archive,",")===false) // Don't construct title if more than one archive state is selected
         {
