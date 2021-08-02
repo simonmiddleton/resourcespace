@@ -3047,7 +3047,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
     // favouring the Active one
     $search_archive = explode(',', $search_params['archive']);
-    $default_workflow_state = get_default_archive_state(0);
+    $default_workflow_state = get_default_archive_state();
     if($default_workflow_state == 0)
         {
         $upload_here_params['status'] = $default_workflow_state;
