@@ -5717,13 +5717,15 @@ function get_page_count($resource,$alternative=-1)
             $pages=str_replace(":","",$pages);
             $pages=trim($pages);
             }
+        if (!is_numeric($pages))
+            {
+            $pages = 1; // default to 1 page if we didn't get anything back
+            }
         }
     else
         {
-        $pages = '';
+        $pages = 1;
         }
-
-	if (!is_numeric($pages)){ $pages = 1; } // default to 1 page if we didn't get anything back
 
 	if ($alternative!=-1)
 		{
