@@ -4468,3 +4468,126 @@ function validate_remote_code(string $code)
 
     return !isset($invalid);
     }
+
+
+/**
+ * Get system status information
+ * 
+ * 
+ * 
+ * @return array
+ */
+function get_system_status()
+    {
+    $return = [
+        'results' => [
+            // Example of a test result
+            // [
+            // 'name' => 'Short name of what is being tested',
+            // 'status' => 'OK/FAIL/WARN',
+            // 'info' => 'Any relevant information',
+            // ]
+        ],
+        'status' => 'FAIL',
+    ];
+    $fail_tests = 0;
+    $warn_tests = 0;
+
+    // Check required PHP modules
+    $missing_modules = [];
+    foreach(SYSTEM_REQUIRED_PHP_MODULES as $module => $test_fn)
+        {
+        if(!function_exists($test_fn))
+            {
+            $missing_modules[] = $module;
+            }
+        }
+    if(count($missing_modules) > 0)
+        {
+        $return['results'][] = [
+            'name' => 'required_php_modules',
+            'status' => 'FAIL',
+            'info' => 'Missing PHP modules: ' . implode(', ', $missing_modules),
+        ];
+
+        // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
+        return $return;
+        }
+
+    // Check database connectivity.
+    $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
+    if ($check <= 0)
+        {
+        $return['results'][] = [
+            'name' => 'database_connection',
+            'status' => 'FAIL',
+            'info' => 'SQL query produced unexpected result',
+        ];
+
+        ++$fail_tests; 
+        }
+
+
+    // Check write access to filestore - FAIL
+
+# Check write access to filestore
+if (!is_writable($storagedir)) {exit("FAIL - \$storagedir is not writeable.");}
+$hash=md5(time());
+$file=$storagedir . "/write_test_$hash.txt";
+if(file_put_contents($file,$hash) === false)
+    {
+    exit("FAIL - Unable to write to configured \$storagedir. Folder permissions are: " . fileperms($storagedir));
+    }
+
+if(!file_exists($file) || !is_readable($file))
+    {
+    exit("FAIL - Hash not saved or unreadable in file'{$file}'");
+    }
+
+$check=file_get_contents($file);
+
+if(file_exists($file))
+    {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+    unlink($file);
+        } 
+    catch (exception $e)
+        {
+        debug("Unable to delete file: " . $file);
+        }
+    $GLOBALS["use_error_exception"] = false;
+    }
+
+if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if($fail_tests === 0 && $warn_tests === 0)
+        {
+        $return['status'] = 'OK';
+        }
+    else if($warn_tests > 0 && $fail_tests === 0)
+        {
+        $return['status'] = 'WARNING';
+        }
+
+    return $return;
+    }
