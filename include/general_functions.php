@@ -4435,3 +4435,29 @@ function build_permission(string $perm)
     }
 
 
+/**
+ * Attempt to validate remote code.
+ * 
+ * IMPORTANT: Never use this function or eval() on any code received externally from a source that can't be trusted!
+ * 
+ * @param  string  $code  Remote code to validate
+ * 
+ * @return boolean
+ */
+function validate_remote_code(string $code)
+    {
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        extract($GLOBALS, EXTR_SKIP);
+        eval($code);
+        }
+    catch(Throwable $t)
+        {
+        debug('validate_remote_code: Failed to validate remote code. Reason: ' . $t->getMessage());
+        $invalid = true;
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    return !isset($invalid);
+    }

@@ -968,8 +968,8 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
                     else{
                         $pdf_max_dim=$pdfinfo[1];
                         }
+                    $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
                 }
-                $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
             }
         }
         

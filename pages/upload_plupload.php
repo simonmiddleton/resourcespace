@@ -78,12 +78,13 @@ if($upload_then_edit && $resource_type_force_selection && getval('posting', '') 
 // If upload_then_edit we may not have a resource type, so we need to find the first resource type
 // which does not have an XU? (restrict upload) permission  
 // This will be the resource type used for the upload, but may be changed later when extension is known
+// Resource types that can't be added to collections must be avoided for edit then upload mode to display the edit page for metadata entry.
 $all_resource_types = get_resource_types();
 if($resource_type == "")
 	{
 	foreach($all_resource_types as $restype)
 		{
-		if (!checkperm("XU" . $restype["ref"]))
+		if (!checkperm("XU" . $restype["ref"]) && !in_array($restype["ref"],$collection_block_restypes))
 			{
 			$resource_type = $restype["ref"];
 			break;

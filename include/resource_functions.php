@@ -5698,26 +5698,34 @@ function get_page_count($resource,$alternative=-1)
 		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alternative);
 		}
 
-	# locate exiftool
-    $exiftool_fullpath = get_utility_path("exiftool");
-    if ($exiftool_fullpath==false)
-		{
-		# Try with ImageMagick instead
-		$command = get_utility_path("im-identify") . ' -format %n ' . escapeshellarg($file);
-		$pages = trim(run_command($command));
-		}
+    if (file_exists($file))
+        {
+        # locate exiftool
+        $exiftool_fullpath = get_utility_path("exiftool");
+        if ($exiftool_fullpath==false)
+            {
+            # Try with ImageMagick instead
+            $command = get_utility_path("im-identify") . ' -format %n ' . escapeshellarg($file);
+            $pages = trim(run_command($command));
+            }
+        else
+            {
+            $command = $exiftool_fullpath;    
+            $command= escapeshellarg($command) . " -sss -pagecount " . escapeshellarg($file);
+            $output=run_command($command);
+            $pages=str_replace("Page Count","",$output);
+            $pages=str_replace(":","",$pages);
+            $pages=trim($pages);
+            }
+        if (!is_numeric($pages))
+            {
+            $pages = 1; // default to 1 page if we didn't get anything back
+            }
+        }
     else
         {
-        $command = $exiftool_fullpath;
-    	
-        $command= escapeshellarg($command) . " -sss -pagecount " . escapeshellarg($file);
-        $output=run_command($command);
-        $pages=str_replace("Page Count","",$output);
-        $pages=str_replace(":","",$pages);
-        $pages=trim($pages);
-		}
-
-	if (!is_numeric($pages)){ $pages = 1; } // default to 1 page if we didn't get anything back
+        $pages = 1;
+        }
 
 	if ($alternative!=-1)
 		{

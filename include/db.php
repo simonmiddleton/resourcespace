@@ -127,16 +127,20 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 			# The last 33 characters must be a hash and the sign of the previous characters.
 			$sign=substr($r,-32); # Last 32 characters is a signature
 			$r=substr($r,0,strlen($r)-33);
-			if ($sign==md5($remote_config_key . $r))
+
+            if ($sign == md5($remote_config_key . $r))
                 {
-                $remote_config=$r;
-                set_sysvar($remote_config_sysvar,$remote_config);
+                if(validate_remote_code($r))
+                    {
+                    $remote_config = $r;
+                    set_sysvar($remote_config_sysvar, $remote_config);
+                    }
                 }
             else
                 {
                 # Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
                 # Do nothing; proceed with old config and try again later.
-                debug('[db.php][warn] Validation of returned remote config failed');
+                debug('[db.php][warn] Failed to authenticate the signature of the remote config');
                 }
 			}
 		else
@@ -150,6 +154,7 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 
 		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
 		}
+
 	# Load and use the config
 	eval($remote_config);
     debug_track_vars('after@remote_config', get_defined_vars());
