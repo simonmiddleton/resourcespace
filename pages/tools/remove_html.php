@@ -11,14 +11,15 @@ include_once "{$webroot}/include/db.php";
 
 
 // Script options @see https://www.php.net/manual/en/function.getopt.php
-$cli_short_options = 'cdh';
+$cli_short_options = 'cdhn';
 $cli_long_options  = array(
     'help',
     'html-field:',
     'plaintext-field:',
     'encoding:',
     'html-entity-decode',
-    'copy-all'
+    'copy-all',
+    'newlines'
 );
 $help_text = "NAME
     remove_html - a script to help administrators remove HTML from existing fields' values for all resources.
@@ -41,6 +42,7 @@ OPTIONS SUMMARY
                                see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
     -c, --copy-all             Optional parameter. By default this script will only output to the --plaintext-field if html was found in the --html-field. Adding -c will
                                force the script to copy the data regardless of if any change has occurred. Useful if the --plaintext-field is to replace the --html-field.
+    -n, --newlines             Attempt to preserve any new lines in the html value to keep similar line spacing in the output plain text value.
 
 EXAMPLES
     php remove_html.php --html-field=\"87\" --plaintext-field=\"88\"
@@ -50,6 +52,7 @@ EXAMPLES
 $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
 $copy_all = false;
+$preserve_newlines = false;
 foreach($options as $option_name => $option_value)
     {
     if(in_array($option_name, ['h', 'help']))
@@ -73,6 +76,12 @@ foreach($options as $option_name => $option_value)
     if(in_array($option_name, ['c','copy-all']))
         {
         $copy_all = true;
+        continue;
+        }
+    
+    if(in_array($option_name, ['n','newlines']))
+        {
+        $preserve_newlines = true;
         continue;
         }
 
@@ -141,6 +150,11 @@ $results = array_column($html_data, 'value', 'resource');
 
 foreach($results as $resource_ref => $html_value)
     {
+    if ($preserve_newlines)
+        {
+        $html_value = str_replace('<br />', '\\n', $html_value);
+        }
+
     $plaintxt_val = strip_tags($html_value);
 
     if ($html_decode)
