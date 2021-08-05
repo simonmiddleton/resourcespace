@@ -4493,6 +4493,7 @@ function get_system_status()
     $fail_tests = 0;
     $warn_tests = 0;
 
+
     // Check required PHP modules
     $missing_modules = [];
     foreach(SYSTEM_REQUIRED_PHP_MODULES as $module => $test_fn)
@@ -4514,6 +4515,7 @@ function get_system_status()
         return $return;
         }
 
+
     // Check database connectivity.
     $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
     if ($check <= 0)
@@ -4524,43 +4526,133 @@ function get_system_status()
             'info' => 'SQL query produced unexpected result',
         ];
 
-        ++$fail_tests; 
+        ++$fail_tests;
         }
 
 
     // Check write access to filestore - FAIL
-
-# Check write access to filestore
-if (!is_writable($storagedir)) {exit("FAIL - \$storagedir is not writeable.");}
-$hash=md5(time());
-$file=$storagedir . "/write_test_$hash.txt";
-if(file_put_contents($file,$hash) === false)
-    {
-    exit("FAIL - Unable to write to configured \$storagedir. Folder permissions are: " . fileperms($storagedir));
-    }
-
-if(!file_exists($file) || !is_readable($file))
-    {
-    exit("FAIL - Hash not saved or unreadable in file'{$file}'");
-    }
-
-$check=file_get_contents($file);
-
-if(file_exists($file))
-    {
-    $GLOBALS["use_error_exception"] = true;
-    try
+    if(!is_writable($GLOBALS['storagedir']))
         {
-    unlink($file);
-        } 
-    catch (exception $e)
-        {
-        debug("Unable to delete file: " . $file);
+        $return['results'][] = [
+            'name' => 'filestore_writable',
+            'status' => 'FAIL',
+            'info' => '$storagedir is not writeable',
+        ];
+
+        return $return;
         }
-    $GLOBALS["use_error_exception"] = false;
-    }
 
-if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
+    // Check ability to create a file in filestore
+    $hash = md5(time());
+    $file = sprintf('%s/write_test_%s.txt', $GLOBALS['storagedir'], $hash);
+    if(file_put_contents($file, $hash) === false)
+        {
+        $return['results'][] = [
+            'name' => 'create_file_in_filestore',
+            'status' => 'FAIL',
+            'info' => 'Unable to write to configured $storagedir. Folder permissions are: ' . fileperms($GLOBALS['storagedir']),
+        ];
+
+        return $return;
+        }
+
+    if(!file_exists($file) || !is_readable($file))
+        {
+        $return['results'][] = [
+            'name' => 'filestore_file_exists_and_is_readable',
+            'status' => 'FAIL',
+            'info' => 'Hash not saved or unreadable in file ' . $file,
+        ];
+
+        return $return;
+        }
+
+    $check = file_get_contents($file);
+    if(file_exists($file))
+        {
+        $GLOBALS['use_error_exception'] = true;
+        try
+            {
+            unlink($file);
+            }
+        catch (Throwable $t)
+            {
+            $return['results'][] = [
+                'name' => 'filestore_file_delete',
+                'status' => 'WARNING',
+                'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
+            ];
+
+            ++$warn_tests;
+            }
+        $GLOBALS['use_error_exception'] = false;
+        }
+    if($check !== $hash)
+        {
+        $return['results'][] = [
+            'name' => 'filestore_file_check_hash',
+            'status' => 'FAIL',
+            'info' => sprintf('Test write to disk returned a different string ("%s" vs "%s")', $hash, $check),
+        ];
+
+        return $return;
+        }
+
+
+    // Check write access to sql_log
+    if(isset($GLOBALS['mysql_log_transactions']) && $GLOBALS['mysql_log_transactions'])
+        {
+        $mysql_log_location = $GLOBALS['mysql_log_location'] ?? '';
+        $mysql_log_dir = dirname($mysql_log_location);
+        if(!is_writeable($mysql_log_dir) || (file_exists($mysql_log_location) && !is_writeable($mysql_log_location)))
+            {
+            $return['results'][] = [
+                'name' => 'mysql_log_location',
+                'status' => 'FAIL',
+                'info' => 'Invalid $mysql_log_location specified in config file',
+            ];
+
+            return $return;
+            }
+        }
+
+
+    // Check write access to debug_log
+    $debug_log_location = $GLOBALS['debug_log_location'] ?? get_debug_log_dir() . '/debug.txt';
+    $debug_log_dir = dirname($debug_log_location);
+    if(!is_writeable($debug_log_dir) || (file_exists($debug_log_location) && !is_writeable($debug_log_location)))
+        {
+        $debug_log = isset($GLOBALS['debug_log']) && $GLOBALS['debug_log'];
+        $debug_log_location_test_status = ($debug_log ? 'FAIL' : 'WARNING');
+
+        $return['results'][] = [
+            'name' => 'debug_log_location',
+            'status' => $debug_log_location_test_status,
+            'info' => 'Invalid $debug_log_location specified in config file',
+        ];
+
+        if($debug_log)
+            {
+            return $return;
+            }
+        else
+            {
+            ++$warn_tests;
+            }
+        }
+
+
+    // Check that the cron process executed within the last 5 days* (FAIL)
+
+
+
+// Check that the cron process executed within the last 5 days (allows for a window of downtime, for migration, etc.).
+$last_cron=strtotime(sql_value("SELECT value FROM sysvars WHERE name='last_cron'", ''));
+$diff_days=(time()-$last_cron) / (60 * 60 * 24);
+if ($diff_days>5) 
+    {
+    echo "WARNING - cron was executed " . round($diff_days,0) . " days ago.";
+    }
 
 
 
