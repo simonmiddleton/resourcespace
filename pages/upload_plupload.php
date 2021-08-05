@@ -24,7 +24,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         }
     }
 
-include "../include/image_processing.php";
+include_once "../include/image_processing.php";
 
 $overquota                              = overquota();
 $status                                 = '';

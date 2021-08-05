@@ -1993,18 +1993,11 @@ function get_temp_dir($asUrl = false,$uniqid="")
     if ($uniqid!=""){
         $uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
         $result.="/$uniqid";
+
         if(!is_dir($result))
             {
-            $GLOBALS["use_error_exception"] = true; 
-            // If it does not exist, create it.
-            try {
-                mkdir($result, 0777,true);
-            } 
-            catch (Exception $e) {
-                debug("get_temp_dir: Attempt to create folder '$result' failed. Reason: {$e->getMessage()}");  
+            mkdir($result, 0777, true);
             }
-            unset($GLOBALS["use_error_exception"]);    
-        }
     }
     
     // return the result.

@@ -12,15 +12,27 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 		// Check whether download file extension matches
     if(!in_array(strtoupper($ext),$format_chooser_output_formats))
         {return false;}
-    
+
+    $url_qs = [
+        'ref' => $ref,
+        'size' => $size,
+        'k' => $k,
+        'ext' => $ext,
+        'page' => $page,
+        'alt' => $alternative,
+    ];
+    $resource_data = get_resource_data($ref);
+
     // Check whether original resource file extension matches    
-    $original_ext = sql_value("select file_extension value from resource where ref = '".escape_check($ref)."'",'');    
+    $original_ext = $resource_data['file_extension'] ?? '';
     if(!in_array(strtoupper($original_ext),$format_chooser_input_formats))
         {return false;}
     
     $profile = getvalescaped('profile' , null);
 	if (!empty($profile))
-		$profile = '&profile=' . $profile;
+        {
+        $url_qs['profile'] = $profile;
+        }
 	else
 		{
 		$path = get_resource_path($ref, true, $size, false, $ext, -1, $page,$size=="scr" && checkperm("w") && $alternative==-1, '', $alternative);
@@ -28,8 +40,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 		return false;
 		}
 
-	return $baseurl_short . 'plugins/format_chooser/pages/convert.php?ref=' . $ref . '&size='
-			. $size . '&k=' . $k . '&ext=' . $ext . $profile . '&page=' . $page . '&alt=' . $alternative;
+    return generateURL($baseurl_short . 'plugins/format_chooser/pages/convert.php', $url_qs);
 	}
 
 // Following moved from collection_download to work for offline jobs

@@ -4,8 +4,8 @@
 #
 include('../../include/db.php');
 include('../../include/authenticate.php');
-include('../../include/image_processing.php');
-include('../../include/pdf_functions.php');
+include_once('../../include/image_processing.php');
+include_once('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/vendor/autoload.php';
 
 use Spipu\Html2Pdf\Html2Pdf;
