@@ -4489,7 +4489,17 @@ function get_system_status()
         'status' => 'FAIL',
     ];
     $warn_tests = 0;
+    $rs_root = dirname(__DIR__);
 
+
+    // Checking requirements must be done before db.php. If that's the case always stop after testing for required PHP modules
+    // otherwise the function will break because of undefined global variables or functions (as expected).
+    $check_requirements_only = false;
+    if(!defined('SYSTEM_REQUIRED_PHP_MODULES'))
+        {
+        include_once $rs_root . '/include/definitions.php';
+        $check_requirements_only = true;
+        }
 
     // Check required PHP modules
     $missing_modules = [];
@@ -4510,6 +4520,10 @@ function get_system_status()
 
         // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
         return $return;
+        }
+    else if($check_requirements_only)
+        {
+        return ['results' => [], 'status' => 'OK'];
         }
 
 
@@ -4716,7 +4730,6 @@ function get_system_status()
 
     // Return the SVN information, if possible
     $svn_data = '';
-    $rs_root = dirname(__DIR__);
 
     // - If a SVN branch, add on the branch name.
     $svninfo = run_command('svn info '  . $rs_root);
