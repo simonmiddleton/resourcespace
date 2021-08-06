@@ -4743,6 +4743,20 @@ function get_system_status()
         }
 
 
+    // Check if plugins have their tests FAILed
+    $extra_fail_checks = hook('extra_fail_checks');
+    if($extra_fail_checks !== false && is_array($extra_fail_checks))
+        {
+        $return['results'][] = [
+            'name' => $extra_fail_checks['name'],
+            'status' => 'FAIL',
+            'info' => $extra_fail_checks['info'],
+        ];
+
+        return $return;
+        }
+
+
     // Return the version number
     $return['results'][] = [
         'name' => 'version',
@@ -4793,7 +4807,7 @@ function get_system_status()
     ];
 
 
-    // Check active user count (last 7 days)
+    // Return active user count (last 7 days)
     $return['results'][] = [
         'name' => 'active_user_count',
         'status' => 'OK',
