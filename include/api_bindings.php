@@ -942,3 +942,8 @@ function api_get_profile_image($user)
     {
     return get_profile_image($user);
     }
+
+function api_get_system_status()
+    {
+    return get_system_status();
+    }

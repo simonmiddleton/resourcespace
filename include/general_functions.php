@@ -4473,8 +4473,6 @@ function validate_remote_code(string $code)
 /**
  * Get system status information
  * 
- * 
- * 
  * @return array
  */
 function get_system_status()
@@ -4529,7 +4527,7 @@ function get_system_status()
         }
 
 
-    // Check write access to filestore - FAIL
+    // Check write access to filestore
     if(!is_writable($GLOBALS['storagedir']))
         {
         $return['results'][] = [
@@ -4709,9 +4707,6 @@ function get_system_status()
 
 
     // Return the version number
-    // Formulate a version number. Start with the one set in version.php, which is already changed on each release 
-    // branch, and also when building a new release ZIP.
-    // $version = $GLOBALS['productversion'];
     $return['results'][] = [
         'name' => 'version',
         'status' => 'OK',
@@ -4719,7 +4714,7 @@ function get_system_status()
     ];
 
 
-    // Return the SVN information if possible
+    // Return the SVN information, if possible
     $svn_data = '';
     $rs_root = dirname(__DIR__);
 
@@ -4750,19 +4745,24 @@ function get_system_status()
         $return['results'][] = [
             'name' => 'svn',
             'status' => 'OK',
-            'info' => $svn_data,
-        ];
+            'info' => $svn_data];
         }
 
-    
+
+    // Return a list with names of active plugins
+    $return['results'][] = [
+        'name' => 'plugins',
+        'status' => 'OK',
+        'info' => implode(', ', array_column(get_active_plugins(), 'name')),
+    ];
 
 
-
-
-
-
-
-
+    // Check active user count (last 7 days)
+    $return['results'][] = [
+        'name' => 'active_user_count',
+        'status' => 'OK',
+        'info' => get_recent_users(7) . ' recent users',
+    ];
 
 
 
