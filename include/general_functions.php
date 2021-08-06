@@ -4484,13 +4484,12 @@ function get_system_status()
             // Example of a test result
             // [
             // 'name' => 'Short name of what is being tested',
-            // 'status' => 'OK/FAIL/WARN',
+            // 'status' => 'OK/FAIL/WARNING',
             // 'info' => 'Any relevant information',
             // ]
         ],
         'status' => 'FAIL',
     ];
-    $fail_tests = 0;
     $warn_tests = 0;
 
 
@@ -4526,7 +4525,7 @@ function get_system_status()
             'info' => 'SQL query produced unexpected result',
         ];
 
-        ++$fail_tests;
+        return $return;
         }
 
 
@@ -4643,42 +4642,137 @@ function get_system_status()
 
 
     // Check that the cron process executed within the last 5 days* (FAIL)
-
-
-
-// Check that the cron process executed within the last 5 days (allows for a window of downtime, for migration, etc.).
-$last_cron=strtotime(sql_value("SELECT value FROM sysvars WHERE name='last_cron'", ''));
-$diff_days=(time()-$last_cron) / (60 * 60 * 24);
-if ($diff_days>5) 
-    {
-    echo "WARNING - cron was executed " . round($diff_days,0) . " days ago.";
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if($fail_tests === 0 && $warn_tests === 0)
+    $last_cron = strtotime(get_sysvar('last_cron', ''));
+    $diff_days = (time() - $last_cron) / (60 * 60 * 24);
+    if($diff_days > 5)
         {
-        $return['status'] = 'OK';
+        $return['results'][] = [
+            'name' => 'cron_process',
+            'status' => 'FAIL',
+            'info' => 'Cron was executed ' . round($diff_days, 0) . ' days ago.',
+        ];
+
+        return $return;
         }
-    else if($warn_tests > 0 && $fail_tests === 0)
+
+
+    // Check free disk space is sufficient -  WARN (or FAIL if critical low)
+    $avail = disk_total_space($GLOBALS['storagedir']);
+    $free = disk_free_space($GLOBALS['storagedir']);
+    $calc = $free / $avail;
+    if($calc < 0.05)
+        {
+        $return['results'][] = [
+            'name' => 'free_disk_space',
+            'status' => 'WARNING',
+            'info' => 'Less than 5% disk space free.',
+        ];
+        ++$warn_tests;
+        }
+    else if($calc < 0.01)
+        {
+        $return['results'][] = [
+            'name' => 'free_disk_space',
+            'status' => 'FAIL',
+            'info' => 'Less than 1% disk space free.',
+        ];
+        return $return;
+        }
+
+
+    // Check the disk space against the quota limit - WARN (FAIL if exceeded)
+    if(isset($GLOBALS['disksize']))
+        {
+        $avail = $GLOBALS['disksize'] * (1000 * 1000 * 1000); # Get quota in bytes
+        $used = get_total_disk_usage(); # Total usage in bytes
+        $percent = ceil(((int) $used / $avail) * 100);
+
+        if($percent >= 95 && $percent <= 100)
+            {
+            $return['results'][] = [
+                'name' => 'quota_limit',
+                'status' => 'WARNING',
+                'info' => $percent . '% used - nearly full.',
+            ];
+            ++$warn_tests;
+            }
+        else if($percent > 100)
+            {
+            $return['results'][] = [
+                'name' => 'quota_limit',
+                'status' => 'FAIL',
+                'info' => $percent . '% used - over quota.',
+            ];
+            return $return;
+            }
+        }
+
+
+    // Return the version number
+    // Formulate a version number. Start with the one set in version.php, which is already changed on each release 
+    // branch, and also when building a new release ZIP.
+    // $version = $GLOBALS['productversion'];
+    $return['results'][] = [
+        'name' => 'version',
+        'status' => 'OK',
+        'info' => $GLOBALS['productversion'],
+    ];
+
+
+    // Return the SVN information if possible
+    $svn_data = '';
+    $rs_root = dirname(__DIR__);
+
+    // - If a SVN branch, add on the branch name.
+    $svninfo = run_command('svn info '  . $rs_root);
+    $matches = [];
+    if(preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches) != 0)
+        {
+        $svn_data .= ' BRANCH ' . $matches[1];
+        }
+
+    // - Add on the SVN revision if we can find it.
+    // If 'svnversion' is available, run this as it will produce a better output with 'M' signifying local modifications.
+    $matches = [];
+    $svnversion = run_command('svnversion ' . $rs_root);
+    if($svnversion != '')
+        {
+        # 'svnversion' worked - use this value and also flag local mods using a detectable string.
+        $svn_data .= ' r' . str_replace('M', '(mods)', $svnversion);    
+        }
+    else if(preg_match('/\nRevision: (\d+)/i', $svninfo, $matches) != 0)
+        {
+        // No 'svnversion' command, but we found the revision in the results from 'svn info'.
+        $svn_data .= ' r' . $matches[1];
+        }
+    if($svn_data !== '')
+        {
+        $return['results'][] = [
+            'name' => 'svn',
+            'status' => 'OK',
+            'info' => $svn_data,
+        ];
+        }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    if($warn_tests > 0)
         {
         $return['status'] = 'WARNING';
+        }
+    else
+        {
+        $return['status'] = 'OK';
         }
 
     return $return;
