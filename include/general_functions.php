@@ -4610,6 +4610,29 @@ function get_system_status()
         }
 
 
+    // Check filestore folder browseability
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $output = file_get_contents($GLOBALS['baseurl'] . '/filestore');
+        if(strpos($output, 'Index of') !== false)
+            {
+            $return['results'][] = [
+                'name' => 'filestore_indexed',
+                'status' => 'FAIL',
+                'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
+            ];
+
+            return $return;
+            }
+        }
+    catch (Exception $e)
+        {
+        // Error accesing filestore URL - this is as expected
+        }
+    unset($GLOBALS['use_error_exception']);
+
+
     // Check write access to sql_log
     if(isset($GLOBALS['mysql_log_transactions']) && $GLOBALS['mysql_log_transactions'])
         {
