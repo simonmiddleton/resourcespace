@@ -372,11 +372,11 @@ function update_fieldx(int $metadata_field_ref)
     }
     
 /**
- * Set resource dimentions using data from exiftool. 
+ * Set resource dimensions using data from exiftool. 
  *
  * @param  string   $file_path         Path to the original file.
  * @param  int      $ref               Reference of the resource.
- * @param  boolean  $remove_original   Option to remove the origianl record. Used by update_resource_dimensions.php
+ * @param  boolean  $remove_original   Option to remove the original record. Used by update_resource_dimensions.php
  * 
  * @return void
  */
