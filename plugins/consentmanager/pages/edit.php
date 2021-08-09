@@ -1,10 +1,11 @@
 <?php
 include "../../../include/db.php";
-
 include_once "../../../include/authenticate.php";
+include "../include/file_functions.php";
 
-$ref=getvalescaped("ref","");
-$resource=getvalescaped("resource","");
+$ref=getvalescaped("ref","",true);
+$resource=getvalescaped("resource","",true);
+$file_path=get_consent_file_path($ref);
 
 # Check access
 if ($resource!="")
@@ -61,6 +62,7 @@ if (getval("submitted","")!="")
         # New record 
         sql_query("insert into consent (name,email,telephone,consent_usage,notes,expires) values ('" . getvalescaped("name","") . "', '" . getvalescaped("email","") . "', '" . getvalescaped("telephone","") . "', '" . $consent_usage . "', '" . getvalescaped("notes","") . "', $expires)");	
         $ref=sql_insert_id();
+        $file_path=get_consent_file_path($ref); // get updated path
 
         # Add to all the selected resources
         if (getvalescaped("resources","")!="")
@@ -98,6 +100,22 @@ if (getval("submitted","")!="")
                     }
                 }
             }
+
+        # Handle file upload
+        if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
+            {
+            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+            sql_query("update consent set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+            
+            }
+
+        # Handle file clear
+        if (getval("clear_file","")!="")
+            {
+            if (file_exists($file_path)) {unlink($file_path);}  
+            sql_query("update consent set file='' where ref='$ref'");
+            }
+
         }
     
     redirect($redirect_url);
@@ -109,19 +127,19 @@ if ($ref=="new")
     {
     # Set default values for the creation of a new record.
     $consent=array(
-        "outbound"=>1,
         "name"=>"",		
         "email"=>"",
         "telephone"=>"",
         "consent_usage"=>"",
         "notes"=>"",
-        "expires"=>""
+        "expires"=>"",
+        "file"=>""
         );
     if ($resource=="") {$resources=array();} else {$resources=array($resource);}
     }
 else
     {
-    $consent=sql_query("select * from consent where ref='$ref'");
+    $consent=sql_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref='$ref'");
     if (count($consent)==0) {exit("Consent not found.");}
     $consent=$consent[0];
     $resources=sql_array("select distinct resource value from resource_consent where consent='$ref' order by resource");
@@ -140,7 +158,7 @@ include "../../../include/header.php";
 
 <h1><?php echo ($ref=="new"?$lang["new_consent"]:$lang["edit_consent"]) ?></h1>
 
-<form method="post" action="<?php echo $baseurl_short?>plugins/consentmanager/pages/edit.php" onSubmit="return CentralSpacePost(this,true);">
+<form method="post" action="<?php echo $baseurl_short?>plugins/consentmanager/pages/edit.php" enctype="multipart/form-data">
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
@@ -238,6 +256,30 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
         <textarea class="stdwidth" rows="5" name="notes" id="notes"><?php echo htmlspecialchars($consent["notes"]) ?></textarea>
         <div class="clearerleft"> </div>
     </div>
+
+    <div class="Question" id="file">
+        <label for="file"><?php echo $lang["file"] ?></label>
+        <?php
+        
+        if($consent["file"]!="")
+			{
+			?>
+            <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a></span>
+            <input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"] ?>');">
+            <?php
+			}
+        else
+            {
+            ?>
+            <input type="file" name="file" style="width:300px">
+            <input type="submit" name="upload_file" value="<?php echo $lang['upload']; ?>">
+            <?php
+            }
+            ?>
+        <div class="clearerleft"></div>
+    </div>
+
+
 
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
