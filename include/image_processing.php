@@ -603,23 +603,7 @@ function extract_exif_comment($ref,$extension="")
             # see if we can use exiftool to get resolution/units, and dimensions here.
             # Dimensions are normally extracted once from the view page, but for the original file, it should be done here if possible,
             # and exiftool can provide more data. 
-        
-            $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit " . escapeshellarg($image);
-            $dimensions_resolution_unit=explode("\t",run_command($command));
-
-            # if dimensions resolution and unit could be extracted, add them to the database.
-            # they can be used in view.php to give more accurate data.
-            if (count($dimensions_resolution_unit)==3)
-                {
-                $dru=$dimensions_resolution_unit;
-                $filesize=filesize_unlimited($image); 
-                $wh=explode("x",$dru[0]);
-                $width=$wh[0];
-                $height=$wh[1];
-                $resolution=$dru[1];
-                $unit=$dru[2];
-                sql_query("insert into resource_dimensions (resource, width, height, resolution, unit, file_size) values ('$ref', '$width', '$height', '$resolution', '$unit', '$filesize')");  
-                }
+            exiftool_resolution_calc($image,$ref);
             }
         
         $read_from=get_exiftool_fields($resource['resource_type']);
