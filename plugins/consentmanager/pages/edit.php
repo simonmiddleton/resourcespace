@@ -3,10 +3,6 @@ include "../../../include/db.php";
 
 include_once "../../../include/authenticate.php";
 
-
-# Check if it's necessary to upgrade the database structure
-include dirname(__FILE__) . "/../upgrade/upgrade.php";
-
 $ref=getvalescaped("ref","");
 $resource=getvalescaped("resource","");
 
@@ -18,7 +14,7 @@ if ($resource!="")
     }
 else
     {
-    # Editing all licenses via Manage Licenses - admin only
+    # Editing all consents via Manage Consents - admin only
     if (!checkperm("a")) {exit("Access denied");} 
     }
 
@@ -38,30 +34,32 @@ $url_params = array(
         }
     else
         {
-        # Added from Manage Licenses
-        $redirect_url = generateURL($baseurl_short . "plugins/licensemanager/pages/list.php",$url_params);
+        # Added from Manage Consents
+        $redirect_url = generateURL($baseurl_short . "plugins/consentmanager/pages/list.php",$url_params);
         }
 if (getval("submitted","")!="")
     {
-    # Save license data
+    # Save consent data
     
     # Construct expiry date
     $expires="'" . getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","") . "'";
     
+
+    # Construct usage
+    $consent_usage="";
+    if (isset($_POST["consent_usage"])) {$consent_usage=escape_check(join(", ",$_POST["consent_usage"]));}
+
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")
         {
         $expires="null";
         }
 
-    # Construct usage
-    $license_usage="";
-    if (isset($_POST["license_usage"])) {$license_usage=escape_check(join(", ",$_POST["license_usage"]));}
-    
+   
     if ($ref=="new")
         {
         # New record 
-        sql_query("insert into license (outbound,holder,license_usage,description,expires) values ('" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
+        sql_query("insert into consent (name,email,telephone,consent_usage,notes,expires) values ('" . getvalescaped("name","") . "', '" . getvalescaped("email","") . "', '" . getvalescaped("telephone","") . "', '" . $consent_usage . "', '" . getvalescaped("notes","") . "', $expires)");	
         $ref=sql_insert_id();
 
         # Add to all the selected resources
@@ -73,8 +71,8 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
-                    resource_log($r,"","",$lang["new_license"] . " " . $ref);
+                    sql_query("insert into resource_consent(resource,consent) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    resource_log($r,"","",$lang["new_consent"] . " " . $ref);
                     }
                 }
             }
@@ -82,10 +80,10 @@ if (getval("submitted","")!="")
     else
         {
         # Existing record	
-        sql_query("update license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref'");
+        sql_query("update consent set name='" . getvalescaped("name","") . "',email='" . getvalescaped("email","") . "', telephone='" . getvalescaped("telephone","") . "',consent_usage='" . $consent_usage . "',notes='" . getvalescaped("notes","") . "',expires=$expires where ref='$ref'");
 
         # Add all the selected resources
-        sql_query("delete from resource_license where license='$ref'");
+        sql_query("delete from resource_consent where consent='$ref'");
         $resources=explode(",",getvalescaped("resources",""));
 
         if (getvalescaped("resources","")!="")
@@ -95,8 +93,8 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
-                    resource_log($r,"","",$lang["new_license"] . " " . $ref);
+                    sql_query("insert into resource_consent(resource,consent) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    resource_log($r,"","",$lang["new_consent"] . " " . $ref);
                     }
                 }
             }
@@ -106,25 +104,27 @@ if (getval("submitted","")!="")
     }
 
 
-# Fetch license data
+# Fetch consent data
 if ($ref=="new")
     {
     # Set default values for the creation of a new record.
-    $license=array(
+    $consent=array(
         "outbound"=>1,
-        "holder"=>"",		
-        "license_usage"=>"",
-        "description"=>"",
+        "name"=>"",		
+        "email"=>"",
+        "telephone"=>"",
+        "consent_usage"=>"",
+        "notes"=>"",
         "expires"=>""
         );
     if ($resource=="") {$resources=array();} else {$resources=array($resource);}
     }
 else
     {
-    $license=sql_query("select * from license where ref='$ref'");
-    if (count($license)==0) {exit("License not found.");}
-    $license=$license[0];
-    $resources=sql_array("select distinct resource value from resource_license where license='$ref' order by resource");
+    $consent=sql_query("select * from consent where ref='$ref'");
+    if (count($consent)==0) {exit("Consent not found.");}
+    $consent=$consent[0];
+    $resources=sql_array("select distinct resource value from resource_consent where consent='$ref' order by resource");
     }
         
 include "../../../include/header.php";
@@ -138,36 +138,36 @@ include "../../../include/header.php";
 <?php } ?>
 
 
-<h1><?php echo ($ref=="new"?$lang["new_license"]:$lang["edit_license"]) ?></h1>
+<h1><?php echo ($ref=="new"?$lang["new_consent"]:$lang["edit_consent"]) ?></h1>
 
-<form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" onSubmit="return CentralSpacePost(this,true);">
+<form method="post" action="<?php echo $baseurl_short?>plugins/consentmanager/pages/edit.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
-<?php generateFormToken("licensemanager_edit"); ?>
+<?php generateFormToken("consentmanager_edit"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo ($ref=="new"?$lang["licensemanager_new"]:htmlspecialchars($ref))?></div>
+<div class="Question"><label><?php echo $lang["consent_id"]?></label><div class="Fixed"><?php echo ($ref=="new"?$lang["consentmanager_new"]:htmlspecialchars($ref))?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["type"]?></label>
-<div class="Fixed">
-<input type=radio name="outbound" id="outbound_1" value="1" <?php if ($license["outbound"]==1) { ?>checked<?php } ?> /> <strong><?php echo $lang["outbound"] ?></strong> <?php echo $lang["outbound_license_description"] ?><br>
-<input type=radio name="outbound" id="outbound_0" value="0" <?php if ($license["outbound"]==0) { ?>checked<?php } ?> /> <strong><?php echo $lang["inbound"] ?></strong> <?php echo $lang["inbound_license_description"] ?>
-</div>
+<div class="Question"><label><?php echo $lang["name"]?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($consent["name"])?>" />
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["licensor_licensee"]?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo htmlspecialchars($license["holder"])?>" />
+<div class="Question"><label><?php echo $lang["email"]?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars($consent["email"])?>" />
 <div class="clearerleft"> </div></div>
+
+<div class="Question"><label><?php echo $lang["telephone"]?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo htmlspecialchars($consent["telephone"])?>" />
+<div class="clearerleft"> </div></div>
+
 
 <div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
 <?php
-$s=trim_array(explode(",",$license["license_usage"]));
+$s=trim_array(explode(",",$consent["consent_usage"]));
 $allchecked=true;
-foreach ($license_usage_mediums as $medium)
+foreach ($consent_usage_mediums as $medium)
     {
     ?>
-    <input type="checkbox" class="license_usage" name="license_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "license_usage-") ?>
+    <input type="checkbox" class="consent_usage" name="consent_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "consent_usage-") ?>
     &nbsp;
     &nbsp;
     &nbsp;
@@ -177,15 +177,12 @@ foreach ($license_usage_mediums as $medium)
 
     <!-- Option to tick all mediums -->
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"
-onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>
+onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>
     /><?php echo $lang["selectall"] ?>
 
 <div class="clearerleft"> </div></div>
 
 
-
-<div class="Question"><label><?php echo $lang["description"]?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo htmlspecialchars($license["description"]) ?></textarea>
-<div class="clearerleft"> </div></div>
 
 
 <div class="Question"><label><?php echo $lang["fieldtitle-expiry_date"]?></label>
@@ -196,7 +193,7 @@ onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($all
       for ($n=1;$n<=31;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr($license["expires"],8,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+        ?><option <?php if ($n==substr($consent["expires"],8,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
         }
       ?>
     </select>
@@ -206,7 +203,7 @@ onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($all
       for ($n=1;$n<=12;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr($license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
+        ?><option <?php if ($n==substr($consent["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
         }
       ?>
     </select>
@@ -216,16 +213,16 @@ onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($all
       $y=date("Y")+30;
       for ($n=$minyear;$n<=$y;$n++)
         {
-        ?><option <?php if ($n==substr($license["expires"],0,4)) { ?>selected<?php } ?>><?php echo $n?></option><?php
+        ?><option <?php if ($n==substr($consent["expires"],0,4)) { ?>selected<?php } ?>><?php echo $n?></option><?php
         }
       ?>
     </select>
 
     <!-- Option for no expiry date -->
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($license["expires"]=="") { ?>checked<?php } ?>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($consent["expires"]=="") { ?>checked<?php } ?>
     onChange="jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',this.checked);"
     /><?php echo $lang["no_expiry_date"] ?>
-    <?php if ($license["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
+    <?php if ($consent["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
 
 <div class="clearerleft"> </div></div>
 
@@ -236,6 +233,11 @@ onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($all
         <div class="clearerleft"> </div>
     </div>
 
+    <div class="Question">
+        <label for="notes"><?php echo $lang["notes"]?></label>
+        <textarea class="stdwidth" rows="5" name="notes" id="notes"><?php echo htmlspecialchars($consent["notes"]) ?></textarea>
+        <div class="clearerleft"> </div>
+    </div>
 
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
