@@ -3,7 +3,7 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 include "../include/file_functions.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getvalescaped("ref","");if (!is_numeric($ref)) {$ref="new";} // force to either a number or "new"
 $resource=getvalescaped("resource","",true);
 $file_path=get_consent_file_path($ref);
 
@@ -100,24 +100,22 @@ if (getval("submitted","")!="")
                     }
                 }
             }
-
-        # Handle file upload
-        if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
-            {
-            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-            sql_query("update consent set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
-            
-            }
-
-        # Handle file clear
-        if (getval("clear_file","")!="")
-            {
-            if (file_exists($file_path)) {unlink($file_path);}  
-            sql_query("update consent set file='' where ref='$ref'");
-            }
-
         }
-    
+
+    # Handle file upload
+    if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
+        {
+        move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+        sql_query("update consent set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+        }
+
+    # Handle file clear
+    if (getval("clear_file","")!="")
+        {
+        if (file_exists($file_path)) {unlink($file_path);}  
+        sql_query("update consent set file='' where ref='$ref'");
+        }
+
     redirect($redirect_url);
     }
 
@@ -265,7 +263,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 			{
 			?>
             <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a></span>
-            <input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"] ?>');">
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"] ?>');">
             <?php
 			}
         else
