@@ -5130,7 +5130,9 @@ function render_table($tabledata)
                         }
                     else
                         {
-                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) ? strip_tags_and_attributes($rowdata[$header], array("a"), array("href", "target")) : htmlspecialchars($rowdata[$header]);
+                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) 
+                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick")) 
+                                : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
                     }
