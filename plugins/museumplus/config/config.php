@@ -16,6 +16,7 @@ define('MPLUS_FIELD_ID', '__id'); # This field holds the technical ID of a modul
 ### MuseumPlus API (MpRIA) #################################
 ############################################################
 $museumplus_host = '';
+$museumplus_host_api = '';
 $museumplus_application = '';
 $museumplus_api_user = '';
 $museumplus_api_pass = '';
