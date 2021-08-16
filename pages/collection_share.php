@@ -188,8 +188,9 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
 	}
 
 # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
+# The same applies for collections where the user creating the share doesn't have access to all resources in the collection e.g. some resources are in states blocked by a z permission.
 $minaccess = (isset($minaccess) ? $minaccess : collection_min_access($ref));
-if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED)
+if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED || count(get_collection_resources($ref)) != count(do_search("!collection{$ref}", '', 'relevance', 0, -1, 'desc', false, '', false, '','',false,false)))
     {
     $show_error = true;
     $error = $lang["restrictedsharecollection"];
