@@ -100,7 +100,7 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
 */
 function mplus_get_connection_data()
     {
-    global $museumplus_host, $museumplus_host_apu, $museumplus_application, $museumplus_api_user, $museumplus_api_pass;
+    global $museumplus_host, $museumplus_host_api, $museumplus_application, $museumplus_api_user, $museumplus_api_pass;
 
     if(trim($museumplus_host) == '' || trim($museumplus_application) == '' || trim($museumplus_api_user) == '' || trim($museumplus_api_pass) == '')
         {
