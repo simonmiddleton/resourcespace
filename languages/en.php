@@ -2574,7 +2574,7 @@ $lang["systemconsoleonpermallusers"]="On (permanently for all users)";
 $lang["systemconsoleonallusers"]="On (all users)";
 $lang["systemconsoleonfailedtopcommand"]="Failed to execute top command";
 $lang["systemconsoleonfailedtasklistcommand"]="Failed to execute tasklist command";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable";
+$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable. Please check that '\$debug_log_readable=true;' is set in your configuration";
 $lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or \$mysql_log_location file not found or is not readable";
 $lang['systemconsoletrackVars'] = "Tracking variables";
 $lang['systemconsole_label_input_vars'] = "Variable names";

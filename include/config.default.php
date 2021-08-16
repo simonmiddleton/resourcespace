@@ -2303,6 +2303,11 @@ $qlpreview_exclude_extensions = array("tif","tiff");
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
+// Allow debug log to be readable by ResourceSpace? This must be set to true if using the sytem console to access the log.
+// Unless this is set to true ResourceSpace will attempt to make the file write-only (this will not work on Windows servers). 
+// Please note that if the debug log is located under the web root then extra care should be taken to prevent unauthorised access e.g. by configuring web server rules to deny direct access
+$debug_log_readable=false;
+
 // Optional extended debugging information from backtrace (records pagename and calling functions).
 $debug_extended_info = false;
 
