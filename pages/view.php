@@ -38,7 +38,7 @@ $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive","");
-$per_page=getvalescaped("per_page",0,true);
+$per_page=getvalescaped("per_page",$default_perpage,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
