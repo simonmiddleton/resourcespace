@@ -904,10 +904,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						{
 						global $lang;
 						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
-						if (getval("autosave","")!="")
-							{
-							exit();
-							}
 						$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
 						continue;
 						}
