@@ -1,9 +1,8 @@
 <?php
-// Include standard configuration file
-include __DIR__ . "/../../config-templates/config.php";
-
-// Get config from ResourceSpace and override as required
-global $simplesamlconfig, $simplesaml_config_defaults, $baseurl_short, $email_from;
+// This page is included if using ResourceSpace to store SAML configuration
+// Set SimpleSAML config
+global $simplesamlconfig, $simplesaml_config_defaults, $baseurl,$baseurl_short, $email_from;
+$config = array();
 foreach($simplesamlconfig["config"] as $option => $configvalue)
     {
     $config[$option] = $configvalue;

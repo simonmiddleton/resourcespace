@@ -62,3 +62,4 @@ $lang['simplesaml_sp_idp'] = "IdP identifier (leave blank if processing XML)";
 $lang['simplesaml_saml_config_output'] = "Paste this into your ResourceSpace config file";
 $lang['simplesaml_sp_cert_info'] = "Certificate information (required)";
 $lang['simplesaml_sp_cert_gen_error'] = "Unable to generate certificate";
+$lang['simplesaml_sp_samlphp_link'] = "Visit SimpleSAMLphp test site";

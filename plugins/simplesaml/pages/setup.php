@@ -154,11 +154,22 @@ jQuery("#simplesaml_rsconfig").change(function(event)
     });
 
 </script>
+
+
+<div class='Question' id='sp_config_links'><label></label><div class='Fixed'>
+    <?php
+    $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
+    //exit($samlphplink);
+    if($simplesaml_rsconfig)
+        {
+        echo "<a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></br>";
+        }
+    echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
+    ?>
+    </div>
+    <div class='clearerleft'></div>
+</div>
 <?php
-if($simplesaml_rsconfig)
-    {
-    echo "<div class='Question' id='generate_sp_config_link'><a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></div>";
-    }
 
 echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path,false,420,false,null,false,$simplesaml_rsconfig);
 echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false,$simplesaml_rsconfig);
