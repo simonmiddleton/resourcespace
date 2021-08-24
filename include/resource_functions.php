@@ -4469,6 +4469,8 @@ function delete_alternative_file($resource,$ref)
 	
 	# Update disk usage
 	update_disk_usage($resource);
+
+    return true;
 	}
 	
 function get_alternative_file($resource,$ref)
