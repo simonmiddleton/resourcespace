@@ -2167,3 +2167,7 @@ a.BrowseRefresh{
 }
 
 .Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }
+
+#ShareDeleteForm .ListViewBulkActions {
+    padding-top: 20px;
+    }
