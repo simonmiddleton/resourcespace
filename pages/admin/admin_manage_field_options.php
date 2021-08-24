@@ -495,11 +495,14 @@ if($ajax)
             </fieldset>
         </form>
         <!-- Pager -->
-        <div class="TopInpageNavRight">
-        <?php
-        pager(true,false);
-        $draw_pager = true;
-        ?>
+
+        <div class="TopInpageNav">
+            <div class="TopInpageNavRight">
+            <?php
+            pager(true,false);
+            $draw_pager = true;
+            ?>
+            </div>
         </div>
         <div class="clearerleft"></div>
         <?php
