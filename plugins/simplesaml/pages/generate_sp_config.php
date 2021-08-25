@@ -15,11 +15,10 @@ if(!in_array($plugin_name, $plugins))
 
 // Array of required SAML config settings
 $saml_settings = array(
-    "technicalcontact_name",
-    "technicalcontact_email",
-    "auth.adminpassword",
+    "technicalcontact_name" => "",
+    "technicalcontact_email" => "",
+    "auth.adminpassword" => "",
     );
-
 
 $certreqdetails = array(
     "countryName",
@@ -30,15 +29,18 @@ $certreqdetails = array(
     "commonName",
     "emailAddress"
     );
-    
+
 // set up array to store current and new config
 $spconfig = array();
 
 // Get current values from config
-foreach($simplesamlconfig["config"] as $configopt=>$configvalue)
+if(isset($simplesamlconfig["config"]))
     {
-    //$spconfig[$configopt] = "\$simplesamlconfig[\"config\"][\"" . $configopt . "\"] = '" . htmlspecialchars($configvalue) . "';";
-    $saml_settings[$configopt] = $configopt;
+    foreach($simplesamlconfig["config"] as $configopt=>$configvalue)
+        {
+        //$spconfig[$configopt] = "\$simplesamlconfig[\"config\"][\"" . $configopt . "\"] = '" . htmlspecialchars($configvalue) . "';";
+        $saml_settings[$configopt] = $configopt;
+        }
     }
 
 // Get SP certificate config
@@ -54,42 +56,59 @@ if(isset($simplesamlconfig['authsources']["resourcespace-sp"]))
 $certpath   = getval("cert_path",$curcertpath);
 $keypath    = getval("key_path",$curkeypath);
 $samlidp    = getval("samlidp",$curidp);
-
+$error_text = "";
 
 // Set up array to render all values
-foreach($saml_settings as $samlsetting => $configvalue)
-    {
+foreach($saml_settings as $saml_setting => $configvalue)
+    {   
+    $curvalue = isset($simplesamlconfig["config"][$saml_setting]) ? $simplesamlconfig["config"][$saml_setting] : "";
+    $samlvalue = getval($saml_setting, $curvalue);
+
+    debug("saml_generate_config " . $saml_setting . "="  .  print_r($samlvalue,true));
+    if($saml_setting == "auth.adminpassword" && trim($samlvalue) == "") 
+        {
+        $samlvalue = generateSecureKey(12);
+        }
+    $simplesamlconfig["config"][$saml_setting] = $samlvalue;    
+    
     if(
-        (isset($simplesaml_config_defaults[$samlsetting]) && $configvalue == $simplesaml_config_defaults[$samlsetting])
-        || $samlsetting == "metadatadir"
+        (isset($simplesaml_config_defaults[$saml_setting]) && $samlvalue == $simplesaml_config_defaults[$saml_setting])
+        || $saml_setting == "metadatadir"
+        || is_array($samlvalue)
         )
         {
+        // Don't need to add defaults or metadatadir to config
         continue;
         }
-    $curvalue = isset($simplesamlconfig["config"][$samlsetting]) ? $simplesamlconfig["config"][$samlsetting] : "";
-    $samlvalue = getval($samlsetting, $curvalue);
-    $simplesamlconfig["config"][$samlsetting] = $samlvalue;
-    $spconfig[$configopt] = "\$simplesamlconfig[\"config\"][\"" . $samlsetting . "\"] = '" . htmlspecialchars($samlvalue) . "';";
+    $spconfig[$saml_setting] = "\$simplesamlconfig[\"config\"][\"" . $saml_setting . "\"] = '" . htmlspecialchars($samlvalue) . "';";
     }
 
 if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
     {
     // set up config and format it for admin user to copy into ResourceSpace config file
-    if($certpath == "")
+    if($certpath == "" || $keypath=="")
         {
         foreach($certreqdetails as $certreqdetail)
             {
-            $dn[$certreqdetail] = getval($certreqdetail,"");    
+            $certval =  getval($certreqdetail,"");
+            if(trim($certval) == "" || ($certreqdetail == "countryName" && strlen($certval) !== 2))
+                {
+                $error_text .= $lang['simplesaml_sp_cert_invalid'] . " - '" . $certreqdetail . "'<br/>";
+                }
+            $dn[$certreqdetail] = $certval;
             }
-        $certinfo = simplesaml_generate_keypair($dn);
-        if(is_array($certinfo))
+        if($error_text=="")
             {
-            $certpath = $certinfo["certificate"];
-            $keypath = $certinfo["privatekey"];
-            }
-        else
-            {
-            $error_text = $lang['simplesaml_sp_cert_gen_error'];
+            $certinfo = simplesaml_generate_keypair($dn);
+            if(is_array($certinfo))
+                {
+                $certpath = $certinfo["certificate"];
+                $keypath = $certinfo["privatekey"];
+                }
+            else
+                {
+                $error_text = $lang['simplesaml_sp_cert_gen_error'];
+                }
             }
         }
     $spconfigtext = implode("\n",$spconfig);
@@ -98,8 +117,10 @@ if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
     // Code below copied directly from SimpleSAMLphp metadata-converter.php
     $metadataoutput = "";
     $metadata_xml = trim(getval("metadata_xml",""));
+
     if($metadata_xml != "")
         {
+        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
         \SimpleSAML\Utils\XML::checkSAMLMessage($metadata_xml, 'saml-meta');
         $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
 
@@ -185,7 +206,7 @@ include '../../../include/header.php';
 <?php 
 renderBreadcrumbs($links_trail);
 
-if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></div><?php }
+if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></div><?php }
 ?>
 <form id="simplesamlSPForm" method="post" class="FormWide" action="<?php echo $baseurl_short . "plugins/simplesaml/pages/generate_sp_config.php" ?>">
         <input name="sp_submit" id="sp_submit" type="hidden" value="" ></input>
@@ -206,34 +227,29 @@ if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></
 
         foreach($simplesamlconfig["config"] as $saml_setting => $samlvalue)
             {
-            if(
-                (isset($simplesaml_config_defaults[$samlsetting]) && $samlvalue == $simplesaml_config_defaults[$samlsetting])
-                || $samlsetting == "metadatadir"
-                )
+            if($saml_setting == "metadatadir" || is_array($samlvalue))
                 {
                 continue;
                 }
-            render_text_question($saml_setting,$saml_setting,'',false,'class="stdwidth"',$samlvalue);
+            render_text_question(isset($lang["simplesaml_sp_" . $saml_setting]) ? $lang["simplesaml_sp_" . $saml_setting] : $saml_setting,$saml_setting,'',false,'class="stdwidth"',$samlvalue);
             }
             
-        render_text_question($lang['simplesaml_sp_cert_path'],"cert_path",'',false,'class="stdwidth"',$certpath);
-        render_text_question($lang['simplesaml_sp_key_path'],"key_path",'',false,'class="stdwidth"',$keypath);
+        render_text_question($lang['simplesaml_sp_cert_path'],"cert_path",'',false,'class="stdwidth certinput"',$certpath);
+        render_text_question($lang['simplesaml_sp_key_path'],"key_path",'',false,'class="stdwidth certinput"',$keypath);
         render_text_question($lang['simplesaml_sp_idp'],"samlidp",'',false,'class="stdwidth"',$samlidp);
         
-        if($certpath == "" || $keypath== "")
-            {
-            ?>
-            <div class="Question">
-            <br><h2><?php echo $lang['simplesaml_sp_cert_info'] ?></h2>
-                <div class="clearerleft"></div>
-            </div><?php
-            foreach($certreqdetails as $certreqdetail)
-                {
-                render_text_question($certreqdetail,$certreqdetail,'',false,'class="stdwidth"',"");    
-                }
-            }
-        
         ?>
+        <div id="certificate_info_questions" <?php if($certpath != "" && $keypath != ""){echo "style='display:none;'";}?>>
+            <div class="Question" >
+                <br><h2><?php echo $lang['simplesaml_sp_cert_info'] ?></h2>
+                    <div class="clearerleft"></div>
+                </div>
+                <?php
+                foreach($certreqdetails as $certreqdetail)
+                    {
+                    render_text_question($certreqdetail,$certreqdetail,'',false,'class="stdwidth"',htmlspecialchars(getval($certreqdetail,"")));    
+                    }?>
+        </div>
         <div class="Question">
         <br><h2><?php echo $lang['simplesaml_idp_section'] ?></h2>
             <div class="clearerleft"></div>
@@ -250,6 +266,18 @@ if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></
         </div>
 </form>
 
+<script>
+    jQuery(".certinput").change(function(){
+        if(jQuery('#cert_path_input').val() == "" || jQuery('#key_path_input').val() == "")
+            {
+            jQuery('#certificate_info_questions').slideDown();
+            }
+        else
+            {
+            jQuery('#certificate_info_questions').slideUp();
+            }
+        });
+</script>
 
 
 </div><!-- End of BasicsBox -->

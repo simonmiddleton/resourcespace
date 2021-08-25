@@ -1525,7 +1525,7 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
 	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
 		<?php
-		echo "<input name=\"" . $input . "\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
+		echo "<input name=\"" . $input . "\" id=\"" . $input . "_input\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . htmlspecialchars($current) . "\"" . $extra . "/>\n";
 			
 		echo $additionaltext;
 		?>

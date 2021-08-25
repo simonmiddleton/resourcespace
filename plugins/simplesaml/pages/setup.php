@@ -122,6 +122,35 @@ else
         {
         echo "<div class='PageInfoMessage'>" . $lang['simplesaml_authorisation_version_error'] . "</div>";
         }
+    
+    if($simplesaml_rsconfig && isset($simplesamlconfig["authsources"]))
+        {
+        foreach($simplesamlconfig['authsources'] as $authsource=>$authdata)
+            {
+            if($authsource=="admin")
+                {
+                continue;
+                }
+                        
+            // Show the existing SP metadata
+            $spdata = array();
+            $spdata[$lang["simplesaml_acs_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-acs.php/" . $authsource;
+            $spdata[$lang["simplesaml_entity_id"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/metadata.php/" . $authsource;
+            $spdata[$lang["simplesaml_single_logout_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-logout.php/" . $authsource;
+            $spdata[$lang["simplesaml_start_url"]] = $baseurl;
+            
+            echo config_section_header($lang['simplesaml_sp_data'], '');
+            echo "<div class='TableArray'>";
+            foreach($spdata as $spsetting =>$spvalue)
+                {
+                echo "<div class='Question'>";
+                echo "<label>" . htmlspecialchars($spsetting) . "</label>";
+                echo "<div class='Fixed'>" . htmlspecialchars($spvalue) . "</div>";
+                echo "<div class='clearerleft'></div></div>";
+                }
+            echo "</div>";
+            }
+        }
     }
   
 ?>
@@ -129,7 +158,6 @@ else
 <?php
 generateFormToken("simplesaml_form");
 echo config_section_header($lang['simplesaml_sp_config'], '');
-
 
 echo config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig,30);
 
@@ -158,12 +186,9 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 
 <div class='Question' id='sp_config_links'><label></label><div class='Fixed'>
     <?php
-    $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
+    $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
     //exit($samlphplink);
-    if($simplesaml_rsconfig)
-        {
-        echo "<a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></br>";
-        }
+    echo "<a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></br>";
     echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
     ?>
     </div>
