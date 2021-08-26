@@ -1603,13 +1603,13 @@ $themes_in_my_collections=false;
 $top_nav_upload=true;
 # Show an upload link in the top navigation in addition to 'my contributions' for standard user? (if 'd' permission for the current user)
 $top_nav_upload_user=false;
-$top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, local
+$top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
 # Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $plupload_max_file_size = '50M';
+# $upload_max_file_size = '50M';
 
 # You can set the following line to ''  to disable chunking. May resolve issues with flash uploader.
-$plupload_chunk_size='5mb';
+$upload_chunk_size='5mb';
 
 
 # Resource deletion state
@@ -2502,10 +2502,10 @@ $admin_header_height=120;
 $display_request_log_link=false;
 
 # Start uploads as soon as files are added to the queue?
-$plupload_autostart=false;
+$upload_autostart=false;
 
 # Clear the queue after uploads have completed
-$plupload_clearqueue=true;
+$upload_clearqueue=true;
 
 # Allow Dates to be set within Date Ranges: Ensure to allow By Date to be used in Advanced Search if required.
 $daterange_search=false;
@@ -2781,7 +2781,7 @@ $resource_request_reason_required=true;
 # Allow ResourceSpace to upload multiple times the same file in a row
 # Set to true only if you want RS to create duplicates when client is losing
 # connection with the server and tries again to send the last chunk
-$plupload_allow_duplicates_in_a_row = false;
+$upload_allow_duplicates_in_a_row = false;
 
 # Create all preview sizes at the full target size if image is smaller (except for HPR as this would result in massive images)
 $previews_allow_enlarge=false;
@@ -3085,7 +3085,7 @@ $social_media_links = array("facebook", "twitter", "linkedin");
 
 /*
 Set the suffix used to identify alternatives for a particular resource when both the original file and its alternatives
-are being uploaded in a batch using the UI (plupload)
+are being uploaded in a batch using upload_batch.php 
 IMPORTANT: This will only work if the user uploads all files (resource and its alternatives) into the same 
 collection.
 */

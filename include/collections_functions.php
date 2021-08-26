@@ -3381,7 +3381,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($upload_then_edit)
             {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_plupload.php",array(),array("collection_add"=>$collection_data['ref']));
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_batch.php",array(),array("collection_add"=>$collection_data['ref']));
             }
         else
             {
@@ -5784,7 +5784,7 @@ function upload_share_setup(string $key,$shareopts = array())
 
     // Upload link key can only work on these pages
     $validpages = array(
-        "upload_plupload",
+        "upload_batch",
         "edit",
         "category_tree_lazy_load",
         "suggest_keywords",

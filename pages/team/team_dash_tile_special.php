@@ -38,7 +38,7 @@ renderBreadcrumbs($links_trail);
 		</a>
 	</li>
 	<li>
-		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&freetext=true&title=Upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=plupload";?>">
+		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&freetext=true&title=Upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=batch";?>">
 			<?php echo $lang["createdashtileuserupload"];?>
 		</a>
 	</li>

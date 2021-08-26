@@ -6987,7 +6987,7 @@ function save_original_file_as_alternative($ref)
 
     global $lang, $alternative_file_previews, $alternative_file_previews_batch, $filename_field;
 
-    // Values may be passed in POST or GET data from upload_plupload.php
+    // Values may be passed in POST or GET data from upload_batch.php
     $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
     $filename_field_use                     = getval('filename_field', $filename_field); // GET variable - field to use for filename
 

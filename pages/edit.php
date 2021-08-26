@@ -73,7 +73,7 @@ $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
 $uploadparams["k"] = $k;
 
-# Upload review mode will be true if we are coming from upload_plupload and then editing (config $upload_then_edit)
+# Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
@@ -731,12 +731,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     else
                         {
                         // Default
-                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     }
                 }
@@ -1279,7 +1279,7 @@ else
             }
         else
             {
-            // Defualt - batch upload using plupload
+            // Defualt - batch upload
             $titleh1 = $lang["addresourcebatchbrowser"];
             }?>        
         <h1><?php echo $titleh1 ?></h1>

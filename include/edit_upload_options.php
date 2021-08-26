@@ -1,5 +1,5 @@
 <?php
-$on_upload = ($pagename ==  "upload_plupload");
+$on_upload = ($pagename ==  "upload_batch");
 if(!hook("replaceuploadoptions")):	
 if ($on_upload || $ref<0)
 	{
@@ -335,7 +335,7 @@ if($on_upload)
     <div class="Question" id="question_noupload">
         <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
         <div id="noupolad">
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_batch.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
         </div>
         <div class="clearerleft"> </div>
     </div>

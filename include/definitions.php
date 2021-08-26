@@ -286,8 +286,6 @@ $permitted_html_attributes = array('id', 'class', 'style');
 $jquery_path = "/lib/js/jquery-3.5.1.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
 define('LIB_OPENSEADRAGON', '/lib/openseadragon_2.4.2');
-const LIB_PLUPLOAD = '/lib/plupload_2.3.7';
-
 
 // Define dropdown action categories
 define ('ACTIONGROUP_RESOURCE',     1);

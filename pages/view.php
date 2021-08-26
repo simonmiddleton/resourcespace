@@ -1698,7 +1698,7 @@ hook ("resourceactions") ?>
         // Show the replace file link
         if($top_nav_upload_type == 'local')
             {
-            $replace_upload_type = 'plupload';
+            $replace_upload_type = 'batch';
             }
         else 
             {
