@@ -2864,6 +2864,18 @@ function extract_text($ref,$extension,$path="")
         # Final trim to tidy
         $text=trim($text);
 
+        // Convert text
+        if(!mb_check_encoding($text,"UTF-8"))
+            {
+            $curenc = mb_detect_encoding($text, mb_list_encodings(), true);
+            if($curenc == "ISO-8859-1")
+                {
+                // Safer to use 1252 here as most problematic files seem to have this
+                $curenc = "Windows-1252";
+                }
+            $text = mb_convert_encoding($text,"UTF-8",$curenc);
+            }
+
         # Save text
         update_field($ref,$extracted_text_field,$text);
         }
