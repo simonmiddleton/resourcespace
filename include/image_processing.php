@@ -1792,7 +1792,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         {
                         // use existing strategy for color profiles
                         # Preserve colour profiles? (omit for smaller sizes)
-                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr" && substr($id,0,4)!="tile")
                             {
                             if($imagemagick_mpr)
                                 {
