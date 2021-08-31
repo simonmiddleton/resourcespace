@@ -271,13 +271,13 @@ function check_delete_boxes()
     {
 
     var deleteAccessKeys = jQuery(".deleteShareCheckBox:checked").parent().parent();
-    var accessKeyList = [];
 
-    for (var i = 0; i < deleteAccessKeys.length; i++) {
-        accessKeyList.push( deleteAccessKeys[i].id.substr(11) );
-    } 
+    // var accessKeyList = [];
 
-    jQuery("#accesskeys-selected").val( accessKeyList.join() );
+    // for (var i = 0; i < deleteAccessKeys.length; i++) {
+    //     accessKeyList.push( deleteAccessKeys[i].id.substr(11) );
+    // } 
+    // jQuery("#accesskeys-selected").val( accessKeyList.join() );
 
     if (deleteAccessKeys.length > 0) {
         jQuery("#accesskeys-delete-selected").attr("href", "<?php echo $baseurl_short; ?>pages/manage_external_shares.php");
@@ -294,18 +294,57 @@ function delete_access_key_multiple()
     {
     var deleteAccessKeys = jQuery(".deleteShareCheckBox:checked").parent().parent();
 
+    // Determine which confirmation prompt is to be to sent and assemble set of arrays to be passed to the api
+    var confirmationMessage="";    
+    var countCollectionKeys = 0;
+    var countResourceKeys = 0;
+    var access_keys = [];
+    var resources = [];
+    var collections = [];
     for (var i = 0; i < deleteAccessKeys.length; i++) {
         var access_key_id = deleteAccessKeys[i].id;
         var access_key = access_key_id.substr(11);
         var table_row_cols = jQuery("#"+access_key_id).children();
         var collection = table_row_cols[1].textContent;
         var resource = table_row_cols[2].textContent;
-        console.log("ACCESSKEY="+access_key+" COLLECTION="+collection+" RESOURCE="+resource);
-
-        delete_access_key(access_key, resource, collection);
-
+        if (collection!="-") {
+            countCollectionKeys += 1;
+        }
+        if (resource!="-") {
+            countResourceKeys += 1;
+        }
+        access_keys.push(access_key);
+        resources.push(resource);
+        collections.push(collection);
     } 
 
+    var params={'access_keys': access_keys.join(','),'resources': resources.join(','), 'collections': collections.join(',')};
+
+    if(countCollectionKeys == 0 && countResourceKeys == 1) {
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccessresource']; ?>";
+    }
+    else if(countCollectionKeys == 0 && countResourceKeys > 1) {
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmultires']; ?>";
+    }
+    else if(countCollectionKeys == 1 && countResourceKeys == 0) {
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccess']; ?>";
+    }
+    else if(countCollectionKeys > 1 && countResourceKeys == 0) {
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmulticol']; ?>";
+    }
+    else if(countCollectionKeys > 0 && countResourceKeys > 0) {
+        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmultimix']; ?>";
+    }
+
+    if(confirm(confirmationMessage))
+        {
+        api('delete_access_keys', params, function(response)
+            {
+
+            });
+
+            return false;
+        }
     }
 
 function delete_access_key(access_key, resource, collection)
@@ -462,16 +501,6 @@ function clearsharefilter()
             </a>
             <input type="hidden" id="accesskeys-selected" value="">
         </div>
-<!-- 
-        <div id="QuestionShareDelete">
-            <div class="Question"  id="QuestionDeleteSubmit">
-                <label></label>
-                <input type="button" id="delete_button" class="ClearSelectedButton" value="<?php echo $lang["action-delete"]." ".$lang["selected"]; ?>" 
-                       onclick="clearsharefilter();return CentralSpacePost(document.getElementById('ShareDeleteForm'));">
-                <input type="hidden" id="deleteAccessKeys" value="">
-                <div class="clearerleft"></div>
-            </div>
-        </div> -->
 
     </form>
 
