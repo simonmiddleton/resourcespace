@@ -422,6 +422,80 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 		}
 	}
     
+/**
+ * Add resource(s) $resources to collection $collection
+ *
+ * @param  mixed $resources
+ * @param  mixed $collection
+ * @return boolean
+ */
+function collection_add_resources($collection,$resources='',$search='')
+    {
+    if(     (string)(int)$collection != (string)$collection 
+        ||  ($resources == '' && $search == '')
+        ||  (!collection_writeable($collection))
+        ||  is_featured_collection_category_by_children($collection)
+    )
+        {
+        return false;
+        }
+
+    if($resources =='' && $search!=''){$resources=do_search($search);}
+
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_add = array_diff($resources, $collection_resources);
+
+    
+    foreach($refs_to_add as $ref)
+        {
+        add_resource_to_collection($ref,$collection);
+        }
+    
+    return true;
+    }
+
+
+/**
+ * collection_remove_resources
+ *
+ * @param  mixed $collection
+ * @param  mixed $resources
+ * @param  mixed $removeall
+ * @return void
+ */
+function collection_remove_resources($collection,$resources,$removeall=false,$selected=false)
+    {
+    global $USER_SELECTION_COLLECTION,$lang;
+    if(    (string)(int)$collection != (string)$collection 
+        || ($resources == '' && !$removeall && !$selected)
+        ||  (!collection_writeable($collection))
+        ||  is_featured_collection_category_by_children($collection)
+    )
+        {
+        return false;
+        }
+    debug("BANG collection_functions " . print_r(array($collection,$resources,$removeall,$selected),true));
+    if ($removeall)
+        {
+        foreach(get_collection_resources($collection) as $ref)
+            {
+            remove_resource_from_collection($ref, $collection);
+            }
+        return true;
+        }
+
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_remove = array_intersect($collection_resources, $resources);
+    
+    foreach($refs_to_remove as $ref)
+        {
+        remove_resource_from_collection($ref, $collection);
+        }
+    
+    return true;
+    }
     
 /**
  * Is the collection $collection writable by the current user?

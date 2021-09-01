@@ -600,14 +600,44 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection)
+function api_add_resource_to_collection($resource,$collection='')
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return add_resource_to_collection($resource,$collection);
     }
     
-function api_remove_resource_from_collection($resource,$collection)
+function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_add_resources($collection,$resources,$search,$selected);
+    }
+
+function api_remove_resource_from_collection($resource,$collection='')
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return remove_resource_from_collection($resource,$collection);                  
+    }
+
+function api_collection_remove_resources($collection='',$resources='',$removeall = false,$selected=false)
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_remove_resources($collection,$resources,$removeall,$selected);
     }
     
 function api_create_collection($name)
