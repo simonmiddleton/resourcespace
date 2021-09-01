@@ -5024,7 +5024,7 @@ function render_table($tabledata)
             "url" => $tabledata["defaulturl"],
             "url_params" => $tabledata["params"],
             );
-        echo '<div class="TopInpageNav">';
+        echo '<div class="TopInpageNav TableNav">';
         echo '<div class="InpageNavLeftBlock">' . $lang["resultsdisplay"] . ': ';
         // Show per page options
         $list_display_array["all"] = 99999;
@@ -5046,7 +5046,7 @@ function render_table($tabledata)
         echo implode("&nbsp;|&nbsp;", $pplinks);
         echo "</div> <!-- End of InpageNavLeftBlock per page div -->";
         echo "<div class='TablePagerHolder'>";
-        pager(true, true,$pageroptions);
+        pager(false, true,$pageroptions);
         echo "</div>";
         }
     echo '</div>';

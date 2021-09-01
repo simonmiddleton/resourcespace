@@ -1792,7 +1792,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         {
                         // use existing strategy for color profiles
                         # Preserve colour profiles? (omit for smaller sizes)
-                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr" && substr($id,0,4)!="tile")
                             {
                             if($imagemagick_mpr)
                                 {
@@ -2863,6 +2863,18 @@ function extract_text($ref,$extension,$path="")
         
         # Final trim to tidy
         $text=trim($text);
+
+        // Convert text
+        if(!mb_check_encoding($text,"UTF-8"))
+            {
+            $curenc = mb_detect_encoding($text, mb_list_encodings(), true);
+            if($curenc == "ISO-8859-1")
+                {
+                // Safer to use 1252 here as most problematic files seem to have this
+                $curenc = "Windows-1252";
+                }
+            $text = mb_convert_encoding($text,"UTF-8",$curenc);
+            }
 
         # Save text
         update_field($ref,$extracted_text_field,$text);

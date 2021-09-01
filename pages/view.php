@@ -1775,7 +1775,8 @@ hook ("resourceactions") ?>
 
     $overrideparams= array(
         'search_offset'     => $offset,
-        'offset'            => 0
+        'offset'            => 0,
+        'per_page'          => $default_perpage_list,
     );
 
 	if (checkperm('v')) 

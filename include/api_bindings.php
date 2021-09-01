@@ -512,6 +512,29 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
     return $alternative_ref;
     }
 
+function api_delete_access_keys($access_keys, $resources, $collections)
+	{
+    // Incoming parameters are csv strings; "-" entries denote a null resource or collection     
+    // The number of entries in each parameter is always the same
+    $access_key_array=explode(",",$access_keys);
+    $resource_array=explode(",",$resources);
+    $collection_array=explode(",",$collections);
+
+    for($i=0; $i<count($access_key_array); $i++)
+        {
+        if($collection_array[$i] !="-") 
+            {
+            debug("XYZZY DELETE COLKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
+            return delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
+            }
+        else
+            {
+            debug("XYZZY DELETE RESKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
+            return delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
+            }
+        }
+    }
+
 function api_delete_alternative_file($resource,$ref)
 	{
     global $disable_alternative_files;
