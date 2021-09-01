@@ -370,3 +370,57 @@ function update_fieldx(int $metadata_field_ref)
          }
 
     }
+    
+/**
+ * Set resource dimensions using data from exiftool. 
+ *
+ * @param  string   $file_path         Path to the original file.
+ * @param  int      $ref               Reference of the resource.
+ * @param  boolean  $remove_original   Option to remove the original record. Used by update_resource_dimensions.php
+ * 
+ * @return void
+ */
+function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
+    {
+    $exiftool_fullpath = get_utility_path("exiftool");
+    $command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit " . escapeshellarg($file_path);
+    $dimensions_resolution_unit=explode("\t",run_command($command));
+        
+    # if dimensions resolution and unit could be extracted, add them to the database.
+    # they can be used in view.php to give more accurate data.
+    if (count($dimensions_resolution_unit)>=1 && $dimensions_resolution_unit[0]!='')
+        {
+        if ($remove_original)
+            {
+            $delete=sql_query("delete from resource_dimensions where resource=".escape_check($ref));
+            }
+        $wh=explode("x",$dimensions_resolution_unit[0]);
+        if(count($wh)>1)
+            {
+            $width=$wh[0];
+            $height=$wh[1];
+            $filesize=filesize_unlimited($file_path);
+            $sql_insert="insert into resource_dimensions (resource,width,height,file_size";
+            $sql_values=" values('".$ref."','$width','$height','$filesize'";
+            
+            if(count($dimensions_resolution_unit)>=2)
+                {
+                $resolution=$dimensions_resolution_unit[1];
+                $sql_insert.=",resolution";
+                $sql_values.=",'$resolution'";
+                
+                if(count($dimensions_resolution_unit)>=3)
+                    {
+                    $unit=$dimensions_resolution_unit[2];
+                    $sql_insert.=",unit";
+                    $sql_values.=",'$unit'";
+                    }
+                }
+                
+            $sql_insert.=")";
+            $sql_values.=")";
+            $sql=$sql_insert.$sql_values;
+            $wait=sql_query($sql);
+            }
+        }
+    }

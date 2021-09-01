@@ -854,7 +854,7 @@ $user_purge=true;
 # List of active plugins.
 # Note that multiple plugins must be specified within array() as follows:
 # $plugins=array("loader","rss","messaging","googledisplay"); 
-$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager');
+$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
@@ -2302,6 +2302,11 @@ $qlpreview_exclude_extensions = array("tif","tiff");
 
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
+
+// Allow debug log to be readable by ResourceSpace? This must be set to true if using the sytem console to access the log.
+// Unless this is set to true ResourceSpace will attempt to make the file write-only (this will not work on Windows servers). 
+// Please note that if the debug log is located under the web root then extra care should be taken to prevent unauthorised access e.g. by configuring web server rules to deny direct access
+$debug_log_readable=false;
 
 // Optional extended debugging information from backtrace (records pagename and calling functions).
 $debug_extended_info = false;

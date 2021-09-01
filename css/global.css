@@ -1247,8 +1247,8 @@ div.video-js {margin:auto;}
 
 #modal .TopInpageNav {
     margin: 0;
-    padding: 14px 20px 10px 20px;
-}
+    padding: 0x 20px 10px 5px;
+    }
 
 #modal .TopInpageNav .TopInpageNavRight {
     padding: 14px 20px 10px 20px;
@@ -1700,7 +1700,6 @@ a.Enabled, a:visited.Enabled {
     width:100px;
 }
 
-
 /* Breadcrumbs */
 .BreadcrumbsBox {
     display: table;
@@ -2015,7 +2014,8 @@ a.BrowseRefresh{
 
 .JobTable {
     clear: both;
-}margin
+}
+
 .JobTable .ListTools a {
     float: left;
     margin-left: 10px;
@@ -2023,6 +2023,11 @@ a.BrowseRefresh{
 
 .TablePagerHolder .TopInpageNavRight {
     position: inherit;    
+}
+
+.TableNav.TopInpageNav {
+    margin-bottom:5px;
+    min-height: 25px;
 }
 
 .TablePagerHolder {
@@ -2162,3 +2167,7 @@ a.BrowseRefresh{
 }
 
 .Question input[name="antispam_user_code"] { position: absolute; left: -2000px; }
+
+#ShareDeleteForm .ListViewBulkActions {
+    padding-top: 20px;
+    }

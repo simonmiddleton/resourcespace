@@ -85,7 +85,7 @@ if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 		}
 
 	# Create a new periodic e-mail report
-	create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection);
+	create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection, $search_params);
 	?>
 	<script type="text/javascript">
 	alert("<?php echo $lang["newemailreportcreated"] ?>");

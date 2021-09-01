@@ -228,8 +228,8 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         $tabledata["data"][] = $logentry;
         }
     }
-echo "<div id='log_container'";
+echo "<div id='log_container'>";
 render_table($tabledata);
-echo "\n</div><!-- End of BasicsBox -->";
+echo "</div>\n</div><!-- End of BasicsBox -->";
 
 include "../include/footer.php";

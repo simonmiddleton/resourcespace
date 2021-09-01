@@ -26,9 +26,7 @@ include_once "{$rs_root}/include/header.php";
 
 <div class="RecordResource">
     <div id="previewimagewrapper">
-        <a id="previewimagelink" class="enterLink" href="http://localhost/filestore/1_42e4469810efefe/1pre_f890a82a87e0857.jpg?v=1626106176" title="Full screen preview" style="position:relative;" data-title="Test" data-lightbox="lightbox1">
                 <img id="previewimage" class="Picture" src="<?php echo $preview ?>" alt="Full screen preview" galleryimg="no">
-        </a>
     </div>
       
 <div class="RecordDownload" id="RecordDownload">

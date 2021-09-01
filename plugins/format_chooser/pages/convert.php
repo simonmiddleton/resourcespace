@@ -39,10 +39,12 @@ if ($width == 0 && $height == 0)
 $ext = getvalescaped('ext', getDefaultOutputFormat());
 $profile = getProfileFileName(getvalescaped('profile', null));
 
-$baseDirectory = get_temp_dir() . '/format_chooser';
-@mkdir($baseDirectory);
-
-$target = $baseDirectory . '/' . get_download_filename($ref,$size,$alternative,$ext);
+$target = sprintf('%s/%s_%s.%s',
+    get_temp_dir(false, 'format_chooser'),
+    $ref,
+    md5($username . date('Ymd', time()) . $scramble_key),
+    $ext
+);
 
 set_time_limit(0);
 
@@ -53,11 +55,6 @@ resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['format_chooser'], '',  $size);
 
 if(file_exists($target))
     {
-    sendFile($target);
-    }
-# Additional check added to ensure the file is still in place at the time of unlink().
-if(file_exists($target))
-    {
+    sendFile($target, get_download_filename($ref, $size, $alternative, $ext));
     unlink($target);
     }
-?>

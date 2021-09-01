@@ -382,7 +382,7 @@ function ProcessFolder($folder)
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
                     echo "Collection '{$name}'" . PHP_EOL;
                     // The real featured collection will always be the last directory in the path
-                    $proposed_fc_categories = array_diff($e, array_slice($e, -2));
+                    $proposed_fc_categories = array_values(array_diff($e, array_slice($e, -2)));
                     if(count($proposed_fc_categories) == 0)
                         {
                         if(count($e) > 1)

@@ -1,9 +1,7 @@
 <?php 
 include '../../../include/db.php';
-include '../../../include/image_processing.php';
-include '../include/checkmail_functions.php';
-
-
+include_once '../../../include/image_processing.php';
+include_once '../include/checkmail_functions.php';
 
 
 // required: check that this plugin is activated

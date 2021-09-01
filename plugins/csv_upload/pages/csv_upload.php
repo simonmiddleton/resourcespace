@@ -90,7 +90,7 @@ if(isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0)
     {
     // We have a valid CSV, get a checksum and save it to a temporary location for processing	
     // Needs whole file checksum
-    $csvchecksum = get_checksum($csvfile, true);
+    $csvchecksum = get_checksum($_FILES[$fd]['tmp_name'], true);
     $csv_set_options["csvchecksum"] = $csvchecksum;
     $csv_set_options["csv_filename"] = $_FILES[$fd]["name"];   
 
@@ -101,7 +101,6 @@ if(isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0)
         }
     $result=move_uploaded_file($_FILES[$fd]['tmp_name'], $csvfile);
     }
-
 rs_setcookie("saved_csv_options",json_encode($csv_set_options));
 
 $csvuploaded = file_exists($csvfile);
@@ -226,7 +225,7 @@ switch($csvstep)
         ?>
         <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" >
             <?php generateFormToken("upload_csv_form"); ?>
-            <input type="hidden" id="csvstep" name="csvstep" value="2" > 			
+            <input type="hidden" id="csvstepmain" name="csvstep" value="2" > 			
             <div class="Question">
                 <label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file'] ?></label>
                 <input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } ">	
@@ -253,7 +252,7 @@ switch($csvstep)
             <h2><?php echo $lang["csv_upload_mapping config"]; ?></h2>
             <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_config_form" method="post" enctype="multipart/form-data" >
                 <?php generateFormToken("upload_csv_config_form"); ?>
-                <input type="hidden" id="csvstep" name="csvstep" value="1" > 			
+                <input type="hidden" id="csvstepconfig" name="csvstep" value="1" > 			
 
 
                 <?php

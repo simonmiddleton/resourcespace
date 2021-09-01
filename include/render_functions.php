@@ -3482,6 +3482,7 @@ function render_selected_collection_actions()
         "share_collection",
         "download_collection",
         "license_batch",
+        "consent_batch"
     );
 
     if($refs_to_remove > 0)
@@ -5023,7 +5024,7 @@ function render_table($tabledata)
             "url" => $tabledata["defaulturl"],
             "url_params" => $tabledata["params"],
             );
-        echo '<div class="TopInpageNav">';
+        echo '<div class="TopInpageNav TableNav">';
         echo '<div class="InpageNavLeftBlock">' . $lang["resultsdisplay"] . ': ';
         // Show per page options
         $list_display_array["all"] = 99999;
@@ -5045,7 +5046,7 @@ function render_table($tabledata)
         echo implode("&nbsp;|&nbsp;", $pplinks);
         echo "</div> <!-- End of InpageNavLeftBlock per page div -->";
         echo "<div class='TablePagerHolder'>";
-        pager(true, true,$pageroptions);
+        pager(false, true,$pageroptions);
         echo "</div>";
         }
     echo '</div>';
@@ -5129,7 +5130,9 @@ function render_table($tabledata)
                         }
                     else
                         {
-                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) ? strip_tags_and_attributes($rowdata[$header], array("a"), array("href", "target")) : htmlspecialchars($rowdata[$header]);
+                        echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) 
+                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick")) 
+                                : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
                     }

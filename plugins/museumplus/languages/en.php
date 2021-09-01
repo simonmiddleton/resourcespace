@@ -4,6 +4,7 @@ $lang['museumplus_top_menu_title'] = 'MuseumPlus: invalid associations';
 
 $lang['museumplus_api_settings_header'] = 'API details';
 $lang['museumplus_host'] = 'Host';
+$lang['museumplus_host_api'] = 'API Host (for API calls only; usually the same as the above)';
 $lang['museumplus_application'] = 'Application name';
 $lang['museumplus_api_user'] = $lang['user'] = "User";
 $lang['museumplus_api_pass'] = $lang['password'] = "Password";

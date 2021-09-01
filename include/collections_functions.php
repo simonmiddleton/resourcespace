@@ -4607,11 +4607,22 @@ function update_collection_parent(int $cid, int $parent)
 */
 function get_user_selection_collection($user)
     {
-    global $rs_session;
     if(!is_numeric($user))
         {
         return null;
         }
+    
+    global $username,$anonymous_login, $rs_session, $anonymous_user_session_collection;
+	if(($username==$anonymous_login && $anonymous_user_session_collection) || upload_share_active())
+		{		
+		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
+		$rs_session=get_rs_session_id(true);
+		}
+	else
+		{	
+		$rs_session="";
+        }
+
     $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' %s ORDER BY ref ASC",
         escape_check($user),
         COLLECTION_TYPE_SELECTION,

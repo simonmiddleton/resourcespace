@@ -115,7 +115,7 @@ if ($ref=="new")
         "holder"=>"",		
         "license_usage"=>"",
         "description"=>"",
-        "expires"=>date("Y-m-d")
+        "expires"=>""
         );
     if ($resource=="") {$resources=array();} else {$resources=array($resource);}
     }

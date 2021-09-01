@@ -1,4 +1,5 @@
 <?php
+include_once dirname(__DIR__, 3) . '/include/image_processing.php';
 
 /**
  * Returns the default output file format to use given an optional input format.
@@ -39,10 +40,17 @@ function getImageFormat($size)
 	if (empty($size))
 		return array('width' => 0, 'height' => 0);
 
-	$results = sql_query("select * from preview_size where id='" . escape_check($size) . "'");
-	if (empty($results))
-		die('Unknown size: "' . $size . '"');
-	return $results[0];
+    $sizes = get_all_image_sizes();
+    $found_idx = array_search($size, array_column($sizes, 'id'));
+    if($found_idx === false)
+        {
+        die('Unknown size: "' . $size . '"');
+        }
+
+    return [
+        'width' => $sizes[$found_idx]['width'],
+        'height' => $sizes[$found_idx]['height'],
+    ];
 	}
 
 /**
@@ -53,12 +61,8 @@ function getImageFormat($size)
  */
 function convertImage($resource, $page, $alternative, $target, $width, $height, $profile)
 	{
-    global $exiftool_write, $exiftool_write_option, $username, $scramble_key;
- 
-	$command = get_utility_path("im-convert");
-	if (!$command)
-		die("Could not find ImageMagick 'convert' utility.");
-    
+    global $exiftool_write, $exiftool_write_option, $username, $scramble_key, $preview_no_flatten_extensions;
+
 	$requested_extension = $resource['file_extension'];
 	# If downloading alternative file, lookup its file extension before preparing resource path as it may differ from the resource.
 	if ($alternative > 0)
@@ -67,8 +71,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $requested_extension = $alt_file['file_extension'];
 	    }
 
-	$originalPath = get_resource_path($resource['ref'], true, '', false,
-				$requested_extension, -1, $page, false, '', $alternative);
+	$originalPath = get_resource_path($resource['ref'], true, '', false, $requested_extension, -1, $page, false, '', $alternative);
 
     if($exiftool_write && $exiftool_write_option)
         {
@@ -83,53 +86,50 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $path = $originalPath;
 	    }
 
+    $transform_actions = [
+        'tfactions' => [],
+        'resize' => ['width' => $width, 'height' => $height],
+        'auto_orient' => null,
+    ];
+
+
 	// Preserve transparency like background for conversion from eps files (transparency is not supported in jpg file type).		
 	if ($resource['file_extension'] == "eps")		
         {
-		$command .= " \"$path\"[0] -transparent -auto-orient";
+        $transform_actions['transparent'] = '';
 		}
-	else
-	    {
-	    $command .= " \"$path\"[0] -auto-orient";
-	    }
 	
     // Handle alpha/ matte channels
-    $extensions_no_alpha_off = array('png', 'gif', 'tif');
-    $target_extension        = pathinfo($target, PATHINFO_EXTENSION);
-
-    if(!in_array($target_extension, $extensions_no_alpha_off))
+    $target_extension = pathinfo($target, PATHINFO_EXTENSION);
+    if(!in_array($target_extension, $preview_no_flatten_extensions))
         {
-        $command .= ' -background white -flatten';
+        $transform_actions['background'] = 'white';
         }
-
-	if ($width != 0 && $height != 0)
-		{
-		# Apply resize ('>' means: never enlarge)
-		$command .= " -resize \"$width";
-		if ($height > 0)
-			$command .= "x$height";
-		$command .= '>"';
-		}
 
 	if($profile === '')
 		{
-		$command .= ' +profile *';
+        $transform_actions['profile'][] = ['strip' => true, 'path' => '*'];
 		}
 	elseif(!empty($profile))
 		{
 		// Find out if the image does already have a profile
 		$identify = get_utility_path("im-identify");
 		$identify .= ' -verbose "' . $path . '"';
-		$info = run_command($command);
-		$basePath = dirname(__FILE__) . '/../../../';
-		if (preg_match("/Profile-icc:/", $info) != 1)
-			$command .= ' -profile "' . $basePath . 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc"';
-		$command .= ' -profile "' . $basePath . $profile . '"';
+		$info = run_command($identify);
+
+        $basePath = dirname(__FILE__, 4) . '/';
+        if(preg_match("/Profile-icc:/", $info) != 1)
+            {
+            $transform_actions['profile'][] = ['strip' => false, 'path' => $basePath . 'iccprofiles/sRGB_IEC61966-2-1_black_scaled.icc'];
+            }
+
+        $transform_actions['profile'][] = ['strip' => false, 'path' => $basePath . $profile];
 		}
 
-	$command .= " \"$target\"";
-
-	run_command($command);
+    if(!transform_file($path, $target, $transform_actions))
+        {
+        die('Unable to transform file!');
+        }
 
     //remove temp once completed
     if(isset($temp_path))
@@ -138,20 +138,30 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         }
 	}
 
-function sendFile($filename)
+function sendFile($filename, string $download_filename)
 	{
 	$suffix = pathinfo($filename, PATHINFO_EXTENSION);
 	$size = filesize_unlimited($filename);
 
-	header('Content-Transfer-Encoding: binary');
-	header('Content-Disposition: attachment; filename="' . str_replace(array("\n","\r"),"",mb_basename($filename)) . '"');
-	header('Content-Type: ' . get_mime_type($filename, $suffix));
-	header('Content-Length: ' . $size);
-	header("Content-Type: application/octet-stream");
+    global $baseurl, $username, $scramble_key;
 
-	ob_end_flush();
+    list($resource_ref, $download_key) = explode('_', pathinfo($filename, PATHINFO_FILENAME));
+    $user_downloads_path = sprintf('%s/%s_%s.%s',
+        get_temp_dir(false, 'user_downloads'),
+        $resource_ref,
+        md5($username . $download_key . $scramble_key),
+        $suffix
+    );
+    copy($filename, $user_downloads_path);
 
-	readfile($filename);
+    $user_download_url = generateURL(
+        $baseurl . '/pages/download.php',
+        [
+            'userfile' => pathinfo($filename, PATHINFO_BASENAME),
+            'filename' => strip_extension($download_filename, false),
+        ]
+    );
+    redirect($user_download_url);
 	}
 
 function showProfileChooser($class = '', $disabled = false)
