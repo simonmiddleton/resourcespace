@@ -2171,3 +2171,8 @@ a.BrowseRefresh{
 #ShareDeleteForm .ListViewBulkActions {
     padding-top: 20px;
     }
+
+.chosen-container {
+    font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands';
+    font-weight: 900;
+}

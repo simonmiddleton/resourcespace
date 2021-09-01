@@ -3,23 +3,20 @@ if (!hook("renderresultthumb"))
     {
     # Establish various metrics for use in thumbnail rendering
     $resolved_title_trim=0; 
-
     $field_height = 31;
-    $resource_type_icon_height = 22;
     $resource_id_height = 21;
-    $resource_panel_icons_height = 31;
 
     hook("thumbstextheight");
 
     if ($display == "xlthumbs")
         {
         $resolved_title_trim = $xl_search_results_title_trim;
-        $resource_panel_height = 320 + $resource_panel_icons_height;
+        $resource_panel_height = 375;
         }
     else
         {
         $resolved_title_trim = $search_results_title_trim;
-        $resource_panel_height = 175 + $resource_panel_icons_height;
+        $resource_panel_height = 228;
         }
 
     $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * count($thumbs_display_fields));
@@ -27,11 +24,6 @@ if (!hook("renderresultthumb"))
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
         $thumbs_displayed_fields_height += $field_height;
-        }
-
-    if($resource_type_icons)
-        {
-        $thumbs_displayed_fields_height += $resource_type_icon_height;
         }
 
     # Increase height of search panel for each extended field
@@ -68,13 +60,20 @@ if (!hook("renderresultthumb"))
     style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
     >
         <?php  
-        if ($resource_type_icons && !hook("replaceresourcetypeicon")) 
+        if (!hook("replaceresourcetypeicon"))
             {
+            foreach ($types as $type)
+                {
+                if ($type["ref"] == $result[$n]['resource_type'])
+                    {
+                    $icon = (isset($type["icon"]) ? $type["icon"] : '');
+                    }
+                }
             ?>
             <div class="ResourceTypeIcon<?php
-            if (array_key_exists($result[$n]['resource_type'], $resource_type_icons_mapping))
+            if (isset($icon))
                 {
-                echo ' fa fa-fw fa-' . $resource_type_icons_mapping[$result[$n]['resource_type']];  
+                echo ' fa fa-fw fa-' . $icon;  
                 }
             ?>" ></div>
             <?php 

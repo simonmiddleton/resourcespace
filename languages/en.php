@@ -151,6 +151,7 @@ $lang["information-regexp_filter"]="Regular Expression filtering - e.g. '[A-Z]+'
 $lang["information-regexp_fail"]="The entered value was not in the required format.";
 $lang["property-tab_name"]="Tab name";
 $lang["property-push_metadata"]="Push metadata";
+$lang["property-icon"] = "Icon";
 $lang['property-inherit_global_fields'] = 'Inherit global fields';
 $lang['information-inherit_global_fields'] = 'Should global fields be included for this resource type?';
 $lang["property-smart_theme_name"]="Smart featured collection name";
