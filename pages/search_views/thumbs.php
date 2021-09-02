@@ -59,7 +59,13 @@ if (!hook("renderresultthumb"))
     <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
     >
-        <?php  
+        <?php
+        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "")
+            { ?>
+            <span class="thumbs-file-extension"><?php echo strtoupper(htmlspecialchars($result[$n]['file_extension'])) ?></span>
+            <?php
+            }
+
         if (!hook("replaceresourcetypeicon"))
             {
             foreach ($types as $type)

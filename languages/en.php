@@ -1397,6 +1397,7 @@ $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
 $lang["addremove"]="Add/remove";
+$lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
 $lang["all_users"]="all users";

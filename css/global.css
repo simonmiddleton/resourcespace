@@ -438,6 +438,16 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ASC {display: inline;padding-right: 10px;}
 .DESC {display: inline;padding-right: 10px;}
 
+.thumbs-file-extension {
+    font-weight: bold;
+    background: #e4e4e4;
+    color: #404040;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 3px;
+    margin: 1px;
+}
+
 /*Resource Panel layout*/
 .Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;}
 .ListviewTight {margin: 5px 10px 5px 0;}
