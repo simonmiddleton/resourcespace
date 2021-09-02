@@ -618,9 +618,6 @@ elseif($restypes=='')
         // If an ImageBank is selected then no action
         if (jQuery("#SearchImageBanks :selected").text().length > 0) { return; }
 
-        // If no resource types are checked then no action
-        if (jQuery(".tick :checked").length == 0) { return; }
-
         var ssearchhiddenfields = [];
         ssearchhiddenfields.length=0;
         document.getElementById('ssearchhiddenfields').value='';
