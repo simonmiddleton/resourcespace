@@ -112,6 +112,7 @@ $lang["property-resource_type_id"]="Resource type id";
 $lang["information-allowed_extensions"]="If set, only files with the specified extensions are allowed upon upload to this type, e.g. jpg,gif";
 $lang["property-allowed_extensions"]="Allowed extensions";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
+$lang["icon_picker_placeholder"]="Type to filter";
 
 # Metadata field properties
 $lang["property-field_id"]="Field id";

@@ -73,7 +73,7 @@ if (!hook("renderresultthumb"))
             <div class="ResourceTypeIcon<?php
             if (isset($icon))
                 {
-                echo ' fa fa-fw fa-' . $icon;  
+                echo ' fa-fw ' . $icon;  
                 }
             ?>" ></div>
             <?php 

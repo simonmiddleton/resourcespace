@@ -839,12 +839,6 @@ $zipped_collection_textfile_default_no=false;
 # A list of types which get the extra video icon in the search results
 $videotypes=array(3);
 
-# Small icon above thumbnails showing the resource type
-$resource_type_icons=false;
-# Map the resource type to a font awesome 4 icon
-$resource_type_icons_mapping = array(1 => "camera", 2 => "file", 3 => "video-camera", 4 => "music");
-
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 
