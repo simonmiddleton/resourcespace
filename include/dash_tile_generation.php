@@ -359,19 +359,57 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		</p>
 		<?php
 		}
+    ?>
+    <!-- Resource counter -->
+    <p class="tile_corner_box DisplayNone">
+        <span aria-hidden="true" class="fa fa-clone"></span>
+    </p>
+    <script>
+    jQuery(function()
+        {
+        let data = {
+            'search': '<?php echo htmlspecialchars($search); ?>',
+            'restypes': '<?php echo htmlspecialchars($restypes); ?>',
+            'order_by': '<?php echo htmlspecialchars($order_by); ?>',
+            'archive': '<?php echo htmlspecialchars($archive); ?>',
+            'fetchrows': -1,
+            'sort': '<?php echo htmlspecialchars($sort); ?>',
+            'recent_search_daylimit': '',
+            'getsizes': 'pre',
+        };
+        api('search_get_previews', data, function(response)
+            {
+            console.log('API response (total = %s) for %s with promoted image #%s was: %o',
+                response.length,
+                '<?php echo $tile['link']; ?>',
+                '<?php echo $promoted_image; ?>',
+                response
+            );
 
-	if(!$found_resources && !$tile["resource_count"])
-		{
-		echo "<p class='no_resources'>" . htmlspecialchars($lang["noresourcesfound"]) . "</p>";
-		}
-	if($tile["resource_count"])
-		{?>
-		<p class="tile_corner_box">
-		<span aria-hidden="true" class="fa fa-clone"></span>
-		<?php echo $count; ?>
-		</p>
-		<?php
-		}
+            // Resource count
+            let tile_corner_box = jQuery('div#<?php echo htmlspecialchars($tile_id); ?> p.tile_corner_box');
+            <?php
+            if($tile['resource_count'])
+                {
+                ?>
+                tile_corner_box.append(response.length);
+                tile_corner_box.toggleClass('DisplayNone');
+                <?php
+                }
+            else
+                {
+                ?>
+                if(response.length == 0)
+                    {
+                    tile_corner_box.before('<p class="no_resources"><?php echo htmlspecialchars($lang['noresourcesfound']); ?></p>');
+                    }
+                <?php
+                }
+            ?>
+            });
+        });
+    </script>
+    <?php
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
