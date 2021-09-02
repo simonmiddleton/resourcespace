@@ -314,7 +314,6 @@ var categoryTreeChecksArray = [];
             jQuery(document).ready(function () {
                 jQuery('#ssearchbox').autocomplete({source: "<?php echo $autocomplete_src; ?>"});
                 
-                // if(jQuery("#SearchImageBanks :selected").text().length == 0) {
                     // Ensure any previously hidden searchfields remain hidden
                     ssearchhiddenfields=document.getElementById('ssearchhiddenfields').value.trim();
                     if (ssearchhiddenfields.length > 0) {
@@ -323,7 +322,6 @@ var categoryTreeChecksArray = [];
                             document.getElementById(ssearchhiddenfieldsarray[i]).style.display='none';
                         }
                     }
-                // }
             });
             <?php
             }
@@ -510,7 +508,6 @@ elseif($restypes=='')
         }
 
     $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" onclick=\"HideOrShowSimpleSearchFields();\" />";
-    // $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
 
     if($responsive_ui)
         {
@@ -629,7 +626,7 @@ elseif($restypes=='')
         document.getElementById('ssearchhiddenfields').value='';
 
         <?php
-        # Consider each of the fields. Hide if the resource type for this field is not checked
+        # Consider each of the searchfields; Show or hide depending on whether the resource type for this field is selected
         for ($n=0;$n<count($fields);$n++)
             {
             # Check it's not a global field, we don't need to hide those
@@ -771,6 +768,7 @@ elseif($restypes=='')
             }
         ?>
 
+        // Save the hidden field names for use when searchbar is redisplayed
         ssearchhiddenfieldsstring=ssearchhiddenfields.join(',');
         document.getElementById('ssearchhiddenfields').value=ssearchhiddenfieldsstring;
         SetCookie('ssearchhiddenfields',ssearchhiddenfieldsstring);
