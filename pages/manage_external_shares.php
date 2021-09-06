@@ -333,7 +333,7 @@ function delete_access_key_multiple()
         {
         api('delete_access_keys', params, function(response)
             {
-            jQuery(".deleteShareCheckBox:checked").parent().parent().remove();
+            CentralSpaceLoad(this);
             });
 
             return false;
@@ -489,7 +489,7 @@ function clearsharefilter()
         ?>
 
         <div class="ListViewBulkActions">
-            <a id="accesskeys-delete-selected" onclick="delete_access_key_multiple(); return CentralSpaceLoad(this,true);" class="DisabledLink">
+            <a id="accesskeys-delete-selected" onclick="delete_access_key_multiple();" class="DisabledLink">
                 <i class="fas fa-trash-alt"></i><?php echo $lang["action-delete"]." ".$lang["selected"]; ?>
             </a>
             <input type="hidden" id="accesskeys-selected" value="">
