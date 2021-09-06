@@ -524,15 +524,16 @@ function api_delete_access_keys($access_keys, $resources, $collections)
         {
         if($collection_array[$i] !="-") 
             {
-            debug("XYZZY DELETE COLKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
-            return delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
+            debug("ACCESSKEY DELETING COL=".$collection_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
             }
         else
             {
-            debug("XYZZY DELETE RESKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
-            return delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
+            debug("ACCESSKEY DELETING RES=".$resource_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
             }
         }
+    return true;
     }
 
 function api_delete_alternative_file($resource,$ref)

@@ -272,13 +272,6 @@ function check_delete_boxes()
 
     var deleteAccessKeys = jQuery(".deleteShareCheckBox:checked").parent().parent();
 
-    // var accessKeyList = [];
-
-    // for (var i = 0; i < deleteAccessKeys.length; i++) {
-    //     accessKeyList.push( deleteAccessKeys[i].id.substr(11) );
-    // } 
-    // jQuery("#accesskeys-selected").val( accessKeyList.join() );
-
     if (deleteAccessKeys.length > 0) {
         jQuery("#accesskeys-delete-selected").attr("href", "<?php echo $baseurl_short; ?>pages/manage_external_shares.php");
         jQuery("#accesskeys-delete-selected").removeClass("DisabledLink");
@@ -305,8 +298,8 @@ function delete_access_key_multiple()
         var access_key_id = deleteAccessKeys[i].id;
         var access_key = access_key_id.substr(11);
         var table_row_cols = jQuery("#"+access_key_id).children();
-        var collection = table_row_cols[1].textContent;
-        var resource = table_row_cols[2].textContent;
+        var collection = table_row_cols[2].textContent;
+        var resource = table_row_cols[3].textContent;
         if (collection!="-") {
             countCollectionKeys += 1;
         }
@@ -340,7 +333,7 @@ function delete_access_key_multiple()
         {
         api('delete_access_keys', params, function(response)
             {
-
+            jQuery(".deleteShareCheckBox:checked").parent().parent().remove();
             });
 
             return false;
@@ -496,7 +489,7 @@ function clearsharefilter()
         ?>
 
         <div class="ListViewBulkActions">
-            <a id="accesskeys-delete-selected" onclick="delete_access_key_multiple();" class="DisabledLink">
+            <a id="accesskeys-delete-selected" onclick="delete_access_key_multiple(); return CentralSpaceLoad(this,true);" class="DisabledLink">
                 <i class="fas fa-trash-alt"></i><?php echo $lang["action-delete"]." ".$lang["selected"]; ?>
             </a>
             <input type="hidden" id="accesskeys-selected" value="">
