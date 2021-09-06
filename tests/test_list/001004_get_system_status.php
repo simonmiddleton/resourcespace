@@ -9,8 +9,7 @@ $system_status = get_system_status();
 $find_stat_idx = array_search('required_php_modules', array_column($system_status['results'], 'name'));
 if($find_stat_idx !== false && $system_status['results'][$find_stat_idx]['status'] === 'FAIL')
     {
-    echo 'Required PHP modules - ';
-    return false;
+    echo "INFO: {$system_status['results'][$find_stat_idx]['info']}; - ";
     }
 
 
