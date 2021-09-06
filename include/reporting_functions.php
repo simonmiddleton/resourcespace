@@ -351,7 +351,15 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
-        SELECT pe.*,
+        SELECT pe.ref,
+               pe.user,
+               pe.send_all_users,
+               pe.user_groups,
+               pe.report,
+               pe.period,
+               pe.email_days,
+               pe.last_sent,
+               pe.search_params,
                u.email,
                r.name
           FROM report_periodic_emails pe
