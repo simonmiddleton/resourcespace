@@ -192,12 +192,7 @@ global $ffmpeg_preview_extension,$css_reload_key,$context,$video_preview_hls_sup
 <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?=$css_reload_key?>"></script>
 <script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>
 <?php
-if($video_preview_hls_support!=0)
-	{
-	?>
-	<script src="<?php echo $baseurl_short?>lib/js/videojs-contrib-hls.js?<?php echo $css_reload_key?>"></script>
-	<?php		
-	}
+
 if(isset($videojs_resolution_selection))
 	{
 	?>
