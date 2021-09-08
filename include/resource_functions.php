@@ -6081,14 +6081,33 @@ function delete_resource_access_key($resource,$access_key)
     resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
-function resource_type_config_override($resource_type)
+function resource_type_config_override($resource_type, $only_onchange=true)
     {
     # Pull in the necessary config for a given resource type
-    # As this could be called many times, e.g. during search result display, only execute if the passed resourcetype is different from the previous.
+    # As this could be called many times, e.g. during search result display
+    # By default (only_onchange) only execute the override if the passed resourcetype is different from the previous
     global $resource_type_config_override_last,$resource_type_config_override_snapshot, $ffmpeg_alternatives;
 
-    # If the resource type has changed or if this is the first resource....
-    if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
+    # If the overrides are only to be executed on change of resource type
+    if ($only_onchange) 
+        {
+        # If the resource type has changed or if this is the first resource....
+        if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
+            {
+            # Look for config and execute.
+            $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
+            if ($config_options!="")
+                {
+                # Switch to global context and execute.
+                extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+                eval($config_options);
+                debug_track_vars('end@resource_type_config_override', get_defined_vars());
+                }
+            $resource_type_config_override_last=$resource_type;
+            }
+        }
+    else
+        # The overrides are to be executed for every resource
         {
         # Look for config and execute.
         $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
@@ -6099,7 +6118,6 @@ function resource_type_config_override($resource_type)
             eval($config_options);
             debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
-        $resource_type_config_override_last=$resource_type;
         }
     }
 
