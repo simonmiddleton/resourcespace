@@ -255,80 +255,6 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 	$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
 	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
 	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
-	$tile_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,0,false,false,"",false,false);
-	$found_resources=true;
-	if(!is_array($tile_search) || empty($tile_search))
-		{
-		$found_resources=false;
-		$count=0;
-		}
-	else
-		{
-		$found_resources=true;
-		$count=count($tile_search);
-		}
-
-	if($found_resources)
-		{
-		$previewresource=$tile_search[0];
-		
-		if($promoted_image && in_array($promoted_image,array_column($tile_search,"ref")))
-			{
-			$promoted_image_data=get_resource_data($promoted_image);
-			if ($promoted_image_data!==false)
-				{
-				$previewresource=$promoted_image_data;
-				}
-			}
-		
-		$defaultpreview=false;
-		$previewpath=get_resource_path($previewresource["ref"],true,"pre",false, "jpg", -1, 1, false);
-		if (file_exists($previewpath))
-			{
-            $previewpath=get_resource_path($previewresource["ref"],false,"pre",false, "jpg", -1, 1, false);
-        	}
-        else 
-        	{
-            $previewpath=$baseurl_short."gfx/".get_nopreview_icon($previewresource["resource_type"],$previewresource["file_extension"],false);
-            $defaultpreview=true;
-        	}
-		?>
-		<img 
-			src="<?php echo $previewpath ?>" 
-			<?php 
-			if($defaultpreview)
-				{
-				?>
-				style="position:absolute;top:<?php echo ($tile_height-128)/2 ?>px;left:<?php echo ($tile_width-128)/2 ?>px;"
-				<?php
-				}
-			else 
-				{
-				#fit image to tile size
-				if(($previewresource["thumb_width"]*0.7)>=$previewresource["thumb_height"])
-					{
-					$ratio = $previewresource["thumb_height"] / $tile_height;
-					if ($ratio == 0){$ratio = 1;} // attempt fit if 'thumb_height' is 0
-					$width = $previewresource["thumb_width"] / $ratio;
-					if($width<$tile_width){echo "width='100%' ";}
-					else {echo "height='100%' ";}
-					}
-				else
-					{
-					$ratio = $previewresource["thumb_width"] / $tile_width;
-					if ($ratio == 0){$ratio = 1;} // attempt fit if 'thumb_width' is 0
-					$height = $previewresource["thumb_height"] / $ratio;
-					if($height<$tile_height){echo "height='100%' ";}
-					else {echo "width='100%' ";}
-					}
-				?>
-				style="position:absolute;top:0;left:0;"
-				<?php
-				}?>
-			class="thmbs_tile_img"
-		/>
-		<?php
-		}
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
 		{$icon="cube";}
@@ -365,7 +291,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
         <span aria-hidden="true" class="fa fa-clone"></span>
     </p>
     <script>
-    jQuery(function()
+    jQuery(document).ready(function()
         {
         let data = {
             'search': '<?php echo htmlspecialchars($search); ?>',
@@ -379,12 +305,49 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
         };
         api('search_get_previews', data, function(response)
             {
+            let promoted_image = <?php echo $promoted_image ?: 0; ?>;
             console.log('API response (total = %s) for %s with promoted image #%s was: %o',
                 response.length,
                 '<?php echo $tile['link']; ?>',
-                '<?php echo $promoted_image; ?>',
+                promoted_image,
                 response
             );
+            let promoted_image_resource = response.filter(resource => resource.ref == promoted_image && typeof resource.url_pre !== 'undefined');
+            let preview_resource = promoted_image > 0 && promoted_image_resource[0] !== undefined ? promoted_image_resource[0]
+                        : promoted_image === 0 && response[0] !== undefined ? response[0]
+                        : {};
+            console.debug('promoted_image_resource = %o', promoted_image_resource);
+            console.debug('preview_resource = %o', preview_resource);
+
+            // Tile background - resource preview
+            if(preview_resource.url_pre !== undefined)
+                {
+                let tile_div = jQuery('div#<?php echo htmlspecialchars($tile_id); ?>');
+
+                // Fit (adjust) the 'pre' size to the tile size
+                let tile_width = <?php echo $tile_width; ?>;
+                let tile_height = <?php echo $tile_height; ?>;
+                let size = '';
+                if(preview_resource['thumb_width'] * 0.7 >= preview_resource['thumb_height'])
+                    {
+                    let ratio = preview_resource['thumb_height'] / tile_height;
+                    if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_height' is 0
+
+                    let width = preview_resource['thumb_width'] / ratio;
+                    size = width < tile_width ? ' width="100%"' : ' height="100%"';
+                    }
+                else
+                    {
+                    ratio = preview_resource['thumb_width'] / tile_width;
+                    if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_width' is 0
+
+                    let height = preview_resource['thumb_height'] / ratio;
+                    size = height < tile_height ? ' height="100%"' : ' width="100%"';
+                    }
+
+                tile_div.prepend('<img src="' + preview_resource.url_pre + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">');
+                }
+
 
             // Resource count
             let tile_corner_box = jQuery('div#<?php echo htmlspecialchars($tile_id); ?> p.tile_corner_box');
