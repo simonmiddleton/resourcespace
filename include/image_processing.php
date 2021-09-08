@@ -133,6 +133,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                debug("BANG " . $filename);
                 }
             else
                 {
@@ -289,10 +290,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     # File path has been specified. Let's use that directly.
                     if (file_exists($file_path))
                         {
-                    $result=rename($file_path, $filepath);
+                            debug("BANG renaming '" . $file_path . "' to '" . $filepath . "'");
+                        $result=rename($file_path, $filepath);
                         }
                     else
                         {
+                            debug("BANG not found '" . $file_path ."'");
                         return false;
                         }
                     }               

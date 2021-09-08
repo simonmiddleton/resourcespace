@@ -717,7 +717,8 @@ function delete_collection($collection)
  * @param  integer $collection  Collection id
  * @return void
  */
-function refresh_collection_frame($collection="")
+function 
+refresh_collection_frame($collection="")
     {
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;

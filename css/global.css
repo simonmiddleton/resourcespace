@@ -791,6 +791,21 @@ div.autocomplete ul li {
 .plupload_content {top:0 !important;}
 .ui-widget-content {border:3px dashed #ccc;border-radius:10px;}
 
+#uploader .uppy-size--md .uppy-DashboardContent-addMore {
+    margin-right: 25px;
+}
+.uppy-StatusBar-actionBtn,
+.uppy-Dashboard-browse,
+.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
+.uppy-Dashboard-Item-previewInnerWrap {
+    background-color: #1988d7 !important;
+    color: #fff;
+}
+
+.uppy-StatusBar {
+    line-height: normal;
+}
+
 #showlog,#hidelog
     {
     margin-top:10px;

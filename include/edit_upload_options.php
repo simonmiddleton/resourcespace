@@ -1,7 +1,7 @@
 <?php
 $on_upload = ($pagename ==  "upload_batch");
 if(!hook("replaceuploadoptions")):	
-if ($on_upload || $ref<0)
+if ($on_upload || (isset($ref) && $ref<0))
 	{
 	if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
 	if($tabs_on_edit && !$on_upload)
