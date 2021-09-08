@@ -602,18 +602,23 @@ function HookSimplesamlAllCheck_access_key()
     return false;
     }
 
-function HookSimplesamlHealthcheckErrorcheckadditional()
+function HookSimplesamlAllExtra_fail_checks()
     {
-    global $lang;
-    $GLOBALS["use_error_exception"] = true;
+    $simplesaml_fail = [
+        'name' => 'simplesaml',
+        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+    ];
+
+    $GLOBALS['use_error_exception'] = true;
     try
         {
         $samlok = simplesaml_config_check() && simplesaml_php_check();
         }
     catch (Exception $e)
         {
-        return "FAIL - " . $lang['simplesaml_healthcheck_error']; 
+        return $simplesaml_fail;
         }
-    unset($GLOBALS["use_error_exception"]);
-    return $samlok ? true : "FAIL - " . $lang['simplesaml_healthcheck_error'];
+    unset($GLOBALS['use_error_exception']);
+
+    return $samlok ? false : $simplesaml_fail;
     }

@@ -243,7 +243,7 @@ if ($use_plugins_manager)
     # Need verbatim queries for this query
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
-	$active_plugins = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE inst_version>=0 order by priority","plugins");
+    $active_plugins = get_active_plugins();
     $mysql_verbatim_queries = $mysql_vq;
 
     $active_yaml = array();

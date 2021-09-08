@@ -1404,7 +1404,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         # Set thumbonly=true to (re)generate thumbnails only.
 
         $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
-        $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+        if ($previewonly)
+            {
+            # Original file is the new file if generating previews from a new preview source file.
+            $origfile = $file;
+            }
+        else
+            {
+            $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+            }
         
         $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
         if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}  
