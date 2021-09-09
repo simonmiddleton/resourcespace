@@ -387,10 +387,6 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	$search_string = explode('?',$tile["link"]);
 	parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
 	$search = isset($search_string["search"]) ? $search_string["search"] :"";
-	$restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
-	$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
-	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
-	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
 	
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
@@ -424,83 +420,8 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		</p>
 		<?php
 		}
-    ?>
-    <!-- Resource counter -->
-    <p class="no_resources DisplayNone"><?php echo htmlspecialchars($lang['noresourcesfound']); ?></p>
-    <p class="tile_corner_box DisplayNone">
-        <span aria-hidden="true" class="fa fa-clone"></span>
-    </p>
-    <script>
-    jQuery(document).ready(function()
-        {
-        let show_resource_count = <?php echo $tile['resource_count'] ? 'true' : 'false'; ?>;
-        let fetchrows = show_resource_count ? -1 : 4;
 
-        let data = {
-            'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
-            'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
-            'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
-            'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
-            'fetchrows': fetchrows,
-            'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
-            'recent_search_daylimit': '',
-            'getsizes': 'pre',
-        };
-        api('search_get_previews', data, function(response)
-            {
-            let tile_id = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
-
-            let preview_resources = response
-                .filter(resource => typeof resource.url_pre !== 'undefined')
-                .slice(0, 4)
-                .map(function(resource, index, resources_list)
-                    {
-                    let tile_working_space = <?php echo $tile['tlsize'] == '' ? 140 : 280; ?>;
-                    let gap = tile_working_space / resources_list.length;
-                    let space = index * gap;
-                    let style = 'left: ' + (space * 1.5) + 'px;'
-                        + ' transform: rotate(' + (20 - (index * 12)) + 'deg);';
-
-                    return '<img src="' + resource.url_pre + '" style="' + style + '">';
-                    })
-                .reverse();
-            console.debug('preview_resources = %o', preview_resources);
-
-            // Tile background - resources previews
-            if(preview_resources.length > 0)
-                {
-                let tile_div = jQuery('div#' + tile_id);
-
-                for(let i = 0; i < preview_resources.length; i++)
-                    {
-                    tile_div.prepend(preview_resources[i]);
-                    }
-                }
-
-            // Resource count
-            let tile_corner_box = jQuery('div#' + tile_id + ' p.tile_corner_box');
-            <?php
-            if($tile['resource_count'])
-                {
-                ?>
-                tile_corner_box.append(response.length);
-                tile_corner_box.toggleClass('DisplayNone');
-                <?php
-                }
-            else
-                {
-                ?>
-                if(response.length == 0)
-                    {
-                    jQuery('div#' + tile_id + ' p.no_resources').toggleClass('DisplayNone');
-                    }
-                <?php
-                }
-            ?>
-            });
-        });
-    </script>
-    <?php
+    tltype_srch_generate_js_for_background_and_count($tile, $tile_id);
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
