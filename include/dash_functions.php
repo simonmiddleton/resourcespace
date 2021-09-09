@@ -1976,16 +1976,15 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
         const TILE_STYLE = '<?php echo htmlspecialchars($tile_style, ENT_QUOTES); ?>';
         const SHOW_RESOURCE_COUNT = <?php echo $tile['resource_count'] ? 'true' : 'false'; ?>;
 
-        let fetchrows = TILE_STYLE === 'multi' && !SHOW_RESOURCE_COUNT ? 4 : -1;
         let data = {
             'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
             'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
             'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
             'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
-            'fetchrows': fetchrows,
+            'fetchrows': TILE_STYLE === 'multi' && !SHOW_RESOURCE_COUNT ? 4 : -1,
             'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
             'recent_search_daylimit': '',
-            'getsizes': 'pre',
+            'getsizes': TILE_STYLE === 'blank' ? '' : 'pre',
         };
         api('search_get_previews', data, function(response)
             {
@@ -2049,13 +2048,11 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
             // Blank style
             else
                 {
-                console.log('reached else');
                 preview_resources = [];
                 }
 
-            console.debug('preview_resources = %o', preview_resources);
-
             // Tile background - resource(s) preview
+            console.debug('preview_resources = %o', preview_resources);
             if(preview_resources.length > 0)
                 {
                 let tile_div = jQuery('div#' + TILE_ID);

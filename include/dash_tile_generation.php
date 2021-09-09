@@ -342,10 +342,6 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 	$search_string = explode('?',$tile["link"]);
 	parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
 	$search = isset($search_string["search"]) ? $search_string["search"] :"";
-	$restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
-	$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
-	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
-	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
 	
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
@@ -378,51 +374,8 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		</p>
 		<?php
 		}
-    ?>
-    <!-- Resource counter -->
-    <p class="no_resources DisplayNone"><?php echo htmlspecialchars($lang['noresourcesfound']); ?></p>
-    <p class="tile_corner_box DisplayNone">
-        <span aria-hidden="true" class="fa fa-clone"></span>
-    </p>
-    <script>
-    jQuery(document).ready(function()
-        {
-        let data = {
-            'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
-            'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
-            'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
-            'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
-            'fetchrows': -1,
-            'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
-        };
-        api('do_search', data, function(response)
-            {
-            let tile_id = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
 
-            // Resource count
-            let tile_corner_box = jQuery('div#' + tile_id + ' p.tile_corner_box');
-            <?php
-            if($tile['resource_count'])
-                {
-                ?>
-                tile_corner_box.append(response.length);
-                tile_corner_box.toggleClass('DisplayNone');
-                <?php
-                }
-            else
-                {
-                ?>
-                if(response.length == 0)
-                    {
-                    jQuery('div#' + tile_id + ' p.no_resources').toggleClass('DisplayNone');
-                    }
-                <?php
-                }
-            ?>
-            });
-        });
-    </script>
-    <?php
+    tltype_srch_generate_js_for_background_and_count($tile, $tile_id, (int) $tile_width, (int) $tile_height, 0);
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
