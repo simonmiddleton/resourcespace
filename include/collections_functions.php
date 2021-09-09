@@ -743,14 +743,13 @@ function refresh_collection_frame($collection="")
  * @param  string $order_by
  * @param  string $sort
  * @param  boolean $exclude_themes
- * @param  boolean $exclude_public
  * @param  boolean $include_resources
  * @param  boolean $override_group_restrict
- * @param  boolean $search_user_collections
  * @param  integer $fetchrows
  * @return array
  */
-function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows=-1)
+
+function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $include_resources=false, $override_group_restrict=false, $fetchrows=-1)
     {
     global $userref;
 
@@ -838,10 +837,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
     // Filter by type (public/featured collections)
     $public_type_filter_sql = "c.`type` = " . COLLECTION_TYPE_PUBLIC;
-    if($search_user_collections)
-        {
-        $public_type_filter_sql = sprintf('(c.`type` = %s OR c.user = \'%s\')', COLLECTION_TYPE_PUBLIC, escape_check($userref));
-        }
     $featured_type_filter_sql = sprintf(
         "(c.`type` = %s %s)",
         COLLECTION_TYPE_FEATURED,
@@ -851,10 +846,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         {
         $featured_type_filter_sql = "";
         }
-    else if($exclude_public && !$search_user_collections)
-        {
-        $public_type_filter_sql = "";
-        }
     $type_filter_sql = sprintf(
         ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? "(%s%s)" : "%s%s"),
         $public_type_filter_sql,
@@ -862,10 +853,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     );
 
     $where_clause_osql = 'col.`type` = ' . COLLECTION_TYPE_PUBLIC;
-    if($search_user_collections)
-        {
-        $where_clause_osql = sprintf('col.`type` IN (%s, %s)', COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC);
-        }
     if($featured_type_filter_sql !== '')
         {
         $where_clause_osql .= ' OR (col.`type` = ' . COLLECTION_TYPE_FEATURED . ' AND col.is_featured_collection_category = false)';
@@ -918,7 +905,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
  */
 function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC", $fetchrows = -1)
     {
-    global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata, $default_collection_sort;
+    global $search_includes_themes, $userref, $default_collection_sort;
     
     if($order_by=='')
         {
@@ -934,32 +921,16 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
         $search=substr($search,1,-1);
         } 
     $search_includes_themes_now=$search_includes_themes;
-    $search_includes_public_collections_now=$search_includes_public_collections;
-    $search_includes_user_collections_now=$search_includes_user_collections;
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
         $search_includes_themes_now=in_array("themes",$restypes_x);
-        $search_includes_public_collections_now=in_array("pubcol",$restypes_x);
-        $search_includes_user_collections_now=in_array("mycol",$restypes_x);
         } 
 
-    if ($search_includes_themes_now || $search_includes_public_collections_now || $search_includes_user_collections_now)
+    if ($search_includes_themes_now)
         {
-        if ($collection_search_includes_resource_metadata)
-            {
-            # Include metadata from resources when searching - using a special search
-                $collections=do_search("!contentscollection"
-                    . ($search_includes_user_collections_now?'U':'')
-                    . ($search_includes_public_collections_now?'P':'')
-                    . ($search_includes_themes_now?'T':'')
-                    . " " . $search,"",$order_by,0,-1,$sort);
-            }
-        else
-            {
-            # The old way - same search as when searching within public collections.
-            $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
-            }
+        # Same search as when searching within public collections.
+        $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         
         $condensedcollectionsresults=array();
         $result=$collections;

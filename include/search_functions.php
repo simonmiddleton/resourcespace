@@ -1167,43 +1167,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
-    
-     # Collections containing resources
-     # NOTE - this returns collections not resources! Not intended for use in user searches.
-     # This is used when the $collection_search_includes_resource_metadata option is enabled and searches collections based on the contents of the collections.
-    if (substr($search,0,19)=="!contentscollection")
-        {
-        $flags=substr($search,19,((strpos($search," ")!==false)?strpos($search," "):strlen($search)) -19); # Extract User/Public/Theme flags from the beginning of the search parameter.
-        
-        if ($flags=="") {$flags="TP";} # Sensible default
-
-        # Add collections based on the provided collection type flags.
-        $collection_filter="(";
-        if (strpos($flags,"T")!==false) # Include themes
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_FEATURED);
-            }
-    
-     if (strpos($flags,"P")!==false) # Include public collections
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_PUBLIC);
-            }
-        
-        if (strpos($flags,"U")!==false) # Include the user's own collections
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            global $userref;
-            $collection_filter .= sprintf(" (c.`type` = %s AND c.user = '%s')", COLLECTION_TYPE_STANDARD, escape_check($userref));
-            }
-        $collection_filter.=")";
-        
-        # Formulate SQL
-        $sql="SELECT DISTINCT c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count FROM collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref AND cr.collection=c.ref WHERE $sql_filter AND $collection_filter GROUP BY c.ref ORDER BY $order_by ";
-        return $returnsql ? $sql : sql_query($sql);
-        }
-    
+   
     # View Resources With No Downloads
     if (substr($search,0,12)=="!nodownloads") 
         {
@@ -2888,7 +2852,7 @@ function update_search_from_request($search)
 
 function get_search_default_restypes()
 	{
-	global $search_includes_resources, $collection_search_includes_resource_metadata;
+	global $search_includes_resources;
 	$defaultrestypes=array();
 	if($search_includes_resources)
 		{
@@ -2897,8 +2861,6 @@ function get_search_default_restypes()
 	  else
 		{
 		$defaultrestypes[] = "Collections";
-		if($search_includes_user_collections){$defaultrestypes[] = "mycol";}
-		if($search_includes_public_collections){$defaultrestypes[] = "pubcol";}
 		if($search_includes_themes){$defaultrestypes[] = "themes";}
 		}	
 	return $defaultrestypes;
@@ -2906,7 +2868,7 @@ function get_search_default_restypes()
 	
 function get_selectedtypes()
     {
-    global $search_includes_resources, $collection_search_includes_resource_metadata;
+    global $search_includes_resources;
 
 	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
 	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere

@@ -20,7 +20,7 @@ if(!empty(array_diff(array($fc_cat_1, $fc_cat_1_1), $fc_tree)))
     }
 
 $public_col = create_collection($userref, "Test 1400 - Public collection", 0, 0, 0, true);
-$find_public_col = search_public_collections("Test 1400", "name", "ASC", true, false);
+$find_public_col = search_public_collections("Test 1400", "name", "ASC", true);
 $found_public_col = array_column($find_public_col, "ref");
 if(empty($found_public_col))
     {

@@ -1454,8 +1454,6 @@ $simple_search_display_condition=array();
 
 # When searching, also include themes/public collections at the top?
 $search_includes_themes=false;
-$search_includes_public_collections=false;
-$search_includes_user_collections=false;
 $search_includes_resources=true;
 
 # Should the Clear button leave collection searches off by default?
@@ -2895,9 +2893,6 @@ $replace_resource_preserve_default=false;
 
 # Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
 $replace_batch_existing = false;
-
-# When searching collections, return results based on the metadata of the resources inside also
-$collection_search_includes_resource_metadata=false;
 
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
