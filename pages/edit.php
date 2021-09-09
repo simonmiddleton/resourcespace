@@ -2388,12 +2388,13 @@ if ($ref>0 && !$multiple)
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
+  $error_datetime = date('Y-m-d H:i:s');
   ?>
   <script>
   preventautoscroll = true;
   var errorHeading='<?php echo $lang["error"]; ?>';
   
-  var errorBody='<?php echo date("Y-m-d H:i:s")."<br />".implode("<br />",$save_errors); ?>';
+  var errorBody='<?php echo offset_user_local_timezone($error_datetime, 'Y-m-d H:i:s')."<br />".implode("<br />",$save_errors); ?>';
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
