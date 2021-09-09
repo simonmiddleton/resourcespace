@@ -251,10 +251,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 	$search_string = explode('?',$tile["link"]);
 	parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
 	$search = isset($search_string["search"]) ? $search_string["search"] :"";
-	$restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
-	$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
-	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
-	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+
 	$icon = ""; 
 	if(substr($search,0,11)=="!collection")
 		{$icon="cube";}
@@ -285,96 +282,8 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		</p>
 		<?php
 		}
-    ?>
-    <!-- Resource counter -->
-    <p class="no_resources DisplayNone"><?php echo htmlspecialchars($lang['noresourcesfound']); ?></p>
-    <p class="tile_corner_box DisplayNone">
-        <span aria-hidden="true" class="fa fa-clone"></span>
-    </p>
-    <script>
-    jQuery(document).ready(function()
-        {
-        let data = {
-            'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
-            'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
-            'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
-            'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
-            'fetchrows': -1,
-            'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
-            'recent_search_daylimit': '',
-            'getsizes': 'pre',
-        };
-        api('search_get_previews', data, function(response)
-            {
-            let tile_id = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
-            let promoted_image = <?php echo $promoted_image ?: 0; ?>;
-            console.log('API response (total = %s) for %s with promoted image #%s was: %o',
-                response.length,
-                '<?php echo $tile['link']; ?>',
-                promoted_image,
-                response
-            );
-            let promoted_image_resource = response.filter(resource => resource.ref == promoted_image && typeof resource.url_pre !== 'undefined');
-            let preview_resource = promoted_image > 0 && promoted_image_resource[0] !== undefined ? promoted_image_resource[0]
-                        : promoted_image === 0 && response[0] !== undefined ? response[0]
-                        : {};
-            console.debug('promoted_image_resource = %o', promoted_image_resource);
-            console.debug('preview_resource = %o', preview_resource);
 
-            // Tile background - resource preview
-            if(preview_resource.url_pre !== undefined)
-                {
-                let tile_div = jQuery('div#' + tile_id);
-
-                // Fit (adjust) the 'pre' size to the tile size
-                let tile_width = <?php echo $tile_width; ?>;
-                let tile_height = <?php echo $tile_height; ?>;
-                let size = '';
-                if(preview_resource['thumb_width'] * 0.7 >= preview_resource['thumb_height'])
-                    {
-                    let ratio = preview_resource['thumb_height'] / tile_height;
-                    if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_height' is 0
-
-                    let width = preview_resource['thumb_width'] / ratio;
-                    size = width < tile_width ? ' width="100%"' : ' height="100%"';
-                    }
-                else
-                    {
-                    ratio = preview_resource['thumb_width'] / tile_width;
-                    if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_width' is 0
-
-                    let height = preview_resource['thumb_height'] / ratio;
-                    size = height < tile_height ? ' height="100%"' : ' width="100%"';
-                    }
-
-                tile_div.prepend('<img src="' + preview_resource.url_pre + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">');
-                }
-
-
-            // Resource count
-            let tile_corner_box = jQuery('div#' + tile_id + ' p.tile_corner_box');
-            <?php
-            if($tile['resource_count'])
-                {
-                ?>
-                tile_corner_box.append(response.length);
-                tile_corner_box.toggleClass('DisplayNone');
-                <?php
-                }
-            else
-                {
-                ?>
-                if(response.length == 0)
-                    {
-                    jQuery('div#' + tile_id + ' p.no_resources').toggleClass('DisplayNone');
-                    }
-                <?php
-                }
-            ?>
-            });
-        });
-    </script>
-    <?php
+    tltype_srch_generate_js_for_background_and_count($tile, $tile_id, (int) $tile_width, (int) $tile_height, (int) $promoted_image);
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
@@ -421,7 +330,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		<?php
 		}
 
-    tltype_srch_generate_js_for_background_and_count($tile, $tile_id);
+    tltype_srch_generate_js_for_background_and_count($tile, $tile_id, (int) $tile_width, (int) $tile_height, 0);
 	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
