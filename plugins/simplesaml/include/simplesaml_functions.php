@@ -38,22 +38,23 @@ function simplesaml_get_lib_path()
  * @return boolean
  */
 function simplesaml_authenticate()
-	{
-	global $as,$simplesaml_sp;
+    {
+    global $as;
     if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
         return false;
         }
-	if(!isset($as))
-		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
-		}
-	$as->requireAuth();
-	return true;
-	}
-	
+    if(!isset($as))
+        {
+        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+        $spname = get_saml_sp_name();
+        $as = new SimpleSAML\Auth\Simple($spname);
+        }
+    $as->requireAuth();
+    return true;
+    }
+
 /**
  * Get SAML attributes
  *
@@ -61,11 +62,12 @@ function simplesaml_authenticate()
  */
 function simplesaml_getattributes()
 	{
-	global $as,$simplesaml_sp;
+	global $as;
 	if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
+        $spname = get_saml_sp_name();
+		$as = new SimpleSAML\Auth\Simple($spname);
 		}
 	$as->requireAuth();
 	$attributes = $as->getAttributes();
@@ -80,7 +82,7 @@ function simplesaml_getattributes()
  */
 function simplesaml_signout()
 	{
-	global $baseurl, $as, $simplesaml_sp;
+	global $baseurl, $as;
 	if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
@@ -88,8 +90,9 @@ function simplesaml_signout()
         }
 	if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);	
+		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');        
+        $spname = get_saml_sp_name();
+        $as = new SimpleSAML\Auth\Simple($spname);
 		}
 	if($as->isAuthenticated())
 		{
@@ -104,7 +107,7 @@ function simplesaml_signout()
  */
 function simplesaml_is_authenticated()
 	{
-	global $as,$simplesaml_sp,$simplesaml_authenticated;
+	global $as,$simplesaml_authenticated;
 	if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
@@ -118,8 +121,9 @@ function simplesaml_is_authenticated()
 
     if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
+		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');     
+        $spname = get_saml_sp_name();
+        $as = new SimpleSAML\Auth\Simple($spname);
 		}
 	if(isset($as) && $as->isAuthenticated())
 		{
@@ -136,11 +140,12 @@ function simplesaml_getauthdata($value)
         debug("simplesaml: plugin not configured.");
         return false;
         }
-	global $as,$simplesaml_sp;
+	global $as;
 	if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
+		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');       
+        $spname = get_saml_sp_name();
+        $as = new SimpleSAML\Auth\Simple($spname);
 		}
 	$as->requireAuth();
 	$authdata = $as->getAuthData($value);
@@ -317,3 +322,14 @@ function simplesaml_generate_keypair($dn)
         'certificate' => $crtpath
         );
 	}
+
+/**
+ * Get the name of the saml sp to use
+ *
+ * @return string
+ */
+function get_saml_sp_name()
+    {
+    global $simplesaml_rsconfig, $simplesaml_sp;
+    return $simplesaml_rsconfig ?  "resourcespace-sp" : $simplesaml_sp;
+    }
