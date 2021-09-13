@@ -52,6 +52,7 @@ $lang['flickr_no_published']="without suitable sized upload";
 $lang["flickr_publishing_in_progress"]='Please wait while we publish. This might take a while, depending on the total size of your resources.<br /><br />To continue working, you may use the previous window.<br /><br />';
 
 $lang['flickr_theme_publish']="Flickr Theme Publish";
+$lang['flickr_title_field'] = 'Title field';
 $lang["flickr_caption_field"]="Caption field";
 $lang["flickr_keywords_field"]="Keyword field";
 $lang['flickr_prefix_id_title']="Prefix resource id to title";
