@@ -807,7 +807,28 @@ function get_mime_type($path, $ext = null)
     return "application/octet-stream";
     }
 
-
+/**
+ * Convert the permitted resource type extension to MIME type. Used by upload_batch.php
+ *
+ * @param  string $extension    File extension
+ * @return string               MIME type e.g. image/jpeg
+ */
+function allowed_type_mime($allowedtype)
+    {
+    global $mime_types_by_extension;
+    if(strpos($allowedtype,"/") === false)
+        {        
+        // Get extended list of mime types to convert legacy extensions 
+        // to Uppy mime type syntax
+        include_once 'mime_types.php';
+        return $mime_types_by_extension[$allowedtype] ?? $allowedtype;        
+        }
+    else
+        {
+        // already a mime type
+        return $allowedtype;
+        }
+    }
     
 /**
  * Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.

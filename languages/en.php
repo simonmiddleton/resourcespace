@@ -109,8 +109,8 @@ $lang["property-allow_registration_selection"]="Allow registration selection";
 $lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
-$lang["information-allowed_extensions"]="If set, only files with the specified extensions are allowed upon upload to this type, e.g. jpg,gif";
-$lang["property-allowed_extensions"]="Allowed extensions";
+$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
+$lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
 
 # Metadata field properties
@@ -2894,6 +2894,13 @@ $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not 
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
 $lang["error_multiple_preview_tools"] = "Please disable the curent preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
+$lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
+$lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
+$lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
+$lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
+$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %RESOURCES%%";
+$lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
