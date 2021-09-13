@@ -560,6 +560,7 @@ $lang["nextresult"]="Next result";
 $lang["pixels"]="pixels";
 $lang["download"]="Download";
 $lang["preview"]="Preview";
+$lang["previewithsizename"]="%sizename Preview";
 $lang["fullscreenpreview"]="Full screen preview";
 $lang["originalfileoftype"]="Original %EXTENSION File"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION File" -> "Original PDF File"
 $lang["fileoftype"]="? File"; # ? will be replaced, e.g. "MP4 File"
