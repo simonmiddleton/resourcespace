@@ -5920,7 +5920,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 		$o_size=false;
 		}
 		
-	if($o_size!==false && !$forcefromfile){
+	if($o_size!==false && !$forcefromfile && $o_size['file_size'] > 0){
 		
 		$fileinfo[0]=$o_size['file_size'];
 		$fileinfo[1]=$o_size['width'];
