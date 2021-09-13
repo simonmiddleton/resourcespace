@@ -67,3 +67,5 @@ $lang['flickr_nice_progress_min_timeout']="Time between progress pings (ms)";
 
 $lang["flickr_api_key"] = "Flickr API key";
 $lang["flickr_api_secret"] = "Flickr API secret";
+
+$lang['flickr_warn_no_title_access'] = "Publishing not allowed without access to the title field (ID #%id). Please contact an administrator!";
