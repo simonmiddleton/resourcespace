@@ -4731,7 +4731,7 @@ function get_system_status()
             {
             $return['results']['quota_limit'] = [
                 'status' => 'OK',
-                'info' => $percent . '% used - nearly full.',
+                'info' => $percent . '% used.',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent
             ];
             }
