@@ -4512,8 +4512,7 @@ function get_system_status()
         }
     if(count($missing_modules) > 0)
         {
-        $return['results'][] = [
-            'name' => 'required_php_modules',
+        $return['results']['required_php_modules'] = [
             'status' => 'FAIL',
             'info' => 'Missing PHP modules: ' . implode(', ', $missing_modules),
         ];
@@ -4531,8 +4530,7 @@ function get_system_status()
     $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
     if ($check <= 0)
         {
-        $return['results'][] = [
-            'name' => 'database_connection',
+        $return['results']['database_connection'] = [
             'status' => 'FAIL',
             'info' => 'SQL query produced unexpected result',
         ];
@@ -4544,8 +4542,7 @@ function get_system_status()
     // Check write access to filestore
     if(!is_writable($GLOBALS['storagedir']))
         {
-        $return['results'][] = [
-            'name' => 'filestore_writable',
+        $return['results']['filestore_writable'] = [
             'status' => 'FAIL',
             'info' => '$storagedir is not writeable',
         ];
@@ -4558,8 +4555,7 @@ function get_system_status()
     $file = sprintf('%s/write_test_%s.txt', $GLOBALS['storagedir'], $hash);
     if(file_put_contents($file, $hash) === false)
         {
-        $return['results'][] = [
-            'name' => 'create_file_in_filestore',
+        $return['results']['create_file_in_filestore'] = [
             'status' => 'FAIL',
             'info' => 'Unable to write to configured $storagedir. Folder permissions are: ' . fileperms($GLOBALS['storagedir']),
         ];
@@ -4569,8 +4565,7 @@ function get_system_status()
 
     if(!file_exists($file) || !is_readable($file))
         {
-        $return['results'][] = [
-            'name' => 'filestore_file_exists_and_is_readable',
+        $return['results']['filestore_file_exists_and_is_readable'] = [
             'status' => 'FAIL',
             'info' => 'Hash not saved or unreadable in file ' . $file,
         ];
@@ -4588,8 +4583,7 @@ function get_system_status()
             }
         catch (Throwable $t)
             {
-            $return['results'][] = [
-                'name' => 'filestore_file_delete',
+            $return['results']['filestore_file_delete'] = [
                 'status' => 'WARNING',
                 'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
             ];
@@ -4600,8 +4594,7 @@ function get_system_status()
         }
     if($check !== $hash)
         {
-        $return['results'][] = [
-            'name' => 'filestore_file_check_hash',
+        $return['results']['filestore_file_check_hash'] = [
             'status' => 'FAIL',
             'info' => sprintf('Test write to disk returned a different string ("%s" vs "%s")', $hash, $check),
         ];
@@ -4617,8 +4610,7 @@ function get_system_status()
         $output = file_get_contents($GLOBALS['baseurl'] . '/filestore');
         if(strpos($output, 'Index of') !== false)
             {
-            $return['results'][] = [
-                'name' => 'filestore_indexed',
+            $return['results']['filestore_indexed'] = [
                 'status' => 'FAIL',
                 'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
             ];
@@ -4640,8 +4632,7 @@ function get_system_status()
         $mysql_log_dir = dirname($mysql_log_location);
         if(!is_writeable($mysql_log_dir) || (file_exists($mysql_log_location) && !is_writeable($mysql_log_location)))
             {
-            $return['results'][] = [
-                'name' => 'mysql_log_location',
+            $return['results']['mysql_log_location'] = [
                 'status' => 'FAIL',
                 'info' => 'Invalid $mysql_log_location specified in config file',
             ];
@@ -4659,8 +4650,7 @@ function get_system_status()
         $debug_log = isset($GLOBALS['debug_log']) && $GLOBALS['debug_log'];
         $debug_log_location_test_status = ($debug_log ? 'FAIL' : 'WARNING');
 
-        $return['results'][] = [
-            'name' => 'debug_log_location',
+        $return['results']['debug_log_location'] = [
             'status' => $debug_log_location_test_status,
             'info' => 'Invalid $debug_log_location specified in config file',
         ];
@@ -4681,8 +4671,7 @@ function get_system_status()
     $diff_days = (time() - $last_cron) / (60 * 60 * 24);
     if($diff_days > 5)
         {
-        $return['results'][] = [
-            'name' => 'cron_process',
+        $return['results']['cron_process'] = [
             'status' => 'FAIL',
             'info' => 'Cron was executed ' . round($diff_days, 0) . ' days ago.',
         ];
@@ -4697,8 +4686,7 @@ function get_system_status()
     $calc = $free / $avail;
     if($calc < 0.05)
         {
-        $return['results'][] = [
-            'name' => 'free_disk_space',
+        $return['results']['free_disk_space'] = [
             'status' => 'WARNING',
             'info' => 'Less than 5% disk space free.',
         ];
@@ -4706,8 +4694,7 @@ function get_system_status()
         }
     else if($calc < 0.01)
         {
-        $return['results'][] = [
-            'name' => 'free_disk_space',
+        $return['results']['free_disk_space'] = [
             'status' => 'FAIL',
             'info' => 'Less than 1% disk space free.',
         ];
@@ -4724,21 +4711,29 @@ function get_system_status()
 
         if($percent >= 95 && $percent <= 100)
             {
-            $return['results'][] = [
-                'name' => 'quota_limit',
+            $return['results']['quota_limit'] = [
                 'status' => 'WARNING',
                 'info' => $percent . '% used - nearly full.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
             ];
             ++$warn_tests;
             }
         else if($percent > 100)
             {
-            $return['results'][] = [
-                'name' => 'quota_limit',
+            $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
                 'info' => $percent . '% used - over quota.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
             ];
             return $return;
+            }
+        else
+            {
+            $return['results']['quota_limit'] = [
+                'status' => 'OK',
+                'info' => $percent . '% used - nearly full.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
+            ];
             }
         }
 
@@ -4747,8 +4742,7 @@ function get_system_status()
     $extra_fail_checks = hook('extra_fail_checks');
     if($extra_fail_checks !== false && is_array($extra_fail_checks))
         {
-        $return['results'][] = [
-            'name' => $extra_fail_checks['name'],
+        $return['results'][$extra_fail_checks['name']] = [
             'status' => 'FAIL',
             'info' => $extra_fail_checks['info'],
         ];
@@ -4758,8 +4752,7 @@ function get_system_status()
 
 
     // Return the version number
-    $return['results'][] = [
-        'name' => 'version',
+    $return['results']['version'] = [
         'status' => 'OK',
         'info' => $GLOBALS['productversion'],
     ];
@@ -4792,26 +4785,23 @@ function get_system_status()
         }
     if($svn_data !== '')
         {
-        $return['results'][] = [
-            'name' => 'svn',
+        $return['results']['svn'] = [
             'status' => 'OK',
             'info' => $svn_data];
         }
 
 
     // Return a list with names of active plugins
-    $return['results'][] = [
-        'name' => 'plugins',
+    $return['results']['plugins'] = [
         'status' => 'OK',
         'info' => implode(', ', array_column(get_active_plugins(), 'name')),
     ];
 
 
     // Return active user count (last 7 days)
-    $return['results'][] = [
-        'name' => 'active_user_count',
+    $return['results']['recent_user_count'] = [
         'status' => 'OK',
-        'info' => get_recent_users(7) . ' recent users',
+        'info' => get_recent_users(7)
     ];
 
 
