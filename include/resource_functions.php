@@ -6088,26 +6088,24 @@ function resource_type_config_override($resource_type, $only_onchange=true)
     # By default (only_onchange) only execute the override if the passed resourcetype is different from the previous
     global $resource_type_config_override_last,$resource_type_config_override_snapshot, $ffmpeg_alternatives;
 
+    $config_override_required=false;
     # If the overrides are only to be executed on change of resource type
     if ($only_onchange) 
         {
         # If the resource type has changed or if this is the first resource....
         if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
             {
-            # Look for config and execute.
-            $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
-            if ($config_options!="")
-                {
-                # Switch to global context and execute.
-                extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-                eval($config_options);
-                debug_track_vars('end@resource_type_config_override', get_defined_vars());
-                }
+            $config_override_required=true;
             $resource_type_config_override_last=$resource_type;
             }
         }
     else
         # The overrides are to be executed for every resource
+        {
+        $config_override_required=true;
+        }
+        
+    if ($config_override_required)
         {
         # Look for config and execute.
         $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
