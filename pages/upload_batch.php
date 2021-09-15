@@ -1,33 +1,34 @@
 <?php
-include "../include/db.php";
 
+use Predis\Protocol\Text\Handler\StatusResponse;
+
+include "../include/db.php";
 $tusupload = false;
 $uniqueid = isset($_COOKIE["user"]) ? $_COOKIE["user"] : get_rs_session_id(false);
 // Process only if file upload complete
 $processupload = getval("processupload","") != "";
-
 if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     {
     // This code handles the actual TUS file upload from Uppy. Once the file is on the system RS takes over
+    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
+    \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
+    $server   = new \TusPhp\Tus\Server('file');
     if(!$uniqueid)
         {
         // Should already have a user or session cookie from a non-TUS call or can't upload
-        // TODO Send correct TUS response
-        exit("TUS ERROR - NO RS USER OR SESSION");
+        http_response_code(403);
+        exit($lang["error"] . ". " . $lang["error-permissiondenied"]);
         }
     $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . $uniqueid; 
+    $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
         {     		
         mkdir($targetDir,0777,true);
         }
-    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
-    \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
-    $server   = new \TusPhp\Tus\Server('file');
-    $server -> setUploadDir($targetDir);
     $response = $server->serve();
     $response->send();
-    exit(0); // Exit from the current PHP process, as this is TUS no further processing should be performed.
+    exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
     }
 
 // The collection_add parameter can have the following values:-
@@ -180,7 +181,6 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         // Clear out review collection before new uploads are added to prevent inadvertent edits of old uploads
         remove_all_resources_from_collection(0-$userref);
         }
-    $redirecturl_extra_params = array();
 
 	# Set the redirect after upload to the start of the edit process
     if($alternative != "") 
@@ -189,8 +189,7 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
             "{$baseurl}/pages/view.php",
             array(
                 'ref' => $alternative
-            ),
-            $redirecturl_extra_params);	
+            ));	
         }
     else
         {
@@ -198,8 +197,7 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
             "{$baseurl}/pages/edit.php",
             array(
                 'upload_review_mode' => true
-            ),
-            $redirecturl_extra_params);	
+            ));	
         }
 
 	# Clear the user template
@@ -261,6 +259,8 @@ $uploadparams= array(
     'status'                                 => $setarchivestate,
     'k'                                      => $k,
 );
+
+$searchparams = get_search_params();
 
 global $merge_filename_with_title, $merge_filename_with_title_default;
 if($merge_filename_with_title)
@@ -386,11 +386,14 @@ if($send_collection_to_admin && $archive == -1 && getvalescaped('ajax' , 'false'
 
     // Get the user (or username) of the contributor:
     $user = get_user($userref);
-    if(isset($user) && trim($user['fullname']) != '') {
+    if(isset($user) && trim($user['fullname']) != '')
+        {
         $user = $user['fullname'];
-    } else {
+        }
+    else
+        {
         $user = $user['username'];
-    }
+        }
 
     // Get details about the collection:
     $collection = get_collection($collection_id);
@@ -495,16 +498,16 @@ if ($processupload)
     if (in_array($extension,$banned_extensions))
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
+        $result["status"] = true;
         $result["message"] = str_replace("%%FILETYPE%%",$origuploadedfilename,$lang["error_upload_invalid_file"]);
         $result["error"] = 105;
         die(json_encode($result));
         }
 
 	hook('additional_plupload_checks');
-	// Clean the filename for security reasons
+	// Clean the filename
 	if($replace){$origuploadedfilename=escape_check($upfilename);}
-	$upfilename = preg_replace('/[^\w\.-]+/', '_', $upfilename);	
-
+	//$upfilename = preg_replace('/[^\w\.-]+/', '_', $upfilename);
 	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
 
     if($allowed_extensions != "")
@@ -517,7 +520,8 @@ if ($processupload)
         if(!in_array($extension,$allowedarr) || !in_array($filemime,$allowedmime))
             {
             debug("upload_batch - invalid file received from user " . $username . ",  filename " . $upfilename . ", mime type: " . $filemime);
-            $result["message"] = str_replace("%%FILETYPE%%",$origuploadedfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
+            $result["status"] = false;
+            $result["message"] = str_replace("%%FILETYPE%%", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
             $result["error"] = 105;
             die(json_encode($result));
             }            
@@ -528,6 +532,7 @@ if ($processupload)
     if(count($duplicates)>0)
         {
         debug("upload_batch ERROR- duplicate file matches resources" . implode(",",$duplicates));
+        $result["status"] = false;
         $result["message"] = str_replace("%%RESOURCES%%",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
         $result["error"] = 108;
         die(json_encode($result));
@@ -541,6 +546,7 @@ if ($processupload)
             $resource_data = get_resource_data($alternative);
             if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
                 {
+                $result["status"] = false;
                 $result["message"] = get_resource_lock_message($resource_data["lock_user"]);
                 $result["error"] = 111;
                 $result["id"] = htmlspecialchars($ref);
@@ -559,6 +565,7 @@ if ($processupload)
 
                 if ($result===false)
                     {
+                    $result["status"] = false;
                     $result["message"] = $lang["error_upload_file_move_failed"];
                     $result["error"] = 104;
                     die(json_encode($result));
@@ -590,6 +597,7 @@ if ($processupload)
                     update_disk_usage($alternative);
                     hook('upload_alternative_extra', '', array($path));
 
+                    $result["status"] = true;
                     $result["message"] = $lang["alternative_file_created"];
                     $result["error"] = 111;
                     $result["id"] = $alternative;  
@@ -619,7 +627,8 @@ if ($processupload)
 
             # check that $ref is not false - possible return value with create_resource()
             if(!$ref)
-                {                
+                {
+                $result["status"] = false;
                 $result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
                 $result["error"] = 125;
                 $result["id"] = htmlspecialchars($ref);
@@ -737,9 +746,9 @@ if ($processupload)
                 hook('upload_original_extra', '', array($ref));
                     
                 $wait = hook('afterpluploadfile', '', array($ref, $extension));
-                
-                //$result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
-                $result["error"] = 0;
+                                
+                $result["status"] = true;
+                $result["message"] = $lang["created"];
                 $result["id"] = htmlspecialchars($ref);
                 $result["collection"] = htmlspecialchars($collection_add);          
                 }
@@ -753,12 +762,14 @@ if ($processupload)
             $success = replace_resource_file($replace_resource,$upfilepath,$no_exif,$autorotate,$keep_original);
             if (!$success)
                 {
+                $result["status"] = false;
                 $result["message"] = $lang["alternative_file_created"];
                 $result["error"] = 109;
                 $result["id"] = $replace_resource;
                 }
             else
                 {
+                $result["status"] = true;
                 $result["message"] = $lang["replacefile"];
                 $result["error"] = 0;
                 $result["id"] = $replace_resource;
@@ -794,13 +805,14 @@ if ($processupload)
                     $success = replace_resource_file($target_resource[0],$upfilepath,$no_exif,$autorotate,$keep_original);
                     if (!$success)
                         {
+                        $result["status"] = false;
                         $result["message"] = $lang["error_upload_replace_file_fail"];
                         $result["error"] = 109;
                         $result["id"] = $target_resource[0];
                         }
                     else
                         {
-                        unlink($upfilepath);
+                        $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
                         $result["id"] = $target_resource[0];
@@ -809,7 +821,7 @@ if ($processupload)
                 elseif(count($target_resource)==0)
                     {
                     // No resource found with the same filename
-                    unlink($upfilepath);
+                    $result["status"] = false;
                     $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                     $result["error"] = 106;
                     }
@@ -825,14 +837,15 @@ if ($processupload)
                             $success = replace_resource_file($replaced,$upfilepath,$no_exif,$autorotate,$keep_original);
                             if (!$success)
                                 {
+                                $result["status"] = false;
                                 $result["message"] = $lang["error_upload_replace_file_fail"];
                                 $result["error"] = 109;
                                 $result["id"] = $replaced;
                                 }                                
                             $status = upload_file($replaced, ('yes' == $no_exif && '' == getval('exif_override', '')), false, $autorotate, $upfilepath);
                             }
-                        unlink($upfilepath);
 
+                        $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
                         $result["id"] = $resourcelist;
@@ -840,8 +853,7 @@ if ($processupload)
                     else
                         {
                         // Multiple resources found with the same filename
-                        unlink($upfilepath);
-
+                        $result["status"] = false;
                         $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_multiple_matching_files"]);
                         $result["error"] = 107;
                         $result["id"] = $resourcelist;
@@ -873,13 +885,15 @@ if ($processupload)
                         
                         $success = replace_resource_file($ref,$upfilepath,$no_exif,$autorotate,$keep_original);
                         if (!$success)
-                            {                            
+                            {
+                            $result["status"] = false;          
                             $result["message"] = $lang["error_upload_replace_file_fail"];
                             $result["error"] = 109;
                             $result["id"] = $ref;
                             }
                         else
-                            {                        
+                            {      
+                            $result["status"] = true;                   
                             $result["message"] = $lang["replacefile"];
                             $result["error"] = 0;
                             $result["id"] = $ref;
@@ -890,7 +904,7 @@ if ($processupload)
                         // No resource found with the same filename
                         debug("batch_replace upload: No valid resource id for filename " . $origuploadedfilename);
                         header('Content-Type: application/json');
-                        unlink($upfilepath);
+                        $result["status"] = false; 
                         $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                         $result["error"] = 106;
                         }
@@ -898,7 +912,13 @@ if ($processupload)
                 }
             }
         }
+    // Remove file now it has been handled
+    if(file_exists($upfilepath))
+        {
+        unlink($upfilepath);
+        }
     // Return JSON-RPC response
+    sleep(10);
     exit(json_encode($result));
     }
 elseif ($upload_no_file && getval("createblank","")!="")
@@ -916,6 +936,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
+    // TODO Use generateurl
     redirect($baseurl_short."pages/edit.php?refreshcollectionframe=true&ref=" . $ref."&search=".urlencode($search)."&offset=".$offset."&order_by=".$order_by."&sort=".$sort."&archive=".$archive);
 	}
 
@@ -927,11 +948,14 @@ include "../include/header.php";
 
 
 <script>
-
 <?php
-echo "show_upload_log=" . (($show_upload_log)?"true;":"false;");
+echo "show_upload_log=" . (($show_upload_log)?"true;":"false;") . "\n";
 
+//exit(print_r($_SERVER));
+$pageurl = $baseurl  . $_SERVER["REQUEST_URI"];
 ?>
+
+
 var resource_keys=[];
 var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
@@ -947,14 +971,22 @@ if(typeof newcol != 'undefined')
 var resource_ids_for_alternatives = [];
        
         
-jQuery(document).ready(function () {            
+jQuery(document).ready(function () {
+
+    // If page URL has not updated, set it so that we can resume in event of crash
+    if(window.location.href != '<?php echo $pageurl ?>' && typeof(top.history.pushState)=='function')
+        {
+        console.log("Updating url");        
+        top.history.pushState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname, '<?php echo str_replace("&ajax=true","",$pageurl) ?>');
+        }
+
     registerCollapsibleSections();
 
     totalProgress = 0;
+    rscompleted = 0;
     var uppy = Uppy.Core({
         debug: true,
         autoProceed: false,
-
 
         restrictions: {
         <?php
@@ -1016,7 +1048,6 @@ jQuery(document).ready(function () {
         width: '100%',
         height: 450,
         thumbnailWidth: 100,
-        //defaultTabIcon: defaultTabIcon,
         showLinkToFileUploadResult: false,
         showProgressDetails: true,
         hideUploadButton: false,
@@ -1033,14 +1064,13 @@ jQuery(document).ready(function () {
         disablePageScrollWhenModalOpen: true,
         animateOpenClose: true,
         fileManagerSelectionType: 'files',
-        proudlyDisplayPoweredByUppy: false,
+        proudlyDisplayPoweredByUppy: true,
         showSelectedFiles: true,
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
         theme: 'light',
         //companionUrl: 'https://dev.resourcespace.com/uppy',
         });
-
     
     uppy.use(Tus, {
         endpoint: '<?php echo $baseurl ?>/pages/upload_batch.php',
@@ -1048,8 +1078,14 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
+        limit: 5,
+        removeFingerprintOnSuccess: true,
+        <?php
+        if(trim($upload_chunk_size) != "")
+            {
+            echo "chunkSize: " . str_ireplace(array("kb","mb","gb"),array("000","000000","000000000"),$upload_chunk_size) . ",\n";
+            }?>
         });
-
 
     uppy.on('upload-success', (file, response) => {
         console.log(file.name, response);
@@ -1069,12 +1105,16 @@ jQuery(document).ready(function () {
                     echo $uploadparam . " : '" . urlencode($value) . "',\n";
                     }?>
                     },
-            success: function(data,type){
+            success: function(data,type,xhr){
                 // Process the response
-                uploadresponse = JSON.parse(data);
-                console.log(uploadresponse);
+                console.log(xhr);
+                //if (xhr.hasOwnProperty('responseJSON'))
+                  //  {
+                    uploadresponse = JSON.parse(data);        
+                    console.debug(uploadresponse);            
+                    //}
                 
-                if (typeof uploadresponse.error != 'undefined' && uploadresponse.error != 0)
+                if (uploadresponse.status != true)
                     {
                     error = uploadresponse.error;
                     //uploaderrormessage = uploadresponse.error + " " + uploadresponse.message;
@@ -1082,11 +1122,11 @@ jQuery(document).ready(function () {
                         {
                         styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourcefound"]?>');   
                         message = '<?php echo $lang['error-duplicatesfound']?>';
-                        jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
-                        if(!uploader.settings.logopened)
+                        jQuery("#upload_log").append("\r\n" + file.name + "&nbsp;" + uploadresponse.message);
+                        if(!logopened)
                             {
-                                jQuery("#UploadLogSectionHead").click();
-                                uploader.settings.logopened = true;
+                            jQuery("#UploadLogSectionHead").click();
+                            logopened = true;
                             }
                         }
                     else if(uploadresponse.error==109)
@@ -1094,10 +1134,10 @@ jQuery(document).ready(function () {
                         message = uploadresponse.message +  ' ' + uploadresponse.id;
                         styledalert('<?php echo $lang["error"] ?> ' + uploadresponse.error, message);   
                         jQuery("#upload_log").append("\r\n" + message);
-                        if(!uploader.settings.logopened)
+                        if(!logopened)
                             {
                             jQuery("#UploadLogSectionHead").click();
-                            uploader.settings.logopened = true;
+                            logopened = true;
                             }
                         }
                     else
@@ -1113,9 +1153,11 @@ jQuery(document).ready(function () {
                     jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                     if(resource_keys===processed_resource_keys){resource_keys=[];}
                     resource_keys.push(uploadresponse.id.replace( /^\D+/g, ''));
-
-                    if(true)
+console.log("curindex " + curindex);
+console.log("count " + count);
+                    if(rscompleted == count-1)
                         {
+                        console.log("Upload completed");
                         <?php
                         // Upload has completed, perform post upload actions
                         if ($redirecturl != "")
@@ -1174,10 +1216,35 @@ jQuery(document).ready(function () {
                         }
 
                     }
+                rscompleted++;
                 },
+            error: function(xhr, status, error)
+                {
+                console.log("Error:  " + error);
+                jQuery("#upload_log").append("\r\n" + file.name + ": " + error);
+                styledalert('<?php echo $lang["error"]?> ', error);                
+                rscompleted++;                
+                }
             }); // End of post upload AJAX
     
         // End of file uploaded code
+        });
+
+    uppy.on('upload-error', (file, error, response) => {
+        fullerror = error;
+        errmessage = error.message;
+        if(errmessage.indexOf('response text') !== -1)
+            {
+            errtxt = errmessage.substring(errmessage.indexOf("response text")+15,errmessage.indexOf(', request id'));
+            }
+        else
+            {
+            errtxt = '<?php echo $lang["error"]?>';
+            }
+        
+        console.log("Error:  " + errtxt);
+        jQuery("#upload_log").append("\r\n" + file.name + ": " + errtxt);
+        styledalert('<?php echo $lang["error"]?> ', errtxt);
         });
 
     }); // End of Uppy JS code
@@ -1195,8 +1262,6 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
 </script>
 		
 <div class="BasicsBox" >
-
-
         
  <?php if ($overquota) 
    {
@@ -1204,28 +1269,45 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
    include "../include/footer.php";
    exit();
    }
-   
-   
-   
-   
-   
 
+    if  ($alternative!="")
+        {
+        $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
+        ?>
+        <p>
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
+        </p><?php 
+        }        
+    elseif ($replace_resource!="")
+        {
+        $editurl = generateURL($baseurl_short . 'pages/edit.php',$searchparams,array("ref"=>$replace_resource));
+        $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
+        ?>
+        <p>
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a>
+        <br />
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+        </p>
+        <?php
+        }
 
- if  ($alternative!=""){?><p>
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($alternative)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a></p><?php } ?>
-
-<?php if ($replace_resource!=""){?><p> <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($replace_resource)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($replace_resource) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p><?php } ?>
-
-<?php if ($alternative!=""){$resource=get_resource_data($alternative);
-	if ($alternative_file_resource_preview){ 
-		$imgpath=get_resource_path($resource['ref'],true,"col",false);
-		if (file_exists($imgpath)){ ?><img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/><?php }
-	}
-	if ($alternative_file_resource_title){ 
-		echo "<h2>".$resource['field'.$view_title_field]."</h2><br/>";
-	}
-}
+    if ($alternative!="")
+        {
+        $resource=get_resource_data($alternative);
+	    if ($alternative_file_resource_preview)
+            { 
+		    $imgpath=get_resource_path($resource['ref'],true,"col",false);
+		    if (file_exists($imgpath))
+                {?>
+                <img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
+                <?php
+                }
+	        }
+	    if ($alternative_file_resource_title)
+            { 
+		    echo "<h2>" . htmlspecialchars($resource['field'.$view_title_field]) . "</h2><br/>";
+	        }
+        }
 
 # Define the titles:
 if ($replace!="") 

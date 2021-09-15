@@ -2683,8 +2683,10 @@ function check_duplicate_checksum($filepath,$replace_resource){
         else
             {
             $checksum=md5_file($filepath);
+            debug("BANG" . $checksum);
             }
         $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+        debug("BANG select ref value from resource where file_checksum='$checksum'");
         if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
             {
             return $duplicates;                       

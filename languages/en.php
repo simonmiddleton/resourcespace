@@ -2898,7 +2898,7 @@ $lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
 $lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
 $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
 $lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
-$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %RESOURCES%%";
+$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
 
 

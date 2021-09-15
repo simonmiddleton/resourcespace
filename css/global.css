@@ -797,9 +797,32 @@ div.autocomplete ul li {
 .uppy-StatusBar-actionBtn,
 .uppy-Dashboard-browse,
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
-.uppy-Dashboard-Item-previewInnerWrap {
+.uppy-DashboardContent-back,
+.uppy-DashboardContent-addMore
+{
     background-color: #1988d7 !important;
     color: #fff;
+}
+
+.uppy-DashboardContent-addMore svg{
+    display:none;
+}
+
+.uppy-Dashboard-Item-action--remove, .uppy-Dashboard-Item-previewInnerWrap {
+    background-color: #f2f2f2 !important;
+}
+
+.uppy-size--xl .uppy-Dashboard-Item {
+    width: calc(10% - 30px);
+    height: 125px;
+}
+
+.uppy-size--xl .uppy-Dashboard-Item-preview {
+    height: 60px;
+}
+
+.uppy-Dashboard-Item-preview img.uppy-Dashboard-Item-previewImg {
+    object-fit: contain;
 }
 
 .uppy-StatusBar {
