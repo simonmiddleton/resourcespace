@@ -144,7 +144,8 @@ if ($upload_review_mode)
                 "sort"=>"DESC",
                 "archive"=>$defaultarchivestate,
                 "refreshcollectionframe"=>"true",
-                "resetlockedfields"=>"true"
+                "resetlockedfields"=>"true",
+                "collection_add"=>$collection_add
                 );
                 
             if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
@@ -463,6 +464,7 @@ $urlparams= array(
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
     'collection'        => $collection,
+    "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
 );
@@ -665,7 +667,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     "sort"=>"DESC",
                                     "archive"=>$setarchivestate,
                                     "refreshcollectionframe"=>"true",
-                                    "resetlockedfields"=>"true"
+                                    "resetlockedfields"=>"true",
+                                    "collection_add"=>$collection_add
                                     );
                                 if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
                                     {
