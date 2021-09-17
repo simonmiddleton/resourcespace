@@ -26,7 +26,7 @@ if ($on_upload || (isset($ref) && $ref<0))
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"
-                    onchange="CentralSpacePost(document.getElementById('UploadPluploadForm'), true);">
+                    onchange="CentralSpacePost(document.getElementById('UploadForm'), true);">
                 <option value='' selected><?php echo $lang["select"]; ?></option>
             <?php
             $types                = get_resource_types();
@@ -347,11 +347,9 @@ if($on_upload)
     <script>
     // Add code to change URL if options change
     
-    jQuery(document).ready(function() {
-        
+    jQuery(document).ready(function() {        
         jQuery('#relateonupload').on('change', function ()
             {
-            cururl = plup.object.getOption('url');
             if(jQuery(this).is(':checked'))
                 {
                 relate_on_upload = true;

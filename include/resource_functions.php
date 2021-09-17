@@ -7765,7 +7765,6 @@ function get_hidden_indexed_fields()
         }
     }
 
-
 function get_OR_fields()
     {
     # Returns a list of fields that should retain semicolon separation of keywords in a search string
@@ -8891,4 +8890,26 @@ function get_video_duration(string $file_path)
             {
             return 0;
             }
+    }
+
+/**
+ * Relate all resources in the passed array with each other
+ *
+ * @param  array $related Array of resource IDs
+ * @return boolean
+ */
+function relate_all_resources(array $related = [])
+    {
+    $error = false;
+    array_filter($related,"is_int_loose");
+    foreach($related as $ref)
+        {
+        $other_refs = array_diff($related,array($ref));
+        $success = update_related_resource($ref,$other_refs,true);
+        if(!$success)
+            {
+            $error = true;
+            }
+        }
+    return !$error;
     }

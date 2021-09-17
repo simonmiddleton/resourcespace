@@ -127,7 +127,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == $chunks-1)))
+if($collection_add == "new" && $processupload)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -312,12 +312,10 @@ $uploadurl_extra_params = array();
 
 if($upload_here)
     {
-    $uploadurl_extra_params = array(
-        'upload_here' => $upload_here,
-        'search' => $search,
-        'resource_type' => $resource_type,
-        'status' => $setarchivestate,
-        );
+    $uploadparams['upload_here'] = $upload_here;
+    $uploadparams['search'] = $search;
+    $uploadparams['resource_type'] = $resource_type;
+    $uploadparams['status'] = $setarchivestate;
     }
 
 $uploadurl = generateURL("{$baseurl}/pages/upload_batch.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
@@ -625,9 +623,11 @@ if ($processupload)
                 $ref = create_resource($resource_type, $setarchivestate);
                 }
 
+                debug("BANG A");
             # check that $ref is not false - possible return value with create_resource()
             if(!$ref)
                 {
+                    debug("BANG B");
                 $result["status"] = false;
                 $result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
                 $result["error"] = 125;
@@ -636,11 +636,16 @@ if ($processupload)
                 }
             else
                 {
+                    debug("BANG C " . ($upload_here ? "TRUE" : "FALSE"));
+                    debug("BANG E " . ($upload_then_edit ? "TRUE" : "FALSE"));
                 // Check valid requested state by calling function that checks permissions
                 update_archive_status($ref, $setarchivestate);
                 
                 if($upload_then_edit && $upload_here)
                     {
+                    $search = urldecode($search);
+                    debug("BANG D " . $search);
+                    
                     if(!empty(get_upload_here_selected_nodes($search, array())))
                         {
                         add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
@@ -983,6 +988,7 @@ jQuery(document).ready(function () {
     registerCollapsibleSections();
 
     totalProgress = 0;
+    curindex = 0;
     rscompleted = 0;
     var uppy = Uppy.Core({
         debug: true,
@@ -1013,7 +1019,7 @@ jQuery(document).ready(function () {
 
         onBeforeUpload: (files) => {
             count = Object.keys(files).length;
-            curindex = totalProgress+1;
+            curindex++;
             console.log('Started uploading file ' + curindex + ' out of ' + count + ' files');
             uppy.setMeta({
                 <?php
@@ -1089,22 +1095,44 @@ jQuery(document).ready(function () {
 
     uppy.on('upload-success', (file, response) => {
         console.log(file.name, response);
+        totalProgress++;
         //count = Object.keys(files).length;
         //console.log('Completed uploading file ' + curindex + ' out of ' + count + ' files');
         // Process response and inform RS that upload has completed
+        if(totalProgress == count-1)
+            {
+            jQuery(".uppy-DashboardContent-title").html("Processing uploaded resources");
+            CentralSpaceShowLoading();
+            }
+
+        postdata = {
+            ajax: 'true',
+            processupload: "true",
+            file_name: file.name,
+            <?php echo generateAjaxToken("upload_batch") . ",\n";
+            foreach($uploadparams as $uploadparam=>$value)
+                {
+                echo $uploadparam . " : '" . urlencode($value) . "',\n";
+                }?>
+            };    
+        
+        // Add any extra data required
+        if(typeof newcol == 'undefined')
+            {
+            newcol = jQuery('#collection_add').val();
+            }
+        console.log("newcol: " + newcol);
+        entercolname = jQuery('#entercolname').val();
+        console.log("entercolname: " + entercolname);
+
+        // Add the updated values 
+        postdata['collection_add'] = newcol;
+        postdata['entercolname'] = entercolname;
+
         jQuery.ajax({
             type: 'POST',
             url: '<?php echo $baseurl_short; ?>pages/upload_batch.php',
-            data: {
-                ajax: 'true',
-                processupload: "true",
-                file_name: file.name,
-                <?php echo generateAjaxToken("upload_batch") . ",\n";
-                foreach($uploadparams as $uploadparam=>$value)
-                    {
-                    echo $uploadparam . " : '" . urlencode($value) . "',\n";
-                    }?>
-                    },
+            data: postdata,
             success: function(data,type,xhr){
                 // Process the response
                 console.log(xhr);
@@ -1153,13 +1181,33 @@ jQuery(document).ready(function () {
                     jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                     if(resource_keys===processed_resource_keys){resource_keys=[];}
                     resource_keys.push(uploadresponse.id.replace( /^\D+/g, ''));
+                    if (typeof uploadresponse.collection != 'undefined' && uploadresponse.collection > 0)
+                        {
+                        newcol = uploadresponse.collection;                                            
+                        }
 console.log("curindex " + curindex);
 console.log("count " + count);
+console.log("rscompleted " + rscompleted);
                     if(rscompleted == count-1)
                         {
-                        console.log("Upload completed");
-                        <?php
                         // Upload has completed, perform post upload actions
+                        console.log("Upload completed");
+                        CentralSpaceShowLoading();
+
+                         // if relateonupload input field checked, or relate_on_upload == true
+                         if(relate_on_upload || jQuery("#relateonupload").is(":checked"))
+                            {
+                            console.log('Relating all resources');
+                            postdata = {
+                                'resources': resource_keys,
+                                }
+
+                            api('relate_all_resources',{'related': resource_keys}, function(response)
+                                {
+                                console.debug('Completed relating uploaded resources');
+                                });
+                            }                            
+                        <?php
                         if ($redirecturl != "")
                             {?>
                             CentralSpaceLoad('<?php echo $redirecturl ?>',true);
@@ -1206,11 +1254,7 @@ console.log("count " + count);
                             }
                         else
                             {?>               
-                            if (typeof uploadresponse.collection != 'undefined' && uploadresponse.collection > 0)
-                                {
-                                newcol = uploadresponse.collection;                                            
-                                CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
-                                }
+                            CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
                             <?php
                             }?>
                         }
@@ -1374,7 +1418,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     ?>
     <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
-    <form id="UploadPluploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
+    <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
     generateFormToken("upload_batch");
     

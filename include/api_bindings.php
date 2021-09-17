@@ -942,3 +942,18 @@ function api_get_profile_image($user)
     {
     return get_profile_image($user);
     }
+
+function api_relate_all_resources($related)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    if(!is_array($related))
+        {
+        $related = explode(",",$related);
+        }
+    return relate_all_resources($related);
+    }
+
