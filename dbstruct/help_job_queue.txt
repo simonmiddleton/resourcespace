@@ -8,3 +8,4 @@ status,int(11),Job status code e.g. STATUS_COMPLETE. See definitions.php
 success_text,varchar(250),Text to include in message if job completes successfully
 failure_text,varchar(250),Text to include in message if job fails
 job_code,varchar(100),Unique hash. Used to prevent duplicate jobs
+priority,tinyint(1),
