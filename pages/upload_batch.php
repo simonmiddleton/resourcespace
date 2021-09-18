@@ -1018,6 +1018,24 @@ jQuery(document).ready(function () {
             },
 
         onBeforeUpload: (files) => {
+
+            // Check if a new collection is required
+            if(typeof newcol == 'undefined')
+                {
+                newcol = jQuery('#collection_add').val();
+                if(newcol == "new")
+                    {
+                    entercolname = jQuery('#entercolname').val();
+                    console.debug("api create_collection(" + entercolname + ")");
+                    api('create_collection',{'name': entercolname}, function(response)
+                        {
+                        newcol = parseInt(response);
+                        console.debug('Created collection #' + newcol);
+                        });
+                    }
+                }
+                
+            // Now upload the files
             count = Object.keys(files).length;
             curindex++;
             console.log('Started uploading file ' + curindex + ' out of ' + count + ' files');
