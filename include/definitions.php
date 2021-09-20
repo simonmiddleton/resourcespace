@@ -447,3 +447,14 @@ $MARKER_COLORS = array(
 
 // Reports
 const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';
+
+// SYSTEM - GENERAL
+const SYSTEM_REQUIRED_PHP_MODULES = [
+    'curl' => 'curl_init',
+    'gd' => 'imagecrop',
+    'xml' => 'xml_parser_create',
+    'mbstring' => 'mb_strtoupper',
+    'intl' => 'locale_get_default',
+    'json' => 'json_decode',
+    'zip' => 'zip_open',
+];

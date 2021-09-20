@@ -381,6 +381,18 @@ function is_plugin_activated($name)
         }
     }
 
+
+/**
+ * Get active plugins
+ * 
+ * @return array
+ */
+function get_active_plugins()
+    {
+    return sql_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', 'plugins');
+    }
+
+
 /**
  * Handle the POST for an upload of a plugin configuration (.rsc) file
  *

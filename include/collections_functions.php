@@ -429,29 +429,33 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
  * @param  mixed $collection
  * @return boolean
  */
-function collection_add_resources($collection,$resources='',$search='')
+function collection_add_resources($collection,$resources='',$search='',$selected=false)
     {
+    global $USER_SELECTION_COLLECTION,$lang;
     if(     (string)(int)$collection != (string)$collection 
         ||  ($resources == '' && $search == '')
         ||  (!collection_writeable($collection))
         ||  is_featured_collection_category_by_children($collection)
     )
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
-    if($resources =='' && $search!=''){$resources=do_search($search);}
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+    else if($resources ==''){$resources=do_search($search);}
 
+    if ($resources =='' || count($resources) == 0){return $lang["noresourcesfound"];}
     $collection_resources       = get_collection_resources($collection);
     $refs_to_add = array_diff($resources, $collection_resources);
 
-    
+    $errors=0;
     foreach($refs_to_add as $ref)
         {
-        add_resource_to_collection($ref,$collection);
+        if(!add_resource_to_collection($ref,$collection)){$errors ++;}
         }
     
-    return true;
+    if($errors ==0){return true;}
+    else {return $lang["cantaddresourcestocolection"];}
     }
 
 
@@ -463,18 +467,19 @@ function collection_add_resources($collection,$resources='',$search='')
  * @param  mixed $removeall
  * @return void
  */
-function collection_remove_resources($collection,$resources,$removeall=false,$selected=false)
+function collection_remove_resources($collection,$resources='',$removeall=false,$selected=false)
     {
     global $USER_SELECTION_COLLECTION,$lang;
+    
     if(    (string)(int)$collection != (string)$collection 
         || ($resources == '' && !$removeall && !$selected)
-        ||  (!collection_writeable($collection))
-        ||  is_featured_collection_category_by_children($collection)
+        || (!collection_writeable($collection))
+        || is_featured_collection_category_by_children($collection)
     )
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
-    debug("BANG collection_functions " . print_r(array($collection,$resources,$removeall,$selected),true));
+
     if ($removeall)
         {
         foreach(get_collection_resources($collection) as $ref)
@@ -489,12 +494,14 @@ function collection_remove_resources($collection,$resources,$removeall=false,$se
     $collection_resources       = get_collection_resources($collection);
     $refs_to_remove = array_intersect($collection_resources, $resources);
     
+    $errors=0;
     foreach($refs_to_remove as $ref)
         {
-        remove_resource_from_collection($ref, $collection);
+        if(!remove_resource_from_collection($ref, $collection)){$errors++;}
         }
     
-    return true;
+    if ($errors == 0){return true;}
+    else {return $lang["cantremoveresourcesfromcolection"];}
     }
     
 /**

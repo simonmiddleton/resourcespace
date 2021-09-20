@@ -454,7 +454,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 if(!isset($newref))
                     {
-                    $lastref = sql_value("SELECT MAX(ref) value FROM resource",0);
+                    $lastref = (int) sql_value("SELECT MAX(ref) value FROM resource",0);
                     $newref  = $lastref + 1;
                     }
                 else
