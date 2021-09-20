@@ -247,7 +247,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
                 <?php
                 foreach($certreqdetails as $certreqdetail)
                     {
-                    render_text_question($certreqdetail,$certreqdetail,'',false,'class="stdwidth"',htmlspecialchars(getval($certreqdetail,"")));    
+                    render_text_question($lang["simplesaml_sp_cert_" . strtolower($certreqdetail)] . " *",$certreqdetail,'',false,'class="stdwidth"',htmlspecialchars(getval($certreqdetail,"")));    
                     }?>
         </div>
         <div class="Question">
