@@ -170,7 +170,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         $redirecturl = generateURL(
             "{$baseurl}/pages/edit.php",
             array(
-                'upload_review_mode' => true
+                'upload_review_mode' => true,
+                'collection_add' => $collection_add,
             ),
             $redirecturl_extra_params);	
         }

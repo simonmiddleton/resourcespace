@@ -319,6 +319,7 @@ function submitForm()
     {
     document.getElementById("user_submit").disabled = true;
     document.getElementById("btn_submit").click();
+    return false;
     }
 </script>
 

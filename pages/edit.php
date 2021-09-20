@@ -144,7 +144,8 @@ if ($upload_review_mode)
                 "sort"=>"DESC",
                 "archive"=>$defaultarchivestate,
                 "refreshcollectionframe"=>"true",
-                "resetlockedfields"=>"true"
+                "resetlockedfields"=>"true",
+                "collection_add"=>$collection_add
                 );
                 
             if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
@@ -463,6 +464,7 @@ $urlparams= array(
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
     'collection'        => $collection,
+    "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
 );
@@ -665,7 +667,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     "sort"=>"DESC",
                                     "archive"=>$setarchivestate,
                                     "refreshcollectionframe"=>"true",
-                                    "resetlockedfields"=>"true"
+                                    "resetlockedfields"=>"true",
+                                    "collection_add"=>$collection_add
                                     );
                                 if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
                                     {
@@ -2388,9 +2391,13 @@ if ($ref>0 && !$multiple)
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
+  $error_datetime = date('Y-m-d H:i:s');
   ?>
   <script>
   preventautoscroll = true;
+  var errorHeading='<?php echo $lang["error"]; ?>';
+  
+  var errorBody='<?php echo offset_user_local_timezone($error_datetime, 'Y-m-d H:i:s')."<br />".implode("<br />",$save_errors); ?>';
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
@@ -2398,7 +2405,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
     {
     error_fields[0].scrollIntoView();
     }
-  styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
+  styledalert(errorHeading, errorBody, 450);
   </script>
   <?php
   }

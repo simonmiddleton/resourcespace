@@ -2,8 +2,8 @@
 include "../../include/db.php";
 include "../../include/authenticate.php";
 
-# Get username. Spaces have been replaced with undescores when tagging.
-$username=str_replace("_"," ",getvalescaped("username",""));
+# Get username.
+$username=getvalescaped("username","");
 
 # Resolve the username and make sure the user has access.
 $users=get_users(0,$username,"u.username",true,-1,"",false,"",true); // use permissions = TRUE and exact match on username

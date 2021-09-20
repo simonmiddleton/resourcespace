@@ -1,5 +1,11 @@
 #!/usr/bin/php
 <?php
+
+if (PHP_SAPI != 'cli')
+    {
+    exit("Command line execution only.");
+    }
+
 include(dirname(__FILE__) . "/../include/db.php");
 include(dirname(__FILE__) . "/../include/image_processing.php");
 

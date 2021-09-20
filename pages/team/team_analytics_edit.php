@@ -205,7 +205,8 @@ for ($n=0;$n<count($list);$n++)
 ?>
 <option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo $lang["themes"] ?> ---</option>
 <?php
-$list=search_public_collections("","name","ASC",false, true, false);
+
+$list=search_public_collections("","name","ASC",false, false);
 for ($n=0;$n<count($list);$n++)
         {
         ?>

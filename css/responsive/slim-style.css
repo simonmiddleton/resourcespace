@@ -54,8 +54,17 @@ body {
         overflow: scroll !important;
     }
     
-    .Question .stdwidth, .stdwidth {
+    .Question .stdwidth, .stdwidth, #iconpicker-question {
         width:100%;
+    }
+
+    input[type="text"]#iconpicker-input {
+        width: calc(100% - 41px);
+    }
+
+    #iconpicker-container {
+        left: unset;
+        right: 16px;
     }
     
     #SearchBarContainer {
@@ -190,9 +199,14 @@ body {
     .CategoryBox {
         width:100%;
     }
+
+    #iconpicker-container {
+        left: 4px;
+        width: 100%;
+    }
 }
+
 /* Login Forms */
-}
 @media(max-width:750px) {
     #AntiSpamImage {
         margin-left: 0 !important;

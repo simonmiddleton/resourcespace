@@ -86,7 +86,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     $ref = $collection_resources[$n]["ref"];
     $resource_data = get_resource_data($ref);
     $collection_resources[$n]["resource_type"] = $resource_data['resource_type']; // Update as used in other functions
-    resource_type_config_override($resource_data['resource_type']);
+    resource_type_config_override($resource_data['resource_type'], false); # False means execute override for every resource
 
     $copy = false; 
     $ref = $collection_resources[$n]['ref'];
