@@ -35,12 +35,13 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
     $defaultFormat = getDefaultOutputFormat($inputFormat);
     $tableHeadersDrawn = false;
+    $block_original_size=false;
 
     ?><table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions"><?php
     hook("formatchooserbeforedownloads");
     $sizes = get_image_sizes($ref, false, $resource['file_extension'], false);
     $downloadCount = 0;
-    $originalSize = array("width"=>9999,"height"=>9999);
+    $originalSize = array();
     # Show original file download
 	for ($n = 0; $n < count($sizes); $n++)
         {
@@ -100,6 +101,17 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		add_download_column($ref, $sizes[$n], $downloadthissize);
 		}
 
+    if(!isset($originalSize) || $originalSize ===array())
+        {
+        $originalSize = array();
+        $fileinfo = get_original_imagesize($ref,$origpath,$resource['file_extension']);
+        $originalSize['file_size'] = $fileinfo[0];
+        $originalSize['width']     = $fileinfo[1];
+        $originalSize['height']    = $fileinfo[2];
+        $originalSize['id']='';
+        $block_original_size=true;
+        }
+
 	# Add drop down for all other sizes
 	$closestSize = 0;
 	if ($downloadCount > 0)
@@ -151,7 +163,10 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
 			$name = $size['name'];
 			if ($size['width'] == $closestSize)
+                {
+                if($block_original_size){continue;}
 				$name = $lang['format_chooser_original_size'];
+                }
             ?><option value="<?php echo $n ?>"><?php echo $name ?></option><?php
             }
             

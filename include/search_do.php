@@ -123,6 +123,7 @@ function do_search(
         "file_path"       => "file_path $sort,r.ref $sort",
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
+        "extension"       => "file_extension $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
         "status"          => "archive $sort",

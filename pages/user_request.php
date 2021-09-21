@@ -313,9 +313,20 @@ if(!hook("replaceantispam"))
     render_antispam_question();
 	}
 ?>
+
+<script>
+function submitForm() 
+    {
+    document.getElementById("user_submit").disabled = true;
+    document.getElementById("btn_submit").click();
+    return false;
+    }
+</script>
+
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
+<input name="save" id="btn_submit" type="submit" hidden/>
+<input name="user_save" id="user_submit" onclick="submitForm()" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 

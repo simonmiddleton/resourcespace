@@ -1,7 +1,7 @@
 name: adobe_link
 title: Adobe Link
 desc: [Advanced] Allow ingest of Adobe files from ResourceSpace into Adobe CC
-icon: fab fa-adobe
+icon: fa fa-link
 author: Montala Limited
 version: 1.0
 config_url: /plugins/adobe_link/pages/setup.php

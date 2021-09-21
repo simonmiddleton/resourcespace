@@ -4489,3 +4489,352 @@ function validate_remote_code(string $code)
 
     return !isset($invalid);
     }
+
+
+/**
+ * Get system status information
+ * 
+ * @return array
+ */
+function get_system_status()
+    {
+    $return = [
+        'results' => [
+            // Example of a test result
+            // [
+            // 'name' => 'Short name of what is being tested',
+            // 'status' => 'OK/FAIL/WARNING',
+            // 'info' => 'Any relevant information',
+            // ]
+        ],
+        'status' => 'FAIL',
+    ];
+    $warn_tests = 0;
+    $rs_root = dirname(__DIR__);
+
+
+    // Checking requirements must be done before db.php. If that's the case always stop after testing for required PHP modules
+    // otherwise the function will break because of undefined global variables or functions (as expected).
+    $check_requirements_only = false;
+    if(!defined('SYSTEM_REQUIRED_PHP_MODULES'))
+        {
+        include_once $rs_root . '/include/definitions.php';
+        $check_requirements_only = true;
+        }
+
+    // Check required PHP modules
+    $missing_modules = [];
+    foreach(SYSTEM_REQUIRED_PHP_MODULES as $module => $test_fn)
+        {
+        if(!function_exists($test_fn))
+            {
+            $missing_modules[] = $module;
+            }
+        }
+    if(count($missing_modules) > 0)
+        {
+        $return['results']['required_php_modules'] = [
+            'status' => 'FAIL',
+            'info' => 'Missing PHP modules: ' . implode(', ', $missing_modules),
+        ];
+
+        // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
+        return $return;
+        }
+    else if($check_requirements_only)
+        {
+        return ['results' => [], 'status' => 'OK'];
+        }
+
+
+    // Check database connectivity.
+    $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
+    if ($check <= 0)
+        {
+        $return['results']['database_connection'] = [
+            'status' => 'FAIL',
+            'info' => 'SQL query produced unexpected result',
+        ];
+
+        return $return;
+        }
+
+
+    // Check write access to filestore
+    if(!is_writable($GLOBALS['storagedir']))
+        {
+        $return['results']['filestore_writable'] = [
+            'status' => 'FAIL',
+            'info' => '$storagedir is not writeable',
+        ];
+
+        return $return;
+        }
+
+    // Check ability to create a file in filestore
+    $hash = md5(time());
+    $file = sprintf('%s/write_test_%s.txt', $GLOBALS['storagedir'], $hash);
+    if(file_put_contents($file, $hash) === false)
+        {
+        $return['results']['create_file_in_filestore'] = [
+            'status' => 'FAIL',
+            'info' => 'Unable to write to configured $storagedir. Folder permissions are: ' . fileperms($GLOBALS['storagedir']),
+        ];
+
+        return $return;
+        }
+
+    if(!file_exists($file) || !is_readable($file))
+        {
+        $return['results']['filestore_file_exists_and_is_readable'] = [
+            'status' => 'FAIL',
+            'info' => 'Hash not saved or unreadable in file ' . $file,
+        ];
+
+        return $return;
+        }
+
+    $check = file_get_contents($file);
+    if(file_exists($file))
+        {
+        $GLOBALS['use_error_exception'] = true;
+        try
+            {
+            unlink($file);
+            }
+        catch (Throwable $t)
+            {
+            $return['results']['filestore_file_delete'] = [
+                'status' => 'WARNING',
+                'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
+            ];
+
+            ++$warn_tests;
+            }
+        $GLOBALS['use_error_exception'] = false;
+        }
+    if($check !== $hash)
+        {
+        $return['results']['filestore_file_check_hash'] = [
+            'status' => 'FAIL',
+            'info' => sprintf('Test write to disk returned a different string ("%s" vs "%s")', $hash, $check),
+        ];
+
+        return $return;
+        }
+
+
+    // Check filestore folder browseability
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $output = file_get_contents($GLOBALS['baseurl'] . '/filestore');
+        if(strpos($output, 'Index of') !== false)
+            {
+            $return['results']['filestore_indexed'] = [
+                'status' => 'FAIL',
+                'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
+            ];
+
+            return $return;
+            }
+        }
+    catch (Exception $e)
+        {
+        // Error accesing filestore URL - this is as expected
+        }
+    unset($GLOBALS['use_error_exception']);
+
+
+    // Check write access to sql_log
+    if(isset($GLOBALS['mysql_log_transactions']) && $GLOBALS['mysql_log_transactions'])
+        {
+        $mysql_log_location = $GLOBALS['mysql_log_location'] ?? '';
+        $mysql_log_dir = dirname($mysql_log_location);
+        if(!is_writeable($mysql_log_dir) || (file_exists($mysql_log_location) && !is_writeable($mysql_log_location)))
+            {
+            $return['results']['mysql_log_location'] = [
+                'status' => 'FAIL',
+                'info' => 'Invalid $mysql_log_location specified in config file',
+            ];
+
+            return $return;
+            }
+        }
+
+
+    // Check write access to debug_log
+    $debug_log_location = $GLOBALS['debug_log_location'] ?? get_debug_log_dir() . '/debug.txt';
+    $debug_log_dir = dirname($debug_log_location);
+    if(!is_writeable($debug_log_dir) || (file_exists($debug_log_location) && !is_writeable($debug_log_location)))
+        {
+        $debug_log = isset($GLOBALS['debug_log']) && $GLOBALS['debug_log'];
+        $debug_log_location_test_status = ($debug_log ? 'FAIL' : 'WARNING');
+
+        $return['results']['debug_log_location'] = [
+            'status' => $debug_log_location_test_status,
+            'info' => 'Invalid $debug_log_location specified in config file',
+        ];
+
+        if($debug_log)
+            {
+            return $return;
+            }
+        else
+            {
+            ++$warn_tests;
+            }
+        }
+
+
+    // Check that the cron process executed within the last 5 days* (FAIL)
+    $last_cron = strtotime(get_sysvar('last_cron', ''));
+    $diff_days = (time() - $last_cron) / (60 * 60 * 24);
+    if($diff_days > 5)
+        {
+        $return['results']['cron_process'] = [
+            'status' => 'FAIL',
+            'info' => 'Cron was executed ' . round($diff_days, 0) . ' days ago.',
+        ];
+
+        return $return;
+        }
+
+
+    // Check free disk space is sufficient -  WARN (or FAIL if critical low)
+    $avail = disk_total_space($GLOBALS['storagedir']);
+    $free = disk_free_space($GLOBALS['storagedir']);
+    $calc = $free / $avail;
+    if($calc < 0.05)
+        {
+        $return['results']['free_disk_space'] = [
+            'status' => 'WARNING',
+            'info' => 'Less than 5% disk space free.',
+        ];
+        ++$warn_tests;
+        }
+    else if($calc < 0.01)
+        {
+        $return['results']['free_disk_space'] = [
+            'status' => 'FAIL',
+            'info' => 'Less than 1% disk space free.',
+        ];
+        return $return;
+        }
+
+
+    // Check the disk space against the quota limit - WARN (FAIL if exceeded)
+    if(isset($GLOBALS['disksize']))
+        {
+        $avail = $GLOBALS['disksize'] * (1000 * 1000 * 1000); # Get quota in bytes
+        $used = get_total_disk_usage(); # Total usage in bytes
+        $percent = ceil(((int) $used / $avail) * 100);
+
+        if($percent >= 95 && $percent <= 100)
+            {
+            $return['results']['quota_limit'] = [
+                'status' => 'WARNING',
+                'info' => $percent . '% used - nearly full.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
+            ];
+            ++$warn_tests;
+            }
+        else if($percent > 100)
+            {
+            $return['results']['quota_limit'] = [
+                'status' => 'FAIL',
+                'info' => $percent . '% used - over quota.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
+            ];
+            return $return;
+            }
+        else
+            {
+            $return['results']['quota_limit'] = [
+                'status' => 'OK',
+                'info' => $percent . '% used.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent
+            ];
+            }
+        }
+
+
+    // Check if plugins have their tests FAILed
+    $extra_fail_checks = hook('extra_fail_checks');
+    if($extra_fail_checks !== false && is_array($extra_fail_checks))
+        {
+        $return['results'][$extra_fail_checks['name']] = [
+            'status' => 'FAIL',
+            'info' => $extra_fail_checks['info'],
+        ];
+
+        return $return;
+        }
+
+
+    // Return the version number
+    $return['results']['version'] = [
+        'status' => 'OK',
+        'info' => $GLOBALS['productversion'],
+    ];
+
+
+    // Return the SVN information, if possible
+    $svn_data = '';
+
+    // - If a SVN branch, add on the branch name.
+    $svninfo = run_command('svn info '  . $rs_root);
+    $matches = [];
+    if(preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches) != 0)
+        {
+        $svn_data .= ' BRANCH ' . $matches[1];
+        }
+
+    // - Add on the SVN revision if we can find it.
+    // If 'svnversion' is available, run this as it will produce a better output with 'M' signifying local modifications.
+    $matches = [];
+    $svnversion = run_command('svnversion ' . $rs_root);
+    if($svnversion != '')
+        {
+        # 'svnversion' worked - use this value and also flag local mods using a detectable string.
+        $svn_data .= ' r' . str_replace('M', '(mods)', $svnversion);    
+        }
+    else if(preg_match('/\nRevision: (\d+)/i', $svninfo, $matches) != 0)
+        {
+        // No 'svnversion' command, but we found the revision in the results from 'svn info'.
+        $svn_data .= ' r' . $matches[1];
+        }
+    if($svn_data !== '')
+        {
+        $return['results']['svn'] = [
+            'status' => 'OK',
+            'info' => $svn_data];
+        }
+
+
+    // Return a list with names of active plugins
+    $return['results']['plugins'] = [
+        'status' => 'OK',
+        'info' => implode(', ', array_column(get_active_plugins(), 'name')),
+    ];
+
+
+    // Return active user count (last 7 days)
+    $return['results']['recent_user_count'] = [
+        'status' => 'OK',
+        'info' => get_recent_users(7)
+    ];
+
+
+
+    if($warn_tests > 0)
+        {
+        $return['status'] = 'WARNING';
+        }
+    else
+        {
+        $return['status'] = 'OK';
+        }
+
+    return $return;
+    }

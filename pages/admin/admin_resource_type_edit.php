@@ -8,6 +8,7 @@
 include "../../include/db.php";
 
 include "../../include/authenticate.php"; 
+include "../../lib/fontawesome/resourcespace/icon_classes.php";
 
 if (!checkperm("a"))
 	{
@@ -22,6 +23,7 @@ $tab                   = getvalescaped('tab', '');
 $colour                = getvalescaped('colour', 0, true);
 $push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
 $inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
+$icon                  = getvalescaped('icon', '');
 
 $restype_order_by=getvalescaped("restype_order_by","rt");
 $restype_sort=getvalescaped("restype_sort","asc");
@@ -55,7 +57,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
                tab_name = '{$tab}',
                push_metadata = '{$push_metadata}',
                inherit_global_fields = '{$inherit_global_fields}',
-               colour = '{$colour}'
+               colour = '{$colour}',
+               icon = '{$icon}'
          WHERE ref = '$ref'
      ");
     clear_query_cache("schema");
@@ -126,7 +129,8 @@ $restypedata=sql_query ("
              tab_name,
              push_metadata,
              inherit_global_fields,
-             colour
+             colour,
+             icon
         FROM resource_type
        WHERE ref = '{$ref}'
     ORDER BY `name`
@@ -138,8 +142,10 @@ $inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ?
 
 include "../../include/header.php";
 
-
 ?>
+<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
+
 <div class="BasicsBox">
 <?php
 $links_trail = array(
@@ -239,7 +245,6 @@ else
     {
 ?> 
     
-    
     <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
     
     <div class="Question"><label><?php echo $lang["property-reference"]?></label>
@@ -247,11 +252,31 @@ else
 	<div class="clearerleft"> </div>
     </div>
     
-    
     <div class="Question">
 	<label><?php echo $lang["property-name"]?></label>
 	<input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($restypedata["name"])?>" />
 	<div class="clearerleft"> </div>
+    </div>
+
+    <div class="Question">
+        <label><?php echo $lang["property-icon"]?></label>
+        <?php $blank_icon = ($restypedata["icon"] == "" || !in_array($restypedata["icon"], $font_awesome_icons)); ?>
+        <div id="iconpicker-question">
+            <input name="icon" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($restypedata["icon"])?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($restypedata['icon'])?>" id="iconpicker-button-fa"></i></span>
+        </div>
+        <div id="iconpicker-container">
+            <div class="iconpicker-title">
+                <input type="text" id="iconpicker-filter" placeholder="<?php echo $lang['icon_picker_placeholder'] ?>" onkeyup="filterIcons()">
+            </div>
+            <div class="iconpicker-content">
+                <?php foreach ($font_awesome_icons as $icon_name) { ?>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
@@ -264,8 +289,6 @@ else
 	</div>    
 	<div class="clearerleft"> </div>    
     </div>
-    
-    
     
     <?php if (!$execution_lockout) { ?>
     <div class="Question">
@@ -326,8 +349,61 @@ else
 </form>
 </div><!-- End of Basics Box -->
 
+<script type="text/javascript">
+
+    jQuery("#iconpicker-button").click(function()
+        {
+        jQuery("#iconpicker-container").toggle();
+        });
+
+    jQuery("#iconpicker-input").focus(function()
+        {
+        jQuery("#iconpicker-container").show();
+        });
+
+    jQuery(".iconpicker-content-icon").click(function()
+        {
+        var icon_name = jQuery(this).data("icon");
+        jQuery("#iconpicker-input").val(icon_name);
+        jQuery("#iconpicker-button i").attr("class","fa-fw " + icon_name);
+        });
+
+    jQuery(document).mouseup(function(e) 
+        {
+        var container = jQuery("#iconpicker-container");
+        var question = jQuery("#iconpicker-question");
+
+        if (!container.is(e.target) && container.has(e.target).length === 0
+            && !question.is(e.target) && question.has(e.target).length === 0) 
+            {
+            container.hide();
+            }
+        });
+
+    function filterIcons()
+        {
+        filter_text = document.getElementById("iconpicker-filter");
+        var filter_upper = filter_text.value.toLowerCase();
+
+        container = document.getElementById("iconpicker-container");
+        icon_divs = container.getElementsByClassName("iconpicker-content-icon");
+
+        for (i = 0; i < icon_divs.length; i++)
+            {
+            icon_short_name = icon_divs[i].getAttribute("data-icon");
+            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1)
+                {
+                icon_divs[i].style.display = "inline-block";
+                }
+            else
+                {
+                icon_divs[i].style.display = "none";
+                }
+            }
+        }
+
+</script>
+
 <?php
-
-
 include "../../include/footer.php";
 ?>

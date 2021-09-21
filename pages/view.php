@@ -1434,12 +1434,19 @@ if ($resource["has_image"]==1 && $download_multisize)
 			if ($downloadthissize && $sizes[$n]["allow_preview"]==1)
 				{ 
 				# Add an extra line for previewing
+                global $data_viewsize;
+                $data_viewsize=$sizes[$n]["id"];
+                $data_viewsizeurl=hook('getpreviewurlforsize');
+                $preview_with_sizename=str_replace('%sizename', $sizes[$n]["name"], $lang['previewithsizename']);
 				?> 
-				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2><?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?><p><?php echo $lang["fullscreenpreview"]?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2><?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
+                <p><?php echo $preview_with_sizename; ?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
 				<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 				?>
 				<td class="DownloadButton">
-				<a class="enterLink" id="previewlink" href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>"><?php echo $lang["action-view"]?></a>
+				<a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
+                    id="previewlink" data-viewsize="<?php echo $data_viewsize; ?>" data-viewsizeurl="<?php echo $data_viewsizeurl; ?>"  
+                    href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>"><?php echo $lang["action-view"]?></a>
 				</td>
 				</tr>
 				<?php
@@ -1849,11 +1856,6 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource)
 	{
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref;
-    $reset_ref  = $ref;
-	$ref        = $resource["ref"];
-	$fields     = get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
-	$access     = get_resource_access($ref);
     global $k,$view_title_field,$lang, $internal_share_access, $fields_all,$ref;
     $reset_ref  = $ref;
 	$ref        = $resource["ref"];

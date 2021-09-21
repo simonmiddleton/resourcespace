@@ -112,6 +112,7 @@ $lang["property-resource_type_id"]="Resource type id";
 $lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
 $lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
+$lang["icon_picker_placeholder"]="Type to filter";
 
 # Metadata field properties
 $lang["property-field_id"]="Field id";
@@ -151,6 +152,7 @@ $lang["information-regexp_filter"]="Regular Expression filtering - e.g. '[A-Z]+'
 $lang["information-regexp_fail"]="The entered value was not in the required format.";
 $lang["property-tab_name"]="Tab name";
 $lang["property-push_metadata"]="Push metadata";
+$lang["property-icon"] = "Icon";
 $lang['property-inherit_global_fields'] = 'Inherit global fields';
 $lang['information-inherit_global_fields'] = 'Should global fields be included for this resource type?';
 $lang["property-smart_theme_name"]="Smart featured collection name";
@@ -558,6 +560,7 @@ $lang["nextresult"]="Next result";
 $lang["pixels"]="pixels";
 $lang["download"]="Download";
 $lang["preview"]="Preview";
+$lang["previewithsizename"]="%sizename Preview";
 $lang["fullscreenpreview"]="Full screen preview";
 $lang["originalfileoftype"]="Original %EXTENSION File"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION File" -> "Original PDF File"
 $lang["fileoftype"]="? File"; # ? will be replaced, e.g. "MP4 File"
@@ -976,6 +979,9 @@ $lang["lastused"]="Last used";
 $lang["noattachedusers"]="No attached users.";
 $lang["confirmdeleteaccess"]="Are you sure you wish to delete this access key? Users that have been given access using this key will no longer be able to access this collection.";
 $lang["confirmdeleteaccessresource"]="Are you sure you wish to delete this access key? Users that have been given access using this key will no longer be able to access this resource.";
+$lang["confirmdeleteaccessmulticol"]="Are you sure you wish to delete these access keys? Users that have been given access using these keys will no longer be able to access the relevant collections.";
+$lang["confirmdeleteaccessmultires"]="Are you sure you wish to delete these access keys? Users that have been given access using these keys will no longer be able to access the relevant resources.";
+$lang["confirmdeleteaccessmultimix"]="Are you sure you wish to delete these access keys? Users that have been given access using these keys will no longer be able to access the relevant collections and resources.";
 $lang["editingexternalshare"]="Editing external share";
 $lang["noexternalsharing"]="No external URLs generated yet.";
 $lang["sharedcollectionaddwarning"]="Warning: This collection has been shared with external users. The resource you have added has now been made available to these users. Click 'share' to manage the external access for this collection.";
@@ -1392,6 +1398,7 @@ $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
 $lang["addremove"]="Add/remove";
+$lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
 $lang["all_users"]="all users";

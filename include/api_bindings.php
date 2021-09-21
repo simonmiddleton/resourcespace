@@ -512,6 +512,30 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
     return $alternative_ref;
     }
 
+function api_delete_access_keys($access_keys, $resources, $collections)
+	{
+    // Incoming parameters are csv strings; "-" entries denote a null resource or collection     
+    // The number of entries in each parameter is always the same
+    $access_key_array=explode(",",$access_keys);
+    $resource_array=explode(",",$resources);
+    $collection_array=explode(",",$collections);
+
+    for($i=0; $i<count($access_key_array); $i++)
+        {
+        if($collection_array[$i] !="-") 
+            {
+            debug("ACCESSKEY DELETING COL=".$collection_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
+            }
+        else
+            {
+            debug("ACCESSKEY DELETING RES=".$resource_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
+            }
+        }
+    return true;
+    }
+
 function api_delete_alternative_file($resource,$ref)
 	{
     global $disable_alternative_files;
@@ -633,11 +657,10 @@ function api_delete_collection($ref)
     return delete_collection($ref);
     }
     
-function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false)
+function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true)
     {
     $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
-    $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
-    $results = search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
+    $results = search_public_collections($search, $order_by, $sort, $exclude_themes);
     $resultcount= count ($results);
         {
         for($n=0;$n<$resultcount;$n++)
@@ -946,6 +969,11 @@ function api_send_user_message($users,$text)
 function api_get_profile_image($user)
     {
     return get_profile_image($user);
+    }
+
+function api_get_system_status()
+    {
+    return get_system_status();
     }
 
 function api_relate_all_resources($related)

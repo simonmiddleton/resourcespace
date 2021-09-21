@@ -839,21 +839,13 @@ $zipped_collection_textfile_default_no=false;
 # A list of types which get the extra video icon in the search results
 $videotypes=array(3);
 
-# Small icon above thumbnails showing the resource type
-$resource_type_icons=false;
-# Map the resource type to a font awesome 4 icon
-$resource_type_icons_mapping = array(1 => "camera", 2 => "file", 3 => "video-camera", 4 => "music");
-
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 
 /* Should the "purge users" function be available? */
 $user_purge=true;
 
-# List of active plugins.
-# Note that multiple plugins must be specified within array() as follows:
-# $plugins=array("loader","rss","messaging","googledisplay"); 
+# List of active plugins, enabled by default and cannot be disabled in the UI.
 $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
@@ -1454,8 +1446,6 @@ $simple_search_display_condition=array();
 
 # When searching, also include themes/public collections at the top?
 $search_includes_themes=false;
-$search_includes_public_collections=false;
-$search_includes_user_collections=false;
 $search_includes_resources=true;
 
 # Should the Clear button leave collection searches off by default?
@@ -2896,9 +2886,6 @@ $replace_resource_preserve_default=false;
 
 # Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
 $replace_batch_existing = false;
-
-# When searching collections, return results based on the metadata of the resources inside also
-$collection_search_includes_resource_metadata=false;
 
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.

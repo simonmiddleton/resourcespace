@@ -1407,7 +1407,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         # Set thumbonly=true to (re)generate thumbnails only.
 
         $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, $alternative, $ingested);
-        $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+        if ($previewonly)
+            {
+            # Original file is the new file if generating previews from a new preview source file.
+            $origfile = $file;
+            }
+        else
+            {
+            $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+            }
         
         $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
         if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}  
@@ -1795,7 +1803,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         {
                         // use existing strategy for color profiles
                         # Preserve colour profiles? (omit for smaller sizes)
-                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr" && substr($id,0,4)!="tile")
                             {
                             if($imagemagick_mpr)
                                 {
@@ -2869,6 +2877,18 @@ function extract_text($ref,$extension,$path="")
         # Final trim to tidy
         $text=trim($text);
 
+        // Convert text
+        if(!mb_check_encoding($text,"UTF-8"))
+            {
+            $curenc = mb_detect_encoding($text, mb_list_encodings(), true);
+            if($curenc == "ISO-8859-1")
+                {
+                // Safer to use 1252 here as most problematic files seem to have this
+                $curenc = "Windows-1252";
+                }
+            $text = mb_convert_encoding($text,"UTF-8",$curenc);
+            }
+
         # Save text
         update_field($ref,$extracted_text_field,$text);
         }
@@ -3534,37 +3554,40 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         return false;
         }
 
+    $cmd_args = [];
     $imversion = get_imagemagick_version();
     // Set correct syntax for commands to remove alpha channel
     if($imversion[0] >= 7)
         {
-        $alphaoff = "-alpha off";
+        $alphaoff = " -alpha off";
         }
     else
         {
-        $alphaoff = "+matte";
+        $alphaoff = " +matte";
         }
     $sf_parts = pathinfo($sourcepath);
     $of_parts = pathinfo($outputpath);
-    $commandprefix="";
 
     $profile = '';
     if(isset($actions['profile']) && is_array($actions['profile']) && !empty($actions['profile']))
         {
-        foreach($actions['profile'] as $profile_data)
+        foreach($actions['profile'] as $i => $profile_data)
             {
             if(is_bool($profile_data['strip']) && trim($profile_data['path']) !== '')
                 {
+                $profile_placeholder = "%profile{$i}";
+                $cmd_args[$profile_placeholder] = $profile_data['path'];
                 $profile .= sprintf(' %sprofile %s',
                     ($profile_data['strip'] ? '+' : '-'),
-                    escapeshellarg($profile_data['path'])
+                    $profile_placeholder
                 );
                 }
             }
         }
     else if(!isset($actions["rgb"]) && !$imagemagick_preserve_profiles)
         {
-        $profile=" +profile icc -colorspace " . $imagemagick_colorspace; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
+        $cmd_args['%imagemagick_colorspace'] = $imagemagick_colorspace;
+        $profile = ' +profile icc -colorspace %imagemagick_colorspace'; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
         }
 
     if(strtoupper($sf_parts["extension"]) == 'SVG')
@@ -3581,26 +3604,26 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $keep_transparency=false;
     if(isset($actions['background']) && $actions['background'] !== '')
         {
-        $command .= sprintf('%s -background %s %s[0]',
-            $commandprefix,
-            escapeshellarg($actions['background']),
-            escapeshellarg($sourcepath)
-        );
+        $cmd_args['%background'] = $actions['background'];
+        $cmd_args['%sourcepath'] = $sourcepath;
+        $command .= ' -background %background %sourcepath[0]';
         }
     else if (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
         {
-        $commandprefix = " -background transparent ";
         $keep_transparency=true;
-        $command .= $commandprefix . " \"$sourcepath\" ";
+        $cmd_args['%sourcepath'] = $sourcepath;
+        $command .= ' -background transparent %sourcepath';
         }
     else
         {
-        $command .= $commandprefix . " \"$sourcepath\"[0] ";
+        $cmd_args['%sourcepath'] = $sourcepath;
+        $command .= ' %sourcepath[0]';
         }
 
     if(array_key_exists('transparent', $actions))
         {
-        $command .= sprintf(' -transparent%s', $actions['transparent'] ?? escapeshellarg($actions['transparent']));
+        $cmd_args['%transparent'] = $actions['transparent'];
+        $command .= ' -transparent%transparent';
         }
 
     if(array_key_exists('auto_orient', $actions))
@@ -3611,7 +3634,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $quality = isset($actions["quality"]) ? $actions["quality"] : "";
     if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($of_parts["extension"]) , array("PNG","JPG")))
         {
-        $command .= " -quality " .  (int)$quality . "% ";
+        $cmd_args['%quality'] = (int) $quality;
+        $command .= ' -quality %quality%';
         }
 
     $colorspace1 = "";
@@ -3632,7 +3656,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     if(isset($actions["resolution"]) && is_int_loose($actions["resolution"]) && $actions["resolution"] != 0)
         {
-        $command .= " -units PixelsPerInch -density " .  $actions["resolution"] . " ";
+        $cmd_args['%resolution'] = $actions['resolution'];
+        $command .= ' -units PixelsPerInch -density %resolution';
         }
 
     if(in_array($sf_parts['extension'], $preview_no_flatten_extensions)
@@ -3651,8 +3676,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]) && $actions["gamma"] <> 50)
         {
-        $gamma = round($actions["gamma"]/50,2);
-        $command .= " -gamma " .  $gamma . " ";
+        $cmd_args['%gamma'] = round($actions['gamma'] / 50, 2);
+        $command .= ' -gamma %gamma';
         }
 
     if ($sf_parts['extension']=="psd" && !$keep_transparency)
@@ -3732,7 +3757,11 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         debug("finalwidth:  " . $finalwidth);
         debug("finalheight:  " . $finalheight);
 
-        $command .= " -crop " . $finalwidth . "x" . $finalheight . "+" . $finalxcoord . "+" . $finalycoord;
+        $cmd_args['%finalwidth'] = $finalwidth;
+        $cmd_args['%finalheight'] = $finalheight;
+        $cmd_args['%finalxcoord'] = $finalxcoord;
+        $cmd_args['%finalycoord'] = $finalycoord;
+        $command .= ' -crop %finalwidthx%finalheight+%finalxcoord+%finalycoord';
         }
 
     if (isset($actions["repage"]) && $actions["repage"])
@@ -3786,12 +3815,13 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             // height, there may be a tiny amount of distortion introduced as the
             // program scales up or down by a few pixels. This should be
             // imperceptible, but perhaps worth revisiting at some point.
-            $command .= " -scale " . (int)$actions["new_width"];
+            $cmd_args['%new_width'] = (int) $actions['new_width'];
+            $command .= ' -scale %new_width';
             if ($actions["new_height"] > 0)
                 {
-                $command .= "x" . (int)$actions["new_height"];
+                $cmd_args['%new_height'] = (int) $actions['new_height'];
+                $command .= 'x%new_height';
                 }
-            $command .= " ";
             }
         }
 
@@ -3801,15 +3831,16 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         && $actions['resize']['width'] > 0
     )
         {
+        $cmd_args['%resize_width'] = $actions['resize']['width'];
+        $cmd_args['%resize_height'] = $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
+
         # Apply resize ('>' means: never enlarge)
-        $command .= sprintf(' -resize "%s%s>"',
-            $actions['resize']['width'],
-            $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : ''
-        );
+        $command .= ' -resize "%resize_width%resize_height>"';
         }
 
-    $command .= $profile . " \"$outputpath\"";
-    $shell_result = run_command($command);
+    $cmd_args['%outputpath'] = $outputpath;
+    $command .= $profile . ' %outputpath';
+    $shell_result = run_command($command, false, $cmd_args);
 
     if (file_exists($outputpath))
         {
@@ -3818,7 +3849,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         if (($exiftool_fullpath!=false) && !in_array($of_parts["extension"],$exiftool_no_process))
             {
             $exifcommand = $exiftool_fullpath . ' -m -overwrite_original -E -Orientation#=1 ';
-            $exifargs = array();
+            $exifargs = ['%outputfile%' => $outputpath];
 
             if(isset($actions["resolution"]) && $actions["resolution"] != "")
                 {
@@ -3829,9 +3860,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 }
 
             $exifcommand.= " %outputfile%";
-            $exifargs["%outputfile%"]  = $outputpath;
-            $command = escape_command_args($exifcommand,$exifargs);
-            $output = run_command($command);
+            $output = run_command($exifcommand, false, $exifargs);
             }
         }
 

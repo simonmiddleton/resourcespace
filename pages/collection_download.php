@@ -316,9 +316,9 @@ if ($submitted != "")
     # Build a list of files to download
     for ($n=0;$n<count($result);$n++)
         {
-        resource_type_config_override($result[$n]["resource_type"]);
-        $copy=false; 
         $ref=$result[$n]["ref"];
+        resource_type_config_override($result[$n]["resource_type"], false); # False means execute override for every resource
+        $copy=false; 
         # Load access level
         $access=get_resource_access($result[$n]);
         $use_watermark=check_use_watermark();

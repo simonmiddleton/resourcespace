@@ -283,7 +283,7 @@ $permitted_html_tags =  array(
 $permitted_html_attributes = array('id', 'class', 'style');
 
 // Standard paths (e.g libraries)
-$jquery_path = "/lib/js/jquery-3.5.1.min.js";
+$jquery_path = "/lib/js/jquery-3.6.0.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
 define('LIB_OPENSEADRAGON', '/lib/openseadragon_2.4.2');
 
@@ -445,3 +445,14 @@ $MARKER_COLORS = array(
 
 // Reports
 const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';
+
+// SYSTEM - GENERAL
+const SYSTEM_REQUIRED_PHP_MODULES = [
+    'curl' => 'curl_init',
+    'gd' => 'imagecrop',
+    'xml' => 'xml_parser_create',
+    'mbstring' => 'mb_strtoupper',
+    'intl' => 'locale_get_default',
+    'json' => 'json_decode',
+    'zip' => 'zip_open',
+];
