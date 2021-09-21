@@ -845,9 +845,7 @@ $user_preferences = true;
 /* Should the "purge users" function be available? */
 $user_purge=true;
 
-# List of active plugins.
-# Note that multiple plugins must be specified within array() as follows:
-# $plugins=array("loader","rss","messaging","googledisplay"); 
+# List of active plugins, enabled by default and cannot be disabled in the UI.
 $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
