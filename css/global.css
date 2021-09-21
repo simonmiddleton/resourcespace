@@ -2242,3 +2242,26 @@ input[type="text"]#iconpicker-input {
 }
 
 .iconpicker-content-icon:hover {background-color: #0000001f;}
+
+/* jQuery tagEditor */
+
+.SearchSpace .tag-editor{
+    border-radius: 4px;
+    min-height: 28px;
+    width: 250px;
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.SearchSpace .tag-editor li {
+    margin: 4px 0;
+}
+
+.SearchSpace .tag-editor .active input{
+    max-height: 18px;
+    min-height: 0;
+    padding: 2px;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}
