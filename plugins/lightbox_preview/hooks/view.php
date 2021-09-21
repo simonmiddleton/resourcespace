@@ -16,9 +16,8 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
     jQuery(document).on('click', '.previewsizelink', function(event) {
         var data_viewsize= event.target.getAttribute('data-viewsize');
         var data_viewsizeurl= event.target.getAttribute('data-viewsizeurl');
-console.log("XYZZY");
         event.preventDefault();
-        default_viewsizeurl = document.getElementById("previewimagelink").getAttribute("href");    
+        var default_viewsizeurl = document.getElementById("previewimagelink").getAttribute("href");    
         document.getElementById("previewimagelink").setAttribute("href", data_viewsizeurl);    
         jQuery('#previewimage').click(); 
         document.getElementById("previewimagelink").setAttribute("href", default_viewsizeurl);    
