@@ -1649,11 +1649,6 @@ $lang["savesearchassmartcollection"]="Save search as smart collection";
 $lang["smartcollection"]="Smart collection";
 $lang["dosavedsearch"]="Do saved search";
 
-
-$lang["uploadertryjava"]="Use the legacy Java uploader.";
-$lang["uploadertryplupload"]="<strong>NEW</strong> - Try out the new style uploader.";
-$lang["getjava"]="To ensure that you have the latest Java software on your system, visit the Java website.";
-
 $lang["all"]="All";
 $lang["allresourcessearchbar"]="All resources";
 $lang["allcollectionssearchbar"]="All collections";
@@ -1987,10 +1982,10 @@ $lang["local_upload_path"] = "Local upload folder";
 $lang["foldercontent"] = "Folder content";
 $lang["intro-local_upload"] = "Select one or more files from the local upload folder and click  'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
 $lang["intro-single_upload"] = "Click  'Browse' to locate a file and then click  'Upload'.";
-$lang["intro-plupload"] = "Click 'Add files' to locate one or more files and then click 'Start upload'.";
-$lang["intro-plupload_dragdrop"] = "Drag and drop or click 'Add files' to locate one or more files and then click 'Start upload'.";
+$lang["intro-plupload"] = "Browse for files or drag and drop, then click 'Upload'.";
 $lang["intro-plupload_upload-replace_resource"] = "Click 'Add files' to locate a file and then click 'Start upload'.";
 $lang["intro-batch_edit"] = "Please specify the default upload settings and the default values for the metadata of the resources you are about to upload.";
+$lang["upload_complete_processing"] = "File upload complete - processing";
 $lang["plupload-maxfilesize"] = "The maximum allowed upload file size is %s.";
 $lang["collections-1"] = "(<strong>1</strong> Collection)";
 $lang["collections-2"] = "(<strong>%d</strong> Collections with <strong>%d</strong> items)"; # %number will be replaced, e.g. 3 Collections

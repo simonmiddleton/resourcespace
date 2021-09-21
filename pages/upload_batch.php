@@ -535,7 +535,6 @@ if ($processupload)
         $result["error"] = 108;
         die(json_encode($result));
         }
-    //debug(" BANG " . $upfilepath);
     elseif(!hook("initialuploadprocessing"))
         {
         if ($alternative!="")
@@ -623,11 +622,9 @@ if ($processupload)
                 $ref = create_resource($resource_type, $setarchivestate);
                 }
 
-                debug("BANG A");
             # check that $ref is not false - possible return value with create_resource()
             if(!$ref)
                 {
-                    debug("BANG B");
                 $result["status"] = false;
                 $result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
                 $result["error"] = 125;
@@ -636,16 +633,12 @@ if ($processupload)
                 }
             else
                 {
-                    debug("BANG C " . ($upload_here ? "TRUE" : "FALSE"));
-                    debug("BANG E " . ($upload_then_edit ? "TRUE" : "FALSE"));
                 // Check valid requested state by calling function that checks permissions
                 update_archive_status($ref, $setarchivestate);
                 
                 if($upload_then_edit && $upload_here)
                     {
-                    $search = urldecode($search);
-                    debug("BANG D " . $search);
-                    
+                    $search = urldecode($search);                    
                     if(!empty(get_upload_here_selected_nodes($search, array())))
                         {
                         add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
@@ -670,9 +663,9 @@ if ($processupload)
                     update_related_resource($relateto,$ref);
                     }
 
-                // For upload_then_edit mode ONLY, we decide the resource type based on the extension. User
+                // For upload_then_edit mode ONLY, set the resource type based on the extension. User
                 // can later change this at the edit stage
-                // IMPORTANT: we change resource type only if user has access to it
+                // IMPORTANT: Change resource type only if user has access to it
                 if($upload_then_edit && !$resource_type_force_selection)
                     {
                     $resource_type_from_extension = get_resource_type_from_extension(
@@ -1017,6 +1010,12 @@ jQuery(document).ready(function () {
             ?>
             },
 
+           locale: {
+                strings: {
+                    uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
+                },
+            },
+
         onBeforeUpload: (files) => {
 
             // Check if a new collection is required
@@ -1027,10 +1026,11 @@ jQuery(document).ready(function () {
                     {
                     entercolname = jQuery('#entercolname').val();
                     console.debug("api create_collection(" + entercolname + ")");
-                    api('create_collection',{'name': entercolname}, function(response)
+                    api('create_collection',{'name': entercolname,'forupload': true}, function(response)
                         {
                         newcol = parseInt(response);
                         console.debug('Created collection #' + newcol);
+                        api('show_hide_collection',{'collection': newcol,'show':0,'user':<?php echo $userref ?>});
                         });
                     }
                 }
@@ -1093,7 +1093,6 @@ jQuery(document).ready(function () {
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
         theme: 'light',
-        //companionUrl: 'https://dev.resourcespace.com/uppy',
         });
     
     uppy.use(Tus, {
@@ -1111,18 +1110,22 @@ jQuery(document).ready(function () {
             }?>
         });
 
+    uppy.on('complete', (result) => {
+        console.log("status count " + count);
+        console.log("status totalProgress " + totalProgress);
+        // Process response and inform RS that upload has completed
+        if(totalProgress == count)
+            {
+            console.log("Processing uploaded resources");
+            CentralSpaceShowLoading();
+            }
+        });
+
     uppy.on('upload-success', (file, response) => {
         console.log(file.name, response);
         totalProgress++;
-        //count = Object.keys(files).length;
-        //console.log('Completed uploading file ' + curindex + ' out of ' + count + ' files');
-        // Process response and inform RS that upload has completed
-        if(totalProgress == count-1)
-            {
-            jQuery(".uppy-DashboardContent-title").html("Processing uploaded resources");
-            CentralSpaceShowLoading();
-            }
-
+        console.log('Completed uploading file ' + curindex + ' out of ' + count + ' files');
+     
         postdata = {
             ajax: 'true',
             processupload: "true",
@@ -1135,6 +1138,24 @@ jQuery(document).ready(function () {
             };    
         
         // Add any extra data required
+
+        <?php
+        if($replace_resource_preserve_option)
+            {
+            ?>
+            // Check for keep_original
+            keep_original = jQuery('#keep_original').is(':checked');
+            if(keep_original)
+                {
+                postdata['keep_original'] = 1;
+                }
+
+            altname  = jQuery('#replace_resource_original_alt_filename').val();
+            postdata['replace_resource_original_alt_filename'] = altname;
+            <?php
+            }?>
+
+        // New collection
         if(typeof newcol == 'undefined')
             {
             newcol = jQuery('#collection_add').val();
