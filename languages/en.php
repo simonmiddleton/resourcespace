@@ -1992,7 +1992,8 @@ $lang["intro-single_upload"] = "Click  'Browse' to locate a file and then click 
 $lang["intro-plupload"] = "Browse for files or drag and drop, then click 'Upload'.";
 $lang["intro-plupload_upload-replace_resource"] = "Click 'Add files' to locate a file and then click 'Start upload'.";
 $lang["intro-batch_edit"] = "Please specify the default upload settings and the default values for the metadata of the resources you are about to upload.";
-$lang["upload_complete_processing"] = "File upload complete - processing";
+$lang["upload_complete_processing"] = "File upload complete. Processing...";
+$lang["upload_finished_processing"] = "Completed processing. Files: %COUNT%. Errors: %ERRORS%";
 $lang["plupload-maxfilesize"] = "The maximum allowed upload file size is %s.";
 $lang["collections-1"] = "(<strong>1</strong> Collection)";
 $lang["collections-2"] = "(<strong>%d</strong> Collections with <strong>%d</strong> items)"; # %number will be replaced, e.g. 3 Collections
@@ -2239,7 +2240,7 @@ $lang['merge_filename_title_include_extensions'] = 'Include extensions?';
 $lang['merge_filename_title_spacer'] = 'Spacer';
 
 # For sending a collection with all the resources uploaded at one time:
-$lang['send_collection_to_admin_emailedcollectionname'] = 'E-mailed collection';
+$lang['send_collection_to_admin_emailedcollectionname'] = 'User submitted resources';
 $lang['send_collection_to_admin_emailsubject'] = 'Collection uploaded by ';
 $lang['send_collection_to_admin_usercontributedcollection'] = ' uploaded these resources as a whole collection';
 $lang['send_collection_to_admin_additionalinformation'] = 'Additional information';

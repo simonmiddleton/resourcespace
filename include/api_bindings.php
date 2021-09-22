@@ -992,6 +992,10 @@ function api_relate_all_resources($related)
 
 function api_show_hide_collection($collection, $show, $user)
     {
-    debug("BANG collection=" . $collection . ", show=" . ($show ? "TRUE": "FALSE") . ", user=" . $user);
     return show_hide_collection($collection, $show, $user);
+    }
+
+function api_send_collection_to_admin($collection)
+    {
+    return send_collection_to_admin($collection);
     }
