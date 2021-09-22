@@ -981,7 +981,7 @@ jQuery(document).ready(function () {
     registerCollapsibleSections();
 
     uploadProgress = 0; // Count of number of files that have been uploaded
-    rscompleted = 0;  // Count of number of files that have been processed
+    rsprocessed = [];  // Array of file names that have been processed
     process_alts = true // Flag to indicate whether upload of alternatives has started
     var uppy = Uppy.Core({
         debug: true,
@@ -1110,7 +1110,7 @@ jQuery(document).ready(function () {
 
     uppy.on('complete', (result) => {
         console.log("status count " + count);
-        console.log("status rscompleted " + rscompleted);
+        console.log("status rsprocessed " + rsprocessed.length);
 
         // Process response and inform RS that upload has completed
         if(uploadProgress >= count)
@@ -1205,7 +1205,6 @@ function processFile(file, forcepost)
                     // Found the original, upload this file as an alternative for this resource ID
                     console.log("Found resource id for original file :  " + resource_id);
                     postdata['alternative'] = resource_id;
-                    //delete(processafter[file.name]);
                     }
                 else
                     {                    
@@ -1246,6 +1245,7 @@ function processFile(file, forcepost)
     postdata['collection_add'] = newcol;
     postdata['entercolname'] = entercolname;
 
+    rsprocessed.push(file.name); // Add it to the processed array before AJAX call as processing is asynchronous
     jQuery.ajax({
         type: 'POST',
         url: '<?php echo $baseurl_short; ?>pages/upload_batch.php',
@@ -1332,12 +1332,12 @@ function processFile(file, forcepost)
                     <?php
                     }?>
 
-                console.log("Processed " + rscompleted + " files");
+                console.log("Processed " + rsprocessed.length + " files");
                 console.debug("Alternatives still to process: " + processafter.length);
                 console.debug("process_alts flag: " + process_alts);
                 console.debug("count : " + count);
 
-                if(rscompleted >= count-1)
+                if(rsprocessed.length >= count)
                     {
                     // Upload has completed, perform post upload actions
                     console.log("Upload processing completed");
@@ -1391,40 +1391,35 @@ function processFile(file, forcepost)
                         <?php 
                         }?>
                     }
-                else if((rscompleted + Object.keys(processafter).length == count-1) && process_alts)
+                else if((rsprocessed.length + Object.keys(processafter).length == count) && process_alts)
                     {
                     // Trigger event to begin processing the alternative files
                     console.debug("Processed primary files, triggering upload of alternatives");
                     jQuery('#CentralSpace').trigger("ProcessedMain");
                     process_alts=false;
                     }
-                else
-                    {
-                    console.debug("More files to upload");
-                    /// Still more files, update collection bar if required 
-                    <?php if ($usercollection==$collection_add)
-                        { 
-                        // Update collection div if uploading to active collection
-                        ?>
-                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
-                        <?php
-                        }
-                    else
-                        {?>               
-                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
-                        <?php
-                        }?>
+                
+                /// Update collection bar if required 
+                <?php if ($usercollection==$collection_add)
+                    { 
+                    // Update collection div if uploading to active collection
+                    ?>
+                    CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
+                    <?php
                     }
+                else
+                    {?>               
+                    CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
+                    <?php
+                    }?>
 
                 }
-            rscompleted++;
             },
         error: function(xhr, status, error)
             {
             console.log("Error:  " + error);
             jQuery("#upload_log").append("\r\n" + file.name + ": " + error);
-            styledalert('<?php echo $lang["error"]?> ', error);                
-            rscompleted++;                
+            styledalert('<?php echo $lang["error"]?> ', error); 
             }
         }); // End of post upload AJAX
     } // End of processFile()
@@ -1434,9 +1429,14 @@ function processFile(file, forcepost)
 jQuery('#CentralSpace').on("ProcessedMain",function(){
     // Now safe to process any alternative files that were held back waiting for the original files to upload
     console.debug("Processing alternative files");
-    processafter.forEach(function (file){
-        console.debug("Processing alternative file: " + file.name);
-        processFile(file,true);
+    processafter.forEach(function (file,index,object){
+        if(rsprocessed.indexOf(file.name) === -1)
+            {
+            // This file hasn't been processed
+            console.debug("Processing alternative file: " + file.name);
+            processFile(file,true);
+            object.splice(index, 1);
+            }
         });
     });
 		
