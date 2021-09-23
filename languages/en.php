@@ -1430,6 +1430,7 @@ $lang["requestapprovedmail"]="Your request has been approved. Click the link bel
 $lang["requestdeclinedmail"]="Sorry, your request for the resources in the collection below has been declined.";
 
 $lang["resourceexpirymail"]="The following resources have expired:";
+$lang['resource_expiry_x_days'] = "This resource expires in %X day(s)."; # %X should be replaced (it's a placeholder)
 $lang["resourceexpiry"]="Resource expiry";
 
 $lang["requestapprovedexpires"]="Your access to these resources will expire on";
