@@ -3,32 +3,33 @@
 use Predis\Protocol\Text\Handler\StatusResponse;
 
 include "../include/db.php";
-$tusupload = false;
-$uniqueid = isset($_COOKIE["user"]) ? $_COOKIE["user"] : get_rs_session_id(false);
-// Process only if file upload complete
-$processupload = getval("processupload","") != "";
-if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
+
+if(isset($_SERVER['HTTP_TUS_RESUMABLE'])
+    && isset($_SERVER['HTTP_UPLOAD_METADATA'])
+   // && in_array($_SERVER["REQUEST_METHOD"], array("PUT","POST","PATCH"))
+    )
     {
-    // This code handles the actual TUS file upload from Uppy. Once the file is on the system RS takes over
-    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
-    \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
-    $server   = new \TusPhp\Tus\Server('file');
-    if(!$uniqueid)
+    // Uppy can only send the token in upload-metadata
+    // Extract extra POST data
+    $uppy_metadata_arr = explode(",",$_SERVER['HTTP_UPLOAD_METADATA']);
+    foreach($uppy_metadata_arr as $uppy_metadata)
         {
-        // Should already have a user or session cookie from a non-TUS call or can't upload
-        http_response_code(403);
-        exit($lang["error"] . ". " . $lang["error-permissiondenied"]);
+        $data = explode(" ", $uppy_metadata);
+        if(isset($data[0]) && isset($data[1]))
+            {
+            if(substr($data[0],0,3) == "rs_")
+                {
+                $key = substr($data[0],3); 
+                if(!isset($_POST[$key]))
+                    {
+                    $val = base64_decode($data[1]); 
+                    $_POST[$key] = $val;
+                    }
+                }
+            }
         }
-    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . $uniqueid; 
-    $server -> setUploadDir($targetDir);
-    // Create target dir
-    if (!file_exists($targetDir))
-        {     		
-        mkdir($targetDir,0777,true);
-        }
-    $response = $server->serve();
-    $response->send();
-    exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
+    // Force pagename as cannot handle Uppy files suffix
+    $pagename = "upload_batch";
     }
 
 // The collection_add parameter can have the following values:-
@@ -38,6 +39,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
 //  is_numeric  Use this collection  
 $collection_add = getvalescaped('collection_add', 'false');
 $external_upload = upload_share_active();
+
 if($collection_add =='false' && $external_upload)
     {
     $collection_add = $external_upload;
@@ -52,6 +54,38 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+// Settings
+if(upload_share_active())
+    {
+    $session_hash = $rs_session;
+    }
+// TUS handling
+// Use PHP APCU cache if available as more robust (using file cache can result in 410 errors)
+$cachestore = function_exists('apcu_fetch') ? "apcu" : "file";
+
+if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
+    {
+    // This code handles the actual TUS file upload from Uppy. Once the file is on the system RS takes over
+    require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
+    \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
+    $server   = new \TusPhp\Tus\Server($cachestore);
+    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $session_hash); 
+    $server -> setUploadDir($targetDir);
+    // Create target dir
+    if (!file_exists($targetDir))
+        {     		
+        mkdir($targetDir,0777,true);
+        }
+
+    // TODO remove this line
+    //sleep(5);
+        
+    $response = $server->serve();
+    $response->send();
+    exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
+    }
+
+
 include_once "../include/image_processing.php";
 
 $overquota                              = overquota();
@@ -79,6 +113,9 @@ $replace_resource                       = getvalescaped('replace_resource', '');
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 $upload_here                            = (getval('upload_here', '') != '' ? true : false);
+
+// Set to process upload once file upload complete
+$processupload                          = getval("processupload","") != "";
 
 // $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 // $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
@@ -126,7 +163,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && $processupload)
+if($collection_add == "new" && ($processupload  || !$upload_then_edit))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -142,6 +179,10 @@ if($collection_add == "new" && $processupload)
     if ($hidden_collection)
         {
         show_hide_collection($collection_add, false, $userref);
+        }
+    else
+        {
+        set_user_collection($userref,$collection_add);
         }
 	}
     
@@ -351,19 +392,6 @@ else if ($resource_type!="" && !$alternative)
     {
     $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
-if(!$processupload)
-    {
-    if(!upload_share_active())
-        {
-        refresh_collection_frame($usercollection);
-        }
-    elseif (is_numeric($collection_add))
-        {
-        # Switch to the selected collection (existing or newly created) and refresh the frame.
-        set_user_collection($userref,$collection_add);
-        refresh_collection_frame($collection_add);
-        }
-    }
 
 //  Process completed upload
 if ($processupload)
@@ -375,12 +403,7 @@ if ($processupload)
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
 
-	// Settings
-    if(upload_share_active())
-        {
-        $session_hash = $rs_session;
-        }
-    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . $session_hash;
+    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $session_hash);
     $upfilename = getval("file_name","");
     $cleanupTargetDir = true; // Remove old files
     $maxFileAge = 5 * 3600; // Temp file age in seconds
@@ -550,8 +573,6 @@ if ($processupload)
                         add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                         }
                     }
-
-                    debug("BANG 1");
                 # Add to collection?
                 if (is_numeric($collection_add))
                     {
@@ -560,7 +581,6 @@ if ($processupload)
                 if ($upload_then_edit && $replace == "" && $replace_resource == "" && $collection_add != $upload_review_col)
                     {
                     # Also add to the user's special upload collection.
-                    debug("BANG 2");
                     add_resource_to_collection($ref,$upload_review_col,false,"",$resource_type); 
                     }
                 
@@ -866,11 +886,7 @@ upRedirBlock = false;
 // A mapping used by subsequent file uploads of alternatives to know to which resource to add the files as alternatives
 // Used when the original file and its alternatives are uploaded in a batch to a collection
 var resource_ids_for_alternatives = [];
-if(typeof newcol != 'undefined')
-    {
-    delete(newcol);
-    }
-        
+newcol = '<?php echo (int) $collection_add; ?>';
 jQuery(document).ready(function () {
 
     // If page URL has not updated, set it so that we can resume in event of crash
@@ -880,6 +896,12 @@ jQuery(document).ready(function () {
         top.history.pushState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname, '<?php echo str_replace("&ajax=true","",$pageurl) ?>');
         }
 
+    <?php
+    if(!$processupload && is_int_loose($collection_add))
+        {             
+        echo "CollectionDivLoad('" . $baseurl . "/pages/collections.php?collection="  . (int)$collection_add . "&nowarn=true&nc=" . time() . "');";
+        }?>
+
     registerCollapsibleSections();
 
     uploadProgress = 0; // Count of number of files that have been uploaded
@@ -887,39 +909,41 @@ jQuery(document).ready(function () {
     rscompleted = [];  // Array of file names that have been completed (AJAX POST has returned)
     process_alts = true // Flag to indicate whether upload of alternatives has started
     processerrors = 0;
-    var uppy = Uppy.Core({
-        debug: true,
+    retried = []; // Keep track of files that have been retried automatically
+    uppy = Uppy.Core({
+        debug: false,
         autoProceed: false,
-
         restrictions: {
-        <?php
-        if (isset($upload_max_file_size))
-            {
-            echo "maxFileSize: '$upload_max_file_size',"; 
-            }
-        if ($replace_resource > 0 || $single)
-            {
-            echo "maxNumberOfFiles: '1',"; 
-            }
-        if (isset($allowedmime))
-            {
-            // Specify what files can be browsed for
-            $allowed_extension_filter = "'" . implode("','",$allowedmime) . "'";
-            echo "allowedFileTypes: [" . $allowed_extension_filter . "],";
-            }            
-            ?>
+            <?php
+            if (isset($upload_max_file_size))
+                {
+                echo "maxFileSize: '$upload_max_file_size',"; 
+                }
+            if ($replace_resource > 0 || $single)
+                {
+                echo "maxNumberOfFiles: '1',"; 
+                }
+            if (isset($allowedmime))
+                {
+                // Specify what files can be browsed for
+                $allowed_extension_filter = "'" . implode("','",$allowedmime) . "'";
+                echo "allowedFileTypes: [" . $allowed_extension_filter . "],";
+                }            
+                ?>
             },
 
-           locale: {
+        locale: {
                 strings: {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
+                    browseFiles: '<?php echo $lang["upload_browse"] ?>',
+                    uploadXFiles: '<?php echo $lang["upload_start"] ?>',
                 },
             },
 
         onBeforeUpload: (files) => {
             processafter = []; // Array of alternative files to process after primary files
             // Check if a new collection is required
-            if(typeof newcol == 'undefined')
+            if(newcol == '' || newcol == 0)
                 {
                 newcol = jQuery('#collection_add').val();
                 if(newcol == "new")
@@ -936,28 +960,26 @@ jQuery(document).ready(function () {
                 
             // Now upload the files
             count = Object.keys(files).length;
-            uppy.setMeta({
-                <?php
-                if($k != "")
-                    {
-                    // This is an external upload, add data so that we can authenticate Uppy uploads
-                    ?>
-                    rs_collection_add: newcol,
-                    rs_k: '<?php echo htmlspecialchars($k) ?>',
-                    <?php
-                    }
-                else
-                    {
-                    // Add CSRF token as this is checked by authenticate.php ?>
-                    rs_<?php echo $CSRF_token_identifier . ": '" . generateCSRFToken($uniqueid, "upload_batch") . "'"; ?>,  
-                    <?php
-                    }?>
-                })
-
-            //jQuery('.uploadform input').prop('disabled','true'); 
-            //jQuery('.uploadform select').prop('disabled','true');
+            jQuery('.uploadform input').prop('disabled','true'); 
+            jQuery('.uploadform select').prop('disabled','true');
             }
-        })
+        });
+    
+        uppy.setMeta({
+            // Add CSRF token
+            rs_<?php echo $CSRF_token_identifier . ": '" . generateCSRFToken($session_hash, "upload_batch") . "'"; ?>,  
+            <?php
+            if($k != "")
+                {
+                // This is an external upload, add data so that we can authenticate Uppy uploads
+                ?>
+                rs_k: '<?php echo htmlspecialchars($k) ?>',
+                rs_collection_add: '<?php echo (int)$collection_add ?>',
+                <?php
+                }?>
+            });
+
+
     var Dashboard = Uppy.Dashboard;
     var Tus = Uppy.Tus;
     
@@ -998,7 +1020,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: 5,
+        limit: <?php echo ($cachestore == "apcu") ? "2" : "2"; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
@@ -1029,15 +1051,40 @@ jQuery(document).ready(function () {
         });
 
     uppy.on('upload-error', (file, error, response) => {
-        errtxt = error;
+        console.debug(error);
         errmessage = error.message;
-        console.log(error);
         if(errmessage.indexOf('response text') !== -1)
             {
-            errtxt = errmessage.substring(errmessage.indexOf("response text")+15,errmessage.indexOf(', request id'));
+            errmessage = errmessage.substring(errmessage.indexOf("response text")+15,errmessage.indexOf(', request id'));
             }
-        jQuery("#upload_log").append("\r\n" + file.name + ": " + errtxt);
-        styledalert('<?php echo $lang["error"]?> ', errtxt);
+        if(errmessage.indexOf('410') !== -1)
+            {
+            errmessage += ' <?php echo $lang["error_suggest_apcu"]; ?>';
+            }
+        <?php
+        // Automatically retry any errors that may be caused by TUS file cache
+        if($cachestore != "apcu")
+            {
+            ?>
+            console.log("Failed upload of " + file.name);
+            console.log(retried.indexOf(file.id));
+            if(retried.indexOf(file.id) === -1)
+                {            
+                // Retry the upload
+                console.log("Retrying the upload of " + file.name);
+                retried.push(file.id);
+                setTimeout(function () {
+                    uppy.retryUpload(file.id);
+                    }, 4000);
+                }
+            else
+                {
+                jQuery("#upload_log").append("\r\n" + file.name + ": <?php echo $lang["error"]?>" + errmessage);
+                styledalert('<?php echo $lang["error"]?> ', errmessage);                
+                }
+            <?php
+            }?>
+        
         });
 
     }); // End of Uppy JS code
@@ -1129,16 +1176,15 @@ function processFile(file, forcepost)
         }?>
 
     // EXTRA DATA: New collection information
-    if(typeof newcol == 'undefined')
+    if(typeof newcol !== 'undefined' && newcol != '' && newcol != 0)
         {
-        newcol = jQuery('#collection_add').val();
+        postdata['collection_add'] = newcol;
         }
     console.debug("newcol: " + newcol);
     entercolname = jQuery('#entercolname').val();
     console.debug("entercolname: " + entercolname);
 
     // Add the updated values 
-    postdata['collection_add'] = newcol;
     postdata['entercolname'] = entercolname;
 
     rsprocessed.push(file.name); // Add it to the processed array before AJAX call as processing is asynchronous
@@ -1334,7 +1380,7 @@ function postUploadActions()
             }
         <?php
         }
-    elseif (($upload_clearqueue && checkperm("d")) && !$replace)
+    elseif (($plupload_clearqueue && checkperm("d")) && !$replace)
         {
         $redirect_url_params = array(
             'search'   => '!contributions' . $userref,
@@ -1358,20 +1404,28 @@ function postUploadActions()
             {
             CentralSpaceLoad('<?php echo $redirect_url ?>',true);
             }
+        echo "uppy.reset();";
         <?php 
-        }?>
+        }
+    elseif($plupload_clearqueue)
+            {
+            echo "uppy.reset();";
+            }?>
 
-    completedlang = '<?php echo htmlspecialchars($lang["upload_finished_processing"]); ?>';
-    completedlang = completedlang.replace('%COUNT%',count);
-    completedlang = completedlang.replace('%ERRORS%',processerrors);
-    uppy.setOptions({
-        locale: {
-            strings: {
-                    uploadComplete: completedlang,
+    if(upRedirBlock)
+        {
+        completedlang = '<?php echo htmlspecialchars($lang["upload_finished_processing"]); ?>';
+        completedlang = completedlang.replace('%COUNT%',count);
+        completedlang = completedlang.replace('%ERRORS%',processerrors);
+        uppy.setOptions({
+            locale: {
+                strings: {
+                        uploadComplete: completedlang,
+                    },
                 },
-            },
-        });
-    CentralSpaceHideLoading();    
+            });
+        }
+    CentralSpaceHideLoading(); 
     }
 
 </script>

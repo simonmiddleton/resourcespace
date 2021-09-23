@@ -116,7 +116,7 @@ if ($enable_ckeditor){?>
 <?php } ?>
 
 <!--  UPPY -->
-<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/js/uppy_bundle_test.js?<?php echo $css_reload_key;?>"></script>
+<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/js/uppy.js?<?php echo $css_reload_key;?>"></script>
 <link rel="stylesheet" href="<?php echo $baseurl?>/css/uppy.min.css?css_reload_key=<?php echo $css_reload_key?>">
 
 

@@ -1819,6 +1819,8 @@ $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
 $lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
 $lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
+$lang['server_npuc_check_fail'] = 'The php-npuc extension is not installed. Intermittent upload errors may be experienced';
+$lang["error_suggest_apcu"] = "Please contact your system administrator to enable the php-npuc module";
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
@@ -3141,5 +3143,6 @@ $lang["message_recipients"]                 = "Recipient(s)";
 $lang["error_invalid_user"]                 = "Invalid user specified";
 $lang["error_not_logged_in"]                = "You are not logged in";
 $lang["reply"]                              = "Reply";
-
+$lang["upload_browse"]                      = "add files";
+$lang["upload_start"]                       = "Start upload";
 

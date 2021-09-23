@@ -102,6 +102,7 @@ if ($upload_review_mode)
         {
         $collection=0-$userref;
         }
+
     # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
     if ($edit_access_for_contributor == false)
         {

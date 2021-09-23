@@ -349,8 +349,6 @@ if(
     && !defined("API_CALL")
 )
     {
-    debug("WARNING: CSRF verification failed!");
-
     http_response_code(400);
 
     if(filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN))

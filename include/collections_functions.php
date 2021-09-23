@@ -5983,7 +5983,7 @@ function send_collection_to_admin(int $collection)
         }
     if (count($admin_notify_users)>0)
         {
-        debug("BANG sending collection to users IDs: " . implode(",",$admin_notify_users));
+        debug("sending collection to user IDs: " . implode(",",$admin_notify_users));
         message_add($admin_notify_users,$notification_message,$notification_url, $userref, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION, $collection_id);
         $collectionsent = true;
         }
