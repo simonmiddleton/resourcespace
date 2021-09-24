@@ -1847,7 +1847,6 @@ function check_access_key_collection($collection, $key)
     // get_featured_collection_categ_sub_fcs() does the check internally
     $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
 
-    debug("BANG 99");
     if($keyinfo[0]["password_hash"] != "" && PHP_SAPI != "cli")
         {
         // A share password has been set. Check if user has a valid cookie set

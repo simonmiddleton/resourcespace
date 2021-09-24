@@ -1719,7 +1719,6 @@ function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)
     // extract all of the words, a word being a bunch of tokens with optional NOTs
     if (preg_match_all('/(' . NODE_TOKEN_PREFIX . NODE_TOKEN_NOT . '*\d+)+/',$search,$words)===false || count($words[0])==0)
         {
-            debug("BANG F " . $search);
         return;
         }
 

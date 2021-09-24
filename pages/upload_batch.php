@@ -76,9 +76,6 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
         {     		
         mkdir($targetDir,0777,true);
         }
-
-    // TODO remove this line
-    //sleep(5);
         
     $response = $server->serve();
     $response->send();
@@ -549,8 +546,7 @@ if ($processupload)
                 $ref = create_resource($resource_type, $setarchivestate);
                 }
 
-                debug("BANG 4");
-            # check that $ref is not false - possible return value with create_resource()
+            # Check that $ref is not false - possible return value with create_resource()
             if(!$ref)
                 {
                 $result["status"] = false;
@@ -561,7 +557,6 @@ if ($processupload)
                 }
             else
                 {
-                    debug("BANG 3");
                 // Check valid requested state by calling function that checks permissions
                 update_archive_status($ref, $setarchivestate);
                 
@@ -910,6 +905,7 @@ jQuery(document).ready(function () {
     process_alts = true // Flag to indicate whether upload of alternatives has started
     processerrors = 0;
     retried = []; // Keep track of files that have been retried automatically
+    allerrors =[];
     uppy = Uppy.Core({
         debug: false,
         autoProceed: false,
@@ -1052,6 +1048,7 @@ jQuery(document).ready(function () {
 
     uppy.on('upload-error', (file, error, response) => {
         console.debug(error);
+        allerrors.push(error);
         errmessage = error.message;
         if(errmessage.indexOf('response text') !== -1)
             {
@@ -1195,11 +1192,18 @@ function processFile(file, forcepost)
         success: function(data,type,xhr){
             // Process the response            
             rscompleted.push(file.name); // Add it to the completed array
-            //if (xhr.hasOwnProperty('responseJSON'))
-                //  {
+
+            try {
                 uploadresponse = JSON.parse(data);        
-                console.debug(uploadresponse);            
-                //}
+                console.debug(uploadresponse);    
+                }
+            catch (e) {
+                // Not valid JSON, possibly a PHP error
+                uploadresponse = new Object();
+                uploadresponse.status =false;
+                uploadresponse.error = '';
+                uploadresponse.message = file.name + ': <?php echo $lang['upload_error_unknown'] ; ?> ' + data;
+                }    
             
             if (uploadresponse.status != true)
                 {

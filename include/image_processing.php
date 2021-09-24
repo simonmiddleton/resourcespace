@@ -133,7 +133,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
-                debug("BANG " . $filename);
                 }
             else
                 {
@@ -290,12 +289,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     # File path has been specified. Let's use that directly.
                     if (file_exists($file_path))
                         {
-                            debug("BANG renaming '" . $file_path . "' to '" . $filepath . "'");
                         $result=rename($file_path, $filepath);
                         }
                     else
                         {
-                            debug("BANG not found '" . $file_path ."'");
                         return false;
                         }
                     }               
@@ -327,7 +324,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         AutoRotateImage($filepath);
                         }
                     }
-                chmod($filepath,0777);
 
                 if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
                     {
@@ -2691,10 +2687,8 @@ function check_duplicate_checksum($filepath,$replace_resource){
         else
             {
             $checksum=md5_file($filepath);
-            debug("BANG" . $checksum);
             }
         $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
-        debug("BANG select ref value from resource where file_checksum='$checksum'");
         if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
             {
             return $duplicates;                       

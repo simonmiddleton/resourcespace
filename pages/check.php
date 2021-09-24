@@ -252,8 +252,8 @@ hook("addinstallationcheck");?>
 $npuccheck = function_exists("apcu_fetch");
 ?>
 <tr>
-    <td colspan="2">php-npuc</td>
-    <td><b><?php echo (function_exists("apcu_fetch") ? $lang['status-ok'] : $lang['server_npuc_check_fail']); ?></b></td>
+    <td colspan="2">php-apcu</td>
+    <td><b><?php echo (function_exists("apcu_fetch") ? $lang['status-ok'] : $lang['server_apcu_check_fail']); ?></b></td>
 </tr>
 <?php
 $extensions_required = array();
