@@ -63,6 +63,9 @@ if(upload_share_active())
 // Use PHP APCU cache if available as more robust (using file cache can result in 410 errors)
 $cachestore = function_exists('apcu_fetch') ? "apcu" : "file";
 
+
+$cachestore = "file";
+
 if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     {
     // This code handles the actual TUS file upload from Uppy. Once the file is on the system RS takes over
@@ -886,8 +889,7 @@ jQuery(document).ready(function () {
 
     // If page URL has not updated, set it so that we can resume in event of crash
     if(window.location.href != '<?php echo $pageurl ?>' && typeof(top.history.pushState)=='function')
-        {
-        console.log("Updating url");        
+        {       
         top.history.pushState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname, '<?php echo str_replace("&ajax=true","",$pageurl) ?>');
         }
 
@@ -905,7 +907,7 @@ jQuery(document).ready(function () {
     process_alts = true // Flag to indicate whether upload of alternatives has started
     processerrors = 0;
     retried = []; // Keep track of files that have been retried automatically
-    allerrors =[];
+    allowcollectionreload = true;
     uppy = Uppy.Core({
         debug: false,
         autoProceed: false,
@@ -1026,29 +1028,27 @@ jQuery(document).ready(function () {
         });
 
     uppy.on('complete', (result) => {
-        console.log("status count " + count);
-        console.log("status rsprocessed " + rsprocessed.length);
+        console.debug("status count " + count);
+        console.debug("status rsprocessed " + rsprocessed.length);
 
         // Process response and inform RS that upload has completed
         if(uploadProgress >= count)
             {
-            console.log("Processing uploaded resources");
+            console.debug("Processing uploaded resources");
             CentralSpaceShowLoading();
             pageScrolltop(scrolltopElementCentral);
             }
         });
 
     uppy.on('upload-success', (file, response) => {
-        console.log(file.name, response);
         uploadProgress++;
-        console.log('Completed uploading file ' + uploadProgress + ' out of ' + count + ' files');
+        console.debug('Completed uploading file ' + uploadProgress + ' out of ' + count + ' files');
         processFile(file);    
         // End of file uploaded code
         });
 
     uppy.on('upload-error', (file, error, response) => {
         console.debug(error);
-        allerrors.push(error);
         errmessage = error.message;
         if(errmessage.indexOf('response text') !== -1)
             {
@@ -1279,11 +1279,9 @@ function processFile(file, forcepost)
                     }?>
                 }
 
-            console.log("Completed processing " + rscompleted.length + " files");
+            console.debug("Completed processing " + rscompleted.length + " files");
             console.debug("Alternatives to process: " + processafter.length);
-            console.debug("process_alts flag: " + process_alts);
-            console.debug("count : " + count);
-
+            
             if(rscompleted.length >= count)
                 {
                 // Upload has completed, perform post upload actions
@@ -1303,14 +1301,27 @@ function processFile(file, forcepost)
                     { 
                     // Update collection div if uploading to active collection
                     ?>
-                    CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
+                    // Prevent too frequent updates that can cause flickering
+                    if(!allowcollectionreload)
+                        {
+                        allowcollectionreload = false;
+                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
+                        }
                     <?php
                     }
                 else
-                    {?>               
-                    CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
+                    {?> 
+                    if(!allowcollectionreload)
+                        {
+                        allowcollectionreload = false;
+                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
+                        }
                     <?php
                     }?>
+
+                setTimeout(function () {
+                    allowcollectionreload = true;
+                    }, 2000);   
                 }
             },
         error: function(xhr, status, error)
@@ -1341,7 +1352,7 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
 
 function postUploadActions()
     {
-    console.log("Upload processing completed");
+    console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
     <?php
     if($send_collection_to_admin && $setarchivestate == -1) 

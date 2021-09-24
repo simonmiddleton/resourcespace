@@ -7391,12 +7391,13 @@ function copy_hitcount_to_live()
  * 
  * @return array    $return
  */
-function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
+function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
     global $imagemagick_calculate_sizes;
 
     # Work out resource type
-    $resource_type=sql_value("select resource_type value from resource where ref='$ref'","");
+    $resource_data = get_resource_data($ref);
+    $resource_type = $resource_data["resource_type"];
 
     # add the original image
     $return=array();
@@ -7427,9 +7428,18 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
         else
             {
             $fileinfo=get_original_imagesize($ref,$path2,$extension);
-            $filesize = $fileinfo[0];
-            $sw = $fileinfo[1];
-            $sh = $fileinfo[2];
+            if($fileinfo !== false)
+                {
+                $filesize = $fileinfo[0];
+                $sw= $fileinfo[1];
+                $sh = $fileinfo[2];
+                }
+            else
+                {
+                $filesize = $resource_data["file_size"];
+                $sw = 0;
+                $sh = 0;
+                }
             }
         if (!is_numeric($filesize)) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
         else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$returnline["filesize"]=formatfilesize($filesize);}
