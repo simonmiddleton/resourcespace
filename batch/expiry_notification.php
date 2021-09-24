@@ -1,10 +1,4 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    http_response_code(401);
-    exit('Access denied - Command line only!');
-    }
-
 include(dirname(__FILE__) . "/../include/db.php");
 include(dirname(__FILE__) . "/../include/image_processing.php");
 
@@ -75,7 +69,7 @@ if (count($expired_resources)>0)
 // Send a notification X days prior to expiry to all users who have ever downloaded the resources
 if(isset($notify_on_resource_expiry_days))
     {
-    echo "Sending a notification {$notify_on_resource_expiry_days} day(s) prior to expiry to all users who have ever downloaded these resources.\r\n";
+    echo "<br>Sending a notification {$notify_on_resource_expiry_days} day(s) prior to expiry to all users who have ever downloaded these resources.";
     $data = sql_query(sprintf(
          'SELECT rl.`user`,
                  rte.ref AS `resource`
