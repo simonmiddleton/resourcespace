@@ -1,7 +1,7 @@
 <?php
 include dirname(__FILE__) . '/../../../include/db.php';
 
-$k = getval('k','');
+$k = getvalescaped('k','');
 $upload_collection = upload_share_active();
 if ($k=="" || !check_access_key_collection($upload_collection,$k))
     {
