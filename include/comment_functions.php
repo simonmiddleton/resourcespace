@@ -207,7 +207,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		</script>		
 		
 		<div id="comments_container">				
-		<div id="comment_form">
+		<div id="comment_form" class="comment_form_container">
 			<form class="comment_form" action="javascript:void(0);" method="">
 EOT;
         generateFormToken("comment_form");
@@ -294,14 +294,7 @@ EOT;
 			echo "</div>";			
 
 
-			echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";			
-			if ($comment['responseToDateTime']!="")
-				{
-				$responseToName = htmlspecialchars ($comment['responseToName']);
-				$responseToDateTime =  strftime('%a',strtotime($comment["responseToDateTime"])) . " " . nicedate($comment['responseToDateTime'], true, true, true);						
-				$jumpAnchorID = "comment" . $comment['ref_parent'];								
-				echo $lang['comments_in-response-to'] . "<br /><a class='.smoothscroll' rel='' href='#${jumpAnchorID}'>${responseToName} " . $lang['comments_in-response-to-on'] . " ${responseToDateTime}</a>";				
-				}						
+			echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";						
 			echo "</div>";	// end of CommentEntryInfoDetails		
 			echo "</div>";	// end of CommentEntryInfoLine			
 			echo "</div>";	// end CommentEntryInfoContainer
@@ -358,11 +351,13 @@ EOT;
 
 				}			
 			
+			$respond_button_id = "comment_respond_button_" . $thisRef;
 			$respond_div_id = "comment_respond_" . $thisRef;
-			
-			echo "<div id='${respond_div_id}' class='CommentRespond'>";		// start respond div
+			//style='margin-left: " . ($level-1)*50 . "px;'>"
+
+			echo "<div id='${respond_button_id}' class='CommentRespond'>";		// start respond div
 			echo "<a href='javascript:void(0)' onClick='
-				jQuery(\"#{$respond_div_id}\").replaceWith(jQuery(\"#comment_form\").clone().attr(\"id\",\"${respond_div_id}\")); 
+				jQuery(\"#comment_form\").clone().attr(\"id\",\"${respond_div_id}\").css(\"margin-left\",\"" . ($level-1)*50 . 'px")' . ".insertAfter(\"#comment$thisRef\"); 
 				jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#${respond_div_id} .comment_form\");				
 			'>" . '<i aria-hidden="true" class="fa fa-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";			
 			echo "</div>";		// end respond
