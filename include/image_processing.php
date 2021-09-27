@@ -764,13 +764,6 @@ function extract_exif_comment($ref,$extension="")
                     # Read the data.                
                     if ($read)
                         {
-                        $plugin=dirname(__FILE__)."/../plugins/exiftool_filter_" . $read_from[$i]['name'] . ".php";
-                        if ($read_from[$i]['exiftool_filter']!="")
-                            {
-                            eval($read_from[$i]['exiftool_filter']);
-                            }
-                        if (file_exists($plugin)) {include $plugin;}
-        
                         $exiffieldoption=$exifoption;
                         debug("[extract_exif_comment()][ref={$ref}] exiffieldoption = " . json_encode($exiffieldoption));
                         
