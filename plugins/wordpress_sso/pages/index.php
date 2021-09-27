@@ -23,10 +23,10 @@ if (isset($_GET["logout"]))
 
 $wordpress_user="";
 $wordpress=getval("wordpress_user","");
- exit ("TEST" . $wordpress);
+ exit ("TEST" . htmlspecialchars($wordpress));
  if ($wordpress!="")
 	{
-	exit ($wordpress);
+	exit (htmlspecialchars($wordpress));
 	$s=explode("|",$wordpress);
 	if (count($s)==2)
 			{
@@ -36,7 +36,7 @@ $wordpress=getval("wordpress_user","");
 					{
 					# Invalid hash. Redirect to Wordpress to reauthenticate.
 					##header("Location: $wordpress_url?rsauth=true"); /* Redirect browser */
-					exit($wordpress_user . " " . $hash);
+					exit(htmlspecialchars($wordpress_user) . " " . $hash);
 					}
 			}
 	}
@@ -45,7 +45,7 @@ if ($wordpress_user!="")
         {
         # Set a  cookie and redirect back to the site.
 
-        echo $wordpress_user;
+        echo htmlspecialchars($wordpress_user);
         ##setcookie("wordpress",$wordpress_user . "|" . md5("sjCx32lLPPa2" . $wordpress_user),0,"/");
 
         header("Location: $wordpress_url/wp-login.php");
