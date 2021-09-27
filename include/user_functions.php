@@ -1574,11 +1574,12 @@ function resolve_users($users)
  * @return boolean Valid?
  */
 function check_access_key($resources,$key)
-    {    
+    {
     if(!is_array($resources))
         {
         $resources = array($resources);
         }
+    array_filter($resources,'is_int_loose');
 
     foreach($resources as $resource)
         {
