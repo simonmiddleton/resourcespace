@@ -1,5 +1,5 @@
 Lists all plugins active on the system and stores plugin configuration.
-name,varchar(50),The folder name containing the plugin, also the file name in the case of an uploaded .RSP file
+name,varchar(50),The folder name containing the plugin
 descrip,text,A textual description of the plugin loaded from the .yaml file
 author,varchar(100),The author of the plugin, loaded from the .yaml file
 update_url,varchar(100),Loaded from the .yaml file

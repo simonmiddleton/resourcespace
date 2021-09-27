@@ -2111,10 +2111,6 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Allow Plugin Upload
-# Allow Plugin Upload
-$enable_plugin_upload = true;
-
 // GEOLOCATION MAP CONFIGURATION------------
     // Disable maps and geocoding features?
     $disable_geocoding = false;
