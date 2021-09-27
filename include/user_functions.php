@@ -1816,8 +1816,8 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
     
+    $key_escaped = escape_check($key);
     // Get key info 
     $keyinfo = sql_query("
                     SELECT user,
@@ -1827,7 +1827,7 @@ function check_access_key_collection($collection, $key)
                            password_hash,
                            collection
                       FROM external_access_keys
-                     WHERE access_key = '{$key}'
+                     WHERE access_key = '{$key_escaped}'
                        AND (expires IS NULL OR expires > now())");
     
     if(count($keyinfo) == 0)
