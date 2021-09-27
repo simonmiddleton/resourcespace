@@ -123,7 +123,8 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
         $duplicates=check_duplicate_checksum($url,false);
         if (count($duplicates)>0)
             {
-            return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+            $duplicates_string=implode(",",$duplicates);
+            return "FAILED: Resource {$ref} was created, but the file was not uploaded. Resources {$duplicates_string} already have a matching file.";
             }   
         else 
             {
@@ -555,7 +556,8 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     $duplicates=check_duplicate_checksum($file_path,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not uploaded. Resources {$duplicates_string} already have a matching file.";
         }   
     else 
         {
@@ -575,7 +577,8 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $duplicates=check_duplicate_checksum($url,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not uploaded. Resources {$duplicates_string} already have a matching file.";
         }   
     else 
         {
@@ -761,7 +764,8 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
     $duplicates=check_duplicate_checksum($file_location,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource not replaced - duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not replaced. Resources {$duplicates_string} already have a matching file.";
         }
     else 
         {
