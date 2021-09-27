@@ -64,8 +64,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
 
     set_plugin_config("action_dates",$action_dates_config);
     }
-    
-if (getval('upload','')!=''){return handle_rsc_upload($plugin_name);}
+   
 
 if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
 

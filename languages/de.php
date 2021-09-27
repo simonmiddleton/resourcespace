@@ -1216,10 +1216,6 @@ $lang['plugins-upload'] = 'Konfiguration hochladen';
 $lang['plugins-getrsc'] = 'Datei:';
 $lang['plugins-saveconfig'] = 'Konfiguration speichern';
 $lang['plugins-saveandexit'] = 'Speichern und zurück';
-$lang['plugins-didnotwork'] = 'Das hat leider nicht funktioniert. Bitte wählen Sie eine gültige .rsc Datei für dieses Plugin aus und klicken dann den \'Konfiguration hochladen\' Button.';
-$lang['plugins-goodrsc'] = 'Konfiguration erfolgreich hochgeladen. Klicken Sie den  \'Konfiguration speichern\' Button zum Speichern.';
-$lang['plugins-badrsc'] = 'Ungültige .rsc Datei.';
-$lang['plugins-wrongplugin'] = 'Diese .rsc Datei ist für das %plugin Plugin. Bitte wählen Sie eine Datei für dieses Plugin.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Setzt Konfigurationsvariable: $%cvn'; //%cvn is replaced by the name of the config variable being set
 
 #Location Data

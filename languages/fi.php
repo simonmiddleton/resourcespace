@@ -1134,10 +1134,6 @@ $lang['plugins-upload-title'] = 'Hanki asetukset tiedostosta';
 $lang['plugins-upload'] = 'Lataa asetukset';
 $lang['plugins-getrsc'] = 'Käytettävä tiedosto:';
 $lang['plugins-saveconfig'] = 'Tallenna asetukset';
-$lang['plugins-didnotwork'] = 'Tämä ei valitettavasti toiminut. Valitse kelvollinen .rsc-tiedosto tälle lisäosalle ja napsauta \'Lataa asetukset\'-nappia.';
-$lang['plugins-goodrsc'] = 'Asetukset ladattu onnistuneesti. Napsauta \'Tallenna asetukset\'-nappia tallentaaksesi.';
-$lang['plugins-badrsc'] = 'Valitettavasti tämä ei ollut kelvollinen .rsc-tiedosto.';
-$lang['plugins-wrongplugin'] = 'Valitettavasti tämä on .rsc-tiedosto lisäosalle %plugin. Valitse tämän lisäosan asetustiedosto.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Asettaa asetusten muuttujan: $%cvn'; //%cvn is replaced by the name of the config variable being set
 
 #Location Data
