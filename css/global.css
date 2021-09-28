@@ -782,7 +782,7 @@ div.autocomplete ul li {
 .dynamickeywords {float:left;}
 .keywordsselected {margin-top:10px;}
 
-#LoadingBox
+#LoadingBox, #ProcessingBox
     {
     position: absolute;
     top:300px;
@@ -808,10 +808,14 @@ div.autocomplete ul li {
 .uppy-Dashboard-browse,
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
 .uppy-DashboardContent-back,
-.uppy-DashboardContent-addMore
-{
+.uppy-DashboardContent-addMore {
     background-color: #1988d7 !important;
     color: #fff;
+}
+
+.uppy-Dashboard-browse{
+    font-size: 25px;
+    margin-bottom: 8px;
 }
 
 .uppy-DashboardContent-addMore svg{

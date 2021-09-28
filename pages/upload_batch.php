@@ -884,6 +884,10 @@ upRedirBlock = false;
 // A mapping used by subsequent file uploads of alternatives to know to which resource to add the files as alternatives
 // Used when the original file and its alternatives are uploaded in a batch to a collection
 var resource_ids_for_alternatives = [];
+
+// Array of file ids that errors have been logged for
+errorslogged = [];
+
 newcol = '<?php echo (int) $collection_add; ?>';
 jQuery(document).ready(function () {
 
@@ -905,7 +909,7 @@ jQuery(document).ready(function () {
     rsprocessed = [];  // Array of file names that have been processed (AJAX POST has been sent)
     rscompleted = [];  // Array of file names that have been completed (AJAX POST has returned)
     process_alts = true // Flag to indicate whether upload of alternatives has started
-    processerrors = 0;
+    processerrors = []; // Keep track of upload errors
     retried = []; // Keep track of files that have been retried automatically
     allowcollectionreload = true;
     uppy = Uppy.Core({
@@ -1030,12 +1034,11 @@ jQuery(document).ready(function () {
     uppy.on('complete', (result) => {
         console.debug("status count " + count);
         console.debug("status rsprocessed " + rsprocessed.length);
-
         // Process response and inform RS that upload has completed
         if(uploadProgress >= count)
             {
             console.debug("Processing uploaded resources");
-            CentralSpaceShowLoading();
+            CentralSpaceShowProcessing();
             pageScrolltop(scrolltopElementCentral);
             }
         });
@@ -1058,6 +1061,10 @@ jQuery(document).ready(function () {
             {
             errmessage += ' <?php echo $lang["error_suggest_apcu"]; ?>';
             }
+        else if(errmessage == "")
+            {
+            errmessage += ' <?php echo $lang["upload_error_unknown"]; ?>';
+            }
         <?php
         // Automatically retry any errors that may be caused by TUS file cache
         if($cachestore != "apcu")
@@ -1076,12 +1083,36 @@ jQuery(document).ready(function () {
                 }
             else
                 {
-                jQuery("#upload_log").append("\r\n" + file.name + ": <?php echo $lang["error"]?>" + errmessage);
-                styledalert('<?php echo $lang["error"]?> ', errmessage);                
+                // Add to array of errored files
+                if(processerrors.indexOf(file.id) === -1)
+                    {
+                    processerrors.push(file.id);
+                    }
                 }
             <?php
-            }?>
-        
+            }
+        else
+            {
+            ?>
+            // Add to array of errored files
+            if(processerrors.indexOf(file.id) === -1)
+                {
+                processerrors.push(file.id);
+                }
+            <?php
+            }
+            ?>
+
+        if(typeof errorslogged[file.id] == 'undefined' || errorslogged[file.id] != errmessage)
+            {
+            // Add error to log if not already done
+            errorslogged[file.id] = errmessage;
+            jQuery("#upload_log").append("\r\n'" + file.name + "' <?php echo $lang["error"]?>:" + errmessage);
+            }
+        else
+            {
+            upRedirBlock = true;
+            }
         });
 
     }); // End of Uppy JS code
@@ -1147,7 +1178,7 @@ function processFile(file, forcepost)
                     }
                 else
                     {                    
-                    jQuery("#upload_log").append("\r\n" + file.name + ": <?php echo $lang['error'] . ", " . $lang['error_upload_resource_not_found']; ?>");
+                    jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
                     return false; 
                     }
@@ -1190,8 +1221,11 @@ function processFile(file, forcepost)
         url: '<?php echo $baseurl_short; ?>pages/upload_batch.php',
         data: postdata,
         success: function(data,type,xhr){
-            // Process the response            
-            rscompleted.push(file.name); // Add it to the completed array
+            // Process the response
+            if(rscompleted.indexOf(file.id) === -1)
+                {
+                rscompleted.push(file.id);
+                }
 
             try {
                 uploadresponse = JSON.parse(data);        
@@ -1236,7 +1270,11 @@ function processFile(file, forcepost)
                     styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error, uploadresponse.message);
                     jQuery("#upload_log").append("\r\n" + uploadresponse.message + " [" + uploadresponse.error + "]");
                     }
-                processerrors++;
+                
+                if(processerrors.indexOf(file.id) === -1)
+                    {
+                    processerrors.push(file.id);
+                    }
                 }
             else
                 {
@@ -1274,64 +1312,28 @@ function processFile(file, forcepost)
                         console.debug("Added '"+ filename + "' (ID " + uploaded_resource_id + ") to resource_ids_for_alternatives array")
                         resource_ids_for_alternatives[uploaded_resource_id] = filename;
                         }
-
                     <?php
                     }?>
                 }
-
             console.debug("Completed processing " + rscompleted.length + " files");
             console.debug("Alternatives to process: " + processafter.length);
-            
-            if(rscompleted.length >= count)
-                {
-                // Upload has completed, perform post upload actions
-                postUploadActions();
-                }
-            else if((rscompleted.length + Object.keys(processafter).length == count) && process_alts)
-                {
-                // Trigger event to begin processing the alternative files
-                console.debug("Processed primary files, triggering upload of alternatives");
-                jQuery('#CentralSpace').trigger("ProcessedMain");
-                process_alts=false;
-                }
-            else
-                {
-                /// Update collection bar
-                <?php if ($usercollection==$collection_add)
-                    { 
-                    // Update collection div if uploading to active collection
-                    ?>
-                    // Prevent too frequent updates that can cause flickering
-                    if(!allowcollectionreload)
-                        {
-                        allowcollectionreload = false;
-                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
-                        }
-                    <?php
-                    }
-                else
-                    {?> 
-                    if(!allowcollectionreload)
-                        {
-                        allowcollectionreload = false;
-                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
-                        }
-                    <?php
-                    }?>
-
-                setTimeout(function () {
-                    allowcollectionreload = true;
-                    }, 2000);   
-                }
+            postUploadActions();
             },
         error: function(xhr, status, error)
-            { 
-            rscompleted.push(file.name);
+            {
+            if(rscompleted.indexOf(file.id) === -1)
+                {
+                rscompleted.push(file.id);
+                }
             console.log("Error:  " + error);
             jQuery("#upload_log").append("\r\n" + file.name + ": " + error);
             styledalert('<?php echo $lang["error"]?> ', error);
             upRedirBlock = true;
-            processerrors++;
+            
+            if(processerrors.indexOf(file.id) === -1)
+                {
+                processerrors.push(file.id);
+                }
             }
         }); // End of post upload AJAX
     } // End of processFile()
@@ -1345,13 +1347,54 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
             // This file hasn't been processed
             console.debug("Processing alternative file: " + file.name);
             processFile(file,true);
-            //object.splice(index, 1);
             }
         });
     });
 
 function postUploadActions()
     {
+    if(((rscompleted.length + processerrors.length + Object.keys(processafter).length) == count) && process_alts && processafter.length > 0)
+        {
+        // Trigger event to begin processing the alternative files
+        console.debug("Processed primary files, triggering upload of alternatives");
+        jQuery('#CentralSpace').trigger("ProcessedMain");
+        process_alts=false;
+        return;
+        }
+    else if(rscompleted.length + processerrors.length < count)
+        {
+        // More to do, update collection bar
+        <?php if ($usercollection==$collection_add)
+            { 
+            // Update collection div if uploading to active collection
+            ?>
+            // Prevent too frequent updates that can cause flickering
+            if(allowcollectionreload)
+                {
+                allowcollectionreload = false;
+                CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
+                }
+            <?php
+            }
+        else
+            {?> 
+            if(allowcollectionreload)
+                {
+                allowcollectionreload = false;
+                CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
+                }
+            <?php
+            }?>
+
+        setTimeout(function () {
+            allowcollectionreload = true;
+            }, 2000);
+        return;
+        }
+
+    
+    CentralSpaceHideProcessing();
+    // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
     <?php
@@ -1377,7 +1420,8 @@ function postUploadActions()
             {
             console.debug('Completed relating uploaded resources');
             });
-        }                            
+        }
+
     <?php
     if ($redirecturl != "")
         {?>
@@ -1413,25 +1457,25 @@ function postUploadActions()
             $redirect_url_params['collection_add'] = $collection_add;
             }
 
-        $redirect_url = generateURL($baseurl_short . 'pages/search.php',$redirect_url_params);
+        $redirecturl = generateURL($baseurl_short . 'pages/search.php',$redirect_url_params);
         ?>
         if(!upRedirBlock)
             {
-            CentralSpaceLoad('<?php echo $redirect_url ?>',true);
+            CentralSpaceLoad('<?php echo $redirecturl ?>',true);
             }
-        echo "uppy.reset();";
+        uppy.reset();
         <?php 
         }
     elseif($plupload_clearqueue)
-            {
-            echo "uppy.reset();";
-            }?>
+        {
+        echo "uppy.reset();";
+        }?>
 
     if(upRedirBlock)
         {
         completedlang = '<?php echo htmlspecialchars($lang["upload_finished_processing"]); ?>';
         completedlang = completedlang.replace('%COUNT%',count);
-        completedlang = completedlang.replace('%ERRORS%',processerrors);
+        completedlang = completedlang.replace('%ERRORS%',processerrors.length);
         uppy.setOptions({
             locale: {
                 strings: {
@@ -1439,88 +1483,115 @@ function postUploadActions()
                     },
                 },
             });
+
+        // Show popup with option to proceed 
+        CentralSpaceHideProcessing();
+
+        jQuery("#modal_dialog").html(completedlang);
+        jQuery("#modal_dialog").dialog({
+            title:'<?php echo $lang["error"]; ?>',
+            modal: true,
+            width: 400,
+            resizable: false,
+            dialogClass: 'no-close',
+            buttons: {
+                <?php
+                if ($redirecturl != "")
+                    {
+                    echo "'" . $lang['upload_process_successful'] . "' : function() {
+                        jQuery(this).dialog('close');
+                        CentralSpaceLoad('" . $redirecturl . "',true);                        
+                    },";
+                    }
+                echo "'" . $lang['upload_view_log'] . "' : function() { 
+                        jQuery(this).dialog('close');
+                        if(!jQuery('#UploadLogSection').is(':visible'))
+                            {
+                            jQuery('#UploadLogSectionHead').click();
+                            }
+                        pageScrolltop('#UploadLogSection');
+                    },";
+                    ?>
+                }
+            });
         }
-    CentralSpaceHideLoading(); 
+    }
+</script>
+<div class="BasicsBox" >
+<?php if ($overquota) 
+{
+echo "<h1>" . $lang["diskerror"] . "</h1><p>" . $lang["overquota"] . "</p>";
+include "../include/footer.php";
+exit();
+}
+
+if  ($alternative!="")
+    {
+    $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
+    ?>
+    <p>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
+    </p><?php 
+    }        
+elseif ($replace_resource!="")
+    {
+    $editurl = generateURL($baseurl_short . 'pages/edit.php',$searchparams,array("ref"=>$replace_resource));
+    $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
+    ?>
+    <p>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a>
+    <br />
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    </p>
+    <?php
     }
 
-</script>
-		
-<div class="BasicsBox" >
-        
- <?php if ($overquota) 
-   {
-   ?><h1><?php echo $lang["diskerror"]?></h1><p><?php echo $lang["overquota"] ?></p> <?php 
-   include "../include/footer.php";
-   exit();
-   }
-
-    if  ($alternative!="")
-        {
-        $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
-        ?>
-        <p>
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
-        </p><?php 
-        }        
-    elseif ($replace_resource!="")
-        {
-        $editurl = generateURL($baseurl_short . 'pages/edit.php',$searchparams,array("ref"=>$replace_resource));
-        $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
-        ?>
-        <p>
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a>
-        <br />
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
-        </p>
-        <?php
+if ($alternative!="")
+    {
+    $resource=get_resource_data($alternative);
+    if ($alternative_file_resource_preview)
+        { 
+        $imgpath=get_resource_path($resource['ref'],true,"col",false);
+        if (file_exists($imgpath))
+            {?>
+            <img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
+            <?php
+            }
         }
-
-    if ($alternative!="")
-        {
-        $resource=get_resource_data($alternative);
-	    if ($alternative_file_resource_preview)
-            { 
-		    $imgpath=get_resource_path($resource['ref'],true,"col",false);
-		    if (file_exists($imgpath))
-                {?>
-                <img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
-                <?php
-                }
-	        }
-	    if ($alternative_file_resource_title)
-            { 
-		    echo "<h2>" . htmlspecialchars($resource['field'.$view_title_field]) . "</h2><br/>";
-	        }
+    if ($alternative_file_resource_title)
+        { 
+        echo "<h2>" . htmlspecialchars($resource['field'.$view_title_field]) . "</h2><br/>";
         }
+    }
 
 # Define the titles:
 if ($replace!="") 
-	{
-	# Replace Resource Batch
-	$titleh1 = $lang["replaceresourcebatch"];
-	$titleh2 = "";
-	$intro = $lang["intro-plupload_upload-replace_resource"];
-	}
+    {
+    # Replace Resource Batch
+    $titleh1 = $lang["replaceresourcebatch"];
+    $titleh2 = "";
+    $intro = $lang["intro-plupload_upload-replace_resource"];
+    }
 elseif ($replace_resource!="")
-	{
-	# Replace file
-	$titleh1 = $lang["replacefile"];
-	$titleh2 = "";
-	$intro = $lang["intro-plupload_upload-replace_resource"];
-	}
+    {
+    # Replace file
+    $titleh1 = $lang["replacefile"];
+    $titleh2 = "";
+    $intro = $lang["intro-plupload_upload-replace_resource"];
+    }
 elseif ($alternative!="")
-	{
-	# Batch upload alternative files 
-	$titleh1 = $lang["alternativebatchupload"];
-	$titleh2 = "";
-	$intro = $lang["intro-plupload"];
-	}
+    {
+    # Batch upload alternative files 
+    $titleh1 = $lang["alternativebatchupload"];
+    $titleh2 = "";
+    $intro = $lang["intro-plupload"];
+    }
 else
-	{
-	# Add Resource Batch - In Browser 
-	$titleh1 = $lang["addresourcebatchbrowser"];
-	$intro = $lang["intro-plupload"];
-	}	
+    {
+    # Add Resource Batch - In Browser 
+    $titleh1 = $lang["addresourcebatchbrowser"];
+    $intro = $lang["intro-plupload"];
+    }	
 
 ?>
 <?php hook("upload_page_top"); ?>
@@ -1530,13 +1601,17 @@ else
 <?php
 
 if (isset($upload_max_file_size))
-	{
-	if (is_numeric($upload_max_file_size))
-		$sizeText = formatfilesize($upload_max_file_size);
-	else
-		$sizeText = formatfilesize(filesize2bytes($upload_max_file_size));
-	echo ' '.sprintf($lang['plupload-maxfilesize'], $sizeText);
-	}
+    {
+    if (is_numeric($upload_max_file_size))
+        {
+        $sizeText = formatfilesize($upload_max_file_size);
+        }
+    else
+        {
+        $sizeText = formatfilesize(filesize2bytes($upload_max_file_size));
+        }
+    echo ' '.sprintf($lang['plupload-maxfilesize'], $sizeText);
+    }
 
 hook("additionaluploadtext");
 
@@ -1608,7 +1683,6 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
         }
     elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         {
-        //$upload_page_options = true;
         include '../include/edit_upload_options.php';
         }
         
@@ -1644,11 +1718,8 @@ if ($show_upload_log)
     </div>
     <?php
     }
-    ?>    
+    ?>
 </div>
-
-
-
 <?php
 
 hook("upload_page_bottom");

@@ -1819,9 +1819,9 @@ $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
 $lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
 $lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
-$lang['server_apcu_check_fail'] = 'The php-apcu extension is not installed. Intermittent upload errors may be experienced';
+$lang['server_apcu_check_fail'] = 'The php-apcu extension is not installed. Enable this to make uploads faster and more resilient';
 $lang["error_suggest_apcu"] = "Please contact your system administrator to enable the php-apcu module";
-$lang["upload_error_unknown"] = "An unexpected error was encountered, please contact your administrator";
+$lang["upload_error_unknown"] = "An unexpected error was encountered. Please check that the filename is valid. If the problem persists please contact your system administrator";
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
@@ -3146,4 +3146,6 @@ $lang["error_not_logged_in"]                = "You are not logged in";
 $lang["reply"]                              = "Reply";
 $lang["upload_browse"]                      = "add files";
 $lang["upload_start"]                       = "Start upload";
-
+$lang["status_processing"]                  = "Processing";
+$lang["upload_process_successful"]          = "Continue";
+$lang["upload_view_log"]                    = "View log";
