@@ -764,6 +764,11 @@ function extract_exif_comment($ref,$extension="")
                     # Read the data.                
                     if ($read)
                         {
+                        if ($read_from[$i]['exiftool_filter']!="")
+                            {
+                            eval($read_from[$i]['exiftool_filter']);
+                            }
+        
                         $exiffieldoption=$exifoption;
                         debug("[extract_exif_comment()][ref={$ref}] exiffieldoption = " . json_encode($exiffieldoption));
                         
