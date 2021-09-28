@@ -175,6 +175,11 @@ body {
     .CommentFormBody {
         width: 100%;
     }
+    .CommentEntry,
+    .comment_form_container {
+        max-width: 600px;
+        width: auto;
+    }
     .RecordBox {
         margin: 20px 0 15px 0;
     }

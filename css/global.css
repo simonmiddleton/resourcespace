@@ -869,11 +869,12 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentFormFullname {margin-top: 5px; width: 170px;}
 .CommentFormEmail{margin-top: 5px; margin-left: 5px; width: 220px;}
 .CommentFormWebsiteURL{margin-top: 5px; margin-left: 5px; width: 189px;}
-.CommentFormSubmit{margin-top: 5px; margin-bottom: 5px;}
-.CommentFormBody {width: 600px; height: 60px; font-size: 1em;}
+.comment_form .CommentFormSubmit{margin: 8px 0 0 0;}
+.CommentFormBody {width: 600px; height: 60px; font-size: 1em; margin: 3px 0 0 0;}
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
 .TaggingHint {cursor: hand;display:block;width:588px;padding:5px;}
 .TaggingHint::before {content: "\f02b  ";   font: normal normal normal 14px "Font Awesome 5 Free";font-weight: 600;}
+.comment_form_container{background-color: white; border: 1px solid lightgray; padding: 8px; border-radius: 4px; width: 600px; margin-top: 5px;}
 
 .collectionscompactstylespacer {height:25px;}
 
