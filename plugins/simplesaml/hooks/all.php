@@ -264,7 +264,7 @@ function HookSimplesamlAllProvideusercredentials()
             $groups = $attributes[$simplesaml_group_attribute];
             }
 
-		$password_hash= md5("RSSAML" . $scramble_key . $username);
+        $password_hash = rs_password_hash('RSSAML' . generateSecureKey(64) . $username);
 
         $userid = 0;
         $currentuser = sql_query("SELECT ref, usergroup FROM user WHERE username='" . escape_check($username) . "'");
