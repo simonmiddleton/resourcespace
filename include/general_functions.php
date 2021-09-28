@@ -1990,15 +1990,20 @@ function get_temp_dir($asUrl = false,$uniqid="")
         }
     }
     
-    if ($uniqid!=""){
-        $uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
+    if ($uniqid!="")
+        {
+        //restrict to forward-only movements
+        $path_components = explode('/',$uniqid);
+        $path_components_filtered = array_filter($path_components, function($p) {return $p != '..';});
+        $uniqid = implode('/',$path_components_filtered);
+
         $result.="/$uniqid";
 
         if(!is_dir($result))
             {
             mkdir($result, 0777, true);
             }
-    }
+        }
     
     // return the result.
     if($asUrl==true)
