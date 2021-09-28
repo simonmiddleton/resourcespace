@@ -2545,6 +2545,7 @@ $comments_responses_max_level=10 ;				# maximum number of nested comments / thre
 $comments_max_characters=2000;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
+$comments_policy_enable=false;                  # show a Comments Policy link to the site text comments_policy
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
 $comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
 
