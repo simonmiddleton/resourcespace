@@ -637,12 +637,17 @@ function api_remove_resource_from_collection($resource,$collection)
     return remove_resource_from_collection($resource,$collection);                  
     }
     
-function api_create_collection($name)
+function api_create_collection($name,$forupload=false)
 	{
     global $userref, $collection_allow_creation;
     if (checkperm("b") || !$collection_allow_creation)
         {
         return false;
+        }
+    if($forupload && trim($name) == "")
+        {
+        # Do not translate this string, the collection name is translated when displayed!
+        $name = "Upload " . date("YmdHis"); 
         }
     
     return create_collection($userref,$name);
@@ -973,4 +978,28 @@ function api_get_profile_image($user)
 function api_get_system_status()
     {
     return get_system_status();
+    }
+
+function api_relate_all_resources($related)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    if(!is_array($related))
+        {
+        $related = explode(",",$related);
+        }
+    return relate_all_resources($related);
+    }
+
+function api_show_hide_collection($collection, $show, $user)
+    {
+    return show_hide_collection($collection, $show, $user);
+    }
+
+function api_send_collection_to_admin($collection)
+    {
+    return send_collection_to_admin($collection);
     }

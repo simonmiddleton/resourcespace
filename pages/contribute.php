@@ -17,10 +17,10 @@ include "../include/header.php";
 	<?php
 				#We need to point to the right upload sequence based on $upload_then_edit
 				if ($upload_then_edit==1){?>
-						href="<?php echo $baseurl_short?>pages/upload_plupload.php">
+						href="<?php echo $baseurl_short?>pages/upload_batch.php">
 				<?php }
 				else {?>
-						href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=plupload"><?php 
+						href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=batch"><?php 
 				}?>
 	<?php echo $lang["addresourcebatchbrowser"];?></a>
     </li>

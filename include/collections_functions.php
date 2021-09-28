@@ -717,7 +717,8 @@ function delete_collection($collection)
  * @param  integer $collection  Collection id
  * @return void
  */
-function refresh_collection_frame($collection="")
+function 
+refresh_collection_frame($collection="")
     {
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;
@@ -3352,7 +3353,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($upload_then_edit)
             {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_plupload.php",array(),array("collection_add"=>$collection_data['ref']));
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_batch.php",array(),array("collection_add"=>$collection_data['ref']));
             }
         else
             {
@@ -5755,7 +5756,7 @@ function upload_share_setup(string $key,$shareopts = array())
 
     // Upload link key can only work on these pages
     $validpages = array(
-        "upload_plupload",
+        "upload_batch",
         "edit",
         "category_tree_lazy_load",
         "suggest_keywords",
@@ -5887,23 +5888,104 @@ function purge_expired_shares($filteropts)
     }
 
     
-    /**
-     * Check if user has the appropriate access to delete a collection.
-     *
-     * @param   array     $collection_data   Array of collection details, typically from get_collection()
-     * @param   int       $userref           Id of user
-     * @param   int       $k                 External access key value
-     * 
-     * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
-     */
-    function can_delete_collection($collection_data, $userref, $k = "")
+/**
+ * Check if user has the appropriate access to delete a collection.
+ *
+ * @param   array     $collection_data   Array of collection details, typically from get_collection()
+ * @param   int       $userref           Id of user
+ * @param   int       $k                 External access key value
+ * 
+ * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
+ */
+function can_delete_collection($collection_data, $userref, $k = "")
+    {
+    if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
         {
-        if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
-		    {
-	        return false;
-		    }
+        return false;
+        }
+    else
+        {
+        return true;
+        }
+    }
+
+/**
+ * Send colletion to administrators - used if $send_collection_to_admin is enabled)
+ *
+ * @param  int $collection  Collection ID
+ * @return boolean
+ */
+function send_collection_to_admin(int $collection)
+    {
+    if(!is_int_loose($collection))
+        {
+        return false;
+        }
+    
+    global $lang, $userref, $applicationname, $baseurl, $admin_resource_access_notifications;
+    $collectionsent = false;
+    // Create a copy of the collection for admin:
+    $admin_copy = create_collection(-1, $lang['send_collection_to_admin_emailedcollectionname']);
+    copy_collection($collection, $admin_copy);
+    $collection_id = $admin_copy;
+
+    // Get the user (or username) of the contributor:
+    $user = get_user($userref);
+    if(isset($user) && trim($user['fullname']) != '')
+        {
+        $user = $user['fullname'];
+        }
+    else
+        {
+        $user = $user['username'];
+        }
+
+    // Get details about the collection:
+    $collection = get_collection($collection_id);
+    $collection_name = $collection['name'];
+    $resources_in_collection = count(get_collection_resources($collection_id));
+
+    // Build mail and send it:
+    $subject = $applicationname . ': ' . $lang['send_collection_to_admin_emailsubject'] . $user;
+
+    $message = $user . $lang['send_collection_to_admin_usercontributedcollection'] . "\n\n";
+    $message .= $baseurl . '/pages/search.php?search=!collection' . $collection_id . "\n\n";
+    $message .= $lang['send_collection_to_admin_additionalinformation'] . "\n\n";
+    $message .= $lang['send_collection_to_admin_collectionname'] . $collection_name . "\n\n";
+    $message .= $lang['send_collection_to_admin_numberofresources'] . $resources_in_collection . "\n\n";
+    
+    $notification_message = $lang['send_collection_to_admin_emailsubject'] . " " . $user;
+    $notification_url = $baseurl . '/?c=' . $collection_id;
+    $admin_notify_emails = array();
+    $admin_notify_users = array();
+    $notify_users=get_notification_users(array("e-1","e0")); 
+    foreach($notify_users as $notify_user)
+        {
+        get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message, $admin_resource_access_notifications);		  
+        if($send_message==false)
+            {
+            continue;
+            }		
+        get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+        if($send_email && $notify_user["email"]!="")
+            {
+            $admin_notify_emails[] = $notify_user['email'];				
+            }        
         else
             {
-            return true;
+            $admin_notify_users[]=$notify_user["ref"];
             }
         }
+    foreach($admin_notify_emails as $admin_notify_email)
+        {
+        send_mail($admin_notify_email, $subject, $message, '', '');
+        $collectionsent = true;
+        }
+    if (count($admin_notify_users)>0)
+        {
+        debug("sending collection to user IDs: " . implode(",",$admin_notify_users));
+        message_add($admin_notify_users,$notification_message,$notification_url, $userref, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION, $collection_id);
+        $collectionsent = true;
+        }
+    return $collectionsent;
+    }

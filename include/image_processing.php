@@ -289,7 +289,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     # File path has been specified. Let's use that directly.
                     if (file_exists($file_path))
                         {
-                    $result=rename($file_path, $filepath);
+                        $result=rename($file_path, $filepath);
                         }
                     else
                         {
@@ -324,7 +324,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         AutoRotateImage($filepath);
                         }
                     }
-                chmod($filepath,0777);
 
                 if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
                     {

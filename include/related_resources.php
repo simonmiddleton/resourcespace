@@ -75,7 +75,7 @@ if ($enable_related_resources)
 				if($related_type_upload_link && $edit_access)
 					{
 					echo "<div class=\"clearerleft\" ></div>";
-					echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=plupload&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a>";
+					echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=batch&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a>";
 					}
 				}
 			else
@@ -116,7 +116,7 @@ if ($enable_related_resources)
 	
 								if($related_type_upload_link && $edit_access)
 									{
-									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=plupload&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
+									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=batch&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
 									}
 							?>
 						</tbody>

@@ -2834,7 +2834,7 @@ function get_upload_url($collection="",$k="")
     global $upload_then_edit, $userref, $baseurl;
     if ($upload_then_edit || $k != "" || !isset($userref))
         {
-        $url = generateURL($baseurl . "/pages/upload_plupload.php",array("k" => $k,"collection_add"=>$collection));
+        $url = generateURL($baseurl . "/pages/upload_batch.php",array("k" => $k,"collection_add"=>$collection));
         }
     elseif(isset($userref))
         {

@@ -7003,7 +7003,7 @@ function save_original_file_as_alternative($ref)
 
     global $lang, $alternative_file_previews, $alternative_file_previews_batch, $filename_field;
 
-    // Values may be passed in POST or GET data from upload_plupload.php
+    // Values may be passed in POST or GET data from upload_batch.php
     $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
     $filename_field_use                     = getval('filename_field', $filename_field); // GET variable - field to use for filename
 
@@ -7391,12 +7391,13 @@ function copy_hitcount_to_live()
  * 
  * @return array    $return
  */
-function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
+function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
     global $imagemagick_calculate_sizes;
 
     # Work out resource type
-    $resource_type=sql_value("select resource_type value from resource where ref='$ref'","");
+    $resource_data = get_resource_data($ref);
+    $resource_type = $resource_data["resource_type"];
 
     # add the original image
     $return=array();
@@ -7427,9 +7428,18 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
         else
             {
             $fileinfo=get_original_imagesize($ref,$path2,$extension);
-            $filesize = $fileinfo[0];
-            $sw = $fileinfo[1];
-            $sh = $fileinfo[2];
+            if($fileinfo !== false)
+                {
+                $filesize = $fileinfo[0];
+                $sw= $fileinfo[1];
+                $sh = $fileinfo[2];
+                }
+            else
+                {
+                $filesize = $resource_data["file_size"];
+                $sw = 0;
+                $sh = 0;
+                }
             }
         if (!is_numeric($filesize)) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
         else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$returnline["filesize"]=formatfilesize($filesize);}
@@ -7780,7 +7790,6 @@ function get_hidden_indexed_fields()
         return $hidden;
         }
     }
-
 
 function get_OR_fields()
     {
@@ -8907,4 +8916,26 @@ function get_video_duration(string $file_path)
             {
             return 0;
             }
+    }
+
+/**
+ * Relate all resources in the passed array with each other
+ *
+ * @param  array $related Array of resource IDs
+ * @return boolean
+ */
+function relate_all_resources(array $related = [])
+    {
+    $error = false;
+    array_filter($related,"is_int_loose");
+    foreach($related as $ref)
+        {
+        $other_refs = array_diff($related,array($ref));
+        $success = update_related_resource($ref,$other_refs,true);
+        if(!$success)
+            {
+            $error = true;
+            }
+        }
+    return !$error;
     }

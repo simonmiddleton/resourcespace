@@ -1385,7 +1385,7 @@ if($responsive_ui)
     $drag_over="";
     if (is_array($drag_upload_params) && ($display=='thumbs' || $display=='xlthumbs') && $order_by == 'collection')
         {
-        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
+        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_batch.php", $drag_upload_params);
         $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
         }
     ?>

@@ -3008,7 +3008,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 
     $upload_here_params = array();
 
-    $upload_endpoint = 'pages/upload_plupload.php';
+    $upload_endpoint = 'pages/upload_batch.php';
     if(!$GLOBALS['upload_then_edit'])
         {
         $upload_endpoint = 'pages/edit.php';

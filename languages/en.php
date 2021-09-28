@@ -109,8 +109,8 @@ $lang["property-allow_registration_selection"]="Allow registration selection";
 $lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
-$lang["information-allowed_extensions"]="If set, only files with the specified extensions are allowed upon upload to this type, e.g. jpg,gif";
-$lang["property-allowed_extensions"]="Allowed extensions";
+$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
+$lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
 $lang["icon_picker_placeholder"]="Type to filter";
 
@@ -1641,11 +1641,6 @@ $lang["savesearchassmartcollection"]="Save search as smart collection";
 $lang["smartcollection"]="Smart collection";
 $lang["dosavedsearch"]="Do saved search";
 
-
-$lang["uploadertryjava"]="Use the legacy Java uploader.";
-$lang["uploadertryplupload"]="<strong>NEW</strong> - Try out the new style uploader.";
-$lang["getjava"]="To ensure that you have the latest Java software on your system, visit the Java website.";
-
 $lang["all"]="All";
 $lang["allresourcessearchbar"]="All resources";
 $lang["allcollectionssearchbar"]="All collections";
@@ -1809,6 +1804,9 @@ $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
 $lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
 $lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
+$lang['server_apcu_check_fail'] = 'The php-apcu extension is not installed. Enable this to make uploads faster and more resilient';
+$lang["error_suggest_apcu"] = "Please contact your system administrator to enable the php-apcu module";
+$lang["upload_error_unknown"] = "An unexpected error was encountered. Please check that the filename is valid. If the problem persists please contact your system administrator";
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
@@ -1977,12 +1975,13 @@ $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Local upload folder";
 $lang["foldercontent"] = "Folder content";
-$lang["intro-local_upload"] = "Select one or more files from the local upload folder and click  'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
+$lang["intro-local_upload"] = "Select one or more files from the local upload folder and click 'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
 $lang["intro-single_upload"] = "Click  'Browse' to locate a file and then click  'Upload'.";
-$lang["intro-plupload"] = "Click 'Add files' to locate one or more files and then click 'Start upload'.";
-$lang["intro-plupload_dragdrop"] = "Drag and drop or click 'Add files' to locate one or more files and then click 'Start upload'.";
+$lang["intro-plupload"] = "Browse for files or drag and drop, then click 'Upload'";
 $lang["intro-plupload_upload-replace_resource"] = "Click 'Add files' to locate a file and then click 'Start upload'.";
 $lang["intro-batch_edit"] = "Please specify the default upload settings and the default values for the metadata of the resources you are about to upload.";
+$lang["upload_complete_processing"] = "File upload complete. Processing...";
+$lang["upload_finished_processing"] = "Completed processing. Files: %COUNT%. Errors: %ERRORS%";
 $lang["plupload-maxfilesize"] = "The maximum allowed upload file size is %s.";
 $lang["collections-1"] = "(<strong>1</strong> Collection)";
 $lang["collections-2"] = "(<strong>%d</strong> Collections with <strong>%d</strong> items)"; # %number will be replaced, e.g. 3 Collections
@@ -2229,7 +2228,7 @@ $lang['merge_filename_title_include_extensions'] = 'Include extensions?';
 $lang['merge_filename_title_spacer'] = 'Spacer';
 
 # For sending a collection with all the resources uploaded at one time:
-$lang['send_collection_to_admin_emailedcollectionname'] = 'E-mailed collection';
+$lang['send_collection_to_admin_emailedcollectionname'] = 'User submitted resources';
 $lang['send_collection_to_admin_emailsubject'] = 'Collection uploaded by ';
 $lang['send_collection_to_admin_usercontributedcollection'] = ' uploaded these resources as a whole collection';
 $lang['send_collection_to_admin_additionalinformation'] = 'Additional information';
@@ -2886,6 +2885,13 @@ $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not 
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
 $lang["error_multiple_preview_tools"] = "Please disable the curent preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
+$lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
+$lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
+$lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
+$lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
+$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
+$lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -3123,5 +3129,8 @@ $lang["message_recipients"]                 = "Recipient(s)";
 $lang["error_invalid_user"]                 = "Invalid user specified";
 $lang["error_not_logged_in"]                = "You are not logged in";
 $lang["reply"]                              = "Reply";
-
-
+$lang["upload_browse"]                      = "add files";
+$lang["upload_start"]                       = "Start upload";
+$lang["status_processing"]                  = "Processing";
+$lang["upload_process_successful"]          = "Continue";
+$lang["upload_view_log"]                    = "View log";

@@ -27,7 +27,7 @@ include "../../include/header.php";
 		<?php endif // Test if Add Single Resource is allowed. ?>
 
 		<?php if($upload_methods['in_browser_upload']): // Test if Add Resource Batch - In Browser is allowed. 
-			$url = ($upload_then_edit) ? "upload_plupload.php" : "edit.php?ref=-$userref&amp;uploader=plupload";
+			$url = ($upload_then_edit) ? "upload_batch.php" : "edit.php?ref=-$userref&amp;uploader=batch";
 		?>
             <li><i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/<?php echo $url?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchbrowser"]?></a></li>
         <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
