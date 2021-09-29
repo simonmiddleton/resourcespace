@@ -31,7 +31,7 @@ $simplesaml_multiple_email_notify = "";
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
 
-$simplesaml_rsconfig = true;
+$simplesaml_rsconfig = false;
 
 // When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
 // plugins/simplesaml/lib/lib/_autoload.php
