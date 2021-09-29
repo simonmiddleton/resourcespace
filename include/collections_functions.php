@@ -294,10 +294,12 @@ function get_collection_resources_with_data($ref)
  * @return boolean
  */
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
-	{
+    {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     global $collection_allow_not_approved_share, $collection_block_restypes;
@@ -376,7 +378,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	else
 		{
 		hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
 
@@ -391,9 +393,11 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
  */
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
     {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     if (collection_writeable($collection)||$smartadd)
@@ -418,7 +422,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 	else
 		{
 		hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
     
