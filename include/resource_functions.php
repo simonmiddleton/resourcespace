@@ -3456,12 +3456,9 @@ function copy_resource($from,$resource_type=-1)
 		add_keyword_mappings($to,$username . " " . $userfullname,-1);
 		}
 
-	# Now copy all data
-	copyResourceDataValues($from,$to,$resource_type);
-	
-    # Copy nodes
-    copy_resource_nodes($from,$to);
-	
+    # Copy Metadata
+    copyAllDataToResource($from,$to);
+
 	# Copy relationships
     copyRelatedResources($from, $to);
 
