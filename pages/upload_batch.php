@@ -6,7 +6,6 @@ include "../include/db.php";
 
 if(isset($_SERVER['HTTP_TUS_RESUMABLE'])
     && isset($_SERVER['HTTP_UPLOAD_METADATA'])
-   // && in_array($_SERVER["REQUEST_METHOD"], array("PUT","POST","PATCH"))
     )
     {
     // Uppy can only send the token in upload-metadata
@@ -1134,7 +1133,10 @@ function processFile(file, forcepost)
         ajax: 'true',
         processupload: "true",
         file_name: file.name,
-        <?php echo generateAjaxToken("upload_batch") . ",\n";
+        <?php if($CSRF_enabled) 
+            {
+            echo generateAjaxToken("upload_batch") . ",\n";
+            }
         foreach($uploadparams as $uploadparam=>$value)
             {
             echo $uploadparam . " : '" . urlencode($value) . "',\n";
