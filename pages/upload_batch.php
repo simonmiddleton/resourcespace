@@ -873,7 +873,6 @@ include "../include/header.php";
 <?php
 echo "show_upload_log=" . (($show_upload_log)?"true;":"false;") . "\n";
 
-$pageurl = $baseurl  . $_SERVER["REQUEST_URI"];
 ?>
 var resource_keys=[];
 var processed_resource_keys=[];
@@ -889,11 +888,10 @@ errorslogged = [];
 
 newcol = '<?php echo (int) $collection_add; ?>';
 jQuery(document).ready(function () {
-
     // If page URL has not updated, set it so that we can resume in event of crash
-    if(window.location.href != '<?php echo $pageurl ?>' && typeof(top.history.pushState)=='function')
+    if(window.location.href != '<?php echo $uploadurl ?>' && typeof(top.history.pushState)=='function')
         {       
-        top.history.pushState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname, '<?php echo str_replace("&ajax=true","",$pageurl) ?>');
+        top.history.pushState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname, '<?php echo str_replace("&ajax=true","",$uploadurl) ?>');
         }
 
     <?php
