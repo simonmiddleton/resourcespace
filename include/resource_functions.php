@@ -6562,6 +6562,19 @@ function copyResourceDataValues($from, $to, $resource_type = "")
         $resource_type_sql = "";
         }
 
+    // This is for logging after the insert statement
+    $data_to_add = sql_query("
+        SELECT
+            rd.resource_type_field AS field,
+            rd.value AS value
+        FROM resource_data AS rd
+        JOIN resource AS r ON rd.resource = r.ref
+        JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
+        {$resource_type_sql}
+        WHERE rd.resource = '{$from}'
+        {$omit_fields_sql}
+    ");
+
     sql_query("
         INSERT INTO resource_data(resource, resource_type_field, value)
              SELECT '{$to}',
@@ -6574,6 +6587,11 @@ function copyResourceDataValues($from, $to, $resource_type = "")
               WHERE rd.resource = '{$from}'
                 {$omit_fields_sql}
     ");
+    
+    foreach($data_to_add as $data)
+        {
+        resource_log($to,LOG_CODE_EDITED,$data["field"],'','',$data["value"]);
+        }
 
     return;
     }

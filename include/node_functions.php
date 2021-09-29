@@ -1447,6 +1447,15 @@ function copy_resource_nodes($resourcefrom, $resourceto)
             }
         }
 
+    // This is for logging after the insert statement
+    $nodes_to_add = sql_array("
+    SELECT node value
+        FROM resource_node AS rnold
+    LEFT JOIN node AS n ON n.ref = rnold.node
+    WHERE resource ='{$resourcefrom}'
+        {$omit_fields_sql};
+    ");
+
     sql_query("
         INSERT INTO resource_node(resource, node, hit_count, new_hit_count)
              SELECT '{$resourceto}', node, 0, 0
@@ -1456,6 +1465,8 @@ function copy_resource_nodes($resourcefrom, $resourceto)
                 {$omit_fields_sql}
                  ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
     ");
+
+    log_node_changes($resourceto,$nodes_to_add,array());
 
     return;
     }
