@@ -53,17 +53,10 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
-// Settings
-if(upload_share_active())
-    {
-    $session_hash = $rs_session;
-    }
+global $usersession;
 // TUS handling
-// Use PHP APCU cache if available as more robust (using file cache can result in 410 errors)
+// Use PHP APCU cache if available as more robust
 $cachestore = function_exists('apcu_fetch') ? "apcu" : "file";
-
-
-$cachestore = "file";
 
 if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     {
@@ -71,7 +64,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
     \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
     $server   = new \TusPhp\Tus\Server($cachestore);
-    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $session_hash); 
+    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $usersession); 
     $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
@@ -402,7 +395,7 @@ if ($processupload)
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
 
-    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $session_hash);
+    $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . md5($scramble_key . $usersession);
     $upfilename = getval("file_name","");
     $cleanupTargetDir = true; // Remove old files
     $maxFileAge = 5 * 3600; // Temp file age in seconds
@@ -965,9 +958,12 @@ jQuery(document).ready(function () {
         });
     
         uppy.setMeta({
-            // Add CSRF token
-            rs_<?php echo $CSRF_token_identifier . ": '" . generateCSRFToken($session_hash, "upload_batch") . "'"; ?>,  
-            <?php
+            <?php 
+            if($CSRF_enabled)
+                {
+                // Add CSRF token
+                echo "rs_" . $CSRF_token_identifier . ": '" . generateCSRFToken($usersession, "upload_batch") . "',";
+                }
             if($k != "")
                 {
                 // This is an external upload, add data so that we can authenticate Uppy uploads
