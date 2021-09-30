@@ -172,7 +172,8 @@ $json_decode_file_data = function($fh)
 
 if(isset($generate_spec_file) && $generate_spec_file)
     {
-    $spec_fh = $get_file_handler("spec_file_example.php", "w+b");
+    $spec_fpath = (getcwd() ?: dirname(__DIR__, 2)) . '/spec_file_example.php';
+    $spec_fh = $get_file_handler($spec_fpath, "w+b");
     fwrite($spec_fh, '<?php
 // All of the following configuration options have the left side (keys) represent the SRC and DEST on the right (values)
 
@@ -239,7 +240,7 @@ $resource_type_fields_spec = array(
 );
     ' . PHP_EOL);
     fclose($spec_fh);
-    logScript("Successfully generated an example of the spec file. Location: '" . __DIR__ . "/spec_file_example.php'");
+    logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
     exit(0);
     }
 
@@ -278,7 +279,7 @@ if($export || $import)
     if(!file_exists($folder_path) || !is_dir($folder_path))
         {
         $folder_type = $export ? "DEST" : ($import ? "SRC" : "");
-        logScript("ERROR: {$folder_type} MUST be folder. Value provided: '{$folder_path}'");
+        logScript("ERROR: {$folder_type} MUST be an existing folder. Value provided: '{$folder_path}'");
         exit(1);
         }
     }
