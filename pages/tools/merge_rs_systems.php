@@ -123,8 +123,6 @@ foreach($options as $option_name => $option_value)
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
 
-include_once "{$webroot}/include/log_functions.php";
-
 $get_file_handler = function($file_path, $mode)
     {
     $file_handler = fopen($file_path, $mode);
@@ -244,6 +242,14 @@ $resource_type_fields_spec = array(
     exit(0);
     }
 
+// Advanced workflow plugin is required to be enabled
+$active_plugins = array_column(get_active_plugins(), 'name');
+if(!in_array('rse_workflow', $active_plugins))
+    {
+    logScript("ERROR: Missing requirement - 'Advanced workflow' plugin is not enabled.");
+    exit(1);
+    }
+
 if($import && !isset($user))
     {
     logScript("ERROR: You need to specify a user when importing. It is best if it is a Super Admin.");
@@ -285,7 +291,10 @@ if($export || $import)
     }
 
 if($export && isset($folder_path))
-    {   
+    {
+    logScript('Script disabled $hide_real_filepath configuration option.');
+    $hide_real_filepath = false;
+
     $tables = array(
         array(
             "name" => "usergroup",
@@ -360,13 +369,7 @@ if($export && isset($folder_path))
                     AND (file_extension IS NOT NULL AND trim(file_extension) <> '')
                     AND (preview_extension IS NOT NULL AND trim(preview_extension) <> '')",
             ),
-            "additional_process" => function($record) use ($hide_real_filepath) {
-                if($hide_real_filepath)
-                    {
-                    logScript("ERROR: --export requires configuration option '\$hide_real_filepath' to be disabled (ie. set to FALSE)");
-                    exit(1);
-                    }
-
+            "additional_process" => function($record) {
                 // new fake column used at import for ingesting the file in the DEST system
                 $record["merge_rs_systems_file_url"] = "";
 
