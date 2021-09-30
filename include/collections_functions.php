@@ -294,10 +294,12 @@ function get_collection_resources_with_data($ref)
  * @return boolean
  */
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
-	{
+    {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     global $collection_allow_not_approved_share, $collection_block_restypes;
@@ -376,7 +378,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	else
 		{
 		hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
 
@@ -391,9 +393,11 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
  */
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
     {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     if (collection_writeable($collection)||$smartadd)
@@ -418,10 +422,91 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 	else
 		{
 		hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
     
+/**
+ * Add resource(s) $resources to collection $collection
+ *
+ * @param  mixed $resources
+ * @param  mixed $collection
+ * @return boolean
+ */
+function collection_add_resources($collection,$resources='',$search='',$selected=false)
+    {
+    global $USER_SELECTION_COLLECTION,$lang;
+    if(     (string)(int)$collection != (string)$collection 
+        ||  ($resources == '' && $search == '')
+        ||  (!collection_writeable($collection))
+        ||  is_featured_collection_category_by_children($collection)
+    )
+        {
+        return $lang["cantmodifycollection"];
+        }
+
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+    else if($resources ==''){$resources=do_search($search);}
+
+    if ($resources =='' || count($resources) == 0){return $lang["noresourcesfound"];}
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_add = array_diff($resources, $collection_resources);
+
+    $errors=0;
+    foreach($refs_to_add as $ref)
+        {
+        if(!add_resource_to_collection($ref,$collection)){$errors ++;}
+        }
+    
+    if($errors ==0){return true;}
+    else {return $lang["cantaddresourcestocolection"];}
+    }
+
+
+/**
+ * collection_remove_resources
+ *
+ * @param  mixed $collection
+ * @param  mixed $resources
+ * @param  mixed $removeall
+ * @return void
+ */
+function collection_remove_resources($collection,$resources='',$removeall=false,$selected=false)
+    {
+    global $USER_SELECTION_COLLECTION,$lang;
+    
+    if(    (string)(int)$collection != (string)$collection 
+        || ($resources == '' && !$removeall && !$selected)
+        || (!collection_writeable($collection))
+        || is_featured_collection_category_by_children($collection)
+    )
+        {
+        return $lang["cantmodifycollection"];
+        }
+
+    if ($removeall)
+        {
+        foreach(get_collection_resources($collection) as $ref)
+            {
+            remove_resource_from_collection($ref, $collection);
+            }
+        return true;
+        }
+
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_remove = array_intersect($collection_resources, $resources);
+    
+    $errors=0;
+    foreach($refs_to_remove as $ref)
+        {
+        if(!remove_resource_from_collection($ref, $collection)){$errors++;}
+        }
+    
+    if ($errors == 0){return true;}
+    else {return $lang["cantremoveresourcesfromcolection"];}
+    }
     
 /**
  * Is the collection $collection writable by the current user?

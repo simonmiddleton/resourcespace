@@ -1681,8 +1681,21 @@ hook ("resourceactions") ?>
                 }
             else
                 {
-                echo "<a id='delete_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/delete.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</a>";
-                }
+                $urlparams['text']='deleted';
+                $urlparams['refreshcollection']='true';
+                $redirect_url = generateURL($baseurl_short . "pages/done.php",$urlparams);
+                ?> <a id='delete_link_" . $ref . "' href='#' onclick="
+                if (confirm('<?php echo $lang['filedeleteconfirm'] ?>'))
+                    {
+                        api(
+                        'delete_resource',
+                        {'resource':'<?php echo $ref?>'}, 
+                        function(response){
+                            ModalLoad('<?php echo $redirect_url ?>',true);
+                    }
+                );}
+                " ><i class='fa fa-fw fa-trash'></i>&nbsp;<?php echo $deletetext ?></a>
+                <?php }
             echo "</li>";
             }
 		if (!$disable_alternative_files && !checkperm('A')) 
