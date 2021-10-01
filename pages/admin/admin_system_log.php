@@ -138,7 +138,16 @@ if($table != '' && $table_reference > 0 && array_key_exists($table, $tables_data
         }
     }
 
-if (strpos($backurl, "pages/team/team_user.php") !== false)
+
+// Breadcrumbs
+if(strpos($backurl, 'pages/admin/admin_resource_type_fields.php') !== false)
+    {
+    $links_trail = [
+        ['title' => $lang["systemsetup"], 'href' => "{$baseurl_short}pages/admin/admin_home.php"],
+        ['title' => $lang["admin_resource_type_fields"], 'href' => $backurl],
+    ];
+    }
+else if (strpos($backurl, "pages/team/team_user.php") !== false)
     {
     // Arrived from Manage users page
     $links_trail = array(
@@ -170,12 +179,10 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
         )
     );
     }
-
 $links_trail[] = array(
     'title' => htmlspecialchars($title),
     'href'  => ""
 );
-
 renderBreadcrumbs($links_trail);
 ?>
     <h1>
