@@ -220,7 +220,7 @@ for ($n=0;$n<count($fields);$n++)
             
                 <a href="<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
                 <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
-                <a href="<?php echo $baseurl . "/pages/admin/admin_system_log.php?table=resource_type_field&table_reference=" . $fields[$n]["ref"]?>" onClick="CentralSpaceLoad(this,true);"><?php echo LINK_CARET; ?><?php echo $lang["log"]; ?></a>
+                <a href="<?php echo $baseurl . "/pages/admin/admin_system_log.php?table=resource_type_field&table_reference=" . $fields[$n]["ref"]?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo $lang["log"]; ?></a>
             </div>
         </td>
     </tr>
