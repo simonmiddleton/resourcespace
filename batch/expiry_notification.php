@@ -72,7 +72,8 @@ if(isset($notify_on_resource_expiry_days))
     echo "<br>Sending a notification {$notify_on_resource_expiry_days} day(s) prior to expiry to all users who have ever downloaded these resources.";
     $data = sql_query(sprintf(
          'SELECT rl.`user`,
-                 rte.ref AS `resource`
+                 rte.ref AS `resource`,
+                 u.email
             FROM resource_log AS rl
             JOIN (
                      SELECT r.ref
@@ -82,6 +83,7 @@ if(isset($notify_on_resource_expiry_days))
                       WHERE rd.`value` <> ""
                         AND DATE(rd.`value`) = DATE(DATE_ADD(NOW(), INTERVAL %s DAY))
                  ) AS rte ON rte.ref = rl.resource
+            JOIN user AS u ON u.ref = rl.user
            WHERE rl.`type` = "%s"
         ORDER BY rte.ref ASC',
 
@@ -96,8 +98,23 @@ if(isset($notify_on_resource_expiry_days))
     foreach($matched_resources as $resource_ref)
         {
         $url = "{$baseurl}/?r={$resource_ref}";
+        $email_body = "{$msg}<br><br><a href=\"{$url}\">{$url}</a>";
+        $admin_notify_users = [];
+
         $users_who_dld = array_filter($data, function($v) use ($resource_ref) { return $v['resource'] === $resource_ref; });
-        $users_who_dld = array_unique(array_column($users_who_dld, 'user'));
-        message_add($users_who_dld, $msg, $url);
+        foreach($users_who_dld as $dld_record)
+            {
+            get_config_option($dld_record['user'], 'email_user_notifications', $send_email);
+            if($send_email && $dld_record['email'] !== '')
+                {
+                send_mail($dld_record['email'], "{$applicationname}: {$lang['resourceexpiry']}", $email_body);
+                }
+            else
+                {
+                $admin_notify_users[] = $dld_record['user'];
+                }
+            }
+
+        message_add($admin_notify_users, $msg, $url);
         }
     }
