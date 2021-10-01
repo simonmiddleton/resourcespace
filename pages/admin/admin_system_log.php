@@ -183,10 +183,6 @@ renderBreadcrumbs($links_trail);
         <form class="ResultsFilterTopRight" method="get">
             <input type="hidden" name="actasuser" value="<?php echo $actasuser; ?>">
             <input type="hidden" name="backurl" value="<?php echo $backurl; ?>">
-            <input type="hidden" name="table" value="<?php echo $table; ?>">
-            <input type="hidden" name="table_reference" value="<?php echo $table_reference; ?>">
-            <input type="hidden" name="logyear" value="<?php echo $logyear; ?>">
-            <input type="hidden" name="logmonth" value="<?php echo $logmonth; ?>">
             <input type="text" name="log_search" placeholder="<?php echo htmlspecialchars($log_search); ?>">
             <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
         <?php
@@ -242,7 +238,7 @@ $select_table_url = generateURL(
         </select>    
     </div>   
     <?php
-    if($table_reference == "")
+    if($table == "")
         {
         ?>
         <select class="SplitSearch" name="table">
@@ -266,30 +262,9 @@ $select_table_url = generateURL(
                 }
                 ?>
         </select>
-
-    <?php
-        }
-    else
-        {
-        ?>
-        <input type="hidden" name="table" value="<?php echo $table;?>">
         <?php
         }
-        
-    if ($table_reference != '')
-        {
         ?>
-        <input type="hidden" name="table_reference" value="<?php echo $table_reference;?>">
-        <?php
-        }
-    
-    if ($log_search != '')
-        {
-        ?>
-        <input type="hidden" name="log_search" value="<?php echo $log_search;?>">
-        <?php
-        }
-    ?>
 
 <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('TableFilterForm'));">
 <div class="clearerleft"></>
