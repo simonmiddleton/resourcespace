@@ -67,7 +67,7 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     border: none;
 }
 
-button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
+button:not(.vjs-menu-button), input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
     background-color: #1988d7;
     background-image: none;
