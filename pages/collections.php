@@ -425,6 +425,30 @@ else { ?>
 			jQuery('#CentralSpace').trigger('prepareDragDrop');
 			CheckHideCollectionBar();
 		});
+
+        jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).addClass("Selected");
+                    jQuery("#check" + resource).prop('checked','checked');
+                });
+        
+            UpdateSelColSearchFilterBar();
+            CentralSpaceHideLoading();
+        });
+
+        jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
+            console.log('BANG');
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).removeClass("Selected");
+                    jQuery("#check" + resource).prop('checked','');
+                });
+            
+            CentralSpaceHideLoading();
+            UpdateSelColSearchFilterBar();
+        });
+
 	</script>
 	<!-- End of Drag and Drop -->
 	<style>

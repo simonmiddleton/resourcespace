@@ -109,9 +109,10 @@ $lang["property-allow_registration_selection"]="Allow registration selection";
 $lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
-$lang["information-allowed_extensions"]="If set, only files with the specified extensions are allowed upon upload to this type, e.g. jpg,gif";
-$lang["property-allowed_extensions"]="Allowed extensions";
+$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
+$lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
+$lang["icon_picker_placeholder"]="Type to filter";
 
 # Metadata field properties
 $lang["property-field_id"]="Field id";
@@ -151,6 +152,7 @@ $lang["information-regexp_filter"]="Regular Expression filtering - e.g. '[A-Z]+'
 $lang["information-regexp_fail"]="The entered value was not in the required format.";
 $lang["property-tab_name"]="Tab name";
 $lang["property-push_metadata"]="Push metadata";
+$lang["property-icon"] = "Icon";
 $lang['property-inherit_global_fields'] = 'Inherit global fields';
 $lang['information-inherit_global_fields'] = 'Should global fields be included for this resource type?';
 $lang["property-smart_theme_name"]="Smart featured collection name";
@@ -392,6 +394,8 @@ $lang["action-addtocollection"]="Add to collection";
 $lang["action-removefromcollection"]="Remove from collection";
 $lang["addtocollection"]="Add to collection";
 $lang["cantmodifycollection"]="You can't modify this collection.";
+$lang["cantaddresourcestocollection"]="One or more resources couldn't be added to the collection.";
+$lang["cantremoveresourcesfromcolection"]="One or more resources couldn't be removed from the collection.";
 $lang["currentcollection"]="Current collection";
 $lang["viewcollection"]="View collection";
 $lang['hiddencollections_hide']="Hide hidden collections";
@@ -558,6 +562,7 @@ $lang["nextresult"]="Next result";
 $lang["pixels"]="pixels";
 $lang["download"]="Download";
 $lang["preview"]="Preview";
+$lang["previewithsizename"]="%sizename Preview";
 $lang["fullscreenpreview"]="Full screen preview";
 $lang["originalfileoftype"]="Original %EXTENSION File"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION File" -> "Original PDF File"
 $lang["fileoftype"]="? File"; # ? will be replaced, e.g. "MP4 File"
@@ -600,6 +605,8 @@ $lang['remove_custom_access_no_users_found'] = 'No users or groups with custom a
 $lang['action-generate_pdf'] = 'Generate PDF';
 $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
+$lang["view_directly_in_browser"] = "View directly in browser";
+$lang["view_in_browser"] = "View in browser";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -1156,6 +1163,8 @@ $lang["managealternativefilestitle"]="Alternative files";
 $lang["alternativefiles"]="Alternative files";
 $lang["filetype"]="File type";
 $lang["filedeleteconfirm"]="Are you sure you wish to delete this file?";
+$lang["altfiledeletefail"]="Unable to delete alternative file.";
+$lang["altfilesdeletefail"]="Unable to delete one or more alternative files.";
 $lang["addalternativefile"]="Add alternative file";
 $lang["editalternativefile"]="Edit alternative file";
 $lang["description"]="Description";
@@ -1395,6 +1404,7 @@ $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
 $lang["addremove"]="Add/remove";
+$lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
 $lang["all_users"]="all users";
@@ -1453,33 +1463,18 @@ $lang['plugins-author'] = 'Author';
 $lang['plugins-version'] = 'Version';
 $lang['plugins-instversion'] = 'Installed version';
 $lang['plugins-icon'] = 'Icon';
-$lang['plugins-uploadheader'] = 'Upload plugin';
-$lang['plugins-uploadtext'] = 'Select a .rsp file to install.';
 $lang['plugins-deactivate'] = 'Deactivate';
 $lang['plugins-moreinfo'] = 'More&nbsp;Info';
 $lang['plugins-activate'] = 'Activate';
 $lang['plugins-purge'] = 'Purge&nbsp;configuration';
-$lang['plugins-rejmultpath'] = 'Archive contains multiple paths. (Security Risk)';
-$lang['plugins-rejrootpath'] = 'Archive contains absolute paths. (Security Risk)';
-$lang['plugins-rejparentpath'] = 'Archive contain parent paths (../). (Security Risk)';
-$lang['plugins-rejmetadata'] = 'Archive description file not found.';
-$lang['plugins-rejarchprob'] = 'There was a problem extracting the archive:';
-$lang['plugins-rejfileprob'] = 'Uploaded plugin must be a .rsp file.';
-$lang['plugins-rejremedy'] = 'If you trust this plugin you can install it manually by expanding the archive into your plugins directory.';
-$lang['plugins-uploadsuccess'] = 'Plugin uploaded succesfully.';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Activated via config.php';
-$lang['plugins-uploadbutton'] = 'Upload plugin';
 $lang['plugins-download'] = 'Download&nbsp;configuration';
 $lang['plugins-upload-title'] = 'Get configuration from file';
 $lang['plugins-upload'] = 'Upload configuration';
 $lang['plugins-getrsc'] = 'File to use:';
 $lang['plugins-saveconfig'] = 'Save configuration';
 $lang['plugins-saveandexit'] = 'Save and exit';
-$lang['plugins-didnotwork'] = 'Sorry, that didn\'t work. Choose a valid .rsc file for this plugin and then click \'Upload Configuration\' button.';
-$lang['plugins-goodrsc'] = 'Configuration uploaded ok. Click \'Save Configuration\' button to save.';
-$lang['plugins-badrsc'] = 'Sorry, that wasn\'t a valid .rsc file.';
-$lang['plugins-wrongplugin'] = 'Sorry, that\'s an .rsc file for the %plugin plugin. Choose one for this plugin.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Sets configuration variable: $%cvn'; //%cvn is replaced by the name of the config variable being set
 $lang['plugins-search-plugin-placeholder'] = 'Search plugins';
 $lang['plugins-disabled-plugin-message'] = 'Disabled in configuration';
@@ -1652,11 +1647,6 @@ $lang["savesearchassmartcollection"]="Save search as smart collection";
 $lang["smartcollection"]="Smart collection";
 $lang["dosavedsearch"]="Do saved search";
 
-
-$lang["uploadertryjava"]="Use the legacy Java uploader.";
-$lang["uploadertryplupload"]="<strong>NEW</strong> - Try out the new style uploader.";
-$lang["getjava"]="To ensure that you have the latest Java software on your system, visit the Java website.";
-
 $lang["all"]="All";
 $lang["allresourcessearchbar"]="All resources";
 $lang["allcollectionssearchbar"]="All collections";
@@ -1820,6 +1810,9 @@ $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
 $lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
 $lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
+$lang['server_apcu_check_fail'] = 'The php-apcu extension is not installed. Enable this to make uploads faster and more resilient';
+$lang["error_suggest_apcu"] = "Please contact your system administrator to enable the php-apcu module";
+$lang["upload_error_unknown"] = "An unexpected error was encountered. Please check that the filename is valid. If the problem persists please contact your system administrator";
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
@@ -1988,12 +1981,13 @@ $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Local upload folder";
 $lang["foldercontent"] = "Folder content";
-$lang["intro-local_upload"] = "Select one or more files from the local upload folder and click  'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
+$lang["intro-local_upload"] = "Select one or more files from the local upload folder and click 'Upload'. Once the files are uploaded they can be deleted from the upload folder.";
 $lang["intro-single_upload"] = "Click  'Browse' to locate a file and then click  'Upload'.";
-$lang["intro-plupload"] = "Click 'Add files' to locate one or more files and then click 'Start upload'.";
-$lang["intro-plupload_dragdrop"] = "Drag and drop or click 'Add files' to locate one or more files and then click 'Start upload'.";
+$lang["intro-plupload"] = "Browse for files or drag and drop, then click 'Upload'";
 $lang["intro-plupload_upload-replace_resource"] = "Click 'Add files' to locate a file and then click 'Start upload'.";
 $lang["intro-batch_edit"] = "Please specify the default upload settings and the default values for the metadata of the resources you are about to upload.";
+$lang["upload_complete_processing"] = "File upload complete. Processing...";
+$lang["upload_finished_processing"] = "Completed processing. Files: %COUNT%. Errors: %ERRORS%";
 $lang["plupload-maxfilesize"] = "The maximum allowed upload file size is %s.";
 $lang["collections-1"] = "(<strong>1</strong> Collection)";
 $lang["collections-2"] = "(<strong>%d</strong> Collections with <strong>%d</strong> items)"; # %number will be replaced, e.g. 3 Collections
@@ -2240,7 +2234,7 @@ $lang['merge_filename_title_include_extensions'] = 'Include extensions?';
 $lang['merge_filename_title_spacer'] = 'Spacer';
 
 # For sending a collection with all the resources uploaded at one time:
-$lang['send_collection_to_admin_emailedcollectionname'] = 'E-mailed collection';
+$lang['send_collection_to_admin_emailedcollectionname'] = 'User submitted resources';
 $lang['send_collection_to_admin_emailsubject'] = 'Collection uploaded by ';
 $lang['send_collection_to_admin_usercontributedcollection'] = ' uploaded these resources as a whole collection';
 $lang['send_collection_to_admin_additionalinformation'] = 'Additional information';
@@ -2897,6 +2891,13 @@ $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not 
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
 $lang["error_multiple_preview_tools"] = "Please disable the curent preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
+$lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
+$lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
+$lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
+$lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
+$lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
+$lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -3134,5 +3135,8 @@ $lang["message_recipients"]                 = "Recipient(s)";
 $lang["error_invalid_user"]                 = "Invalid user specified";
 $lang["error_not_logged_in"]                = "You are not logged in";
 $lang["reply"]                              = "Reply";
-
-
+$lang["upload_browse"]                      = "add files";
+$lang["upload_start"]                       = "Start upload";
+$lang["status_processing"]                  = "Processing";
+$lang["upload_process_successful"]          = "Continue";
+$lang["upload_view_log"]                    = "View log";

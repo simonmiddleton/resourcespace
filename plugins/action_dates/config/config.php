@@ -9,6 +9,7 @@ $action_dates_email_admin_days    = '';
 $action_dates_new_state           = 3;
 $action_dates_remove_from_collection = true;
 $action_dates_extra_config        = array();
+$action_dates_workflow_actions    = false;
 
 // Add any new vars that specify metadata fields to this array to stop them being deleted if plugin is in use
 // These are added in hooks/all.php

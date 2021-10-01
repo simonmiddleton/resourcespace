@@ -111,6 +111,13 @@ if (!hook("replacelistitem"))
             </td>
             <?php 
             }
+        ?>
+
+        <td <?php hook("listviewcolumnstyle");?>>
+            <?php echo strtoupper(htmlspecialchars($result[$n]["file_extension"])); ?>
+        </td>
+
+        <?php
 
         if ($list_view_status_column)
             { ?>

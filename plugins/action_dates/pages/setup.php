@@ -41,6 +41,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_email_admin_days"] = getvalescaped('action_dates_email_admin_days','',true);
     $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
     $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
+    $action_dates_config['action_dates_workflow_actions'] = getvalescaped('action_dates_workflow_actions',false);
     
     // Get the extra rows fom the table
     $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
@@ -64,8 +65,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
 
     set_plugin_config("action_dates",$action_dates_config);
     }
-    
-if (getval('upload','')!=''){return handle_rsc_upload($plugin_name);}
+   
 
 if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
 
@@ -80,7 +80,7 @@ $page_def[] = config_add_boolean_select('action_dates_remove_from_collection',$l
 $page_def[] = config_add_text_input('action_dates_email_admin_days',$lang['action_dates_email_admin_days']);
 $page_def[] = config_add_boolean_select('action_dates_email_for_state', $lang['action_dates_email_for_state']);
 $page_def[] = config_add_boolean_select('action_dates_email_for_restrict', $lang['action_dates_email_for_restrict']);
-
+$page_def[] = config_add_boolean_select('action_dates_workflow_actions',$lang['action_dates_workflow_actions']);
 $page_def[] = config_add_multi_archive_select('action_dates_weekdays', $lang['action_dates_weekdays'],array($lang["weekday-0"],$lang["weekday-1"],$lang["weekday-2"],$lang["weekday-3"],$lang["weekday-4"],$lang["weekday-5"],$lang["weekday-6"]));
 
 $page_def[] = config_add_section_header($lang['action_dates_additional_settings']);

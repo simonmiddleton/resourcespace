@@ -67,7 +67,7 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     border: none;
 }
 
-button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
+button:not(.vjs-menu-button), input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
     background-color: #1988d7;
     background-image: none;
@@ -299,9 +299,9 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
-#CentralSpace {text-align:left;position:relative;}
+#CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%;}
 
-.TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;min-height: 30px;}
+.TopInpageNav {clear: left;margin-bottom:15px;margin-right: 0;position:relative;min-height: 30px;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;}
@@ -438,6 +438,17 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .IconUserRatingSpace    {width:7px;height:10px;padding: 0;margin-bottom:6px;display: block;float: left;}
 .ASC {display: inline;padding-right: 10px;}
 .DESC {display: inline;padding-right: 10px;}
+
+.thumbs-file-extension {
+    font-weight: bold;
+    background: #e4e4e4;
+    color: #404040;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 3px;
+    margin: 1px;
+    cursor: default;
+}
 
 /*Resource Panel layout*/
 .Listview {overflow-x:auto; margin: 0 0 25px 0; clear:both;}
@@ -773,16 +784,22 @@ div.autocomplete ul li {
 .dynamickeywords {float:left;}
 .keywordsselected {margin-top:10px;}
 
-#LoadingBox
+#LoadingBox, #ProcessingBox
     {
     position: absolute;
     top:300px;
     left: 40%;
     font-size:150%;
-    width:200px;padding:30px;
+    width:200px;
+    padding:30px;
     z-index:99999;
     display:none;
     border-radius:5px;
+    }
+
+#ProcessingBox h3
+    {
+    padding:0px;
     }
 
 .plupload_container {min-height:450px;}
@@ -791,6 +808,48 @@ div.autocomplete ul li {
 .plupload_header {display:none;}
 .plupload_content {top:0 !important;}
 .ui-widget-content {border:3px dashed #ccc;border-radius:10px;}
+
+#uploader .uppy-size--md .uppy-DashboardContent-addMore {
+    margin-right: 25px;
+}
+.uppy-StatusBar-actionBtn,
+.uppy-Dashboard-browse,
+.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
+.uppy-DashboardContent-back,
+.uppy-DashboardContent-addMore {
+    background-color: #1988d7 !important;
+    color: #fff;
+}
+
+.uppy-Dashboard-browse{
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.uppy-DashboardContent-addMore svg{
+    display:none;
+}
+
+.uppy-Dashboard-Item-action--remove, .uppy-Dashboard-Item-previewInnerWrap {
+    background-color: #f2f2f2 !important;
+}
+
+.uppy-size--xl .uppy-Dashboard-Item {
+    width: calc(10% - 30px);
+    height: 125px;
+}
+
+.uppy-size--xl .uppy-Dashboard-Item-preview {
+    height: 60px;
+}
+
+.uppy-Dashboard-Item-preview img.uppy-Dashboard-Item-previewImg {
+    object-fit: contain;
+}
+
+.uppy-StatusBar {
+    line-height: normal;
+}
 
 #showlog,#hidelog
     {
@@ -860,11 +919,12 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentFormFullname {margin-top: 5px; width: 170px;}
 .CommentFormEmail{margin-top: 5px; margin-left: 5px; width: 220px;}
 .CommentFormWebsiteURL{margin-top: 5px; margin-left: 5px; width: 189px;}
-.CommentFormSubmit{margin-top: 5px; margin-bottom: 5px;}
-.CommentFormBody {width: 600px; height: 60px; font-size: 1em;}
+.comment_form .CommentFormSubmit{margin: 8px 0 0 0;}
+.CommentFormBody {width: 600px; height: 60px; font-size: 1em; margin: 3px 0 0 0;}
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
 .TaggingHint {cursor: hand;display:block;width:588px;padding:5px;}
 .TaggingHint::before {content: "\f02b  ";   font: normal normal normal 14px "Font Awesome 5 Free";font-weight: 600;}
+.comment_form_container{background-color: white; border: 1px solid lightgray; padding: 8px; border-radius: 4px; width: 600px; margin-top: 5px;}
 
 .collectionscompactstylespacer {height:25px;}
 
@@ -927,6 +987,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #SearchResultFound {
     padding-top: 3px;
     min-width: 90px;
+    padding-left: 10px;
 }
 
 #contactadminbox  textarea{
@@ -1599,6 +1660,7 @@ form.FormFilter button.ClearButton {
 #CentralSpaceResources  
     {
     text-align:justify;
+    margin: 10px 8px 0 8px;
     }
 .ImageTools
     {
@@ -1708,7 +1770,7 @@ a.Enabled, a:visited.Enabled {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    margin: 1em 1em 0.8em 0;;
+    margin: 1em 1em 0.8em 0;
     padding: 8px 10px;
     background: gray;
 }
@@ -1718,6 +1780,10 @@ a.Enabled, a:visited.Enabled {
 .BreadcrumbsBox .fa {
     padding-left: 10px;
     padding-right: 3px;
+}
+
+.BreadcrumbsBox.BreadcrumbsBoxSlim {
+    margin: 1em 1em 0 0;
 }
 
 /* Colour picker */
@@ -2173,3 +2239,98 @@ a.BrowseRefresh{
 #ShareDeleteForm .ListViewBulkActions {
     padding-top: 20px;
     }
+
+/* Resource type icon picker */
+
+#iconpicker-question {display: inline-block;}
+
+input[type="text"]#iconpicker-input {
+    width: 380px;
+    margin: 3px 0;
+    font-size: 1em;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+#iconpicker-button {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: white;
+    padding: 3px 10px 2px 10px;
+    border: 1px solid rgba(0,0,0,0.25);
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: inset -1px -1px 3px 0px rgb(0 0 0 / 10%);
+    cursor: pointer;
+    margin: 3px 0;
+}
+
+#iconpicker-container {
+    width: 418px;
+    height: 285px;
+    left: 318px;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 6px;
+    position: absolute;
+    display: none;
+    box-shadow: 0px 3px 5px 1px #0000004a;
+    margin-top: 5px;
+}
+
+.iconpicker-title {padding: 6px 8px;}
+
+.iconpicker-title input {width: 100%;}
+
+.iconpicker-content {
+    padding: 5px 8px;
+    height: 235px;
+    overflow: scroll;
+}
+
+.iconpicker-content-icon {
+    width: 34px;
+    display: inline-block;
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.iconpicker-content-icon:hover {background-color: #0000001f;}
+
+.BasicsBox.SearchSticky {
+    top: 0;
+    position: sticky;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #c1c1c1;
+    box-shadow: 0 12px 10px -12px #bbbbbb;
+    z-index: 101;
+    padding-top: 15px;
+    margin-top: 0;
+}
+
+/* jQuery tagEditor */
+
+.SearchSpace .tag-editor{
+    border-radius: 4px;
+    min-height: 28px;
+    width: 250px;
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.SearchSpace .tag-editor li {
+    margin: 4px 0;
+}
+
+.SearchSpace .tag-editor .active input{
+    max-height: 18px;
+    min-height: 0;
+    padding: 2px;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}

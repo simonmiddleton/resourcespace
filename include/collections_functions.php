@@ -294,10 +294,12 @@ function get_collection_resources_with_data($ref)
  * @return boolean
  */
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
-	{
+    {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     global $collection_allow_not_approved_share, $collection_block_restypes;
@@ -376,7 +378,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	else
 		{
 		hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
 
@@ -391,9 +393,11 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
  */
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
     {
+    global $lang;
+
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
         {
-        return false;
+        return $lang["cantmodifycollection"];
         }
 
     if (collection_writeable($collection)||$smartadd)
@@ -418,10 +422,91 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 	else
 		{
 		hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return false;
+		return $lang["cantmodifycollection"];
 		}
 	}
     
+/**
+ * Add resource(s) $resources to collection $collection
+ *
+ * @param  mixed $resources
+ * @param  mixed $collection
+ * @return boolean
+ */
+function collection_add_resources($collection,$resources='',$search='',$selected=false)
+    {
+    global $USER_SELECTION_COLLECTION,$lang;
+    if(     (string)(int)$collection != (string)$collection 
+        ||  ($resources == '' && $search == '')
+        ||  (!collection_writeable($collection))
+        ||  is_featured_collection_category_by_children($collection)
+    )
+        {
+        return $lang["cantmodifycollection"];
+        }
+
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+    else if($resources ==''){$resources=do_search($search);}
+
+    if ($resources =='' || count($resources) == 0){return $lang["noresourcesfound"];}
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_add = array_diff($resources, $collection_resources);
+
+    $errors=0;
+    foreach($refs_to_add as $ref)
+        {
+        if(!add_resource_to_collection($ref,$collection)){$errors ++;}
+        }
+    
+    if($errors ==0){return true;}
+    else {return $lang["cantaddresourcestocolection"];}
+    }
+
+
+/**
+ * collection_remove_resources
+ *
+ * @param  mixed $collection
+ * @param  mixed $resources
+ * @param  mixed $removeall
+ * @return void
+ */
+function collection_remove_resources($collection,$resources='',$removeall=false,$selected=false)
+    {
+    global $USER_SELECTION_COLLECTION,$lang;
+    
+    if(    (string)(int)$collection != (string)$collection 
+        || ($resources == '' && !$removeall && !$selected)
+        || (!collection_writeable($collection))
+        || is_featured_collection_category_by_children($collection)
+    )
+        {
+        return $lang["cantmodifycollection"];
+        }
+
+    if ($removeall)
+        {
+        foreach(get_collection_resources($collection) as $ref)
+            {
+            remove_resource_from_collection($ref, $collection);
+            }
+        return true;
+        }
+
+    if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
+
+    $collection_resources       = get_collection_resources($collection);
+    $refs_to_remove = array_intersect($collection_resources, $resources);
+    
+    $errors=0;
+    foreach($refs_to_remove as $ref)
+        {
+        if(!remove_resource_from_collection($ref, $collection)){$errors++;}
+        }
+    
+    if ($errors == 0){return true;}
+    else {return $lang["cantremoveresourcesfromcolection"];}
+    }
     
 /**
  * Is the collection $collection writable by the current user?
@@ -717,7 +802,8 @@ function delete_collection($collection)
  * @param  integer $collection  Collection id
  * @return void
  */
-function refresh_collection_frame($collection="")
+function 
+refresh_collection_frame($collection="")
     {
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;
@@ -743,14 +829,13 @@ function refresh_collection_frame($collection="")
  * @param  string $order_by
  * @param  string $sort
  * @param  boolean $exclude_themes
- * @param  boolean $exclude_public
  * @param  boolean $include_resources
  * @param  boolean $override_group_restrict
- * @param  boolean $search_user_collections
  * @param  integer $fetchrows
  * @return array
  */
-function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false, $include_resources=false, $override_group_restrict=false, $search_user_collections=false, $fetchrows=-1)
+
+function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $include_resources=false, $override_group_restrict=false, $fetchrows=-1)
     {
     global $userref;
 
@@ -838,10 +923,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
     // Filter by type (public/featured collections)
     $public_type_filter_sql = "c.`type` = " . COLLECTION_TYPE_PUBLIC;
-    if($search_user_collections)
-        {
-        $public_type_filter_sql = sprintf('(c.`type` = %s OR c.user = \'%s\')', COLLECTION_TYPE_PUBLIC, escape_check($userref));
-        }
     $featured_type_filter_sql = sprintf(
         "(c.`type` = %s %s)",
         COLLECTION_TYPE_FEATURED,
@@ -851,10 +932,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         {
         $featured_type_filter_sql = "";
         }
-    else if($exclude_public && !$search_user_collections)
-        {
-        $public_type_filter_sql = "";
-        }
     $type_filter_sql = sprintf(
         ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? "(%s%s)" : "%s%s"),
         $public_type_filter_sql,
@@ -862,10 +939,6 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     );
 
     $where_clause_osql = 'col.`type` = ' . COLLECTION_TYPE_PUBLIC;
-    if($search_user_collections)
-        {
-        $where_clause_osql = sprintf('col.`type` IN (%s, %s)', COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC);
-        }
     if($featured_type_filter_sql !== '')
         {
         $where_clause_osql .= ' OR (col.`type` = ' . COLLECTION_TYPE_FEATURED . ' AND col.is_featured_collection_category = false)';
@@ -918,7 +991,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
  */
 function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC", $fetchrows = -1)
     {
-    global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata, $default_collection_sort;
+    global $search_includes_themes, $userref, $default_collection_sort;
     
     if($order_by=='')
         {
@@ -934,32 +1007,16 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
         $search=substr($search,1,-1);
         } 
     $search_includes_themes_now=$search_includes_themes;
-    $search_includes_public_collections_now=$search_includes_public_collections;
-    $search_includes_user_collections_now=$search_includes_user_collections;
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
         $search_includes_themes_now=in_array("themes",$restypes_x);
-        $search_includes_public_collections_now=in_array("pubcol",$restypes_x);
-        $search_includes_user_collections_now=in_array("mycol",$restypes_x);
         } 
 
-    if ($search_includes_themes_now || $search_includes_public_collections_now || $search_includes_user_collections_now)
+    if ($search_includes_themes_now)
         {
-        if ($collection_search_includes_resource_metadata)
-            {
-            # Include metadata from resources when searching - using a special search
-                $collections=do_search("!contentscollection"
-                    . ($search_includes_user_collections_now?'U':'')
-                    . ($search_includes_public_collections_now?'P':'')
-                    . ($search_includes_themes_now?'T':'')
-                    . " " . $search,"",$order_by,0,-1,$sort);
-            }
-        else
-            {
-            # The old way - same search as when searching within public collections.
-            $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,!$search_includes_public_collections_now,true,false, $search_includes_user_collections_now, $fetchrows);
-            }
+        # Same search as when searching within public collections.
+        $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         
         $condensedcollectionsresults=array();
         $result=$collections;
@@ -3381,7 +3438,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($upload_then_edit)
             {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_plupload.php",array(),array("collection_add"=>$collection_data['ref']));
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_batch.php",array(),array("collection_add"=>$collection_data['ref']));
             }
         else
             {
@@ -5784,7 +5841,7 @@ function upload_share_setup(string $key,$shareopts = array())
 
     // Upload link key can only work on these pages
     $validpages = array(
-        "upload_plupload",
+        "upload_batch",
         "edit",
         "category_tree_lazy_load",
         "suggest_keywords",
@@ -5916,23 +5973,104 @@ function purge_expired_shares($filteropts)
     }
 
     
-    /**
-     * Check if user has the appropriate access to delete a collection.
-     *
-     * @param   array     $collection_data   Array of collection details, typically from get_collection()
-     * @param   int       $userref           Id of user
-     * @param   int       $k                 External access key value
-     * 
-     * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
-     */
-    function can_delete_collection($collection_data, $userref, $k = "")
+/**
+ * Check if user has the appropriate access to delete a collection.
+ *
+ * @param   array     $collection_data   Array of collection details, typically from get_collection()
+ * @param   int       $userref           Id of user
+ * @param   int       $k                 External access key value
+ * 
+ * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
+ */
+function can_delete_collection($collection_data, $userref, $k = "")
+    {
+    if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
         {
-        if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
-		    {
-	        return false;
-		    }
+        return false;
+        }
+    else
+        {
+        return true;
+        }
+    }
+
+/**
+ * Send colletion to administrators - used if $send_collection_to_admin is enabled)
+ *
+ * @param  int $collection  Collection ID
+ * @return boolean
+ */
+function send_collection_to_admin(int $collection)
+    {
+    if(!is_int_loose($collection))
+        {
+        return false;
+        }
+    
+    global $lang, $userref, $applicationname, $baseurl, $admin_resource_access_notifications;
+    $collectionsent = false;
+    // Create a copy of the collection for admin:
+    $admin_copy = create_collection(-1, $lang['send_collection_to_admin_emailedcollectionname']);
+    copy_collection($collection, $admin_copy);
+    $collection_id = $admin_copy;
+
+    // Get the user (or username) of the contributor:
+    $user = get_user($userref);
+    if(isset($user) && trim($user['fullname']) != '')
+        {
+        $user = $user['fullname'];
+        }
+    else
+        {
+        $user = $user['username'];
+        }
+
+    // Get details about the collection:
+    $collection = get_collection($collection_id);
+    $collection_name = $collection['name'];
+    $resources_in_collection = count(get_collection_resources($collection_id));
+
+    // Build mail and send it:
+    $subject = $applicationname . ': ' . $lang['send_collection_to_admin_emailsubject'] . $user;
+
+    $message = $user . $lang['send_collection_to_admin_usercontributedcollection'] . "\n\n";
+    $message .= $baseurl . '/pages/search.php?search=!collection' . $collection_id . "\n\n";
+    $message .= $lang['send_collection_to_admin_additionalinformation'] . "\n\n";
+    $message .= $lang['send_collection_to_admin_collectionname'] . $collection_name . "\n\n";
+    $message .= $lang['send_collection_to_admin_numberofresources'] . $resources_in_collection . "\n\n";
+    
+    $notification_message = $lang['send_collection_to_admin_emailsubject'] . " " . $user;
+    $notification_url = $baseurl . '/?c=' . $collection_id;
+    $admin_notify_emails = array();
+    $admin_notify_users = array();
+    $notify_users=get_notification_users(array("e-1","e0")); 
+    foreach($notify_users as $notify_user)
+        {
+        get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message, $admin_resource_access_notifications);		  
+        if($send_message==false)
+            {
+            continue;
+            }		
+        get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+        if($send_email && $notify_user["email"]!="")
+            {
+            $admin_notify_emails[] = $notify_user['email'];				
+            }        
         else
             {
-            return true;
+            $admin_notify_users[]=$notify_user["ref"];
             }
         }
+    foreach($admin_notify_emails as $admin_notify_email)
+        {
+        send_mail($admin_notify_email, $subject, $message, '', '');
+        $collectionsent = true;
+        }
+    if (count($admin_notify_users)>0)
+        {
+        debug("sending collection to user IDs: " . implode(",",$admin_notify_users));
+        message_add($admin_notify_users,$notification_message,$notification_url, $userref, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION, $collection_id);
+        $collectionsent = true;
+        }
+    return $collectionsent;
+    }

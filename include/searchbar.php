@@ -404,22 +404,10 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     # End of rendering for resource type checkbox inputs
 
     ?><div class="spacer"></div>
-    <?php if ($searchbar_selectall && ($search_includes_user_collections || $search_includes_public_collections || $search_includes_themes)) { ?>
+    <?php if ($searchbar_selectall && $search_includes_themes) { ?>
     <div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
     <?php }?>
     <?php if ($clear_button_unchecks_collections){$colcheck="false";}else {$colcheck="true";}
-    if ($search_includes_user_collections) 
-        { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxMyCol" type="checkbox" name="resourcemycol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("mycol",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxMyCol">&nbsp;<?php echo $lang["mycollections"]?></label></div><?php 
-        $clear_function.="jQuery('#TickBoxMyCol').prop('checked'," . $colcheck . ");";
-        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
-        }
-    if ($search_includes_public_collections) 
-        { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxPubCol" type="checkbox" name="resourcepubcol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("pubcol",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxPubCol">&nbsp;<?php echo $lang["findpubliccollection"]?></label></div><?php  
-        $clear_function.="jQuery('#TickBoxPubCol').prop('checked'," . $colcheck . ");";
-        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
-        }
     if ($search_includes_themes) 
         { ?>
         <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("themes",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxThemes">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
@@ -438,8 +426,6 @@ elseif($restypes=='')
             $restypes.=($restypes=='' ? '' : ',').$types[$t]['ref'];
             }
         }
-    if($search_includes_user_collections){$restypes.=($restypes=='' ? '' : ','). "mycol";}
-    if($search_includes_public_collections){$restypes.=($restypes=='' ? '' : ','). "pubcol";}
     if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "themes";}
     
     ?>

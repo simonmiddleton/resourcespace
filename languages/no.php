@@ -933,22 +933,12 @@ $lang['plugins-author'] = 'Forfatter';
 $lang['plugins-version'] = 'Versjon';
 $lang['plugins-instversion'] = 'Installert versjon';
 $lang['plugins-uploadheader'] = 'Last opp programtillegg';
-$lang['plugins-uploadtext'] = 'Velg en .rsp-fil å installere.';
 $lang['plugins-deactivate'] = 'Deaktiver';
 $lang['plugins-moreinfo'] = 'Mer informasjon';
 $lang['plugins-activate'] = 'Aktiver';
 $lang['plugins-purge'] = 'Gjenoppfrisk programtillegg';
-$lang['plugins-rejmultpath'] = 'Arkivet inneholder flere stier. (Sikkerhetsrisiko)';
-$lang['plugins-rejrootpath'] = 'Arkivet inneholder absolutte stier. (Sikkerhetsrisiko)';
-$lang['plugins-rejparentpath'] = 'Arkivet inneholder overliggende stier (../). (Sikkerhetsrisiko)';
-$lang['plugins-rejmetadata'] = 'Arkivets dokumentasjonsfil ble ikke funnet.';
-$lang['plugins-rejarchprob'] = 'Det oppstod et problem under filutpakkingen:';
-$lang['plugins-rejfileprob'] = 'Programtillegget må være en .rsp-fil.';
-$lang['plugins-rejremedy'] = 'Hvis du stoler på dette programtillegget kan du installere det manuelt ved å pakke ut arkivet direkte i din programtilleggsmappe.';
-$lang['plugins-uploadsuccess'] = 'Opplastingen av programtillegget var vellykket';
 $lang['plugins-headertext'] = 'Programtillegget utvider fuksjonaliteten til mediearkivet.';
 $lang['plugins-legacyinst'] = 'Aktivert via config.php';
-$lang['plugins-uploadbutton'] = 'Opplastings-plugin';
 
 #Location Data
 $lang['location-title'] = 'Stedsdata';

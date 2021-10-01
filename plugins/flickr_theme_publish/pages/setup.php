@@ -15,6 +15,7 @@ $page_intro = '';
 $page_def[] = config_add_text_input('flickr_api_key',$lang['flickr_api_key']);
 $page_def[] = config_add_text_input('flickr_api_secret',$lang['flickr_api_secret']);
 $page_def[]= config_add_section_header("General","");
+$page_def[] = config_add_single_ftype_select('flickr_title_field', $lang['flickr_title_field'], 300, 0, [FIELD_TYPE_TEXT_BOX_SINGLE_LINE]);
 $page_def[]= config_add_single_ftype_select("flickr_caption_field", $lang["flickr_caption_field"]); 
 $page_def[]= config_add_single_ftype_select("flickr_keywords_field", $lang["flickr_keywords_field"]);
 $page_def[] = config_add_boolean_select("flickr_prefix_id_title", $lang['flickr_prefix_id_title']);

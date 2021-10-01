@@ -95,7 +95,7 @@ if ($print)
     <link href="<?php echo $baseurl ?>/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
     <link href="<?php echo $baseurl ?>/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
 
-    <script src="<?php echo $baseurl ?>/lib/js/jquery-3.5.1.min.js?css_reload_key=152"></script>
+    <script src="<?php echo $baseurl ?>/lib/js/jquery-3.6.0.min.js?css_reload_key=152"></script>
     <script src="<?php echo $baseurl ?>/lib/js/jquery-ui-1.12.1.min.js?css_reload_key=152" type="text/javascript"></script>
     <!-- FLOT for graphs -->
     <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.js"></script> 
@@ -205,7 +205,8 @@ for ($n=0;$n<count($list);$n++)
 ?>
 <option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo $lang["themes"] ?> ---</option>
 <?php
-$list=search_public_collections("","name","ASC",false, true, false);
+
+$list=search_public_collections("","name","ASC",false, false);
 for ($n=0;$n<count($list);$n++)
         {
         ?>

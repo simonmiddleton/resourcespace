@@ -11,7 +11,8 @@ function HookAction_datesCronCron()
 	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
-           $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state, $action_dates_email_for_restrict, $action_dates_eligible_states, $action_dates_weekdays;
+           $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state,
+           $action_dates_email_for_restrict, $action_dates_eligible_states, $action_dates_weekdays, $action_dates_workflow_actions;
 	
 	echo "action_dates: running cron tasks" . PHP_EOL;
     
@@ -30,7 +31,8 @@ function HookAction_datesCronCron()
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)", "schema");
     
     $email_state_refs = array();
-    $email_restrict_refs=array();
+    $email_restrict_refs = array();
+    $state_change_notify = array();
 
     # Process resource access restriction if a restriction date has been configured
     # The restriction date will be processed if it is full date or a partial date because either will yield viable timestamps
@@ -136,7 +138,7 @@ function HookAction_datesCronCron()
                     {
                     # NOT FULL DELETION - Update resources to the target archive state
                     sql_query("UPDATE resource SET archive = '{$resource_deletion_state}' WHERE ref = '{$ref}'");
-                    
+                    $state_change_notify[] = $ref;
                     if($action_dates_remove_from_collection)
                         {
                         // Remove the resource from any collections
@@ -159,6 +161,10 @@ function HookAction_datesCronCron()
                     }
                 }
             }
+            if ($action_dates_workflow_actions == "1" && count($state_change_notify) > 0)
+                {
+                hook('after_update_archive_status', '', array($state_change_notify, $resource_deletion_state,""));
+                }
         }
 
     // Only allow email for actions configured.
