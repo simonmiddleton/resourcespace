@@ -104,7 +104,6 @@ $jumpcount = 0;
 
 include "../../include/header.php";
 ?>
-
 <script>
 jQuery(document).ready(function()
     {
@@ -292,12 +291,8 @@ $select_table_url = generateURL(
     ?>
 
 <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('TableFilterForm'));">
-<div class="clearerleft"></>
-</div>
-
+<div class="clearerleft"></div>
 </form>
-
-
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">&nbsp;</div>
        
@@ -338,7 +333,8 @@ $select_table_url = generateURL(
             <?php
             $original_permitted_html_tags = $permitted_html_tags;
             $permitted_html_tags = array("html", "body");
-            foreach(get_activity_log($log_search, $offset, $per_page, $log_tables_where_statements, $table, $table_reference) as $record)
+            $activity_log_records = get_activity_log($log_search, $offset, $per_page, $log_tables_where_statements, $table, $table_reference);
+            foreach($activity_log_records as $record)
                 {
                 ?>
                 <tr>
