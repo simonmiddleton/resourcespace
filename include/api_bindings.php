@@ -123,7 +123,8 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
         $duplicates=check_duplicate_checksum($url,false);
         if (count($duplicates)>0)
             {
-            return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+            $duplicates_string=implode(",",$duplicates);
+            return "FAILED: Resource {$ref} was created, but the file was not uploaded. Resources {$duplicates_string} already have a matching file.";
             }   
         else 
             {
@@ -524,15 +525,16 @@ function api_delete_access_keys($access_keys, $resources, $collections)
         {
         if($collection_array[$i] !="-") 
             {
-            debug("XYZZY DELETE COLKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
-            return delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
+            debug("ACCESSKEY DELETING COL=".$collection_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_collection_access_key($collection_array[$i], $access_key_array[$i]);
             }
         else
             {
-            debug("XYZZY DELETE RESKEY=".$access_key_array[$i]." RES=".$resource_array[$i]." COL=".$collection_array[$i]);
-            return delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
+            debug("ACCESSKEY DELETING RES=".$resource_array[$i]. " KEY=".$access_key_array[$i]);
+            delete_resource_access_key($resource_array[$i], $access_key_array[$i]);
             }
         }
+    return true;
     }
 
 function api_delete_alternative_file($resource,$ref)
@@ -554,7 +556,8 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     $duplicates=check_duplicate_checksum($file_path,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not uploaded. Resources {$duplicates_string} already have a matching file.";
         }   
     else 
         {
@@ -574,7 +577,8 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $duplicates=check_duplicate_checksum($url,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not uploaded. Resources {$duplicates_string} already have a matching file.";
         }   
     else 
         {
@@ -623,22 +627,57 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection)
+function api_add_resource_to_collection($resource,$collection='')
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return add_resource_to_collection($resource,$collection);
     }
     
-function api_remove_resource_from_collection($resource,$collection)
+function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_add_resources($collection,$resources,$search,$selected);
+    }
+
+function api_remove_resource_from_collection($resource,$collection='')
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return remove_resource_from_collection($resource,$collection);                  
     }
+
+function api_collection_remove_resources($collection='',$resources='',$removeall = false,$selected=false)
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_remove_resources($collection,$resources,$removeall,$selected);
+    }
     
-function api_create_collection($name)
+function api_create_collection($name,$forupload=false)
 	{
     global $userref, $collection_allow_creation;
     if (checkperm("b") || !$collection_allow_creation)
         {
         return false;
+        }
+    if($forupload && trim($name) == "")
+        {
+        # Do not translate this string, the collection name is translated when displayed!
+        $name = "Upload " . date("YmdHis"); 
         }
     
     return create_collection($userref,$name);
@@ -651,11 +690,10 @@ function api_delete_collection($ref)
     return delete_collection($ref);
     }
     
-function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false)
+function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true)
     {
     $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
-    $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
-    $results = search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
+    $results = search_public_collections($search, $order_by, $sort, $exclude_themes);
     $resultcount= count ($results);
         {
         for($n=0;$n<$resultcount;$n++)
@@ -761,7 +799,8 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
     $duplicates=check_duplicate_checksum($file_location,false);
     if (count($duplicates)>0)
         {
-        return "FAILED: Resource not replaced - duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        $duplicates_string=implode(",",$duplicates);
+        return "FAILED: The file for resource {$ref} was not replaced. Resources {$duplicates_string} already have a matching file.";
         }
     else 
         {
@@ -969,4 +1008,28 @@ function api_get_profile_image($user)
 function api_get_system_status()
     {
     return get_system_status();
+    }
+
+function api_relate_all_resources($related)
+    {
+    global $enable_related_resources;
+    if(!$enable_related_resources)
+        {
+        return false;
+        }
+    if(!is_array($related))
+        {
+        $related = explode(",",$related);
+        }
+    return relate_all_resources($related);
+    }
+
+function api_show_hide_collection($collection, $show, $user)
+    {
+    return show_hide_collection($collection, $show, $user);
+    }
+
+function api_send_collection_to_admin($collection)
+    {
+    return send_collection_to_admin($collection);
     }

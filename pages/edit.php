@@ -73,7 +73,7 @@ $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
 $uploadparams["k"] = $k;
 
-# Upload review mode will be true if we are coming from upload_plupload and then editing (config $upload_then_edit)
+# Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
@@ -102,6 +102,7 @@ if ($upload_review_mode)
         {
         $collection=0-$userref;
         }
+
     # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
     if ($edit_access_for_contributor == false)
         {
@@ -144,7 +145,8 @@ if ($upload_review_mode)
                 "sort"=>"DESC",
                 "archive"=>$defaultarchivestate,
                 "refreshcollectionframe"=>"true",
-                "resetlockedfields"=>"true"
+                "resetlockedfields"=>"true",
+                "collection_add"=>$collection_add
                 );
                 
             if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
@@ -463,6 +465,7 @@ $urlparams= array(
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
     'collection'        => $collection,
+    "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
 );
@@ -665,7 +668,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     "sort"=>"DESC",
                                     "archive"=>$setarchivestate,
                                     "refreshcollectionframe"=>"true",
-                                    "resetlockedfields"=>"true"
+                                    "resetlockedfields"=>"true",
+                                    "collection_add"=>$collection_add
                                     );
                                 if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
                                     {
@@ -731,12 +735,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     else
                         {
                         // Default
-                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     }
                 }
@@ -1279,7 +1283,7 @@ else
             }
         else
             {
-            // Defualt - batch upload using plupload
+            // Defualt - batch upload
             $titleh1 = $lang["addresourcebatchbrowser"];
             }?>        
         <h1><?php echo $titleh1 ?></h1>
@@ -2388,9 +2392,13 @@ if ($ref>0 && !$multiple)
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
+  $error_datetime = date('Y-m-d H:i:s');
   ?>
   <script>
   preventautoscroll = true;
+  var errorHeading='<?php echo $lang["error"]; ?>';
+  
+  var errorBody='<?php echo offset_user_local_timezone($error_datetime, 'Y-m-d H:i:s')."<br />".implode("<br />",$save_errors); ?>';
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
@@ -2398,7 +2406,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
     {
     error_fields[0].scrollIntoView();
     }
-  styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
+  styledalert(errorHeading, errorBody, 450);
   </script>
   <?php
   }

@@ -4,6 +4,9 @@ include_once "../../include/db.php";
 $provider   = getval("provider","");
 $variant    = getval("variant","");
 
+$provider   = safe_file_name($provider);
+$variant    = safe_file_name($variant);
+
 # Originally adapted from
 # http://wiki.openstreetmap.org/wiki/ProxySimplePHP
 # The main benefit is for SSL sites which don't want to be making HTTP calls which result in content warnings

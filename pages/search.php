@@ -935,7 +935,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $result_count = $resources_count;
         }
     ?>
-    <div class="BasicsBox">
+    <div class="BasicsBox SearchSticky">
     <div class="TopInpageNav">
     <div class="TopInpageNavLeft">
 
@@ -1385,7 +1385,7 @@ if($responsive_ui)
     $drag_over="";
     if (is_array($drag_upload_params) && ($display=='thumbs' || $display=='xlthumbs') && $order_by == 'collection')
         {
-        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
+        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_batch.php", $drag_upload_params);
         $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
         }
     ?>
@@ -1461,6 +1461,7 @@ if($responsive_ui)
         hook("searchbeforeratingfieldtitlecolumn");
         if ($id_column){?><?php if ($order_by=="resourceid"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a></td><?php } ?><?php } ?>
         <?php if ($resource_type_column){?><?php if ($order_by=="resourcetype"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>"ASC")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a></td><?php } ?><?php } ?>
+        <?php if ($order_by=="extension"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"extension","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list_file_extension"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"extension","sort"=>"ASC")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list_file_extension"]?></a></td><?php } ?>
         <?php if ($list_view_status_column){?><?php if ($order_by=="status"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["status"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"status")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["status"]?></a></td><?php } ?><?php } ?>
         <?php if ($date_column){?><?php if ($order_by=="date"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"date","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["date"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"date")); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["date"]?></a></td><?php } ?><?php } ?>
         <?php hook("addlistviewtitlecolumn");?>
@@ -1660,23 +1661,6 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-if($display != 'map' || !$modal)
-    {
-    if(!hook('bottomnavigation'))
-        { ?>
-        <!--Bottom Navigation - Archive, Saved Search plus Collection-->
-        <div class="BottomInpageNav">
-            <?php hook('add_bottom_in_page_nav_left'); ?>
-            <div class="BottomInpageNavRight">  
-           <?php 
-           if (isset($draw_pager)) {pager(false);} 
-            ?>
-            </div>
-            <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-    }
 } # End of replace all results hook conditional
 
 hook("endofsearchpage");

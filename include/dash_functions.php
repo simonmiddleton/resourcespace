@@ -1318,7 +1318,7 @@ function parse_dashtile_link($link)
     $link = str_replace("[userref]", $userref, $link);
 
     //For upload tiles respect the upload then edit preference
-    if((strpos($link, 'uploader=plupload') !== false) && $upload_then_edit)
+    if((strpos($link, 'uploader=') !== false) && $upload_then_edit)
         {
         global $baseurl;
 
@@ -1331,13 +1331,13 @@ function parse_dashtile_link($link)
         /**
         * @var path is the real ResourceSpace path (regardless if RS is installed under web root or in a subfolder)
         * Example:
-        * For http://localhost/trunk/pages/edit.php?ref=-[userref]&uploader=plupload the real path is pages/edit.php as 
+        * For http://localhost/trunk/pages/edit.php?ref=-[userref]&uploader=batch the real path is pages/edit.php as 
         * RS handles this via its baseurl when generating absolute paths.
         */
         $path = str_replace("{$baseurl}/", "", $link);
         $path = str_replace("?{$query}", "", $path);
 
-        $link = str_replace($path, "pages/upload_plupload.php", $link);
+        $link = str_replace($path, "pages/upload_batch.php", $link);
         }
 
     return $link;

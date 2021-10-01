@@ -3262,7 +3262,7 @@ function get_resource_types($types = "", $translate = true)
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select *, colour from resource_type $sql order by order_by,ref","schema");
+    $r=sql_query("select *, colour, icon from resource_type $sql order by order_by,ref","schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -4469,6 +4469,8 @@ function delete_alternative_file($resource,$ref)
 	
 	# Update disk usage
 	update_disk_usage($resource);
+
+    return true;
 	}
 	
 function get_alternative_file($resource,$ref)
@@ -6081,14 +6083,31 @@ function delete_resource_access_key($resource,$access_key)
     resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
-function resource_type_config_override($resource_type)
+function resource_type_config_override($resource_type, $only_onchange=true)
     {
     # Pull in the necessary config for a given resource type
-    # As this could be called many times, e.g. during search result display, only execute if the passed resourcetype is different from the previous.
+    # As this could be called many times, e.g. during search result display
+    # By default (only_onchange) only execute the override if the passed resourcetype is different from the previous
     global $resource_type_config_override_last,$resource_type_config_override_snapshot, $ffmpeg_alternatives;
 
-    # If the resource type has changed or if this is the first resource....
-    if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
+    $config_override_required=false;
+    # If the overrides are only to be executed on change of resource type
+    if ($only_onchange) 
+        {
+        # If the resource type has changed or if this is the first resource....
+        if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
+            {
+            $config_override_required=true;
+            $resource_type_config_override_last=$resource_type;
+            }
+        }
+    else
+        # The overrides are to be executed for every resource
+        {
+        $config_override_required=true;
+        }
+        
+    if ($config_override_required)
         {
         # Look for config and execute.
         $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
@@ -6099,7 +6118,6 @@ function resource_type_config_override($resource_type)
             eval($config_options);
             debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
-        $resource_type_config_override_last=$resource_type;
         }
     }
 
@@ -6987,7 +7005,7 @@ function save_original_file_as_alternative($ref)
 
     global $lang, $alternative_file_previews, $alternative_file_previews_batch, $filename_field;
 
-    // Values may be passed in POST or GET data from upload_plupload.php
+    // Values may be passed in POST or GET data from upload_batch.php
     $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
     $filename_field_use                     = getval('filename_field', $filename_field); // GET variable - field to use for filename
 
@@ -7375,12 +7393,13 @@ function copy_hitcount_to_live()
  * 
  * @return array    $return
  */
-function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
+function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists=true)
     {
     global $imagemagick_calculate_sizes;
 
     # Work out resource type
-    $resource_type=sql_value("select resource_type value from resource where ref='$ref'","");
+    $resource_data = get_resource_data($ref);
+    $resource_type = $resource_data["resource_type"];
 
     # add the original image
     $return=array();
@@ -7411,9 +7430,18 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
         else
             {
             $fileinfo=get_original_imagesize($ref,$path2,$extension);
-            $filesize = $fileinfo[0];
-            $sw = $fileinfo[1];
-            $sh = $fileinfo[2];
+            if($fileinfo !== false)
+                {
+                $filesize = $fileinfo[0];
+                $sw= $fileinfo[1];
+                $sh = $fileinfo[2];
+                }
+            else
+                {
+                $filesize = $resource_data["file_size"];
+                $sw = 0;
+                $sh = 0;
+                }
             }
         if (!is_numeric($filesize)) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
         else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$returnline["filesize"]=formatfilesize($filesize);}
@@ -7764,7 +7792,6 @@ function get_hidden_indexed_fields()
         return $hidden;
         }
     }
-
 
 function get_OR_fields()
     {
@@ -8891,4 +8918,26 @@ function get_video_duration(string $file_path)
             {
             return 0;
             }
+    }
+
+/**
+ * Relate all resources in the passed array with each other
+ *
+ * @param  array $related Array of resource IDs
+ * @return boolean
+ */
+function relate_all_resources(array $related = [])
+    {
+    $error = false;
+    array_filter($related,"is_int_loose");
+    foreach($related as $ref)
+        {
+        $other_refs = array_diff($related,array($ref));
+        $success = update_related_resource($ref,$other_refs,true);
+        if(!$success)
+            {
+            $error = true;
+            }
+        }
+    return !$error;
     }

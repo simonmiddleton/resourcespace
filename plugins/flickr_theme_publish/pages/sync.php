@@ -24,7 +24,14 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 ?>
 <h1><?php echo $lang["flickr_title"] ?></h1>
 <?php
-if($flickr_nice_progress){
+if(!metadata_field_view_access($flickr_title_field))
+    {
+    render_top_page_error_style(str_replace('%id', $flickr_title_field, $lang['flickr_warn_no_title_access']));
+    include "../../../include/footer.php";
+    exit();
+    }
+
+    if($flickr_nice_progress){
 	?>
 	<script>
 		function flickr_open_nice_progress(id,publishType){
@@ -124,5 +131,3 @@ else
 	}
 
 include "../../../include/footer.php";
-
-?>

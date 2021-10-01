@@ -11,18 +11,25 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
     
     ?>
     <script type="text/javascript">
-        // Simulate clicking of preview button when clicking View
-        jQuery(document).on('click', '#previewlink', function(event) {
-            event.preventDefault();
-            jQuery('#previewimage').click(); 
+
+    // Ensure each preview "View" button causes a link to its correct image size
+    jQuery(document).on('click', '.previewsizelink', function(event) {
+        var data_viewsize= event.target.getAttribute('data-viewsize');
+        var data_viewsizeurl= event.target.getAttribute('data-viewsizeurl');
+        event.preventDefault();
+        var default_viewsizeurl = document.getElementById("previewimagelink").getAttribute("href");    
+        document.getElementById("previewimagelink").setAttribute("href", data_viewsizeurl);    
+        jQuery('#previewimage').click(); 
+        document.getElementById("previewimagelink").setAttribute("href", default_viewsizeurl);    
         });
+    
     </script>
     <?php
 
     global $resource, $title_field;
 
+    // Establish the default preview url for this resource
     $url = getPreviewURL($resource);
-    
     if(false === $url)
         {
         return;
@@ -56,6 +63,16 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
         <?php
         }
     }
+
+function HookLightbox_previewViewGetpreviewurlforsize()
+    {
+    global $resource, $data_viewsize;
+
+    // Establish the default preview url for this resource
+    return getPreviewURLForType($resource, $data_viewsize);
+    
+    }
+
 
 function HookLightbox_previewViewRenderaltthumb()
     {

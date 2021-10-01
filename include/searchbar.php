@@ -314,14 +314,9 @@ var categoryTreeChecksArray = [];
             jQuery(document).ready(function () {
                 jQuery('#ssearchbox').autocomplete({source: "<?php echo $autocomplete_src; ?>"});
                 
-                    // Ensure any previously hidden searchfields remain hidden
-                    ssearchhiddenfields=document.getElementById('ssearchhiddenfields').value.trim();
-                    if (ssearchhiddenfields.length > 0) {
-                        ssearchhiddenfieldsarray=ssearchhiddenfields.split(",");
-                        for (var i = 0; i < ssearchhiddenfieldsarray.length; i++) {
-                            document.getElementById(ssearchhiddenfieldsarray[i]).style.display='none';
-                        }
-                    }
+                // Ensure any previously hidden searchfields remain hidden
+                SimpleSearchFieldsHideOrShow();
+                
             });
             <?php
             }
@@ -367,7 +362,7 @@ if (!$basic_simple_search && !$hide_search_resource_types)
         if (checkcount==tickboxes.length){jQuery('#rttickallcoll').prop('checked',true);}   
     }
     </script>
-    <div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); HideOrShowSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allresourcessearchbar']?></div>
+    <div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo $lang['allresourcessearchbar']?></div>
     <?php }?>
     <?php
     $rt=explode(",",@$restypes);
@@ -401,7 +396,7 @@ if (!$basic_simple_search && !$hide_search_resource_types)
             type="checkbox" value="yes" name="resource<?php echo $types[$n]["ref"]?>"  
         <?php if (((count($rt)==1) && ($rt[0]=="")) || ($restypes=="Global") || (in_array($types[$n]["ref"],$rt))) 
             {?> checked="checked"<?php } ?> 
-            onClick="HideOrShowSimpleSearchFields(true);<?php echo $resetTickAllCall;?>">
+            onClick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall;?>">
         <label for="TickBox<?php echo $types[$n]["ref"]?>">&nbsp;<?php echo htmlspecialchars($types[$n]["name"]) ?></label>
     </div>
     <?php 
@@ -409,25 +404,13 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     # End of rendering for resource type checkbox inputs
 
     ?><div class="spacer"></div>
-    <?php if ($searchbar_selectall && ($search_includes_user_collections || $search_includes_public_collections || $search_includes_themes)) { ?>
-    <div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); HideOrShowSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
+    <?php if ($searchbar_selectall && $search_includes_themes) { ?>
+    <div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
     <?php }?>
     <?php if ($clear_button_unchecks_collections){$colcheck="false";}else {$colcheck="true";}
-    if ($search_includes_user_collections) 
-        { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxMyCol" type="checkbox" name="resourcemycol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("mycol",$rt))) {?>checked="checked"<?php } ?> onClick="HideOrShowSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxMyCol">&nbsp;<?php echo $lang["mycollections"]?></label></div><?php 
-        $clear_function.="jQuery('#TickBoxMyCol').prop('checked'," . $colcheck . ");";
-        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
-        }
-    if ($search_includes_public_collections) 
-        { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxPubCol" type="checkbox" name="resourcepubcol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("pubcol",$rt))) {?>checked="checked"<?php } ?> onClick="HideOrShowSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxPubCol">&nbsp;<?php echo $lang["findpubliccollection"]?></label></div><?php  
-        $clear_function.="jQuery('#TickBoxPubCol').prop('checked'," . $colcheck . ");";
-        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
-        }
     if ($search_includes_themes) 
         { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("themes",$rt))) {?>checked="checked"<?php } ?> onClick="HideOrShowSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxThemes">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
+        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("themes",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxThemes">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
         $clear_function.="jQuery('#TickBoxThemes').prop('checked'," . $colcheck . ");";
         if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
         }
@@ -443,8 +426,6 @@ elseif($restypes=='')
             $restypes.=($restypes=='' ? '' : ',').$types[$t]['ref'];
             }
         }
-    if($search_includes_user_collections){$restypes.=($restypes=='' ? '' : ','). "mycol";}
-    if($search_includes_public_collections){$restypes.=($restypes=='' ? '' : ','). "pubcol";}
     if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "themes";}
     
     ?>
@@ -493,7 +474,7 @@ elseif($restypes=='')
             $searchbuttons .= " document.getElementById('searchresourceid').value='';";
             }
 
-        $searchbuttons .= "ResetTicks();HideOrShowSimpleSearchFields();\"/>";
+        $searchbuttons .= "ResetTicks();SimpleSearchFieldsHideOrShow();\"/>";
         }
     else
         {
@@ -507,7 +488,7 @@ elseif($restypes=='')
             }
         }
 
-    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" onclick=\"HideOrShowSimpleSearchFields();\" />";
+    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
     if($responsive_ui)
         {
@@ -578,7 +559,7 @@ elseif($restypes=='')
                 }
                 ?>
             // Hide any fields now no longer relevant.  
-            HideOrShowSimpleSearchFields(false);
+            SimpleSearchFieldsHideOrShow(false);
             }
 
         <?php
@@ -611,158 +592,115 @@ elseif($restypes=='')
         jQuery.get('<?php echo $baseurl_short?>pages/ajax/filter_basic_search_options.php?nofilter=' + encodeURIComponent(clickedfieldno) + '&filter=' + encodeURIComponent(Filter), { success: function(data, textStatus, jqXHR) {eval(data);} });
         <?php } ?>
         }
-        
-    function HideOrShowSimpleSearchFields(reset)
-        {
 
-        // If an ImageBank is selected then no action
-        if (jQuery("#SearchImageBanks :selected").text().length > 0) { return; }
+
+    function SimpleSearchFieldsHideOrShow(resetvalues)
+        {
+        // ImageBank is selection has already dealt with hiding of elements, so just reset the searchfields
+        if (jQuery("#SearchImageBanks :selected").text().length > 0) 
+            { 
+            SimpleSearchFieldsResetValues(true); // true = include globals
+            return; 
+            }
+
+        if (resetvalues) {
+            SimpleSearchFieldsResetValues(false); // false = exclude globals
+        }
 
         var ssearchhiddenfields = [];
         ssearchhiddenfields.length=0;
         document.getElementById('ssearchhiddenfields').value='';
 
         <?php
-        # Consider each of the searchfields; Show or hide depending on whether the resource type for this field is selected
+        # Show or hide each searchfield depending on whether the resource type for this field is selected
+        # Exclude global fields
         for ($n=0;$n<count($fields);$n++)
             {
-            # Check it's not a global field, we don't need to hide those
-            # Also check it's not a duplicate field as those should not be toggled.
-            if ($fields[$n]["resource_type"]!=0 
-                && !in_array($fields[$n]["name"],$duplicate_fields) 
-                && (  empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))  )  )
+            # Duplicate fields are skipped
+            # Fields subjected to display conditioning are skipped
+            if ( !in_array($fields[$n]["name"],$duplicate_fields) 
+              && ( empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))  )  )
                 {
-                ?>
-                // Reset search field values if necessary
-                if (reset) 
-                    {
-                    // When clicking checkboxes, always reset any resource type specific fields.
-                    <?php
-                    switch($fields[$n]['type'])
-                        {
-                        case FIELD_TYPE_CATEGORY_TREE:
-                            ?>
-                            var ref = <?php echo htmlspecialchars($fields[$n]["ref"]) ?>;
-                            jQuery('#search_tree_' + ref).jstree(true).deselect_all();
-
-                            /* remove the hidden inputs */
-                            var elements = document.getElementsByName('nodes_searched[' + ref + ']');
-                            while(elements[0])
-                                {
-                                elements[0].parentNode.removeChild(elements[0]);
-                                }
-
-                            /* update status box */
-                            var node_statusbox = document.getElementById('nodes_searched_' + ref + '_statusbox');
-                            while(node_statusbox.lastChild)
-                                {
-                                node_statusbox.removeChild(node_statusbox.lastChild);
-                                }
-                            
-                            jQuery('.search_tree_' + ref + '_nodes').remove();
-                            <?php
-                            break;
-                        case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
-                        case FIELD_TYPE_EXPIRY_DATE:
-                        case FIELD_TYPE_DATE:
-                            ?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
-                            <?php
-                            if($searchbyday)
-                                {
-                                ?>
-                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
-                                <?php
-                                }
-                            break;
-                        case FIELD_TYPE_CHECK_BOX_LIST: 
-                        case FIELD_TYPE_DROP_DOWN_LIST:
-                        case FIELD_TYPE_RADIO_BUTTONS:
-                            ?>
-                            jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
-                            <?php                            
-                            break;  
-                        default:
-                            if ($fields[$n]['field_constraint']==1){?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';  
-                            <?php } else { ?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
-                            <?php }
-                        }
+                // Process resource type checkboxes, whether checked or unchecked 
+                if ($fields[$n]["resource_type"]!=0) 
+                    { 
                     ?>
-                    } // End of search field resets 
+                    if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !jQuery('#TickBox<?php echo $fields[$n]["resource_type"] ?>').prop('checked'))
+                        { 
+                        // Process unchecked element
+                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
+                        document.getElementById(ssearchfieldname).style.display='none';
 
-                // Process resource type checkboxes, whether checked or unchecked   
-                if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !jQuery('#TickBox<?php echo $fields[$n]["resource_type"] ?>').prop('checked'))
-                    {
-                    ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
-                    document.getElementById(ssearchfieldname).style.display='none';
+                        // Search field is hidden, so add it to the list of hidden search field names for use when searchbar is redisplayed
+                        ssearchhiddenfields.push(ssearchfieldname)
 
-                    // Search field is hidden, so add it to the list of hidden search field names for use when searchbar is redisplayed
-                    ssearchhiddenfields.push(ssearchfieldname)
-
-                    // Also deselect it.
-                    <?php
-                    switch($fields[$n]['type'])
-                        {
-                        case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
-                        case FIELD_TYPE_EXPIRY_DATE:
-                        case FIELD_TYPE_DATE:
-                            ?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
-                            <?php
-                            if($searchbyday)
-                                {
-                                ?>
-                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
-                                <?php
-                                }
-                            break;
-                        case FIELD_TYPE_CATEGORY_TREE:
-                            ?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
-                            <?php
-                            break;
-                        case FIELD_TYPE_CHECK_BOX_LIST: 
-                        case FIELD_TYPE_DROP_DOWN_LIST:
-                        case FIELD_TYPE_RADIO_BUTTONS:
-                            ?>
-                            jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
-                            <?php                            
-                            break;  
-                        default:
-                            if ($fields[$n]['field_constraint']==1){?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';  
-                            <?php } else { ?>
-                            document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
-                            <?php }
-                        }
-                    ?>
-                    }
-                else
-                    {
-                    <?php
-                    if(in_array($fields[$n]['type'],array(2,3)) || ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown))
-                        {
-                        ?>
-                        document.getElementById('field_<?php echo $fields[$n]["ref"] ?>').disabled=false;
+                        // Also deselect it.
                         <?php
+                        switch($fields[$n]['type'])
+                            {
+                            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+                            case FIELD_TYPE_EXPIRY_DATE:
+                            case FIELD_TYPE_DATE:
+                                ?>
+                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
+                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
+                                <?php
+                                if($searchbyday)
+                                    {
+                                    ?>
+                                    document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
+                                    <?php
+                                    }
+                                break;
+                            case FIELD_TYPE_CATEGORY_TREE:
+                                ?>
+                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
+                                <?php
+                                break;
+                            case FIELD_TYPE_CHECK_BOX_LIST: 
+                            case FIELD_TYPE_DROP_DOWN_LIST:
+                            case FIELD_TYPE_RADIO_BUTTONS:
+                                ?>
+                                jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
+                                <?php                            
+                                break;  
+                            default:
+                                if ($fields[$n]['field_constraint']==1){?>
+                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';  
+                                <?php } else { ?>
+                                document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+                                <?php }
+                            }
+                        ?>
                         }
-                    ?>
-                    ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
-                    document.getElementById(ssearchfieldname).style.display='';
+                    else
+                        {
+                        // Process checked element
 
-                    // Search field is no longer hidden, so remove it from the list of hidden search field names for use when searchbar is redisplayed
-                    ssindex = ssearchhiddenfields.indexOf(ssearchfieldname);
-                    if (ssindex > -1) {
-                        ssearchhiddenfield.splice(ssindex, 1);
-                    }
-                    }
+                        <?php
+                        if(in_array($fields[$n]['type'],array(2,3)) || ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown))
+                            {
+                            ?>
+                            document.getElementById('field_<?php echo $fields[$n]["ref"] ?>').disabled=false;
+                            <?php
+                            }
+                            ?>
+
+                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
+                        document.getElementById(ssearchfieldname).style.display='';
+
+                        // Search field is no longer hidden, so remove it from the list of hidden search field names for use when searchbar is redisplayed
+                        ssindex = ssearchhiddenfields.indexOf(ssearchfieldname);
+                        if (ssindex > -1) 
+                            {
+                            ssearchhiddenfield.splice(ssindex, 1);
+                            }
+                        }
+
                 <?php
                 }
             }
+        }
         ?>
 
         // Save the hidden field names for use when searchbar is redisplayed
@@ -772,6 +710,90 @@ elseif($restypes=='')
         console.log("SETCOOKIE SSEARCHHIDDENFIELDS="+ssearchhiddenfieldsstring);
 
         }   
+
+        
+    function SimpleSearchFieldsResetValues(includeglobals) {
+    <?php
+    # Reset the data in each of the searchfields including global 
+    for ($n=0;$n<count($fields);$n++)
+        {
+        if ($fields[$n]["resource_type"]==0) 
+            {
+            ?>
+            if (includeglobals) 
+                {
+        <?php
+            }
+        # Duplicate fields are skipped
+        # Fields subjected to display conditioning are skipped
+        if ( !in_array($fields[$n]["name"],$duplicate_fields) 
+            && ( empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))  )  )
+            {
+            switch($fields[$n]['type'])
+                {
+                case FIELD_TYPE_CATEGORY_TREE:
+                    ?>
+                    var ref = <?php echo htmlspecialchars($fields[$n]["ref"]) ?>;
+                    jQuery('#search_tree_' + ref).jstree(true).deselect_all();
+
+                    /* remove the hidden inputs */
+                    var elements = document.getElementsByName('nodes_searched[' + ref + ']');
+                    while(elements[0])
+                        {
+                        elements[0].parentNode.removeChild(elements[0]);
+                        }
+
+                    /* update status box */
+                    var node_statusbox = document.getElementById('nodes_searched_' + ref + '_statusbox');
+                    while(node_statusbox.lastChild)
+                        {
+                        node_statusbox.removeChild(node_statusbox.lastChild);
+                        }
+                    
+                    jQuery('.search_tree_' + ref + '_nodes').remove();
+                    <?php
+                    break;
+                case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+                case FIELD_TYPE_EXPIRY_DATE:
+                case FIELD_TYPE_DATE:
+                    ?>
+                    document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
+                    document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
+                    <?php
+                    if($searchbyday)
+                        {
+                        ?>
+                        document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
+                        <?php
+                        }
+                    break;
+                case FIELD_TYPE_CHECK_BOX_LIST: 
+                case FIELD_TYPE_DROP_DOWN_LIST:
+                case FIELD_TYPE_RADIO_BUTTONS:
+                    ?>
+                    jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
+                    <?php                            
+                    break;  
+                default:
+                    if ($fields[$n]['field_constraint']==1){?>
+                    document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';  
+                    <?php } else { ?>
+                    document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+                    <?php }
+                }
+            }
+
+            if ($fields[$n]["resource_type"]==0) 
+                {
+                ?>
+                }
+            <?php
+                }
+
+        }
+    ?>
+    }
+
     </script>
         
     <div id="basicdate" class="SearchItem"<?php if ($simpleSearchFieldsAreHidden) {?> style="display:none;"<?php } ?>>
