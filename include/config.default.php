@@ -1688,6 +1688,9 @@ $no_preview_extensions=array("icm","icc");
 # If this is not set and the script is executed notifications will be sent to resource admins, or users in groups specified in $email_notify_usergroups 
 # $expiry_notification_mail="myaddress@mydomain.example";
 
+// Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
+// $notify_on_resource_expiry_days = 1;
+
 # What is the default display mode for search results? (smallthumbs/thumbs/list)
 $default_display="thumbs";
 
