@@ -52,6 +52,7 @@ $lang['flickr_no_published']="without suitable sized upload";
 $lang["flickr_publishing_in_progress"]='Please wait while we publish. This might take a while, depending on the total size of your resources.<br /><br />To continue working, you may use the previous window.<br /><br />';
 
 $lang['flickr_theme_publish']="Flickr Theme Publish";
+$lang['flickr_title_field'] = 'Title field';
 $lang["flickr_caption_field"]="Caption field";
 $lang["flickr_keywords_field"]="Keyword field";
 $lang['flickr_prefix_id_title']="Prefix resource id to title";
@@ -66,3 +67,5 @@ $lang['flickr_nice_progress_min_timeout']="Time between progress pings (ms)";
 
 $lang["flickr_api_key"] = "Flickr API key";
 $lang["flickr_api_secret"] = "Flickr API secret";
+
+$lang['flickr_warn_no_title_access'] = "Publishing not allowed without access to the title field (ID #%id). Please contact an administrator!";

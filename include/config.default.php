@@ -1593,14 +1593,13 @@ $themes_in_my_collections=false;
 $top_nav_upload=true;
 # Show an upload link in the top navigation in addition to 'my contributions' for standard user? (if 'd' permission for the current user)
 $top_nav_upload_user=false;
-$top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, local
+$top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
 # Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $plupload_max_file_size = '50M';
+# $upload_max_file_size = '50M';
 
-# You can set the following line to ''  to disable chunking. May resolve issues with flash uploader.
-$plupload_chunk_size='5mb';
-
+# You can set the following line to ''  to disable chunking.
+$upload_chunk_size='5mb';
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
@@ -2111,10 +2110,6 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Allow Plugin Upload
-# Allow Plugin Upload
-$enable_plugin_upload = true;
-
 // GEOLOCATION MAP CONFIGURATION------------
     // Disable maps and geocoding features?
     $disable_geocoding = false;
@@ -2549,6 +2544,7 @@ $comments_responses_max_level=10 ;				# maximum number of nested comments / thre
 $comments_max_characters=2000;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
+$comments_policy_enable=false;                  # show a Comments Policy link to the site text comments_policy
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
 $comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
 
@@ -2768,11 +2764,6 @@ $custom_access_overrides_search_filter=false;
 # When requesting a resource or resources, is the "reason for request" field mandatory?
 $resource_request_reason_required=true;
 
-# Allow ResourceSpace to upload multiple times the same file in a row
-# Set to true only if you want RS to create duplicates when client is losing
-# connection with the server and tries again to send the last chunk
-$plupload_allow_duplicates_in_a_row = false;
-
 # Create all preview sizes at the full target size if image is smaller (except for HPR as this would result in massive images)
 $previews_allow_enlarge=false;
 
@@ -2949,6 +2940,9 @@ $resource_type_extension_mapping         = array(
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
 
+// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
+$view_in_browser_extensions=array("pdf","mp3","svg");
+
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
@@ -3072,7 +3066,7 @@ $social_media_links = array("facebook", "twitter", "linkedin");
 
 /*
 Set the suffix used to identify alternatives for a particular resource when both the original file and its alternatives
-are being uploaded in a batch using the UI (plupload)
+are being uploaded in a batch using upload_batch.php 
 IMPORTANT: This will only work if the user uploads all files (resource and its alternatives) into the same 
 collection.
 */

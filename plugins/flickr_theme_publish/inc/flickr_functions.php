@@ -1,4 +1,24 @@
 <?php
+/**
+ * Get the title field value (as configured in the plugin)
+ * 
+ * @param integer $resource Resource ID
+ * @return string Returns the i18l translated string of the field that represents the title for Flickr purposes.
+ */
+function flickr_get_title_field_value(int $resource)
+    {
+    $title_field = $GLOBALS['flickr_title_field'] ?? 0;
+    $title = array_values(
+        array_filter(
+            get_resource_field_data($resource),
+            function($f) use ($title_field) { return $f['ref'] == $title_field && $f['type'] == FIELD_TYPE_TEXT_BOX_SINGLE_LINE; }
+        )
+    );
+    $title = array_reverse($title);
+    $title = array_pop($title);
+
+    return i18n_get_translated($title['value'] ?? '');
+    }
 
 function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$private=0)
 	{
@@ -19,10 +39,10 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 	
 	foreach ($results as $result)
 		{
-		global $flickr, $view_title_field;
+		global $flickr;
 
 		# Fetch some resource details.
-		$title=i18n_get_translated($result["field" . $view_title_field]);
+        $title = flickr_get_title_field_value($result['ref']);
 		$description=sql_value("select value from resource_data where resource_type_field=$flickr_caption_field and resource='" . $result["ref"] . "'","");
 		
 		$field_type=sql_value("select type value from resource_type_field where ref=$flickr_keywords_field","", "schema");

@@ -289,7 +289,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     # File path has been specified. Let's use that directly.
                     if (file_exists($file_path))
                         {
-                    $result=rename($file_path, $filepath);
+                        $result=rename($file_path, $filepath);
                         }
                     else
                         {
@@ -324,7 +324,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         AutoRotateImage($filepath);
                         }
                     }
-                chmod($filepath,0777);
 
                 if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
                     {
@@ -764,12 +763,10 @@ function extract_exif_comment($ref,$extension="")
                     # Read the data.                
                     if ($read)
                         {
-                        $plugin=dirname(__FILE__)."/../plugins/exiftool_filter_" . $read_from[$i]['name'] . ".php";
                         if ($read_from[$i]['exiftool_filter']!="")
                             {
                             eval($read_from[$i]['exiftool_filter']);
                             }
-                        if (file_exists($plugin)) {include $plugin;}
         
                         $exiffieldoption=$exifoption;
                         debug("[extract_exif_comment()][ref={$ref}] exiffieldoption = " . json_encode($exiffieldoption));

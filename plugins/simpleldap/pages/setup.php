@@ -9,13 +9,8 @@ if(!in_array($plugin_name, $plugins))
 	
 $upload_status="";
 
-if (getval('upload','')!='' && enforcePostRequest(false))
-       {
-       $upload_status=handle_rsc_upload($plugin_name);
-       }
-elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="" && enforcePostRequest(false))
+if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="" && enforcePostRequest(false))
 	{
-
 	$simpleldap['fallbackusergroup'] = getvalescaped('fallbackusergroup','');
 	$simpleldap['domain'] = getvalescaped('domain','');
 	$simpleldap['emailsuffix'] = getvalescaped('emailsuffix','');
@@ -364,9 +359,6 @@ echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['lda
 <div class="clearerleft"></div>
 
 </form>
-<?php
-    display_rsc_upload($upload_status);
-?>
 </div>	
 
 <script language="javascript">

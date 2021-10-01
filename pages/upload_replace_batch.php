@@ -31,7 +31,7 @@ if($submitted)
         $upload_params["batch_replace_max"] = $batch_replace_max;
         $upload_params["no_exif"]           = $no_exif;
         
-        redirect(generateURL($baseurl_short . "pages/upload_plupload.php", $upload_params));
+        redirect(generateURL($baseurl_short . "pages/upload_batch.php", $upload_params));
         exit();
         }
     elseif($mode == "fetch_local" && $offline_job_queue)

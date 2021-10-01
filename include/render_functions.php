@@ -1537,7 +1537,7 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
 	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
 		<?php
-		echo "<input name=\"" . $input . "\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . $current . "\"" . $extra . "/>\n";
+		echo "<input name=\"" . $input . "\" id=\"" . $input . "_input\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . htmlspecialchars($current) . "\"" . $extra . "/>\n";
 			
 		echo $additionaltext;
 		?>
@@ -3008,7 +3008,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 
     $upload_here_params = array();
 
-    $upload_endpoint = 'pages/upload_plupload.php';
+    $upload_endpoint = 'pages/upload_batch.php';
     if(!$GLOBALS['upload_then_edit'])
         {
         $upload_endpoint = 'pages/edit.php';
@@ -4003,16 +4003,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
 		}
 	
-	# Process the value using a plugin. Might be processing an empty value so need to do before we remove the empty values
-	$plugin="../plugins/value_filter_" . $field["name"] . ".php";
-	
     if ($field['value_filter']!="")
         {
         eval($field['value_filter']);
-        }
-    else if (file_exists($plugin))
-        {
-        include $plugin;
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {

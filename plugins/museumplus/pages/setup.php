@@ -12,13 +12,7 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-// This is processed in config_gen_setup_post() but it's losing the museumplus_modules_saved_config information. We 
-// need it in order to be able to generate the HTML for it ($page_def).
-if(getval('upload','') !== '')
-    {
-    $error = handle_rsc_upload($plugin_name);
-    }
-
+    
 // Validate modules config (this is configurable on a different page - setup_module.php)
 $museumplus_modules_config = plugin_decode_complex_configs(getval('museumplus_modules_saved_config', $museumplus_modules_saved_config));
 if(!is_array($museumplus_modules_config))
