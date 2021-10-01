@@ -4605,7 +4605,7 @@ function process_notify_user_contributed_submitted($ref,$htmlbreak)
  */
 function notify_user_contributed_submitted($refs,$collection=0)
 	{
-	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
+	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer,$userref;
 	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
 	$htmlbreak="\r\n";
 	if ($use_phpmailer){$htmlbreak="<br /><br />";}
