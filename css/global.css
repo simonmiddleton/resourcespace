@@ -170,6 +170,7 @@ select::-ms-expand
 .underline{text-decoration: underline;}
 .pageline{border-bottom: 1px solid #d7d7d7;  margin-right:10px;margin-left:5px;}
 .DisplayNone { display: none !important; }
+.AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
 
 /* General Form tags */
 .checkoption {vertical-align: top;display: inline-block;width: 195px;margin: 2px; *display:inline;*zoom: 1;}
@@ -1449,6 +1450,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-right: 5px;    
 }
 
+.HomePanel.DashTile .HomePanelIN img:not(img:only-of-type),
 .FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; box-shadow: 0 0 25px #000; }
 
 .FeaturedSimpleTile.FullWidth { height: 40px; }
