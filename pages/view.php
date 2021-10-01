@@ -1259,7 +1259,7 @@ function make_download_preview_link($ref, $size, $label)
 	return "<a href='$direct_link' target='dl_window_$ref'>$label</a>";
 	}
 
-function add_download_column($ref, $size_info, $downloadthissize)
+function add_download_column($ref, $size_info, $downloadthissize, $view_in_browser=false)
 	{
     global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
 	if ($downloadthissize)
@@ -1277,9 +1277,16 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
 							. "&ext=" . $size_info["extension"])))
 						{
-						echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                        if ($view_in_browser)
+                            {
+                            echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                            }
+                        else
+                            {
+                            echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                            }
 						}
-						if($iOS_save)
+						if($iOS_save || $view_in_browser)
 							{
 							echo " target=\"_blank\"";
 							}
@@ -1287,7 +1294,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 							{
 							echo " onClick=\"return CentralSpaceLoad(this,true);\"";
 							}
-						?>><?php echo $lang["action-download"]?></a><?php
+						?>><?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?></a><?php
 					
 				}
 			elseif ($download_usage)
@@ -1298,16 +1305,23 @@ function add_download_column($ref, $size_info, $downloadthissize)
                     {
                     echo 'href=' . $baseurl . '/pages/download_usage.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k);
                     }
-                ?>><?php echo $lang["action-download"]?></a><?php
+                ?>><?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?></a><?php
                 }
             else
                 {
                 ?> <a id="downloadlink" <?php
                 if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
                     {
-                    echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ')"';
+                    if ($view_in_browser)
+                        {
+                        echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . '" target="_blank"';
+                        }
+                    else
+                        {
+                        echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ')"';
+                        }
                     }
-                ?>><?php echo $lang["action-download"]?></a><?php
+                ?>><?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"] ?></a><?php
                 }
 				unset($size_info_array);
 				?>
@@ -1515,6 +1529,46 @@ elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full
         $nodownloads=true;
         }
     } 
+
+// Render a "View in browser" button
+if (strlen($resource["file_extension"]) > 0 
+    && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
+    && in_array($resource["file_extension"], $view_in_browser_extensions))
+    {
+    $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
+    if (resource_download_allowed($ref,"",$resource["resource_type"]) && file_exists($path))
+        {
+        $counter++;
+        ?>
+        <tr class="DownloadDBlend">
+        <td class="DownloadFileName"><h2><?php echo $lang["view_directly_in_browser"]; ?></h2>
+        <?php if ($use_larger_layout) { ?></td><td class="DownloadFileDimensions"><?php } ?>
+        <?php
+            if ($resource["has_image"]==1)
+                {
+                $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
+                $original_size = '';
+                for ($n=0;$n<count($sizes);$n++)
+                    {
+                    if ($sizes[$n]["id"]=="" && is_numeric($sizes[$n]["width"]))
+                        {
+                        $original_size = get_size_info($sizes[$n]);
+                        break;
+                        }
+                    }
+                echo $original_size;
+                }
+        ?>
+        </td>
+        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+        <?php
+            $size_info = array('id' => '', 'extension' => $resource['file_extension']);
+            add_download_column($ref, $size_info, $downloadthissize, true);
+        ?>
+        </tr>
+        <?php
+        }
+    }
 
 if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'] . '_'))
 	{

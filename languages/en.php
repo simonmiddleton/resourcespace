@@ -605,6 +605,8 @@ $lang['remove_custom_access_no_users_found'] = 'No users or groups with custom a
 $lang['action-generate_pdf'] = 'Generate PDF';
 $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
+$lang["view_directly_in_browser"] = "View directly in browser";
+$lang["view_in_browser"] = "View in browser";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
