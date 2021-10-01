@@ -298,9 +298,9 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
-#CentralSpace {text-align:left;position:relative;}
+#CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%;}
 
-.TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;min-height: 30px;}
+.TopInpageNav {clear: left;margin-bottom:15px;margin-right: 0;position:relative;min-height: 30px;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;}
@@ -446,6 +446,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     font-size: 12px;
     padding: 3px;
     margin: 1px;
+    cursor: default;
 }
 
 /*Resource Panel layout*/
@@ -985,6 +986,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #SearchResultFound {
     padding-top: 3px;
     min-width: 90px;
+    padding-left: 10px;
 }
 
 #contactadminbox  textarea{
@@ -1656,6 +1658,7 @@ form.FormFilter button.ClearButton {
 #CentralSpaceResources  
     {
     text-align:justify;
+    margin: 10px 8px 0 8px;
     }
 .ImageTools
     {
@@ -1765,7 +1768,7 @@ a.Enabled, a:visited.Enabled {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    margin: 1em 1em 0.8em 0;;
+    margin: 1em 1em 0.8em 0;
     padding: 8px 10px;
     background: gray;
 }
@@ -1775,6 +1778,10 @@ a.Enabled, a:visited.Enabled {
 .BreadcrumbsBox .fa {
     padding-left: 10px;
     padding-right: 3px;
+}
+
+.BreadcrumbsBox.BreadcrumbsBoxSlim {
+    margin: 1em 1em 0 0;
 }
 
 /* Colour picker */
@@ -2291,6 +2298,17 @@ input[type="text"]#iconpicker-input {
 }
 
 .iconpicker-content-icon:hover {background-color: #0000001f;}
+
+.BasicsBox.SearchSticky {
+    top: 0;
+    position: sticky;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #c1c1c1;
+    box-shadow: 0 12px 10px -12px #bbbbbb;
+    z-index: 101;
+    padding-top: 15px;
+    margin-top: 0;
+}
 
 /* jQuery tagEditor */
 
