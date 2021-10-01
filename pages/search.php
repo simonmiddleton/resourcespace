@@ -935,7 +935,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $result_count = $resources_count;
         }
     ?>
-    <div class="BasicsBox">
+    <div class="BasicsBox SearchSticky">
     <div class="TopInpageNav">
     <div class="TopInpageNavLeft">
 
@@ -1385,7 +1385,7 @@ if($responsive_ui)
     $drag_over="";
     if (is_array($drag_upload_params) && ($display=='thumbs' || $display=='xlthumbs') && $order_by == 'collection')
         {
-        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
+        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_batch.php", $drag_upload_params);
         $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
         }
     ?>
@@ -1661,23 +1661,6 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-if($display != 'map' || !$modal)
-    {
-    if(!hook('bottomnavigation'))
-        { ?>
-        <!--Bottom Navigation - Archive, Saved Search plus Collection-->
-        <div class="BottomInpageNav">
-            <?php hook('add_bottom_in_page_nav_left'); ?>
-            <div class="BottomInpageNavRight">  
-           <?php 
-           if (isset($draw_pager)) {pager(false);} 
-            ?>
-            </div>
-            <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-    }
 } # End of replace all results hook conditional
 
 hook("endofsearchpage");

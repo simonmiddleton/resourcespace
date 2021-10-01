@@ -60,7 +60,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                     } ?>
                 <hr style="margin-top:20px;">
                 <?php
-                if ($show_detailed_errors===true)
+                if ($show_detailed_errors)
                     {?>
                     <p style="font-size:11px;color:black;"><?php echo htmlspecialchars($error_info); ?></p>
                     <?php

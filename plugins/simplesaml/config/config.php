@@ -30,3 +30,36 @@ $simplesaml_multiple_email_notify = "";
 // the user is allowed to log in to ResourceSpace or not
 $simplesaml_authorisation_claim_name = '';
 $simplesaml_authorisation_claim_value = '';
+
+$simplesaml_rsconfig = false;
+
+// When using ResourceSpace to store SAML config these setttings are initialised and set in the following pages:-
+// plugins/simplesaml/lib/lib/_autoload.php
+// plugins/simplesaml/lib/resourcespace/config/config.php
+// plugins/simplesaml/lib/resourcespace/config/authsources.php
+// plugins/simplesaml/lib/resourcespace/metadata/saml20-idp-remote.php
+
+// Set some defaults to ease setup
+global $baseurl_short, $email_from, $application_name, $scramble_key, $storagedir;
+$samlid = hash('sha256', "saml" . $scramble_key);
+$samltempdir = get_temp_dir(false,"simplesaml");
+$simplesaml_config_defaults = array();
+$simplesaml_config_defaults["baseurlpath"] =  $baseurl_short . 'plugins/simplesaml/lib/www/';
+$simplesaml_config_defaults["tempdir"] =  $samltempdir;
+$simplesaml_config_defaults["technicalcontact_name"] =  $application_name;
+$simplesaml_config_defaults["technicalcontact_email"] =  $email_from;
+$simplesaml_config_defaults["secretsalt"] =  $samlid;
+$simplesaml_config_defaults["loggingdir"] = $samltempdir;
+$simplesaml_config_defaults["logging.logfile"] = "saml_" . md5($samlid) . ".log";
+$simplesaml_config_defaults["admin.protectindexpage"] = true;
+$simplesaml_config_defaults["admin.protectmetadata"] = false;
+$simplesaml_config_defaults["enable.saml20-idp"] = true;
+$simplesaml_config_defaults["datadir"] = $storagedir . "/simplesamldata";
+$simplesaml_config_defaults["timezone"] = null;
+
+
+
+
+
+
+

@@ -47,100 +47,6 @@ elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
         purge_plugin_config($purge_name);
         }
     }
-elseif ($enable_plugin_upload && isset($_REQUEST['submit']) && enforcePostRequest(false))
-    { # Upload a plugin .rsp file. 
-    if (($_FILES['pfile']['error'] == 0) && (pathinfo($_FILES['pfile']['name'], PATHINFO_EXTENSION)=='rsp'))
-        {
-        require "../../lib/pcltar/pcltar.lib.php";
-
-        # Create tmp folder if not existing
-        # Since get_temp_dir() method does this, omit: if (!file_exists(dirname(__FILE__).'/../../filestore/tmp')) {mkdir(dirname(__FILE__).'/../../filestore/tmp',0777);}
-
-        $tmp_file = get_temp_dir() . '/'.basename($_FILES['pfile']['name'].'.tgz');
-        if(move_uploaded_file($_FILES['pfile']['tmp_name'], $tmp_file)==true)
-            {
-            $rejected = false;
-            $filelist = PclTarList($tmp_file);
-            if(is_array($filelist))
-                {
-                foreach($filelist as $key=>$value)
-                    { # Loop through the file list to create an array we can use php's functions with.
-                    $filearray[] = $value['filename'];
-                    }
-                # Some security checks.
-                foreach ($filearray as $filename)
-                    {
-                    if ($filename[0]=='/' || $filename[0] =='\\')
-                        { # Paths are absolute.  Reject the plugin.
-                        $rejected = true;
-                        $rej_reason = $lang['plugins-rejrootpath'];
-                        break; 
-                        }
-                    }
-                if (array_search('..', $filearray)!==false) 
-                    {# Archive may contain ../ directories (Security risk)
-                    $rejected = true;
-                    $rej_reason = $lang['plugins-rejparentpath'];
-                    }
-                if(!$rejected)
-                    {
-                    # Locate the plugin name based on highest directory in structure.
-                    # This loop will also look for the .yaml file (to avoid having to loop twice).
-                    $exp_path = explode('/',$filearray[0]);
-                    $yaml_index = false;
-                    $u_plugin_name = $exp_path[0];
-                    foreach ($filearray as $key=>$value)
-                        {
-                        $test = explode('/',$value);
-                        if ($u_plugin_name != $test[0])
-                            {
-                            $rejected = true;
-                            $rej_reason = $lang['plugins-rejmultpath'];
-                            break;
-                            }
-                        # TODO: This should be a regex to make sure the file is in the right position (<pluginname>/<pluginname>.yaml)
-                        if (strpos($value,$u_plugin_name.'.yaml')!==false)
-                            {
-                            $yaml_index = $key;
-                            }
-                        }
-                    # TODO: We should extract the yaml file if it exists and validate it.
-                    if ($yaml_index===false)
-                        {
-                        $rejected = true;
-                        $rej_reason = $lang['plugins-rejmetadata'];
-                        }
-                    if (!$rejected)
-                        {
-                        # Uploaded plugins live in the filestore folder.		  
-                        $phar = new PharData($tmp_file);
-                        try
-                            {
-                            $phar->extractTo($storagedir . "/plugins/", null, true);
-                            activate_plugin($u_plugin_name);
-                            redirect($baseurl_short.'pages/team/team_plugins.php');
-                            }
-                        catch (Exception $e) 
-                            {
-                            $rejected = true;
-                            $rej_reason = $lang['plugins-rejarchprob'];
-                            }
-                        }
-                    }
-                }
-            else 
-                {
-                $rejected = true;
-                $rej_reason = $lang['plugins-rejfileprob'];
-                }	 
-            }
-        }
-    else 
-        {
-        $rejected = true;
-        $rej_reason  = $lang['plugins-rejfileprob'];
-        }
-    }
 
 $inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
     'inst_version, update_url, info_url, enabled_groups, disable_group_select, title, icon ' .
@@ -693,23 +599,6 @@ else
    echo ",p>".$lang['plugins-noneavailable']."</p>";
    }
 
-if ($enable_plugin_upload) 
-   {
-   ?>
-   <div class="plugin-upload">
-   <h2 class="pageline"><?php echo $lang['plugins-uploadheader']; ?></h2>
-   <form enctype="multipart/form-data" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins.php">
-        <?php generateFormToken("team_plugins"); ?>
-      <input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
-      <p><?php echo $lang['plugins-uploadtext']; ?><input type="file" name="pfile" /><br /></p>
-      <input type="submit" name="submit" value="<?php echo $lang['plugins-uploadbutton'] ?>" />
-   </form>
-   <?php if (isset($rejected)&& !$rejected) 
-      { 
-      echo "<p>".$lang['plugins-uploadsuccess']."</p>";
-      }
-   echo "</div>"; 
-   }
 ?>
 </div>
 <form id="anc-post" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins.php" >
@@ -717,10 +606,5 @@ if ($enable_plugin_upload)
   <input type="hidden" id="anc-input" name="" value="" />
 </form>
 <?php
-if (isset($rejected) && $rejected)
-   { ?>
-   <script>alert("<?php echo $rej_reason.'\\n\\r'.$lang['plugins-rejremedy']; ?>");</script>
-   <?php 
-   } 
 include "../../include/footer.php";
 

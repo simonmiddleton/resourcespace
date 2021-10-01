@@ -14,8 +14,16 @@ function comments_submit()
 	$comment_to_hide = getvalescaped("comment_to_hide",0,true);
 	
 	if (($comment_to_hide != 0) && (checkPerm("o"))) {	
-		$sql = "update comment set hide=1 where ref='$comment_to_hide'";
-		sql_query ($sql);		
+		// Does this comment have any child comments?
+		if (sql_value("SELECT ref AS value FROM comment WHERE ref_parent = '$comment_to_hide'",'') != '')
+			{
+			sql_query("UPDATE comment SET hide = 1 WHERE ref = '$comment_to_hide'");
+			}
+		else
+			{
+			sql_query("DELETE FROM comment WHERE ref = '$comment_to_hide'");
+			}
+
 		return;
 	}
 	
@@ -207,7 +215,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		</script>		
 		
 		<div id="comments_container">				
-		<div id="comment_form">
+		<div id="comment_form" class="comment_form_container">
 			<form class="comment_form" action="javascript:void(0);" method="">
 EOT;
         generateFormToken("comment_form");
@@ -294,14 +302,7 @@ EOT;
 			echo "</div>";			
 
 
-			echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";			
-			if ($comment['responseToDateTime']!="")
-				{
-				$responseToName = htmlspecialchars ($comment['responseToName']);
-				$responseToDateTime =  strftime('%a',strtotime($comment["responseToDateTime"])) . " " . nicedate($comment['responseToDateTime'], true, true, true);						
-				$jumpAnchorID = "comment" . $comment['ref_parent'];								
-				echo $lang['comments_in-response-to'] . "<br /><a class='.smoothscroll' rel='' href='#${jumpAnchorID}'>${responseToName} " . $lang['comments_in-response-to-on'] . " ${responseToDateTime}</a>";				
-				}						
+			echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";						
 			echo "</div>";	// end of CommentEntryInfoDetails		
 			echo "</div>";	// end of CommentEntryInfoLine			
 			echo "</div>";	// end CommentEntryInfoContainer
@@ -315,7 +316,7 @@ EOT;
 				}
 			else
 				{
-					echo $lang["hidden"];
+					echo "[" . $lang["deleted"] . "]";
 				}
 			}
 			else
@@ -358,41 +359,48 @@ EOT;
 
 				}			
 			
-			$respond_div_id = "comment_respond_" . $thisRef;
-			
-			echo "<div id='${respond_div_id}' class='CommentRespond'>";		// start respond div
-			echo "<a href='javascript:void(0)' onClick='
-				jQuery(\"#{$respond_div_id}\").replaceWith(jQuery(\"#comment_form\").clone().attr(\"id\",\"${respond_div_id}\")); 
-				jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#${respond_div_id} .comment_form\");				
-			'>" . '<i aria-hidden="true" class="fa fa-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";			
-			echo "</div>";		// end respond
-
-			echo "<div class='CommentEntryInfoFlag'>";		
-			if (getval("comment${thisRef}flagged","") || $comment['hide'])
+			if (!$comment['hide']) 
 				{
-					echo "<div class='CommentFlagged'><i aria-hidden='true' class='fa fa-fw fa-flag'>&nbsp;</i>${lang['comments_flag-has-been-flagged']}</div>";			
-				} else {				
+				$respond_button_id = "comment_respond_button_" . $thisRef;
+				$respond_div_id = "comment_respond_" . $thisRef;
+
+				echo "<div id='${respond_button_id}' class='CommentRespond'>";		// start respond div
+				echo "<a href='javascript:void(0)' onClick='
+					jQuery(\"#comment_form\").clone().attr(\"id\",\"${respond_div_id}\").css(\"margin-left\",\"" . ($level * 50) . 'px")' . ".insertAfter(\"#comment$thisRef\"); 
+					jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#${respond_div_id} .comment_form\");
+					jQuery(\"#{$respond_button_id} a\").removeAttr(\"onclick\");
+				'>" . '<i aria-hidden="true" class="fa fa-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";			
+				echo "</div>";		// end respond
+
+				echo "<div class='CommentEntryInfoFlag'>";		
+				if (getval("comment${thisRef}flagged",""))
+					{
+					echo "<div class='CommentFlagged'><i aria-hidden='true' class='fa fa-fw fa-flag'>&nbsp;</i>${lang['comments_flag-has-been-flagged']}</div>";
+					}	
+				else
+					{				
 					echo<<<EOT
 					<div class="CommentFlag">
 						<a href="javascript:void(0)" onclick="jQuery('#CommentFlagContainer${thisRef}').toggle('fast');" ><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>${lang['comments_flag-this-comment']}</a>
 					</div>
 EOT;
+					}							
+				
+				if(checkPerm("o"))
+					{
+					?>
+					<form class="comment_removal_form">
+						<?php generateFormToken("comment_removal_form"); ?>
+						<input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>                 
+						<a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
+					</form>
+					<?php
+					}
+				
+				echo "</div>";		// end of CommentEntryInfoFlag
+						
+				}
 
-				}							
-			
-            if(checkPerm("o"))
-                {
-                ?>
-                <form class="comment_removal_form">
-                    <?php generateFormToken("comment_removal_form"); ?>
-                    <input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>                 
-                    <a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
-                </form>
-                <?php
-                }
-			
-			echo "</div>";		// end of CommentEntryInfoFlag
-							
 			echo "</div>";		// end of CommentEntry
 			
 			if ($bRecursive) comments_show($thisRef, $bcollection_mode, true, $level+1);				

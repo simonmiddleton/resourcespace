@@ -1,4 +1,7 @@
 <?php
+include '../../../include/db.php';
+include "../../../include/authenticate.php";
+
  // we get a list of groups from the LDAP;
  include_once ("../hooks/ldap_class.php");
 

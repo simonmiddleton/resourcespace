@@ -1,7 +1,7 @@
 <?php
-$on_upload = ($pagename ==  "upload_plupload");
+$on_upload = ($pagename ==  "upload_batch");
 if(!hook("replaceuploadoptions")):	
-if ($on_upload || $ref<0)
+if ($on_upload || (isset($ref) && $ref<0))
 	{
 	if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
 	if($tabs_on_edit && !$on_upload)
@@ -17,7 +17,6 @@ if ($on_upload || $ref<0)
 		<?php
 		}
 
-
     if($on_upload && $upload_then_edit && $resource_type_force_selection)
         {
         ?>
@@ -26,7 +25,7 @@ if ($on_upload || $ref<0)
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"
-                    onchange="CentralSpacePost(document.getElementById('UploadPluploadForm'), true);">
+                    onchange="CentralSpacePost(document.getElementById('UploadForm'), true);">
                 <option value='' selected><?php echo $lang["select"]; ?></option>
             <?php
             $types                = get_resource_types();
@@ -109,24 +108,31 @@ if ($on_upload || $ref<0)
             ?>
             <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
             <label for="collection_add"><?php echo $lang["addtocollection"]?></label>
-            <select name="collection_add" id="collection_add" class="stdwidth">
+            <select name="collection_add" id="collection_add" class="stdwidth" >
             
-            <?php if ($upload_add_to_new_collection_opt && $collection_allow_creation) { 
-                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
+            <?php if ($upload_add_to_new_collection_opt && $collection_allow_creation && !$upload_force_mycollection)
+                { 
+                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                    {
                     $non_col_options++;
+                    }
+                ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option>
+                <?php
                 }
-                ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option><?php } ?>
-            <?php if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection")) {
-                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
+            if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection") && !$upload_force_mycollection)
+                {
+                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                    {
                     $non_col_options++;
+                    }
+                ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option>
+                <?php
                 }
-                ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option><?php } ?>
-            
-            <?php
             
             if ($upload_force_mycollection)
                 {
-                $list=get_user_collections($userref,"Default Collection");}
+                $list=get_user_collections($userref,"Default Collection");
+                }
             else
                 {
                 //If the user is attached to a collection that is not allowed to add resources to,
@@ -330,28 +336,26 @@ if ($on_upload || $ref<0)
 if($on_upload)
     {
     if($upload_no_file)
-	{
-	?>
-    <div class="Question" id="question_noupload">
-        <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
-        <div id="noupolad">
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+        {
+        ?>
+        <div class="Question" id="question_noupload">
+            <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
+            <div id="noupolad">
+                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_batch.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+            </div>
+            <div class="clearerleft"> </div>
         </div>
-        <div class="clearerleft"> </div>
-    </div>
-	<?php
-    }
+        <?php
+        }
     ?>
     </div> <!-- End of Upload options -->
     <div class="BasicsBox">
     <script>
     // Add code to change URL if options change
     
-    jQuery(document).ready(function() {
-        
+    jQuery(document).ready(function() {        
         jQuery('#relateonupload').on('change', function ()
             {
-            cururl = plup.object.getOption('url');
             if(jQuery(this).is(':checked'))
                 {
                 relate_on_upload = true;

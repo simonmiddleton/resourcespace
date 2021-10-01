@@ -72,7 +72,7 @@ jQuery(document).ready(function() {
                      break;
             case <?php echo $keyboard_navigation_close; ?>: ModalClose();
                      break;
-            case <?php echo $keyboard_navigation_view_all; ?>: CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true);
+            case <?php echo $keyboard_navigation_view_all; ?>: if(!modOn){CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true)};
                      break;
             <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview)){?>
 				<?php if($video_playback_backwards){ ?>

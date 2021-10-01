@@ -29,6 +29,7 @@ $lang['action_dates_additional_settings_status']="Move resources to this archive
 $lang['action_dates_remove_from_collection']="Remove resources from all associated collections when state is changed?";
 $lang['action_dates_email_for_state']="Send notification email for resources changing state. Requires change of state fields above to be configured.";
 $lang['action_dates_email_for_restrict']="Send notification email for resources to be restricted. Requires restrict resource fields above to be configured.";
+$lang['action_dates_workflow_actions']="If the Advanced Workflow plugin is enabled, should its notifications be applied to state changes initiated by this plugin?";
 
 $lang['action_dates_weekdays']="Select the weekdays when actions be processed.";
 $lang["weekday-0"]="Sunday";

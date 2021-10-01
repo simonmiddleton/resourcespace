@@ -533,7 +533,7 @@ if(!$validpage)
 		?>
 		<div class="Question">
 			<label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
-			<input type="text" id="previewtext" name="freetext" value="<?php echo htmlspecialchars(ucfirst($freetext));?>"/>
+			<textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo htmlspecialchars(ucfirst($freetext));?></textarea>
 			<div class="clearerleft"></div>
 		</div>
 		<?php

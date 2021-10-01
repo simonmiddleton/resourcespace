@@ -181,28 +181,25 @@ function updateFieldOptions(question)
     selectedField =  jQuery(question).children('#filter_rule_field').val();
 
     var post_data = {
-        ajax: true,
-        field: selectedField,
-        <?php echo generateAjaxToken("filter_rule_field"); ?>
+        'ref': selectedField,
+        'nodeinfo':true
     };
-    options_url = baseurl_short + 'pages/ajax/field_options.php';
 
-    jQuery.post(options_url, post_data, function(response) {
-            if(response.success === true)
+    api("get_field_options", post_data, function(response) {
+            if(response!= false)
                 {
-                nodeoptions = response.options;
                 nodeselect =  jQuery(question).children('.filter_rule_nodes');
-                
-                jQuery.each(nodeoptions, function (i, item) {
+
+                jQuery.each(response, function () {
                     nodeselect.append(jQuery('<option>', { 
-                        value: i,
-                        text : item 
+                        value: this.ref,
+                        text : this.name 
                     }));
                 });
-                jQuery('.filter_rule_nodes').chosen();
 
+                jQuery('.filter_rule_nodes').chosen();
                 }
-        }, 'json');
+        });
     jQuery('#modal').css('overflow', 'visible');
     }
 

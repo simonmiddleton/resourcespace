@@ -155,7 +155,7 @@ if($k == "" && $smart_rtf == 0)
         );
         if($upload_then_edit)
             {
-            $upload_url = generateURL("{$baseurl_short}pages/upload_plupload.php", array("collection_add" => $parent));
+            $upload_url = generateURL("{$baseurl_short}pages/upload_batch.php", array("collection_add" => $parent));
             }
 
         $rendering_options["html_h2_span_class"] = "fa fa-fw fa-upload";

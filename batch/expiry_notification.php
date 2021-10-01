@@ -1,6 +1,6 @@
 <?php
 include(dirname(__FILE__) . "/../include/db.php");
-include(dirname(__FILE__) . "/../include/image_processing.php");
+include_once(dirname(__FILE__) . "/../include/image_processing.php");
 
 $expired_resources = sql_query('select r.ref,r.field8 as title from resource r join resource_data rd on r.ref=rd.resource join resource_type_field rtf on rd.resource_type_field=rtf.ref and rtf.type = ' . FIELD_TYPE_EXPIRY_DATE . ' where r.expiry_notification_sent<>1 and rd.value<>"" and rd.value<=now()');
 if (count($expired_resources)>0)

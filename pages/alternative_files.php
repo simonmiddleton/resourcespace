@@ -73,11 +73,37 @@ include "../include/header.php";
 <script type="text/javascript">
 function clickDelete(){
 	var files = [];
+    var errors = 0;
     jQuery('#altlistitems input:checked').not("#toggleall").each(function() {
             files.push(this.value);
         });
-	document.getElementById('filedelete').value=files.toString();
-	document.getElementById('fileform').submit();
+
+    files.forEach((file) => {
+        postdata = {
+            'resource' : '<?php echo $ref;?>',
+            'ref'      : file,
+        }
+
+        api(
+            'delete_alternative_file',
+            postdata,
+            function(response)
+                {
+                if(response == true)
+                    {
+                    document.getElementById('altlistrow' + file).remove();
+                    }
+                else
+                    {
+                    error++;
+                    
+                    }
+                }
+            );
+    });
+
+    if (errors > 0){styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfilesdeletefail']?>');return false;}
+    else {return true;}
 }
 function toggleAll(){
 jQuery("#toggleall").click(function() {
@@ -170,7 +196,7 @@ for ($n=0;$n<count($files);$n++)
 	{
 	?>
 	<!--List Item-->
-	<tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?>>
+	<tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']?>'>
 	<td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
 	<td><?php echo htmlspecialchars($files[$n]["name"])?></td>	
 	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
@@ -182,10 +208,29 @@ for ($n=0;$n<count($files);$n++)
 	<td><div class="ListTools">
 	
 	<a href="#" onclick="
-        if (confirm('<?php echo $lang["filedeleteconfirm"]?>'))
+        if (confirm('<?php echo $lang['filedeleteconfirm']?>'))
             {
-            document.getElementById('filedelete').value='<?php echo $files[$n]["ref"]?>';
-            <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('fileform'), true);
+            postdata = {
+                'resource' : '<?php echo $ref;?>',
+                'ref'      : '<?php echo $files[$n]['ref'];?>',
+            }
+
+            api(
+                'delete_alternative_file',
+                postdata,
+                function(response)
+                    {
+                    if(response == true)
+                        {
+                        document.getElementById('altlistrow<?php echo $files[$n]['ref'];?>').remove();
+                        return true;
+                        }
+                    else
+                        {
+                        styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfiledeletefail']?>');
+                        }
+                    }
+                );
             }
         return false;
     "><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
@@ -207,7 +252,7 @@ for ($n=0;$n<count($files);$n++)
 </table>
 </div>
 <p>
-	<a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_plupload.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"] ?></a>
+	<a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"] ?></a>
 </p>
 </form>
 
