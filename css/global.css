@@ -821,11 +821,6 @@ div.autocomplete ul li {
     color: #fff;
 }
 
-.uppy-StatusBar-actionBtn--done
-    {
-    display:none;
-}
-
 .uppy-Dashboard-browse{
     font-size: 20px;
     margin-bottom: 8px;

@@ -1007,6 +1007,7 @@ jQuery(document).ready(function () {
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
         theme: 'light',
+        doneButtonHandler: null,
         });
     
     uppy.use(Tus, {
