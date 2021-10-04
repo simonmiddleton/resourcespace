@@ -929,6 +929,7 @@ jQuery(document).ready(function () {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
                     browseFiles: '<?php echo $lang["upload_browse"] ?>',
                     uploadXFiles: '<?php echo $lang["upload_start"] ?>',
+                    dropPaste: '<?php echo $lang["upload_droparea_text"] ?>',
                 },
             },
 
