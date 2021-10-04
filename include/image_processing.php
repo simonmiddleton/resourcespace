@@ -610,7 +610,7 @@ function extract_exif_comment($ref,$extension="")
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
         # We then split the lines in the result into an array
-        $command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -G " . escapeshellarg($image);
+        $command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 " . escapeshellarg($image);
         $output=run_command($command);
         $metalines = explode("\n",$output);
         
@@ -680,6 +680,13 @@ function extract_exif_comment($ref,$extension="")
                     # Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
                     $metadata[$tagname] = escape_check($value);
                     $metadata[$groupname . ":" . $tagname] = escape_check($value);
+
+                    if(strpos($groupname,"-") !== false)
+                        {
+                        // Remove XMP sub namespace for XMP data if it has been entered without full qualified namespace to accommodate multiple file formats
+                        $groupname = substr($groupname,0,(strpos($groupname,"-")));
+                        $metadata[$groupname . ":" . $tagname] = escape_check($value);
+                        }
 
                     debug("[extract_exif_comment()][ref={$ref}] Extracted field '{$groupname}:{$tagname}', value = {$value}");
                     }
@@ -868,7 +875,7 @@ function extract_exif_comment($ref,$extension="")
                             unset($newval);
                         }
 
-                    }   
+                    }
                     else {
                         debug("[extract_exif_comment()][ref={$ref}] Unable to find embedded field mapping for subfield '{$subfield}'");
                         // Process if no embedded title is found:
