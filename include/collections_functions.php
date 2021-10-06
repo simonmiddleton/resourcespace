@@ -5995,7 +5995,7 @@ function can_delete_collection($collection_data, $userref, $k = "")
     }
 
 /**
- * Send colletion to administrators - used if $send_collection_to_admin is enabled)
+ * Send collection to administrators - used if $send_collection_to_admin is enabled
  *
  * @param  int $collection  Collection ID
  * @return boolean

@@ -902,7 +902,7 @@ jQuery(document).ready(function () {
     processerrors = []; // Keep track of upload errors
     retried = []; // Keep track of files that have been retried automatically
     allowcollectionreload = true;
-    uppy = Uppy.Core({
+    const uppy = new Uppy.Core({
         debug: false,
         autoProceed: false,
         restrictions: {
