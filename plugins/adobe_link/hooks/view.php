@@ -200,7 +200,7 @@ function HookAdobe_linkViewDownloadbuttonreplace()
         {
         $extraparams["replace_resource"] =  $ref;
         $extraparams[$CSRF_token_identifier] =  generateCSRFToken($usersession, "adobe_upload");
-        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "' ";
         $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
@@ -266,7 +266,7 @@ function HookAdobe_linkViewOrigdownloadlink()
      if($edit_access && in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
         {
         $extraparams["replace_resource"] =  $ref;
-        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "'";
         $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";

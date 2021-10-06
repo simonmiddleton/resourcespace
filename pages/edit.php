@@ -1283,7 +1283,7 @@ else
             }
         else
             {
-            // Defualt - batch upload
+            // Default - batch upload
             $titleh1 = $lang["addresourcebatchbrowser"];
             }?>        
         <h1><?php echo $titleh1 ?></h1>
