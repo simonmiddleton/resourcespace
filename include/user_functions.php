@@ -176,25 +176,11 @@ function setup_user($userdata)
         $usercollection=$userdata["current_collection"];
         // Check collection actually exists
         $validcollection=$userdata["current_collection_valid"];
-        if($validcollection==0)
+        if($validcollection==0 || $usercollection==0 || !is_numeric($usercollection))
             {
             // Not a valid collection - switch to user's primary collection if there is one
-            $usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
-            if ($usercollection!=0)
-                {
-                # set this to be the user's current collection
-                sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-                }
-            }
-        
-        if ($usercollection==0 || !is_numeric($usercollection))
-            {
-            # Create a collection for this user
-            # The collection name is translated when displayed!
-            $usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
-            # set this to be the user's current collection
-            sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-            }
+            $usercollection = get_default_user_collection(true);
+            }        
         }
     
     $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);

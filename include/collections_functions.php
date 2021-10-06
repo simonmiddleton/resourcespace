@@ -661,7 +661,7 @@ function set_user_collection($user,$collection)
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection;
 	if(!(isset($anonymous_login) && $username==$anonymous_login) || !$anonymous_user_session_collection)
 		{		
-		sql_query("update user set current_collection='" . escape_check($collection) . "' where ref='" . escape_check($user) . "'");
+		sql_query("UPDATE user SET current_collection='" . escape_check($collection) . "' WHERE ref='" . escape_check($user) . "'");
 		}
 	$usercollection=$collection;
 	}
@@ -6073,4 +6073,28 @@ function send_collection_to_admin(int $collection)
         $collectionsent = true;
         }
     return $collectionsent;
+    }
+
+/**
+ * Get the user's default collection, creating one if necessary
+ *
+ * @param  bool $setactive  Set the collection as the user's active collection?
+ * @return int  collection ID
+ */
+function get_default_user_collection($setactive=false)
+    {
+    global $userref;
+    $usercollection=sql_value("SELECT ref value FROM collection WHERE user='$userref' AND name LIKE 'Default Collection%' ORDER BY created ASC LIMIT 1",0);
+    if ($usercollection == 0)
+        {
+        # Create a collection for this user
+        # The collection name is translated when displayed!
+        $usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
+        }
+    if($setactive)
+        {
+        # set this to be the user's current collection
+        sql_query("UPDATE user SET current_collection='$usercollection' where ref='$userref'");
+		set_user_collection($userref,$usercollection);
+        }
     }
