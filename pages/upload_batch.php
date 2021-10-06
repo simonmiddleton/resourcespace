@@ -1206,6 +1206,10 @@ function processFile(file, forcepost)
         {
         postdata['collection_add'] = newcol;
         }
+    
+    // EXTRA DATA: no_exif
+    postdata['no_exif'] = jQuery('#no_exif').is(':checked') ? "yes": "";
+
     console.debug("newcol: " + newcol);
     entercolname = jQuery('#entercolname').val();
     console.debug("entercolname: " + entercolname);
