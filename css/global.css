@@ -2303,6 +2303,7 @@ input[type="text"]#iconpicker-input {
 
 .BasicsBox.SearchSticky {
     top: 0;
+    position: -webkit-sticky; 
     position: sticky;
     background-color: #f2f2f2;
     border-bottom: 1px solid #c1c1c1;
