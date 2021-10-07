@@ -381,7 +381,7 @@
 						jQuery( this ).dialog( "close" );
 						}}],
 			dialogClass: 'message',
-			width:'auto',
+			width: 400,
 			draggable: true,
 			open: function(event, ui) { jQuery('.ui-widget-overlay').bind('click', function(){ jQuery("#modal_dialog").dialog('close'); }); },
 			close: function( event, ui ) {
