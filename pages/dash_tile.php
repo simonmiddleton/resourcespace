@@ -777,7 +777,7 @@ if('' != $tile_type && $tile_type !== "conf")
 	function updateDashTilePreview() {
 		var prevstyle = jQuery(".tlstyle:checked").val();
 		var width = 250;
-		var height = 180;
+		var height = 160;
 		var pretitle = encodeURIComponent(jQuery("#previewtitle").val());
 		var pretxt = encodeURIComponent(jQuery("#previewtext").val());
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());
