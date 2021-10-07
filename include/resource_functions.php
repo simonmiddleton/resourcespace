@@ -5577,14 +5577,17 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
+        # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
-            # Empty value. Autocomplete and set.
+            # Autocomplete and update using the returned value
             $value = eval($field['autocomplete_macro']);
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
+                # Multiple values are comma separated
                 $autovals = str_getcsv($value);
                 $autonodes = array();
+                # Establish an array of nodes from the values
                 foreach($autovals as $autoval)
                     {
                     $nodeid = get_node_id($autoval,$field['ref']);
@@ -5593,10 +5596,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                         $autonodes[] = $nodeid;
                         }
                     }
-                natsort($autonodes);
-                add_resource_nodes($resource,$autonodes,false,false);
-                log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
-                $fields_updated[$field['ref']] = implode(",",$autonodes);
+                # Add nodes if any were established
+                if (count($autonodes) > 0)
+                    {
+                    natsort($autonodes);
+                    add_resource_nodes($resource,$autonodes,false,false);
+                    log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
+                    $fields_updated[$field['ref']] = implode(",",$autonodes);
+                    }
                 }
             else
                 {
