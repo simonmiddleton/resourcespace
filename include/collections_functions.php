@@ -6097,4 +6097,5 @@ function get_default_user_collection($setactive=false)
         sql_query("UPDATE user SET current_collection='$usercollection' where ref='$userref'");
 		set_user_collection($userref,$usercollection);
         }
+    return $usercollection;
     }
