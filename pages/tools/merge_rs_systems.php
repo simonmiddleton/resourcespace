@@ -2,7 +2,7 @@
 /**
 * @package ResourceSpace\Tools
 * 
-* A script to help administrators merge two ResourceSpace systems.
+* A tool to help administrators merge two ResourceSpace systems.
 */
 if('cli' != PHP_SAPI)
     {
@@ -11,7 +11,7 @@ if('cli' != PHP_SAPI)
     }
 
 $help_text = "NAME
-    merge_rs_systems - a script to help administrators merge two ResourceSpace systems.
+    merge_rs_systems - a tool for merging two ResourceSpace systems.
 
 SYNOPSIS
     On the system (also known as SRC system) that is going to merge with the other (DEST) system:
@@ -21,17 +21,15 @@ SYNOPSIS
         php path/tools/merge_rs_systems.php [OPTION...] SRC
 
 DESCRIPTION
-    A script to help administrators merge two ResourceSpace systems.
+    A tool to help administrators merge two ResourceSpace systems.
 
-    A specification file is required for the migration to be possible. The spec file will contain:
+    A specification file is required for the migration to be possible. The spec file will contain:-
     - A mapping between the SRC system and the DEST systems' records. Use the --generate-spec-file option to get
       an example.
     - If new workflow states will have to be created, the script will attempt to update config.php with this extra 
       information.
 
 OPTIONS SUMMARY
-    Here is a short summary of the options available in merge_rs_systems. Please refer to the detailed description below 
-    for a complete description.
 
     -h, --help              display this help and exit
     -u, --user              run script as a ResourceSpace user. Use the ID of the user
@@ -277,7 +275,7 @@ if(isset($user))
 For the following usage:
  - php path/tools/merge_rs_systems.php [OPTION...] --export DEST
  - php path/tools/merge_rs_systems.php [OPTION...] --import SRC
-Ensure DEST/SRC folder has been provided when exporting or importing data
+Ensure DEST/SRC folder has been provided when exporting/importing data
 */
 if($export || $import)
     {
@@ -833,6 +831,18 @@ if($import && isset($folder_path))
         if(array_key_exists($archive_state["ref"], $archive_states_spec) && is_null($archive_states_spec[$archive_state["ref"]]))
             {
             logScript("Updating config.php with extra workflow state:");
+echo "<pre>";print_r($archive_states_spec[$archive_state['ref']]);echo "</pre>";
+
+
+
+
+
+
+
+
+
+
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
             $new_archive_state = end($dest_archive_states) + 1;
             $additional_archive_states[] = $new_archive_state;
