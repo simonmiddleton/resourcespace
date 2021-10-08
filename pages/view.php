@@ -617,6 +617,7 @@ if(!hook('replaceviewtitle'))
 if (in_array($resource["file_extension"], config_merge_non_image_types()) && $non_image_types_generate_preview_only)
     {
     $download_multisize=false;
+    $image_preview_zoom = false;
     }
 else
     {
@@ -802,7 +803,8 @@ if($image_preview_zoom)
     {
     $image_preview_zoom = false;
     $tile_region_support = false;
-    $zoom_image_path = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, $use_watermark);
+    $fulljpgsize = strtolower($resource['file_extension']) != "jpg" ? "hpr" : "";
+    $zoom_image_path = get_resource_path($ref, true, $fulljpgsize, false, $resource['file_extension'], true, 1, $use_watermark);
     if($preview_tiles && file_exists($zoom_image_path) && resource_download_allowed($ref, '', $resource['resource_type']))
         {
         $image_size = get_original_imagesize($ref, $zoom_image_path);

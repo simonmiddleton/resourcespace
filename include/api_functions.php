@@ -380,14 +380,7 @@ function iiif_error($errorcode = 404, $errors = array())
         {
         http_response_code($errorcode); # Send error status
         }
-    if($iiif_debug)
-        {
-        echo implode("<br />",$errors);	 
-        }
-    else
-        {
-        echo implode("<br />",$errors);
-        }
+    echo json_encode($errors);	 
     exit();
     }
 
