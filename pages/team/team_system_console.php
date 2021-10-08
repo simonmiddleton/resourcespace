@@ -458,7 +458,7 @@ switch ($callback)
                 <input type="submit"
                        name="save"
                        value="<?php echo htmlspecialchars($lang['save']); ?>"
-                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&track_vars=' + encodeURIComponent(jQuery('#track_vars').val()) + '&track_var_duration=' + jQuery('#track_var_duration').val());">
+                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&track_vars=' + encodeURIComponent(jQuery('#track_vars_input').val()) + '&track_var_duration=' + jQuery('#track_var_duration_input').val());">
                 <input class="ClearSelectedButton"
                        type="submit"
                        name="cancel"
