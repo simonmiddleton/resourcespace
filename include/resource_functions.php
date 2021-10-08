@@ -4094,15 +4094,19 @@ function write_metadata($path, $ref, $uniqid="")
                 $group_tag = strtolower($group_tag); # E.g. IPTC:Keywords -> iptc:keywords
                 if (strpos($group_tag,":")===false) {$tag = $group_tag;} # E.g. subject -> subject
                 else {$tag = substr($group_tag, strpos($group_tag,":")+1);} # E.g. iptc:keywords -> keywords
-                
+                if(strpos($group_tag,"-") !== false)
+                    {
+                    // Remove the XMP namespace for XMP data if included
+                    $group_tag = substr($group_tag,0,(strpos($group_tag,"-")));
+                    }                
                 $exifappend=false; // Need to replace values by default
                 if(isset($writtenfields[$group_tag])) 
-                        { 
-                        // This embedded field is already being updated, we need to append values from this field                          
-                        $exifappend=true;
-                        debug("write_metadata - more than one field mappped to the tag '" . $group_tag . "'. Enabling append mode for this tag. ");
-                        }
-                        
+                    { 
+                    // This embedded field is already being updated, we need to append values from this field                          
+                    $exifappend=true;
+                    debug("write_metadata - more than one field mapped to the tag '" . $group_tag . "'. Enabling append mode for this tag. ");
+                    }
+
                 switch ($tag)
                     {
                     case "filesize":
@@ -4114,29 +4118,31 @@ function write_metadata($path, $ref, $uniqid="")
                     case "directory":
                         # Do nothing, we don't want metadata to control this
                         break;
-                    case "keywords":                  
-                        # Keywords shall be written one at a time and not all together.
-						if(!isset($writtenfields["keywords"])){$writtenfields["keywords"]="";} 
-						$keywords = explode(",", $writevalue); # "keyword1,keyword2, keyword3" (with or without spaces)
-						if (implode("", $keywords) != "")
-                        	{
-                        	# Only write non-empty keywords/ may be more than one field mapped to keywords so we don't want to overwrite with blank
-	                        foreach ($keywords as $keyword)
-	                            {
-                                $keyword = trim($keyword);
-	                            if ($keyword != "")
-	                            	{
-                                    debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
-									$writtenfields[$group_tag].="," . $keyword;
-										 
-									# Convert the data to UTF-8 if not already.
-									if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, mb_detect_encoding($keyword), 'UTF-8');}
-									$command.= escapeshellarg("-" . $group_tag . "-=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " "; // In case value is already embedded, need to manually remove it to prevent duplication
-									$command.= escapeshellarg("-" . $group_tag . "+=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " ";
-									}
-	                            }
-	                        }
-                        break;
+                    case "keywords": 
+                        if(substr($group_tag,0,3) != "xmp")
+                            {
+                            # Only IPTC Keywords are a list type - these are written one at a time and not all together.
+                            if(!isset($writtenfields["keywords"])){$writtenfields["keywords"]="";} 
+                            $keywords = explode(",", $writevalue); # "keyword1,keyword2, keyword3" (with or without spaces)
+                            if (implode("", $keywords) != "")
+                                {
+                                # Only write non-empty keywords/ may be more than one field mapped to keywords so we don't want to overwrite with blank
+                                foreach ($keywords as $keyword)
+                                    { 
+                                    $keyword = trim($keyword);
+                                    if ($keyword != "")
+                                        {                                      
+                                        debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
+                                        $writtenfields["keywords"].="," . $keyword;
+                                        # Convert the data to UTF-8 if not already.
+                                        if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, mb_detect_encoding($keyword), 'UTF-8');}
+                                        $command.= escapeshellarg("-" . $group_tag . "-=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " "; // In case value is already embedded, need to manually remove it to prevent duplication
+                                        $command.= escapeshellarg("-" . $group_tag . "+=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " ";
+                                        }
+                                    }
+                                }
+                            break; // The break is in here so that Non-IPTC keywords continue to be handled by default
+                            }
                     default:
                         if($exifappend && ($writevalue=="" || ($writevalue!="" && strpos($writtenfields[$group_tag],$writevalue)!==false)))
                             {                                                            
@@ -4469,6 +4475,8 @@ function delete_alternative_file($resource,$ref)
 	
 	# Update disk usage
 	update_disk_usage($resource);
+
+    return true;
 	}
 	
 function get_alternative_file($resource,$ref)
@@ -4603,7 +4611,7 @@ function process_notify_user_contributed_submitted($ref,$htmlbreak)
  */
 function notify_user_contributed_submitted($refs,$collection=0)
 	{
-	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
+	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer,$userref;
 	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
 	$htmlbreak="\r\n";
 	if ($use_phpmailer){$htmlbreak="<br /><br />";}
@@ -5569,14 +5577,17 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
+        # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
-            # Empty value. Autocomplete and set.
+            # Autocomplete and update using the returned value
             $value = eval($field['autocomplete_macro']);
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
+                # Multiple values are comma separated
                 $autovals = str_getcsv($value);
                 $autonodes = array();
+                # Establish an array of nodes from the values
                 foreach($autovals as $autoval)
                     {
                     $nodeid = get_node_id($autoval,$field['ref']);
@@ -5585,10 +5596,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                         $autonodes[] = $nodeid;
                         }
                     }
-                natsort($autonodes);
-                add_resource_nodes($resource,$autonodes,false,false);
-                log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
-                $fields_updated[$field['ref']] = implode(",",$autonodes);
+                # Add nodes if any were established
+                if (count($autonodes) > 0)
+                    {
+                    natsort($autonodes);
+                    add_resource_nodes($resource,$autonodes,false,false);
+                    log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
+                    $fields_updated[$field['ref']] = implode(",",$autonodes);
+                    }
                 }
             else
                 {

@@ -122,19 +122,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 
         if (!curl_errno($ch))
             {
-			# Fetch remote config was a success.
-			# Validate the return to make sure it's an expected config file
-			# The last 33 characters must be a hash and the sign of the previous characters.
-			$sign=substr($r,-32); # Last 32 characters is a signature
-			$r=substr($r,0,strlen($r)-33);
+            # Fetch remote config was a success.
+            # Validate the return to make sure it's an expected config file
+            # The last 33 characters must be a hash and the sign of the previous characters.
+            $sign=substr($r,-32); # Last 32 characters is a signature
+            $r=substr($r,0,strlen($r)-33);
 
             if ($sign == md5($remote_config_key . $r))
                 {
-                if(validate_remote_code($r))
-                    {
-                    $remote_config = $r;
-                    set_sysvar($remote_config_sysvar, $remote_config);
-                    }
+                $remote_config = $r;
+                set_sysvar($remote_config_sysvar, $remote_config);
                 }
             else
                 {

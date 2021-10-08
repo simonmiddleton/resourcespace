@@ -1157,7 +1157,7 @@ function get_user_dash($user)
 				jQuery(function(){
 					var height = jQuery("#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>").height();
 					var width = jQuery("#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>").width();
-					jQuery('#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".htmlspecialchars($tile["tile"]);?>&user_tile=<?php echo htmlspecialchars($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                	jQuery('#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".htmlspecialchars($tile["tile"]);?>&user_tile=<?php echo htmlspecialchars($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
 				});
 				</script>
 			</div>
@@ -1930,4 +1930,153 @@ function validate_build_url($buildurl)
             }
         }
     return $buildurl;
+    }
+
+
+/**
+ * Generate client side logic for doing expensive computation async for retrieving the tile background and total results count.
+ * 
+ * @param array  $tile           Tile information {@see pages/ajax/dash_tile.php}
+ * @param string $tile_id        HTML ID for the container div
+ * @param int    $tile_width     Tile width {@see pages/ajax/dash_tile.php}
+ * @param int    $tile_height    Tile height {@see pages/ajax/dash_tile.php}
+ * @param int    $promoted_image ID of the promoted resource (for background)
+ */
+function tltype_srch_generate_js_for_background_and_count(array $tile, string $tile_id, int $tile_width, int $tile_height, int $promoted_image)
+    {
+    // Prevent function from running for the wrong tile type and style
+    parse_str(parse_url($tile['url'] ?? '', PHP_URL_QUERY), $tile_meta);
+    if(!(
+        isset($tile_meta['tltype'], $tile_meta['tlstyle']) 
+        && $tile_meta['tltype'] === 'srch'
+        && in_array($tile_meta['tlstyle'], $GLOBALS['tile_styles']['srch'])
+    ))
+        {
+        return;
+        }
+
+    $tile_style = $tile_meta['tlstyle'];
+
+    $search_string = explode('?',$tile["link"]);
+    parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
+    $search = isset($search_string["search"]) ? $search_string["search"] :"";
+    $restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
+    $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
+    $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
+    $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+    ?>
+    <!-- Resource counter -->
+    <p class="no_resources DisplayNone"><?php echo htmlspecialchars($GLOBALS['lang']['noresourcesfound']); ?></p>
+    <p class="tile_corner_box DisplayNone">
+        <span aria-hidden="true" class="fa fa-clone"></span>
+    </p>
+    <script>
+    jQuery(document).ready(function()
+        {
+        const TILE_STYLE = '<?php echo htmlspecialchars($tile_style, ENT_QUOTES); ?>';
+        const SHOW_RESOURCE_COUNT = <?php echo $tile['resource_count'] ? 'true' : 'false'; ?>;
+
+        let data = {
+            'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
+            'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
+            'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
+            'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
+            'fetchrows': TILE_STYLE === 'multi' && !SHOW_RESOURCE_COUNT ? 4 : -1,
+            'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
+            'recent_search_daylimit': '',
+            'getsizes': TILE_STYLE === 'blank' ? '' : 'pre',
+        };
+        api('search_get_previews', data, function(response)
+            {
+            const TILE_ID = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
+            const TILE_WIDTH = <?php echo $tile_width; ?>;
+            const TILE_HEIGHT = <?php echo $tile_height; ?>;
+            var preview_resources;
+
+            if(TILE_STYLE === 'thmbs')
+                {
+                let promoted_image = <?php echo $promoted_image; ?>;
+                let promoted_image_resource = response.filter(resource => resource.ref == promoted_image && typeof resource.url_pre !== 'undefined');
+                console.debug('promoted_image_resource = %o', promoted_image_resource);
+
+                preview_resources = promoted_image > 0 && promoted_image_resource[0] !== undefined ? [promoted_image_resource[0]]
+                    : promoted_image === 0 && response[0] !== undefined ? [response[0]]
+                    : [];
+
+                // Fit (adjust) the 'pre' size to the tile size
+                preview_resources = preview_resources.map(function(resource)
+                    {
+                    if(resource['thumb_width'] * 0.7 >= resource['thumb_height'])
+                        {
+                        let ratio = resource['thumb_height'] / TILE_HEIGHT;
+                        if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_height' is 0
+
+                        let width = resource['thumb_width'] / ratio;
+                        var size = width < TILE_WIDTH ? ' width="100%"' : ' height="100%"';
+                        }
+                    else
+                        {
+                        let ratio = resource['thumb_width'] / TILE_WIDTH;
+                        if(ratio == 0) { ratio = 1; } // attempt fit if 'thumb_width' is 0
+
+                        let height = resource['thumb_height'] / ratio;
+                        var size = height < TILE_HEIGHT ? ' height="100%"' : ' width="100%"';
+                        }
+
+                    return '<img src="' + resource.url_pre + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">';
+                    });
+                }
+            else if(TILE_STYLE === 'multi')
+                {
+                preview_resources = response
+                    .filter(resource => typeof resource.url_pre !== 'undefined')
+                    .slice(0, 4)
+                    .map(function(resource, index, resources_list)
+                        {
+                        let tile_working_space = <?php echo $tile['tlsize'] == '' ? 140 : 280; ?>;
+                        let gap = tile_working_space / resources_list.length;
+                        let space = index * gap;
+                        let style = 'left: ' + (space * 1.5) + 'px;'
+                            + ' transform: rotate(' + (20 - (index * 12)) + 'deg);';
+
+                        return '<img src="' + resource.url_pre + '" style="' + style + '">';
+                        })
+                    // images will be prepended to the tile container so reverse the order so that the layout ends up as 
+                    // expected (from left to right, each preview on top of the previous one)
+                    .reverse();
+                }
+            // Blank style
+            else
+                {
+                preview_resources = [];
+                }
+
+            // Tile background - resource(s) preview
+            console.debug('preview_resources = %o', preview_resources);
+            if(preview_resources.length > 0)
+                {
+                let tile_div = jQuery('div#' + TILE_ID);
+
+                for(let i = 0; i < preview_resources.length; i++)
+                    {
+                    tile_div.prepend(preview_resources[i]);
+                    }
+                }
+
+            // Resource count
+            let tile_corner_box = jQuery('div#' + TILE_ID + ' p.tile_corner_box');
+            if(SHOW_RESOURCE_COUNT)
+                {
+                tile_corner_box.append(response.length);
+                tile_corner_box.removeClass('DisplayNone');
+                }
+            else if(response.length == 0)
+                {
+                jQuery('div#' + TILE_ID + ' p.no_resources').removeClass('DisplayNone');
+                }
+            });
+        });
+    </script>
+    <?php
+    return;
     }

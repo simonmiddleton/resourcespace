@@ -13,16 +13,26 @@ global $userref,$baseurl_short;
 
 $tile_type=getvalescaped("tltype","");
 $tile_style=getvalescaped("tlstyle","");
+$promoted_image = getval('promimg', '');
 
 $tile                   = array();
-$tile['ref']            = getvalescaped('edit', '');
-$tile['link']           = getvalescaped('tllink', '');
-$tile['txt']            = getvalescaped('tltxt', '');
-$tile['title']          = getvalescaped('tltitle', '');
-$tile['resource_count'] = getvalescaped('tlrcount', '');
+$tile['ref']            = getval('edit', '');
+$tile['link']           = getval('tllink', '');
+$tile['txt']            = getval('tltxt', '');
+$tile['title']          = getval('tltitle', '');
+$tile['resource_count'] = getval('tlrcount', '');
 $tile['tlsize']         = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 
-
+// Simulate URL so we can preview based on requested params
+$tile['url'] = generateURL(
+    'pages/ajax/dash_tile_preview.php',
+    [
+        'tltype' => $tile_type,
+        'tlsize' => $tile['tlsize'],
+        'tlstyle' => $tile_style,
+        'promimg' => $promoted_image,
+    ]
+);
 $tile_id="previewdashtile";
 $tile_width = getvalescaped("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
 $tile_height = getvalescaped("tlheight",180,true); 

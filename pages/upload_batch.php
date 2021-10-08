@@ -902,7 +902,7 @@ jQuery(document).ready(function () {
     processerrors = []; // Keep track of upload errors
     retried = []; // Keep track of files that have been retried automatically
     allowcollectionreload = true;
-    uppy = Uppy.Core({
+    const uppy = new Uppy.Core({
         debug: false,
         autoProceed: false,
         restrictions: {
@@ -929,6 +929,7 @@ jQuery(document).ready(function () {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
                     browseFiles: '<?php echo $lang["upload_browse"] ?>',
                     uploadXFiles: '<?php echo $lang["upload_start"] ?>',
+                    dropPaste: '<?php echo $lang["upload_droparea_text"] ?>',
                 },
             },
 
@@ -1007,6 +1008,7 @@ jQuery(document).ready(function () {
         showRemoveButtonAfterComplete: false,
         browserBackButtonClose: false,
         theme: 'light',
+        doneButtonHandler: null,
         });
     
     uppy.use(Tus, {
@@ -1204,6 +1206,10 @@ function processFile(file, forcepost)
         {
         postdata['collection_add'] = newcol;
         }
+    
+    // EXTRA DATA: no_exif
+    postdata['no_exif'] = jQuery('#no_exif').is(':checked') ? "yes": "";
+
     console.debug("newcol: " + newcol);
     entercolname = jQuery('#entercolname').val();
     console.debug("entercolname: " + entercolname);

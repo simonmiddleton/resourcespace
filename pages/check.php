@@ -16,9 +16,9 @@ include "../include/header.php";
 
 # Check ResourceSpace Build
 $build = '';
-if ($productversion == 'SVN')
+if (substr($productversion,0,3) == 'SVN')
     {
-    $p_version = 'Trunk (SVN)'; # Should not be translated as this information is sent to the bug tracker.
+    $p_version = 'Trunk (SVN)';
     //Try to run svn info to determine revision number
     $out = array();
     exec('svn info ../', $out);
@@ -43,7 +43,7 @@ if ($productversion == 'SVN')
     }
 
 # ResourceSpace version
-$p_version = $productversion == 'SVN'?'Subversion ' . $build:$productversion; # Should not be translated as this information is sent to the bug tracker.
+$p_version = substr($productversion,0,3) == 'SVN' ? 'SVN ' . $build : $productversion;
 
 ?><tr><td nowrap="true"><?php echo str_replace("?", "ResourceSpace", $lang["softwareversion"]); ?></td><td><?php echo $p_version?></td><td><br /></td></tr><?php
 

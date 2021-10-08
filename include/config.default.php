@@ -1688,6 +1688,9 @@ $no_preview_extensions=array("icm","icc");
 # If this is not set and the script is executed notifications will be sent to resource admins, or users in groups specified in $email_notify_usergroups 
 # $expiry_notification_mail="myaddress@mydomain.example";
 
+// Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
+// $notify_on_resource_expiry_days = 1;
+
 # What is the default display mode for search results? (smallthumbs/thumbs/list)
 $default_display="thumbs";
 
@@ -2939,6 +2942,9 @@ $resource_type_extension_mapping         = array(
     3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv'),
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
+
+// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
+$view_in_browser_extensions=array("pdf","mp3","svg");
 
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;

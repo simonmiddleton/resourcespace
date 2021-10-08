@@ -205,7 +205,7 @@ if($video_preview_hls_support!=0)
           // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
           $ffprobe_array=get_video_info($hlsfile);
           $hls_codec_info["profile"]=(isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]]))?$h264_profiles[$ffprobe_array["streams"][0]["profile"]]:"58A0";				  
-          $hls_codec_info["level"]=isset($ffprobe_array["streams"][0]["level"])?dechex($ffprobe_array["streams"][0]["level"]):"33";
+          $hls_codec_info["level"]="1e";
           }
         // Set stream info, allowing for overhead of bitrate (this is why it is not 1024)
         $hlscontent.="#EXT-X-STREAM-INF:PROGRAM-ID=" . $n . ",BANDWIDTH=" . (($video_hls_stream["bitrate"] + $video_hls_stream["audio_bitrate"])*1200) . (isset($hls_codec_info)?",CODECS=\"mp4a.40.2, avc1." . $hls_codec_info["profile"] . $hls_codec_info["level"] . "\"":"") . ",RESOLUTION=" . $video_hls_stream["resolution"] . "\n";
