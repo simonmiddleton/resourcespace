@@ -285,9 +285,7 @@ function rse_workflow_create_state(array $data)
         escape_check($new_state_data['bcc_admin']),
         escape_check($new_state_data['simple_search_flag'])        
     );
-
     sql_query($sql);
-
     $new_state_data['ref'] = sql_insert_id();
 
     return $new_state_data;

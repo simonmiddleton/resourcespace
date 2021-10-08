@@ -830,49 +830,23 @@ if($import && isset($folder_path))
 
         if(array_key_exists($archive_state["ref"], $archive_states_spec) && is_null($archive_states_spec[$archive_state["ref"]]))
             {
-            logScript("Updating config.php with extra workflow state:");
-echo "<pre>";print_r($archive_states_spec[$archive_state['ref']]);echo "</pre>";
-
-
-
-
-
-
-
-
-
-
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-
-            $new_archive_state = end($dest_archive_states) + 1;
-            $additional_archive_states[] = $new_archive_state;
-            $lang["status{$new_archive_state}"] = $archive_state["lang"];
-            $dest_archive_states[] = $new_archive_state;
-
-            $processed_archive_states[] = $archive_state["ref"];
-            fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state["ref"]};" . PHP_EOL);
-
-            $config_fh = fopen("{$webroot}/include/config.php", "a+b");
-            if($config_fh === false)
+            $new_archive_state = rse_workflow_create_state(['name' => $archive_state['lang']]);
+            if($new_archive_state === false)
                 {
-                logScript("WARNING: Unable to open output file '{$file_path}'! Please add manually to the file the following:");
-                logScript("CONFIG.PHP: \$additional_archive_states[] = {$new_archive_state};");
-                logScript("CONFIG.PHP: \$lang['status{$new_archive_state}'] = '{$archive_state["lang"]}';");
-                continue;
+                logScript("ERROR: Unable to create new workflow state!");
+                exit(1);
                 }
-
-            fwrite(
-                $config_fh,
-                PHP_EOL
-                . "\$additional_archive_states[] = {$new_archive_state};"
-                . PHP_EOL
-                . "\$lang['status{$new_archive_state}'] = '{$archive_state["lang"]}';");
-            fclose($config_fh);
+            $dest_archive_states[] = $new_archive_state['code'];
+            $processed_archive_states[] = $archive_state['ref'];
+            fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state['ref']};" . PHP_EOL);
+            logScript("Created new workflow state with code #{$new_archive_state['code']}");
             }
         }
     unset($src_archive_states);
+    clear_query_cache('workflow');
 
-
+echo PHP_EOL.'====================';
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
     # RESOURCE TYPES
     ################
     logScript("");
