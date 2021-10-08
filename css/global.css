@@ -825,6 +825,16 @@ div.autocomplete ul li {
     background-color: #1988d7 !important;
     color: #fff;
 }
+.uppy-DashboardContent-back:hover,
+.uppy-DashboardContent-addMore:hover {
+    color: #fff;
+}
+
+.uppy-Dashboard-Item-action--remove {
+    border: unset;
+    box-shadow: unset;
+    background-color: unset;
+}
 
 .uppy-Dashboard-browse{
     font-size: 20px;
@@ -835,7 +845,7 @@ div.autocomplete ul li {
     display:none;
 }
 
-.uppy-Dashboard-Item-action--remove, .uppy-Dashboard-Item-previewInnerWrap {
+.uppy-Dashboard-Item-previewInnerWrap {
     background-color: #f2f2f2 !important;
 }
 

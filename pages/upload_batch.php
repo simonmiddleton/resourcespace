@@ -989,7 +989,7 @@ jQuery(document).ready(function () {
         inline: true,
         width: '100%',
         height: 450,
-        thumbnailWidth: 100,
+        thumbnailWidth: 125,
         showLinkToFileUploadResult: false,
         showProgressDetails: true,
         hideUploadButton: false,
