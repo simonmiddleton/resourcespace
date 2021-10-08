@@ -1865,73 +1865,65 @@ function validate_tile_style(string $type, string $style)
  */
 function validate_build_url($buildurl)
     {
+    global $tile_styles;
     if ($buildurl != "")
         {
         # Sanitise the url provided.
         $build_url_parts = explode('?',$buildurl);
-        if ($build_url_parts[0] != 'pages/ajax/dash_tile.php')
+        $valid_tile_urls = array();
+        $valid_tile_urls[] = 'pages/ajax/dash_tile.php';
+        $valid_tile_urls[] = 'pages/team/ajax/graph.php';
+        if (!in_array($build_url_parts[0],$valid_tile_urls))
             {
-            // url is wrong - build standard tile
+            // Url is invalid
             $buildurl = "";
             }
         else
             {
-            $build_url_parts_param = explode('&',$build_url_parts[1]);
-            foreach ($build_url_parts_param as $url_part_param)
+            parse_str($build_url_parts[1], $build_url_parts_param);
+            foreach ($build_url_parts_param as $param => $value)
                 {
-                $build_url_param = explode('=',$url_part_param);
-                if (in_array($build_url_param[0],array('tltype','tlsize','tlstyle','promimg')))
+                switch ($param)
                     {
-                    global $tile_styles;
-                    switch ($build_url_param[0])
-                        {
-                        case 'tltype':
-                            # type checks
-                            if (!array_key_exists($build_url_param[1],$tile_styles))
-                                {
-                                $buildurl = "";
-                                }
-                            break;
-                        case 'tlsize':
-                            # size checks
-                            if (!in_array($build_url_param[1],array('single','double','')))
-                                {
-                                $buildurl = "";
-                                }
-                            break;
-                        case 'tlstyle':
-                            # style checks
-                            $all_tile_styles = array();
-                            foreach ($tile_styles as $tile_type_style)
-                                {
-                                $all_tile_styles = array_merge($all_tile_styles, $tile_type_style);
-                                }
-                            if (!in_array($build_url_param[1],$all_tile_styles))
-                                {
-                                $buildurl = "";
-                                }
-                            break;
-                        case 'promimg':
-                            # img checks
-                            if (!is_numeric($build_url_param[1]) && !is_bool($build_url_param[1]))
-                                {							    
-                                $buildurl = "";
-                                }
-                            break;
-                        }
-                    }
-                else 
-                    {
-                    // parameter is wrong - build standard tile
-                    $buildurl = "";
-                    break;
+                    case 'tltype':
+                        # type checks
+                        if (!array_key_exists($value,$tile_styles))
+                            {
+                            $buildurl = "";
+                            }
+                        break;
+                    case 'tlsize':
+                        # size checks
+                        if (!in_array($value,array('single','double','')))
+                            {
+                            $buildurl = "";
+                            }
+                        break;
+                    case 'tlstyle':
+                        # style checks
+                        $all_tile_styles = array();
+                        foreach ($tile_styles as $tile_type_style)
+                            {
+                            $all_tile_styles = array_merge($all_tile_styles, $tile_type_style);
+                            }
+                        if (!in_array($value,$all_tile_styles))
+                            {
+                            $buildurl = "";
+                            }
+                        break;
+                    case 'promimg':
+                        # img checks
+                        if (!is_int_loose($$value) && !is_bool($build_url_param[1]))
+                            {
+                            $buildurl = "";
+                            }
+                        break;
                     }
                 }
             }
         }
     return $buildurl;
     }
-
 
 /**
  * Generate client side logic for doing expensive computation async for retrieving the tile background and total results count.
