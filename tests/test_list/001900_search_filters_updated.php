@@ -23,6 +23,8 @@ debug("Resource C: " . $resourcec);
 debug("Resource D: " . $resourced);
 debug("Resource E: " . $resourcee);
 
+// Create new resource type field - required for set_node(), type is not significant but must be a node type
+$resource_type_field = create_resource_type_field('search_filters', 1, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, 'search_filters', false);
 
 // create new 'department' field
 $departmentfield = create_resource_type_field("Department",0,FIELD_TYPE_CHECK_BOX_LIST,"department");
@@ -37,8 +39,8 @@ $sensitivefield = create_resource_type_field("Sensitive",0,FIELD_TYPE_RADIO_BUTT
 $emotionfield = create_resource_type_field("Emotion",0,FIELD_TYPE_DROP_DOWN_LIST,"emotion");
 
 // Add new nodes to fields
-$eldoradonode = set_node(NULL, 3, "Eldorado",'',1000);
-$atlantisnode = set_node(NULL, 3, "Atlantis",'',1000);
+$eldoradonode = set_node(NULL, $resource_type_field, "Eldorado",'',1000);
+$atlantisnode = set_node(NULL, $resource_type_field, "Atlantis",'',1000);
 $marketingnode = set_node(NULL, $departmentfield, "Marketing",'',1000);
 $publicnode = set_node(NULL, $publicfield, "Yes",'',1000);
 $sensitivenode = set_node(NULL, $sensitivefield, "Yes",'',1000);

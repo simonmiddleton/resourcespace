@@ -1175,7 +1175,7 @@ if($import && isset($folder_path))
             }
 
         db_begin_transaction(TX_SAVEPOINT);
-        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "", true);
+        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
         if($new_node_ref === false)
             {
             logScript("ERROR: unable to create new node!");

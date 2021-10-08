@@ -626,7 +626,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 // Update the field with the new option
                                 if($processcsv)
                                     {
-                                    $new_node = set_node(null, $fieldid, $cell_value_item, null, null, true);
+                                    $new_node = set_node(null, $fieldid, $cell_value_item, null, null);
                                     }
                                 else 
                                     {
@@ -740,8 +740,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                             }
 
                         $daterangenodes     = array();
-                        $daterangestartnode = set_node(null, $fieldid, $rangedates[0], null, null,true);
-                        $daterangeendnode   = set_node(null, $fieldid, isset($rangedates[1])? $rangedates[1] : "", null, null,true);
+                        $daterangestartnode = set_node(null, $fieldid, $rangedates[0], null, null);
+                        $daterangeendnode   = set_node(null, $fieldid, isset($rangedates[1])? $rangedates[1] : "", null, null);
 
                         // get latest list of nodes, in case new nodes added with set_node() above
                         $field_nodes   = $allfields[$fieldid]["nodes"];

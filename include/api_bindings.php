@@ -286,7 +286,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     if(!in_array($newvalue, $currentoptions) && $newvalue != '')
                         {
                         # Append the option and update the field
-                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                         $nodes_to_add[]   = $newnode;
                         $currentoptions[] = trim($newvalue);
                         $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue)); 
@@ -723,7 +723,7 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
         }
     if(strtoupper($ref) == 'NULL'){$ref = null;}
     if(strtoupper($parent) == 'NULL'){$parent = null;}
-    return set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting = false);  
+    return set_node($ref, $resource_type_field, $name, $parent, $order_by);  
     }
 
 function api_add_resource_nodes($resource,$nodestring)

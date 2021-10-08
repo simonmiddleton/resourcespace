@@ -742,8 +742,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                         
 						$newval = $rangestart . $range_separator . $rangeend;
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
+						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
+						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
 						}
 					else
 						{
@@ -776,7 +776,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							$newval.= ($newval!=""?$range_separator:"") . $val;
 							if($val!=="")
 								{
-								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
+								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
 								}
 							}
                         }
@@ -1463,8 +1463,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                     
                     $newval = $rangestart . $range_separator . $rangeend;
-                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
-                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
                     }
                 else
                     {
@@ -1496,7 +1496,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                             }
                         $newval.= ($newval!=""?$range_separator:"") . $val;if($val!=="")
                             {
-                            $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
+                            $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
                             }
                         }
                     }
@@ -2260,7 +2260,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                 $nodes_to_add[]   = $newnode;
                 $currentoptions[] = trim($newvalue);
 
@@ -2309,7 +2309,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                 $nodes_to_add[]   = $newnode;
                 $currentoptions[] = trim($newvalue);
 
