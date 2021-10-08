@@ -69,8 +69,11 @@ if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/set
 include (dirname(__FILE__)."/config.php");
 $track_vars_after_config = get_defined_vars();
 
-error_reporting($config_error_reporting);
+// Set exception_ignore_args so that if $log_error_messages_url is set it receives all the necessary 
+// information to perform troubleshooting
+ini_set("zend.exception_ignore_args","Off");
 
+error_reporting($config_error_reporting);
 
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
