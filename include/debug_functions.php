@@ -167,13 +167,21 @@ function is_tracking_vars_active(int $user)
 */
 function get_tracked_vars(int $user)
     {
+    global $tracked_var_cache;
+    if(isset($tracked_var_cache[$user]))
+        {
+        return $tracked_var_cache[$user];
+        }
     if($user > 0)
         {
         $vars_csv = get_sysvar("track_var_{$user}", '');
         $vars_list = explode(',', $vars_csv);
         $vars_trimmed = array_map('trim', $vars_list);
         $vars_not_empty = array_filter($vars_trimmed);
-        return array_values(array_unique($vars_not_empty));
+        
+        $return = array_values(array_unique($vars_not_empty));
+        $tracked_var_cache[$user] = $return;
+        return $return;
         }
 
     $all_tracked_vars = [];
@@ -187,7 +195,9 @@ function get_tracked_vars(int $user)
         $all_tracked_vars = array_merge($all_tracked_vars, $vars_not_empty);
         }
 
-    return array_values(array_unique($all_tracked_vars));
+    $return = array_values(array_unique($all_tracked_vars));
+    $tracked_var_cache[$user] = $return;
+    return $return;
     }
 
 
