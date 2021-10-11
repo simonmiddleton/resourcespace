@@ -103,6 +103,7 @@ function debug_function_call($name, array $args)
 */
 function clear_tracking_vars_info(array $users)
     {
+    global $tracked_var_cache;
     foreach($users as $uref)
         {
         if(!is_numeric($uref))
@@ -113,6 +114,7 @@ function clear_tracking_vars_info(array $users)
         set_sysvar("track_var_{$uref}", null);
         set_sysvar("track_var_{$uref}_duration", null);
         set_sysvar("track_var_{$uref}_start_datetime", null);
+        unset($tracked_var_cache[$uref]);
         }
     }
 
