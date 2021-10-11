@@ -107,6 +107,14 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('.CollectionPanelShell').css('background-color',value);jQuery('#CollectionDiv select').css('background-color',value); jQuery('.ui-layout-resizer').css('background',value);"
 );
+$page_def[] = config_add_colouroverride_input(
+    'button_colour_override',
+    $lang["setup-buttoncolouroverride"],
+    '',
+    null,
+    true,
+    "jQuery('button:not(.search-icon),input[type=submit],input[type=button],.RecordPanel .RecordDownloadSpace .DownloadDBlend a,.UploadButton a').css('background-color',value);"
+);
 $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, '', true);

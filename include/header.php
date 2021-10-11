@@ -516,7 +516,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo $lang['myaccount']; ?>" title="<?php echo $lang['myaccount']; ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {
@@ -558,7 +558,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
                     <?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
