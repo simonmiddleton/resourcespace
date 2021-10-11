@@ -214,6 +214,9 @@ $home_colour_style_override='';
 $collection_bar_background_override='';
 $collection_bar_foreground_override='';
 
+# Used for changing colour of default blue buttons
+$button_colour_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)

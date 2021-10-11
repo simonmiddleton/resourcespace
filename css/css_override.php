@@ -14,7 +14,7 @@ if(is_array($k) || trim($k) === '') { include '../include/authenticate.php'; }
 header("Content-type: text/css");
 
 global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $collection_bar_background_override,
-$collection_bar_foreground_override;
+$collection_bar_foreground_override, $button_colour_override;
 
 $browse_on = has_browsebar();
 
@@ -113,5 +113,19 @@ if ($browse_on)
         clear: both;
         } 
 
+    <?php
+    }
+
+// Override the button colour
+if ((isset($button_colour_override) && $button_colour_override != ''))
+    {
+    ?>
+    button,
+    input[type=submit],
+    input[type=button],
+    .RecordPanel .RecordDownloadSpace .DownloadDBlend a,
+    .UploadButton a {
+        background-color: <?php echo $button_colour_override; ?>;
+    }
     <?php
     }
