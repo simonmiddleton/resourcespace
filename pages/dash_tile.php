@@ -360,6 +360,7 @@ if($create)
 
         unset($tile_style);
 
+        $srch = urldecode($srch);
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
 		
