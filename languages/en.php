@@ -2544,6 +2544,7 @@ $lang["createdashtileuserupload"]="Upload tile (user specific)";
 $lang["tile_thmbs"]="Single";
 $lang["tile_multi"]="Multi";
 $lang["tile_blank"]="Blank";
+$lang["tile_analytics"]="Analytics";
 $lang["tile_ftxt"]="Text only";
 /* * End - User Dash Strings * */
 
