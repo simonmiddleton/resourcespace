@@ -1111,19 +1111,49 @@ if($import && isset($folder_path))
     logScript("");
     logScript("Importing nodes...");
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
-    $nodes_mapping = (isset($nodes_mapping) ? $nodes_mapping : array());
-    $nodes_not_created = (isset($nodes_not_created) ? $nodes_not_created : array());
+    $nodes_spec = $nodes_spec ?? [];
+    $new_nodes_mapping = $new_nodes_mapping ?? [];
+    $nodes_not_created = $nodes_not_created ?? [];
     $src_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "nodes_export.json", "r+b"));
+    $dest_node_refs = sql_array('SELECT ref AS `value` FROM node');
     foreach($src_nodes as $src_node)
         {
-        if(array_key_exists($src_node["ref"], $nodes_mapping) || in_array($src_node["ref"], $nodes_not_created))
+        if(array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created))
             {
             continue;
             }
 
         logScript("Processing #{$src_node["ref"]} '{$src_node["name"]}'");
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
+        // Check if the specification has a mapping defined for this node to other DEST node(s).
+        if(isset($nodes_spec[$src_node['ref']]))
+            {
+            if(!is_array($nodes_spec[$src_node['ref']]))
+                {
+                logScript('ERROR: Invalid nodes specification! Reason: expected a list of nodes, received type is ' . gettype($nodes_spec[$src_node['ref']]));
+                exit(1);
+                }
+
+            $nodes_spec[$src_node['ref']] = array_filter($nodes_spec[$src_node['ref']], 'is_int_loose');
+            if(empty($nodes_spec[$src_node['ref']]))
+                {
+                logScript('ERROR: Invalid nodes specification! Reason: no mapping defined.');
+                exit(1);
+                }
+
+            // Safe check: error if any of the mappings for this node is invalid (ie ref doesn't exist).
+            $found_invalid_nodes_map = array_diff($nodes_spec[$src_node['ref']], $dest_node_refs);
+            if(!empty($found_invalid_nodes_map))
+                {
+                logScript('ERROR: Invalid DEST node(s) mapping found: ' . implode(', ', $found_invalid_nodes_map));
+                exit(1);
+                }
+
+            logScript('Found direct mapping to DEST node(s): ' . implode(', ', $nodes_spec[$src_node['ref']]));
+            continue;
+            }
+
+        // If this nodes' resource type field was specified to not be created on the DEST system (via $resource_type_fields_spec), skip it
         if(in_array($src_node["resource_type_field"], $resource_type_fields_not_created))
             {
             logScript("Skipping as resource type field was not created on the destination system!");
@@ -1131,6 +1161,9 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             fwrite($progress_fh, "\$nodes_not_created[] = {$src_node["ref"]};" . PHP_EOL);
             continue;
             }
+
+continue;
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         $mapped_rtf_ref = $resource_type_fields_spec[$src_node["resource_type_field"]]["ref"];
         $found_rtf_index = array_search($mapped_rtf_ref, array_column($dest_resource_type_fields, "ref"));
@@ -1157,10 +1190,10 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
             && (!is_null($src_node["parent"]) || trim($src_node["parent"]) != "")
             && !in_array($src_node["parent"], $nodes_not_created)
-            && isset($nodes_mapping[$src_node["parent"]])
+            && isset($new_nodes_mapping[$src_node["parent"]])
         )
             {
-            $node_parent = $nodes_mapping[$src_node["parent"]];
+            $node_parent = $new_nodes_mapping[$src_node["parent"]];
             }
         else
             {
@@ -1176,11 +1209,12 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             }
 
         logScript("Created new record #{$new_node_ref} '{$src_node["name"]}'");
-        $nodes_mapping[$src_node["ref"]] = $new_node_ref;
-        fwrite($progress_fh, "\$nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
+        $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
+        fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
         }
     unset($src_nodes);
+die("Backup statement - Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
 
     # RESOURCES
@@ -1303,14 +1337,14 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             continue;
             }
 
-        if(!isset($nodes_mapping[$src_rn["node"]]))
+        if(!isset($new_nodes_mapping[$src_rn["node"]]))
             {
             logScript("WARNING: unable to find a node mapping!");
             continue;
             }
 
         sql_query("INSERT INTO resource_node (resource, node, hit_count, new_hit_count)
-                        VALUES ('{$resources_mapping[$src_rn["resource"]]}', '{$nodes_mapping[$src_rn["node"]]}', '{$src_rn["hit_count"]}', '{$src_rn["new_hit_count"]}')");
+                        VALUES ('{$resources_mapping[$src_rn["resource"]]}', '{$new_nodes_mapping[$src_rn["node"]]}', '{$src_rn["hit_count"]}', '{$src_rn["new_hit_count"]}')");
         $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
         }
