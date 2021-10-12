@@ -845,8 +845,7 @@ if($import && isset($folder_path))
     unset($src_archive_states);
     clear_query_cache('workflow');
 
-echo PHP_EOL.'====================';
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+
     # RESOURCE TYPES
     ################
     logScript("");
@@ -1087,7 +1086,12 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         if(!in_array($found_rtf["type"], $compatible_rtf_types[$src_rtf["type"]]))
             {
-            logScript("ERROR: incompatible types! Consider mapping to a field with one of these types: " . implode(", ", $compatible_rtf_types[$found_rtf["type"]]));
+            $compat_rtf_type_names_msg = '';
+            foreach($compatible_rtf_types[$found_rtf["type"]] as $compatible_rtf_type)
+                {
+                $compat_rtf_type_names_msg .= PHP_EOL . " - {$lang[$field_types[$compatible_rtf_type]]}";
+                }
+            logScript("ERROR: incompatible types! Consider mapping to a field with one of these types: {$compat_rtf_type_names_msg}");
             exit(1);
             }
 
@@ -1118,6 +1122,7 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             }
 
         logScript("Processing #{$src_node["ref"]} '{$src_node["name"]}'");
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         if(in_array($src_node["resource_type_field"], $resource_type_fields_not_created))
             {
@@ -1263,6 +1268,9 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         $resources_mapping[$src_resource["ref"]] = $new_resource_ref;
         fwrite($progress_fh, "\$resources_mapping[{$src_resource["ref"]}] = {$new_resource_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
+
+// TODO: apply the $nodes_applied_to_all_merged_resources to all resources that were merged to DEST
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         }
     unset($src_resources);
 
