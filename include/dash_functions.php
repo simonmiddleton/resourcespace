@@ -1696,7 +1696,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             </a>
         </div>
         <?php
-        if(checkPermission_dashadmin() || (isset($tile['all_users']) && $tile['all_users'] == 0))
+        if((checkPermission_dashadmin() || (isset($tile['all_users']) && $tile['all_users'] == 0)) && !(isset($tile['no_edit']) && $tile['no_edit']))
             {
             ?>
             <div class="tool edit">
