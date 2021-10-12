@@ -1162,9 +1162,6 @@ if($import && isset($folder_path))
             continue;
             }
 
-continue;
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-
         $mapped_rtf_ref = $resource_type_fields_spec[$src_node["resource_type_field"]]["ref"];
         $found_rtf_index = array_search($mapped_rtf_ref, array_column($dest_resource_type_fields, "ref"));
         if($found_rtf_index === false)
@@ -1181,10 +1178,8 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             && in_array($src_node["parent"], $nodes_not_created)
         )
             {
-            logScript("WARNING: unable to create new node because its parent was not created!");
-            $nodes_not_created[] = $src_node["ref"];
-            fwrite($progress_fh, "\$nodes_not_created[] = {$src_node["ref"]};" . PHP_EOL);
-            continue;
+            logScript("ERROR: Unable to create new node because its parent was not created!");
+            exit(1);
             }
         else if(
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
@@ -1208,13 +1203,12 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             exit(1);
             }
 
-        logScript("Created new record #{$new_node_ref} '{$src_node["name"]}'");
+        logScript("Created new node record #{$new_node_ref} '{$src_node["name"]}'. Node set for resource type field {$mapped_rtf_ref}");
         $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
         fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
         }
     unset($src_nodes);
-die("Backup statement - Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
 
     # RESOURCES
@@ -1232,6 +1226,7 @@ die("Backup statement - Process stopped in file " . __FILE__ . " at line " . __L
             }
 
         logScript("Processing #{$src_resource["ref"]} | resource_type: {$src_resource["resource_type"]} | archive: {$src_resource["archive"]} | created_by: {$src_resource["created_by"]}");
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         if(
             !array_key_exists($src_resource["archive"], $archive_states_spec)
@@ -1241,7 +1236,7 @@ die("Backup statement - Process stopped in file " . __FILE__ . " at line " . __L
             exit(1);
             }
 
-        $created_by = isset($user) && isset($userref) ? $userref : -1;
+        $created_by = $userref ?? -1;
         if(!in_array($src_resource["created_by"], $users_not_created) && isset($usernames_mapping[$src_resource["created_by"]]))
             {
             $created_by = $usernames_mapping[$src_resource["created_by"]];
