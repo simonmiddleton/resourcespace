@@ -3641,16 +3641,33 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
     if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only)
         {
+        $is_smart_featured_collection = (isset($collection_data["smart"]) ? (bool) $collection_data["smart"] : false);
+        $is_featured_collection_category = (is_featured_collection_category($collection_data) || is_featured_collection_category_by_children($collection_data["ref"]));
+        $is_featured_collection = (!$is_featured_collection_category && !$is_smart_featured_collection);
+
         $tileparams = array(
-            "create"            =>"true",
-            "tltype"            =>"srch",
-            "promoted_resource" =>"true",
-            "freetext"          =>"true",
-            "all_users"         =>"1",
-            "link"              => $baseurl_short . "pages/search.php?search=!collection" . $collection_data['ref'],
-            );
+                'create'            => 'true',
+                'tltype'            => 'srch',
+                'tlstyle'           => 'thmbs',
+                'promoted_resource' => 'true',
+                'freetext'          => 'true',
+                'all_users'         => '1',
+                'title'             => $collection_data["name"],
+        );
+
+        if($is_featured_collection)
+            {
+            $tileparams['tltype'] = 'srch';
+            $tileparams['link']   = generateURL($baseurl_short . 'pages/search.php',array('search' => '!collection' . $collection_data['ref']));
+            }
+        else
+            {
+            $tileparams['tltype'] = 'fcthm';
+            $tileparams['link']   = generateURL($baseurl_short . 'pages/collections_featured.php',array('parent' => $collection_data['ref']));
+            }
         
         $data_attribute['url'] = generateURL($baseurl_short . "pages/dash_tile.php",$urlparams,$tileparams);
+
         $options[$o]['value']='save_collection_to_dash';
         $options[$o]['label']=$lang['createnewdashtile'];
         $options[$o]['data_attr']=$data_attribute;
