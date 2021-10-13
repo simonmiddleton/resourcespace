@@ -2131,6 +2131,7 @@ function add_partial_index($keywords)
 
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
     {
+    global $noadd;
     # do not highlight if the field is not indexed, so it is clearer where results came from.   
     if ($keywords_index!=1)
         {
@@ -2162,6 +2163,10 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
                 {
                 // Add general keywords
                 $keyword=$s[$n];
+                if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
+                    {
+                    continue;
+                    }
                 if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
                     {
                     $keyword=GetStem($keyword);
