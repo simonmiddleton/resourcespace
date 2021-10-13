@@ -26,8 +26,6 @@ DESCRIPTION
     A specification file is required for the migration to be possible. The spec file will contain:-
     - A mapping between the SRC system and the DEST systems' records. Use the --generate-spec-file option to get
       an example.
-    - If new workflow states will have to be created, the script will attempt to update config.php with this extra 
-      information.
 
 OPTIONS SUMMARY
 
@@ -40,6 +38,9 @@ OPTIONS SUMMARY
     --export                export information from ResourceSpace
     --import                import information to ResourceSpace based on the specification file (Requires spec-file and 
                             user options)
+
+DEPENDENCIES
+    The tool requires rse_workflow plugin to be enabled.
 
 EXAMPLES
     Export
@@ -198,7 +199,8 @@ $archive_states_spec = array(
 
 // Resource types can either be mapped to an existing record or be created as a new state on the DEST system
 $resource_types_spec = array(
-    0 => 0, # Global
+    0 => 0, # Global (magic type)
+    999 => 999, # Archive Only (magic type)
     1 => 1, # Photo
     5 => null, # Case Study
 );
@@ -212,6 +214,15 @@ Resource type fields can be configured in three ways:
 
 IMPORTANT: make sure you map to a compatible field on the DEST system. This is especially true for a category tree which
 can end up a flat structure if mapped to a fixed list field of different type.
+
+When it comes to field mappings, these are the rules the script goes by:-
+- one SRC field can only be mapped to one DEST field;
+- different SRC fixed list fields could be mapped to the same DEST field;
+- when mapping fields, all the options from the SRC fixed list field move over to the DEST fixed list field (this also 
+  applies to fields that are created as new on the destination system - ie. there\'s no mapping)
+
+For fixed list fields, if required, there can be extra rules for the options. See nodes_spec rules. Please bear in mind 
+that the metadata field mapping becomes the fallback rule for nodes.
 */
 $resource_type_fields_spec = array(
     // Note: when mapping to a field on DEST system, the "create" property should still be true
@@ -235,8 +246,17 @@ $resource_type_fields_spec = array(
     ), # Display condition child | text box
 );
 
-// Optional node re-mapping.
-// Please note that is the true source of truth for mapping a SRC node to DEST node(s).
+/*
+Allow nodes (ie fixed list field options) mapping between SRC and DEST. This is optional and should only be done as 
+needed (ie. where a SRC field needs to become something else on DEST and its import is no longer required).
+
+The rules governing nodes mapping is as follows:-
+- one SRC node can be mapped to multiple DEST nodes (the DEST node can be under a different DEST field - compared 
+  to the mapping of the SRC nodes\' field);
+- different SRC nodes can be mapped to the same DEST node;
+
+IMPORTANT: this is the true source of truth for mapping a SRC node to DEST node(s).
+*/
 $nodes_spec = [
     // from field 89
     280 => [260],
@@ -247,6 +267,16 @@ $nodes_spec = [
     288 => [287], # Example of a map to a category tree ==> "Folder 1/1.2/1.2.1"
     289 => [181],
 ];
+/*
+Considering the configuration for both resource_type_fields_spec and nodes_spec, you can expect the following behaviour:-
+
+SRC RTF        | Create on DEST? | Map to DEST RTF? | Options mapped | Outcome
+===============|=================|==================|================|========
+fixed list rtf | no              | no               | no             | discard all options
+fixed list rtf | no              | no               | yes            | use only mapped DEST nodes, discard everything else
+fixed list rtf | yes             | no               | yes            | move only mapped nodes to their DEST nodes, everything else is added as an option on the new field 
+fixed list rtf | yes             | yes              | yes            | move only mapped nodes to their DEST node, everything else is moved to the mapped DEST field
+*/
 
 
 // Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
