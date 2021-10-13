@@ -234,7 +234,12 @@ $resource_type_fields_spec = array(
         "ref" => null,
     ), # Display condition child | text box
 );
-    ' . PHP_EOL);
+
+
+// Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
+$rtf_src_resource_ref = 0;
+
+' . PHP_EOL);
     fclose($spec_fh);
     logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
     exit(0);
@@ -1226,7 +1231,6 @@ if($import && isset($folder_path))
             }
 
         logScript("Processing #{$src_resource["ref"]} | resource_type: {$src_resource["resource_type"]} | archive: {$src_resource["archive"]} | created_by: {$src_resource["created_by"]}");
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         if(
             !array_key_exists($src_resource["archive"], $archive_states_spec)
@@ -1241,6 +1245,8 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             {
             $created_by = $usernames_mapping[$src_resource["created_by"]];
             }
+
+die(PHP_EOL . "Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         db_begin_transaction(TX_SAVEPOINT);
         $new_resource_ref = create_resource(
@@ -1293,11 +1299,25 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             $src_resource["ref"],
             $new_resource_ref);
 
+        // If configured, also store the SRC resource ID in a text field
+        if($rtf_src_resource_ref > 0)
+            {
+            $rtf_src_resource_ref_data = get_resource_type_field($rtf_src_resource_ref);
+            $ursrr_errors = [];
+            if(
+                $rtf_src_resource_ref_data !== false
+                && $rtf_src_resource_ref_data['type'] == FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                && !update_field($new_resource_ref, $rtf_src_resource_ref, $src_resource['ref'], $ursrr_errors)
+            )
+                {
+                logScript("WARNING: unable to update the new resource and store the source resource ID! Reason: " . implode('; ', $ursrr_errors));
+                }
+            }
+
         logScript("Created new record #{$new_resource_ref}");
         $resources_mapping[$src_resource["ref"]] = $new_resource_ref;
         fwrite($progress_fh, "\$resources_mapping[{$src_resource["ref"]}] = {$new_resource_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-
 // TODO: apply the $nodes_applied_to_all_merged_resources to all resources that were merged to DEST
 die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
         }
