@@ -3830,11 +3830,10 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         && $actions['resize']['width'] > 0
     )
         {
-        $cmd_args['%resize_width'] = $actions['resize']['width'];
-        $cmd_args['%resize_height'] = $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
+        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
 
         # Apply resize ('>' means: never enlarge)
-        $command .= ' -resize "%resize_width%resize_height>"';
+        $command .= ' -resize %resize_dimensions>';
         }
 
     $cmd_args['%outputpath'] = $outputpath;
