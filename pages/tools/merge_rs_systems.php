@@ -235,6 +235,19 @@ $resource_type_fields_spec = array(
     ), # Display condition child | text box
 );
 
+// Optional node re-mapping.
+// Please note that is the true source of truth for mapping a SRC node to DEST node(s).
+$nodes_spec = [
+    // from field 89
+    280 => [260],
+    281 => [181, 261,],
+    282 => [262],
+
+    // from field 91
+    288 => [287], # Example of a map to a category tree ==> "Folder 1/1.2/1.2.1"
+    289 => [181],
+];
+
 
 // Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
 $rtf_src_resource_ref = 0;
@@ -1358,8 +1371,23 @@ if($import && isset($folder_path))
             continue;
             }
 
-        logScript("Processing resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+        logScript("Processing SRC resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
+
+        // If specification defined a mapping for a SRC node, apply it
+        if(isset($nodes_spec[$src_rn['node']]))
+            {
+            if(add_resource_nodes($resources_mapping[$src_rn['resource']], $nodes_spec[$src_rn['node']], false, true))
+                {
+                logScript("Found direct mapping ==> added to DEST resource #{$resources_mapping[$src_rn['resource']]} the mapped DEST nodes: " . implode(', ', $nodes_spec[$src_rn['node']]));
+                $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+                fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
+                }
+            else
+                {
+                logScript("WARNING: Failed to add found mapped DEST nodes to the resource (ie. resource_node)");
+                }
+            continue;
+            }
 
         if(in_array($src_rn["node"], $nodes_not_created))
             {
