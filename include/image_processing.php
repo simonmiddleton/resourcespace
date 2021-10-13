@@ -3268,6 +3268,11 @@ function delete_previews($resource,$alternative=-1)
     $delete_prefixes = array();
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
+
+    if(!file_exists($resourcefolder))
+        {
+        return;
+        }
     
     $allfiles = new DirectoryIterator($resourcefolder);
     foreach ($allfiles as $fileinfo)
