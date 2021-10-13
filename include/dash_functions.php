@@ -1991,6 +1991,8 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                 let promoted_image_resource = response.filter(resource => resource.ref == promoted_image && typeof resource.url_pre !== 'undefined');
                 console.debug('promoted_image_resource = %o', promoted_image_resource);
 
+                // Find a resource with a preview
+                response = response.filter(resource => typeof resource.url_pre !== 'undefined')
                 preview_resources = promoted_image > 0 && promoted_image_resource[0] !== undefined ? [promoted_image_resource[0]]
                     : promoted_image === 0 && response[0] !== undefined ? [response[0]]
                     : [];
