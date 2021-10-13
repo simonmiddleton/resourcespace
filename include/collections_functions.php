@@ -3652,6 +3652,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
                 'promoted_resource' => 'true',
                 'freetext'          => 'true',
                 'all_users'         => '1',
+                'title'             => $collection_data["name"],
         );
 
         if($is_featured_collection)
