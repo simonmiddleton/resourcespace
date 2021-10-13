@@ -438,7 +438,6 @@ else { ?>
         });
 
         jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
-            console.log('BANG');
             resource_list.forEach(function (resource)
                 {
                     jQuery("#ResourceShell" + resource).removeClass("Selected");
