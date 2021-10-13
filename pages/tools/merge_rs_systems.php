@@ -239,6 +239,10 @@ $resource_type_fields_spec = array(
 // Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
 $rtf_src_resource_ref = 0;
 
+
+// Fixed list field options that will be applied to all imported SRC resources. List of node IDs.
+$nodes_applied_to_all_merged_resources = [];
+
 ' . PHP_EOL);
     fclose($spec_fh);
     logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
@@ -1246,8 +1250,6 @@ if($import && isset($folder_path))
             $created_by = $usernames_mapping[$src_resource["created_by"]];
             }
 
-die(PHP_EOL . "Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
-
         db_begin_transaction(TX_SAVEPOINT);
         $new_resource_ref = create_resource(
             $resource_types_spec[$src_resource["resource_type"]],
@@ -1318,8 +1320,20 @@ die(PHP_EOL . "Process stopped in file " . __FILE__ . " at line " . __LINE__ . P
         $resources_mapping[$src_resource["ref"]] = $new_resource_ref;
         fwrite($progress_fh, "\$resources_mapping[{$src_resource["ref"]}] = {$new_resource_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
-// TODO: apply the $nodes_applied_to_all_merged_resources to all resources that were merged to DEST
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
+        }
+
+    // If specification is configured to add certain nodes to all imported resources, do it now
+    if(!empty($nodes_applied_to_all_merged_resources))
+        {
+        if(add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false))
+            {
+            logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
+            }
+        else
+            {
+            logScript('ERROR: Failed to update all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
+            exit(1);
+            }
         }
     unset($src_resources);
 
@@ -1345,6 +1359,7 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
             }
 
         logScript("Processing resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
+die("Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
 
         if(in_array($src_rn["node"], $nodes_not_created))
             {
