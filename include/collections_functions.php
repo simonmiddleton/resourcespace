@@ -291,7 +291,7 @@ function get_collection_resources_with_data($ref)
  * @param  boolean $smartadd
  * @param  string $size
  * @param  string $addtype
- * @return boolean
+ * @return boolean | string
  */
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
     {
@@ -389,7 +389,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
  * @param  integer $collection
  * @param  boolean $smartadd
  * @param  string $size
- * @return boolean
+ * @return boolean | string
  */
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
     {
@@ -431,7 +431,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
  *
  * @param  mixed $resources
  * @param  mixed $collection
- * @return boolean
+ * @return boolean | string
  */
 function collection_add_resources($collection,$resources='',$search='',$selected=false)
     {
@@ -469,7 +469,7 @@ function collection_add_resources($collection,$resources='',$search='',$selected
  * @param  mixed $collection
  * @param  mixed $resources
  * @param  mixed $removeall
- * @return void
+ * @return boolean | string
  */
 function collection_remove_resources($collection,$resources='',$removeall=false,$selected=false)
     {
@@ -505,7 +505,7 @@ function collection_remove_resources($collection,$resources='',$removeall=false,
         }
     
     if ($errors == 0){return true;}
-    else {return $lang["cantremoveresourcesfromcolection"];}
+    else {return $lang["cantremoveresourcesfromcollection"];}
     }
     
 /**
