@@ -1260,30 +1260,41 @@ if($import && isset($folder_path))
         )
             {
             $node_parent = $new_nodes_mapping[$src_node["parent"]];
+            $node_parent_sql = " AND parent = '" . escape_check($node_parent) . "'";
             }
         else
             {
             $node_parent = null;
+            $node_parent_sql = '';
             }
 
-// TODO; need a function that allows to compare a node name (simple or i18n) with existing nodes but against both the name and translated
 
-die(PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__.PHP_EOL);
-
-        db_begin_transaction(TX_SAVEPOINT);
-        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
-        if($new_node_ref === false)
+        // Check if we can find an existing node for this metadata field (taking into account language translations as well)
+        $all_nodes_for_rtf = sql_query("SELECT ref, `name` FROM node WHERE resource_type_field = '" . escape_check($mapped_rtf_ref) . "'{$node_parent_sql}");
+        $found_matching_node_i18n = get_node_by_name($all_nodes_for_rtf, $src_node['name'], true);
+        if(!empty($found_matching_node_i18n))
             {
-            logScript("ERROR: unable to create new node!");
-            exit(1);
+            logScript("Found matching node after translation: '{$found_matching_node_i18n['name']}'");
+            $new_nodes_mapping[$src_node['ref']] = $found_matching_node_i18n['ref'];
+            fwrite($progress_fh, "\$new_nodes_mapping[{$src_node['ref']}] = {$found_matching_node_i18n['ref']};" . PHP_EOL);
             }
+        else
+            {
+            db_begin_transaction(TX_SAVEPOINT);
+            $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
+            if($new_node_ref === false)
+                {
+                logScript("ERROR: unable to create new node!");
+                exit(1);
+                }
 
-        logScript("Created new node record #{$new_node_ref} '{$src_node["name"]}'. Node set for resource type field {$mapped_rtf_ref}");
-        $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
-        fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
-        db_end_transaction(TX_SAVEPOINT);
+            logScript("Created new node record #{$new_node_ref} '{$src_node["name"]}'. Node set for resource type field {$mapped_rtf_ref}");
+            $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
+            fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
+            db_end_transaction(TX_SAVEPOINT);
+            }
         }
-    unset($src_nodes);
+    unset($src_nodes, $dest_node_refs, $all_nodes_for_rtf);
 
 
     # RESOURCES
