@@ -339,10 +339,8 @@ if(isset($user))
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
     }
+logScript("Running script with language set to '{$language}'");
 
-echo ($language??'nothing'). PHP_EOL;
-echo "Contact us is --- {$lang["contactus"]}" . PHP_EOL;
-die(PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__.PHP_EOL);
 
 /*
 For the following usage:
@@ -1268,8 +1266,12 @@ if($import && isset($folder_path))
             $node_parent = null;
             }
 
+// TODO; need a function that allows to compare a node name (simple or i18n) with existing nodes but against both the name and translated
+
+die(PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__.PHP_EOL);
+
         db_begin_transaction(TX_SAVEPOINT);
-        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "", true);
+        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
         if($new_node_ref === false)
             {
             logScript("ERROR: unable to create new node!");

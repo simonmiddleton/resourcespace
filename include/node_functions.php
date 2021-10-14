@@ -9,11 +9,10 @@
 * @param  string   $name                  Node name to be used (international)
 * @param  integer  $parent                ID of the parent of this node (null for non trees)
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
-* @param  boolean  $returnexisting        Return an existing node if a match is found for this field. Duplicate nodes may be required for category trees but are not desirable for non-fixed list fields
 *
 * @return boolean|integer
 */
-function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting=false)
+function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     if(!is_null($name))
         {
@@ -25,6 +24,31 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         return false;
         }
 
+    // Prevent the creation of duplicate nodes unless type is category tree and the nodes have different parents in the tree.
+    $resource_type_field_data = get_resource_type_field($resource_type_field);
+
+    if (!$resource_type_field_data)
+        {
+        return false;
+        }
+
+    if ($resource_type_field_data['type'] != FIELD_TYPE_CATEGORY_TREE)
+        {
+        $returnexisting = true;
+        }
+    else
+        {
+        $nodes_for_parent = get_nodes($resource_type_field, $parent);
+        if (count($nodes_for_parent) == 0 || !in_array($name, array_column($nodes_for_parent, 'name')))
+            {
+            $returnexisting = false;
+            }
+        else
+            {
+            $returnexisting = true;
+            }
+        }
+    
     if(is_null($ref) && '' == $order_by)
         {
         $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);
@@ -90,7 +114,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         // Check for an existing match
         $existingnode=sql_value("SELECT ref value FROM node WHERE resource_type_field ='" . escape_check($resource_type_field) . "' AND name ='" . escape_check($name) . "'",0);
         if($existingnode > 0)
-            {return $existingnode;}
+            {return (int)$existingnode;}
         }
 
     sql_query($query);

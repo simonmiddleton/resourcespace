@@ -214,6 +214,9 @@ $home_colour_style_override='';
 $collection_bar_background_override='';
 $collection_bar_foreground_override='';
 
+# Used for changing colour of default blue buttons
+$button_colour_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
@@ -306,7 +309,7 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank');
+$tile_styles['conf']  = array('blank', 'analytics');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
@@ -1744,9 +1747,6 @@ $featured_collections_root_collection = 0;
 
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
-# If a theme header contains a single collection, allow the title to be a direct link to the collection.
-# Drilling down is still possible via the >Expand tool, which replaces >Select when a deeper level exists
-$themes_single_collection_shortcut=false;
 
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;

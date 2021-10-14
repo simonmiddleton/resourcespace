@@ -145,10 +145,11 @@ else
     style="width:100%;height:80%;"
     <?php } ?>
     
-    ></div><?php } ?>
+    ></div><?php 
+    } 
 
-    <?php if ($type=="pie") {
-    
+if ($type=="pie")
+    {
     if ($activity_type=="Keyword usage" || $activity_type=="Keyword added to resource")
         {
         $join_table="keyword";
@@ -213,74 +214,68 @@ else
     });
 
     </script>
-    <?php } ?>
+    <?php } 
     
-    
-    
-    
-    
-    
-    
-    <?php if ($type=="piegroup") {
+    if ($type=="piegroup")
+        {
+        # External conditions
+        # 0 = external shares are ignored
+        # 1 = external shares are combined with the user group of the sharing user
+        # 2 = external shares are reported as a separate user group
 
-    # External conditions
-    # 0 = external shares are ignored
-    # 1 = external shares are combined with the user group of the sharing user
-    # 2 = external shares are reported as a separate user group
+        # External mode 2 support - return the usergroup as '-1' if externally shared
+        $usergroup_resolve="d.usergroup";
+        $name_resolve="ug.name";
+        if ($external==2)
+            {
+            $usergroup_resolve="if(d.external=0,d.usergroup,-1)";
+                $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
+            }
+        $data=sql_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc");
+        if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
+        ?>
+        <script type="text/javascript"> 
+        jQuery(function () {
+        
+        jQuery.plot('#placeholder<?php echo $type . $n ?>', [
 
-    # External mode 2 support - return the usergroup as '-1' if externally shared
-    $usergroup_resolve="d.usergroup";
-    $name_resolve="ug.name";
-    if ($external==2)
-	{
-	$usergroup_resolve="if(d.external=0,d.usergroup,-1)";
-        $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
-	}
-    $data=sql_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc");
-    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
-    ?>
-    <script type="text/javascript"> 
-    jQuery(function () {
-	
-	jQuery.plot('#placeholder<?php echo $type . $n ?>', [
+                    <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["name"]  ?>"},<?php } ?>
 
-                <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["name"]  ?>"},<?php } ?>
-
-		], {
-	series: {
-	    pie: {
-		show: true,
-		label: {
-                show: false
-		},
-		stroke: { width: 0 }
-	    }
-	}
-	,
-	grid: {
-	    hoverable: true
-	},
-	legend: {
-        show: false
-	},
-    tooltip: {
-        show: true,
-        content: '%p.0%, %s',
-        shifts: {
-            x: 20,
-            y: 0
+            ], {
+        series: {
+            pie: {
+            show: true,
+            label: {
+                    show: false
+            },
+            stroke: { width: 0 }
+            }
         }
-    }
+        ,
+        grid: {
+            hoverable: true
+        },
+        legend: {
+            show: false
+        },
+        tooltip: {
+            show: true,
+            content: '%p.0%, %s',
+            shifts: {
+                x: 20,
+                y: 0
+            }
+        }
 
-    });
-    });
+        });
+        });
 
-    </script>
-    <?php } ?>
+        </script>
+        <?php
+        }
     
-    
-    
-    <?php if ($type=="pieresourcetype") {
+if ($type=="pieresourcetype")
+        {
     // Pie chart to break down resource activities by type
         
     $data=sql_query("
@@ -354,88 +349,83 @@ else
                 });
             });
     </script>
-    <?php } ?>
+    <?php 
+    }
     
+if ($type=="line")
+    {
+    $data=sql_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t");
+    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
     
+    # Find zero days and fill in the gaps
 
-    
-    <?php if ($type=="line")
+    $day_ms=(60*60*24*1000); # One day in milliseconds.
+    $last_t=(strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000) -$day_ms;
+    $newdata=array();
+    #$last_t=0;
+    foreach ($data as $row)
         {
-        $data=sql_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t");
-        if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
-        
-	# Find zero days and fill in the gaps
-
-	$day_ms=(60*60*24*1000); # One day in milliseconds.
-	$last_t=(strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000) -$day_ms;
-	$newdata=array();
-	#$last_t=0;
-	foreach ($data as $row)
-	    {
-	    if ($row["t"]>0)
-		{
-		if ($last_t!=0 && ($row["t"]-$last_t)>$day_ms)
-		    {
-		    for ($m=$last_t+$day_ms;$m<$row["t"];$m+=$day_ms)
-			{
-			$newdata[(string)$m]=0;
-			}
-		    }
-		$newdata[$row["t"]]=$row["c"];
-		$last_t=$row["t"];
-		}
-	    }
-	?>
+        if ($row["t"]>0)
+        {
+        if ($last_t!=0 && ($row["t"]-$last_t)>$day_ms)
+            {
+            for ($m=$last_t+$day_ms;$m<$row["t"];$m+=$day_ms)
+            {
+            $newdata[(string)$m]=0;
+            }
+            }
+        $newdata[$row["t"]]=$row["c"];
+        $last_t=$row["t"];
+        }
+        }
+    ?>
         <script type="text/javascript"> 
 jQuery(function () {
                         
     jQuery.plot("#placeholder<?php echo $type . $n ?>", [
     
         
-    	    {
+            {
         data: [
         <?php foreach ($newdata as $t=>$c) { ?>
         [<?php echo $t ?>,<?php echo $c ?>],
         <?php } ?>
-         ],
+        ],
         label: "<?php echo get_translated_activity_type($activity_type) ?>",
         lines: { show: true  },
         points: { show: false},
         shadowSize: 4,
         <?php if ($from_dash) { ?>color: "#fff"<?php } else { ?>color: "#0be"<?php } ?>
     },
-           
+        
     ],
-    	{
-	<?php if (!$from_dash) { ?>
-    	xaxis: { mode: "time", timeformat: "%Y-%m-%d", ticks: 10,  minTickSize: [1, "day"],
+        {
+    <?php if (!$from_dash) { ?>
+        xaxis: { mode: "time", timeformat: "%Y-%m-%d", ticks: 10,  minTickSize: [1, "day"],
         min: <?php echo strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000 ?>,
         max: <?php echo strtotime($to_y . "-" . $to_m . "-" . $to_d) * 1000 ?>
         },
-	<?php } else { ?>
-	xaxis: { show: false },
-	<?php } ?>
-	    legend: {show: false },
-	    grid: { <?php if (!$from_dash) { ?>hoverable: true, clickable: true, backgroundColor: "#fff", <?php } ?> borderWidth: <?php echo $from_dash?0:2 ?>, autoHighlight: true }
-    	}
+    <?php } else { ?>
+    xaxis: { show: false },
+    <?php } ?>
+        legend: {show: false },
+        grid: { <?php if (!$from_dash) { ?>hoverable: true, clickable: true, backgroundColor: "#fff", <?php } ?> borderWidth: <?php echo $from_dash?0:2 ?>, autoHighlight: true }
+        }
     
     );
     <?php if (!$from_dash) { ?>
         jQuery("<div id='tooltip<?php echo $type . $n ?>'></div>").css({
-	       position: "absolute",
-	       display: "none",
-	       border: "1px solid #fdd",
-	       padding: "2px",
-	       "background-color": "#fee",
-	       opacity: 0.80
-       }).appendTo("body");
+        position: "absolute",
+        display: "none",
+        border: "1px solid #fdd",
+        padding: "2px",
+        "background-color": "#fee",
+        opacity: 0.80
+    }).appendTo("body");
 
-       jQuery("#placeholder<?php echo $type . $n ?>").bind("plothover", function (event, pos, item) {
+    jQuery("#placeholder<?php echo $type . $n ?>").bind("plothover", function (event, pos, item) {
 
-       jQuery("#UICenter").on("scroll",function () { jQuery("#tooltip<?php echo $type . $n ?>").hide();});
-
-        
-        
+    jQuery("#UICenter").on("scroll",function () { jQuery("#tooltip<?php echo $type . $n ?>").hide();});
         if (item) {
                 var x = item.datapoint[0], y = item.datapoint[1].toFixed(0);
                 var d = new Date(x);
@@ -447,55 +437,56 @@ jQuery(function () {
         } else {
                 jQuery("#tooltip<?php echo $type . $n ?>").hide();
         }
-       }
+    }
     );
     <?php }  else  {
     
     # Specific from dash styling
     ?>    
     jQuery(".flot-text").css("color","#ddd");
-    <?php } ?>
-    
+    <?php } ?>        
     });
 
-</script> 
-        <?php
-        }
-    ?>
-    
-    
-<?php if ($type=="summary") {
-$cells=3;
-$cellwidth=100/$cells;
-if ($from_dash)
-    {
-    # Define styles locally for dash display
-    ?>
-    <style>
-    .ReportSummary td {padding:3px 0 3px 0;vertical-align:bottom;display:block;width:45%;}
-    .ReportMetric {font-size:200%;padding-left:5px;}
-    </style>
+    </script> 
     <?php
     }
 
-?>
-<table style="width:100%;" class="ReportSummary">
-<tr>
-<td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_total"]   ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(sum(count),0),0) value from daily_stat d $join $condition",0); ?></span></td>
-<td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_average"] ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(avg(c),1),0) value from (select year,month,day,sum(count) c from daily_stat d $join $condition group by year,month,day) intable",0); ?></span></td>
-</table>    
-<?php } ?>
+if ($type=="summary")
+    {
+    $cells=3;
+    $cellwidth=100/$cells;
+    if ($from_dash)
+        {
+        # Define styles locally for dash display
+        ?>
+        <style>
+        .ReportSummary td {padding:3px 0 3px 0;vertical-align:bottom;display:block;width:45%;}
+        .ReportMetric {font-size:200%;padding-left:5px;}
+        </style>
+        <?php
+        }
 
+    ?>
+    <table style="width:100%;" class="ReportSummary">
+    <tr>
+    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_total"]   ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(sum(count),0),0) value from daily_stat d $join $condition",0); ?></span></td>
+    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_average"] ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(avg(c),1),0) value from (select year,month,day,sum(count) c from daily_stat d $join $condition group by year,month,day) intable",0); ?></span></td>
+    </table>    
+    <?php 
+    }
 
-<?php if ($from_dash) { 
-if($tile>0)
-{
-    # Update $tile and $usertile for generate_dash_tile_toolbar purposes
-    $usertile=get_user_tile($user_tile,$userref);
-    $tile=get_tile($tile);
-    $tile_id        = (is_array($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
-    generate_dash_tile_toolbar($tile, $tile_id);
-}
-?>
-</div>
-<?php } ?>
+if ($from_dash)
+    { 
+    if($tile>0)
+        {
+        # Update $tile and $usertile for generate_dash_tile_toolbar purposes
+        $usertile=get_user_tile($user_tile,$userref);
+        $tile=get_tile($tile);
+        $tile["no_edit"] = true;
+        $tile_id        = (is_array($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
+        generate_dash_tile_toolbar($tile, $tile_id);
+        }
+    ?>
+    </div>
+    <?php 
+    }

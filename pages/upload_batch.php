@@ -155,7 +155,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && ($processupload  || !$upload_then_edit))
+if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$upload_force_mycollection)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -235,17 +235,20 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
-
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
 	{
 	$redirecturl=$modify_redirecturl;
 	}
 
-# Fallback to current user collection if nothing was passed in
-if($collection_add=='undefined')
+if($upload_force_mycollection)
     {
-    $collection_add=$usercollection;    
+    $collection_add = get_default_user_collection(true);
+    }
+elseif($collection_add=='undefined')
+    {
+    # Fallback to current user collection if nothing was passed in
+    $collection_add = $usercollection;    
     $uploadparams['collection_add']=$usercollection;
     }
 
@@ -986,7 +989,7 @@ jQuery(document).ready(function () {
         inline: true,
         width: '100%',
         height: 450,
-        thumbnailWidth: 100,
+        thumbnailWidth: 125,
         showLinkToFileUploadResult: false,
         showProgressDetails: true,
         hideUploadButton: false,
@@ -1118,7 +1121,7 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
-    }   
+    }
 ?>
 
 function processFile(file, forcepost)

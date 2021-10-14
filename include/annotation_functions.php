@@ -547,7 +547,7 @@ function prepareTags(array $dirty_tags)
                 }
 
             // Create new node but avoid duplicates
-            $new_node_id = set_node(null, $dirty_tag['resource_type_field'], $dirty_tag['name'], null, null, true);
+            $new_node_id = set_node(null, $dirty_tag['resource_type_field'], $dirty_tag['name'], null, null);
             if(false !== $new_node_id && is_numeric($new_node_id))
                 {
                 $dirty_tag['ref'] = $new_node_id;

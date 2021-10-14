@@ -15,13 +15,13 @@ function comments_submit()
 	
 	if (($comment_to_hide != 0) && (checkPerm("o"))) {	
 		// Does this comment have any child comments?
-		if (sql_value("SELECT ref AS value FROM comment WHERE ref_parent = '$comment_to_hide'",'') != '')
+		if (sql_value("SELECT ref AS value FROM comment WHERE ref_parent = '" . escape_check($comment_to_hide) . "'",'') != '')
 			{
-			sql_query("UPDATE comment SET hide = 1 WHERE ref = '$comment_to_hide'");
+			sql_query("UPDATE comment SET hide = 1 WHERE ref = '" . escape_check($comment_to_hide) . "'");
 			}
 		else
 			{
-			sql_query("DELETE FROM comment WHERE ref = '$comment_to_hide'");
+			sql_query("DELETE FROM comment WHERE ref = '" . escape_check($comment_to_hide) . "'");
 			}
 
 		return;
