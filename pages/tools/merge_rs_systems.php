@@ -31,6 +31,10 @@ OPTIONS SUMMARY
 
     -h, --help              display this help and exit
     -u, --user              run script as a ResourceSpace user. Use the ID of the user
+    -l, --language          Set the language when translating i18n strings (see https://www.resourcespace.com/knowledge-base/systemadmin/translations)
+                            Useful to prevent duplicate fixed list field options because one side has translations and
+                            the other doesn't.
+                            Please note if using the option multiple times, only the last occurence will take precedence.
     --dry-run               perform a trial run with no changes made. IMPORTANT: unavailable for import!
     --clear-progress        clear the progress file which is automatically generated at import
     --generate-spec-file    generate an example specification file
@@ -53,12 +57,13 @@ EXAMPLES
     " . PHP_EOL;
 
 
-$cli_short_options = "hu:";
+$cli_short_options = "hu:l:";
 $cli_long_options  = array(
     "help",
     "dry-run",
     "clear-progress",
     "user:",
+    "language:",
     "spec-file:",
     "export",
     "import",
@@ -116,6 +121,18 @@ foreach($options as $option_name => $option_value)
             }
 
         $user = $option_value;
+        }
+
+    if(in_array($option_name, ["l", "language"]))
+        {
+        if(is_array($option_value))
+            {
+            fwrite(STDERR, "ERROR: Language should only be set once. Use either -l or --language." . PHP_EOL);
+            fwrite(STDOUT, PHP_EOL . $help_text);
+            exit(1);
+            }
+
+        $language = trim($option_value);
         }
     }
 
@@ -322,6 +339,10 @@ if(isset($user))
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
     }
+
+echo ($language??'nothing'). PHP_EOL;
+echo "Contact us is --- {$lang["contactus"]}" . PHP_EOL;
+die(PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__.PHP_EOL);
 
 /*
 For the following usage:
