@@ -4685,11 +4685,6 @@ function render_featured_collection(array $ctx, array $fc)
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = ['display: none;'];
-    if(count($tools) > 3)
-        {
-        $html_actions_style[] = "height: 43px;";
-        }
-
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>

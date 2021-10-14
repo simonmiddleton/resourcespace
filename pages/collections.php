@@ -1094,7 +1094,7 @@ else
         hook("beforecollectiontoolscolumn");
 
         $resources_count = $count_result;
-        render_actions($cinfo, false,true,'',$result);
+        render_actions($cinfo, false,!hook('renderactionsononeline', 'collections'),'',$result);
 
         hook("aftercollectionsrenderactions");
         ?>
