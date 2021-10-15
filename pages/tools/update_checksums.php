@@ -10,7 +10,7 @@
 $cwd = dirname(__FILE__);
 include "$cwd/../../include/db.php";
 
-include "$cwd/../../include/image_processing.php";
+include_once "$cwd/../../include/image_processing.php";
 
 // Allow access from UI (legacy mode) only if authenticated and admin
 if('cli' != PHP_SAPI)
