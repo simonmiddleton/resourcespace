@@ -358,6 +358,356 @@ function db_rollback_transaction($name)
 	}        
 
 /**
+ * Execute a prepared statement and return the results as an array.
+ * 
+ * Database functions are wrapped in this way so supporting a database server other than MySQL is easier.
+ *
+ * @param  mixed $sql						The SQL to execute
+ * @param  mixed $parameters				An array of paremters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s"=>"This is the first SQL parameter and is a string","d"=>"This is the second parameter which is a double")
+ * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  mixed $reconnect
+ * @param  mixed $fetch_specific_columns
+ * @return array
+ */
+function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
+    {
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang, $prepared_statement_cache;
+	
+    // Check cache for this query
+    $cache_write=false;
+    $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
+    if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
+        {
+        $cache_write=true;
+        $cache_location=get_query_cache_location();
+        $cache_file=$cache_location . "/" . $cache . "_" . md5($serialised_query) . "_" . md5($scramble_key . $serialised_query) . ".json"; // Scrambled path to cache
+        if (file_exists($cache_file))
+            {
+            $cachedata=json_decode(file_get_contents($cache_file),true);
+            if (!is_null($cachedata)) // JSON decode success
+                {
+                if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
+                    {
+                    if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
+                        {
+                        debug("[sql_query] returning cached data (source: {$cache_file})");
+                        db_clear_connection_mode();
+                        return $cachedata["results"];
+                        }
+                    }
+                }
+            }
+        }
+
+    if(!isset($debug_log_override))
+        {
+        $original_con_mode = db_get_connection_mode();
+        db_clear_connection_mode();
+        check_debug_log_override();
+        db_set_connection_mode($original_con_mode);
+        }
+
+    if ($config_show_performance_footer)
+        {
+        # Stats
+        # Start measuring query time
+        $time_start = microtime(true);
+        global $querycount;
+        $querycount++;
+        }
+
+    if (($debug_log || $debug_log_override) && !$suppress_sql_log)
+        {
+        debug("SQL: " . $sql);
+        }
+
+    /*
+    COMMENTED - This needs work. A transaction text log will not work with prepared statements.
+
+    if($mysql_log_transactions && !($logthis==0))
+        {	
+        $requirelog = true;
+
+        if($logthis==2)
+            {
+            // Ignore any SELECTs if the decision to log has not been indicated by function call, 	
+            if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
+                {
+                $requirelog = false;
+                }
+            }
+
+
+        if($logthis==1 || $requirelog)
+            {
+            # Log this to a transaction log file so it can be replayed after restoring database backup
+            $mysql_log_dir = dirname($mysql_log_location);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                if (!is_dir($mysql_log_dir))
+                    {
+                    mkdir($mysql_log_dir, 0333, true);
+                    }
+                if(!file_exists($mysql_log_location))
+                    {
+                    $mlf=fopen($mysql_log_location,"wb");
+                    fwrite($mlf,"USE " . $mysql_db . ";\r\n");
+                    // Set the permissions if we can to prevent browser access (will not work on Windows)
+                    chmod($mysql_log_location,0333);
+                    }
+                $mlf=fopen($mysql_log_location,"ab");
+                fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " *" . "/ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
+                fclose ($mlf);
+                }
+            catch(Exception $e)
+                {
+                debug("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);
+                $mysql_log_transactions = false;
+                }
+            unset($GLOBALS["use_error_exception"]);
+            }
+        }
+    */
+
+    // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
+    // available using db_set_connection_mode(). An example use case for this can be reports.
+    $db_connection_mode = 'read_write';
+    $db_connection = $db['read_write'];
+    if(
+        db_use_multiple_connection_modes()
+        && !isset($GLOBALS['sql_transaction_in_progress'])
+        && (db_get_connection_mode() === 'read_only' || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) === 'SELECT'))
+    )
+        {
+        $db_connection_mode = 'read_only';
+        $db_connection = $db['read_only'];
+
+        // In case it needs to retry and developer has forced a read-only
+        $logthis = 2;
+
+        db_clear_connection_mode();
+        }
+
+    if (count($parameters)>0)
+        {
+        // Execute prepared statement
+        if(!isset($prepared_statement_cache[$sql]))
+            {
+            if(!isset($prepared_statement_cache))
+                {
+                $prepared_statement_cache=array();
+                }
+            $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+            if($prepared_statement_cache[$sql]===false)
+                {
+                errorhandler("N/A", "Bad prepared SQL statement<br/><br/>" . $sql, "(database)", "N/A");
+                }
+            }
+        $params_array = array();
+        $types="";
+        for($n=0;$n<count($parameters);$n+=2)
+            {
+            $types.=$parameters[$n];
+            $params_array[] = $parameters[$n+1];
+            }
+        mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
+        mysqli_stmt_execute($prepared_statement_cache[$sql]);
+        $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+        if ($error=="")
+            {
+            $result=fetch_assoc_stmt($prepared_statement_cache[$sql],true,$fetchrows);
+            }
+        $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
+        }
+    else    
+        {
+        // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
+        $result_set=mysqli_query($db_connection,$sql);
+        $return_row_count=0;$result=array();
+        $error=mysqli_error($db_connection);
+        if ($error=="")
+            {
+            while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result_set))
+                {
+                $return_row_count++;
+                $result[]=$result_row;
+                }
+            }
+        mysqli_free_result($result_set);
+        }
+
+    if ($config_show_performance_footer){
+    	# Stats
+   		# Log performance data		
+		global $querytime,$querylog;
+		
+		$time_total=(microtime(true) - $time_start);
+		if (isset($querylog[$sql]))
+			{
+			$querylog[$sql]['dupe']=$querylog[$sql]['dupe']+1;
+			$querylog[$sql]['time']=$querylog[$sql]['time']+$time_total;
+			}
+		else
+			{
+			$querylog[$sql]['dupe']=1;
+			$querylog[$sql]['time']=$time_total;
+			}	
+		$querytime += $time_total;
+	}
+	
+	$return_rows=array();
+    if ($error!="")
+        {
+        if ($error=="Server shutdown in progress")
+        	{
+			echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
+        	}
+        elseif (substr($error,0,15)=="Too many tables")
+        	{
+			echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
+        	}
+        elseif (strpos($error,"has gone away")!==false && $reconnect)
+			{
+			# SQL server connection has timed out or been killed. Try to reconnect and run query again.
+			sql_connect();
+            db_set_connection_mode($db_connection_mode);
+			return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
+			}
+        else
+        	{
+        	# Check that all database tables and columns exist using the files in the 'dbstruct' folder.
+        	if ($dbstruct) # should we do this?
+        		{
+                db_clear_connection_mode();
+				check_db_structs();
+                db_set_connection_mode($db_connection_mode);
+
+        		# Try again (no dbstruct this time to prevent an endless loop)
+        		return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect);
+        		}
+
+	        errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
+	        }
+
+        exit();
+        }
+    elseif ($result===false)
+        {
+		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
+        }
+
+    if($cache_write)
+        {
+        $cachedata = array();
+        $cachedata["query"] = $sql;
+        $cachedata["time"] = time();
+        $cachedata["results"] = $result;
+
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            if(!file_exists($storagedir . "/tmp"))
+                {
+                mkdir($storagedir . "/tmp", 0777, true);
+                }
+
+            if(!file_exists($cache_location))
+                {
+                mkdir($cache_location, 0777);
+                }
+
+            file_put_contents($cache_file, json_encode($cachedata));
+            }
+        catch(Exception $e)
+            {
+            debug("SQL_CACHE: {$e->getMessage()}");
+            }
+        unset($GLOBALS["use_error_exception"]);
+        }
+
+    if($fetchrows == -1)
+        {
+        return $result;
+        }
+
+    /*
+    COMMENTED - this should no longer be needed; it was added for search results however in that situation a separate count() query
+    should be executed first.
+
+	# If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
+	# is still correct (even though these rows won't be shown).
+    if(count($result) < $query_returned_row_count)
+        {
+        // array_pad has a hardcoded limit of 1,692,439 elements. If we need to pad the results more than that, we do it in
+        // 1,000,000 elements batches.
+        while(count($result) < $query_returned_row_count)
+            {
+            $padding_required = $query_returned_row_count - count($result);
+            $pad_by = ($padding_required > 1000000 ? 1000000 : $query_returned_row_count);
+            $result = array_pad($result, $pad_by, 0);
+            }
+       }
+    */
+
+
+    return $result;        
+    }
+
+
+/**
+* Fetches the results of a prepared statement as an array of associative
+* arrays such that each stored array is keyed by the result's column names.
+* @param stmt       Must have been successfully prepared and executed prior to calling this function
+* @param buffer     Whether to buffer the result set; if true, results are freed at end of function
+* @param fetchrows  The maximum numbers of rows to return; results will be truncated if necessary
+
+* @return An array, possibly empty, containing one associative array per result row
+*/
+function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true, $fetchrows=-1)
+    {
+    if ($buffer)
+        {
+        $stmt->store_result();
+        }
+    $fields = $stmt->result_metadata()->fetch_fields();
+    $args = array();
+    foreach($fields AS $field)
+        {
+        $key = str_replace(' ', '_', $field->name); // space may be valid SQL, but not PHP
+        $args[$key] = &$field->name; // this way the array key is also preserved
+        }
+    call_user_func_array(array($stmt, "bind_result"), $args);
+    $results = array();
+    $count=0;
+    while($stmt->fetch() && ($fetchrows==-1 || $count<$fetchrows))
+        {
+        $count++;
+        $results[] = array_map("copy_value", $args);
+        }
+    if ($buffer)
+        {
+        $stmt->free_result();
+        }
+    return $results;
+    }
+
+/**
+* Copy value as value
+*/
+function copy_value($v) {
+    return $v;
+}
+
+
+
+
+/**
  * Execute a query and return the results as an array.
  * 
  * Database functions are wrapped in this way so supporting a database server other than MySQL is easier.
@@ -671,6 +1021,31 @@ function sql_value($query, $default, $cache="")
         return $result[0]["value"];
     }
 
+/**
+* Return a single value from a database query, or the default if no rows
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses sql_query()
+* 
+* @param string $query      SQL query
+* @param string $parameters SQL parameters with types, as for ps_query()
+* @param mixed  $default    Default value
+* 
+* @return string
+*/
+function ps_value($query, $parameters, $default, $cache="")
+    {
+    db_set_connection_mode("read_only");
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
+
+    if(count($result) == 0)
+        {
+        return $default;
+        }
+
+    return $result[0]["value"];
+    }
 
 /**
 * Like sql_value() but returns an array of all values found
