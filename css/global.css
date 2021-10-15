@@ -1815,6 +1815,7 @@ a.Enabled, a:visited.Enabled {
     float: right;
     height: 30px;
     vertical-align: top;
+    margin: 0;
 }
 
 /* jQuery UI */
