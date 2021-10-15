@@ -3844,10 +3844,9 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         && $actions['resize']['width'] > 0
     )
         {
-        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
-
         # Apply resize ('>' means: never enlarge)
-        $command .= ' -resize %resize_dimensions>';
+        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '') . ">";
+        $command .= ' -resize %resize_dimensions';
         }
 
     $cmd_args['%outputpath'] = $outputpath;
