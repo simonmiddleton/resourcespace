@@ -2263,10 +2263,15 @@ if ($multiple && !$disable_geocoding)
     }
 
 if($disablenavlinks)
-        { ?>
-        <input type=hidden name="disablenav" value="true">
-        <?php
-        }
+    { ?>
+    <input type=hidden name="disablenav" value="true">
+    <?php
+    }
+
+if(is_int_loose($collection_add))
+    { 
+    echo "<input type=hidden name='collection_add' value='" . htmlspecialchars($collection_add) . "'>";
+    }
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
 
