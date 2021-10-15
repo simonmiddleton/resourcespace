@@ -2112,7 +2112,7 @@ function add_keyword_mappings(int $ref,$string,$resource_type_field,$partial_ind
  */
 function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
-    global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
+    global $unnormalized_index,$stemming,$noadd;
     
     debug("add_keyword_to_resource: resource:" . $ref . ", keyword: " . $keyword);
     if(!$normalized)
@@ -2142,36 +2142,19 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
 
-            $stm_bind_data = array('iiii', $ref, $keyref, $position, $resource_type_field);
-            $stm_prep_values = "?,?,?,?";
-
             $sql_extra_select = "";
             $sql_extra_value = "";
             if($optional_column != '' && $optional_value != '')
                 {
                 $sql_extra_select = ", `{$optional_column}`";
                 $sql_extra_value = ", '" . escape_check($optional_value) . "'";
-
-                $stm_prep_values .= ",?";
-                $stm_bind_data[0] .= "s";
-                $stm_bind_data[] = $optional_value;
                 }
-
-            # create mapping, increase hit count.
-            if(isset($use_mysqli_prepared) && $use_mysqli_prepared)
-                {
-                sql_query_prepared("INSERT INTO `resource_keyword`(`resource`,`keyword`,`position`,`resource_type_field` {$sql_extra_select}) VALUES ($stm_prep_values)",
-                    $stm_bind_data);
-                }
-            else
-                {
-                $ref = escape_check($ref);
-                $keyref = escape_check($keyref);
-                $position = escape_check($position);
-                $resource_type_field = escape_check($resource_type_field);
-                sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
-                                VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
-                }
+            $ref = escape_check($ref);
+            $keyref = escape_check($keyref);
+            $position = escape_check($position);
+            $resource_type_field = escape_check($resource_type_field);
+            sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
+                            VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
 
             sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
             

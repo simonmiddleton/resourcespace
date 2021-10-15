@@ -63,10 +63,6 @@ $mysql_bin_path = '/usr/bin';
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared = false;
-
 # Enable establishing secure connections using SSL
 # Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
 $use_mysqli_ssl = false;
