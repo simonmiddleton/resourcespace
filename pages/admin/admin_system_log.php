@@ -15,7 +15,7 @@ $requesteduser = getval('actasuser',0, true);
 $actasuser = $requesteduser === $userref ? $userref : $requesteduser;
 
 // Filter by a particular table and its reference
-$table = getval('table', '');
+$table = getvalescaped('table', '');
 $table_reference = getval('table_reference', 0, true);
 $tables_data = array(
     'resource_type_field' => array(
