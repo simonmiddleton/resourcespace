@@ -228,7 +228,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         $redirecturl = generateURL(
             "{$baseurl}/pages/edit.php",
             array(
-                'upload_review_mode' => true
+                'upload_review_mode' => true,
+                'collection_add' => $collection_add
             ));	
         }
 
@@ -288,7 +289,7 @@ $uploadparams= array(
     'filename_field'                         => getval('filename_field', ''),
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
-    'single'                                 => ($single ? "true" : "false"),
+    'single'                                 => ($single ? "true" : ""),
     'status'                                 => $setarchivestate,
     'k'                                      => $k,
 );
@@ -870,6 +871,7 @@ include "../include/header.php";
 echo "show_upload_log=" . (($show_upload_log)?"true;":"false;") . "\n";
 
 ?>
+redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
@@ -905,7 +907,7 @@ jQuery(document).ready(function () {
     processerrors = []; // Keep track of upload errors
     retried = []; // Keep track of files that have been retried automatically
     allowcollectionreload = true;
-    const uppy = new Uppy.Core({
+    uppy = new Uppy.Core({
         debug: false,
         autoProceed: false,
         restrictions: {
@@ -950,6 +952,7 @@ jQuery(document).ready(function () {
                         {
                         newcol = parseInt(response);
                         console.debug('Created collection #' + newcol);
+                        redirurl =  ReplaceUrlParameter(redirurl, 'collection_add', newcol);
                         });
                     }
                 }
@@ -1321,6 +1324,7 @@ function processFile(file, forcepost)
                     }?>
                 }
             console.debug("Completed processing " + rscompleted.length + " files");
+            console.debug("Failed to process " + processerrors.length + " files");
             console.debug("Alternatives to process: " + processafter.length);
             postUploadActions();
             },
@@ -1396,7 +1400,6 @@ function postUploadActions()
             }, 2000);
         return;
         }
-
     
     CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
@@ -1408,7 +1411,7 @@ function postUploadActions()
         ?>
         api('send_collection_to_admin',{'collection': newcol}, function(response)
             {
-            console.debug('A copy of the collection ID ' + newcol + ' has been sent.');
+            console.debug('A copy of collection #' + newcol + ' has been sent to for review.');
             });
         <?php
         }?>
@@ -1432,7 +1435,7 @@ function postUploadActions()
         {?>
         if(!upRedirBlock)
             {
-            CentralSpaceLoad('<?php echo $redirecturl ?>',true);
+            CentralSpaceLoad(redirurl,true);
             }
         <?php
         }

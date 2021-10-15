@@ -3194,41 +3194,46 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
  * @param  integer $colref
  * @param  boolean $show    Show or hide?
  * @param  integer $user  
- * @return void
+ * @return bool 
  */
 function show_hide_collection($colref, $show=true, $user="")
-	{
-	global $userref;
-	if($user=="" || $user==$userref)
-		{
-		// Working with logged on user, use global variable 
-		$user=$userref;
-		global $hidden_collections;
-		}
-	else
-		{
-		//Get hidden collections for user
-		$hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
-		}
-		
-	if($show)
-		{
-		debug("Unhiding collection " . $colref . " from user " . $user);
-		if(($key = array_search($colref, $hidden_collections)) !== false)
-			{
-			unset($hidden_collections[$key]);
-			}
-		}
-	else
-		{
-		debug("Hiding collection " . $colref . " from user " . $user);
-		if(($key = array_search($colref, $hidden_collections)) === false) 
-			{
-			$hidden_collections[]=$colref;
-			}
-		}
-	sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
-	}
+    {
+    global $userref;
+    if($user=="" || $user==$userref)
+        {
+        // Working with logged on user, use global variable 
+        $user=$userref;
+        global $hidden_collections;
+        }
+    else
+        {
+        if(!checkperm_user_edit($user))
+            {
+            return false;
+            }
+        //Get hidden collections for user
+        $hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
+        }
+        
+    if($show)
+        {
+        debug("Unhiding collection " . $colref . " from user " . $user);
+        if(($key = array_search($colref, $hidden_collections)) !== false)
+            {
+            unset($hidden_collections[$key]);
+            }
+        }
+    else
+        {
+        debug("Hiding collection " . $colref . " from user " . $user);
+        if(($key = array_search($colref, $hidden_collections)) === false) 
+            {
+            $hidden_collections[]=$colref;
+            }
+        }
+    sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
+    return true;
+    }
 	
 /**
  * Get an array of collection IDs for the specified ResourceSpace session and user
@@ -6023,8 +6028,20 @@ function send_collection_to_admin(int $collection)
         {
         return false;
         }
-    
+       
     global $lang, $userref, $applicationname, $baseurl, $admin_resource_access_notifications;
+    
+    // Get details about the collection:
+    $collectiondata = get_collection($collection);
+    $collection_name = $collectiondata['name'];
+    $resources_in_collection = count(get_collection_resources($collection));
+
+    // Only do this if it is the user's own collection
+    if($collectiondata['user'] != $userref)
+        {
+        return false;
+        }
+
     $collectionsent = false;
     // Create a copy of the collection for admin:
     $admin_copy = create_collection(-1, $lang['send_collection_to_admin_emailedcollectionname']);
@@ -6041,11 +6058,6 @@ function send_collection_to_admin(int $collection)
         {
         $user = $user['username'];
         }
-
-    // Get details about the collection:
-    $collection = get_collection($collection_id);
-    $collection_name = $collection['name'];
-    $resources_in_collection = count(get_collection_resources($collection_id));
 
     // Build mail and send it:
     $subject = $applicationname . ': ' . $lang['send_collection_to_admin_emailsubject'] . $user;
