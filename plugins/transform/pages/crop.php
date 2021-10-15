@@ -196,7 +196,7 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 if ($saveaction != '' && enforcePostRequest(false))
     {
-    $actions["repage"] = $cropper_use_repage;
+    $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
     $width       = getvalescaped('width',0,true);
