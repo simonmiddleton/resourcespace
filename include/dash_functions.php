@@ -1109,7 +1109,7 @@ function get_user_dash($user)
 	global $baseurl,$baseurl_short,$lang,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
 
 	#Build User Dash and recalculate order numbers on display
-	$user_tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+	$user_tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user=? ORDER BY user_dash_tile.order_by",array("i",$user));
 
 	$order=10;
 	foreach($user_tiles as $tile)

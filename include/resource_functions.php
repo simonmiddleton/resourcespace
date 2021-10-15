@@ -3228,24 +3228,26 @@ function get_resource_types($types = "", $translate = true)
     {
     # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
     // support getting info for a comma-delimited list of restypes (as in a search)
+    $parameters=array();
     if ($types==""){$sql="";} else
         {
         # Ensure $types are suitably quoted and escaped
         $cleantypes="";
         $s=explode(",",$types);
+        
         foreach ($s as $type)
             {
             if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
                 {
-                if (strpos($type,"'")===false) {$type="'" . $type . "'";}
                 if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.=$type;
+                $cleantypes.="?";
+                $parameters[]="i";$parameters[]=$type;
                 }
             }
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select *, colour, icon from resource_type $sql order by order_by,ref","schema");
+    $r=ps_query("select *, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -3718,7 +3720,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","", "schema"),"resourcetype-");
+	return lang_or_i18n_get_translated(ps_value("select name value from resource_type where ref=?",array("i",$type), "schema"),"resourcetype-");
 	}
 	
 function get_resource_custom_access($resource)
