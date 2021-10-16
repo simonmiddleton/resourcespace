@@ -675,7 +675,9 @@ function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true, $fetchrows=-1)
         {
         $stmt->store_result();
         }
-    $fields = $stmt->result_metadata()->fetch_fields();
+    $metadata=$stmt->result_metadata();
+    if ($metadata===false) {return true;} // Did not return a result set, execution of an update/insert etc.
+    $fields = $metadata->fetch_fields();
     $args = array();
     foreach($fields AS $field)
         {
