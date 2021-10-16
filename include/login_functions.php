@@ -49,7 +49,7 @@ function perform_login($loginuser="",$loginpass="")
                 trigger_error('Failed to rehash password!');
                 }
 
-            sql_query(sprintf("UPDATE user SET `password` = '%s' WHERE ref = '%s'", escape_check($password_hash), escape_check($user_ref)));
+            ps_query("UPDATE user SET `password` = ? WHERE ref = ?", array("s",$password_hash,"i",$user_ref));
             }
         else
             {
@@ -111,16 +111,16 @@ function perform_login($loginuser="",$loginpass="")
         $result['password_hash'] = $password_hash;
         $result['ref'] = $userref;
 
-        $session_hash_sql="session='".escape_check($session_hash)."',";
+        
         $language = getvalescaped("language", "");
-		sql_query("
+		ps_query("
             UPDATE user
-               SET {$session_hash_sql}
+               SET session=?,
                    last_active = NOW(),
                    login_tries = 0,
-                   lang = '{$language}'
-             WHERE ref = '{$userref}'
-        ");
+                   lang = ?
+             WHERE ref = ?
+        ", array("s",$session_hash,"s",$language,"i",$userref));
 
         // Update user local time zone (if provided)
         $get_user_local_timezone = getval('user_local_timezone', null);
@@ -131,7 +131,7 @@ function perform_login($loginuser="",$loginpass="")
         log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
 
         # Blank the IP address lockout counter for this IP
-        sql_query("DELETE FROM ip_lockout WHERE ip = '" . escape_check($ip) . "'");
+        ps_query("DELETE FROM ip_lockout WHERE ip = ?",array("s",$ip));
 
         return $result;
         }
@@ -143,12 +143,12 @@ function perform_login($loginuser="",$loginpass="")
   hook("loginincorrect");
 
 	# Add / increment a lockout value for this IP
-	$lockouts=sql_value("select count(*) value from ip_lockout where ip='" . escape_check($ip) . "' and tries<'" . $max_login_attempts_per_ip . "'","");
+	$lockouts=ps_value("select count(*) value from ip_lockout where ip=? and tries<?",array("s",$ip,"i",$max_login_attempts_per_ip),"");
 
 	if ($lockouts>0)
 		{
 		# Existing row with room to move
-		$tries=sql_value("select tries value from ip_lockout where ip='" . escape_check($ip) . "'",0);
+		$tries=ps_value("select tries value from ip_lockout where ip=?",array("s",$ip),0);
 		$tries++;
 		if ($tries==$max_login_attempts_per_ip)
 			{
@@ -156,17 +156,17 @@ function perform_login($loginuser="",$loginpass="")
 			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
 			}
 		# Increment
-		sql_query("update ip_lockout set last_try=now(),tries=tries+1 where ip='" . escape_check($ip) . "'");
+		ps_query("update ip_lockout set last_try=now(),tries=tries+1 where ip=?",array("s",$ip));
 		}
 	else
 		{
 		# New row
-		sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
-		sql_query("insert into ip_lockout (ip,tries,last_try) values ('" . escape_check($ip) . "',1,now())");
+		ps_query("delete from ip_lockout where ip=?",array("s",$ip));
+		ps_query("insert into ip_lockout (ip,tries,last_try) values (?,1,now())",array("s",$ip));
 		}
 
 	# Increment a lockout value for any matching username.
-	$ulocks=sql_query("select ref,login_tries,login_last_try from user where username='".escape_check($username)."'");
+	$ulocks=ps_query("select ref,login_tries,login_last_try from user where username=?",array("s",$username));
 	if (count($ulocks)>0)
 		{
 		$tries=$ulocks[0]["login_tries"];
@@ -177,7 +177,7 @@ function perform_login($loginuser="",$loginpass="")
 			# Show locked out message.
 			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
 			}
-		sql_query("update user set login_tries='$tries',login_last_try=now() where username='$username'");
+		ps_query("update user set login_tries=?,login_last_try=now() where username=?",array("i",$tries,"s",$username));
 		}
 
 	return $result;
@@ -195,8 +195,8 @@ function generate_session_hash($password_hash)
 		while (true)
 			{
 			$session=md5(rand() . microtime());
-			if (sql_value("select count(*) value from user where session='" . escape_check($session) . "'",0)==0) {return $session;} # Return a unique hash only.
-			}	
+			if (ps_value("select count(*) value from user where session=?",array("s",$session),0)==0) {return $session;} # Return a unique hash only.
+			}
 		}
 	else
 		{
@@ -205,9 +205,9 @@ function generate_session_hash($password_hash)
 		while (true)
 			{
 			$session=md5($scramble_key . $password_hash . date("Ymd") . $suffix);
-			if (sql_value("select count(*) value from user where session='" . escape_check($session) . "' and password<>'" . escape_check($password_hash) . "'",0)==0) {return $session;} # Return a unique hash only.
+			if (ps_value("select count(*) value from user where session=? and password<>?",array("s",$session,"s",$password_hash),0)==0) {return $session;} # Return a unique hash only.
 			$suffix.="."; # Extremely unlikely case that this was not a unique session (hash collision) - alter the string slightly and try again.
-			}	
+			}
 		}	
 		
 	}
@@ -253,7 +253,7 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
     # Set default resource types
     rs_setcookie('restypes', $default_res_types);
 
-    $userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($user) . "' AND parameter = 'colour_theme';") : FALSE;
+    $userpreferences = ($user_preferences) ? ps_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = ? AND parameter = 'colour_theme'",array("i",$user)) : FALSE;
     $userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
     if($userpreferences && isset($userpreferences["colour_theme"]) && $userpreferences["colour_theme"]!="" && (!isset($_COOKIE["colour_theme"]) || $userpreferences["colour_theme"]!=$_COOKIE["colour_theme"]))
         {
