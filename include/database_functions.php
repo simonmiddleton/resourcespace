@@ -514,6 +514,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         for($n=0;$n<count($parameters);$n+=2)
             {
             $types.=$parameters[$n];
+            if (!isset($parameters[$n+1])) {exit("Count of \$parameters array must be even (ensure types specified) for query: $sql");}
             $params_array[] = $parameters[$n+1];
             }
         mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
@@ -1032,7 +1033,8 @@ function sql_value($query, $default, $cache="")
 * 
 * @param string $query      SQL query
 * @param string $parameters SQL parameters with types, as for ps_query()
-* @param mixed  $default    Default value
+* @param mixed  $default    Default value to return if no rows returned
+* @param mixed  $cache      Cache category (optional)
 * 
 * @return string
 */
@@ -1048,6 +1050,34 @@ function ps_value($query, $parameters, $default, $cache="")
 
     return $result[0]["value"];
     }
+
+/**
+* Like ps_value() but returns an array of all values found
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses ps_query()
+* 
+* @param string $query      SQL query
+* @param string $parameters SQL parameters with types, as for ps_query()
+* @param mixed  $cache      Cache category (optional)
+* 
+* @return array
+*/
+function ps_array($query,$parameters,$cache="")
+	{
+	$return = array();
+
+    db_set_connection_mode("read_only");
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
+
+    for($n = 0; $n < count($result); $n++)
+    	{
+    	$return[] = $result[$n]["value"];
+    	}
+
+    return $return;
+	}
 
 /**
 * Like sql_value() but returns an array of all values found
