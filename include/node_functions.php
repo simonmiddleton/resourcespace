@@ -112,7 +112,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     if($returnexisting)
         {
         // Check for an existing match
-        $existingnode=sql_value("SELECT ref value FROM node WHERE resource_type_field ='" . escape_check($resource_type_field) . "' AND name ='" . escape_check($name) . "'",0);
+        $existingnode=ps_value("SELECT ref value FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name),0);
         if($existingnode > 0)
             {return (int)$existingnode;}
         }
@@ -123,7 +123,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         {
         if ($ref == null)
             {
-            return sql_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`='" . escape_check($resource_type_field) . "' AND `name`='" . escape_check($name) . "'",0);
+            return ps_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`=? AND `name`=?",array("i",$resource_type_field,"s",$name),0);
             }
         else
             {
@@ -159,8 +159,7 @@ function delete_node($ref)
         return;
         }
 
-    $query = "DELETE FROM node WHERE ref = '" . escape_check($ref) . "';";
-    sql_query($query);
+    ps_query("DELETE FROM node WHERE ref = ?",array("i",$ref));
 
     remove_all_node_keyword_mappings($ref);
 
@@ -184,7 +183,7 @@ function delete_nodes_for_resource_type_field($ref)
         trigger_error('$ref must be an integer greater than 0');
         }
 
-    sql_query("DELETE FROM node WHERE resource_type_field = '" . escape_check($ref) . "';");
+    ps_query("DELETE FROM node WHERE resource_type_field = ?",array("i",$ref));
 
     clear_query_cache("schema");
 
@@ -207,8 +206,7 @@ function get_node($ref, array &$returned_node)
         return false;
         }
 
-    $query = "SELECT * FROM node WHERE ref = '" . escape_check($ref) . "';";
-    $node  = sql_query($query,"schema");
+    $node  = ps_query("SELECT * FROM node WHERE ref = ?",array("i", $ref),"schema");
 
     if(count($node)==0)
         {
@@ -260,33 +258,28 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
 
     $return_nodes = array();
 
-    // Check if limiting is required
-    $limit = '';
+    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
+    $language_string_length = (strlen($language_in_use) + 2);
 
-    if(!is_null($offset) && is_int($offset)) # Offset specified
-        {
-        if(!is_null($rows) && is_int($rows)) # Row limit specified
-            {
-            $limit = "LIMIT {$offset},{$rows}";
-            }
-        else # Row limit absent
-            {
-            $limit = "LIMIT {$offset},999999999"; # Use a large arbitrary limit
-            }
-        }
-    else # Offset not specified
-        {
-        if(!is_null($rows) && is_int($rows)) # Row limit specified
-            {
-            $limit = "LIMIT {$rows}";
-            }
-        }
+    $parameters=
+        array
+        (
+        "s","~" . $language_in_use,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        "i",$resource_type_field
+        );
 
     // Filter by name if required
     $filter_by_name = '';
     if('' != $name)
         {
-        $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
+        $filter_by_name = " AND `name` LIKE ?";
+        $parameters[]="s";$parameters[]="%" . $name . "%";
         }
 
     // Option to include a usage count alongside each node
@@ -295,32 +288,56 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
         }
+  
 
+    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
+    if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
+    
     // Order by translated_name or order_by based on flag
     $order_by = $order_by_translated_name ? "translated_name" : "order_by";
-    
-    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
-    $language_string_length = (strlen($language_in_use) + 2);
 
-    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = '" . escape_check($parent) . "'");
-   
+    // Check if limiting is required
+    $limit = '';
+    if(!is_null($offset) && is_int($offset)) # Offset specified
+        {
+        if(!is_null($rows) && is_int($rows)) # Row limit specified
+            {
+            $limit = "LIMIT ?,?";
+            $parameters[]="i";$parameters[]=$offset;
+            $parameters[]="i";$parameters[]=$rows;
+            }
+        else # Row limit absent
+            {
+            $limit = "LIMIT ?,999999999"; # Use a large arbitrary limit
+            $parameters[]="i";$parameters[]=$offset;
+            }
+        }
+    else # Offset not specified
+        {
+        if(!is_null($rows) && is_int($rows)) # Row limit specified
+            {
+            $limit = "LIMIT ?";
+            $parameters[]="i";$parameters[]=$rows;
+            }
+        }
+        
     $query = "
         SELECT 
             *,
             CASE
                 WHEN
-                    POSITION('~" . $language_in_use . "' IN name) > 0
+                    POSITION(? IN name) > 0
                 THEN
                     TRIM(SUBSTRING(name,
-                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                            POSITION(? IN name) + ?,
                             CASE
                                 WHEN
                                     POSITION('~' IN SUBSTRING(name,
-                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                                            POSITION(? IN name) + ?,
                                             LENGTH(name) - 1)) > 0
                                 THEN
                                     POSITION('~' IN SUBSTRING(name,
-                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                                            POSITION(? IN name) + ?,
                                             LENGTH(name) - 1)) - 1
                                 ELSE LENGTH(name)
                             END))
@@ -328,13 +345,13 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
             END AS translated_name
             " . $use_count_sql . "
         FROM node 
-        WHERE resource_type_field = " . escape_check($resource_type_field) . "
+        WHERE resource_type_field = ?
         " . $filter_by_name . "
         AND " . $parent_sql . "
         ORDER BY " . $order_by . " ASC
         " . $limit;
 
-    $nodes = sql_query($query,"schema");
+    $nodes = ps_query($query,$parameters,"schema");
 
     foreach($nodes as $node)
         {
@@ -1442,8 +1459,8 @@ function delete_all_resource_nodes($resourceid)
 * Copy resource nodes from one resource to another
 * 
 * @uses escape_check()
-* @uses sql_array()
-* @uses sql_query()
+* @uses ps_array()
+* @uses ps_query()
 * 
 * @param integer $resourcefrom Resource we are copying data from
 * @param integer $resourceto   Resource we are copying data to
@@ -1460,7 +1477,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     // NOTE: this does not apply to user template resources (negative ID resource)
     if($resourcefrom > 0)
         {
-        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
+        $omitfields      = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
         if (count($omitfields) > 0)
             {
             $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
