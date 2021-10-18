@@ -1067,14 +1067,17 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 
     $keyword_ref = resolve_keyword($keyword, true);
 
+    $parameters=array("i",$node,"i",$keyword_ref);
     $position_sql = '';
     if('' != trim($position))
         {
-        $position_sql = " AND position = '" . escape_check($position) . "'";
+        $position_sql = " AND position = ?";
+        $parameters[]="i";$parameters[]=$position;
         }
 
-    sql_query("DELETE FROM node_keyword WHERE node = '" . escape_check($node) . "' AND keyword = '" . escape_check($keyword_ref) . "' $position_sql");
-    sql_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = '" . escape_check($keyword_ref) . "'");
+    ps_query("DELETE FROM node_keyword WHERE node = ? AND keyword = ? $position_sql",$parameters);
+    
+    ps_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = ?",array("i",$keyword_ref));
 
     log_activity("Keyword ID {$keyword_ref} removed for node ID #{$node}", LOG_CODE_DELETED, null, 'node_keyword', null, null, null, $keyword);
 
@@ -1093,7 +1096,7 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 */
 function remove_all_node_keyword_mappings($node)
     {
-    sql_query("DELETE FROM node_keyword WHERE node = '" . escape_check($node) . "'");
+    ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
     clear_query_cache("schema");
 
     return;
@@ -1115,7 +1118,7 @@ function check_node_indexed(array $node, $partial_index = false)
         return;
         }
 
-    $count_indexed_node_keywords = sql_value("SELECT count(node) AS 'value' FROM node_keyword WHERE node = '" . escape_check($node['ref']) . "'", 0);
+    $count_indexed_node_keywords = ps_value("SELECT count(node) AS 'value' FROM node_keyword WHERE node = ?", array("i", $node['ref']), 0);
     $keywords                    = split_keywords($node['name'], true, $partial_index);
 
     if($count_indexed_node_keywords == count($keywords))
