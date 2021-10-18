@@ -6113,7 +6113,7 @@ function send_collection_to_admin(int $collection)
 function get_default_user_collection($setactive=false)
     {
     global $userref;
-    $usercollection=sql_value("SELECT ref value FROM collection WHERE user='$userref' AND name LIKE 'Default Collection%' ORDER BY created ASC LIMIT 1",0);
+    $usercollection=sql_value("SELECT ref value FROM collection WHERE user='" . (int)$userref . "' AND name LIKE 'Default Collection%' ORDER BY created ASC LIMIT 1",0);
     if ($usercollection == 0)
         {
         # Create a collection for this user
@@ -6123,7 +6123,7 @@ function get_default_user_collection($setactive=false)
     if($setactive)
         {
         # set this to be the user's current collection
-        sql_query("UPDATE user SET current_collection='$usercollection' where ref='$userref'");
+        sql_query("UPDATE user SET current_collection='" . (int)$usercollection . "' where ref='" . (int)$userref . "'");
 		set_user_collection($userref,$usercollection);
         }
     return $usercollection;
