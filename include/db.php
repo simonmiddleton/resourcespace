@@ -243,7 +243,7 @@ if ($use_plugins_manager)
                         "s",$p_y['info_url'],
                         "s",$p_y['update_url'],
                         "s",$p_y['config_url'],
-                        "s",$p_y['config_url'],
+                        "s",$p_y['priority'],
                         "s",$p_y['disable_group_select'],
                         "s",$p_y['title'],
                         "s",$p_y['icon']
