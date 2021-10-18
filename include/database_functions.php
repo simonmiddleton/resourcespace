@@ -514,7 +514,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         for($n=0;$n<count($parameters);$n+=2)
             {
             $types.=$parameters[$n];
-            if (!isset($parameters[$n+1])) {exit("Count of \$parameters array must be even (ensure types specified) for query: $sql");}
+            if (!array_key_exists($n+1,$parameters)) {exit("Count of \$parameters array must be even (ensure types specified) for query: $sql" . print_r($parameters,true));}
             $params_array[] = $parameters[$n+1];
             }
         mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 

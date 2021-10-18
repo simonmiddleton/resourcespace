@@ -54,12 +54,14 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);
         }
 
-    $query = sprintf("INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES ('%s', '%s', %s, '%s')",
-        escape_check($resource_type_field),
-        escape_check($name),
-        ('' == trim($parent) ? 'NULL' : "'" . escape_check($parent) . "'"),
-        escape_check($order_by)
-    );
+    $query = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES (?, ?, ?, ?)";
+    $parameters=array  
+        (
+        "i",$resource_type_field,
+        "s",$name,
+        "i",(trim($parent)=="" ? NULL : $parent),
+        "s",$order_by
+        );
 
     // Check if we only need to save the record
     $current_node = array();
@@ -89,20 +91,22 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             $order_by = $current_node['order_by'];
             }
 
-        $query = sprintf("
+        $query = "
                 UPDATE node
-                   SET resource_type_field = '%s',
-                       `name` = '%s',
-                       parent = %s,
-                       order_by = '%s'
-                 WHERE ref = '%s'
-            ",
-            escape_check($resource_type_field),
-            escape_check($name),
-            (trim($parent)=="" ? 'NULL' : '\'' . escape_check($parent) . '\''),
-            escape_check($order_by),
-            escape_check($ref)
-        );
+                   SET resource_type_field = ?,
+                       `name` = ?,
+                       parent = ?,
+                       order_by = ?
+                 WHERE ref = ?
+            ";
+        $parameters=array  
+                (
+                "i",$resource_type_field,
+                "s",$name,
+                "i",(trim($parent)=="" ? NULL : $parent),
+                "s",$order_by,
+                "i",$ref
+                );
 
         // Handle node indexing for existing nodes
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), NULL);
@@ -117,7 +121,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             {return (int)$existingnode;}
         }
 
-    sql_query($query);
+    ps_query($query,$parameters);
     $new_ref = sql_insert_id();
     if ($new_ref == 0 || $new_ref === false)
         {
