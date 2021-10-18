@@ -1505,3 +1505,32 @@ function sql_truncate_text_val(string $v, int $len)
 
     return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
     }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in outputting the correct number of parameters. 
+* 
+* @param integer $count How many parameters to insert, e.g. 3 returns "?,?,?"
+* 
+* @return string
+*/
+function ps_param_insert($count)
+    {
+    return join(",",array_fill(0,$count,"?"));
+    }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in preparing the parameter array. 
+* 
+* @param integer $count How many parameters to insert, e.g. 3 returns "?,?,?"
+* 
+* @return array
+*/
+function ps_param_fill($array,$type)
+{
+$parameters=array();
+foreach ($array as $a)
+    {
+    $parameters[]=$type;$parameters[]=$a;
+    }
+return $parameters;
+}

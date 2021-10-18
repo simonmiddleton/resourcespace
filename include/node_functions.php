@@ -389,8 +389,9 @@ function get_nodes_by_refs(array $refs)
         return [];
         }
 
-    $query = "SELECT * FROM node WHERE ref IN ('" . implode('\', \'', $refs) . "')";
-    return sql_query($query, "schema");
+    $query = "SELECT * FROM node WHERE ref IN (" . ps_param_insert(count($refs)) . ")";
+    $parameters = ps_param_fill($refs,"i");
+    return ps_query($query, $parameters, "schema");
     }
 
 
