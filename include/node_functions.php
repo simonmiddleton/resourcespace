@@ -1665,14 +1665,16 @@ function get_parent_nodes($noderef)
 */
 function get_nodes_count($resource_type_field, $name = '')
     {
-    $resource_type_field = escape_check($resource_type_field);
-    $filter_by_name = '';
+    $query="SELECT count(ref) AS `value` FROM node WHERE resource_type_field = ?";
+    $parameters=array("i",$resource_type_field);
+
     if('' != $name)
         {
-        $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
+        $query .= " AND `name` LIKE ?";
+        $parameters[]="s";$parameters[]="%" . $name . "%";
         }
 
-    return (int) sql_value("SELECT count(ref) AS `value` FROM node WHERE resource_type_field = '{$resource_type_field}'{$filter_by_name}", 0);
+    return (int) ps_value($query,$parameters, 0);
     }
 
 /**
@@ -1769,7 +1771,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'","schema");
+    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value), "schema");
     if (count($node)>0)
         {
         return $node[0]["ref"];
