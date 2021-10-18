@@ -19,6 +19,10 @@ if(strpos($size,"x") !== false)
     {
     $size = explode("x",$size);
     }
+else
+    {
+    $size = strtoupper($size);
+    }
 $columns           = getvalescaped('columns', 1);
 $order_by          = getvalescaped('orderby', 'relevance');
 $sort              = getvalescaped('sort', 'asc');
