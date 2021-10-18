@@ -394,7 +394,7 @@ function get_session_api_key($user)
     {
     global $scramble_key;
     $private_key = get_api_key($user);
-    $usersession = sql_value("SELECT session value FROM user where ref ='" . $user . "'", "");
+    $usersession = ps_value("SELECT session value FROM user where ref = ?", array("i",$user), "");
     return hash_hmac("sha256", "{$usersession}{$private_key}", $scramble_key);
     }
 
