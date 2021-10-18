@@ -2408,9 +2408,6 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   ?>
   <script>
   preventautoscroll = true;
-  var errorHeading='<?php echo $lang["error"]; ?>';
-  
-  var errorBody='<?php echo offset_user_local_timezone($error_datetime, 'Y-m-d H:i:s')."<br />".implode("<br />",$save_errors); ?>';
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
@@ -2418,7 +2415,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
     {
     error_fields[0].scrollIntoView();
     }
-  styledalert(errorHeading, errorBody, 450);
+    styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
   <?php
   }
