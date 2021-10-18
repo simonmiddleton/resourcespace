@@ -61,7 +61,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 $search_title_element=explode(":", search_title_node_processing($refinements[$n]));
                 if (isset($search_title_element[1]))
                     {
-                    $datefieldinfo=sql_query("select ref from resource_type_field where name='" . trim(escape_check($search_title_element[0])) . "' and type IN (4,6,10)", "schema");
+                    $datefieldinfo=ps_query("select ref from resource_type_field where name=? and type IN (4,6,10)", array("s",trim($search_title_element[0])), "schema");
 
                     if (count($datefieldinfo)) 
                         {
@@ -95,11 +95,11 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 if (is_numeric($search_title_elementq))
                     {
                     $fref=$search_title_elementq;
-                    $ftitle=sql_value("select title value from resource_type_field where ref='" .$search_title_elementq . "'","", "schema");
+                    $ftitle=ps_value("select title value from resource_type_field where ref=?",array("i",$search_title_elementq),"", "schema");
                     }
                 else
                     {
-                    $ftitleref=sql_query("select title,ref from resource_type_field where name='" . $search_title_elementq . "'", "schema");
+                    $ftitleref=ps_query("select title,ref from resource_type_field where name=?", array("s",$search_title_elementq), "schema");
                     if (!isset($ftitleref[0]))
                         {
                         exit ("invalid !empty search. No such field: $search_title_elementq");
@@ -157,7 +157,7 @@ if ($search_titles)
         $alt_text = '';
         if ($pagename=="search" && isset($collectiondata['savedsearch']) && $collectiondata['savedsearch']!='')
             {
-            $smartsearch = sql_query("select * from collection_savedsearch where ref=".$collectiondata['savedsearch']);
+            $smartsearch = ps_query("select * from collection_savedsearch where ref=?",array("i",$collectiondata['savedsearch']));
             if (isset($smartsearch[0]))
                 {
                 $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "&starsearch=" . $smartsearch[0]['starsearch'] . "'";
