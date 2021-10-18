@@ -409,8 +409,9 @@ function is_parent_node($ref)
         return false;
         }
 
-    $query = "SELECT exists (SELECT ref from node WHERE parent = '" . escape_check($ref) . "') AS value;";
-    $parent_exists = sql_value($query, 0);
+    $query = "SELECT exists (SELECT ref from node WHERE parent = ?) AS value;";
+    $parameters = array("i",$ref);
+    $parent_exists = ps_value($query, $parameters, 0);
 
     if($parent_exists > 0)
         {
@@ -440,8 +441,9 @@ function get_tree_node_level($ref)
 
     do
         {
-        $query  = "SELECT parent AS value FROM node WHERE ref = '" . $parent . "';";
-        $parent = sql_value($query, 0);
+        $query  = "SELECT parent AS value FROM node WHERE ref = ?";
+        $parameters = array("i",$parent);
+        $parent = ps_value($query, $parameters, 0);
 
         $depth_level++;
         }
@@ -526,14 +528,18 @@ function reorder_node(array $nodes_new_order)
     $order_by = 10;
 
     $query = 'UPDATE node SET order_by = (CASE ref ';
+    $parameters = array();
+
     foreach($nodes_new_order as $node_ref)
         {
-        $query    .= 'WHEN \'' . $node_ref . '\' THEN \'' . $order_by . '\' ';
+        $query    .= 'WHEN ? THEN ? ';
+        $parameters[]="i";$parameters[]=$node_ref;
+        $parameters[]="i";$parameters[]=$order_by;
         $order_by += 10;
         }
     $query .= 'ELSE order_by END);';
 
-    sql_query($query);
+    ps_query($query,$parameters);
     clear_query_cache("schema");
 
     return;
@@ -709,17 +715,27 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
     {
     $order_by = 10;
 
-    $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = '" . escape_check($resource_type_field) . "' ORDER BY order_by ASC;";
-    $nodes_counter = sql_value($query, 0);
+    $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ? ORDER BY order_by ASC;";
+    $parameters     = array("i",$resource_type_field);
+    $nodes_counter = ps_value($query, $parameters, 0);
 
     if($is_tree)
         {
-        $query = sprintf('SELECT COUNT(*) AS value FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC;',
-            escape_check($resource_type_field),
-            (trim($parent)=="") ? 'parent IS NULL' : 'parent = \'' . escape_check($parent) . '\''
-        );
+        $query = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ?";
+        $parameters=array("i",$resource_type_field);
 
-        $nodes_counter = sql_value($query, 0);
+        if (trim($parent)=="")
+            {
+            $query.=" AND parent IS NULL ";
+            }
+        else    
+            {
+            $query.=" AND parent = ? ";
+            $parameters=array("i",$parent);
+            }
+        $query.="ORDER BY order_by ASC;";
+        
+        $nodes_counter = ps_value($query, $parameters, 0);
         }
 
     if(0 < $nodes_counter)
@@ -1012,8 +1028,8 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
 
     $keyword_ref = resolve_keyword($keyword, true,$normalize,false); // We have already stemmed
 
-    sql_query("INSERT INTO node_keyword (node, keyword, position) VALUES ('" . escape_check($node) . "', '" . escape_check($keyword_ref) . "', '" . escape_check($position) . "')");
-    sql_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = '" . escape_check($keyword_ref) . "'");
+    ps_query("INSERT INTO node_keyword (node, keyword, position) VALUES (?, ?, ?)",array("i",$node,"i",$keyword_ref,"i",$position));
+    ps_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = ?",array("i",$keyword_ref));
 
     log_activity("Keyword {$keyword_ref} added for node ID #{$node}", LOG_CODE_CREATED, $keyword, 'node_keyword');
 
