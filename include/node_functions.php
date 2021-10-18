@@ -1475,7 +1475,7 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
  */
 function delete_all_resource_nodes($resourceid)
     {
-    sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");  
+    ps_query("DELETE FROM resource_node WHERE resource = ?",array("i",$resourceid));  
     }
 
 
@@ -1534,9 +1534,8 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 function get_nodes_from_keywords($keywords=array())
     {
     if(!is_array($keywords)){$keywords=array($keywords);}
-    return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");"); 
+    return ps_array("select node value FROM node_keyword WHERE keyword in (" . ps_param_insert(count($keywords)) . ")",ps_param_fill($keywords,"i")); 
     }
-
     
 /**
  * For the specified $resource, increment the hitcount for each node in array
@@ -1641,7 +1640,7 @@ function get_parent_nodes($noderef)
     $topnode=false;
     do
         {
-        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ", "schema");
+        $node=ps_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref=?", array("i",$noderef), "schema");
         if(empty($node[0]["parent"]))
             {
             $topnode=true;
