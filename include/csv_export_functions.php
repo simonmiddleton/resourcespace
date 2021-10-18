@@ -35,7 +35,10 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     $csv_field_headers["resource_type"] = $lang["resourcetype"];
     $csv_field_headers["status"] = $lang['status'];
     $csv_field_headers["created_by"] = $lang["contributedby"];
-    $csv_field_headers["file_checksum"] = $lang["filechecksum"];
+    if($file_checksums && $alldata)
+        {
+        $csv_field_headers["file_checksum"] = $lang["filechecksum"];
+        }
     // Add original size URL column
     if($csv_export_add_original_size_url_column)
         {
