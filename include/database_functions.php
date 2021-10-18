@@ -685,7 +685,7 @@ function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true, $fetchrows=-1)
         $key = str_replace(' ', '_', $field->name); // space may be valid SQL, but not PHP
         $args[$key] = &$field->name; // this way the array key is also preserved
         }
-    call_user_func_array(array($stmt, "bind_result"), $args);
+    call_user_func_array(array($stmt, "bind_result"), array_values($args));
     $results = array();
     $count=0;
     while($stmt->fetch() && ($fetchrows==-1 || $count<$fetchrows))
