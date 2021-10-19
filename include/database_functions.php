@@ -506,7 +506,11 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
             if($prepared_statement_cache[$sql]===false)
                 {
-                errorhandler("N/A", "Bad prepared SQL statement<br/><br/>" . $sql, "(database)", "N/A");
+                $error="Bad prepared SQL statement: " . $sql;
+                if (!$dbstruct) // if the second pass, this still didn't work after checking dbstruct, throw a proper error.
+                    {
+                    errorhandler("N/A", $error, "(database)", "N/A");
+                    }
                 }
             }
         $params_array = array();
@@ -517,14 +521,17 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             if (!array_key_exists($n+1,$parameters)) {trigger_error("Count of \$parameters array must be even (ensure types specified) for query: $sql" . print_r($parameters,true));}
             $params_array[] = $parameters[$n+1];
             }
-        mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
-        mysqli_stmt_execute($prepared_statement_cache[$sql]);
-        $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+        if (!(isset($error) && $error!=""))
+            {
+            mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
+            mysqli_stmt_execute($prepared_statement_cache[$sql]);
+            $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+            }
         if ($error=="")
             {
             $result=fetch_assoc_stmt($prepared_statement_cache[$sql],true,$fetchrows);
+            $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
             }
-        $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
         }
     else    
         {
