@@ -6123,7 +6123,7 @@ function get_default_user_collection($setactive=false)
     if($setactive)
         {
         # set this to be the user's current collection
-        ps_query("UPDATE user SET current_collection='?' where ref='?'",array("i",$usercollection,"i",$userref));
+        ps_query("UPDATE user SET current_collection=? where ref=?",array("i",$usercollection,"i",$userref));
 		set_user_collection($userref,$usercollection);
         }
     return $usercollection;
