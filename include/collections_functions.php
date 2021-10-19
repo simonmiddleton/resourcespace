@@ -1351,9 +1351,26 @@ function save_collection($ref, $coldata=array())
             sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
-        #log this
-        collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
-		
+
+        # log this only if a user is being added
+        if($coldata["users"]!="")
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
+            }
+        
+        # log the removal of users / smart groups
+        $was_shared_with = array();
+        $was_shared_with = sql_array("select username value from user where ref in ('" . escape_check(join("','",$old_attached_users)) . "')");
+        if (count($old_attached_groups) > 0)
+            {
+            foreach($old_attached_groups as $old_group)
+            $was_shared_with[] = "Group (Smart): " . sql_value("select name value from usergroup where ref='" . escape_check($old_group) . "'","");
+            }
+        if (count($urefs) == 0 && count($was_shared_with) > 0)
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
+            }
+
         if($attach_user_smart_groups)
             {
             $groups=resolve_userlist_groups_smart($users);
