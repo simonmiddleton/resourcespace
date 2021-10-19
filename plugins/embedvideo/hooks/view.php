@@ -50,8 +50,10 @@ function HookEmbedvideoViewAfterresourceactions()
             class="Picture"
             poster="' . $thumb . '">
             <source src="' . $flashpath . '" type="video/' . $ffmpeg_preview_extension . '" >
-            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-        </video>');
+            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>');
+        echo "\n";
+        echo htmlspecialchars(hook("html5videoextra"));
+        echo "</video>";
         } // end hook replaceembedcode
     ?>
     </textarea>
