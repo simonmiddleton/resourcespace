@@ -1386,7 +1386,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     if(!is_numeric($ref))
@@ -1509,7 +1509,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $ps = array_values($ps);
             }
             
-        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes))
+        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
+            && !in_array($extension, config_merge_non_image_types())
+            )
             {
             // Ensure that scales are in order
             natsort($preview_tile_scale_factors);
