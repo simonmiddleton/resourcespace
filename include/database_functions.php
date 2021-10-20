@@ -360,15 +360,13 @@ function db_rollback_transaction($name)
 /**
  * Execute a prepared statement and return the results as an array.
  * 
- * Database functions are wrapped in this way so supporting a database server other than MySQL is easier.
- *
- * @param  mixed $sql						The SQL to execute
- * @param  mixed $parameters				An array of paremters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s"=>"This is the first SQL parameter and is a string","d"=>"This is the second parameter which is a double")
- * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
- * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
- * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
- * @param  mixed $reconnect
+ * @param  string $sql						The SQL to execute
+ * @param  string $parameters				An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d","This is the second parameter which is a double")
+ * @param  string $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  integer $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  boolean $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  integer $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  boolean $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
  */
@@ -1036,7 +1034,7 @@ function sql_value($query, $default, $cache="")
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param string $query      SQL query
 * @param string $parameters SQL parameters with types, as for ps_query()
