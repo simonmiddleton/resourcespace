@@ -64,7 +64,7 @@ foreach($options as $option_name => $option_value)
 
     if(in_array($option_name, ['g', 'glue']) && is_string($option_value) && trim($option_value) !== '')
         {
-        $glue = trim($option_value);
+        $glue = $option_value;
         }
     }
 
