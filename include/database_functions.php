@@ -1039,7 +1039,7 @@ function sql_value($query, $default, $cache="")
 * @param string $query      SQL query
 * @param string $parameters SQL parameters with types, as for ps_query()
 * @param mixed  $default    Default value to return if no rows returned
-* @param mixed  $cache      Cache category (optional)
+* @param string  $cache      Cache category (optional)
 * 
 * @return string
 */
@@ -1065,7 +1065,7 @@ function ps_value($query, $parameters, $default, $cache="")
 * 
 * @param string $query      SQL query
 * @param string $parameters SQL parameters with types, as for ps_query()
-* @param mixed  $cache      Cache category (optional)
+* @param string  $cache      Cache category (optional)
 * 
 * @return array
 */
