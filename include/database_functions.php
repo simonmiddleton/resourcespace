@@ -673,7 +673,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
 * @param buffer     Whether to buffer the result set; if true, results are freed at end of function
 * @param fetchrows  The maximum numbers of rows to return; results will be truncated if necessary
 
-* @return An array, possibly empty, containing one associative array per result row
+* @return An array, possibly empty, containing one associative array per result row OR true if there was no result set.
 */
 function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true, $fetchrows=-1)
     {
