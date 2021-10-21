@@ -282,3 +282,8 @@ function HookResourceconnectAllCountresult($collection,$count)
 	return $count+sql_value("select count(*) value from resourceconnect_collection_resources where collection='$collection'",0);
 
 	}
+
+function HookResourceConnectAllgetRemoteResources($collection)
+    {
+    return count(sql_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection='". escape_check($collection) ."'"));
+    }
