@@ -10,6 +10,8 @@ if('cli' != PHP_SAPI)
     exit('Access denied - Command line only!');
     }
 
+set_time_limit(0);
+
 $help_text = "NAME
     merge_rs_systems - a tool for merging two ResourceSpace systems.
 
