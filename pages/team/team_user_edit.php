@@ -88,8 +88,11 @@ if (!checkperm_user_edit($user))
     exit();
     }
 
-include "../../include/header.php";
-
+// Block this from running if we are logging in as a user because running this here will block db.php from setting headers
+if(getval('loginas', '') === '')
+    {
+    include "../../include/header.php";
+    }
 
 
 // Log in as this user. A user key must be generated to enable login using the MD5 hash as the password.
@@ -103,19 +106,18 @@ if(getval('loginas', '') != '')
     );
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $userref, false);
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $user['ref'], false);
-    ?>
-    <form method="post" action="<?php echo $baseurl_short?>login.php" id="autologin">
-        <?php generateFormToken("autologin"); ?>
-        <input type="hidden" name="username" value="<?php echo $user["username"]?>">
-        <input type="hidden" name="password" value="<?php echo $user["password"]?>">
-        <input type="hidden" name="userkey" value="<?php echo md5(escape_check($user["username"]) . $scramble_key)?>">
-        <noscript><input type="submit" value="<?php echo $lang["login"]?>"></noscript>
-    </form>
-    <script type="text/javascript">
-    document.getElementById("autologin").submit();
-    </script>
-    <?php
+
+    global $CSRF_token_identifier, $usersession;
+
+    $_POST                         = [];
+    $_POST['username']             = $user['username'];
+    $_POST['password']             = $user["password"];
+    $_POST['userkey']              = md5(escape_check($user["username"]) . $scramble_key);
+    $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
+
+    include __DIR__ . '/../../login.php';
     exit();
+
     }
 ?>
 <div class="BasicsBox">
