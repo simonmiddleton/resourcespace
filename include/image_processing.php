@@ -1654,7 +1654,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             else
                 {
-                $flatten = "-flatten";
+                $flatten = "-background white -flatten";
                 }
 
             $addcheckbdpre = "";
