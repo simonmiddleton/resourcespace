@@ -10,8 +10,6 @@ if('cli' != PHP_SAPI)
     exit('Access denied - Command line only!');
     }
 
-set_time_limit(0);
-
 $help_text = "NAME
     merge_rs_systems - a tool for merging two ResourceSpace systems.
 
@@ -140,6 +138,7 @@ foreach($options as $option_name => $option_value)
 
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
+set_time_limit(0);
 
 $get_file_handler = function($file_path, $mode)
     {
