@@ -1090,6 +1090,8 @@ if($import && isset($folder_path))
         // This is merged as a new field
         if(is_null($mapped_rtf_ref))
             {
+            $db_rtf_known_columns = array_column(sql_query('DESCRIBE resource_type_field', '', -1, false), 'Field');
+
             db_begin_transaction(TX_SAVEPOINT);
             $new_rtf_ref = create_resource_type_field(
                 $src_rtf["title"],
@@ -1108,8 +1110,13 @@ if($import && isset($folder_path))
             $sql = "";
             foreach($src_rtf as $column => $value)
                 {
-                // Ignore columns that have been used for creating this field
-                if(in_array($column, array("ref", "name", "title", "type", "keywords_index", "resource_type")))
+                if(
+                    // SRC may be very old and contain columns no longer in use which are unavailable on DEST
+                    !in_array($column, $db_rtf_known_columns)
+
+                    // Ignore columns that have been used for creating this field
+                    || in_array($column, array("ref", "name", "title", "type", "keywords_index", "resource_type"))
+                )
                     {
                     continue;
                     }
