@@ -2257,7 +2257,7 @@ if ($multiple && !$disable_geocoding)
             map3.setView([geoLat, geoLong], currentZoom);
         });
     </script>
-
+    </div>
     <div class="clearerleft"> </div> <?php
     hook("locationextras");
     }
