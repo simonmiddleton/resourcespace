@@ -42,7 +42,7 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         $fieldinfo = get_resource_type_field($action_dates_restrictfield);
-        echo "action_dates: Checking restrict action field ".$fieldinfo["title"]." [".$action_dates_restrictfield."]".$LINE_END;
+        echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
 
         $restrict_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource "
             . ($eligible_states_list == "" ? "" : "AND r.archive IN ({$eligible_states_list})")    
@@ -84,7 +84,7 @@ function HookAction_datesCronCron()
         $change_archive_state = false;
 
         $fieldinfo = get_resource_type_field($action_dates_deletefield);
-        echo "action_dates: Checking state action field ".$fieldinfo["title"]." [".$action_dates_deletefield."]".$LINE_END;
+        echo "action_dates: Checking state action field $action_dates_deletefield.".$LINE_END;
 
         if($action_dates_reallydelete)
             {
@@ -242,7 +242,6 @@ function HookAction_datesCronCron()
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
-            echo "Sending email to " . $admin_notify_email . $LINE_END;
             send_mail($admin_notify_email,$applicationname . ": " . $subject_combined,$message_combined,"","","emailproposedchanges",$templatevars);    
             }
                 
@@ -270,7 +269,6 @@ function HookAction_datesCronCron()
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
-            echo "Sending email to " . $admin_notify_email . $LINE_END;
             send_mail($admin_notify_email,$applicationname . ": " . $subject_state,$message_state,"","","emailproposedchanges",$templatevars);    
             }
                 
@@ -293,7 +291,6 @@ function HookAction_datesCronCron()
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
-            echo "Sending email to " . $admin_notify_email . $LINE_END;
             send_mail($admin_notify_email,$applicationname . ": " . $subject_restrict,$message_restrict,"","","emailproposedchanges",$templatevars);    
             }
                 
@@ -314,7 +311,7 @@ function HookAction_datesCronCron()
         $newstatus = $action_dates_extra_config_setting["status"];
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
-            echo "action_dates: Checking extra action dates for field ".$datefield["title"]." [".$datefield["ref"]."]".$LINE_END;
+            echo "action_dates: Checking extra action dates for field $datefield.".$LINE_END;
             $additional_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource WHERE r.ref > 0 AND rd.resource_type_field = '$field' AND rd.value <>'' AND rd.value IS NOT null AND r.archive<>'$resource_deletion_state' AND r.archive<>'$newstatus'");
             
             foreach ($additional_resources as $resource)
