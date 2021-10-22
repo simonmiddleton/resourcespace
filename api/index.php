@@ -66,7 +66,6 @@ if($function != "login")
             {
             ajax_permission_denied();
             }
-        debug("API: set up user '{$user}' signed with '{$sign}'");
         }
     }
 # Run the requested query

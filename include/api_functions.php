@@ -87,15 +87,15 @@ function execute_api_call($query,$pretty=false)
         {
         $paramkey = $n + 1;
         $param_name = $fparam->getName();
-        debug ("API Checking for parameter " . $param_name . " (param" . $paramkey . ")");
+        debug("API: Checking for parameter " . $param_name . " (param" . $paramkey . ")");
         if (array_key_exists("param" . $paramkey,$params))
             {
-            debug ("API " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
+            debug ("API: " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
             $setparams[$n] = $params["param" . $paramkey];
             }
         else if(array_key_exists($param_name, $params))
             {
-            debug("API: {$param_name} - value has been passed (by name): '{" . print_r($params[$param_name], true) . "}'");
+            debug("API: {$param_name} - value has been passed (by name): '" . json_encode($params[$param_name]) . "'");
 
             // Check if array;
             $type = $fparam->getType();
@@ -138,19 +138,19 @@ function execute_api_call($query,$pretty=false)
         elseif ($fparam->isOptional())
             {
             // Set default value if nothing passed e.g. from API test tool
-            debug ("API " . $param_name . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: " . $param_name . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = $fparam->getDefaultValue();
             }
         else
             {
              // Set as empty
-            debug ("API " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = "";    
             }
         $n++;
         }
     
-    debug("API - calling api_" . $function);
+    debug("API: calling api_" . $function);
     $result = call_user_func_array("api_" . $function, $setparams);
 
     if($pretty)
