@@ -20,7 +20,7 @@ include $rs_root . '/include/db.php';
 // The O and K are separate, so that if served as plain text the remote check doesn't erroneously report all well
 $status_ok = 'O' . 'K';
 $system_info = get_system_status();
-if($system_info['status'] === $status_ok)
+if(in_array($system_info['status'], ['OK', 'WARNING']))
     {
     echo $status_ok;
     }
