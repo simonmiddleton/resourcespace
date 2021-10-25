@@ -4812,6 +4812,7 @@ function get_featured_collections(int $parent, array $ctx)
                       c.parent,
                       c.thumbnail_selection_method,
                       c.bg_img_resource_ref,
+                      c.order_by,
                       c.created,
                       count(DISTINCT cr.resource) > 0 AS has_resources,
                       count(DISTINCT cc.ref) > 0 AS has_children
