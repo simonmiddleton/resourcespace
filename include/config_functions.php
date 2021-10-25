@@ -1137,23 +1137,16 @@ function config_generate_html(array $page_def)
 */
 function config_merge_non_image_types()
     {
-    global $non_image_types,$ffmpeg_supported_extensions,$unoconv_extensions,$ghostscript_extensions, $all_non_image_types;
+    global $non_image_types,$ffmpeg_supported_extensions,$unoconv_extensions,$ghostscript_extensions;
 
-    if(!isset($all_non_image_types))
-        {
-        $all_non_image_types = array_unique(
-            array_map(
-                'strtolower',
-                array_merge(
-                    $non_image_types,
-                    $ffmpeg_supported_extensions,
-                    $unoconv_extensions,
-                    $ghostscript_extensions
-                    )
-                )
-            );
-        }
-    return $all_non_image_types;
+    return array_unique(
+        array_map(
+            'strtolower',
+            array_merge(
+                $non_image_types,
+                $ffmpeg_supported_extensions,
+                $unoconv_extensions,
+                $ghostscript_extensions)));
     }
 
 function get_header_image($full = false)
