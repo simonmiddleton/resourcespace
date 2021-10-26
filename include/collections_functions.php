@@ -3077,7 +3077,7 @@ function remove_all_resources_from_collection($ref){
         }
 
     sql_query("DELETE FROM collection_resource WHERE collection = '" . escape_check($ref) . "'");
-    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "'");
+    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "' AND upload!=1");
     }	
 
 function get_home_page_promoted_collections()
