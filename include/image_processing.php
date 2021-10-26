@@ -3307,17 +3307,17 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         }
     else
         {
-        $GLOBALS["use_error_exception"] = true;
-        try
+        // we really need dimensions here, so fallback to php's method
+        if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            // we really need dimensions here, so fallback to php's method
             list($w,$h) = getimagesize($file);
             }
-        catch(Exception $e)
+        else
             {
-            debug("getFileDimensions: Unable to get image size for file: " . $file . ". Reason: {$e->getMessage()}");
+            $w = null; 
+            $h = null;
+            debug("getFileDimensions: Unable to get image size for file: $file");
             }
-        $GLOBALS["use_error_exception"] = false;
         }
     
     $dimensions = array($w, $h);
