@@ -52,17 +52,31 @@ $file_list=file_get_contents($url . "/pages/tools/filestore_sync.php?access_key=
 if ($file_list=="Access denied") {exit("Access was denied, ensure \$scramble_key is the same on both systems.\n");}
 
 $files=explode("\n",$file_list);array_pop($files); // Last one is blank as terminates with \n
-echo "File list fetched - " . count($files) . " files to check.\n";
+echo "File list fetched - " . count($files) . " files to check.\n";flush();
 
 $counter=0;
 foreach ($files as $file)
     {
     $counter++;
     $s=explode("\t",$file);$file=$s[0];$filesize=$s[1];
+    $file=str_replace("\\","/",$file); // Windows path support
     if (!file_exists($storagedir . $file) || filesize($storagedir . $file)!=$filesize)
         {
-        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . $filesize . " bytes\n";
+        echo "(" . $counter . "/" . count($files) . ") Copying " . $file . " - " . $filesize . " bytes\n";flush();
+
+        // Download the file
         $contents=file_get_contents($url . "/filestore/" . $file);
+
+        // Check folder exists
+        $s=explode("/",dirname($file));
+        $checkdir=$storagedir;
+        foreach ($s as $dirpart)
+                {
+                $checkdir.=$dirpart . "/";    
+                if (!file_exists($checkdir)) {mkdir($checkdir,0777);}
+                }
+
+        // Write the file to disk
         file_put_contents($storagedir . $file,$contents);
         }
     else 
