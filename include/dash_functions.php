@@ -1913,7 +1913,7 @@ function validate_build_url($buildurl)
                         break;
                     case 'promimg':
                         # img checks
-                        if (!is_int_loose($$value) && !is_bool($build_url_param[1]))
+                        if (!is_int_loose($value) && !is_bool($build_url_param[1]))
                             {
                             $buildurl = "";
                             }
