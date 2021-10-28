@@ -5,48 +5,51 @@ if('cli' != PHP_SAPI)
     }
 
 // Set up
-$fc_cat_1 = create_collection($userref, "FC first");
-$fc_cat_2 = create_collection($userref, "FC second");
-$fc_cat_3 = create_collection($userref, "FC third");
-$fc_cat_1_stars = create_collection($userref, "*FC with 1 asterisks");
-$fc_cat_2_stars = create_collection($userref, "**FC with 2 asterisks");
-$fcs_list = [
-    $fc_cat_1,
-    $fc_cat_2,
-    $fc_cat_3,
-    $fc_cat_1_stars,
-    $fc_cat_2_stars,
+$fc_struct = function($name, $order_by, $is_categ = true) {
+    return [
+        'name' => $name,
+        'order_by' => $order_by,
+        'has_resources' => (int) $is_categ,
+    ];
+};
+$fc_A = $fc_struct('A', 30);
+$fc_B = $fc_struct('B', 40);
+$fc_C = $fc_struct('C', 50);
+$fc_1_stars = $fc_struct('*1 stars', 10);
+$fc_2_stars = $fc_struct('**2 stars', 20);
+
+
+
+$test_1404_ucs = [
+    [
+        'name' => 'Simple order by',
+        'input' => [$fc_B, $fc_A, $fc_C],
+        'expected' => [$fc_A, $fc_B, $fc_C],
+    ],
 ];
-foreach($fcs_list as $idx => $fc_ref)
+foreach($test_1404_ucs as $use_case)
     {
-    save_collection($fc_ref, ["featured_collections_changes" => ["update_parent" => 0, "force_featured_collection_type" => true]]);
-    $fc_data = get_collection($fc_ref);
-    if($fc_data === false)
+    usort($use_case['input'], 'order_featured_collections');
+    if($use_case['expected'] !== $use_case['input'])
         {
-        echo "Setting up FC #{$fc_ref} - ";
+        echo "Use case: {$use_case['name']} - ";
         return false;
         }
-    $fc_data['has_resources'] = 0;
-
-    $fcs_list[$idx] = $fc_data;
     }
 
-
-usort($fcs_list, "order_featured_collections");
-$expected_order = [
-    $fc_cat_2_stars,
-    $fc_cat_1_stars,
-    $fc_cat_1,
-    $fc_cat_2,
-    $fc_cat_3
-];
-if($expected_order !== array_map('intval', array_column($fcs_list, 'ref')))
+// TEST other use cases - wip - TODO: delete once test suite is complete
+$uc = [$fc_B, $fc_A, $fc_C];
+$uc_expected = [$fc_A, $fc_B, $fc_C];
+usort($uc, 'order_featured_collections');
+if($uc_expected !== $uc)
     {
+    echo 'UC test - ';
     return false;
     }
 
 
 // Tear down
-unset($fc_cat_1, $fc_cat_2, $fc_cat_3, $fc_cat_1_stars, $fc_cat_2_stars, $fcs_list);
+unset($fc_struct, $test_1404_ucs);
+unset($fc_A, $fc_B, $fc_C, $fc_1_stars, $fc_2_stars);
 
 return true;

@@ -4970,8 +4970,9 @@ function featured_collection_check_access_control(int $c_ref)
 
 
 /**
-* Helper comparison function for ordering featured collections by the "has_resource" property,  then by name, this takes into account the legacy
-* use of '*' as a prefix to move to the start.
+* Helper comparison function for ordering featured collections. It sorts using the order_by property, then based if the
+* collection is a category (using the "has_resource" property), then by name (this takes into account the legacy
+* use of '*' as a prefix to move to the start).
 * 
 * @param array $a First featured collection data structure to compare
 * @param array $b Second featured collection data structure to compare
@@ -4982,16 +4983,29 @@ function featured_collection_check_access_control(int $c_ref)
 function order_featured_collections(array $a, array $b)
     {
     global $descthemesorder;
-    if($a["has_resources"] == $b["has_resources"])
+
+    // Sort using the order_by property
+    if($a['order_by'] != $b['order_by'])
         {
-        if ($descthemesorder)
+        if($descthemesorder)
             {
-            return strnatcasecmp($b["name"],$a["name"]);
+            return $a['order_by'] > $b['order_by'] ? -1 : 1;
             }
-        return strnatcasecmp($a["name"],$b["name"]);
+        return $a['order_by'] < $b['order_by'] ? -1 : 1;
         }
 
-    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    // Order by showing categories first
+    if($a['has_resources'] != $b['has_resources'])
+        {
+        return $a['has_resources'] < $b['has_resources'] ? -1 : 1;
+        }
+
+    // Order by collection name
+    if($descthemesorder)
+        {
+        return strnatcasecmp($b['name'], $a['name']);
+        }
+    return strnatcasecmp($a['name'], $b['name']);
     }
 
 /**
