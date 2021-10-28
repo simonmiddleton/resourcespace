@@ -6,7 +6,6 @@ if(!checkperm('a'))
     header('HTTP/1.1 401 Unauthorized');
     exit('Permission denied.');
     }
-include '../../include/admin_functions.php';
 include '../../include/slideshow_functions.php';
 
 $slideshow_files = get_slideshow_files_data();

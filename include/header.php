@@ -562,7 +562,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                     <?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
-                            $pending=sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0);
+                            $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
                             if ($pending>0)
                                 {
                                 ?><span class="Pill"><?php echo $pending ?></span><?php

@@ -291,7 +291,7 @@ function get_collection_resources_with_data($ref)
  * @param  boolean $smartadd
  * @param  string $size
  * @param  string $addtype
- * @return boolean
+ * @return boolean | string
  */
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
     {
@@ -389,7 +389,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
  * @param  integer $collection
  * @param  boolean $smartadd
  * @param  string $size
- * @return boolean
+ * @return boolean | string
  */
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
     {
@@ -431,7 +431,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
  *
  * @param  mixed $resources
  * @param  mixed $collection
- * @return boolean
+ * @return boolean | string
  */
 function collection_add_resources($collection,$resources='',$search='',$selected=false)
     {
@@ -469,7 +469,7 @@ function collection_add_resources($collection,$resources='',$search='',$selected
  * @param  mixed $collection
  * @param  mixed $resources
  * @param  mixed $removeall
- * @return void
+ * @return boolean | string
  */
 function collection_remove_resources($collection,$resources='',$removeall=false,$selected=false)
     {
@@ -505,7 +505,7 @@ function collection_remove_resources($collection,$resources='',$removeall=false,
         }
     
     if ($errors == 0){return true;}
-    else {return $lang["cantremoveresourcesfromcolection"];}
+    else {return $lang["cantremoveresourcesfromcollection"];}
     }
     
 /**
@@ -1351,9 +1351,26 @@ function save_collection($ref, $coldata=array())
             sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
-        #log this
-        collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
-		
+
+        # log this only if a user is being added
+        if($coldata["users"]!="")
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
+            }
+        
+        # log the removal of users / smart groups
+        $was_shared_with = array();
+        $was_shared_with = sql_array("select username value from user where ref in ('" . escape_check(join("','",$old_attached_users)) . "')");
+        if (count($old_attached_groups) > 0)
+            {
+            foreach($old_attached_groups as $old_group)
+            $was_shared_with[] = "Group (Smart): " . sql_value("select name value from usergroup where ref='" . escape_check($old_group) . "'","");
+            }
+        if (count($urefs) == 0 && count($was_shared_with) > 0)
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
+            }
+
         if($attach_user_smart_groups)
             {
             $groups=resolve_userlist_groups_smart($users);
@@ -3060,7 +3077,7 @@ function remove_all_resources_from_collection($ref){
         }
 
     sql_query("DELETE FROM collection_resource WHERE collection = '" . escape_check($ref) . "'");
-    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "'");
+    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "' AND upload!=1");
     }	
 
 function get_home_page_promoted_collections()
@@ -3194,41 +3211,46 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
  * @param  integer $colref
  * @param  boolean $show    Show or hide?
  * @param  integer $user  
- * @return void
+ * @return bool 
  */
 function show_hide_collection($colref, $show=true, $user="")
-	{
-	global $userref;
-	if($user=="" || $user==$userref)
-		{
-		// Working with logged on user, use global variable 
-		$user=$userref;
-		global $hidden_collections;
-		}
-	else
-		{
-		//Get hidden collections for user
-		$hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
-		}
-		
-	if($show)
-		{
-		debug("Unhiding collection " . $colref . " from user " . $user);
-		if(($key = array_search($colref, $hidden_collections)) !== false)
-			{
-			unset($hidden_collections[$key]);
-			}
-		}
-	else
-		{
-		debug("Hiding collection " . $colref . " from user " . $user);
-		if(($key = array_search($colref, $hidden_collections)) === false) 
-			{
-			$hidden_collections[]=$colref;
-			}
-		}
-	sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
-	}
+    {
+    global $userref;
+    if($user=="" || $user==$userref)
+        {
+        // Working with logged on user, use global variable 
+        $user=$userref;
+        global $hidden_collections;
+        }
+    else
+        {
+        if(!checkperm_user_edit($user))
+            {
+            return false;
+            }
+        //Get hidden collections for user
+        $hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
+        }
+        
+    if($show)
+        {
+        debug("Unhiding collection " . $colref . " from user " . $user);
+        if(($key = array_search($colref, $hidden_collections)) !== false)
+            {
+            unset($hidden_collections[$key]);
+            }
+        }
+    else
+        {
+        debug("Hiding collection " . $colref . " from user " . $user);
+        if(($key = array_search($colref, $hidden_collections)) === false) 
+            {
+            $hidden_collections[]=$colref;
+            }
+        }
+    sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
+    return true;
+    }
 	
 /**
  * Get an array of collection IDs for the specified ResourceSpace session and user
@@ -6023,8 +6045,20 @@ function send_collection_to_admin(int $collection)
         {
         return false;
         }
-    
+       
     global $lang, $userref, $applicationname, $baseurl, $admin_resource_access_notifications;
+    
+    // Get details about the collection:
+    $collectiondata = get_collection($collection);
+    $collection_name = $collectiondata['name'];
+    $resources_in_collection = count(get_collection_resources($collection));
+
+    // Only do this if it is the user's own collection
+    if($collectiondata['user'] != $userref)
+        {
+        return false;
+        }
+
     $collectionsent = false;
     // Create a copy of the collection for admin:
     $admin_copy = create_collection(-1, $lang['send_collection_to_admin_emailedcollectionname']);
@@ -6041,11 +6075,6 @@ function send_collection_to_admin(int $collection)
         {
         $user = $user['username'];
         }
-
-    // Get details about the collection:
-    $collection = get_collection($collection_id);
-    $collection_name = $collection['name'];
-    $resources_in_collection = count(get_collection_resources($collection_id));
 
     // Build mail and send it:
     $subject = $applicationname . ': ' . $lang['send_collection_to_admin_emailsubject'] . $user;
@@ -6101,7 +6130,7 @@ function send_collection_to_admin(int $collection)
 function get_default_user_collection($setactive=false)
     {
     global $userref;
-    $usercollection=sql_value("SELECT ref value FROM collection WHERE user='$userref' AND name LIKE 'Default Collection%' ORDER BY created ASC LIMIT 1",0);
+    $usercollection = ps_value("SELECT ref value FROM collection WHERE user=? AND name LIKE 'Default Collection%' ORDER BY created ASC LIMIT 1",array("i",$userref),0);
     if ($usercollection == 0)
         {
         # Create a collection for this user
@@ -6111,7 +6140,7 @@ function get_default_user_collection($setactive=false)
     if($setactive)
         {
         # set this to be the user's current collection
-        sql_query("UPDATE user SET current_collection='$usercollection' where ref='$userref'");
+        ps_query("UPDATE user SET current_collection=? where ref=?",array("i",$usercollection,"i",$userref));
 		set_user_collection($userref,$usercollection);
         }
     return $usercollection;

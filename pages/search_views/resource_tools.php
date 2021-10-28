@@ -5,7 +5,7 @@
 // The permissions check here is intentionally more basic. It doesn't check edit_filter as this would be computationally intensive
 // when displaying many resources. As such this is a convenience feature for users that have system-wide edit access to the given
 // access level.
-if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook("iconedit")) 
+if($search_results_edit_icon && !hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_access_for_contributor && $userref==$result[$n]["created_by"])))
         { 
         if ($allow_share && ($k=="" || $internal_share_access)) 
                 { ?>

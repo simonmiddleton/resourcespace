@@ -21,7 +21,7 @@
 
 		if ($debug_expires < time())
 			{
-			sql_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'");
+			ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
 			return;
 			}
 
@@ -33,11 +33,10 @@
 
 	function create_debug_log_override($debug_user = -1, $debug_expires = 60)
 		{
-		sql_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'");
+		ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
 		$debug_expires += time();
-		$debug_user_escaped = escape_check($debug_user);
-		$debug_expires_escaped = escape_check($debug_expires);
-		sql_query("INSERT INTO sysvars VALUES ('debug_override_user','{$debug_user_escaped}'), ('debug_override_expires','{$debug_expires_escaped}')");
+		ps_query("INSERT INTO sysvars VALUES ('debug_override_user',?), ('debug_override_expires',?)",
+        array("s",$debug_user,"s",$debug_expires));
 		}
 
 
@@ -187,7 +186,7 @@ function get_tracked_vars(int $user)
         }
 
     $all_tracked_vars = [];
-    $all_users_tracked_vars = sql_array("SELECT `value` FROM sysvars WHERE `name` REGEXP '^track_var_[[:digit:]]+$'");
+    $all_users_tracked_vars = ps_array("SELECT `value` FROM sysvars WHERE `name` REGEXP '^track_var_[[:digit:]]+$'",array());
     foreach($all_users_tracked_vars as $vars_csv)
         {
         $vars_list = explode(',', $vars_csv);

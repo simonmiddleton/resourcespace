@@ -1386,7 +1386,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     if(!is_numeric($ref))
@@ -1453,7 +1453,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
-
+        if(is_null($sw) || is_null($sh))
+            {
+            // This is not a valid image
+            return false;
+            }
+        
         if($extension == "svg")
             {
             $o_width  = $sw;
@@ -1509,7 +1514,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $ps = array_values($ps);
             }
             
-        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes))
+        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
+            && !in_array($extension, config_merge_non_image_types())
+            )
             {
             // Ensure that scales are in order
             natsort($preview_tile_scale_factors);
@@ -1652,7 +1659,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             else
                 {
-                $flatten = "-flatten";
+                $flatten = "-background white -flatten";
                 }
 
             $addcheckbdpre = "";
@@ -3204,16 +3211,12 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
         return false;
         }
 
-    # Download a file from the provided URL, then upload it as if it was a local upload.
-    $file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
-    $s=explode("?",$file_path);$file_path=$s[0]; # Remove query string if it was present in the URL
-
-    $copied = @copy($url, $file_path); # Download the file.
-    if(!$copied)
+    $file_path = temp_local_download_remote_file($url);
+    if($file_path === false)
         {
-        debug("upload_file_by_url - failed to copy file from '$url' to '$file_path'");
         return false;
         }
+ 
     return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
     }
 
@@ -3291,6 +3294,15 @@ function delete_previews($resource,$alternative=-1)
         }
     }
 
+/**
+ * Get dimensions of image file
+ *
+ * @param  string $identify_fullpath        path to IM identify command
+ * @param  string $prefix                   prefix - used by camera RAW files
+ * @param  string $file                     path to file
+ * @param  string $extension                file extension
+ * @return array width and height of image, elements are null if not possible e.g. not an image file
+ */
 function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     {
     # Get image's dimensions.
@@ -3310,7 +3322,16 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     else
         {
         // we really need dimensions here, so fallback to php's method
-        list($w,$h) = @getimagesize($file);
+        if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
+            {
+            list($w,$h) = getimagesize($file);
+            }
+        else
+            {
+            $w = null; 
+            $h = null;
+            debug("getFileDimensions: Unable to get image size for file: $file");
+            }
         }
     
     $dimensions = array($w, $h);
@@ -3624,6 +3645,11 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' %sourcepath[0]';
         }
 
+    if (isset($actions["repage"]) && $actions["repage"])
+        {
+        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
+        }
+
     if(array_key_exists('transparent', $actions))
         {
         $cmd_args['%transparent'] = $actions['transparent'];
@@ -3768,11 +3794,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' -crop %finalwidthx%finalheight+%finalxcoord+%finalycoord';
         }
 
-    if (isset($actions["repage"]) && $actions["repage"])
-        {
-        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
-        }
-
     // Did the user request a width? If so, tack that on
     if ((isset($actions["new_width"]) && (int)$actions["new_width"] > 0) || (isset($actions["new_height"]) && (int)$actions["new_height"] > 0))
         {
@@ -3835,10 +3856,9 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         && $actions['resize']['width'] > 0
     )
         {
-        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
-
         # Apply resize ('>' means: never enlarge)
-        $command .= ' -resize %resize_dimensions>';
+        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '') . ">";
+        $command .= ' -resize %resize_dimensions';
         }
 
     $cmd_args['%outputpath'] = $outputpath;

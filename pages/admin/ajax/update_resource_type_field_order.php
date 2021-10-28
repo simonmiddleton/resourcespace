@@ -9,8 +9,6 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-       
-include dirname(__FILE__) . "/../../../include/admin_functions.php";
 
 
 # Reordering capability

@@ -863,8 +863,17 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                     },
                                                     success: function(response){
                                                             <?php
-                                                            if(is_numeric($collection_add))
+                                                            if(is_int_loose($collection_add))
                                                                 {
+                                                                if($send_collection_to_admin) 
+                                                                    {
+                                                                    ?>
+                                                                    api('send_collection_to_admin',{'collection': <?php echo $collection_add; ?>}, function(response)
+                                                                        {
+                                                                        console.debug('A copy of collection #<?php echo $collection_add; ?> has been sent for review.');
+                                                                        });
+                                                                    <?php
+                                                                    }
                                                                 echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
                                                                 }
                                                             else

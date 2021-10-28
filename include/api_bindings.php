@@ -110,7 +110,6 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
-    
     if (!is_int($ref))
         {
         return false;
@@ -119,8 +118,14 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
+        $tmp_dld_fpath = temp_local_download_remote_file($url);
+        if($tmp_dld_fpath === false)
+            {
+            return "FAILED: Resource #{$ref} was created, but the file was not uploaded. Enable debug log and try again to identify why uploading it failed.";
+            }
+
         #Check for duplicates if required
-        $duplicates=check_duplicate_checksum($url,false);
+        $duplicates=check_duplicate_checksum($tmp_dld_fpath,false);
         if (count($duplicates)>0)
             {
             $duplicates_string=implode(",",$duplicates);
@@ -128,7 +133,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
             }   
         else 
             {
-            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
             if ($return===false) {return false;}
             } 
         }
@@ -573,8 +578,14 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
-    
-    $duplicates=check_duplicate_checksum($url,false);
+
+    $tmp_dld_fpath = temp_local_download_remote_file($url);
+    if($tmp_dld_fpath === false)
+        {
+        return "FAILED: The file for resource #{$ref} was not uploaded. Enable debug log and try again to identify why uploading it failed.";
+        }
+
+    $duplicates=check_duplicate_checksum($tmp_dld_fpath,false);
     if (count($duplicates)>0)
         {
         $duplicates_string=implode(",",$duplicates);
@@ -582,7 +593,7 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
         }   
     else 
         {
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
         if ($return===false) {return false;}
         } 
 

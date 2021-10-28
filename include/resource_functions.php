@@ -2112,7 +2112,7 @@ function add_keyword_mappings(int $ref,$string,$resource_type_field,$partial_ind
  */
 function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
-    global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
+    global $unnormalized_index,$stemming,$noadd;
     
     debug("add_keyword_to_resource: resource:" . $ref . ", keyword: " . $keyword);
     if(!$normalized)
@@ -2142,36 +2142,19 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
 
-            $stm_bind_data = array('iiii', $ref, $keyref, $position, $resource_type_field);
-            $stm_prep_values = "?,?,?,?";
-
             $sql_extra_select = "";
             $sql_extra_value = "";
             if($optional_column != '' && $optional_value != '')
                 {
                 $sql_extra_select = ", `{$optional_column}`";
                 $sql_extra_value = ", '" . escape_check($optional_value) . "'";
-
-                $stm_prep_values .= ",?";
-                $stm_bind_data[0] .= "s";
-                $stm_bind_data[] = $optional_value;
                 }
-
-            # create mapping, increase hit count.
-            if(isset($use_mysqli_prepared) && $use_mysqli_prepared)
-                {
-                sql_query_prepared("INSERT INTO `resource_keyword`(`resource`,`keyword`,`position`,`resource_type_field` {$sql_extra_select}) VALUES ($stm_prep_values)",
-                    $stm_bind_data);
-                }
-            else
-                {
-                $ref = escape_check($ref);
-                $keyref = escape_check($keyref);
-                $position = escape_check($position);
-                $resource_type_field = escape_check($resource_type_field);
-                sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
-                                VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
-                }
+            $ref = escape_check($ref);
+            $keyref = escape_check($keyref);
+            $position = escape_check($position);
+            $resource_type_field = escape_check($resource_type_field);
+            sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
+                            VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
 
             sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
             
@@ -3245,24 +3228,26 @@ function get_resource_types($types = "", $translate = true)
     {
     # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
     // support getting info for a comma-delimited list of restypes (as in a search)
+    $parameters=array();
     if ($types==""){$sql="";} else
         {
         # Ensure $types are suitably quoted and escaped
         $cleantypes="";
         $s=explode(",",$types);
+        
         foreach ($s as $type)
             {
             if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
                 {
-                if (strpos($type,"'")===false) {$type="'" . $type . "'";}
                 if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.=$type;
+                $cleantypes.="?";
+                $parameters[]="i";$parameters[]=$type;
                 }
             }
         $sql=" where ref in ($cleantypes) ";
         }
     
-    $r=sql_query("select *, colour, icon from resource_type $sql order by order_by,ref","schema");
+    $r=ps_query("select *, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -3735,7 +3720,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","", "schema"),"resourcetype-");
+	return lang_or_i18n_get_translated(ps_value("select name value from resource_type where ref=?",array("i",$type), "schema"),"resourcetype-");
 	}
 	
 function get_resource_custom_access($resource)
@@ -8964,3 +8949,55 @@ function relate_all_resources(array $related = [])
         }
     return !$error;
     }
+
+/**
+ * Apply new order to metadata fields
+ *
+ * @param  array $neworder  Field IDs in new order
+ *
+ * @return void
+ */
+function update_resource_type_field_order($neworder)
+	{
+	global $lang;
+	if (!is_array($neworder)) {
+		exit ("Error: invalid input to update_resource_type_field_order function.");
+	}
+
+	$updatesql= "update resource_type_field set order_by=(case ref ";
+	$counter = 10;
+	foreach ($neworder as $restype){
+		$updatesql.= "when '$restype' then '$counter' ";
+		$counter = $counter + 10;
+	}
+	$updatesql.= "else order_by END)";
+	sql_query($updatesql);
+	clear_query_cache("schema");
+	log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
+	}
+	
+/**
+ * Apply a new order to resource types
+ *
+ * @param  array $neworder  Resource type IDs in new order
+ *
+ * @return void
+ */
+function update_resource_type_order($neworder)
+	{
+	global $lang;
+	if (!is_array($neworder)) {
+		exit ("Error: invalid input to update_resource_type_field_order function.");
+	}
+
+	$updatesql= "update resource_type set order_by=(case ref ";
+	$counter = 10;
+	foreach ($neworder as $restype){
+		$updatesql.= "when '$restype' then '$counter' ";
+		$counter = $counter + 10;
+	}
+	$updatesql.= "else order_by END)";
+	sql_query($updatesql);
+	clear_query_cache("schema");
+	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
+	}

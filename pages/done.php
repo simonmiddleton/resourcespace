@@ -35,7 +35,7 @@ include "../include/header.php";
     <p><?php echo text(htmlspecialchars($text)) ?></p>
    
     <?php
-    if ((getval("user","")!="" || $k!="" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin","")=="")
+    if ((getval("user","")!="" || $k!="" || isset($anonymous_login) || hook('checkuserloggedin')) && getval("notloggedin","")=="" && $text != "user_request")
         {
         # User logged in?
         if(!hook("donebacktoresource"))

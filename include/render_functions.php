@@ -3952,6 +3952,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
+    $title=htmlspecialchars($field["title"]);
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
     if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -3991,17 +3992,45 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$field=$modified_field;
 	    }
 	
-	# Handle expiry fields
-	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+    $warningtext="";
+    $dismisstext="";
+    $dismisslink="";
+    # Handle expiry date warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["warningexpired"] . "</h1><p>" . $lang["warningexpiredtext"] . "</p><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
+        $title = $lang["warningexpired"];
+        $warningtext = $lang["warningexpiredtext"];
+        $dismisstext = $lang["warningexpiredok"];
+        $dismisslink = "<p id=\"WarningOK\">
+        <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
+        $extra.="<style>#RecordDownload {display:none;}</style>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
+            <style>#RecordDownload {display:none;}</style>";
+            }   
 		}
 	
-	# Handle warning messages
-	if (!$valueonly && FIELD_TYPE_WARNING_MESSAGE == $field['type'] && '' != trim($value)) 
+	# Handle general warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
 		{
-		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
-		}
+        # title comes from field
+        # value comes from field
+        $warningtext = $value;
+        $dismisstext = $lang["warningdismiss"];
+        $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
+        <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
+            }
+        }
 	
     if ($field['value_filter']!="")
         {
@@ -4066,6 +4095,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			$value = $modified_value['value'];
 		    }
 
+        # Final stages of rendering
+
+        # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"])!="")
 			{
 			# Highlight keywords
@@ -4081,8 +4113,10 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
             Format: [lang-language-name_here]
@@ -4106,9 +4140,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
             $extra   .= $template;
 			}
-		else
+		else # No display template
 			{
-			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
+			# There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars
@@ -4685,11 +4719,6 @@ function render_featured_collection(array $ctx, array $fc)
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = ['display: none;'];
-    if(count($tools) > 3)
-        {
-        $html_actions_style[] = "height: 43px;";
-        }
-
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>

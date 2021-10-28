@@ -63,10 +63,6 @@ $mysql_bin_path = '/usr/bin';
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared = false;
-
 # Enable establishing secure connections using SSL
 # Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
 $use_mysqli_ssl = false;
@@ -980,11 +976,11 @@ $contact_sheet_link_on_collection_bar = true;
 # e.g.
 # <option value="216x343">Foolscap</option>
 $papersize_select = '
-<option value="a4">A4 - 210mm x 297mm</option>
-<option value="a3">A3 - 297mm x 420mm</option>
-<option value="letter">US Letter - 8.5" x 11"</option>
-<option value="legal">US Legal - 8.5" x 14"</option>
-<option value="tabloid">US Tabloid - 11" x 17"</option>';
+<option value="A4">A4 - 210mm x 297mm</option>
+<option value="A3">A3 - 297mm x 420mm</option>
+<option value="LETTER">US Letter - 8.5" x 11"</option>
+<option value="LEGAL">US Legal - 8.5" x 14"</option>
+<option value="TABLOID">US Tabloid - 11" x 17"</option>';
 
 #Optional array to set customised title and margins for named templates
 # e.g.
@@ -1297,6 +1293,11 @@ $date_d_m_y=true;
 
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
+
+# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
+# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
+# easily faked.
+$ip_forwarded_for=false;
 
 # When extracting text from documents (e.g. HTML, DOC, TXT, PDF) which field is used for the actual content?
 # Comment out the line to prevent extraction of text content

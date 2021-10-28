@@ -395,7 +395,7 @@ $lang["action-removefromcollection"]="Remove from collection";
 $lang["addtocollection"]="Add to collection";
 $lang["cantmodifycollection"]="You can't modify this collection.";
 $lang["cantaddresourcestocollection"]="One or more resources couldn't be added to the collection.";
-$lang["cantremoveresourcesfromcolection"]="One or more resources couldn't be removed from the collection.";
+$lang["cantremoveresourcesfromcollection"]="One or more resources couldn't be removed from the collection.";
 $lang["currentcollection"]="Current collection";
 $lang["viewcollection"]="View collection";
 $lang['hiddencollections_hide']="Hide hidden collections";
@@ -1056,6 +1056,7 @@ $lang["comment"]="Comment";
 $lang["warningexpired"]="Resource expired";
 $lang["warningexpiredtext"]="Warning! This resource has exceeded the expiry date. You must click the link below to enable the download functionality.";
 $lang["warningexpiredok"]="&gt; Enable resource download";
+$lang["warningdismiss"] = "&gt; Dismiss this warning";
 $lang["userrequestcomment"]="Comment";
 $lang["addresourcebatchbrowser"]="Upload resources";
 

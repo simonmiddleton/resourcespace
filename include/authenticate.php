@@ -261,20 +261,27 @@ else
 	if (isset($usergroup))
 		{
 		// Fetch user group specific content.
-		$site_text_query = sprintf("
+		$site_text_query = "
 				SELECT `name`,
 				       `text`,
 				       `page` 
 				  FROM site_text 
-				 WHERE language = '%s'
-				   %s #pagefilter
-				   AND specific_to_group = '%s';
-			",
-			escape_check($language),
-			$pagefilter,
-			$usergroup
-		);
-		$results = sql_query($site_text_query,"sitetext",-1,true,0);
+				 WHERE language = ?
+				   AND specific_to_group = ?
+			";
+		$parameters=array
+			(
+			"s",$language,
+			"s",$usergroup
+			);
+
+		if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
+			{
+			$site_text_query.="AND (page = ? OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
+			$parameters[]="s";$parameters[]=$pagename;
+			}
+
+		$results = ps_query($site_text_query,$parameters,"sitetext",-1,true,0);
 
 		for($n = 0; $n < count($results); $n++)
 			{

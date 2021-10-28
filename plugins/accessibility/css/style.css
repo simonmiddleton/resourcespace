@@ -99,3 +99,19 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     width: 20px;
     height: 20px;
 }
+
+.DashTileActions {
+    position: absolute;
+    color: #fff;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #000;
+    height: fit-content;
+    text-align: right;
+    z-index:3;
+}
+
+#CollectionMenu > .ActionsContainer {
+    padding-top: 10px;
+}
