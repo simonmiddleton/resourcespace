@@ -85,7 +85,10 @@ if (!function_exists("rse_workflow_get_archive_states")){
                         {
                         $statename=$lang['status' . $additional_archive_state];
                         }
-                    sql_query("insert into archive_states set code='" . escape_check($additional_archive_state) . "', name='" . escape_check($statename) . "'");
+                    rse_workflow_create_state([
+                        'code' => $additional_archive_state,
+                        'name' => $statename,
+                    ]);
                     clear_query_cache("workflow");
                     $states[$additional_archive_state]['name']=$lang['status' . $additional_archive_state];
                     $states[$additional_archive_state]['fixed']=true;
@@ -101,11 +104,11 @@ if (!function_exists("rse_workflow_get_archive_states")){
                     {
                     $simple_search_flag = ($workflow_state == 0 ? 1 : 0);
 
-                    sql_query("
-                        INSERT INTO archive_states
-                                SET code = '" . escape_check($workflow_state) . "',
-                                    name = '" . escape_check($workflow_state_name) . "',
-                                    simple_search_flag = '{$simple_search_flag}'");
+                    rse_workflow_create_state([
+                        'code' => $workflow_state,
+                        'name' => $workflow_state_name,
+                        'simple_search_flag' => $simple_search_flag,
+                    ]);
                     clear_query_cache("workflow");
                     }
 
@@ -236,4 +239,54 @@ function rse_workflow_compile_actions(array $url_params)
         }
 
     return $wf_actions;
+    }
+
+
+/**
+ * Create new workflow state
+ * 
+ * @param array $data New workflow state data. Requires at least a 'name' property!
+ * 
+ * @return boolean|array Returns false if it fails or the new state data.
+ */
+function rse_workflow_create_state(array $data)
+    {
+    $defaults = [
+        'notify_group'       => 0,
+        'more_notes_flag'    => 0,
+        'notify_user_flag'   => 0,
+        'email_from'         => '',
+        'bcc_admin'          => 0,
+        'simple_search_flag' => 0,
+    ];
+    $new_state_data = array_map('trim', $data + $defaults);
+
+    if(!(isset($new_state_data['name']) && $new_state_data['name'] !== ''))
+        {
+        return false;
+        }
+
+    if(!isset($new_state_data['code']))
+        {
+        // Get the current maximum code reference
+        $code = sql_value('SELECT MAX(code) AS `value` FROM archive_states', 0);
+        $new_state_data['code'] = ++$code;
+        }
+
+    $sql = sprintf(
+        "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag)
+              VALUES ('%s', '%s', '%s', '%s', '%s', %s, '%s', '%s')",
+        escape_check($new_state_data['code']),
+        escape_check($new_state_data['name']),
+        escape_check($new_state_data['notify_group']),
+        escape_check($new_state_data['more_notes_flag']),
+        escape_check($new_state_data['notify_user_flag']),
+        sql_null_or_val($new_state_data['email_from'], $new_state_data['email_from'] === ''),
+        escape_check($new_state_data['bcc_admin']),
+        escape_check($new_state_data['simple_search_flag'])        
+    );
+    sql_query($sql);
+    $new_state_data['ref'] = sql_insert_id();
+
+    return $new_state_data;
     }

@@ -1453,7 +1453,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
-
+        if(is_null($sw) || is_null($sh))
+            {
+            // This is not a valid image
+            return false;
+            }
+        
         if($extension == "svg")
             {
             $o_width  = $sw;
@@ -3289,6 +3294,15 @@ function delete_previews($resource,$alternative=-1)
         }
     }
 
+/**
+ * Get dimensions of image file
+ *
+ * @param  string $identify_fullpath        path to IM identify command
+ * @param  string $prefix                   prefix - used by camera RAW files
+ * @param  string $file                     path to file
+ * @param  string $extension                file extension
+ * @return array width and height of image, elements are null if not possible e.g. not an image file
+ */
 function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     {
     # Get image's dimensions.
@@ -3307,17 +3321,17 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         }
     else
         {
-        $GLOBALS["use_error_exception"] = true;
-        try
+        // we really need dimensions here, so fallback to php's method
+        if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            // we really need dimensions here, so fallback to php's method
             list($w,$h) = getimagesize($file);
             }
-        catch(Exception $e)
+        else
             {
-            debug("getFileDimensions: Unable to get image size for file: " . $file . ". Reason: {$e->getMessage()}");
+            $w = null; 
+            $h = null;
+            debug("getFileDimensions: Unable to get image size for file: $file");
             }
-        $GLOBALS["use_error_exception"] = false;
         }
     
     $dimensions = array($w, $h);
