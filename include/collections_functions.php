@@ -1360,7 +1360,8 @@ function save_collection($ref, $coldata=array())
         
         # log the removal of users / smart groups
         $was_shared_with = array();
-        $was_shared_with = sql_array("select username value from user where ref in ('" . escape_check(join("','",$old_attached_users)) . "')");
+        $old_attached_users = array_map("escape_check",$old_attached_users);
+        $was_shared_with = sql_array("select username value from user where ref in ('" . join("','",$old_attached_users) . "')");
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
