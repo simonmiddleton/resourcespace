@@ -47,6 +47,7 @@ if (php_sapi_name() != "cli")
 // CLI access, connect to the remote system, retrieve the list and start the download
 if (!isset($argv[1])) {exit("Usage: php filestore_sync.php [base url of remote system]\n");}
 $url=$argv[1];
+ob_end_flush(); // Disable output buffering (causes the output to appear in bursts)
 
 $file_list=file_get_contents($url . "/pages/tools/filestore_sync.php?access_key=" . $access_key);
 if ($file_list=="Access denied") {exit("Access was denied, ensure \$scramble_key is the same on both systems.\n");}
