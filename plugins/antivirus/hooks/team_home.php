@@ -2,7 +2,7 @@
 
 function HookAntivirusTeam_homeCustomteamfunctionadmin()
     {
-    global $lang,$baseurl_short;
+    global $lang,$baseurl_short,$antivirus_path;
     if (!isset($antivirus_path) || trim($antivirus_path) == ''){
         $antivirusalerthtml  = '<li><a href="' . $baseurl_short . '/pages/help.php?page=plugins/antivirus"';
         if (getval("modal","")!="")
