@@ -10,6 +10,7 @@ if('cli' != PHP_SAPI)
 
 $webroot = dirname(__DIR__, 2);
 include_once "{$webroot}/include/db.php";
+set_time_limit(0);
 
 $help_text = <<<'HELP'
 NAME
@@ -62,7 +63,7 @@ foreach($options as $option_name => $option_value)
         exit(0);
         }
 
-    if(in_array($option_name, ['g', 'glue']) && is_string($option_value) && trim($option_value) !== '')
+    if(in_array($option_name, ['g', 'glue']) && is_string($option_value))
         {
         $glue = $option_value;
         }
@@ -117,6 +118,7 @@ foreach($fields_to_join as $rtf_ref)
 
 foreach($resources_updates as $resource => $new_field_value)
     {
+    logScript("Processing resource #{$resource} ...");
     $new_field_value = ltrim($new_field_value, $glue);
 
     $update_err = [];
