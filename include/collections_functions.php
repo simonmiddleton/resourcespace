@@ -5527,6 +5527,8 @@ function compute_featured_collections_access_control()
                     {
                     // Collection access has been explicitly denied
                     $excluderefs[] = $fcid;
+                    // Also deny access to child collections.
+                    $excluderefs = array_merge($excluderefs,array_keys($all_fcs_rp,$fcid));
                     }                
                 }
             }
@@ -5583,7 +5585,7 @@ function compute_featured_collections_access_control()
     $return = array();
     foreach($all_fcs_rp as $fc => $fcp)
         {
-        if(in_array($fc, $includerefs) && !in_array($fc,$excluderefs))
+        if((in_array($fc, $includerefs) || checkperm("j*")) && !in_array($fc,$excluderefs))
             {
             $return[] = $fc;
             }
