@@ -600,7 +600,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
 .RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
-.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #999;}
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
 .RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
@@ -1560,6 +1560,10 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 p.LoginLinks {
     line-height: 28px;
     padding-bottom: 5px;
+}
+p.ExternalLoginLinks {
+    line-height: 28px;
+    padding: 10px 0 0 0;
 }
 #login_opt_in {
     float: left;

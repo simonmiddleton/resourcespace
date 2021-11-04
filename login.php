@@ -197,6 +197,10 @@ if (!hook("replaceloginform"))
         
         <h1><?php echo text("welcomelogin")?></h1>
 
+        <p class="ExternalLoginLinks">
+            <?php hook("loginformlink") ?> 
+        </p>
+
         <div class="Question">
             <label for="username"><?php echo $lang["username"]?> </label>
             <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" />
@@ -286,7 +290,6 @@ if (!hook("replaceloginform"))
         <?php if ($allow_password_reset) { ?>
             <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo $lang["forgottenpassword"]?></a>
         <?php } ?>
-        <?php hook("loginformlink") ?> 
         </p>
 
 	</form>

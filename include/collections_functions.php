@@ -1360,7 +1360,8 @@ function save_collection($ref, $coldata=array())
         
         # log the removal of users / smart groups
         $was_shared_with = array();
-        $was_shared_with = sql_array("select username value from user where ref in ('" . escape_check(join("','",$old_attached_users)) . "')");
+        $old_attached_users = array_map("escape_check",$old_attached_users);
+        $was_shared_with = sql_array("select username value from user where ref in ('" . join("','",$old_attached_users) . "')");
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
@@ -5541,6 +5542,8 @@ function compute_featured_collections_access_control()
                     {
                     // Collection access has been explicitly denied
                     $excluderefs[] = $fcid;
+                    // Also deny access to child collections.
+                    $excluderefs = array_merge($excluderefs,array_keys($all_fcs_rp,$fcid));
                     }                
                 }
             }
@@ -5597,7 +5600,7 @@ function compute_featured_collections_access_control()
     $return = array();
     foreach($all_fcs_rp as $fc => $fcp)
         {
-        if(in_array($fc, $includerefs) && !in_array($fc,$excluderefs))
+        if((in_array($fc, $includerefs) || checkperm("j*")) && !in_array($fc,$excluderefs))
             {
             $return[] = $fc;
             }

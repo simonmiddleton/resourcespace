@@ -731,7 +731,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         else    
             {
             $query.=" AND parent = ? ";
-            $parameters=array("i",$parent);
+            $parameters=array_merge($parameters,array("i",$parent));
             }
         $query.="ORDER BY order_by ASC;";
         

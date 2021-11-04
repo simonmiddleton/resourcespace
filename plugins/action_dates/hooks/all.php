@@ -311,7 +311,7 @@ function HookAction_datesCronCron()
         $newstatus = $action_dates_extra_config_setting["status"];
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
-            echo "action_dates: Checking extra action dates for field $datefield.".$LINE_END;
+            echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . $LINE_END;
             $additional_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource WHERE r.ref > 0 AND rd.resource_type_field = '$field' AND rd.value <>'' AND rd.value IS NOT null AND r.archive<>'$resource_deletion_state' AND r.archive<>'$newstatus'");
             
             foreach ($additional_resources as $resource)
