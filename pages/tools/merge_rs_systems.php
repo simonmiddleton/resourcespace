@@ -1556,16 +1556,16 @@ if($import && isset($folder_path))
             continue;
             }
 
-        $page_count = is_numeric($src_rdms["page_count"]) ? $src_rdms["page_count"] : "NULL";
-
-        sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count)
-                        VALUES ('{$resources_mapping[$src_rdms["resource"]]}',
-                                '{$src_rdms["width"]}',
-                                '{$src_rdms["height"]}',
-                                '{$src_rdms["file_size"]}',
-                                '{$src_rdms["resolution"]}',
-                                '{$src_rdms["unit"]}',
-                                {$page_count})");
+        sql_query(sprintf(
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', '%s')",
+            $resources_mapping[$src_rdms["resource"]],
+            $src_rdms["width"],
+            $src_rdms["height"],
+            $src_rdms["file_size"],
+            $src_rdms["resolution"],
+            escape_check($src_rdms["unit"]),
+            sql_null_or_val((string) $src_rdms["page_count"], !is_int_loose($src_rdms["page_count"]))
+        ));
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
