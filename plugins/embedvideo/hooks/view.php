@@ -2,8 +2,9 @@
 
 function HookEmbedvideoViewAfterresourceactions()
     {
-    global $embedvideo_resourcetype,$ffmpeg_preview_extension,$resource,$ref,$ffmpeg_preview_max_width,$ffmpeg_preview_max_height,$baseurl,$lang,$preload,$video_preview_original;
-    
+    global $embedvideo_resourcetype,$ffmpeg_preview_extension,$resource,$ref,$ffmpeg_preview_max_width,$ffmpeg_preview_max_height,$baseurl,$lang,
+    $preload,$video_preview_original,$access;
+
     if ($resource["resource_type"] != $embedvideo_resourcetype)
         {
         return false;
@@ -52,7 +53,7 @@ function HookEmbedvideoViewAfterresourceactions()
             <source src="' . $flashpath . '" type="video/' . $ffmpeg_preview_extension . '" >
             <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>');
         echo "\n";
-        echo htmlspecialchars(hook("html5videoextra"));
+        echo display_video_subtitles($ref,$access);
         echo "</video>";
         } // end hook replaceembedcode
     ?>
