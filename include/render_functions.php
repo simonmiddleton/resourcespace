@@ -1230,8 +1230,18 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'remove_collection':
                     if(confirm("<?php echo $lang['removecollectionareyousure']; ?>")) {
                         // most likely will need to be done the same way as delete_collection
-                        document.getElementById('collectionremove').value = '<?php echo urlencode($collection_data["ref"]); ?>';
-                        document.getElementById('collectionform').submit();
+                        var post_data = {
+                            ajax: true,
+                            dropdown_actions: true,
+                            remove: <?php echo urlencode($collection_data['ref']); ?>,
+                            <?php echo generateAjaxToken("remove_collection"); ?>
+                        };
+
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, 'json')
+                        .always(function(){
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php');
+                        }); 
+                        
                     }
                     break;
 
