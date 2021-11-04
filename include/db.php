@@ -422,7 +422,7 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 // Facial recognition setup
 if($facial_recognition)
     {
-    include __DIR__ . '/facial_recognition_functions.php';
+    include_once __DIR__ . '/facial_recognition_functions.php';
     $facial_recognition = initFacialRecognition();
     }
 
