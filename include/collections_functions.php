@@ -5610,6 +5610,17 @@ function compute_featured_collections_access_control()
     return $return;
     }
 
+
+/**
+ * Check if user is allowed to re-order featured collections
+ * @return boolean
+ */
+function can_reorder_featured_collections()
+    {
+    return checkperm('h') && compute_featured_collections_access_control() === true;
+    }
+
+
 /**
  * Remove all old anonymous collections
  *
