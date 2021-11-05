@@ -3642,7 +3642,8 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 $checkvalues=$s[1];
                 // Break down values delimited with pipe characters
-                $validvalues=explode("|",mb_strtoupper($checkvalues));
+                $validvalues = explode("|",$checkvalues);
+                $validvalues = array_map("i18n_get_translated",$validvalues);
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 

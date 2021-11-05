@@ -303,9 +303,13 @@ function check_view_display_condition($fields,$n,$fields_all)
 				{
 				if ($s[0]==$fields_all[$cf]["name"]) # this field needs to be checked
 					{					
-					$checkvalues=$s[1];
-					$validvalues=explode("|",strtoupper($checkvalues));
-					$v=trim_array(explode(",",strtoupper($fields_all[$cf]["value"])));
+					$checkvalues = $s[1];
+					$validvalues = explode("|",$checkvalues);
+					$validvalues = array_map("i18n_get_translated",$validvalues);
+					$validvalues = array_map("strtoupper",$validvalues);
+					$v = trim_array(explode(",",$fields_all[$cf]["value"]));
+					$v = array_map("i18n_get_translated",$v);
+					$v = array_map("strtoupper",$v);
 					foreach ($validvalues as $validvalue)
 						{
 						if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value						
