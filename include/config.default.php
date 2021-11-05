@@ -3095,7 +3095,7 @@ $CORS_whitelist = array();
 
 
 /* Font selection */
-$global_font="WorkSans";
+$global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
