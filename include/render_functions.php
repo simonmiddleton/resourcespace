@@ -2504,7 +2504,52 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     else if (!$forsearch  && $edit_autosave)
                         {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
                 <?php
-                }?>
+                }
+            
+            if($forsearch !== true)
+                {
+                ?>
+        <script>
+            //Get value of the date element before the change
+            jQuery('[name^=<?php echo $name;?>]').on('focus', function(){
+                jQuery.data(this, 'current', jQuery(this).val());
+            });
+            //Check the value of the date after the change
+            jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+            //Same again but for the end of the date range
+            jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+        </script>
+        <?php } ?>
     <!--  date range search end date-->         
     </div>
     <div class="clearerleft"></div>
