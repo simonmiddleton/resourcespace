@@ -462,7 +462,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         if(isset($amended_filename)){$filename=$amended_filename;}
         {
         if (!$revert){
-            update_field($ref,$filename_field,$filename);
+            update_field($ref,$filename_field,urldecode($filename));
             }
         else {
             update_field($ref,$filename_field,$original_filename);
