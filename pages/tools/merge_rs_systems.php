@@ -1574,7 +1574,7 @@ if($import && isset($folder_path))
             }
 
         sql_query(sprintf(
-            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', '%s')",
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', %s)",
             $resources_mapping[$src_rdms["resource"]],
             $src_rdms["width"],
             $src_rdms["height"],
