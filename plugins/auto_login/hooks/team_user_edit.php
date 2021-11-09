@@ -42,6 +42,6 @@ function HookAuto_loginTeam_user_editAftersaveuser()
         }
 
 	// All OK, save the record.
-    sql_query("UPDATE user SET auto_login_enabled = '{$auto_login_enabled}', auto_login_ip = '{$auto_login_ip}' WHERE ref = '{$ref}'");
+    ps_query("UPDATE user SET auto_login_enabled = ?, auto_login_ip = ? WHERE ref = ?", ['i', $auto_login_enabled, 's', $auto_login_ip, 'i', $ref]);
 	return true;
     }

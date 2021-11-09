@@ -191,7 +191,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
     if(!is_numeric($field))
         {
         // Name may have been passed    
-        $field = sql_value("select ref value from resource_type_field where name='" . escape_check($field) . "'","", "schema");
+        $field = ps_value("select ref value from resource_type_field where name= ?", ['s',$field],"", "schema");
         }
         
     if(!$editaccess || !metadata_field_edit_access($field))
@@ -362,7 +362,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
                     }	
 
-                sql_query("UPDATE resource SET field".$field."='" . $truncated_value . "' WHERE ref='" . escape_check($resource) . "'");
+                ps_query("UPDATE resource SET field".$field."= ? WHERE ref= ?", ['s', $truncated_value, 'i', $resource]);
                 }
             }
 
@@ -507,7 +507,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
     $resource = escape_check($resource);
 
-    sql_query("UPDATE resource_alt_files SET file_size='{$file_size}', creation_date = NOW() WHERE resource = '{$resource}' AND ref = '{$alternative_ref}'");
+    ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
 
     global $alternative_file_previews_batch;
     if($alternative_file_previews_batch)
@@ -619,7 +619,7 @@ function api_get_field_options($ref, $nodeinfo = false)
     if(!is_numeric($ref))
         {
         // Name may have been passed    
-        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","", "schema");
+        $ref = ps_value("select ref value from resource_type_field where name= ?", ['i',$ref], "", "schema");
         }
         
     if(!metadata_field_view_access($ref))
@@ -769,7 +769,7 @@ function api_add_resource_nodes($resource,$nodestring)
     foreach ($joined_fields_to_update as $field_update)
         {
         $resource_node_data = get_data_by_field($resource, $field_update);
-        sql_query("UPDATE resource SET field".$field_update."='" . $resource_node_data . "' WHERE ref='$resource'");
+        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $resource_node_data, 'i', $resource]);
         }
     
     return true;
