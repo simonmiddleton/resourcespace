@@ -10,7 +10,7 @@ global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $
 $deletetokens=getvalescaped("deletetokens",false);
 if ($deletetokens)
 	{
-	sql_query("update user set youtube_access_token='', youtube_refresh_token='', youtube_username='' where ref='$userref'");
+	ps_query("UPDATE user SET youtube_access_token = '', youtube_refresh_token = '', youtube_username = '' WHERE ref = ?", array("i", $userref));
 	}
 
 $ref=getvalescaped("resource","");
@@ -92,7 +92,7 @@ else
     if(!is_array($categories)){$youtube_error=$lang["youtube_publish_category_error"] . $categories;}
     }
 
-$youtube_username = sql_value("select youtube_username as value from user where ref='$userref'","");
+$youtube_username = ps_value("SELECT youtube_username AS value FROM user WHERE ref = ?", array("i", $userref), "");
 						
 if($youtube_object && isset( $_POST['video_title'] ) && isset( $_POST['video_description'] ) ) 
 	{
