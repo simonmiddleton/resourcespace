@@ -78,7 +78,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 					# Reached the end of valid session time, auto log out the user.
 					
 					# Remove session
-					sql_query("update user set logged_in=0,session='' where ref='$userref'");
+					ps_query("update user set logged_in = 0, session = '' where ref= ?",array("i",$userref));
 					hook("removeuseridcookie");
 					# Blank cookie / var
 					rs_setcookie("user", "", time() - 3600, "", "", substr($baseurl,0,5)=="https", true);					
@@ -124,12 +124,12 @@ if (!$valid && isset($anonymous_autouser_group))
     
 	# Prepare to create the user.
 	$email=trim(getvalescaped("email","")) ;
-    $username="anonymous" . sql_value("select max(ref)+1 value from user",0); # Make up a username.
+	$username="anonymous" . ps_value("select max(ref)+1 value from user", array(), 0); # Make up a username.
 	$password=make_password();
     $password_hash = rs_password_hash("RS{$username}{$password}");
 
     # Create the user
-	sql_query("insert into user (username,password,fullname,email,usergroup,approved) values ('" . $username . "','" . $password_hash . "','" . $username . "','','" . $anonymous_autouser_group . "',1)");
+	ps_query("insert into user (username,password,fullname,email,usergroup,approved) values (?, ?, ?, '', ?, 1)",array("s",$username,"s",$password_hash,"s",$username,"i",$anonymous_autouser_group));
 	$new = sql_insert_id();
    
     $login_data = perform_login();
@@ -247,7 +247,7 @@ else
 
 // don't update this table if the System is doing its own operations
 if (!isset($system_login)){
-	sql_query("update user set lang='$language', last_active=now(),logged_in=1,last_ip='" . escape_check(get_ip()) . "',last_browser='" . $last_browser . "' where ref='$userref'",false,-1,true,0);
+	ps_query("update user set lang = ?, last_active = now(), logged_in = 1, last_ip = ? , last_browser = ? where ref = ?", array("s",$language,"s",get_ip(),"s",$last_browser,"s",$userref), false, -1, true, 0);
 }
 
 # Add group specific text (if any) when logged in.
@@ -301,7 +301,7 @@ else
 
 # Load group specific plugins and reorder plugins list
 $plugins= array();
-$active_plugins = (sql_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 ORDER BY priority","plugins"));
+$active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
 
 
 foreach($active_plugins as $plugin)
