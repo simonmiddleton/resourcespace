@@ -58,31 +58,16 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
         $simple_search_escaped = escape_check($simple_search);
 
         if($code=="new")
-            {               
-            # Get current maximum code reference
-            $max=sql_value("select max(code) as value from archive_states","");
-                        $code=$max+1;
-            sql_query("
-                INSERT INTO archive_states (
-                                code,
-                                name,
-                                notify_group,
-                                more_notes_flag,
-                                notify_user_flag,
-                                email_from,
-                                bcc_admin,
-                                simple_search_flag
-                            )
-                    VALUES (
-                            '$code',
-                            '$name',
-                            '$notify_group',
-                            '$more_notes',
-                            '$notify_user',
-                            '$rse_workflow_email_from',
-                            '$rse_workflow_bcc_admin',
-                            '$simple_search_escaped'
-                           )");
+            {
+            rse_workflow_create_state([
+                'name' => $name,
+                'notify_group' => $notify_group,
+                'more_notes_flag' => $more_notes,
+                'notify_user_flag' => $notify_user,
+                'email_from' => $rse_workflow_email_from,
+                'bcc_admin' => $rse_workflow_bcc_admin,
+                'simple_search_flag' => $simple_search_escaped,
+            ]);
             }
         else
             {

@@ -170,7 +170,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
     $conditional_sql="";
     if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
         
-    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user " . $conditional_sql . " ORDER BY " . escape_check($job_order_by) . " " . escape_check($job_sort) . ",start_date ASC";
+    $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user " . $conditional_sql . " ORDER BY " . escape_check($job_order_by) . " " . escape_check($job_sort) . ",start_date ASC";
     $jobs=sql_query($sql);
     return $jobs;
     }

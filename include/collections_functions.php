@@ -1351,9 +1351,27 @@ function save_collection($ref, $coldata=array())
             sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
-        #log this
-        collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
-		
+
+        # log this only if a user is being added
+        if($coldata["users"]!="")
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
+            }
+        
+        # log the removal of users / smart groups
+        $was_shared_with = array();
+        $old_attached_users = array_map("escape_check",$old_attached_users);
+        $was_shared_with = sql_array("select username value from user where ref in ('" . join("','",$old_attached_users) . "')");
+        if (count($old_attached_groups) > 0)
+            {
+            foreach($old_attached_groups as $old_group)
+            $was_shared_with[] = "Group (Smart): " . sql_value("select name value from usergroup where ref='" . escape_check($old_group) . "'","");
+            }
+        if (count($urefs) == 0 && count($was_shared_with) > 0)
+            {
+            collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
+            }
+
         if($attach_user_smart_groups)
             {
             $groups=resolve_userlist_groups_smart($users);
@@ -2337,7 +2355,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             $colstack->push($child_fc);
             }
 
-        while(count($fcresources) < $themes_simple_images && !$colstack->isEmpty())
+        while(count($fcresources) < $limit && !$colstack->isEmpty())
             {
             $checkfc = $colstack->pop();
             if(!in_array($checkfc,$all_fcs_rp))
@@ -3060,7 +3078,7 @@ function remove_all_resources_from_collection($ref){
         }
 
     sql_query("DELETE FROM collection_resource WHERE collection = '" . escape_check($ref) . "'");
-    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "'");
+    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "' AND upload!=1");
     }	
 
 function get_home_page_promoted_collections()
@@ -5509,6 +5527,8 @@ function compute_featured_collections_access_control()
                     {
                     // Collection access has been explicitly denied
                     $excluderefs[] = $fcid;
+                    // Also deny access to child collections.
+                    $excluderefs = array_merge($excluderefs,array_keys($all_fcs_rp,$fcid));
                     }                
                 }
             }
@@ -5565,7 +5585,7 @@ function compute_featured_collections_access_control()
     $return = array();
     foreach($all_fcs_rp as $fc => $fcp)
         {
-        if(in_array($fc, $includerefs) && !in_array($fc,$excluderefs))
+        if((in_array($fc, $includerefs) || checkperm("j*")) && !in_array($fc,$excluderefs))
             {
             $return[] = $fc;
             }

@@ -2257,7 +2257,7 @@ if ($multiple && !$disable_geocoding)
             map3.setView([geoLat, geoLong], currentZoom);
         });
     </script>
-
+    </div>
     <div class="clearerleft"> </div> <?php
     hook("locationextras");
     }
@@ -2404,7 +2404,10 @@ if ($ref>0 && !$multiple)
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
-  $error_datetime = date('Y-m-d H:i:s');
+  foreach ($save_errors as &$save_error) 
+    {
+    $save_error=htmlspecialchars($save_error);
+    }
   ?>
   <script>
   preventautoscroll = true;

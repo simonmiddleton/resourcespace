@@ -4687,14 +4687,14 @@ function get_system_status()
         }
 
 
-    // Check that the cron process executed within the last 5 days* (FAIL)
+    // Check that the cron process executed within the last day (FAIL)
     $last_cron = strtotime(get_sysvar('last_cron', ''));
     $diff_days = (time() - $last_cron) / (60 * 60 * 24);
-    if($diff_days > 5)
+    if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
             'status' => 'FAIL',
-            'info' => 'Cron was executed ' . round($diff_days, 0) . ' days ago.',
+            'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
 
         return $return;

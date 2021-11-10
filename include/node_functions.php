@@ -731,7 +731,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         else    
             {
             $query.=" AND parent = ? ";
-            $parameters=array("i",$parent);
+            $parameters=array_merge($parameters,array("i",$parent));
             }
         $query.="ORDER BY order_by ASC;";
         
@@ -1895,6 +1895,8 @@ function get_tree_strings($resource_nodes,$allnodes = false)
                 in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
                 &&
                 !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
+                &&
+                !$resource_nodes[$n]["parent"]==$resource_nodes[$n]["ref"] // Cater for potential misconfiguration where parent==self (possibly a legacy from pre-nodes tree config)
                 )
                 {
                 // Don't add yet, add once parent has been added

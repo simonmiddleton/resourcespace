@@ -160,18 +160,18 @@ function UpdateRanges()
 
 <form method="post" action="pdf_split.php">
 <?php generateFormToken("pdf_split"); ?>
-<input type="hidden" name="ref" value="<?php echo $ref ?>">
-<input type="hidden" name="ranges" id="ranges" value="<?php echo getval("ranges","1:$page") ?>">
+<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref); ?>">
+<input type="hidden" name="ranges" id="ranges" value="<?php echo htmlspecialchars(getval("ranges","1:$page")); ?>">
 <div id="ranges_html">
 </div>
-<p>&gt;&nbsp;<a href="#" onclick="AddRange();return false;"><?php echo $lang["addrange"] ?></a></p>
+<p>&gt;&nbsp;<a href="#" onclick="AddRange();return false;"><?php echo htmlspecialchars($lang["addrange"]); ?></a></p>
 <br />
 <p>
-<input type="radio" name="method" checked value="alternativefile"><?php echo $lang["splitpdf_createnewalternativefile"] ?>
+<input type="radio" name="method" checked value="alternativefile"><?php echo htmlspecialchars($lang["splitpdf_createnewalternativefile"]); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="radio" name="method" value="resource"><?php echo $lang["splitpdf_createnewresource"] ?>
+<input type="radio" name="method" value="resource"><?php echo htmlspecialchars($lang["splitpdf_createnewresource"]); ?>
 </p>
-<p><input type="submit" value="<?php echo $lang["splitpdf"] ?>"></p>
+<p><input type="submit" value="<?php echo htmlspecialchars($lang["splitpdf"]); ?>"></p>
 </form>
 
 

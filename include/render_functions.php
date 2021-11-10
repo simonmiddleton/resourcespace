@@ -1230,8 +1230,18 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'remove_collection':
                     if(confirm("<?php echo $lang['removecollectionareyousure']; ?>")) {
                         // most likely will need to be done the same way as delete_collection
-                        document.getElementById('collectionremove').value = '<?php echo urlencode($collection_data["ref"]); ?>';
-                        document.getElementById('collectionform').submit();
+                        var post_data = {
+                            ajax: true,
+                            dropdown_actions: true,
+                            remove: <?php echo urlencode($collection_data['ref']); ?>,
+                            <?php echo generateAjaxToken("remove_collection"); ?>
+                        };
+
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, 'json')
+                        .always(function(){
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php');
+                        }); 
+                        
                     }
                     break;
 
@@ -2494,7 +2504,52 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     else if (!$forsearch  && $edit_autosave)
                         {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
                 <?php
-                }?>
+                }
+            
+            if($forsearch !== true)
+                {
+                ?>
+        <script>
+            //Get value of the date element before the change
+            jQuery('[name^=<?php echo $name;?>]').on('focus', function(){
+                jQuery.data(this, 'current', jQuery(this).val());
+            });
+            //Check the value of the date after the change
+            jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+            //Same again but for the end of the date range
+            jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+        </script>
+        <?php } ?>
     <!--  date range search end date-->         
     </div>
     <div class="clearerleft"></div>
@@ -3642,7 +3697,8 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 $checkvalues=$s[1];
                 // Break down values delimited with pipe characters
-                $validvalues=explode("|",mb_strtoupper($checkvalues));
+                $validvalues = explode("|",$checkvalues);
+                $validvalues = array_map("i18n_get_translated",$validvalues);
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 
@@ -3952,6 +4008,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
+    $title=htmlspecialchars($field["title"]);
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
     if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -3991,17 +4048,45 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$field=$modified_field;
 	    }
 	
-	# Handle expiry fields
-	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+    $warningtext="";
+    $dismisstext="";
+    $dismisslink="";
+    # Handle expiry date warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["warningexpired"] . "</h1><p>" . $lang["warningexpiredtext"] . "</p><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
+        $title = $lang["warningexpired"];
+        $warningtext = $lang["warningexpiredtext"];
+        $dismisstext = $lang["warningexpiredok"];
+        $dismisslink = "<p id=\"WarningOK\">
+        <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
+        $extra.="<style>#RecordDownload {display:none;}</style>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
+            <style>#RecordDownload {display:none;}</style>";
+            }   
 		}
 	
-	# Handle warning messages
-	if (!$valueonly && FIELD_TYPE_WARNING_MESSAGE == $field['type'] && '' != trim($value)) 
+	# Handle general warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
 		{
-		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
-		}
+        # title comes from field
+        # value comes from field
+        $warningtext = $value;
+        $dismisstext = $lang["warningdismiss"];
+        $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
+        <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
+            }
+        }
 	
     if ($field['value_filter']!="")
         {
@@ -4066,6 +4151,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			$value = $modified_value['value'];
 		    }
 
+        # Final stages of rendering
+
+        # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"])!="")
 			{
 			# Highlight keywords
@@ -4081,8 +4169,10 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
             Format: [lang-language-name_here]
@@ -4106,9 +4196,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
             $extra   .= $template;
 			}
-		else
+		else # No display template
 			{
-			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
+			# There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars

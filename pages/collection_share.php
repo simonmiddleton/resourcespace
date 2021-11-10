@@ -189,6 +189,14 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
 		}
 	}
 
+// If a plugin needs to fake having more resources, calculate how many are external to ResourceSpace to allow sharing 
+// collections when external resources are in that collection.
+$remoteResources = hook('getRemoteResources', '', [$ref]);
+if($remoteResources !== false)
+    {
+    $resource_count = $resource_count - $remoteResources;
+    }
+
 # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
 # The same applies for collections where the user creating the share doesn't have access to all resources in the collection e.g. some resources are in states blocked by a z permission.
 $minaccess = (isset($minaccess) ? $minaccess : collection_min_access($ref));

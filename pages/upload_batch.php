@@ -961,7 +961,12 @@ jQuery(document).ready(function () {
             count = Object.keys(files).length;
             jQuery('.uploadform input').prop('disabled','true'); 
             jQuery('.uploadform select').prop('disabled','true');
-            }
+            },
+
+        onBeforeFileAdded : (file, files) => {
+            file.name = escape(encodeURIComponent(file.name)); //Double escape, first pass is for non english characters and the second is for special characters
+            return file;
+        }
         });
     
         uppy.setMeta({

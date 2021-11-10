@@ -1081,10 +1081,11 @@ $non_image_types = config_merge_non_image_types();
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))
     {
-    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension, $GLOBALS['non_image_types']))
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types()))
         {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
-
+        // Don't create tiles for these
+        $GLOBALS['preview_tiles']=false;
         if(copy($newfile, $file_used_for_previewonly))
             {
             $previewonly = true;

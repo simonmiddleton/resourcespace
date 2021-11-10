@@ -131,16 +131,16 @@ function extractFitsMetadata($file_path, $resource)
     $resource_type = escape_check($resource['resource_type']);
 
     // Get a list of all the fields that have a FITS field set
-    $rs_fields_to_read_for = sql_query("
+    $rs_fields_to_read_for = ps_query("
            SELECT rtf.ref,
                   rtf.`type`,
                   rtf.`name`,
                   rtf.fits_field
              FROM resource_type_field AS rtf
             WHERE length(rtf.fits_field) > 0
-              AND (rtf.resource_type = '{$resource_type}' OR rtf.resource_type = 0)
+              AND (rtf.resource_type = ? OR rtf.resource_type = 0)
          ORDER BY fits_field;
-    ", "schema");
+    ", ['s', $resource_type], "schema");
 
     if(0 === count($rs_fields_to_read_for))
         {
@@ -303,9 +303,13 @@ function check_view_display_condition($fields,$n,$fields_all)
 				{
 				if ($s[0]==$fields_all[$cf]["name"]) # this field needs to be checked
 					{					
-					$checkvalues=$s[1];
-					$validvalues=explode("|",strtoupper($checkvalues));
-					$v=trim_array(explode(",",strtoupper($fields_all[$cf]["value"])));
+					$checkvalues = $s[1];
+					$validvalues = explode("|",$checkvalues);
+					$validvalues = array_map("i18n_get_translated",$validvalues);
+					$validvalues = array_map("strtoupper",$validvalues);
+					$v = trim_array(explode(",",$fields_all[$cf]["value"]));
+					$v = array_map("i18n_get_translated",$v);
+					$v = array_map("strtoupper",$v);
 					foreach ($validvalues as $validvalue)
 						{
 						if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value						
@@ -342,7 +346,7 @@ function update_fieldx(int $metadata_field_ref)
        
 
         $fieldinfo = get_resource_type_field($metadata_field_ref);
-        $allresources = sql_array("SELECT ref value from resource where ref>0 order by ref ASC",0);
+        $allresources = ps_array("SELECT ref value from resource where ref>0 order by ref ASC",0);
         if(in_array($fieldinfo['type'],$NODE_FIELDS))
                 {
                 foreach($allresources as $resource)
@@ -351,7 +355,7 @@ function update_fieldx(int $metadata_field_ref)
                     $resvals = array_column($resnodes,"name");
                     $resdata = implode(",",$resvals);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='$resource'");
+                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
                     
                     }
                 }
@@ -361,7 +365,7 @@ function update_fieldx(int $metadata_field_ref)
                     {
                     $resdata = get_data_by_field($resource,$metadata_field_ref);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    sql_query("update resource set field" . $metadata_field_ref . "='".escape_check($value)."' where ref='" . escape_check($resource) . "'");
+                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
                     
                     }
                 
@@ -392,7 +396,7 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
         {
         if ($remove_original)
             {
-            $delete=sql_query("delete from resource_dimensions where resource=".escape_check($ref));
+            $delete=ps_query("delete from resource_dimensions where resource= ?", ['i', $ref]);
             }
         $wh=explode("x",$dimensions_resolution_unit[0]);
         if(count($wh)>1)
@@ -400,27 +404,32 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
             $width=$wh[0];
             $height=$wh[1];
             $filesize=filesize_unlimited($file_path);
-            $sql_insert="insert into resource_dimensions (resource,width,height,file_size";
-            $sql_values=" values('".$ref."','$width','$height','$filesize'";
+            $sql_insert ="insert into resource_dimensions (resource,width,height,file_size";
+            $sql_params = [
+                's', $ref,
+                'i', $width,
+                'i', $height,
+                's', $filesize
+            ];
             
             if(count($dimensions_resolution_unit)>=2)
                 {
                 $resolution=$dimensions_resolution_unit[1];
                 $sql_insert.=",resolution";
-                $sql_values.=",'$resolution'";
+                $sql_params[] = 's'; $sql_params[] = $resolution;
                 
                 if(count($dimensions_resolution_unit)>=3)
                     {
                     $unit=$dimensions_resolution_unit[2];
                     $sql_insert.=",unit";
-                    $sql_values.=",'$unit'";
+                    $sql_params[] = 's'; $sql_params[] = $unit;
                     }
                 }
                 
             $sql_insert.=")";
-            $sql_values.=")";
+            $sql_values = "values (". ps_param_insert((count($sql_params)/2)) .")";
             $sql=$sql_insert.$sql_values;
-            $wait=sql_query($sql);
+            $wait=ps_query($sql, $sql_params);
             }
         }
     }
