@@ -120,12 +120,6 @@ if(getval('loginas', '') != '')
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
         redirect($baseurl . '/pages/home.php');
         }
-    else
-        {
-        sleep($password_brute_force_delay);
-		$error=$result['error'];
-        hook("dispcreateacct");
-        }
     exit();
     }
 ?>
