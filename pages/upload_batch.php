@@ -718,6 +718,9 @@ if ($processupload)
             if($filename_field != 0)
                 {
                 $target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+                $target_resourceDebug = $target_resource;
+                $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
+                debug($target_resourceDebug_message1);
                 $target_resource=array_values(array_intersect($target_resource,$replace_resources));
                 if(count($target_resource)==1  && !resource_file_readonly($target_resource[0]))
                     {
@@ -741,6 +744,8 @@ if ($processupload)
                 elseif(count($target_resource)==0)
                     {
                     // No resource found with the same filename
+                    $target_resourceDebug_message2 = "Target resource not found - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE FOUND - should have been: " . (count($target_resourceDebug)>0 ? json_encode($target_resourceDebug): "NONE"))  . " . Replace in resources: " . json_encode($replace_resources);
+                    debug($target_resourceDebug_message2);
                     $result["status"] = false;
                     $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                     $result["error"] = 106;
