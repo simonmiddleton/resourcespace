@@ -309,6 +309,12 @@ $rtf_src_resource_ref = 0;
 // Fixed list field options that will be applied to all imported SRC resources. List of node IDs.
 $nodes_applied_to_all_merged_resources = [];
 
+
+// A resource access moves across as is. Exception are resources with custom access which need to be converted to a
+// different access level (e.g open, restricted or confidential)
+// Acceptable values are: RESOURCE_ACCESS_FULL -or- RESOURCE_ACCESS_RESTRICTED -or- RESOURCE_ACCESS_CONFIDENTIAL
+$custom_access_new_value_spec = RESOURCE_ACCESS_RESTRICTED;
+
 ' . PHP_EOL);
     fclose($spec_fh);
     logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
@@ -661,6 +667,13 @@ if($import && isset($folder_path))
         exit(1);
         }
     include_once $spec_file_path;
+
+    // Quick spec file validation
+    if(!in_array($custom_access_new_value_spec, array_diff(RESOURCE_ACCESS_TYPES, [RESOURCE_ACCESS_CUSTOM_GROUP])))
+        {
+        logScript('ERROR: Specification file - invalid $custom_access_new_value_spec');
+        exit(1);
+        }
 
     /*
     progress.php is used to override the specification file that was provided as original input by keeping track of new 
@@ -1351,6 +1364,22 @@ if($import && isset($folder_path))
             logScript("ERROR: unable to create new resource!");
             exit(1);
             }
+
+        // Move across the resource access. Custom access gets remapped.
+        if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
+            {
+            sql_query(sprintf(
+                "UPDATE resource SET access = '%s' WHERE ref = '%s'",
+                escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
+                escape_check($new_resource_ref)
+            ));
+            }
+        else
+            {
+            logScript("ERROR: unknown resource access type - '{$src_resource['access']}'");
+            exit(1);
+            }
+
 
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
