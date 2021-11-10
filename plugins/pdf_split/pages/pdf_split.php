@@ -62,12 +62,12 @@ if (getval("method","")!="" && enforcePostRequest(false))
 				create_previews($ref,false,"pdf",false,false,$aref);
 				}
 			# Update size.
-			sql_query("update resource_alt_files set file_size='" . filesize_unlimited($copy_path) . "' where ref='$aref'");
+			ps_query("UPDATE resource_alt_files SET file_size = ? WHERE ref = ?", ['i', filesize_unlimited($copy_path), 'i', $aref]);
 			}
 		else
 			{
 			# Update the file extension
-			sql_query("update resource set file_extension='pdf' where ref='$copy'");
+			ps_query("UPDATE resource SET file_extension ='pdf' WHERE ref = ?", ['i', $copy]);
 			
 			# Create preview for the page.
 			create_previews($copy,false,"pdf");

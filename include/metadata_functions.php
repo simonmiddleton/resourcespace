@@ -346,7 +346,7 @@ function update_fieldx(int $metadata_field_ref)
        
 
         $fieldinfo = get_resource_type_field($metadata_field_ref);
-        $allresources = ps_array("SELECT ref value from resource where ref>0 order by ref ASC",0);
+        $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
         if(in_array($fieldinfo['type'],$NODE_FIELDS))
                 {
                 foreach($allresources as $resource)
