@@ -1316,7 +1316,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                     {
                     if ($view_in_browser)
                         {
-                        echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . $k . '" target="_blank"';
+                        echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
                         }
                     else
                         {
