@@ -15,7 +15,7 @@
  * @return mixed Count or array of actions
  */
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
-	{
+    {
     global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
     
     $actions_resource_review,$actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup;
@@ -56,20 +56,20 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     if($actionsql==""){return $countonly?0:array();}
     
     if ($countonly)
-        {return sql_value("SELECT COUNT(*) value FROM (" . $actionsql . ") allactions",0);}
+        {return ps_value("SELECT COUNT(*) value FROM (" . $actionsql . ") allactions",array(),0);}
     else
         {$actionsql = "SELECT date, allactions.ref,user.fullname as 
-			user,"
-			 . ($messages_actions_usergroup?"usergroup.name as 
-			usergroup,":"") . 
-			" description, 
-			type FROM (" . $actionsql . ")  allactions LEFT JOIN user ON 
-			allactions.user=user.ref"
-			 . ($messages_actions_usergroup?" LEFT JOIN usergroup ON 
-			user.usergroup=usergroup.ref":"") .
-			" ORDER BY " . $order_by . " " . $sort;}
+            user,"
+             . ($messages_actions_usergroup?"usergroup.name as 
+            usergroup,":"") . 
+            " description, 
+            type FROM (" . $actionsql . ")  allactions LEFT JOIN user ON 
+            allactions.user=user.ref"
+             . ($messages_actions_usergroup?" LEFT JOIN usergroup ON 
+            user.usergroup=usergroup.ref":"") .
+            " ORDER BY " . $order_by . " " . $sort;}
        
-    return sql_query($actionsql);  
+    return ps_query($actionsql);  
     }
     
 /**
@@ -78,13 +78,13 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
  * @return string
  */
 function get_editable_resource_sql()
-	{
-	global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states;
+    {
+    global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states;
     $default_display	= $list_display_fields;
     $search_all_workflow_states = false;
     $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
-	$editable_resource_sql=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
+    $editable_resource_sql=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
     return $editable_resource_sql;
-	}
+    }
     
