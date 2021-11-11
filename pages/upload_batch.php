@@ -410,22 +410,23 @@ if ($processupload)
     $extension=explode(".",$upfilename);
     $extension=trim(strtolower($extension[count($extension)-1]));
 
+	// Clean the filename
+	$origuploadedfilename=escape_check($upfilename);
+	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
+
     # Banned extension?
     global $banned_extensions;
     if (in_array($extension,$banned_extensions))
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
-        $result["status"] = true;
-        $result["message"] = str_replace("%%FILETYPE%%",$origuploadedfilename,$lang["error_upload_invalid_file"]);
+        $result["status"] = false;
+        $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
         $result["error"] = 105;
+        unlink($upfilepath);
         die(json_encode($result));
         }
 
 	hook('additional_plupload_checks');
-	// Clean the filename
-	if($replace){$origuploadedfilename=escape_check($upfilename);}
-	//$upfilename = preg_replace('/[^\w\.-]+/', '_', $upfilename);
-	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
 
     if($allowed_extensions != "")
         {
@@ -444,6 +445,7 @@ if ($processupload)
             $result["status"] = false;
             $result["message"] = str_replace("%%FILETYPE%%", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
             $result["error"] = 105;
+            unlink($upfilepath);
             die(json_encode($result));
             }            
         }
@@ -872,10 +874,6 @@ include "../include/header.php";
 ?>
 
 <script>
-<?php
-echo "show_upload_log=" . (($show_upload_log)?"true;":"false;") . "\n";
-
-?>
 redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
@@ -1293,6 +1291,7 @@ function processFile(file, forcepost)
                     {
                     processerrors.push(file.id);
                     }
+                upRedirBlock = true;
                 }
             else
                 {
@@ -1526,7 +1525,8 @@ function postUploadActions()
                         if(!jQuery('#UploadLogSection').is(':visible'))
                             {
                             jQuery('#UploadLogSectionHead').click();
-                            }
+                            }                        
+                        jQuery('#upload_continue').show();    
                         pageScrolltop('#UploadLogSection');
                     },";
                     ?>
@@ -1724,20 +1724,19 @@ hook('plupload_before_status');
 </form>
 </div><!-- End of UploadOptionsSection -->
 
-<?php 
-if ($show_upload_log)
-    {
-    ?>
-    <div class="BasicsBox">
+<div class="BasicsBox" >
     <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo $lang["log"]; ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
         <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
-    </div>
-    <?php
-    }
-    ?>
 </div>
+</div>
+
+<!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
+<div class="BasicsBox" >
+    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo $lang['continue']; ?>&nbsp;&nbsp;" 
+        onclick="return CentralSpaceLoad('<?php echo $redirecturl?>',true);">
+</div>    
 <?php
 
 hook("upload_page_bottom");
