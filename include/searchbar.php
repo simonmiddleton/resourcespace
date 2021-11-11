@@ -935,10 +935,6 @@ elseif($restypes=='')
 
 <?php hook("searchbarbottomtoolbar"); ?>
 
-<?php if ($swap_clear_and_search_buttons){?>
-<script type="text/javascript">jQuery("#clearbutton").before(jQuery("#searchbutton"));</script>
-<?php } ?>
-
 </div>
 <?php
 if ($simple_search_pills_view)

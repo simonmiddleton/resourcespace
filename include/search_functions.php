@@ -2917,28 +2917,17 @@ function get_selectedtypes()
 
 function render_advanced_search_buttons() 
     {
-    global $lang, $swap_clear_and_search_buttons, $baseurl_short;
- 
-    $button_search = "<input name=\"dosearch\" class=\"dosearch\" type=\"submit\" value=\"" . $lang["action-viewmatchingresults"] . "\" />";
-    $button_reset = "<input name=\"resetform\" class=\"resetform\" type=\"submit\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "')\" value=\"". $lang["clearbutton"] . "\" />";
-        
-    $html= '
-            <div class="QuestionSubmit QuestionSticky">
-            <label for="buttons"> </label>
-            {button1}
-            &nbsp;
-            {button2}
-            </div>';
-        
-    if ($swap_clear_and_search_buttons)
-            {
-            $content_replace = array("{button1}" => $button_search, "{button2}" => $button_reset);
-            } else 
-            {	
-            $content_replace = array("{button1}" => $button_reset, "{button2}" => $button_search);
-            }
-        
-    echo strtr($html, $content_replace);
+    global $lang, $baseurl_short;
+    ?>
+
+    <div class="QuestionSubmit QuestionSticky">
+        <label for="buttons"> </label>
+        <input name="resetform" class="resetform" type="submit" onClick="unsetCookie('search_form_submit','<?php echo $baseurl_short; ?>')" value="<?php echo $lang["clearbutton"]; ?>" />
+        &nbsp;
+        <input name="dosearch" class="dosearch" type="submit" value="<?php echo $lang["action-viewmatchingresults"]; ?>" />
+    </div>
+    
+    <?php
     }
     
 /**
