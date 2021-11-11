@@ -222,7 +222,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 					break;
 					}
 				$ws = $watched_searches[$i];
-				$view_search_url = search_notification_make_url($ws['search'],$ws['restypes'],$ws['archive']);
+				$view_search_url = search_notification_make_url($ws);
 				?><tr>
 					<td><?php echo nicedate(htmlspecialchars($ws["created"]), true, true, true); ?></td>
 					<td><?php echo highlightkeywords(htmlspecialchars($ws["username"]),$find); ?></td>
