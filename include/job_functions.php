@@ -193,7 +193,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
     if($find!="")
         {
         $find = '%' . $find . '%';
-        $condition[] = " (j.ref LIKE ? OR j.job_data LIKE ? OR j.success_text LIKE ? OR j.failure_text LIKE ? OR j.user LIKE ? OR u.username LIKE ? OR u.fullname LIKE ?)";  //DONE
+        $condition[] = " (j.ref LIKE ? OR j.job_data LIKE ? OR j.success_text LIKE ? OR j.failure_text LIKE ? OR j.user LIKE ? OR u.username LIKE ? OR u.fullname LIKE ?)";
         }
 
     $conditional_sql="";
