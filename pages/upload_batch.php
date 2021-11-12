@@ -967,7 +967,7 @@ jQuery(document).ready(function () {
             },
 
         onBeforeFileAdded : (file, files) => {
-            file.name = escape(encodeURIComponent(file.name)); //Double escape, first pass is for non english characters and the second is for special characters
+            file.name = encode_file_name(file.name);
             return file;
         }
         });
@@ -1134,6 +1134,20 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
     }
 ?>
+
+function encode_file_name(filename)
+    {
+    var specialChars = {
+        '&': '%26',
+        '<': '%3c',
+        '>': '%3e',
+        '"': '%22',
+        "'": '%27'
+    };
+
+    filename = encodeURI(filename);
+    return filename.replace(/[&<>"']/g, function(char) { return specialChars[char];});
+    }
 
 function processFile(file, forcepost)
     {
