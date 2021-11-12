@@ -15,56 +15,62 @@
  */
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
 	{
-	global $usergroup;
+	global $usergroup, $themes_in_my_collections, $rs_session;
+	global $anonymous_login,$username,$anonymous_user_session_collection;
 
-    $sql = "";
+    $condsql = "";
+    $condparams = [];
     $keysql = "";
+    $keyparams = [];
     $extrasql = "";
+    $extraparams = [];
+    $sort = strtoupper($sort) == "ASC" ? "ASC" : "DESC";
 
 	if ($find=="!shared")
 		{
 		# only return shared collections
-		$sql=" where (c.`type` = " . COLLECTION_TYPE_PUBLIC . " or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
+		//$sql=" where (c.`type` = " . COLLECTION_TYPE_PUBLIC . " or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
+        $condsql = " WHERE (c.`type` = ? OR c.ref IN (SELECT DISTINCT collection FROM user_collection WHERE user<>? UNION SELECT DISTINCT collection FROM external_access_keys))";
+        $condparams = array("i",COLLECTION_TYPE_PUBLIC,"i",$user);			
 		}
 	elseif (strlen($find)==1 && !is_numeric($find))
 		{
 		# A-Z search
-		$sql=" where c.name like '" . escape_check($find) . "%'";
+		$condsql=" WHERE c.name LIKE ?";
+        $condparams = array("s",$find . "%");
 		}
 	elseif (strlen($find)>1 || is_numeric($find))
 		{  
 		$keywords=split_keywords($find);
 		$keyrefs=array();
 		$keysql="";
+        $keyparams = array();
 		for ($n=0;$n<count($keywords);$n++)
 			{
 			$keyref=resolve_keyword($keywords[$n],false);
 			if ($keyref!==false) {$keyrefs[]=$keyref;}
-
-			$keysql.=" join collection_keyword k" . $n . " on k" . $n . ".collection=ref and (k" . $n . ".keyword='$keyref')";	
+            $keysql.=" JOIN collection_keyword k" . $n . " ON k" . $n . ".collection=ref AND (k" . $n . ".keyword=?)";
+            $keyparams = array("i",$keyref);
 			}
 		}
 
-    // Type filter
-    global $themes_in_my_collections;
-    $sql .= sprintf(
-        "%s c.`type` IN (%s, %s%s)",
-        ($sql == "" ? "WHERE" : " AND"),
-        COLLECTION_TYPE_STANDARD,
-        COLLECTION_TYPE_PUBLIC,
-        ($themes_in_my_collections ? ", " . COLLECTION_TYPE_FEATURED : ""));
+    $validtypes = [COLLECTION_TYPE_STANDARD,COLLECTION_TYPE_PUBLIC];
+    if($themes_in_my_collections)
+        {
+        $validtypes[] = COLLECTION_TYPE_FEATURED;
+        }
+    $condsql .= $condsql == "" ? "WHERE" : " AND";
+    $condsql .= " c.`type` IN (" . ps_param_insert(count($validtypes)) . ")";
+    $condparams =  array_merge($condparams,ps_param_fill($validtypes,"i"));   
 
     if($themes_in_my_collections)
         {
         // If we show featured collections, remove the categories
-        $keysql .= sprintf(
-            " WHERE (clist.`type` IN (%s, %s) OR (clist.`type` = %s AND clist.`count` > 0))",
-            COLLECTION_TYPE_STANDARD,
-            COLLECTION_TYPE_PUBLIC,
-            COLLECTION_TYPE_FEATURED);
+        $keysql .= " WHERE (clist.`type` IN (?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_STANDARD;
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_PUBLIC;
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_FEATURED;
         }
-
-	global $anonymous_login,$username,$anonymous_user_session_collection;
 
     if(isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
         {
@@ -72,59 +78,57 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         // get collections that have been specifically shared with the anonymous user 
         if('' == $sql)
             {
-            $extrasql = " where ";
+            $extrasql = " WHERE ";
             }
         else
             {
-            $extrasql .= " and ";
+            $extrasql .= " AND ";
             }
 
-        global $rs_session;
-
-        $extrasql .= " (c.session_id='{$rs_session}')";
+        $extrasql .= " (c.session_id=?";
+        $extraparams = array("s",$rs_session);
         }
-
    
 	$order_sort="";
-	if ($order_by!="name"){$order_sort=" order by $order_by $sort";}
+    $validsort =  array("name","ref","user","created","public","home_page_publish","type","parent");
+	if ($order_by!="name" && in_array(strtolower($order_by),$validsort))
+        {
+        $order_sort=" ORDER BY $order_by $sort";
+        }
 
-    $return = sprintf(
-        'SELECT * FROM (
+    $query = "SELECT * FROM (
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM user AS u
-                           JOIN collection AS c ON u.ref = c.user AND c.user = \'%1$s\'
+                           JOIN collection AS c ON u.ref = c.user AND c.user = ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
-                          %2$s %3$s
+                       $condsql 
+                       $extrasql
                        GROUP BY c.ref
         
                           UNION
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM user_collection AS uc
-                           JOIN collection AS c ON uc.collection = c.ref AND uc.user = \'%1$s\' AND c.user <> \'%1$s\'
+                           JOIN collection AS c ON uc.collection = c.ref AND uc.user = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
                       LEFT JOIN user AS u ON c.user = u.ref
-                          %2$s
+                       $condsql
                        GROUP BY c.ref
         
                           UNION
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM usergroup_collection AS gc
-                           JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = \'%4$s\' AND c.user <> \'%1$s\'
+                           JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
                       LEFT JOIN user AS u ON c.user = u.ref
-                          %2$s
+                       $condsql
                         GROUP BY c.ref
         ) AS clist
-        %5$s
-        GROUP BY ref %6$s',
-        escape_check($user), # %1$s
-        $sql, # %2$s
-        $extrasql, # %3$s
-        escape_check($usergroup), # %4$s
-        $keysql, # %5$s
-        $order_sort # %6$s
-    );
-    $return = sql_query($return);
+        $keysql
+        GROUP BY ref $order_sort";
+        
+    $queryparams = array_merge(array("i",$user),$condparams,$extraparams,array("i", $user,"i", $user),$condparams,array("i", $usergroup,"i",$user),$condparams,$keyparams);
+
+    $return = ps_query($query,$queryparams);
 	
 	if ($order_by=="name"){
 		if ($sort=="ASC"){usort($return, 'collections_comparator');}
