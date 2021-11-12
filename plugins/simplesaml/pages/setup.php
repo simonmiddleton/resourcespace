@@ -115,7 +115,7 @@ renderBreadcrumbs($links_trail);
 else
     {
     require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-    if(simplesaml_php_check() == false)
+    if(simplesaml_config_check() ==false)
         {
         echo "<div class='PageInfoMessage'>" . $lang['simplesaml_authorisation_version_error'] . "</div>";
         }

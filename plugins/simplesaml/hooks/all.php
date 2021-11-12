@@ -603,6 +603,7 @@ function HookSimplesamlAllCheck_access_key()
 
 function HookSimplesamlAllExtra_fail_checks()
     {
+    // Check if incompatible with PHP version
     $simplesaml_fail = [
         'name' => 'simplesaml',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
@@ -611,7 +612,7 @@ function HookSimplesamlAllExtra_fail_checks()
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_config_check() && simplesaml_php_check();
+        $samlok = simplesaml_php_check();
         }
     catch (Exception $e)
         {
@@ -620,4 +621,26 @@ function HookSimplesamlAllExtra_fail_checks()
     unset($GLOBALS['use_error_exception']);
 
     return $samlok ? false : $simplesaml_fail;
+    }
+
+function HookSimplesamlAllExtra_warn_checks()
+    {
+    // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
+    $simplesaml_warn = [
+        'name' => 'simplesaml',
+        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+    ];
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $samlok = simplesaml_config_check();
+        }
+    catch (Exception $e)
+        {
+        return array($simplesaml_warn);
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    return $samlok ? false : array($simplesaml_warn);
     }

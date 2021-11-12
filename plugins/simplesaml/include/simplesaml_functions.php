@@ -8,11 +8,11 @@
  */
 function simplesaml_get_lib_path()
     {
-    global $simplesaml_lib_path;
+    global $simplesaml_lib_path, $simplesaml_rsconfig;
 
     $lib_path = dirname(__FILE__) . '/../lib';
 
-    if('' == $simplesaml_lib_path)
+    if('' == $simplesaml_lib_path || $simplesaml_rsconfig)
         {
         return $lib_path;
         }

@@ -4818,14 +4818,24 @@ function get_system_status()
         'info' => implode(', ', array_column(get_active_plugins(), 'name')),
     ];
 
-
     // Return active user count (last 7 days)
     $return['results']['recent_user_count'] = [
         'status' => 'OK',
         'info' => get_recent_users(7)
     ];
 
-
+    // Check if plugins have any warnings
+    $extra_warn_checks = hook('extra_warn_checks');
+    if($extra_warn_checks !== false && is_array($extra_warn_checks) )
+        {
+        foreach ($extra_warn_checks as $extra_warn_check)
+            {
+            $return['results'][$extra_warn_check['name']] = [
+                'status' => 'WARN',
+                'info' => $extra_warn_check['info'],
+                ];
+            }
+        }
 
     if($warn_tests > 0)
         {
