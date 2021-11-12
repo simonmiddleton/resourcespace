@@ -1,5 +1,5 @@
 <?php
-$simplesaml_version = "1.18.5";
+$simplesaml_version = "1.19.3";
 $simplesaml_check_phpversion = "7.1";
 $simplesaml_site_block=false;
 $simplesaml_login=true;

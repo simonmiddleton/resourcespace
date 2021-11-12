@@ -49,7 +49,7 @@ $lang['simplesaml_authorisation_rules_description'] = 'Enable ResourceSpace to b
 $lang['simplesaml_authorisation_claim_name_label'] = 'Attribute (assertion/ claim) name';
 $lang['simplesaml_authorisation_claim_value_label'] = 'Attribute (assertion/ claim) value';
 $lang['simplesaml_authorisation_login_error'] = "You don't have access to this application! Please contact the administrator for your account!";
-$lang['simplesaml_authorisation_version_error'] = "IMPORTANT: Your SimpleSAML configuration needs to be updated before you can use it with PHP version 7.1 or later. Please refer to the <a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade' target='_blank'> Upgrading SimpleSAML </a> section of the Knowledge Base for more information";
+$lang['simplesaml_authorisation_version_error'] = "IMPORTANT: Your SimpleSAML configuration needs to be updated before you can use it with this PHP version. Please refer to the <a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade' target='_blank'> Upgrading SimpleSAML </a> section of the Knowledge Base for more information";
 $lang['simplesaml_healthcheck_error'] = "SimpleSAML plugin error";
 $lang['simplesaml_rsconfig'] = "Use standard ResourceSpace configuration files to set SP configuration and metadata? If this set to false then manual editing of files is required";
 $lang['simplesaml_sp_generate_config'] = "Generate SP config";
@@ -76,7 +76,8 @@ $lang['simplesaml_sp_technicalcontact_name'] = "Technical contact name";
 $lang['simplesaml_sp_technicalcontact_email'] = "Technical contact email";
 $lang['simplesaml_sp_auth.adminpassword'] = "SP Test site admin password";
 $lang['simplesaml_acs_url'] = "ACS URL / Reply URL";
-$lang['simplesaml_entity_id'] = "Entity ID";
+$lang['simplesaml_entity_id'] = "Entity ID/metadata URL";
 $lang['simplesaml_single_logout_url'] = "Single logout URL";
 $lang['simplesaml_start_url'] = "Start/Sign on URL";
 $lang['simplesaml_existing_config'] = "Follow the Knowledge Base instructions to migrate your existing SAML configuration";
+$lang['simplesaml_test_site_url'] = "SimpleSAML test site URL";

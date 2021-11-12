@@ -137,6 +137,7 @@ else
             $spdata[$lang["simplesaml_entity_id"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/metadata.php/" . $authsource;
             $spdata[$lang["simplesaml_single_logout_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-logout.php/" . $authsource;
             $spdata[$lang["simplesaml_start_url"]] = $baseurl;
+            $spdata[$lang["simplesaml_test_site_url"]] = $baseurl . "/plugins/simplesaml/lib/www";            
             
             echo config_section_header($lang['simplesaml_sp_data'], '');
             echo "<div class='TableArray'>";
@@ -186,7 +187,6 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 <div class='Question' id='sp_config_links'><label></label><div class='Fixed'>
     <?php
     $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
-    
     if(isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php"))
         {
         echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a></br>";
