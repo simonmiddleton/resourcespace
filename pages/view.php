@@ -1277,7 +1277,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
 				{
 				?><a id="downloadlink" <?php
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
-							. "&ext=" . $size_info["extension"])))
+							. "&ext=" . $size_info["extension"],  $view_in_browser)))
 						{
                         if ($view_in_browser)
                             {
