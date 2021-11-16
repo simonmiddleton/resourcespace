@@ -5,7 +5,7 @@ include_once '../include/checkmail_functions.php';
 
 
 // required: check that this plugin is activated
-$activated=sql_value("select inst_version value from plugins where name='checkmail'","");
+$activated = ps_value("select inst_version value from plugins where name = 'checkmail'", array(), "");
 if ($activated==""){die("checkmail plugin deactivated\r\n");}
 $process_locks_max_seconds=600;
 
@@ -48,7 +48,7 @@ set_process_lock("checkmail");
 
 
 // manually include plugin config since authenticate isn't being run
-$config = sql_value("select config value from plugins where name='checkmail'","");
+$config = ps_value("select config value from plugins where name = 'checkmail'", array(), "");
 include_plugin_config("checkmail",$config);
 
 if (!isset($temp_dir) || $temp_dir=''){$temp_dir=$storagedir."/tmp/checkmail_in";}
@@ -74,8 +74,8 @@ catch (Exception $e)
 unset($GLOBALS["use_error_exception"]);
 
 
-sql_query("delete from sysvars where name='last_checkmail'");
-sql_query("insert into sysvars (value,name) values (now(),'last_checkmail')");
+ps_query("delete from sysvars where name = 'last_checkmail'", array());
+ps_query("insert into sysvars (value,name) values (now(),'last_checkmail')", array());
 
 $msgnos=imap_search($imap, 'UNSEEN');
 if ($msgnos==null){
@@ -360,7 +360,7 @@ for ($n=0;$n<count($files);$n++){
 	fclose($fp);
 
 	// Get resource defaults for user's group
-	$userresourcedefaults=sql_query("select resource_defaults from usergroup where ref='" . $fromuser['groupref'] . "'");
+	$userresourcedefaults = ps_query("select resource_defaults from usergroup where ref = ?", array("i",$fromuser['groupref']));
 	if (isset($userresourcedefaults)){
 		$userresourcedefaults=$userresourcedefaults[0];
 		$userresourcedefaults=$userresourcedefaults["resource_defaults"];
@@ -368,8 +368,8 @@ for ($n=0;$n<count($files);$n++){
 
 	// Create resource
 	$r=create_resource($resource_type,$checkmail_archive_state,$fromuser_ref);  echo "Creating Resource $r \r\n";
-	sql_query("update resource set access='".$access."',file_extension='".$file['extension']."',preview_extension='jpg',file_modified=now() where ref='$r'");
-		
+	ps_query("update resource set access = ?, file_extension = ?, preview_extension = 'jpg', file_modified = now() where ref = ?", array("i",$access,"s",$file['extension'],"i",$r));
+
 	// Update metadata fields  // HTML OPTIONS
 	update_field($r,$filename_field,$file['filename']); 
 	update_field($r,$checkmail_subject_field,$subject);
