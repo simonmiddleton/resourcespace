@@ -2872,7 +2872,7 @@ function get_search_default_restypes()
 	
 function get_selectedtypes()
     {
-    global $search_includes_resources;
+    global $search_includes_resources, $default_advanced_search_mode;
 
 	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
 	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
@@ -2893,7 +2893,7 @@ function get_selectedtypes()
         {
         if (isset($default_advanced_search_mode)) 
             {
-            $selectedtypes = explode(',',$default_advanced_search_mode);
+            $selectedtypes = explode(',',trim($default_advanced_search_mode, ' ,'));
             }
         else
             {

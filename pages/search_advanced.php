@@ -437,15 +437,35 @@ if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_res
  <label><?php echo $lang["search-mode"]?></label><?php
  
  $wrap=0;
+
+ $checked=false;
+ if(!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
+ 	{
+	$checked=true;
+	}
+elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
+	{
+	$checked=true;
+	}
  ?><table><tr>
- <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if (in_array("Global",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php echo $lang["resources-all-types"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+ <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo $lang["resources-all-types"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
  $hiddentypes=Array();
  for ($n=0;$n<count($types);$n++)
-	 {
-		 if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
-	 $wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
-	 ?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if (in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php	
-	 }
+	{
+	if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
+	$wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
+	$checked=false;	
+	if(!empty($selectedtypes[0]) && (in_array("Global",$selectedtypes) || in_array($types[$n]["ref"],$selectedtypes)))
+		{
+		$checked=true;
+		}
+	elseif((in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) && empty($selectedtypes[0]))
+		{
+		$checked=true;
+		}
+
+	?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php	
+	}
  ?>
  <?php if ($search_includes_themes)
 	 {
