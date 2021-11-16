@@ -1,5 +1,6 @@
 <?php
 include "../../../include/db.php";
+include_once "../include/feedback_functions.php";
 
 
 # Make a folder for this
@@ -10,7 +11,9 @@ if(!is_dir($storagedir . "/feedback"))
     }
     
 # Load config
-if (file_exists($storagedir . '/feedback/config.php')) {include $storagedir . '/feedback/config.php';}
+$config 			  = get_feedback_config(__DIR__ . '../config/config.php');
+$feedback_questions   = $config['questions'];
+$feedback_prompt_text = $config['prompt_text'];
 
 
 if (array_key_exists("user",$_COOKIE))
@@ -19,8 +22,8 @@ if (array_key_exists("user",$_COOKIE))
 	$session_hash=$_COOKIE["user"];
 	$loggedin = ps_value("SELECT count(*) value FROM user WHERE session = ? and approved = 1 and timestampdiff(second, last_active, now()) < (30*60)", array("s", $session_hash), 0);
 	if ($loggedin>0 || $session_hash=="|") // Also checks for dummy cookie used in external authentication
-        	{
-	        # User is logged in. Proceed to full authentication.
+		{
+		# User is logged in. Proceed to full authentication.
 		include "../../../include/authenticate.php";
 		}
 	}
@@ -43,12 +46,20 @@ $sent=false;
 
 if (getval("send","")!="" && enforcePostRequest(false))
 	{
+	//Initialize array used to write to database
+	$feebackData = [];
+
     debug("feedback.php: Sending user survey...");
 	$csvheaders="\"date\"";
 	$csvline="\"" . date("Y-m-d") . "\"";
 	$message="Date: ". date("Y-m-d")."\n";
+
+	//add intial values to the data array
+	$feebackData['date'] = date("Y-m-d");
+	$feebackData['user'] = $username;
+
     debug("feedback.php: count(\$feedback_questions) = " . count($feedback_questions));
-	for ($n=1;$n<=count($feedback_questions);$n++)
+	for ($n=0;$n<count($feedback_questions);$n++)
 		{
 		$type=$feedback_questions[$n]["type"];
         debug("feedback.php: \$type = {$type}");
@@ -82,9 +93,10 @@ if (getval("send","")!="" && enforcePostRequest(false))
             debug("feedback.php: \$csvline = {$csvline}");
 			$csvheaders.="\"".str_replace("\"","'",str_replace("\n","",$feedback_questions[$n]['text']))."\"";
 			if ($value!=""){$message.=$feedback_questions[$n]['text'].": \n". $value."\n\n";}
+			$feebackData[$feedback_questions[$n]['text']] = $value;
 			}
 		}
-	
+
 	# Append user name and group to CSV file
 	$message="\n\nUser: " .$username."\nUsergroup: ".$usergroupname."\n".$message;
 	$csvline="\"$username\",\"$usergroupname\"," . $csvline;
@@ -117,7 +129,9 @@ if (getval("send","")!="" && enforcePostRequest(false))
             debug("feedback.php: \$use_phpmailer = " . ($use_phpmailer ? 'true' : 'false'));
 			$templatevars['message']=$message . "Survey results attached\n\n";
 			send_mail($email_notify,$username." has submitted feedback for ".$applicationname,$message,"","","emailfeedback",$templatevars);
-			} 
+			}
+		
+		save_feedback_data($feebackData);
 		}
 
 	}
@@ -145,7 +159,7 @@ generateFormToken("feedback");
 if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><br /><?php } ?>
 <?php 
 	
-for ($n=1;$n<=count($feedback_questions);$n++)
+for ($n=0;$n<count($feedback_questions);$n++)
 	{
 	$type=$feedback_questions[$n]["type"];
 	$text=$feedback_questions[$n]["text"];	
