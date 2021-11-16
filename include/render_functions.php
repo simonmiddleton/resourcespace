@@ -2981,13 +2981,15 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     {
     global $lang;
     $fieldtypefilter = "";
-	if(count($ftypes)>0)
-		{
-		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
-		}
-        
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
-    
+    $parameters = array();
+    if(count($ftypes)>0)
+        {
+        $fieldtypefilter = " WHERE type IN (" . ps_param_insert(count($ftypes)) . ")";
+        $parameters = ps_param_fill($ftypes,"i");
+        }
+
+    $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
+
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
     echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
