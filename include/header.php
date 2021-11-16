@@ -560,14 +560,16 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
                     { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
-                    <?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+                    <?php 
+                        if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
                             $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
-                            if ($pending>0)
-                                {
-                                ?><span class="Pill"><?php echo $pending ?></span><?php
-                                }
+                            ?><span id="TeamMessages" class="Pill" <?php echo $pending>0?'data-value="'.$pending.'"':'style="display:none"'?>><?php echo $pending>0?$pending:'' ?></span><?php
+                            }
+                        else
+                            {
+                            ?><span id="TeamMessages" class="Pill" style="display:none"></span><?php
                             }
                         ?>
                     </li><?php
