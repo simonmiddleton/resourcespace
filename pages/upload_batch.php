@@ -966,7 +966,12 @@ jQuery(document).ready(function () {
             count = Object.keys(files).length;
             jQuery('.uploadform input').prop('disabled','true'); 
             jQuery('.uploadform select').prop('disabled','true');
-            }
+            },
+
+        onBeforeFileAdded : (file, files) => {
+            file.name = encode_file_name(file.name);
+            return file;
+        }
         });
     
         uppy.setMeta({
@@ -1131,6 +1136,20 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
     }
 ?>
+
+function encode_file_name(filename)
+    {
+    var specialChars = {
+        '&': '%26',
+        '<': '%3c',
+        '>': '%3e',
+        '"': '%22',
+        "'": '%27'
+    };
+
+    filename = encodeURI(filename);
+    return filename.replace(/[&<>"']/g, function(char) { return specialChars[char];});
+    }
 
 function processFile(file, forcepost)
     {
