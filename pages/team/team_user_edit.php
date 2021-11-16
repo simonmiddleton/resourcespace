@@ -110,16 +110,13 @@ if(getval('loginas', '') != '')
     global $CSRF_token_identifier, $usersession;
 
     //userkey and CSRF tokens still need to be placed in post array as preform_login() references these directly
-    $_POST                         = [];
-    $_POST['userkey']              = md5(escape_check($user["username"]) . $scramble_key);
+    $_POST = [];
+    $_POST['username'] = $user['username'];
+    $_POST['password'] = $user['password'];
+    $_POST['userkey'] = md5(escape_check($user["username"]) . $scramble_key);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
-    $result=perform_login($user['username'], $user['password']);
-	if ($result['valid'])
-		{
-        set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
-        redirect($baseurl . '/pages/home.php');
-        }
+    include '../../login.php';
     exit();
     }
 ?>
