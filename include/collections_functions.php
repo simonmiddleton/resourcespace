@@ -75,7 +75,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         {
         // Anonymous user - only get the user's own collections that are for this session - although we can still join to 
         // get collections that have been specifically shared with the anonymous user 
-        if('' == $sql)
+        if('' == $condsql)
             {
             $extrasql = " WHERE ";
             }
@@ -84,7 +84,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
             $extrasql .= " AND ";
             }
 
-        $extrasql .= " (c.session_id=?";
+        $extrasql .= " (c.session_id=?)";
         $extraparams = array("s",$rs_session);
         }
    
