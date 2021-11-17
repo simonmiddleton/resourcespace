@@ -149,6 +149,12 @@ function temp_local_download_remote_file(string $url)
         get_temp_dir(false, $tmp_uniq_path_id),
         $filename);
 
+    if($tmp_file_path == $url)
+        {
+        // Already downloaded earlier by API call 
+        return $tmp_file_path;
+        }
+
     // Download the file
     $GLOBALS['use_error_exception'] = true;
     try
