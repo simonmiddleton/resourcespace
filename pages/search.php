@@ -1530,6 +1530,7 @@ if($responsive_ui)
         $result_count = count($result);
         for ($n=0;$n<$result_count;$n++)
             {
+            if(!is_array($result[$n])){continue;}
             if ($result[$n]["ref"]) {$refs[]=$result[$n]["ref"];} # add this to a list of results, for query refining later
             }
         $suggest=suggest_refinement($refs,$search);
