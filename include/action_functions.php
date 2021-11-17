@@ -16,16 +16,20 @@
  */
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
     {
-    global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
-    
-    $actions_resource_review,$actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup;
-        
+    global $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups, $actions_resource_review,
+    $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup, $actions_notify_states;
+
+    // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
+    if(isset($actions_resource_review) && !$actions_resource_review)
+        {
+        $actions_notify_states = "";
+        }
     $actionsql="";    
     $filtered = $type!="";
     
     if(!$actions_on){return array();}
         
-    if($actions_resource_review && (!$filtered || 'resourcereview'==$type))
+    if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
         $search_all_workflow_states = false;
         $default_display	= $list_display_fields;

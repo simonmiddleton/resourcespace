@@ -67,40 +67,43 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
       
     /***** NOTIFY GROUP SUPPORT *****/
-    if(isset($wfstates[$archive]['notify_group']) && $wfstates[$archive]['notify_group'] != '')
-        {   
-        $archive_notify = sql_query("
-            SELECT ref, email
-              FROM user
-             WHERE approved = 1
-               AND usergroup = '" . escape_check($wfstates[$archive]['notify_group']) . "'
-        ");
 
-        // Send notifications to members of usergroup
-        foreach($archive_notify as $archive_notify_user)
-            {
-            debug("processing notification for notify user " . $archive_notify_user['ref']);
-            get_config_option($archive_notify_user['ref'],'user_pref_resource_notifications', $send_message);          
-            if($send_message==false)
-                {
-                continue;
-                }
+
+    // TODO - replace this with code to set to the default $actions_notify_states if not set by user
+    // if(isset($wfstates[$archive]['notify_group']) && $wfstates[$archive]['notify_group'] != '')
+    //     {   
+    //     $archive_notify = sql_query("
+    //         SELECT ref, email
+    //           FROM user
+    //          WHERE approved = 1
+    //            AND usergroup = '" . escape_check($wfstates[$archive]['notify_group']) . "'
+    //     ");
+
+    //     // Send notifications to members of usergroup
+    //     foreach($archive_notify as $archive_notify_user)
+    //         {
+    //         debug("processing notification for notify user " . $archive_notify_user['ref']);
+    //         get_config_option($archive_notify_user['ref'],'user_pref_resource_notifications', $send_message);          
+    //         if($send_message==false)
+    //             {
+    //             continue;
+    //             }
                 
-            // Does this user want an email or notification?
-            get_config_option($archive_notify_user['ref'],'email_user_notifications', $send_email); 
-            if($send_email && filter_var($archive_notify_user["email"], FILTER_VALIDATE_EMAIL))
-                {
-                debug("sending email notification to user " . $archive_notify_user['ref']);
-                send_mail($archive_notify_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl);
-                }
-            else
-                {
-                global $userref;
-                debug("sending system notification to user " . $archive_notify_user['ref']);
-                message_add($archive_notify_user['ref'],$message,$linkurl);
-                }
-            }
-        }
+    //         // Does this user want an email or notification?
+    //         get_config_option($archive_notify_user['ref'],'email_user_notifications', $send_email); 
+    //         if($send_email && filter_var($archive_notify_user["email"], FILTER_VALIDATE_EMAIL))
+    //             {
+    //             debug("sending email notification to user " . $archive_notify_user['ref']);
+    //             send_mail($archive_notify_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl);
+    //             }
+    //         else
+    //             {
+    //             global $userref;
+    //             debug("sending system notification to user " . $archive_notify_user['ref']);
+    //             message_add($archive_notify_user['ref'],$message,$linkurl);
+    //             }
+    //         }
+    //     }
     /***** END OF NOTIFY GROUP SUPPORT *****/
 
     /*****NOTIFY CONTRIBUTOR*****/

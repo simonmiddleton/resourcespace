@@ -539,12 +539,6 @@ function create_resource($resource_type,$archive=999,$user=-1)
 		add_keyword_mappings($insert,$userinfo["username"] . " " . $userinfo["fullname"],-1);
 		}
 
-	# Copying a resource of the 'pending review' state? Notify, if configured.
-	if ($archive==-1)
-		{
-		notify_user_contributed_submitted(array($insert));
-		}
-
 	return $insert;
 	}
     
@@ -565,8 +559,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	{
 	# Save all submitted data for resource $ref.
 	# Also re-index all keywords from indexable fields.
-	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
-           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
+	global $lang, $multilingual_text_fields,
+           $languages, $language, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
            $userref;
@@ -1810,8 +1804,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             }
         }
 	
-	# Also update archive status
-	global $user_resources_approved_email,$email_notify;	
+	# Also update archive status	
 	if (getval("editthis_status","")!="")
 		{
 		$notifyrefs=array();
@@ -3484,13 +3477,6 @@ function copy_resource($from,$resource_type=-1)
 	# Reindex the resource so the resource_keyword entries are created
 	reindex_resource($to);
 	
-	# Copying a resource of the 'pending review' state? Notify, if configured.
-	global $send_collection_to_admin;
-	if ($archive==-1 && !$send_collection_to_admin)
-		{
-		notify_user_contributed_submitted(array($to));
-		}
-	
 	# Log this			
 	daily_stat("Create resource",$to);
 	resource_log($to,LOG_CODE_CREATED,0);
@@ -4549,208 +4535,6 @@ function user_rating_save($userref,$ref,$rating)
 	sql_query("update resource set user_rating='$average',user_rating_total='$total',user_rating_count='$count' where ref='$ref'");
 		
 	}
-
-
-/**
- * Get contributed by user formatted for inclusion in notifications
- *
- * @param  int     $ref         ID of resource
- * @param  string  $htmlbreak   HTML break type
- * 
- * @return string
- */
-function process_notify_user_contributed_submitted($ref,$htmlbreak)
-	{
-	global $use_phpmailer,$baseurl, $lang;
-	$url="";
-	$url=$baseurl . "/?r=" . $ref;
-	
-	if ($use_phpmailer){$url="<a href'$url'>$url</a>";}
-	
-	// Get the user (or username) of the contributor:
-	$query = "SELECT user.username, user.fullname FROM resource INNER JOIN user ON user.ref = resource.created_by WHERE resource.ref ='".$ref."'";
-	$result = sql_query($query);
-	$user = '';
-	if(count($result) == 0)
-        {
-        $user = $lang["notavailableshort"];
-        }
-    elseif(trim($result[0]['fullname']) != '') 
-		{
-		$user = $result[0]['fullname'];
-		} 
-	else 
-		{
-		$user = $result[0]['username'];
-		}
-	return $htmlbreak . $user . ': ' . $url;
-	}
-
-/**
- * Send notifications when resources are moved from "User Contributed - Pending Submission" to "User Contributed - Pending Review"
- *
- * @param  array|int  $refs         ID of resource(s)
- * @param  int        $collection   ID of collection
- * 
- * @return boolean|void
- */
-function notify_user_contributed_submitted($refs,$collection=0)
-	{
-	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer,$userref;
-	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
-	$htmlbreak="\r\n";
-	if ($use_phpmailer){$htmlbreak="<br /><br />";}
-	
-	$list="";
-	if(is_array($refs))
-		{
-		for ($n=0;$n<count($refs);$n++)
-			{
-			$list .= process_notify_user_contributed_submitted($refs[$n],$htmlbreak);
-			}
-		}
-	else
-		{
-		$list=process_notify_user_contributed_submitted($refs,$htmlbreak);
-		}
-		
-	$list.=$htmlbreak;	
-	
-    if($collection != 0) 
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!collection" . $collection;
-        }
-    elseif(is_array($refs) && count($refs) < 200)
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!list" . implode(":",$refs);
-        }
-    else
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1";
-        }
-	
-	$templatevars['list']=$list;
-	$message=$lang["userresourcessubmitted"] . "\n\n". $templatevars['list'] . "\n\n" . $lang["viewall"] . "\n\n" . $templatevars['url'];
-	$notificationmessage=$lang["userresourcessubmittednotification"];
-	$notify_users=get_notification_users(array("e-1","e0")); 
-	$message_users=array();
-	foreach($notify_users as $notify_user)
-			{
-			get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
-				{
-				send_mail($notify_user["email"],$applicationname . ": " . $lang["status-1"],$message,"","","emailnotifyresourcessubmitted",$templatevars);
-				}        
-			else
-				{
-				$message_users[]=$notify_user["ref"];
-				}
-			}
-	if (count($message_users)>0)
-		{
-		global $userref;
-		if($collection!=0)
-			{
-			message_add($message_users,$notificationmessage,$templatevars['url'],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
-			}
-		else
-			{
-			message_add($message_users,$notificationmessage,$templatevars['url'],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_RESOURCE,(is_array($refs)?$refs[0]:$refs));
-			}
-		}
-    }
-    
-/**
-* Send notifications when resources are moved from "User Contributed - Pending Review" to "User Contributed - Pending Submission"
-*
-* @param  array|int  $refs    ID of resource(s)
-* @param  mixed $collection   ID of collection
-* 
-* @return boolean
-*/
-function notify_user_contributed_unsubmitted($refs,$collection=0)
-	{
-	// Send notifications when resources are moved from "User Contributed - Pending Review"	to "User Contributed - Pending Submission"
-	global $notify_user_contributed_unsubmitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
-	if (!$notify_user_contributed_unsubmitted) {return false;} # Only if configured.
-	
-	$htmlbreak="\r\n";
-	if ($use_phpmailer){$htmlbreak="<br /><br />";}
-	
-	$list="";
-	if(is_array($refs))
-		{
-		for ($n=0;$n<count($refs);$n++)
-			{
-			$url="";	
-			$url=$baseurl . "/?r=" . $refs[$n];
-			
-			if ($use_phpmailer){$url="<a href=\"$url\">$url</a>";}
-			
-			$list.=$htmlbreak . $url . "\n\n";
-			}
-		}
-	else
-		{
-		$url="";	
-		$url=$baseurl . "/?r=" . $refs;
-		if ($use_phpmailer){$url="<a href=\"$url\">$url</a>";}
-		$list.=$htmlbreak . $url . "\n\n";
-		}
-	
-	$list.=$htmlbreak;		
-	$templatevars['list']=$list;
-	
-	if($collection != 0) 
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!collection" . $collection;
-        }
-    elseif(is_array($refs) && count($refs) < 200)
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!list" . implode(":",$refs);
-        }
-    else
-        {
-        $templatevars['url'] = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-2";
-        }
-        
-	$message=$lang["userresourcesunsubmitted"]."\n\n". $templatevars['list'] . $lang["viewall"] . "\n\n" . $templatevars['url'];
-
-	$notificationmessage=$lang["userresourcesunsubmittednotification"];
-	$notify_users=get_notification_users(array("e-1","e0")); 
-	$message_users=array();
-	foreach($notify_users as $notify_user)
-			{
-			get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
-				{
-				send_mail($notify_user["email"],$applicationname . ": " . $lang["status-2"],$message,"","","emailnotifyresourcesunsubmitted",$templatevars);
-				}        
-			else
-				{
-				$message_users[]=$notify_user["ref"];
-				}
-			}
-	if (count($message_users)>0)
-		{
-		global $userref;
-        message_add($message_users,$notificationmessage,$templatevars['url']);
-		}
-	
-	# Clear any outstanding notifications relating to submission of these resources
-	message_remove_related(SUBMITTED_RESOURCE,$refs);
-	if($collection!=0)
-		{
-		message_remove_related(SUBMITTED_COLLECTION,$collection);
-		}
-	}		
-	
 
 /**
 *  A standard field title is translated using $lang.  A custom field title is i18n translated.
@@ -6141,8 +5925,6 @@ function resource_type_config_override($resource_type, $only_onchange=true)
 */
 function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0)
     {
-    global $userref, $user_resources_approved_email;
-
     if(!is_array($resource))
         {
         $resource = array($resource);
@@ -6176,42 +5958,6 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
-    switch ($archive)
-        {
-        case '0':
-            if (isset($existingstates[0]) && $existingstates[0] == -1 && $user_resources_approved_email)
-                {
-                notify_user_resources_approved($resource);
-                # Clear any outstanding notifications relating to submission of these resources
-                message_remove_related(SUBMITTED_RESOURCE,$resource);
-                if($collection != 0)
-                    {
-                    message_remove_related(SUBMITTED_COLLECTION,$collection);
-                    }
-                }
-            break;
-        
-        case '-1':
-            if (isset($existingstates[0]) && $existingstates[0] == -2)
-                {
-                notify_user_contributed_submitted($resource, $collection);
-                }
-            break;
-    
-        case '-2':
-            if (isset($existingstates[0]) && $existingstates[0] == -1)
-                {
-                notify_user_contributed_unsubmitted($resource);
-                }
-            # Clear any outstanding notifications relating to submission of these resources
-            message_remove_related(SUBMITTED_RESOURCE,$resource);
-            if($collection != 0)
-                {
-                message_remove_related(SUBMITTED_COLLECTION,$collection);
-                }
-            break;
-        }
-    
     return;
     }
 
