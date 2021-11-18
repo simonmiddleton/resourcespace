@@ -422,6 +422,7 @@ $lang["couldnotmatchallusernames"]="Could not match all the usernames";
 $lang["emailcollectionmessage"]="has e-mailed you a collection of resources from $applicationname which has been added to your 'my collections' page."; # suffixed to user name e.g. "Fred has e-mailed you a collection..."
 $lang['collectionprivate_attachedusermessage']="%user% has added you to their collection '%colname%'.";
 $lang["nomessage"]="No message";
+$lang["nomessages"]="No messages";
 $lang["emailcollectionmessageexternal"]="has e-mailed you a collection of resources from $applicationname."; # suffixed to user name e.g. "Fred has e-mailed you a collection..."
 $lang["clicklinkviewcollection"]="Use the link below to view the collection.";
 $lang["zippedcollectiontextfile"]="Include text file with resource/collection data.";

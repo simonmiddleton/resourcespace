@@ -264,7 +264,25 @@ function setup_user($userdata)
         debug_track_vars('end@setup_user', get_defined_vars());
         }
 
+    // Set default workflow states to show actions for, if not manually set by user
+    get_config_option($userref,'actions_notify_states', $user_actions_notify_states, '');
+    if(trim($user_actions_notify_states) == '')
+        {
+        $default_notify_states = [];
+        if(checkperm("e-2") && checkperm('d'))
+            {
+            $default_notify_states[] = -2;
+            }
+        if(checkperm("e-1"))
+            {
+            $default_notify_states[] = -1;
+            }
+        $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
+        }
+
     hook('after_setup_user');
+
+    //exit(print_r($GLOBALS['actions_notify_states']));
 
     return true;
     }
