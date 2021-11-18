@@ -128,7 +128,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             # Work out the filename.
             if (isset($_REQUEST['file_name']))
                 {
-                $filename=$_REQUEST['file_name'];
+                $filename = urldecode($_REQUEST['file_name']);
                 }
             elseif ($file_path!="")
                 {
@@ -367,7 +367,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $original_filename = '';
                 if(isset($_REQUEST['file_name'])) 
                     {
-                    $original_filename = $_REQUEST['file_name'];
+                    $original_filename = urldecode($_REQUEST['file_name']);
                     }
                 else
                     {
@@ -816,7 +816,7 @@ function extract_exif_comment($ref,$extension="")
 
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
-                                $original_filename = $_REQUEST['file_name'];
+                                $original_filename = urldecode($_REQUEST['file_name']);
                             } else {
                                 $original_filename = $processfile['name'];
                             }
@@ -887,7 +887,7 @@ function extract_exif_comment($ref,$extension="")
 
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
-                                $original_filename = $_REQUEST['file_name'];
+                                $original_filename = urldecode($_REQUEST['file_name']);
                             } elseif(isset($processfile)) {
                                 $original_filename = $processfile['name'];
                             }
@@ -946,7 +946,7 @@ function extract_exif_comment($ref,$extension="")
             debug ("EXIF - custom option for filename field " . $filename_field . " : " . $exiffilenameoption);
             if ($exiffilenameoption!="yes") // We are not using the extracted filename as usual
                 {
-                $uploadedfilename=isset($_REQUEST['file_name'])?$_REQUEST['file_name']:$processfile['name'];
+                $uploadedfilename=isset($_REQUEST['file_name']) ? urldecode($_REQUEST['file_name']) : $processfile['name'];
                 
                 global $userref, $amended_filename;
                 $entered_filename=get_data_by_field(-$userref,$filename_field);
