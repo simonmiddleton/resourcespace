@@ -222,7 +222,7 @@ jQuery(function() {
             let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
             let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
             console.debug('fcs_new_order=%o', fcs_new_order);
-            // TODO: api call with new order
+            api('reorder_featured_collections', {'refs': fcs_new_order});
             }
     });
 });
