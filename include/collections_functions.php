@@ -1266,6 +1266,19 @@ function save_collection($ref, $coldata=array())
             $sqlset["bg_img_resource_ref"] = null;
             }
 
+        // Order by is supported only by featured collections
+        // Reset the order by when not a featured collection or whenever the parent is updated
+        // TODO: this will force re-ordering the FC tree at the level where the:-
+        // - collection was, and
+        // - collection moved to (if still featured)
+        if(isset($sqlset["type"]) && $sqlset["type"] !== COLLECTION_TYPE_FEATURED)
+            {
+            $sqlset["order_by"] = 0;
+            $reorder_fcs = true;
+            }
+
+
+        // Update collection record
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
@@ -1288,6 +1301,7 @@ function save_collection($ref, $coldata=array())
                 'parent',
                 'thumbnail_selection_method',
                 'bg_img_resource_ref',
+                'order_by',
             ];
             foreach($sqlset as $colopt => $colset)
                 {
