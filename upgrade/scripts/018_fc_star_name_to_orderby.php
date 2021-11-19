@@ -35,14 +35,7 @@ foreach($starred_fcs_parents as $fc_parent)
     {
     $fcs = get_featured_collections((int) $fc_parent, ['access_control' => false]);
     usort($fcs, $old_fc_sort);
-
-    $order_by = 0;
-    foreach($fcs as $fc)
-        {
-        $order_by += 10;
-        // echo "{$fc['name']} -- order_by = $order_by".PHP_EOL;
-        ps_query('UPDATE collection SET order_by = ? WHERE ref = ?', ['i', $order_by, 'i', $fc['ref']]);
-        }
+    reorder_collections(array_column($fcs, 'ref'));
     }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Finished migrating featured collections names that contain asterisks to use order_by column instead!");

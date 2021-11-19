@@ -6206,3 +6206,42 @@ function get_default_user_collection($setactive=false)
         }
     return $usercollection;
     }
+
+
+/**
+ * Re-order collections
+ * 
+ * @param array $refs List of collection IDs in the new order
+ * 
+ * @return void
+ */
+function reorder_collections(array $refs)
+    {
+    $refs = array_values(array_filter($refs, 'is_int_loose'));
+
+    // Chunking the list of collection IDs in batches of 500 should be within the default max_allowed_packet size (with highest ID length)
+    $refs_chunked = array_filter(count($refs) <= 500 ? [$refs] : array_chunk($refs, 500));
+
+    $order_by = 0;
+    
+    foreach($refs_chunked as $refs)
+        {
+        $cases_params = [];
+        $cases = '';
+
+        foreach($refs as $ref)
+            {
+            $order_by += 10;
+            $cases .= ' WHEN ? THEN ?';
+            $cases_params = array_merge($cases_params, ['i', $ref, 'i', $order_by]);
+            }
+
+        $sql = sprintf('UPDATE collection SET order_by = (CASE ref %s END) WHERE ref IN (%s)',
+             $cases,
+             ps_param_insert(count($refs))
+         );
+        ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
+        }
+
+    return;
+    }
