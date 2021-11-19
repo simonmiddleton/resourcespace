@@ -345,7 +345,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 		{
 		if($addtype=="")
 			{
-			$addtype=sql_value("select resource_type value from resource where ref='" . escape_check($resource) . "'",0);
+			$addtype=ps_value("SELECT resource_type value FROM resource WHERE ref = ?",["i",$resource],0);
 			}
 		if(in_array($addtype,$collection_block_restypes))
 			{
@@ -360,7 +360,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
         if (count($keys)>0)
             {
-            $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
+            $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$resource],"");
             if ($archivestatus<0 && !$collection_allow_not_approved_share) {global $lang; $lang["cantmodifycollection"]=$lang["notapprovedresources"] . $resource;return false;}
 
             // Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
@@ -369,7 +369,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
             # Set the flag so a warning appears.
             global $collection_share_warning;
             # Check to see if all shares have expired
-            $expiry_dates=sql_array("select distinct expires value from external_access_keys where collection='" . escape_check($collection) . "'");
+            $expiry_dates=ps_array("SELECT DISTINCT expires value FROM external_access_keys WHERE collection = ?",["i",$collection]);
             $datetime=time();
             $collection_share_warning=true;
             foreach($expiry_dates as $key => $date)
