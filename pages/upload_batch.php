@@ -410,22 +410,23 @@ if ($processupload)
     $extension=explode(".",$upfilename);
     $extension=trim(strtolower($extension[count($extension)-1]));
 
+	// Clean the filename
+	$origuploadedfilename=escape_check($upfilename);
+	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
+
     # Banned extension?
     global $banned_extensions;
     if (in_array($extension,$banned_extensions))
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
-        $result["status"] = true;
-        $result["message"] = str_replace("%%FILETYPE%%",$origuploadedfilename,$lang["error_upload_invalid_file"]);
+        $result["status"] = false;
+        $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
         $result["error"] = 105;
+        unlink($upfilepath);
         die(json_encode($result));
         }
 
 	hook('additional_plupload_checks');
-	// Clean the filename
-	if($replace){$origuploadedfilename=escape_check($upfilename);}
-	//$upfilename = preg_replace('/[^\w\.-]+/', '_', $upfilename);
-	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
 
     if($allowed_extensions != "")
         {
@@ -444,6 +445,7 @@ if ($processupload)
             $result["status"] = false;
             $result["message"] = str_replace("%%FILETYPE%%", $upfilename . " (" . $filemime . ")",$lang["error_upload_invalid_file"]);
             $result["error"] = 105;
+            unlink($upfilepath);
             die(json_encode($result));
             }            
         }
@@ -718,6 +720,9 @@ if ($processupload)
             if($filename_field != 0)
                 {
                 $target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+                $target_resourceDebug = $target_resource;
+                $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
+                debug($target_resourceDebug_message1);
                 $target_resource=array_values(array_intersect($target_resource,$replace_resources));
                 if(count($target_resource)==1  && !resource_file_readonly($target_resource[0]))
                     {
@@ -741,6 +746,8 @@ if ($processupload)
                 elseif(count($target_resource)==0)
                     {
                     // No resource found with the same filename
+                    $target_resourceDebug_message2 = "Target resource not found - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE FOUND - should have been: " . (count($target_resourceDebug)>0 ? json_encode($target_resourceDebug): "NONE"))  . " . Replace in resources: " . json_encode($replace_resources);
+                    debug($target_resourceDebug_message2);
                     $result["status"] = false;
                     $result["message"] = str_replace("%%FILENAME%%",$origuploadedfilename,$lang["error_upload_replace_no_matching_file"]);
                     $result["error"] = 106;
@@ -867,16 +874,13 @@ include "../include/header.php";
 ?>
 
 <script>
-<?php
-echo "show_upload_log=" . (($show_upload_log)?"true;":"false;") . "\n";
-
-?>
 redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
 // Set flag allowing for blocking auto redirect after upload if errors are encountered
 upRedirBlock = false;
+logopened = false;
 // A mapping used by subsequent file uploads of alternatives to know to which resource to add the files as alternatives
 // Used when the original file and its alternatives are uploaded in a batch to a collection
 var resource_ids_for_alternatives = [];
@@ -1213,8 +1217,11 @@ function processFile(file, forcepost)
         postdata['collection_add'] = newcol;
         }
     
-    // EXTRA DATA: no_exif
-    postdata['no_exif'] = jQuery('#no_exif').is(':checked') ? "yes": "";
+    // EXTRA DATA: no_exif whilst avoiding overwriting it if the element does not exist
+    if(jQuery('#no_exif').length > 0)
+        {
+        postdata['no_exif'] = jQuery('#no_exif').is(':checked') ? "yes": "";
+        }
 
     console.debug("newcol: " + newcol);
     entercolname = jQuery('#entercolname').val();
@@ -1253,7 +1260,6 @@ function processFile(file, forcepost)
 
                 if(uploadresponse.error==108)
                     {
-                    styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourcefound"]?>');   
                     message = '<?php echo $lang['error-duplicatesfound']?>';
                     jQuery("#upload_log").append("\r\n" + file.name + "&nbsp;" + uploadresponse.message);
                     if(!logopened)
@@ -1283,6 +1289,7 @@ function processFile(file, forcepost)
                     {
                     processerrors.push(file.id);
                     }
+                upRedirBlock = true;
                 }
             else
                 {
@@ -1516,7 +1523,8 @@ function postUploadActions()
                         if(!jQuery('#UploadLogSection').is(':visible'))
                             {
                             jQuery('#UploadLogSectionHead').click();
-                            }
+                            }                        
+                        jQuery('#upload_continue').show();    
                         pageScrolltop('#UploadLogSection');
                     },";
                     ?>
@@ -1714,20 +1722,19 @@ hook('plupload_before_status');
 </form>
 </div><!-- End of UploadOptionsSection -->
 
-<?php 
-if ($show_upload_log)
-    {
-    ?>
-    <div class="BasicsBox">
+<div class="BasicsBox" >
     <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo $lang["log"]; ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
         <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
-    </div>
-    <?php
-    }
-    ?>
 </div>
+</div>
+
+<!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
+<div class="BasicsBox" >
+    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo $lang['continue']; ?>&nbsp;&nbsp;" 
+        onclick="return CentralSpaceLoad('<?php echo $redirecturl?>',true);">
+</div>    
 <?php
 
 hook("upload_page_bottom");

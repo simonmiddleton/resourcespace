@@ -1703,7 +1703,7 @@ if($tabs_on_edit)
     {
         sort($tab_names);
     }
-    
+
     // create new array of fields, maintaining field order, and the tab order as defined above
     $fields_tab_ordered = array();
 
@@ -1722,18 +1722,12 @@ if($tabs_on_edit)
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;
-  if (count($fields)>0 && ($n==0 || $fields[0]["tab_name"]!=""))
+  if (count($fields)>0)
     { 
     $extra="";
     $tabname=null;
     $tabcount=0;
     $tabtophtml="";
-    $tabs_set = false;
-
-    foreach ($fields as $field)
-        {
-        $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
-        }
 
     $fields_count = count($fields);
     for ($n=0;$n<$fields_count;$n++)
@@ -1743,14 +1737,8 @@ if($tabs_on_edit)
             {
             if ( $fields[$n]["tab_name"] !== $tabname )
                 {
-                if ($tabs_set === true)
-                    {
-                    $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
-                    }
-                else
-                    {
-                    $newtabname = "";
-                    }
+                $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+
                 if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
                 $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
                 if($tabcount==0){$tabtophtml.=" TabSelected ";}

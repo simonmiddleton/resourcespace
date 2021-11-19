@@ -32,7 +32,7 @@
 		global $doi_field_shortname;
 		if (update_field($ref, $doi_field_shortname, $doi) === false) {
 			// field does probably not exist: create and try again
-			sql_query("INSERT INTO `resource_type_field` (`name`, `title`, `type`, `order_by`, `keywords_index`, `partial_index`, `resource_type`, `resource_column`, `display_field`, `use_for_similar`, `iptc_equiv`,
+			ps_query("INSERT INTO `resource_type_field` (`name`, `title`, `type`, `order_by`, `keywords_index`, `partial_index`, `resource_type`, `resource_column`, `display_field`, `use_for_similar`, `iptc_equiv`,
 			`display_template`, `tab_name`, `required`, `smart_theme_name`, `exiftool_field`, `advanced_search`, `simple_search`, `help_text`, `display_as_dropdown`, `external_user_access`, `autocomplete_macro`, `hide_when_uploading`, `hide_when_restricted`,
 			`value_filter`, exiftool_filter, `omit_when_copying`, `tooltip_text`, `regexp_filter`, `sync_field`, `display_condition`)
 			VALUES ('doi', 'DOI', '0', '130', '0', '0', '0', NULL, '1', '1', NULL, NULL, NULL, '0', NULL, 'XMP-prism:doi', '1', '0',

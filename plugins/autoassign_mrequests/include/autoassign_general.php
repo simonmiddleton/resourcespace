@@ -3,22 +3,16 @@ function get_mapped_fields()
 {
     $query = 'SELECT DISTINCT field_id AS value FROM assign_request_map;';
     
-    return sql_array($query);
+    return ps_array($query,array());
 }
 
 function get_mapped_user_by_field($id, $value)
 {
-    $query = sprintf('
-            SELECT user_id AS value
-              FROM assign_request_map
-             WHERE field_id = \'%s\'
-               AND field_value = \'%s\';
-        ',
-        escape_check($id),
-        escape_check($value)
-    );
+    $query = "SELECT user_id AS value
+                FROM assign_request_map
+               WHERE field_id = ? AND field_value = ?";
 
-
-    return sql_value($query, 0);
+    $parameters=array("i",$id, "s",$value);
+    return ps_value($query, $parameters, 0);
 }
 ?>

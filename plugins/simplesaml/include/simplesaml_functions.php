@@ -8,11 +8,11 @@
  */
 function simplesaml_get_lib_path()
     {
-    global $simplesaml_lib_path;
+    global $simplesaml_lib_path, $simplesaml_rsconfig;
 
     $lib_path = dirname(__FILE__) . '/../lib';
 
-    if('' == $simplesaml_lib_path)
+    if('' == $simplesaml_lib_path || $simplesaml_rsconfig)
         {
         return $lib_path;
         }
@@ -187,7 +187,7 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         $emailmessage .= $lang["simplesaml_usercreated"] . ": <a href=\"" . $messageurl . "\">" . $username . "</a><br />";   
         }
     
-    $notify_users = sql_query("SELECT ref, email FROM user WHERE email='" . escape_check($simplesaml_multiple_email_notify) . "'");				
+    $notify_users = ps_query("SELECT ref, email FROM user WHERE email=?",array("s",$simplesaml_multiple_email_notify));				
     $message_users=array();
     foreach($notify_users as $notify_user)
         {
@@ -236,7 +236,7 @@ function simplesaml_config_check()
         {
         if(get_sysvar("SAML_UPGRADE_REQUIRED",0) != 1)
             {
-            system_notification($lang['simplesaml_authorisation_version_error'], "https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade");
+            system_notification($lang['simplesaml_authorisation_version_error'], "https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate");
             // Set flag so this is not sent multiple times
             set_sysvar("SAML_UPGRADE_REQUIRED",1);
             }

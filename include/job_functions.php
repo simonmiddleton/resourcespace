@@ -42,7 +42,7 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
             {
             return $lang["job_queue_duplicate_message"];
             }
-    sql_query("INSERT INTO job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code, priority) VALUES('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . escape_check($success_text) . "','" . escape_check($failure_text) . "','" . escape_check($job_code) . "','" . (int)$priority . "')");
+    ps_query("INSERT INTO job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code, priority) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", array("s",$type,"s",$job_data_json,"i",$user,"s",$time,"i",STATUS_ACTIVE,"s",$success_text,"s",$failure_text,"s",$job_code,"i",(int)$priority));
     return sql_insert_id();
     }
     
@@ -58,29 +58,35 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $priority=NULL)
     {
     $update_sql = array();
+    $parameters = array();
     if (count($job_data) > 0)
         {
-        $update_sql[] = "job_data='" . escape_check(json_encode($job_data)) . "'";
+        $update_sql[] = "job_data = ?";
+        $parameters = array_merge($parameters,array("s",json_encode($job_data)));
         } 
     if($newtime!="")
         {
-        $update_sql[] = "start_date='" . escape_check($newtime) . "'";
+        $update_sql[] = "start_date = ?";
+        $parameters = array_merge($parameters,array("s",$newtime));
         }
     if($newstatus!="")
         {
-        $update_sql[] = "status='" . escape_check($newstatus) . "'";
+        $update_sql[] = "status = ?";
+        $parameters = array_merge($parameters,array("s",$newstatus));
         }
     if(is_int_loose($priority))
         {
-        $update_sql[] = "priority='" . $priority . "'";
+        $update_sql[] = "priority = ?";
+        $parameters = array_merge($parameters,array("i",(int)$priority));
         }
     if(count($update_sql) == 0)
         {
         return false;
         }
 
-    $sql = "UPDATE job_queue SET " . implode(",",$update_sql) . " WHERE ref='" . $ref . "'";
-    sql_query($sql);
+    $sql = "UPDATE job_queue SET " . implode(",",$update_sql) . " WHERE ref = ?";
+    $parameters = array_merge($parameters,array("i",$ref));
+    ps_query($sql,$parameters);
     }
 
 /**
@@ -92,8 +98,14 @@ function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $pr
 function job_queue_delete($ref)
     {
     global $userref;
-    $limitsql = (checkperm('a') || php_sapi_name() == "cli") ? "" : " AND user='" . $userref . "'";
-    sql_query("DELETE FROM job_queue WHERE ref='" . $ref . "' " .  $limitsql);
+    $query = "DELETE FROM job_queue WHERE ref= ?";
+    $parameters = array("i",$ref);
+    if (!checkperm('a') && !php_sapi_name() == "cli")
+        {
+        $query .= " AND user = ?";
+        $parameters = array_merge($parameters,array("i",$userref));
+        }
+    ps_query($query, $parameters);
     }
 
 /**
@@ -111,31 +123,41 @@ function job_queue_delete($ref)
 function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="")
     {
     global $userref;
-    $condition=array();
-    if($type!="")
+    $condition = array();
+    $parameters = array();
+    if($type != "")
         {
-        $condition[] = " type ='" . escape_check($type) . "'";
+        $condition[] = " type = ? ";
+        $parameters = array_merge($parameters,array("s",$type));
         }
     if(!checkperm('a') && PHP_SAPI != 'cli')
         {
         // Don't show certain jobs for normal users
         $hiddentypes = array();
         $hiddentypes[] = "delete_file";
-        $condition[] = " type NOT IN ('" . implode("','",$hiddentypes) . "')";  
+        $condition[] = " type NOT IN (" . ps_param_insert(count($hiddentypes)) . ")";  
+        $parameters = array_merge($parameters, ps_param_fill($hiddentypes,"s"));
         }
         
-    if((int)$status > -1){$condition[] =" status ='" . escape_check($status) . "'";}
+    if((int)$status > -1)
+        {
+        $condition[] =" status = ? ";
+        $parameters = array_merge($parameters,array("i",(int)$status));
+        }
+
     if((int)$user > 0)
         {
         // Has user got access to see this user's jobs?
         if($user == $userref || checkperm_user_edit($user))
             {             
-            $condition[] = " user ='" . (int)$user . "'";
+            $condition[] = " user = ?";
+            $parameters = array_merge($parameters,array("i",(int)$user));
             }
         elseif(isset($userref))
             {
             // Only show own jobs
-            $condition[] = " user ='" . (int)$userref . "'";
+            $condition[] = " user = ?";
+            $parameters = array_merge($parameters,array("i",(int)$user));
             }
         else
             {
@@ -151,7 +173,8 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
             if(isset($userref))
                 {
                 // Only show own jobs
-                $condition[] = " user ='" . (int)$userref . "'";
+                $condition[] = " user = ?";
+                $parameters = array_merge($parameters,array("i",(int)$user));
                 }
             else
                 {
@@ -161,17 +184,35 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
             }
         }
 
-    if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
+    if($job_code!="")
+        {
+        $condition[] =" job_code = ?";
+        $parameters = array_merge($parameters,array("s",$job_code));
+        }
+
     if($find!="")
         {
-        $find=escape_check($find);
-        $condition[] = " (j.ref LIKE '%" . $find . "%'  OR j.job_data LIKE '%" . $find . "%' OR j.success_text LIKE '%" . $find . "%' OR j.failure_text LIKE '%" . $find . "%' OR j.user LIKE '%" . $find . "%' OR u.username LIKE '%" . $find . "%' or u.fullname LIKE '%" . $find . "%')";
+        $find = '%' . $find . '%';
+        $condition[] = " (j.ref LIKE ? OR j.job_data LIKE ? OR j.success_text LIKE ? OR j.failure_text LIKE ? OR j.user LIKE ? OR u.username LIKE ? OR u.fullname LIKE ?)";
         }
+
     $conditional_sql="";
     if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
-        
-    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user " . $conditional_sql . " ORDER BY " . escape_check($job_order_by) . " " . escape_check($job_sort) . ",start_date ASC";
-    $jobs=sql_query($sql);
+    
+    // Check order by value is valid
+    if (!in_array(strtolower($job_order_by), array("priority", "ref", "type", "fullname", "status", "start_date")))
+        {
+        $job_order_by = "priority";
+        }
+    
+    // Check sort value is valid
+    if (!in_array(strtolower($job_sort), array("asc", "desc")))
+        {
+        $job_sort = "asc";
+        }
+
+    $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC";
+    $jobs=ps_query($sql, $parameters);
     return $jobs;
     }
 
@@ -183,8 +224,8 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
  */
 function job_queue_get_job($ref)
     {
-    $sql = "SELECT j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.priority, j.success_text, j.failure_text,j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref=j.user WHERE j.ref='" . (int)$ref . "'";
-    $job_data=sql_query($sql);
+    $sql = "SELECT j.ref, j.type, j.job_data, j.user, j.status, j.start_date, j.priority, j.success_text, j.failure_text, j.job_code, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user WHERE j.ref = ?";
+    $job_data=ps_query($sql, array("i",(int)$ref));
 
     return (is_array($job_data) && count($job_data)>0) ? $job_data[0] : array();
     }    
@@ -200,7 +241,8 @@ function job_queue_purge($status=0)
     $deletejobs = job_queue_get_jobs('',$status == 0 ? '' : $status);
     if(count($deletejobs) > 0)
         {
-        sql_query("DELETE FROM job_queue WHERE ref IN ('" . implode("','",array_column($deletejobs,"ref")) . "')");
+        $parameters = ps_param_fill(array_column($deletejobs,"ref"),"i");
+        ps_query("DELETE FROM job_queue WHERE ref IN ('" . ps_param_insert(count(array_column($deletejobs,"ref"))) . "')", $parameters);
         }
     }
 
@@ -284,7 +326,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $offline_plugins = $plugins;
 
         // Include plugins for this job user's group
-        $group_plugins = sql_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 AND disable_group_select=0 AND find_in_set('" . $jobuserdata["usergroup"] . "',enabled_groups) ORDER BY priority","plugins");
+        $group_plugins = ps_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 AND disable_group_select = 0 AND find_in_set(?,enabled_groups) ORDER BY priority","plugins", array("i",$jobuserdata["usergroup"]));
         foreach($group_plugins as $group_plugin)
             {
             include_plugin_config($group_plugin['name'],$group_plugin['config'],$group_plugin['config_json']);

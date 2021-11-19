@@ -65,6 +65,29 @@ else{
 <?php
 }
 ?>
+<script>
+	//Get value of the date element before the change
+	jQuery('[id^=<?php echo $name;?>]').on('focus', function(){
+		jQuery.data(this, 'current', jQuery(this).val());
+	});
+	//Check the value of the date after the change
+	jQuery('[id^=<?php echo $name;?>]').on('change', function(){
+		let day   = jQuery('#<?php echo $name;?>-d').val();
+		let month = jQuery('#<?php echo $name;?>-m').val();
+		let year  = jQuery('#<?php echo $name;?>-y').val(); 
+		if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+			//format date string into yyyy-mm-dd
+			let date_string = year + '-' + month + '-' + day;
+			//get a timestamp from the date string and then convert that back to yyyy-mm-dd
+			let date		= new Date(date_string).toISOString().split('T')[0];
+			//check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+			if(date_string !== date){
+				styledalert('Error','You have entered an invalid date')
+				jQuery(this).val(jQuery.data(this, 'current'))
+			}
+		}
+	})
+</script>
 <label class="accessibility-hidden" for="<?php echo $name; ?>-y"><?php echo $lang["year"]; ?></label>
 <input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>" <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
 

@@ -56,7 +56,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $logfile = fopen($log, 'a');
 
     // Get system archive states and access levels for validating uploaded values
-    $archivestates = sql_array("select code value from archive_states","");
+    $archivestates = ps_array("SELECT code value FROM archive_states", []);
     $accessstates = array('0','1','2');
     
     csv_upload_log($logfile,"CSV upload started at " . date("Y-m-d H:i",time()));
@@ -440,7 +440,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 // Create the new resource
                 $newref = create_resource($resource_type_set, $setstatus);
-                sql_query("update resource set access='" . $setaccess . "' where ref='$newref'");
+                ps_query("UPDATE resource SET access = ? WHERE ref = ?", ['i', $setaccess, 'i', $newref]);
                 $logtext = "Created new resource: #" . $newref . " (" . $resource_types[$resource_type_set]["name"] . ")";
                 csv_upload_log($logfile,$logtext);
                 array_push ($messages,$logtext);
@@ -454,7 +454,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 if(!isset($newref))
                     {
-                    $lastref = (int) sql_value("SELECT MAX(ref) value FROM resource",0);
+                    $lastref = (int) ps_value("SELECT MAX(ref) value FROM resource", [], 0);
                     $newref  = $lastref + 1;
                     }
                 else
@@ -630,7 +630,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                     }
                                 else 
                                     {
-                                    $lastref = sql_value("SELECT MAX(ref) value FROM node;",0);
+                                    $lastref = ps_value("SELECT MAX(ref) value FROM node", [], 0);
                                     $new_node  = isset($new_node) ? $new_node + 1 : $lastref + 1;
                                     $logtext = ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'";
                                     csv_upload_log($logfile,$logtext);
@@ -818,7 +818,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 $resvals = array_column($resnodes,"name");
                                 $resdata = implode(",",$resvals);
                                 $value = truncate_join_field_value(strip_leading_comma($resdata));
-                                sql_query("UPDATE resource SET field{$fieldid} = '" . escape_check($value)."' WHERE ref = '{$resource_id}'");
+                                ps_query("UPDATE resource SET field{$fieldid} = ? WHERE ref = ?", ['s', $value, 'i', $resource_id]);
                             }
                         }
                     }

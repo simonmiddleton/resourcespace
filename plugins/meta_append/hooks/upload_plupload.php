@@ -27,7 +27,7 @@ function HookMeta_appendAllAfterpluploadfile()
 			}				
 		$value_string = $result;
 		
-		$result = sql_query("select ref from resource where date(creation_date)=curdate() and created_by={$userref}");		
+		$result = ps_query("SELECT ref FROM resource WHERE date(creation_date) = curdate() AND created_by = ?", array("i", $userref));		
 		if (!isset($result[0]))
 			{
 			$count = 1;

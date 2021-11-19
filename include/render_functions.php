@@ -1230,8 +1230,18 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'remove_collection':
                     if(confirm("<?php echo $lang['removecollectionareyousure']; ?>")) {
                         // most likely will need to be done the same way as delete_collection
-                        document.getElementById('collectionremove').value = '<?php echo urlencode($collection_data["ref"]); ?>';
-                        document.getElementById('collectionform').submit();
+                        var post_data = {
+                            ajax: true,
+                            dropdown_actions: true,
+                            remove: <?php echo urlencode($collection_data['ref']); ?>,
+                            <?php echo generateAjaxToken("remove_collection"); ?>
+                        };
+
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, 'json')
+                        .always(function(){
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php');
+                        }); 
+                        
                     }
                     break;
 
@@ -2494,7 +2504,52 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     else if (!$forsearch  && $edit_autosave)
                         {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
                 <?php
-                }?>
+                }
+            
+            if($forsearch !== true)
+                {
+                ?>
+        <script>
+            //Get value of the date element before the change
+            jQuery('[name^=<?php echo $name;?>]').on('focus', function(){
+                jQuery.data(this, 'current', jQuery(this).val());
+            });
+            //Check the value of the date after the change
+            jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+            //Same again but for the end of the date range
+            jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+        </script>
+        <?php } ?>
     <!--  date range search end date-->         
     </div>
     <div class="clearerleft"></div>
@@ -2926,13 +2981,15 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     {
     global $lang;
     $fieldtypefilter = "";
-	if(count($ftypes)>0)
-		{
-		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
-		}
-        
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
-    
+    $parameters = array();
+    if(count($ftypes)>0)
+        {
+        $fieldtypefilter = " WHERE type IN (" . ps_param_insert(count($ftypes)) . ")";
+        $parameters = ps_param_fill($ftypes,"i");
+        }
+
+    $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
+
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
     echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";

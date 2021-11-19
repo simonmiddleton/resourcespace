@@ -2563,9 +2563,6 @@ $hide_resource_share_link=false; // Configurable option to hide the "Share" link
 # Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
 $user_resources_approved_email=false; 
 
-# Set to true to move the Search button before the Clear button
-$swap_clear_and_search_buttons=false;
-
 # Option to have default date left blank, instead of current date.
 $blank_date_upload_template=false;
 
@@ -3095,7 +3092,7 @@ $CORS_whitelist = array();
 
 
 /* Font selection */
-$global_font="WorkSans";
+$global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;

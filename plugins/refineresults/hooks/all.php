@@ -6,7 +6,7 @@ function HookRefineresultsSearchBeforesearchresults()
 
     // Only time when this would be needed is when legacy_actions is enabled otherwise we do it through dropdown actions
     $query = 'SELECT inst_version AS `value` FROM plugins WHERE name = \'legacy_actions\';';
-    if(trim(sql_value($query, '')) === '')
+    if(trim(ps_value($query, array(), '')) === '')
         {
         return false;
         }

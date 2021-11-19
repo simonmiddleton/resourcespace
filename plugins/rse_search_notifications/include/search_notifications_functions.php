@@ -207,22 +207,48 @@
 						}
 					}
 
+				$search['checksum_data_previous'] = $search['checksum_data'];
+				$search['checksum_data'] = implode(',', $resources_found);				
+
 				message_add(
 					$search['owner'],
 					$message,
-					search_notification_make_url($search['search'],$search['restypes'],$search['archive'])
+					search_notification_make_url($search)
 				);
 
 				}
 
 			// finally update with the new checksum, timestamp and resources
-			sql_query("UPDATE search_saved SET checksum='{$checksum}',checksum_matches='{$checksum_matches}',checksum_when=NOW(),checksum_data='" . escape_check($checksum_data) . "' WHERE ref='{$search['ref']}'");
+			ps_query("UPDATE search_saved SET checksum = ?,checksum_matches = ?, checksum_when = NOW(), checksum_data_previous = checksum_data, checksum_data = ? WHERE ref = ?", ['s', $checksum, 's', $checksum_matches, 's', $checksum_data, 'i', $search['ref']]);
 
 			}		// end for each saved search
 		}
 
-	function search_notification_make_url($search,$restypes,$archive)
+	function search_notification_make_url($watched_search)
 		{
-		global $baseurl;
-		return $baseurl . "/pages/search.php?search=" . urlencode($search) . "&restypes=" . urlencode($restypes) . "&archive=" . $archive;
+		global $baseurl, $only_show_changes;
+
+		$url = $baseurl . "/pages/search.php?restypes=" . urlencode($watched_search['restypes']) . "&archive=" . $watched_search['archive'] . "&search=";
+	
+		if($only_show_changes)
+			{
+			$current = explode(',',$watched_search['checksum_data']);
+			$previous = explode(',',$watched_search['checksum_data_previous']);
+
+			$additions = array_diff($current, $previous);
+			$removals = array_diff($previous, $current);
+
+			$changes = array_merge($additions, $removals);
+			if(count($changes) > 0)
+				{
+				$url .= urlencode('!list' . implode(':', $changes));
+				}
+			}
+		else
+			{
+			$url .= urlencode($watched_search['search']);
+			}
+
+		return $url;
+
 		}

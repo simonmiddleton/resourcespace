@@ -1,6 +1,6 @@
 <?php
 
-function HookConditional_termsViewDownloadlink($baseparams)
+function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=false)
     {
     global $baseurl, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
 
@@ -18,7 +18,14 @@ function HookConditional_termsViewDownloadlink($baseparams)
         return false;
         }
     
-    $redirect = "pages/download_progress.php?";
+    if (!$view_in_browser)
+        {
+        $redirect = "pages/download_progress.php?";
+        }
+    else
+        {
+        $redirect = "pages/download.php?direct=1&noattach=true&target=\"_blank\"&";
+        }
 
     if ($download_usage)
         {
