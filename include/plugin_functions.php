@@ -1360,9 +1360,9 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
     $pluginpath=get_plugin_path($plugin_name);
     
     $configpath = $pluginpath . "/config/config.default.php";
-    if (file_exists($configpath)) {include $configpath;}
+    if (file_exists($configpath)) {include_once $configpath;}
     $configpath = $pluginpath . "/config/config.php";
-    if (file_exists($configpath)) {include $configpath;}
+    if (file_exists($configpath)) {include_once $configpath;}
 
     if ($config_json != "" && function_exists('json_decode'))
         {
