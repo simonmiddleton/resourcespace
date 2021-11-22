@@ -123,9 +123,13 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 
 function get_research_request($ref)
 	{
-	$parameters=array("i",$ref);
-	$return=ps_query("select *,email,(select username from user u where u.ref=r.user) username, 
-		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref=?", $parameters);
+	$rr_sql="SELECT rr.ref,rr.name,rr.description,rr.deadline,rr.email,rr.contact,rr.finaluse,rr.resource_types,rr.noresources,rr.shape,
+					rr.created,rr.user,rr.assigned_to,rr.status,rr.collection,rr.custom_fields_json,
+					(select u.username from user u where u.ref=rr.user) username, 
+					(select u.username from user u where u.ref=rr.assigned_to) assigned_username from research_request rr where rr.ref=?";
+	$rr_parameters=array("i",$ref);
+
+	$return=ps_query($rr_sql, $rr_parameters);
 	if (count($return) == 0)
 	    {
 	    return false;
