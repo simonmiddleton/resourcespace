@@ -326,7 +326,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $offline_plugins = $plugins;
 
         // Include plugins for this job user's group
-        $group_plugins = ps_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 AND disable_group_select = 0 AND find_in_set(?,enabled_groups) ORDER BY priority","plugins", array("i",$jobuserdata["usergroup"]));
+        $group_plugins = ps_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 AND disable_group_select = 0 AND find_in_set(?,enabled_groups) ORDER BY priority", array("i",$jobuserdata["usergroup"]), "plugins");
         foreach($group_plugins as $group_plugin)
             {
             include_plugin_config($group_plugin['name'],$group_plugin['config'],$group_plugin['config_json']);
