@@ -598,7 +598,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
-.RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0 10px 2px 0;padding: 0;}
+.RecordPanel .SearchSimilar {float: left;width: auto; margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
@@ -1706,6 +1706,12 @@ form.FormFilter button.ClearButton {
     margin-left:3px;
     vertical-align: text-bottom;
     max-width: 1000px;
+}
+.SearchSimilar .customFieldLabel {
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 3px;
+    vertical-align: text-bottom;
 }
 
 .keywordselected {
