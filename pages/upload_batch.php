@@ -73,6 +73,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
         }
         
     $response = $server->serve();
+    // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
+    $tuslocation = $response->headers->get('location');
+    if (!empty($tuslocation) && (strpos($tuslocation, $baseurl) === false))
+        {
+        $suffix = strpos($tuslocation,"/pages/upload_batch.php");
+        if($suffix !== false)
+            {
+            $tusbase = substr($tuslocation,0,$suffix);
+            $rslocation = str_replace($tusbase,$baseurl,$tuslocation);
+            debug("upload_batch. Correcting invalid upload URL from '" . $tuslocation . "' to '" . $rslocation . "'");
+            $response->headers->set('location', $rslocation);
+            }
+        }
     $response->send();
     exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
     }
