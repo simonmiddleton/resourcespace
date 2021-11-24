@@ -72,7 +72,7 @@ function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $pr
     if($newstatus!="")
         {
         $update_sql[] = "status = ?";
-        $parameters = array_merge($parameters,array("s",$newstatus));
+        $parameters = array_merge($parameters,array("i",$newstatus));
         }
     if(is_int_loose($priority))
         {
@@ -157,7 +157,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
             {
             // Only show own jobs
             $condition[] = " user = ?";
-            $parameters = array_merge($parameters,array("i",(int)$user));
+            $parameters = array_merge($parameters,array("i",(int)$userref));
             }
         else
             {
@@ -174,7 +174,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
                 {
                 // Only show own jobs
                 $condition[] = " user = ?";
-                $parameters = array_merge($parameters,array("i",(int)$user));
+                $parameters = array_merge($parameters,array("i",(int)$userref));
                 }
             else
                 {
