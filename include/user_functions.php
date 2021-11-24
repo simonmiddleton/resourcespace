@@ -266,7 +266,10 @@ function setup_user($userdata)
 
     // Set default workflow states to show actions for, if not manually set by user
     get_config_option($userref,'actions_notify_states', $user_actions_notify_states, '');
-    if(trim($user_actions_notify_states) == '')
+
+    // Check if user has already explicitly asked not to see these
+    get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
+    if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
         $default_notify_states = [];
         if(checkperm("e-2") && checkperm('d'))
@@ -281,9 +284,6 @@ function setup_user($userdata)
         }
 
     hook('after_setup_user');
-
-    //exit(print_r($GLOBALS['actions_notify_states']));
-
     return true;
     }
     

@@ -4,13 +4,12 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $pagename, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
+     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
     
     # Update $archive_states and associated $lang variables with entries from database
     $searchstates = array();
     $wfstates=rse_workflow_get_archive_states();
     
-	global $lang;
 	foreach($wfstates as $wfstateref=>$wfstate)
 		{
 		if (!$wfstate['fixed'])
@@ -50,8 +49,8 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     
     if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
-            $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
-            $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
+        $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
+        $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
         
     if(count($resource) > 200)
@@ -206,17 +205,24 @@ function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_
 function HookRse_workflowAllAfter_setup_user()
     {
     // Replaces notify group messaging - now replaced by actions
-    global $usergroup;
+    global $userref, $usergroup;
+    
+    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);		  
+    if($addwfactions==false)
+        {
+        // No notifications were sent so actions shouldn't appear either
+        return false;
+        }
 
     $extra_notify_states = [];
     $wfstates=rse_workflow_get_archive_states();
     foreach($wfstates as $wfstateref=>$wfstate)
-		{
-		if(isset($wfstate['notify_group']) &&  (int)$wfstate['notify_group'] == $usergroup && !checkperm("z" . $wfstateref))
+        {
+        if(isset($wfstate['notify_group']) &&  (int)$wfstate['notify_group'] == $usergroup && !checkperm("z" . $wfstateref))
             {
             $extra_notify_states[] = $wfstateref;
             }
-		}
+        }
     if(count($extra_notify_states) > 0)
         {
         $GLOBALS['actions_notify_states'] .= "," . implode(",",$extra_notify_states);

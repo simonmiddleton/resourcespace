@@ -3239,8 +3239,7 @@ function get_resource_types($types = "", $translate = true)
             }
         $sql=" where ref in ($cleantypes) ";
         }
-    
-    $r=ps_query("select *, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
+    $r=ps_query("select ref, name,allowed_extensions,order_by,config_options,tab_name,push_metadata,inherit_global_fields, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -5603,68 +5602,6 @@ function overquota()
 	return false;
 	}
 
-function notify_user_resources_approved($refs)
-	{
-	// Send a notification mail to the user when resources have been approved
-	global $applicationname,$baseurl,$lang;	
-	debug("Emailing user notifications of resource approvals");	
-	$htmlbreak="\r\n";
-	global $use_phpmailer,$userref,$templatevars;
-	if ($use_phpmailer){$htmlbreak="<br /><br />";}
-	$notifyusers=array();
-	
-    if(!is_array($refs))
-        {
-        $refs=array($refs);    
-        }
-	for ($n=0;$n<count($refs);$n++)
-		{
-		$ref=$refs[$n];
-		$contributed=sql_value("select created_by value from resource where ref='$ref'",0);
-		if($contributed!=0 && $contributed!=$userref)
-			{
-			if(!isset($notifyusers[$contributed])) // Add new array entry if not already present
-				{
-				$notifyusers[$contributed]=array();
-				$notifyusers[$contributed]["list"]="";
-				$notifyusers[$contributed]["resources"]=array();
-				$notifyusers[$contributed]["url"]=$baseurl . "/pages/search.php?search=!contributions" . $contributed . "&archive=0";
-				}		
-			$notifyusers[$contributed]["resources"][]=$ref;
-			$url=$baseurl . "/?r=" . $refs[$n];		
-			if ($use_phpmailer){$url="<a href=\"$url\">$url</a>";}
-			$notifyusers[$contributed]["list"].=$htmlbreak . $url . "\n\n";
-			}		
-		}
-	foreach($notifyusers as $key=>$notifyuser)	
-		{
-		$templatevars['list']=$notifyuser["list"];
-		$templatevars['url']=$notifyuser["url"];			
-		$message=$lang["userresourcesapproved"] . "\n\n". $templatevars['list'] . "\n\n" . $lang["viewcontributedsubittedl"] . "\n\n" . $notifyuser["url"];
-		$notificationmessage=$lang["userresourcesapproved"];
-		
-		// Does the user want these messages?
-		get_config_option($key,'user_pref_resource_notifications', $send_message);		  
-        if($send_message==false){continue;}		
-       
-		// Does the user want an email or notification?
-		get_config_option($key,'email_user_notifications', $send_email);    
-		if($send_email)
-			{
-			$notify_user=sql_value("select email value from user where ref='$key'","");
-			if($notify_user!='')
-				{
-				send_mail($notify_user,$applicationname . ": " . $lang["approved"],$message,"","","emailnotifyresourcesapproved",$templatevars);
-				}
-			}        
-		else
-			{
-			global $userref;
-			message_add($key,$notificationmessage,$notifyuser["url"]);
-			}
-		}
-	}		
-
 /**
  * Get size of specified image file
  *
@@ -7822,7 +7759,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     }
 
 
-    function notify_resource_change($resource)
+function notify_resource_change($resource)
     {
     debug("notify_resource_change " . $resource);
     global $notify_on_resource_change_days;
