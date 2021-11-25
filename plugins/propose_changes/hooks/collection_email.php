@@ -28,8 +28,9 @@ function HookPropose_changesCollection_emailAdditional_email_collection($colrefs
 		if($propose_changes)
 			{
 			echo $colrefs;
-			sql_query("update collection set propose_changes=1 where ref in ('$colrefs')");
-				
+			$colrefs_array=explode(",",$colrefs);
+			$parameters=ps_param_fill($colrefs_array,"i");
+			ps_query("update collection set propose_changes=1 where ref in (". ps_param_insert(count($colrefs_array)).")", $parameters);
 			}
 		
 		}

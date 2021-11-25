@@ -27,8 +27,9 @@ function HookPropose_changesResource_emailAdditional_email_collection($colrefs,$
 		$propose_changes=(getval("propose_changes","")!=""?1:0);
 		if($propose_changes)
 			{
-			
-			sql_query("update collection set propose_changes=1 where ref in ('$colrefs')");
+			$colrefs_array=explode(",",$colrefs);
+			$parameters=ps_param_fill($colrefs_array,"i");
+			ps_query("update collection set propose_changes=1 where ref in (". ps_param_insert(count($colrefs_array)).")", $parameters);
 			}
 		
 		}
