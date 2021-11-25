@@ -393,18 +393,17 @@ function add_resource_to_collection(
 				{
 				# Insert a new access key entry for this resource/collection.
 				global $userref;
-				
                 ps_query(
                     'INSERT INTO external_access_keys(resource, access_key, user, collection, `date`, expires, access, usergroup, password_hash) VALUES (?, ?, ?, ?, now(), ?, ?, ?, ?)',
                     [
                         'i', $resource,
                         's', $keys[$n]['access_key'],
                         'i', $userref,
-                        'i', $collection,
-                        's', $keys[$n]['expires'],
+                        'i', $collection ?: null,
+                        's', $keys[$n]['expires'] ?: null,
                         'i', $keys[$n]['access'],
-                        's', $keys[$n]['usergroup'],
-                        's', $keys[$n]['password_hash'],
+                        'i', $keys[$n]['usergroup'] ?: null,
+                        's', $keys[$n]['password_hash'] ?: null,
                     ]
                 );				
 				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
@@ -419,7 +418,7 @@ function add_resource_to_collection(
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
                 'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
-                ['i', $collection, 'i', $resource, 's', $size]
+                ['i', $collection, 'i', $resource, 's', $size ?: null]
             );
 			}
 		
