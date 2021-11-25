@@ -2388,7 +2388,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
     else
         {
-        if (trim($value) == trim($existing))
+        if (trim($value) === trim($existing))
             {
             // Nothing to do
             return true;
