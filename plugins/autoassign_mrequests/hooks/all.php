@@ -57,7 +57,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         return false;
         }
 
-    $request_query = new stdClass();
+    $request_query = new PreparedStatementQuery();
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                   VALUES (?, ?, NOW(), 1, 0, ?, ?)";
     $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message, "i",$assigned_administrator);
