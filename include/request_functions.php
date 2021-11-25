@@ -268,9 +268,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
           FROM request r 
           LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
     
-    $request_query = new stdClass();
-    $request_query->sql = $sql;
-    $request_query->parameters = $parameters;
+    $request_query = new PreparedStatementQuery();
 
     if ($returnsql) 
         {
@@ -588,7 +586,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         }
         
     # Setup the principal create request SQL
-    $request_query = new stdClass();
+    $request_query = new PreparedStatementQuery();
     global $request_query;
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments) 
                             VALUES (?, ?, NOW(), 1, 0, ?)";
@@ -768,8 +766,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         } // End of default manager (regular processing)
     else
         {
-        ########################################################################################################
-        ### TODO CHECK >>                                                                         vvvvvvvvvvvvvv
         if(hook('bypass_end_managed_collection_request', '', array(!isset($collectiondata), $ref, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)))
             {
             return true;
