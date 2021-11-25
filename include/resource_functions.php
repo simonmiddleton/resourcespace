@@ -4382,17 +4382,34 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
 	{
 	# Returns a list of alternative files for the given resource
-	if ($order_by!="" && $sort!=""){
+	if ($order_by!="" && $sort!="" 
+        && in_array(strtoupper($order_by),array("ALT_TYPE")) 
+        && in_array(strtoupper($sort),array("ASC","DESC")) )
+        {
 		$ordersort=$order_by." ".$sort.",";
-	} else {
+	    } 
+    else 
+        {
 		$ordersort="";
-	}
+	    }
+
+    # The following hook now returns a query object
     $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
     
     # Filter by type, if provided.
-    if ($type!="") {$extrasql.= " and alt_type='" . escape_check($type) . "'";}
+    if ($type!="") 
+        {
+        $extrasql->sql.=" AND alt_type=?";
+        $extrasql->parameters=array_merge($extrasql->parameters,array("s",$type));
+        }
 
-	return sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='".escape_check($resource)."' $extrasql order by ".escape_check($ordersort)." name asc, file_size desc");
+    $alt_files_sql="SELECT ref,name,description,file_name,file_extension,file_size,creation_date,alt_type 
+                    FROM resource_alt_files where resource=?". $extrasql->sql . 
+                   " order by ".$ordersort." name asc, file_size desc";
+
+    $alt_files_parameters=array_merge($extrasql->parameters,array("i",$resource));
+
+	return ps_query($alt_files_sql,$alt_files_parameters);
 	}
 
 /**
