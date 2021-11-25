@@ -38,7 +38,7 @@ function get_user_requests($excludecompleted=false,$returnsql=false)
     global $userref;
     if (!is_numeric($userref)){ return false; }
 
-    $query_spec = new stdClass();
+    $query_spec = new PreparedStatementQuery();
     $query_spec->parameters=array("i",$userref);
     $query_spec->sql="select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, 
             (select count(*) from collection_resource cr where cr.collection=r.collection) c 
