@@ -19,7 +19,7 @@ if (is_process_lock(THIS_PROCESS_LOCK))
 
 set_process_lock(THIS_PROCESS_LOCK);
 
-$users=sql_query("SELECT DISTINCT owner FROM search_saved WHERE enabled=1");
+$users = ps_query("SELECT DISTINCT owner FROM search_saved WHERE enabled = 1", array());
 
 foreach ($users as $user)
 	{
