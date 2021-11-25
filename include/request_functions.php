@@ -268,7 +268,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
           FROM request r 
           LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
     
-    $request_query = new PreparedStatementQuery();
+    $request_query = new PreparedStatementQuery($sql, $parameters);
 
     if ($returnsql) 
         {
