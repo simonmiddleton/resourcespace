@@ -3244,10 +3244,26 @@ function get_resource_types($types = "", $translate = true)
                 $parameters[]="i";$parameters[]=$type;
                 }
             }
-        $sql=" where ref in ($cleantypes) ";
+        $sql=" WHERE ref IN ($cleantypes) ";
         }
     
-    $r=ps_query("select *, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
+    $r=ps_query("SELECT ref,
+                        name,
+                        allowed_extensions,
+                        order_by,
+                        config_options,
+                        tab_name,
+                        push_metadata,
+                        inherit_global_fields,
+                        colour,
+                        icon
+                   FROM resource_type
+                        $sql
+               ORDER BY order_by,
+                        ref",
+                        $parameters,
+                        "schema");
+
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
