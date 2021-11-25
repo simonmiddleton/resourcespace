@@ -291,20 +291,32 @@ function get_collection_resources_with_data($ref)
  * @param  boolean $smartadd
  * @param  string $size
  * @param  string $addtype
+ * @param  boolean $col_access_control  Collection access control. Is user allowed to add to it? You can leave it null 
+ *                                      to allow this function to determine it but it may have performance issues.
+ * @param  array $external_shares  List of external share keys. {@see get_external_shares()}. You can leave it null 
+ *                                 to allow this function to determine it but it will affect performance.
+ * 
  * @return boolean | string
  */
-function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
+function add_resource_to_collection(
+    $resource,
+    $collection,
+    $smartadd=false,
+    $size="",
+    $addtype="",
+    bool $col_access_control = null,
+    array $external_shares = null
+)
     {
     global $lang;
 
-    if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
+    if(!is_int_loose($collection) || !is_int_loose($resource))
         {
         return $lang["cantmodifycollection"];
         }
 
     global $collection_allow_not_approved_share, $collection_block_restypes;
-
-    $addpermitted = (
+    $addpermitted = $col_access_control ?? (
         (collection_writeable($collection) && !is_featured_collection_category_by_children($collection))
         || $smartadd
     );
@@ -325,7 +337,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
+        $keys = $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
         if (count($keys)>0)
             {
             $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
@@ -350,23 +362,20 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 				# Insert a new access key entry for this resource/collection.
 				global $userref;
 				
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
-				
-				#log this
+                sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
 				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
 				}
 			
 			}
-		
+
 		hook("Addtocollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
 		
 		if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
 			{
-			sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
-			sql_query("insert into collection_resource(resource,collection,purchase_size) values ('" . escape_check($resource) . "','" . escape_check($collection) . "','$size')");
+            sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+            sql_query("insert into collection_resource(resource,collection,purchase_size) values ('" . escape_check($resource) . "','" . escape_check($collection) . "','$size')");
 			}
 		
-		// log this
 		collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
 
 		// Clear theme image cache
@@ -436,14 +445,21 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 function collection_add_resources($collection,$resources='',$search='',$selected=false)
     {
     global $USER_SELECTION_COLLECTION,$lang;
-    if(     (string)(int)$collection != (string)$collection 
+    if(
+            !is_int_loose($collection)
         ||  ($resources == '' && $search == '')
-        ||  (!collection_writeable($collection))
+        ||  !collection_writeable($collection)
         ||  is_featured_collection_category_by_children($collection)
     )
         {
         return $lang["cantmodifycollection"];
         }
+    $access_control = true;
+    $external_share_keys = get_external_shares([
+        'share_collection' => $collection,
+        'share_type' => 0,
+        'ignore_permissions' => true,
+    ]);
 
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
     else if($resources ==''){$resources=do_search($search);}
@@ -455,7 +471,10 @@ function collection_add_resources($collection,$resources='',$search='',$selected
     $errors=0;
     foreach($refs_to_add as $ref)
         {
-        if(!add_resource_to_collection($ref,$collection)){$errors ++;}
+        if(!add_resource_to_collection($ref,$collection, false, '', '', $access_control, $external_share_keys))
+            {
+            $errors++;
+            }
         }
     
     if($errors ==0){return true;}
