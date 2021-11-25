@@ -5920,7 +5920,14 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
     $file=$path;
     
     // check for valid image
-    $mime_content_type = mime_content_type($file);
+    if (function_exists('mime_content_type'))
+        {
+        $mime_content_type = mime_content_type($file);
+        }
+    else
+        {
+        $mime_content_type = get_mime_type($file);
+        }
     $is_image = strpos($mime_content_type, "image/");
     if ($is_image === false)
         {
