@@ -1266,15 +1266,54 @@ function save_collection($ref, $coldata=array())
             $sqlset["bg_img_resource_ref"] = null;
             }
 
-        // Order by is supported only by featured collections
-        // Reset the order by when not a featured collection or whenever the parent is updated
-        // TODO: this will force re-ordering the FC tree at the level where the:-
-        // - collection was, and
-        // - collection moved to (if still featured)
-        if(isset($sqlset["type"]) && $sqlset["type"] !== COLLECTION_TYPE_FEATURED)
+        /*
+        Order by is applicable only to featured collections.
+        Determine if we have to reset and, if required, re-order featured collections at the tree level
+
+        ----------------------------------------------------------------------------------------------------------------
+                                                        |     Old       |        Set        | 
+                                                        |---------------|-------------------|
+        Use cases                                       | Type | Parent | Type    | Parent  | Reset order_by? | Re-order?
+        ------------------------------------------------|------|--------|-----------------------------------------------
+        Move FC to private                              | 3    | null   | 0       | null    | yes             | no
+        Move FC to public                               | 3    | any    | 4       | null    | yes             | no
+        Move FC to new parent                           | 3    | null   | not set | X       | yes             | yes
+        Save FC but don’t change type or parent         | 3    | null   | not set | null    | no              | no
+        Save a child FC but don’t change type or parent | 3    | X      | not set | not set | no              | no
+        Move public to private                          | 4    | null   | 0       | null    | no              | no
+        Move public to FC (root)                        | 4    | null   | 3       | not set | yes             | yes
+        Move public to FC (others)                      | 4    | null   | 3       | X       | yes             | yes
+        Save public but don’t change type or parent     | 4    | null   | 4       | not set | no              | no
+        Create FC at root                               | 0    | null   | 3       | not set | yes             | yes
+        Create FC at other level                        | 0    | null   | 3       | X       | yes             | yes
+        ----------------------------------------------------------------------------------------------------------------
+        */
+        // Saving a featured collection without changing its type or parent
+        $rob_cond_fc_no_change = (
+            isset($oldcoldata['type']) && $oldcoldata['type'] === COLLECTION_TYPE_FEATURED
+            && !isset($sqlset['type'])
+            && (!isset($sqlset['parent']) || is_null($sqlset['parent']))
+        );
+        // Saving a public collection without changing it into a featured collection
+        $rob_cond_public_col_no_change = (
+            isset($oldcoldata['type'], $sqlset['type'])
+            && $oldcoldata['type'] === COLLECTION_TYPE_PUBLIC
+            && $sqlset["type"] !== COLLECTION_TYPE_FEATURED
+        );
+        if( !($rob_cond_fc_no_change || $rob_cond_public_col_no_change) )
             {
-            $sqlset["order_by"] = 0;
-            $reorder_fcs = true;
+            $sqlset['order_by'] = 0;
+
+            if(
+                // Type changed to featured collection
+                (isset($sqlset['type']) && $sqlset['type'] === COLLECTION_TYPE_FEATURED)
+
+                // Featured collection moved in the tree (ie parent changed)
+                || ($oldcoldata['type'] === COLLECTION_TYPE_FEATURED && !isset($sqlset['type']) && isset($sqlset['parent']))
+            )
+                {
+                $reorder_fcs = true;
+                }
             }
 
 
@@ -1334,7 +1373,6 @@ function save_collection($ref, $coldata=array())
 
                 $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
-
             if($sqlupdate !== '')
                 {
                 $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
@@ -1490,6 +1528,40 @@ function save_collection($ref, $coldata=array())
 	if (isset($coldata["result_limit"]) && (int)$coldata["result_limit"] > 0)
         {
         sql_query("update collection_savedsearch set result_limit='" . $coldata["result_limit"] . "' where collection='$ref'");
+        }
+
+    // Re-order featured collections tree at the level of this collection (if applicable - only for featured collections)
+    if(isset($reorder_fcs))
+        {
+        if(isset($sqlset["parent"]) && $sqlset["parent"] > 0)
+            {
+            $sql_where_parent_is = '= ?';
+            $sql_where_parent_is_bp = ['i', $sqlset["parent"]];
+            }
+        else
+            {
+            $sql_where_parent_is = 'IS NULL';
+            $sql_where_parent_is_bp = [];
+            }
+
+
+        // get FCs at the new level and re-order them
+        $fcs_after_update = ps_query(
+              "SELECT DISTINCT c.ref,
+                      c.`name`,
+                      c.`type`,
+                      c.parent,
+                      c.order_by,
+                      count(DISTINCT cr.resource) > 0 AS has_resources
+                 FROM collection AS c
+            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                WHERE c.`type` = ?
+                  AND c.parent {$sql_where_parent_is}
+             GROUP BY c.ref",
+            array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent_is_bp)
+        );
+        usort($fcs_after_update, 'order_featured_collections');
+        reorder_collections(array_column($fcs_after_update, 'ref'));
         }
 
     refresh_collection_frame();
@@ -5032,7 +5104,7 @@ function order_featured_collections(array $a, array $b)
     global $descthemesorder;
 
     // Sort using the order_by property
-    if($a['order_by'] != $b['order_by'])
+    if($a['order_by'] != $b['order_by'] && !($a['order_by'] == 0 || $b['order_by'] == 0))
         {
         if($descthemesorder)
             {
