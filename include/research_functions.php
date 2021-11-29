@@ -104,8 +104,8 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 	$use_sort = "";
 	$parameters=array();
 	if ($find!="") {
-		$searchsql="where name like concat('%', ?, '%') or description like concat('%', ?, '%') or contact like concat('%', ?, '%') or ref=?"; 
-		$parameters=array("s",$find, "s",$find, "s",$find, "s",$find);
+		$searchsql="WHERE name like ? or description like ? or contact like ? or ref=?"; 
+		$parameters=array("s","%{$find}%", "s","%{$find}%", "s","%{$find}%", "i",(int)$find);
 	}
 	if (in_array($order_by, array("ref","name","created","status","assigned_to","collection")))
 		{
