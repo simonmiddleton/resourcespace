@@ -1814,7 +1814,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     }
                 }
 
-            if(0 < count($for_relate) )
+            if(0 < count($for_relate))
                 {
                 sql_query("INSERT INTO resource_related (resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$for_relate) . ")");
                 $successfully_edited_resources[] = $ref;
