@@ -82,6 +82,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     $checkvalues=$s[1];
                     # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
+                    $validvalues = array_map("i18n_get_translated", $validvalues);
 					$scriptconditions[$condref]['valid'] = array();
 					$scriptconditions[$condref]['validtext'] = array();
 					foreach($validvalues as $validvalue)
