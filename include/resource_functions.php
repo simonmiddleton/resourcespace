@@ -1801,10 +1801,22 @@ function save_resource_data_multi($collection,$editsearch = array())
         for($m = 0; $m < count($list); $m++)
             {
             $ref = $list[$m];
+            // Only add new relationships
+            $existing_relations = ps_array("SELECT related value FROM resource_related WHERE resource = ?", array("i", $ref));
 
-            if(0 < count($ok))
+            // Don't relate a resource to itself
+            $for_relate = array();
+            foreach ($ok as $resource_to_relate)
                 {
-                sql_query("INSERT INTO resource_related(resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$ok) . ")");
+                if ($ref != $resource_to_relate && !in_array($resource_to_relate, $existing_relations))
+                    {
+                    $for_relate[] = $resource_to_relate;
+                    }
+                }
+
+            if(0 < count($for_relate) )
+                {
+                sql_query("INSERT INTO resource_related (resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$for_relate) . ")");
                 $successfully_edited_resources[] = $ref;
                 }
             }
