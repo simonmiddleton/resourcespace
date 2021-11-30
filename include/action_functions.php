@@ -81,7 +81,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     else
         {
         $final_action_sql = $actionsql;
-        $final_action_actionsql->sql = "SELECT date, allactions.ref,user.fullname as 
+        $final_action_sql->sql = "SELECT date, allactions.ref,user.fullname as 
         user,"
             . ($messages_actions_usergroup?"usergroup.name as usergroup,":"") . 
         " description, 
@@ -91,7 +91,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         user.usergroup=usergroup.ref":"") .
         " ORDER BY " . $order_by . " " . $sort;
         }
-    return ps_query($final_actionsql->sql, $final_actionsql->parameters);  
+    return ps_query($final_action_sql->sql, $final_action_sql->parameters);  
     }
     
 /**
