@@ -47,6 +47,10 @@ if(!isset($databyname["boatname"]) || $databyname["boatname"] != "Sea Monster")
     return false;
     }
 
+// Metadata should have been logged
+$resource_log = get_resource_log($defresource);
+
+
 $userref            = $saved_userref;
 $usergroup          = $saved_usergroup;
 $userpermissions    = $savedpermissions;
