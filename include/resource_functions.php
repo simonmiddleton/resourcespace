@@ -4408,6 +4408,12 @@ function get_alternative_files($resource,$order_by="",$sort="",$type="")
     # The following hook now returns a query object
     $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
     
+    if (!$extrasql)
+        {
+        # Hook inactive, ensure we have an empty query object
+        $extrasql = new PreparedStatementQuery();
+        }
+
     # Filter by type, if provided.
     if ($type!="") 
         {
