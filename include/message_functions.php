@@ -102,7 +102,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		$owner = NULL;
 		}
 
-	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",$url,"i",$related_activity,"i",$related_ref,"i",$notification_type));
+	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
 	$message_ref = sql_insert_id();
 
 	foreach($users as $user)
