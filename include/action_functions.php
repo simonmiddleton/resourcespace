@@ -80,7 +80,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         {return ps_value("SELECT COUNT(*) value FROM (" . $actionsql->sql . ") allactions",$actionsql->parameters,0);}
     else
         {
-        $final_action_sql = $action_sql;
+        $final_action_sql = $actionsql;
         $final_action_actionsql->sql = "SELECT date, allactions.ref,user.fullname as 
         user,"
             . ($messages_actions_usergroup?"usergroup.name as usergroup,":"") . 
