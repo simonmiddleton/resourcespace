@@ -159,6 +159,8 @@ function sendFile($filename, string $download_filename)
         [
             'userfile' => pathinfo($filename, PATHINFO_BASENAME),
             'filename' => strip_extension($download_filename, false),
+            'k'        => getval('k', ''),
+            'ref'      => getval('ref', '')
         ]
     );
     redirect($user_download_url);
