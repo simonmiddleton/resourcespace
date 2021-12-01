@@ -3637,7 +3637,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $keep_transparency=true;
         $cmd_args['%sourcepath'] = $sourcepath;
-        $command .= ' -background transparent %sourcepath';
+        $command .= ' -background transparent %sourcepath[0]';
         }
     else
         {
