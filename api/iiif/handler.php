@@ -1,7 +1,7 @@
 <?php
 $suppress_headers = true;
 include "../../include/db.php";
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
     {
