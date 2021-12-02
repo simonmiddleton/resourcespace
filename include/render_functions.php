@@ -96,7 +96,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         # If there is a node which corresponds to that value name then append its node reference to a list of valid nodes
 						if(0 != count($found_validvalue))
 							{
-							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+							$scriptconditions[$condref]['valid'][] = (string)$found_validvalue['ref'];
                             
                             # Is the node present in search result list of nodes
                             if(in_array($found_validvalue['ref'],$searched_nodes))
@@ -3720,7 +3720,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                     if(0 != count($found_validvalue))
                         {
-                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+                        $scriptconditions[$condref]['valid'][] = (string)$found_validvalue['ref'];
 
                         if(in_array($found_validvalue['ref'], $v))
                             {
