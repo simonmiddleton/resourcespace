@@ -248,6 +248,7 @@ var categoryTreeChecksArray = [];
                 'forceLowercase': false,
                 'autocomplete': {
                     'source': '<?php echo $autocomplete_src; ?>',
+                    'minLength:': 3,
                 },
                 onChange: function(field, editor, tags)
                     {
@@ -312,7 +313,10 @@ var categoryTreeChecksArray = [];
             {
             ?>
             jQuery(document).ready(function () {
-                jQuery('#ssearchbox').autocomplete({source: "<?php echo $autocomplete_src; ?>"});
+                jQuery('#ssearchbox').autocomplete({
+                    source: "<?php echo $autocomplete_src; ?>",
+                    minLength: 3,
+                    });
                 
                 // Ensure any previously hidden searchfields remain hidden
                 SimpleSearchFieldsHideOrShow();
