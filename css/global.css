@@ -867,6 +867,13 @@ div.autocomplete ul li {
     line-height: normal;
 }
 
+.uppy-Dashboard-Item.is-complete > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
+}
+.uppy-Dashboard-Item.is-inprogress > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
+}
+
 #showlog,#hidelog
     {
     margin-top:10px;
