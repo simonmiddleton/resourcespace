@@ -1,6 +1,6 @@
 <?php
 # Video player - plays the preview file created to preview video resources.
-include_once '../include/video_functions.php';
+include_once __DIR__ . '/../include/video_functions.php';
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,
 $video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
 $video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
