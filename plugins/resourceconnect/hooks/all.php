@@ -287,3 +287,15 @@ function HookResourceConnectAllgetRemoteResources($collection)
     {
     return count(sql_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection='". escape_check($collection) ."'"));
     }
+
+function HookResourceConnectAllrenderadditionalthumbattributes($resource)
+    {
+    if($resource['ref'] == -87412 && !empty($resource['source_ref']))
+        {
+        echo "data-identifier='".htmlspecialchars($resource['source_ref'])."'";
+        }
+    elseif($resource['ref'] == -87412 && empty($resource['source_ref']))
+        {
+        echo "data-identifier='".htmlspecialchars($resource['ref_tab'])."'";
+        }
+    }  
