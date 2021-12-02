@@ -109,11 +109,6 @@ $upload_here                            = (getval('upload_here', '') != '' ? tru
 // Set to process upload once file upload complete
 $processupload                          = getval("processupload","") != "";
 
-// $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-// $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
-// $upfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-// $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
-
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
@@ -410,6 +405,11 @@ if ($processupload)
     $extension=explode(".",$upfilename);
     $extension=trim(strtolower($extension[count($extension)-1]));
 
+    // Clean the filename
+    $origuploadedfilename=escape_check($upfilename);
+    $encodedname = base64_encode($upfilename);
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
+
     # Banned extension?
     global $banned_extensions;
     if (in_array($extension,$banned_extensions))
@@ -422,10 +422,6 @@ if ($processupload)
         }
 
 	hook('additional_plupload_checks');
-	// Clean the filename
-	if($replace){$origuploadedfilename=escape_check($upfilename);}
-	//$upfilename = preg_replace('/[^\w\.-]+/', '_', $upfilename);
-	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
 
     if($allowed_extensions != "")
         {
@@ -961,6 +957,17 @@ jQuery(document).ready(function () {
                         });
                     }
                 }
+             // Encode the file names
+            const updatedFiles = {}
+            Object.keys(files).forEach(fileid => {
+            console.log(files[fileid]);
+                updatedFiles[fileid] = {
+                    ...files[fileid],
+                  }
+                updatedFiles[fileid].meta.name = base64encode(`${files[fileid].name}`);
+                console.debug('file obj')
+                console.debug(files[fileid].id)
+                });    
                 
             // Now upload the files
             count = Object.keys(files).length;
@@ -1176,7 +1183,7 @@ function processFile(file, forcepost)
                 }
             else
                 {
-                // Check if we have recorded a resource ID for a fiel with the same name minus the alternative suffix
+                // Check if we have recorded a resource ID for a file with the same name minus the alternative suffix
                 original_filename = filename.substr(0, filename.lastIndexOf(alternative_suffix));
                 resource_id       = resource_ids_for_alternatives.indexOf(original_filename);
                 if(resource_id != -1)
@@ -1367,6 +1374,13 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
             }
         });
     });
+
+function base64encode(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+      function toSolidBytes(match, p1) {
+          return String.fromCharCode('0x' + p1);
+  }));
+}
 
 function postUploadActions()
     {
