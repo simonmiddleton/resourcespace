@@ -1270,7 +1270,7 @@ function processFile(file, forcepost)
             if (uploadresponse.status != true)
                 {
                 error = uploadresponse.error;
-
+                upRedirBlock = true;
                 if(uploadresponse.error==108)
                     {
                     message = '<?php echo $lang['error-duplicatesfound']?>';
