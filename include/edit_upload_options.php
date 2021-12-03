@@ -1,7 +1,7 @@
 <?php
-$on_upload = ($pagename ==  "upload_plupload");
+$on_upload = ($pagename ==  "upload_batch");
 if(!hook("replaceuploadoptions")):	
-if ($on_upload || $ref<0)
+if ($on_upload || (isset($ref) && $ref<0))
 	{
 	if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
 	if($tabs_on_edit && !$on_upload)
@@ -17,7 +17,6 @@ if ($on_upload || $ref<0)
 		<?php
 		}
 
-
     if($on_upload && $upload_then_edit && $resource_type_force_selection)
         {
         ?>
@@ -26,7 +25,7 @@ if ($on_upload || $ref<0)
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"
-                    onchange="CentralSpacePost(document.getElementById('UploadPluploadForm'), true);">
+                    onchange="CentralSpacePost(document.getElementById('UploadForm'), true);">
                 <option value='' selected><?php echo $lang["select"]; ?></option>
             <?php
             $types                = get_resource_types();
@@ -106,207 +105,214 @@ if ($on_upload || $ref<0)
         if ($enable_add_collection_on_upload)
             {
             $collection_add=getvalescaped("collection_add","");
-            ?>
-            <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
-            <label for="collection_add"><?php echo $lang["addtocollection"]?></label>
-            <select name="collection_add" id="collection_add" class="stdwidth">
-            
-            <?php if ($upload_add_to_new_collection_opt && $collection_allow_creation) { 
-                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
-                    $non_col_options++;
-                }
-                ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option><?php } ?>
-            <?php if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection")) {
-                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
-                    $non_col_options++;
-                }
-                ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option><?php } ?>
-            
-            <?php
-            
-            if ($upload_force_mycollection)
+
+            if($upload_force_mycollection)
                 {
-                $list=get_user_collections($userref,"Default Collection");}
+                $usercollection = get_default_user_collection(true);
+                echo "<input type='hidden' name='collection_add' value='" . (int)$usercollection . "' />";
+                }
             else
                 {
+                ?>
+                <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
+                <label for="collection_add"><?php echo $lang["addtocollection"]?></label>
+                <select name="collection_add" id="collection_add" class="stdwidth" >
+                
+                <?php if ($upload_add_to_new_collection_opt && $collection_allow_creation && !$upload_force_mycollection)
+                    { 
+                    if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                        {
+                        $non_col_options++;
+                        }
+                    ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option>
+                    <?php
+                    }
+                if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection") && !$upload_force_mycollection)
+                    {
+                    if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                        {
+                        $non_col_options++;
+                        }
+                    ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option>
+                    <?php
+                    }                
+               
                 //If the user is attached to a collection that is not allowed to add resources to,
                 //then we hide this collection from the drop down menu of the upload page
                 $temp_list=get_user_collections($userref);
                 $list = array();
                 $hide_non_editable = array();
                     
-                    for ($n=0;$n<count($temp_list);$n++){
-                        if ( $temp_list[$n]['user']!=$userref && $temp_list[$n]['allow_changes'] == 0)
-                            {
-                            continue;
-                            }
-                        else
-                            {
-                            array_push($list,$temp_list[$n]);
-                            }
-                    }
-                
-                }
-                
-            $currentfound=false;
-            
-                // make sure it's possible to set the collection with collection_add (compact style "upload to this collection"
-                if (is_numeric($collection_add) && getval("resetform","")=="" && (!isset($save_errors) || !$save_errors))
-                       {
-                       # Switch to the selected collection (existing or newly created) and refresh the frame.
-                       set_user_collection($userref,$collection_add);
-                       refresh_collection_frame($collection_add);
-                       }
-                       
-            $hidden_collections_array=array();
-            for ($n=0;$n<count($list);$n++)
-                {
-                $hide_collection=false;
-                if($hidden_collections_hide_on_upload && !$hidden_collections_upload_toggle && in_array($list[$n]['ref'],$hidden_collections)){continue;}
-                
-                if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                for ($n=0;$n<count($temp_list);$n++)
                     {
-                    $hide_collection=true;
-                    if(in_array($list[$n]['ref'],$hidden_collections))
+                    if ( $temp_list[$n]['user']!=$userref && $temp_list[$n]['allow_changes'] == 0)
                         {
-                        $list[$n]['hidden']=true;
+                        continue;
                         }
                     else
                         {
-                        $list[$n]['hidden']=false;
+                        array_push($list,$temp_list[$n]);
                         }
                     }
+                    
+                $currentfound=false;
                 
-                if ($collection_dropdown_user_access_mode)
-                    {
-                    $colusername = $list[$n]['fullname'];
-
-                    if(!hook('collectionaccessmode'))
+                    // make sure it's possible to set the collection with collection_add (compact style "upload to this collection"
+                    if (is_numeric($collection_add) && getval("resetform","")=="" && (!isset($save_errors) || !$save_errors))
                         {
-                        switch($list[$n]["type"])
+                        # Switch to the selected collection (existing or newly created) and refresh the frame.
+                        set_user_collection($userref,$collection_add);
+                        refresh_collection_frame($collection_add);
+                        }
+                        
+                $hidden_collections_array=array();
+                for ($n=0;$n<count($list);$n++)
+                    {
+                    $hide_collection=false;
+                    if($hidden_collections_hide_on_upload && !$hidden_collections_upload_toggle && in_array($list[$n]['ref'],$hidden_collections)){continue;}
+                    
+                    if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                        {
+                        $hide_collection=true;
+                        if(in_array($list[$n]['ref'],$hidden_collections))
                             {
-                            case COLLECTION_TYPE_PUBLIC:
-                                $accessmode = $lang["public"];
-                                break;
-
-                            case COLLECTION_TYPE_FEATURED:
-                                $accessmode = $lang["theme"];
-                                break;
-
-                            case COLLECTION_TYPE_STANDARD:
-                            default:
-                                $accessmode = $lang["private"];
-                                break;
+                            $list[$n]['hidden']=true;
                             }
+                        else
+                            {
+                            $list[$n]['hidden']=false;
+                            }
+                        }
+                    
+                    if ($collection_dropdown_user_access_mode)
+                        {
+                        $colusername = $list[$n]['fullname'];
+
+                        if(!hook('collectionaccessmode'))
+                            {
+                            switch($list[$n]["type"])
+                                {
+                                case COLLECTION_TYPE_PUBLIC:
+                                    $accessmode = $lang["public"];
+                                    break;
+
+                                case COLLECTION_TYPE_FEATURED:
+                                    $accessmode = $lang["theme"];
+                                    break;
+
+                                case COLLECTION_TYPE_STANDARD:
+                                default:
+                                    $accessmode = $lang["private"];
+                                    break;
+                                }
+                            }
+                        }
+                        
+                    
+                    #remove smart collections as they cannot be uploaded to.
+                    if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null))
+                        {
+                        #show only active collections if a start date is set for $active_collections 
+                        if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
+                            { if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
+                            if($hide_collection)
+                                {
+                                $hidden_collections_array[]=$list[$n];
+                                }
+                            ?>
+                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?> 	selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?> <?php if ($collection_dropdown_user_access_mode){echo htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option>
+                            <?php }
+                    
                         }
                     }
                     
-                
-                #remove smart collections as they cannot be uploaded to.
-                if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null))
+                if (!$currentfound && !$upload_force_mycollection)
                     {
-                    #show only active collections if a start date is set for $active_collections 
-                    if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
-                        { if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
-                        if($hide_collection)
-                            {
-                            $hidden_collections_array[]=$list[$n];
-                            }
+                    # The user's current collection has not been found in their list of collections (perhaps they have selected a theme to edit). Display this as a separate item.
+                    $cc=get_collection($usercollection);
+        
+                    //Check if the current collection is editable as well by checking $cc['allow_changes']
+                    if(false !== $cc && collection_writeable($usercollection))
+                        {
+                        $currentfound = true;
                         ?>
-                        <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?> 	selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?> <?php if ($collection_dropdown_user_access_mode){echo htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option>
-                        <?php }
-                
+                        <option value="<?php echo htmlspecialchars($usercollection) ?>" <?php if (is_numeric($collection_add) && $usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
+                        <?php
+                        }
                     }
-                }
-                
-            if (!$currentfound && !$upload_force_mycollection)
-                {
-                # The user's current collection has not been found in their list of collections (perhaps they have selected a theme to edit). Display this as a separate item.
-                $cc=get_collection($usercollection);
-    
-                //Check if the current collection is editable as well by checking $cc['allow_changes']
-                if(false !== $cc && collection_writeable($usercollection))
-                    {
-                    $currentfound = true;
-                    ?>
-                    <option value="<?php echo htmlspecialchars($usercollection) ?>" <?php if (is_numeric($collection_add) && $usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
-                    <?php
-                    }
-                }
-            ?>
-            </select>
-            <?php
-            if ($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
-                {
                 ?>
-                <span>
-                    <a id="toggleHiddenCollectionsLink" href="#" onClick="ToggleHiddenCollections();return false;"><?php echo ((isset($_COOKIE['hidden_collections']) && $_COOKIE['hidden_collections']=='show')?$lang['hiddencollections_hide']:$lang['hiddencollections_show'])?></a>
-                </span>
-                <script>
-                    var hiddenCollectionsData=JSON.parse('<?php echo json_encode($hidden_collections_array,JSON_FORCE_OBJECT)?>');
-                    
-                    var hideText='<?php echo $lang['hiddencollections_hide']?>';
-                    var showText='<?php echo $lang['hiddencollections_show']?>';
-                    var nonColOptions='<?php echo $non_col_options?>';
-                    
-                    var collectionDrop=jQuery("#collection_add");
-                    var toggleLink=jQuery("#toggleHiddenCollectionsLink");
-                    
-                    function HideHiddenCollections(){
-                        jQuery.each(hiddenCollectionsData,function(k,v){
-                            if(v.hidden){
-                                jQuery(collectionDrop).children("option[value="+v.ref+"]").remove();
+                </select>
+                <?php
+                if ($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
+                    {
+                    ?>
+                    <span>
+                        <a id="toggleHiddenCollectionsLink" href="#" onClick="ToggleHiddenCollections();return false;"><?php echo ((isset($_COOKIE['hidden_collections']) && $_COOKIE['hidden_collections']=='show')?$lang['hiddencollections_hide']:$lang['hiddencollections_show'])?></a>
+                    </span>
+                    <script>
+                        var hiddenCollectionsData=JSON.parse('<?php echo json_encode($hidden_collections_array,JSON_FORCE_OBJECT)?>');
+                        
+                        var hideText='<?php echo $lang['hiddencollections_hide']?>';
+                        var showText='<?php echo $lang['hiddencollections_show']?>';
+                        var nonColOptions='<?php echo $non_col_options?>';
+                        
+                        var collectionDrop=jQuery("#collection_add");
+                        var toggleLink=jQuery("#toggleHiddenCollectionsLink");
+                        
+                        function HideHiddenCollections(){
+                            jQuery.each(hiddenCollectionsData,function(k,v){
+                                if(v.hidden){
+                                    jQuery(collectionDrop).children("option[value="+v.ref+"]").remove();
+                                }
+                            });
+                            SetCookie('hidden_collections',"hide",1000);
+                            jQuery(toggleLink).html(showText);
+                        }
+                        
+                        function ShowHiddenCollections(){
+                            c=nonColOptions;
+                            jQuery.each(hiddenCollectionsData,function(k,v){
+                                if(v.hidden && jQuery(collectionDrop).children("option[value="+v.ref+"]").length == 0){
+                                    jQuery(collectionDrop).children('option:nth-child('+c+')').after("<option value='"+v.ref+"'>"+v.name+"</option>");
+                                }
+                                c++;
+                            });
+                            SetCookie('hidden_collections',"show",1000);
+                            jQuery(toggleLink).html(hideText);
+                        }
+                        
+                        function ToggleHiddenCollections(init) {
+                            init = init || false;
+                            hiddenCollections = getCookie("hidden_collections");
+                            if(init){
+                                if(hiddenCollections!="hide") {
+                                    ShowHiddenCollections();
+                                } else if(hiddenCollections=="hide") {
+                                    HideHiddenCollections();
+                                }
                             }
-                        });
-                        SetCookie('hidden_collections',"hide",1000);
-                        jQuery(toggleLink).html(showText);
-                    }
-                    
-                    function ShowHiddenCollections(){
-                        c=nonColOptions;
-                        jQuery.each(hiddenCollectionsData,function(k,v){
-                            if(v.hidden && jQuery(collectionDrop).children("option[value="+v.ref+"]").length == 0){
-                                jQuery(collectionDrop).children('option:nth-child('+c+')').after("<option value='"+v.ref+"'>"+v.name+"</option>");
-                            }
-                            c++;
-                        });
-                        SetCookie('hidden_collections',"show",1000);
-                        jQuery(toggleLink).html(hideText);
-                    }
-                    
-                    function ToggleHiddenCollections(init) {
-                        init = init || false;
-                        hiddenCollections = getCookie("hidden_collections");
-                        if(init){
-                            if(hiddenCollections!="hide") {
-                                ShowHiddenCollections();
-                            } else if(hiddenCollections=="hide") {
-                                HideHiddenCollections();
+                            else{
+                                if (hiddenCollections=="show"){
+                                    HideHiddenCollections();
+                                } else { 
+                                    ShowHiddenCollections();
+                                }
                             }
                         }
-                        else{
-                            if (hiddenCollections=="show"){
-                                HideHiddenCollections();
-                            } else { 
-                                ShowHiddenCollections();
-                            }
-                        }
-                    }
-                    ToggleHiddenCollections(true);
-                </script>
+                        ToggleHiddenCollections(true);
+                    </script>
+                    <?php
+                    }?>            
+                <div class="clearerleft"> </div>
+                <div name="collectioninfo" id="collectioninfo" style="display:none;">
+                <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
+                <label for="entercolname"><?php echo $lang["collectionname"]?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
+                <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
+                </div>
+                </div> <!-- end collectioninfo -->
+                </div> <!-- end question_collectionadd -->
                 <?php
                 }
-            ?>
-        
-            <div class="clearerleft"> </div>
-            <div name="collectioninfo" id="collectioninfo" style="display:none;">
-            <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
-            <label for="entercolname"><?php echo $lang["collectionname"]?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
-            <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
-            </div>
-            </div> <!-- end collectioninfo -->
-            </div> <!-- end question_collectionadd -->
-            <?php
             } // end enable_add_collection_on_upload
 		}
     ?>
@@ -330,28 +336,26 @@ if ($on_upload || $ref<0)
 if($on_upload)
     {
     if($upload_no_file)
-	{
-	?>
-    <div class="Question" id="question_noupload">
-        <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
-        <div id="noupolad">
-            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+        {
+        ?>
+        <div class="Question" id="question_noupload">
+            <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
+            <div id="noupolad">
+                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_batch.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+            </div>
+            <div class="clearerleft"> </div>
         </div>
-        <div class="clearerleft"> </div>
-    </div>
-	<?php
-    }
+        <?php
+        }
     ?>
     </div> <!-- End of Upload options -->
     <div class="BasicsBox">
     <script>
     // Add code to change URL if options change
     
-    jQuery(document).ready(function() {
-        
+    jQuery(document).ready(function() {        
         jQuery('#relateonupload').on('change', function ()
             {
-            cururl = plup.object.getOption('url');
             if(jQuery(this).is(':checked'))
                 {
                 relate_on_upload = true;

@@ -29,11 +29,14 @@
             exit();
             }
 
-        $user         = getvalescaped('user', 0, true);
-        $seen         = getvalescaped('seen', 0, true);
-        $unseen       = getvalescaped('unseen', 0, true);
-        $allseen      = getvalescaped('allseen', 0, true);
-        $deleteusrmsg = getvalescaped('deleteusrmsg', 0, true);
+        $user            = getvalescaped('user', 0, true);
+        $seen            = getvalescaped('seen', 0, true);
+        $unseen          = getvalescaped('unseen', 0, true);
+        $allseen         = getvalescaped('allseen', 0, true);
+        $deleteselusrmsg = getvalescaped('deleteselusrmsg', "");
+        $selectedseen    = getvalescaped('selectedseen', "");
+        $selectedunseen  = getvalescaped('selectedunseen', "");
+        $getrefs         = getvalescaped('getrefs', 0, true);
 
 		if(0 < $user)
 			{
@@ -75,12 +78,33 @@
 			return;
 			}
 
-		// Delete a specific message from a single user
-		if (0 < $deleteusrmsg)
-			{
-			message_user_remove($deleteusrmsg);
-			return;
-			}
+        // Delete all selected messages
+        if ($deleteselusrmsg != "")
+            {
+            message_deleteselusrmsg($deleteselusrmsg);
+            return;
+            }
+ 
+        // Mark all selected messages as seen
+        if ($selectedseen != "")
+            {
+            message_selectedseen($selectedseen);
+            return;
+            }
+ 
+        // Mark all selected messages as unseen
+        if ($selectedunseen != "")
+            {
+            message_selectedunseen($selectedunseen);
+            return;
+            }
+ 
+        // Return list of references of all messages
+        if ($getrefs > 0)
+            {
+            message_getrefs($getrefs);
+            return;
+            }
 
 		// Check if there are messages
 		$messages = array();
@@ -99,11 +123,16 @@
             }
         if($offline_job_queue)
 			{
-            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref));
-            $failedjobcount = count($failedjobs);
-            if($failedjobcount>0)
+            $userfailedjobs = count(job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
+			$allfailedjobs  = count(job_queue_get_jobs("",STATUS_ERROR));
+			$jobcounts 		= [];
+
+			if($userfailedjobs > 0){$jobcounts['user'] = $userfailedjobs;}
+			if($allfailedjobs > 0){$jobcounts['all'] = $allfailedjobs;}
+
+			if(!empty($jobcounts))
 				{
-                $extramessage['failedjobcount'] = $failedjobcount;
+                $extramessage['failedjobcount'] = $jobcounts;
                 $extramessages = true;
 				}
             }
@@ -166,8 +195,9 @@
                         }
                     if (typeof(messages[messages.length - 1]['failedjobcount']) !== 'undefined') 
                         {
-                        failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
-                        totalcount=totalcount+failedjobcount;
+                        userfailedjobcount = parseInt(messages[messagecount]['failedjobcount']['user']);
+						totalcount         = totalcount + userfailedjobcount;
+						failedjobcount 	   = parseInt(messages[messagecount]['failedjobcount']['all']);
                         }
                     jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
                     if (activeSeconds > 0 || message_poll_first_run)
@@ -187,16 +217,25 @@
                             message_refs.push(ref);
                             var message = nl2br(messages[i]['message']);
                             var url = messages[i]['url'];
-                            <?php
-                            if($user_pref_show_notifications)
+                            if(messages[i]['type'] & <?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE ?> && pagename =='user_message' && parseInt(messages[i]['ownerid']) == parseInt(msgto))
                                 {
-                                ?>
-                                message_display(message, url, ref, function (ref) {
-                                jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-                                });
-                                <?php
+                                // Show the message directly on the page if on user_message.php and communicating with this user
+                                showUserMessage(messages[i]['message'],false);
                                 }
-                            ?>
+                            else
+                                {
+                                // Show message popup if configured
+                                <?php
+                                if($user_pref_show_notifications)
+                                    {
+                                    ?>
+                                    message_display(message, url, ref, function (ref) {
+                                    jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
+                                    });
+                                    <?php
+                                    }
+                                ?>                                
+                                }                           
                             message_poll();
                             }
                         }
@@ -218,7 +257,13 @@
                         }
                     if (failedjobcount>0)
                         {
-                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();;
+                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();
+						let teampill = jQuery('#TeamMessages');
+						if(teampill.attr('data-value') != undefined)
+							{
+							failedjobcount = failedjobcount + teampill.attr('data-value');
+							}
+						teampill.html(failedjobcount).fadeIn();
                         }
                     else
                         {
@@ -348,7 +393,7 @@
 						jQuery( this ).dialog( "close" );
 						}}],
 			dialogClass: 'message',
-			width:'auto',
+			width: 400,
 			draggable: true,
 			open: function(event, ui) { jQuery('.ui-widget-overlay').bind('click', function(){ jQuery("#modal_dialog").dialog('close'); }); },
 			close: function( event, ui ) {

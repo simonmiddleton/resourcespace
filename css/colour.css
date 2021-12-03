@@ -25,7 +25,9 @@ input[readonly] {
 #Header {background: rgba(0, 0, 0, 0.6);transform: translate3d(0, 0, 0);border: none;}
 #Header li a {color:#fff; opacity:0.7;}
 #Header .SearchResultsDisabled,
-#Header .SearchResultsDisabled:hover, .DisabledLink {opacity: 0.35; cursor: default;}
+#Header .SearchResultsDisabled:hover,
+.DisabledLink,
+.DisabledLink:hover {opacity: 0.35; cursor: default;}
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
 /* links in Header overflow dropdown menu */
@@ -147,7 +149,7 @@ div.autocomplete ul li {color: #000;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend {background: #fff; border-color: #6D6D6D;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}
 .ArchiveResourceTitle, .ResourcePendingSubmissionTitle, .ResourcePendingReviewTitle {color: #888;}
 .DeletedResourceTitle {color: #FF0000;}
 .RecordStory{color: #000000;background: #FFFFFF; .Rec border-top : 1px solid #ddd;}
@@ -189,7 +191,7 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
 .ListviewBoxedTitleStyle td {background-color:#fff;}
-.NewFlag { background-color: #fff; color: #737373; }
+.NewFlag { background-color: #fff; color: #737373; text-shadow: none;}
 
 /* Mouseover effect on list views */
 .ListviewStyle tr:hover td {background-color: #EEE;} 
@@ -230,15 +232,9 @@ div.autocomplete ul li {color: #000;}
 }
 .dash_tile_bin_text {color: #fff;}
 
-/* Shadowy Styling */
-.HomePanelDynamicDash.TileContentShadow h2, .HomePanelDynamicDash.TileContentShadow p, .HomePanelDynamicDash.TileContentShadow,
-.TileContentShadow {
-    text-shadow: 1px 1px 8px #090909;
-    color:#fff;
-}
 .HomePanel h2.title {background: transparent;color:#fff;}
-.HomePanel .HomePanelDynamicDash h2{background:transparent;}
-.HomePanelDynamicDash p.tile_corner_box {background: rgba(19, 19, 19, 0.67);border-top-left-radius: 5px;color:#fff;}
+.HomePanel .HomePanelDynamicDash h2{background: rgba(0,0,0,0.4); text-shadow: 0px 1px 5px #000000;}
+.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);border-top-left-radius: 5px;color:#fff;}
 
 /* Delete Dialog */
 .delete-dialog .ui-dialog-titlebar,  .ui-dialog-titlebar{
@@ -303,7 +299,7 @@ div.MessageBox a {
 }
 
 /* Login box */
-#login_box {background: rgba(0, 0, 0, 0.52)}
+#login_box {background: rgba(0, 0, 0, 0.6)}
 #login_box .Question {border-bottom: none; padding: 0.6em 0 0 0;}
 #login_box .QuestionSubmit {background:none; border: none;}
 #login_box .Question .stdwidth {width: 550px; border-radius: 6px; min-height: 32px;}
@@ -311,9 +307,6 @@ div.MessageBox a {
 
 /* Highlighting required fields in certain plugins */
 .highlighted {border: 3px solid #F00 !important;}
-
-UL.jqueryFileTree A {color:#000;background-color:initial;}
-UL.jqueryFileTree A:hover {background-color:initial !important;}
 
 #previewimage, #previewimagecopy {box-shadow: 0 2px 6px rgba(0,0,0,0.2 );}
 
@@ -332,7 +325,7 @@ input:checked + .customFieldLabel, .keywordselected {
     color: #fff;
 }
   
-#LoadingBox {
+#LoadingBox,  #ProcessingBox{
     background-color:white;
     color:black;
 }
@@ -420,13 +413,13 @@ a.ui-button.plupload_button.ui-button-disabled {
     {
     background-color: rgba(0,0,0,0.4);
     padding-bottom: 5px;
+    text-shadow: 0px 1px 5px #000000;
     }
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents .FeaturedSimpleTileText h2 {
     background-color: unset;
 }
 
-.SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited { color: #474747; }
+.SelectionCollectionLink, .SelectionCollectionLink:link, .SelectionCollectionLink:visited, .MessageBox { color: #474747; }
 .ClearSelectedButton { background-color: #ff2b2b; }
 .ClearSelectedButton:hover { background-color: #b71c1c; }
-

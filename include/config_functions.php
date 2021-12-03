@@ -311,6 +311,7 @@ function process_config_options($user_id = null)
 
             $GLOBALS[$config_option['parameter']] = $param_value;
             }
+        debug_track_vars('end@process_config_options', $GLOBALS, ['user_id' => $user_id ?? 0]);
         }
 
     return;
@@ -380,7 +381,7 @@ function config_add_html($content)
  *          field. Defaulted to false.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false)
+function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden = false)
     {
     global $lang;
 
@@ -391,7 +392,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         }
     ?>
 
-    <div class="Question" id="question_<?php echo $name; ?>">
+    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
     <?php
     if($autosave)
@@ -440,6 +441,20 @@ function config_text_input($name, $label, $current, $password = false, $width = 
 function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden=false)
     {
     return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave, $hidden);
+    }
+
+
+/**
+* Generate a data structure to instruct the configuration page generator to add a hidden input
+* 
+* @param string $cf_var_name  Plugins' configuration variable name
+* @param string $cf_var_value Value
+* 
+* @return array
+*/
+function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
+    {
+    return array('text_hidden_input', $cf_var_name, $cf_var_value);
     }
 
 
@@ -885,7 +900,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         ?>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px"
     <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>>
-    <option value="" <?php echo (($current=="")?' selected':'') ?>></option>
+    <option value="" <?php echo (($current=="")?' selected':'') ?>><?php echo $lang["select"]; ?></option>
 <?php
     foreach($fields as $field)
         {
@@ -1197,4 +1212,34 @@ function config_register_core_fieldvars($source="BASE", $varnames=array())
             $corefields[$source][] = $varname;
             }
         }
+    }
+
+
+/**
+* Used to block deletion of 'core' fields.
+* 
+* @param string $source What part (e.g plugin) relies on this list of metadata fields
+* @param array  $refs   List of metadata field IDs to prevent being deleted
+*/
+function config_register_core_field_refs(string $source, array $refs)
+    {
+    global $core_field_refs;
+
+    $source = trim($source);
+    $source = ($source !== '' ? $source : 'BASE');
+
+    if(!isset($core_field_refs[$source]))
+        {
+        $core_field_refs[$source] = [];
+        }
+
+    foreach($refs as $ref)
+        {
+        if(is_int_loose($ref) && $ref > 0)
+            {
+            $core_field_refs[$source][] = $ref;
+            }
+        }
+
+    return;
     }

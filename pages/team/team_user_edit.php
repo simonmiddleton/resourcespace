@@ -6,7 +6,6 @@
  * @subpackage Pages_Team
  */
 include "../../include/db.php";
-
 include "../../include/authenticate.php"; 
 include "../../include/api_functions.php"; 
 
@@ -89,8 +88,11 @@ if (!checkperm_user_edit($user))
     exit();
     }
 
-include "../../include/header.php";
-
+// Block this from running if we are logging in as a user because running this here will block db.php from setting headers
+if(getval('loginas', '') === '')
+    {
+    include "../../include/header.php";
+    }
 
 
 // Log in as this user. A user key must be generated to enable login using the MD5 hash as the password.
@@ -104,18 +106,17 @@ if(getval('loginas', '') != '')
     );
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $userref, false);
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $user['ref'], false);
-    ?>
-    <form method="post" action="<?php echo $baseurl_short?>login.php" id="autologin">
-        <?php generateFormToken("autologin"); ?>
-        <input type="hidden" name="username" value="<?php echo $user["username"]?>">
-        <input type="hidden" name="password" value="<?php echo $user["password"]?>">
-        <input type="hidden" name="userkey" value="<?php echo md5(escape_check($user["username"]) . $scramble_key)?>">
-        <noscript><input type="submit" value="<?php echo $lang["login"]?>"></noscript>
-    </form>
-    <script type="text/javascript">
-    document.getElementById("autologin").submit();
-    </script>
-    <?php
+
+    global $CSRF_token_identifier, $usersession;
+
+    //userkey and CSRF tokens still need to be placed in post array as preform_login() references these directly
+    $_POST = [];
+    $_POST['username'] = $user['username'];
+    $_POST['password'] = $user['password'];
+    $_POST['userkey'] = md5(escape_check($user["username"]) . $scramble_key);
+    $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
+
+    include '../../login.php';
     exit();
     }
 ?>
@@ -178,8 +179,10 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
 <div class="Question" ><label><?php echo $lang["username"]?></label><input name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
-<?php if (!hook("password")) { ?>
-<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo (strlen($user["password"])==64 || strlen($user["password"])==32)?$lang["hidden"]:$user["password"]?>">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<?php if (!hook("password", "", array($user))) { ?>
+<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo $lang["hidden"]; ?>">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<?php } else { ?>
+<div><input name="password" id="password" type="hidden" value="<?php echo $lang["hidden"];?>" /></div>
 <?php } ?>
 
 <?php if (!hook("replacefullname")){?>
@@ -380,7 +383,11 @@ if ($user_edit_approved_by && $user["approved"]==1)
 	}
 ?>
 
-<div class="Question"><label><?php echo $lang["ticktodelete"]?></label><input name="deleteme" type="checkbox"  value="yes"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label><?php echo $lang['ticktodelete']; ?></label>
+    <input type="checkbox" name="deleteme" value="yes" onclick="return confirm_delete_user(this);">
+    <div class="clearerleft"></div>
+</div>
 <?php hook("additionaluserlinks");?>
 
 <div class="Question">
@@ -391,6 +398,18 @@ if ($user_edit_approved_by && $user["approved"]==1)
 <div class="Question"><label><?php echo $lang["log"]?></label>
 <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewlog"]?></a></div>
 <div class="clearerleft"> </div></div>
+
+<?php
+if($userref != $ref)
+    {
+    // Add message link
+    ?>
+    <div class="Question"><label><?php echo $lang["new_message"]?></label>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["message"]?></a></div>
+    <div class="clearerleft"> </div></div>
+    <?php
+    }  
+hook("usertool")?>
 
 <?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
 <div class="Question"><label><?php echo $lang["login"]?></label>
@@ -406,7 +425,16 @@ if ($user_edit_approved_by && $user["approved"]==1)
 </div>
 </form>
 </div>
+<script>
+function confirm_delete_user(el)
+    {
+    if(jQuery(el).is(':checked') === false)
+        {
+        return true;
+        }
 
+    return confirm('<?php echo htmlspecialchars($lang['team_user__confirm-deletion']); ?>');
+    }
+</script>
 <?php		
 include "../../include/footer.php";
-?>

@@ -36,6 +36,7 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
     $simplesaml['simplesaml_lib_path'] = getvalescaped('simplesaml_lib_path', '');
     $simplesaml['simplesaml_authorisation_claim_name'] = getvalescaped('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getvalescaped('simplesaml_authorisation_claim_value', '');
+    $simplesaml['simplesaml_rsconfig'] = getvalescaped('simplesaml_rsconfig','');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -67,13 +68,17 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 
 global $baseurl;
 
-
 // Retrieve list of groups for use in mapping dropdown
 $rsgroups = sql_query('select ref, name from usergroup order by name asc');
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables
-foreach (array('simplesaml_create_new_match_email','simplesaml_allow_duplicate_email','simplesaml_multiple_email_notify') as $thefield)
+foreach (array(
+    'simplesaml_create_new_match_email',
+    'simplesaml_allow_duplicate_email',
+    'simplesaml_multiple_email_notify',
+    'simplesaml_rsconfig'
+    ) as $thefield)
 	{
 	if (!isset($simplesaml[$thefield]))
 		{
@@ -81,35 +86,123 @@ foreach (array('simplesaml_create_new_match_email','simplesaml_allow_duplicate_e
 		}
 	}
 
+$links_trail = array(
+    array(
+        'title' => $lang["systemsetup"],
+        'href'  => "{$baseurl_short}pages/admin/admin_home.php"
+    ),
+    array(
+        'title' => $lang["pluginmanager"],
+        'href'  => "{$baseurl_short}pages/team/team_plugins.php"
+    ),
+    array(
+        'title' => $lang['simplesaml_configuration'],
+        'help'  => 'plugins/simplesaml'
+    ),
+);
 include '../../../include/header.php';
+
+renderBreadcrumbs($links_trail);
+
 ?>
 <div class="BasicsBox"> 
-  <h2>&nbsp;</h2>
-  <h1><?php echo $lang['simplesaml_configuration'] ?></h1>
   
 <?php
- if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
+ if(($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfig && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))))
     {
-    echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . ". <a href='" . $baseurl . "/plugins/simplesaml/pages/about.php'>" . $baseurl . "/plugins/simplesaml/pages/about.php</a></div>";
+    echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . "</div>";
     }
 else
     {
     require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-    $config = \SimpleSAML\Configuration::getInstance();
-    $version = $config->getVersion();
-    if($version != $simplesaml_version)
+    if(simplesaml_config_check() ==false)
         {
         echo "<div class='PageInfoMessage'>" . $lang['simplesaml_authorisation_version_error'] . "</div>";
+        }
+    
+    if($simplesaml_rsconfig && isset($simplesamlconfig["authsources"]))
+        {
+        foreach($simplesamlconfig['authsources'] as $authsource=>$authdata)
+            {
+            if($authsource=="admin")
+                {
+                continue;
+                }
+                        
+            // Show the existing SP metadata
+            $spdata = array();
+            $spdata[$lang["simplesaml_acs_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-acs.php/" . $authsource;
+            $spdata[$lang["simplesaml_entity_id"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/metadata.php/" . $authsource;
+            $spdata[$lang["simplesaml_single_logout_url"]] = $baseurl . "/plugins/simplesaml/lib/www/module.php/saml/sp/saml2-logout.php/" . $authsource;
+            $spdata[$lang["simplesaml_start_url"]] = $baseurl;
+            $spdata[$lang["simplesaml_test_site_url"]] = $baseurl . "/plugins/simplesaml/lib/www";            
+            
+            echo config_section_header($lang['simplesaml_sp_data'], '');
+            echo "<div class='TableArray'>";
+            foreach($spdata as $spsetting =>$spvalue)
+                {
+                echo "<div class='Question'>";
+                echo "<label>" . htmlspecialchars($spsetting) . "</label>";
+                echo "<div class='Fixed'>" . htmlspecialchars($spvalue) . "</div>";
+                echo "<div class='clearerleft'></div></div>";
+                }
+            echo "</div>";
+            }
         }
     }
   
 ?>
-<form id="form1" name="form1" method="post" action="">
+<form id="simplesaml_setup_form" name="simplesaml_setup_form" method="post" action="">
 <?php
 generateFormToken("simplesaml_form");
-echo config_section_header($lang['systemsetup'], '');
-echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
-echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);
+echo config_section_header($lang['simplesaml_sp_config'], '');
+
+echo config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig,30);
+
+?>
+
+<script>
+jQuery("#simplesaml_rsconfig").change(function(event)
+    {
+    console.log(jQuery(this).val());
+    if(jQuery(this).val()=="1")
+        {
+        jQuery("#question_simplesaml_lib_path").slideUp(0);
+        jQuery("#question_simplesaml_sp").slideUp(0);
+        jQuery("#generate_sp_config_link").slideUp(0);
+        }
+    else
+        {
+        jQuery("#question_simplesaml_lib_path").slideDown(0);
+        jQuery("#question_simplesaml_sp").slideDown(0);
+        jQuery("#generate_sp_config_link").slideDown(0);
+        }
+    });
+
+</script>
+
+
+<div class='Question' id='sp_config_links'><label></label><div class='Fixed'>
+    <?php
+    $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
+    if(isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php"))
+        {
+        echo "<a href='https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate' target='_blank'>" . LINK_CARET . $lang["simplesaml_existing_config"] . "</a></br>";
+        }
+    else
+        {
+        echo "<a href='generate_sp_config.php' onclick='return CentralSpaceLoad(this,true)'>" . LINK_CARET . $lang["simplesaml_sp_generate_config"] . "</a></br>";
+        }
+    echo "<a href='" . $samlphplink . "' target='_blank'>" . LINK_CARET . $lang["simplesaml_sp_samlphp_link"] . "</a></li>";
+    ?>
+    </div>
+    <div class='clearerleft'></div>
+</div>
+<?php
+
+echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path,false,420,false,null,false,$simplesaml_rsconfig);
+echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false,$simplesaml_rsconfig);
+
 ?>
 <div class="Question">
     <br>

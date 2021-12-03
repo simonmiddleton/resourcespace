@@ -22,8 +22,8 @@ function loadWelcomeText()
         <div class="BasicsBox <?php echo $home_dash ? 'dashtext':''; ?>" id="HomeSiteText">
             <div id="HomeSiteTextInner">
                 <h1>
-                    <?php # Include version number, but only when this isn't an SVN checkout. Also, show just the first two digits.
-                    echo str_replace("[ver]",str_replace("SVN","",substr($productversion,0,strrpos($productversion,"."))),text("welcometitle")) ?>
+                    <?php # Include version number
+                    echo str_replace("[ver]",str_replace("SVN","",$productversion),text("welcometitle")) ?>
                 </h1>
                 <p><?php echo text("welcometext")?></p>
             </div>
@@ -251,7 +251,7 @@ if (!hook("replaceslideshow"))
 	<div id="HomePanelContainer">
 	<?php
 	hook('homepanelcontainerstart');
-	if($enable_themes)
+	if($home_themeheaders && $enable_themes)
 		{
 		if($home_dash)
 			{

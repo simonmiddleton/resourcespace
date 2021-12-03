@@ -7,6 +7,13 @@ include_once "../../../include/authenticate.php";
 include_once "../../../include/search_do.php";
 include_once "../include/search_notifications_functions.php";
 
+$plugin_name            = "rse_search_notifications";
+$plugin_active          = in_array($plugin_name, $plugins); // is the plugin active?
+if (!$plugin_active)
+    {
+    redirect("pages/".$default_home_page);
+    }
+    
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");
 $find=getvalescaped("find","");
 $callback=getvalescaped("callback","");
@@ -123,7 +130,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 			if ($all_users_mode)
 				{
 				?><input type="checkbox" name="allusers" id="allusers" value="0" checked="checked"><br /><?php
-				$url.="&allusers=1&";
+				$url.=strpos($url,'?')!==false?'&':'?'."allusers=1&";
 				}
 			else
 				{
@@ -156,7 +163,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 
 	if ($any_enabled)
 		{
-		?><a href="<?php echo $url; ?>&callback=disable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
+		?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 		echo $lang['disable_all']; ?></a>
 		<?php
 		}
@@ -168,7 +175,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 
 	if ($any_disabled)
 		{
-		?><a href="<?php echo $url; ?>&callback=enable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
+		?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 		echo $lang['enable_all']; ?></a>
 		<?php
 		}
@@ -177,7 +184,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 		{
 		global $orderby,$url;
 		if ($orderby==$col_number || $orderby==-$col_number) { ?><span class="Selected"><?php }
-		?><a href="<?php echo $url; ?>&offset=0&orderby=<?php if($orderby==$col_number) { ?>-<?php } echo $col_number; ?>" onclick="return CentralSpaceLoad(this);" ><?php echo $title; ?></a><?php
+		?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>offset=0&orderby=<?php if($orderby==$col_number) { ?>-<?php } echo $col_number; ?>" onclick="return CentralSpaceLoad(this);" ><?php echo $title; ?></a><?php
 		if ($orderby==$col_number) { ?><div class="ASC">&nbsp;</div><?php }
 		if ($orderby==-$col_number) { ?><div class="DESC">&nbsp;</div><?php }
 		if ($orderby==$col_number || $orderby==-$col_number) { ?></span><?php }
@@ -215,7 +222,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 					break;
 					}
 				$ws = $watched_searches[$i];
-				$view_search_url = search_notification_make_url($ws['search'],$ws['restypes'],$ws['archive']);
+				$view_search_url = search_notification_make_url($ws);
 				?><tr>
 					<td><?php echo nicedate(htmlspecialchars($ws["created"]), true, true, true); ?></td>
 					<td><?php echo highlightkeywords(htmlspecialchars($ws["username"]),$find); ?></td>
@@ -233,12 +240,12 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 										if($ws['owner']==$userref)
 											{
 											?><a
-												href="<?php echo $url; ?>&callback=checknow&ref=<?php echo $ws["ref"]; ?>"
+												href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=checknow&ref=<?php echo $ws["ref"]; ?>"
 												onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 											echo $lang["checknow"]; ?></a>
 											<?php
 											}
-									?><a href="<?php echo $url; ?>&callback=disable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
+									?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 										echo $lang['disable']; ?></a>
 							<?php
 							}
@@ -249,12 +256,12 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 							<td>
 								<div class="ListTools">
 									<a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["searchbutton"]; ?></a>
-									<a href="<?php echo $url; ?>&callback=enable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
+									<a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 										echo $lang['enable']; ?></a>
 							<?php
 							}
 						?>
-									<a href="<?php echo $url; ?>&callback=delete&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
+									<a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=delete&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
 										echo $lang['action-delete']; ?></a>
 								</div>
 					</td>

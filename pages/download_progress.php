@@ -10,10 +10,13 @@ $ext=getval("ext","");
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext)){$ext="jpg";} # Mitigate path injection
 $alternative=getval("alternative",-1);
 $search=getvalescaped("search","");
+$iaccept=getvalescaped("iaccept","off");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
+$email       = getvalescaped('email', '');
 
-$download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) . "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative);
+$download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) 
+					. "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative) . "&iaccept=" . urlencode($iaccept);
 $download_url_suffix.= hook("addtodownloadquerystring");
 
 if ($download_usage && getval("usage","")=="" && $terms_download)
@@ -23,7 +26,7 @@ if ($download_usage && getval("usage","")=="" && $terms_download)
 
 if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative)))) // used in remotedownload-plugin
 	{
-	$download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment);
+	$download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment) . "&email=" . urlencode($email);
 	$url=$baseurl."/pages/download.php" . $download_url_suffix;
 	}
 
@@ -40,7 +43,6 @@ if (!$save_as)
 ?>
 
 <div class="BasicsBox">
-
     
 	<?php if ($save_as) { 
 	# $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect)	?>
@@ -54,7 +56,7 @@ if (!$save_as)
     <h1><?php echo $lang["downloadinprogress"]?></h1>
     <p><?php echo text("introtext")?></p>
 	<?php } 
-	$offset= getval("saved_offset",getval("offset",""));
+	$offset= getval("saved_offset",getval("offset",0,true));
 	$order_by= getval("saved_order_by",getval("order_by",""));
 	$sort= getval("saved_sort",getval("sort",""));
 	$archive= getval("saved_archive",getval("archive",""));

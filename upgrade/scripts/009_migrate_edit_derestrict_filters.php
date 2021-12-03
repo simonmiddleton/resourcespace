@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . "/../../include/db.php";
 include_once __DIR__ . "/../../include/migration_functions.php";
 
 if($search_filter_nodes && (!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvars["EDIT_FILTER_MIGRATION"] == 0))

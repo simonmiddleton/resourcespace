@@ -385,7 +385,7 @@ function ProcessFolder($folder)
                                             if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
                                                 {
                                                 // Add this to array of nodes to add
-                                                $newnode = set_node(null, $field, trim($value), null, null, true);
+                                                $newnode = set_node(null, $field, trim($value), null, null);
                                                 echo "Adding node" . trim($value) . "\n";
                                                 
                                                 $newnodes = array($newnode);

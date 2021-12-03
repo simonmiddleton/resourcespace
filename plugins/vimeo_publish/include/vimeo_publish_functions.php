@@ -25,18 +25,26 @@ function init_vimeo_api($client_id, $client_secret, $redirect_uri)
 
 function get_access_token($client_id, $client_secret, $redirect_uri)
     {
-    global $userref;
+    global $userref, $vimeo_publish_allow_user_accounts,$vimeo_publish_system_token,$vimeo_publish_system_state;
 
     // Response variables from Vimeo
     $vimeo_state_response = getval('state', '');
     $vimeo_code_response  = getval('code', '');
-
-    $vimeo_details = sql_query("SELECT vimeo_access_token, vimeo_state FROM user WHERE `ref` = '{$userref}'");
-    $access_token  = isset($vimeo_details[0]['vimeo_access_token']) ? $vimeo_details[0]['vimeo_access_token'] : '';
-    $state         = isset($vimeo_details[0]['vimeo_state']) ? $vimeo_details[0]['vimeo_state'] : '';
+    
+    if($vimeo_publish_allow_user_accounts)
+        {
+        $vimeo_details = ps_query("SELECT vimeo_access_token, vimeo_state FROM user WHERE `ref` = ?", array("i", $userref));
+        $access_token  = isset($vimeo_details[0]['vimeo_access_token']) ? $vimeo_details[0]['vimeo_access_token'] : '';
+        $state         = isset($vimeo_details[0]['vimeo_state']) ? $vimeo_details[0]['vimeo_state'] : '';
+        }
+    else
+        {
+        $access_token  = $vimeo_publish_system_token != "" ? $vimeo_publish_system_token : "";
+        $state         = $vimeo_publish_system_state != "" ? $vimeo_publish_system_state : "";
+        }
 
     // User has an access token, no need to continue
-    if('' !== $access_token && '' !== $state)
+    if('' !== $access_token)
         {
         return $access_token;
         }
@@ -45,12 +53,23 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
     if('' === $access_token && '' === $vimeo_state_response && '' === $vimeo_code_response)
         {
         $state = base64_encode(openssl_random_pseudo_bytes(30));
-        sql_query("UPDATE `user` SET `vimeo_state` = '{$state}' WHERE `ref` = '{$userref}'");
 
+        if($vimeo_publish_allow_user_accounts)
+            {
+            ps_query("UPDATE `user` SET `vimeo_state` = ? WHERE `ref` = ?", array("s", $state, "i", $userref));
+            }
+        else
+            {
+            // System wide user, update the config
+            $vimeo_publish_config = get_plugin_config("vimeo_publish");
+            $vimeo_publish_config["vimeo_publish_system_state"] = $state;            
+            set_plugin_config("vimeo_publish",$vimeo_publish_config);
+            }
 
         $vimeo_lib = new Vimeo($client_id, $client_secret);
         $authentication_url = $vimeo_lib->buildAuthorizationEndpoint($redirect_uri, 'public upload edit', $state);
         header("Location: " . $authentication_url);
+        exit();
         }
 
     if($state !== $vimeo_state_response)
@@ -66,16 +85,37 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
     if(200 == $token['status'])
         {
         $access_token = $token['body']['access_token'];
-        sql_query("UPDATE `user` SET `vimeo_access_token` = '{$access_token}' WHERE `ref` = '{$userref}'");
+        if($vimeo_publish_allow_user_accounts)
+            {
+            ps_query("UPDATE `user` SET `vimeo_access_token` = ? WHERE `ref` = ?", array("s", $access_token, "i", $userref));
+            }
+        elseif(checkperm('a'))
+            {
+            // System wide user, update the config
+            $vimeo_publish_config = get_plugin_config("vimeo_publish");
+            $vimeo_publish_config["vimeo_publish_system_token"] = $access_token;            
+            set_plugin_config("vimeo_publish",$vimeo_publish_config);
+            }
         }
 
     return $access_token;
     }
 
 
-function delete_vimeo_token($user_ref)
+function delete_vimeo_token($user_ref=0)
     {
-    sql_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = '{$user_ref}'");
+    global $userref, $vimeo_publish_allow_user_accounts;
+    if($userref == $user_ref)
+        {
+        ps_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = ?", array("i", $user_ref));
+        }
+    elseif($user_ref==0 && checkperm('a'))
+        {
+        // Not user specific, clear system config
+        $vimeo_publish_config = get_plugin_config("vimeo_publish");
+        $vimeo_publish_config["vimeo_publish_system_token"] = '';            
+        set_plugin_config("vimeo_publish",$vimeo_publish_config);
+        }
 
     return;
     }

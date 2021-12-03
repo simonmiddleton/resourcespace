@@ -68,9 +68,12 @@ $archiver = $collection_download && ($archiver_fullpath!=false) && (isset($archi
 
 # initiate text file
 if (($zipped_collection_textfile==true)&&($includetext=="true")) { 
+    if(hook('replacecollectiontextfile', '', array($collectiondata)))
+        {
     $text = i18n_get_collection_name($collectiondata) . "\r\n" .
     $lang["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
     $lang["contents"] . ":\r\n\r\n";
+    }
 }
 
 # get collection
@@ -184,7 +187,7 @@ if ($submitted != "")
             'includetext'           => $includetext,
             'count_data_only_types' => $count_data_only_types,
             'usage'                 => $usage,
-            'usagecomment'          => $usagecomment,
+            'usagecomment'          => str_replace(array('\r','\n'), " ", $usagecomment),
             'settings_id'           => $settings_id,
             'include_csv_file'      => $include_csv_file
         );
@@ -201,7 +204,10 @@ if ($submitted != "")
             '',
             '',
             $lang["oj-collection-download-success-text"],
-            $lang["oj-collection-download-failure-text"]);
+            $lang["oj-collection-download-failure-text"],
+            '',
+            JOB_PRIORITY_USER
+            );
 
         exit();
         }
@@ -310,9 +316,9 @@ if ($submitted != "")
     # Build a list of files to download
     for ($n=0;$n<count($result);$n++)
         {
-        resource_type_config_override($result[$n]["resource_type"]);
-        $copy=false; 
         $ref=$result[$n]["ref"];
+        resource_type_config_override($result[$n]["resource_type"], false); # False means execute override for every resource
+        $copy=false; 
         # Load access level
         $access=get_resource_access($result[$n]);
         $use_watermark=check_use_watermark();
@@ -560,23 +566,25 @@ include "../include/header.php";
 <?php
 $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
+hook('collectiondownloadintro');
 ?>
 <script>
 
 function ajax_download(download_offline, tar)
 	{
+    console.debug('ajax_download(download_offline = %o, tar = %o)', download_offline, tar);
     var ifrm = document.getElementById('downloadiframe');
     ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
 
-    if(download_offline)
+    if(download_offline && !tar)
         {
-        styledalert('<?php echo $lang['collection_download']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
+        styledalert("<?php echo $lang['collection_download']; ?>", "<?php echo $lang['jq_notify_user_preparing_archive']; ?>");
         document.getElementById('downloadbuttondiv').style.display='none';
         return false;
         }
 
 	document.getElementById('downloadbuttondiv').style.display='none';	
-	document.getElementById('progress').innerHTML='<br /><br /><?php echo $lang["collectiondownloadinprogress"];?>';
+	document.getElementById('progress').innerHTML="<br /><br /><?php echo $lang['collectiondownloadinprogress'];?>";
 	document.getElementById('progress3').style.display='none';
 	document.getElementById('progressdiv').style.display='block';
 
@@ -698,7 +706,9 @@ if (!hook('replaceuseoriginal'))
 	   }
     }
 
-if ($zipped_collection_textfile=="true") { ?>
+if ($zipped_collection_textfile=="true") { 
+    if(!hook('collectiondownloadtextfile'))
+        { ?>
 <div class="Question">
 <label for="text"><?php echo $lang["zippedcollectiontextfile"]?></label>
 <select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
@@ -717,6 +727,7 @@ else{
 
 <?php
 }
+}
  
 # Archiver settings
 if ($archiver && count($collection_download_settings)>1)
@@ -732,16 +743,19 @@ if ($archiver && count($collection_download_settings)>1)
     </select>
     <div class="clearerleft"></div></div><br />
     </div><?php
-    }	?>
+    }
 
+if(!hook('replacecsvfile'))
+    { ?>
 <!-- Add CSV file with the metadata of all the resources found in this colleciton -->
 <div class="Question">
 	<label for="include_csv_file"><?php echo $lang['csvAddMetadataCSVToArchive']; ?></label>
 	<input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
 	<div class="clearerleft"></div>
 </div>
-
 <?php
+}
+
 if($exiftool_write && !$force_exiftool_write_metadata)
     {
     ?>
@@ -755,19 +769,25 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 
-<script>var tar=true;</script>	
+<script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
 	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+        <?php if(!hook('collectiondownloadfileformats'))
+            { ?>
 		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
-		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
+		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option><?php
+            } ?>   
 	</select>
 	
 	<div class="clearerleft"></div></div><br />
 	<div class="clearerleft"></div>
 	<label for="tarinfo"></label>
-	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+    <?php if(!hook('collectiondownloadformhelp'))
+        { ?>
+	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div><?php
+        } ?>
 	
 	<div class="clearerleft"></div>
 </div>
@@ -775,18 +795,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="
-            if(tar)
-                {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, true);
-                return false;
-                }
-            else
-                {
-                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, false);
-                return false;
-                }
-           "
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>

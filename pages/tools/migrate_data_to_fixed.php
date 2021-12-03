@@ -80,7 +80,6 @@ if(getval("submit","") != "")
 
     $chunksize = 1000;    
     $lower=0;
-    $upper = $lower + $chunksize;
     $total = sql_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = '{$migrate_field}'",0);
 
     while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
@@ -90,7 +89,8 @@ if(getval("submit","") != "")
                     `value` 
                 FROM resource_data 
                 WHERE resource_type_field = '{$migrate_field}'
-                LIMIT " . $lower . "," . $upper
+                ORDER BY resource
+                LIMIT " . $lower . "," . $chunksize
             );
 
         // Process each data row
@@ -135,7 +135,7 @@ if(getval("submit","") != "")
                     {
                     if(!$dryrun)
                         {
-                        $newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '',true);
+                        $newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '');
                         $logtext .= " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnode . PHP_EOL;
                         $nodes_to_add[] = $newnode;
                         $newnodecounter = count($existing_nodes);
@@ -196,14 +196,11 @@ if(getval("submit","") != "")
             fclose($fp);
             sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
             sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
-            
             $lower = 0;
-            $upper = $chunksize;
             }
         else
             {
-            $lower = $upper + 1;
-            $upper = $upper + $chunksize;
+            $lower = $lower + $chunksize;
             }
         
         

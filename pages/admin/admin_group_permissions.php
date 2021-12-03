@@ -10,7 +10,7 @@ if (!checkperm("a"))
 include "../../include/header.php";
 
 $ref=getval("ref","");
-$offset=getval("offset",0);
+$offset=getval("offset",0,true);
 $order_by=getval("orderby","");
 $filter_by_parent=getval("filterbyparent","");
 $find=getval("find","");
@@ -183,7 +183,7 @@ foreach ($fields as $field)
 $rtypes=sql_query("select * from resource_type order by name", "schema");
 foreach ($rtypes as $rtype)
 	{
-	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE","%REF"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-"),$rtype["ref"]),$lang["can_see_resource_type"]), true);
+	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
 	}
 
 # ------------ Restricted access to resource types
@@ -237,7 +237,7 @@ foreach ($additional_archive_states as $additional_archive_state)
 	}
 for ($n=0;$n<=($custom_access?3:2);$n++)
     {
-    DrawOption("ea" . $n,  str_replace(array("%STATE","%REF"),array($lang["access" . $n],$n),$lang["edit_access_to_access"]), true);
+    DrawOption("ea" . $n,  str_replace(array("%STATE"),array($lang["access" . $n]),$lang["edit_access_to_access"]), true);
     }
 
 DrawOption("c", $lang["can_create_resources_and_upload_files-admins"]);
@@ -257,6 +257,7 @@ DrawOption("n", $lang["can_tag_resources_using_speed_tagging"]);
 
 DrawOption("b", $lang["enable_bottom_collection_bar"], true);
 DrawOption("h", $lang["can_publish_collections_as_themes"],false,true);
+DrawOption("exup", $lang["permission_share_upload_link"],false,true);
 if(in_array('h', $permissions))
 	{
 	DrawOption('hdta', $lang['manage_all_dash_h'], true, false);

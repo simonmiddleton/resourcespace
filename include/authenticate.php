@@ -1,4 +1,6 @@
 <?php
+include_once __DIR__ . '/login_functions.php';
+
 # authenticate user based on cookie
 
 $valid=true;
@@ -50,7 +52,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         $valid = true;
         setup_user($userdata[0]);
 
-        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && $pagename!="user_change_password" && $pagename!="index" && $pagename!="collections" && strlen(trim($userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
+        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && in_array($pagename, array("user_change_password","index","collections")) === false && strlen(trim($userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
         	{
         	# Redirect the user to the password change page if their password has expired.
 	        $last_password_change=time()-strtotime($userdata[0]["password_last_change"]);
@@ -76,7 +78,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 					# Reached the end of valid session time, auto log out the user.
 					
 					# Remove session
-					sql_query("update user set logged_in=0,session='' where ref='$userref'");
+					ps_query("update user set logged_in = 0, session = '' where ref= ?",array("i",$userref));
 					hook("removeuseridcookie");
 					# Blank cookie / var
 					rs_setcookie("user", "", time() - 3600, "", "", substr($baseurl,0,5)=="https", true);					
@@ -122,15 +124,14 @@ if (!$valid && isset($anonymous_autouser_group))
     
 	# Prepare to create the user.
 	$email=trim(getvalescaped("email","")) ;
-    $username="anonymous" . sql_value("select max(ref)+1 value from user",0); # Make up a username.
+	$username="anonymous" . ps_value("select max(ref)+1 value from user", array(), 0); # Make up a username.
 	$password=make_password();
-	$password_hash = hash('sha256', md5('RS' . $username . $password));
-    
+    $password_hash = rs_password_hash("RS{$username}{$password}");
+
     # Create the user
-	sql_query("insert into user (username,password,fullname,email,usergroup,approved) values ('" . $username . "','" . $password_hash . "','" . $username . "','','" . $anonymous_autouser_group . "',1)");
+	ps_query("insert into user (username,password,fullname,email,usergroup,approved) values (?, ?, ?, '', ?, 1)",array("s",$username,"s",$password_hash,"s",$username,"i",$anonymous_autouser_group));
 	$new = sql_insert_id();
    
-    include_once ("login_functions.php");
     $login_data = perform_login();
     rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
 
@@ -230,7 +231,7 @@ Note: it is considered safe to show the collection bar because even if we enable
       later on, when the user might have resources in it, they would not be able to do anything with them
       unless they accept terms
 */
-if($terms_login && 0 == $useracceptedterms && 'login' != $pagename && 'terms' != $pagename && 'collections' != $pagename)
+if($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password")) === false )
     {
     redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/{$default_home_page}"));
     }
@@ -246,7 +247,7 @@ else
 
 // don't update this table if the System is doing its own operations
 if (!isset($system_login)){
-	sql_query("update user set lang='$language', last_active=now(),logged_in=1,last_ip='" . escape_check(get_ip()) . "',last_browser='" . $last_browser . "' where ref='$userref'",false,-1,true,0);
+	ps_query("update user set lang = ?, last_active = now(), logged_in = 1, last_ip = ? , last_browser = ? where ref = ?", array("s",$language,"s",get_ip(),"s",$last_browser,"s",$userref), false, -1, true, 0);
 }
 
 # Add group specific text (if any) when logged in.
@@ -260,20 +261,27 @@ else
 	if (isset($usergroup))
 		{
 		// Fetch user group specific content.
-		$site_text_query = sprintf("
+		$site_text_query = "
 				SELECT `name`,
 				       `text`,
 				       `page` 
 				  FROM site_text 
-				 WHERE language = '%s'
-				   %s #pagefilter
-				   AND specific_to_group = '%s';
-			",
-			escape_check($language),
-			$pagefilter,
-			$usergroup
-		);
-		$results = sql_query($site_text_query,"sitetext",-1,true,0);
+				 WHERE language = ?
+				   AND specific_to_group = ?
+			";
+		$parameters=array
+			(
+			"s",$language,
+			"s",$usergroup
+			);
+
+		if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
+			{
+			$site_text_query.="AND (page = ? OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
+			$parameters[]="s";$parameters[]=$pagename;
+			}
+
+		$results = ps_query($site_text_query,$parameters,"sitetext",-1,true,0);
 
 		for($n = 0; $n < count($results); $n++)
 			{
@@ -293,7 +301,7 @@ else
 
 # Load group specific plugins and reorder plugins list
 $plugins= array();
-$active_plugins = (sql_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 ORDER BY priority","plugins"));
+$active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
 
 
 foreach($active_plugins as $plugin)
@@ -348,8 +356,6 @@ if(
     && !defined("API_CALL")
 )
     {
-    debug("WARNING: CSRF verification failed!");
-
     http_response_code(400);
 
     if(filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN))

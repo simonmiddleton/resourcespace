@@ -20,7 +20,7 @@ $job_data['include_csv_file'] - User input opting to include the CSV file in the
 include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
 
-global $lang, $baseurl, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
+global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
 $text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
 $collection_download_settings,$restricted_full_download, $download_file_lifetime;
 
@@ -86,7 +86,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     $ref = $collection_resources[$n]["ref"];
     $resource_data = get_resource_data($ref);
     $collection_resources[$n]["resource_type"] = $resource_data['resource_type']; // Update as used in other functions
-    resource_type_config_override($resource_data['resource_type']);
+    resource_type_config_override($resource_data['resource_type'], false); # False means execute override for every resource
 
     $copy = false; 
     $ref = $collection_resources[$n]['ref'];
@@ -214,6 +214,10 @@ for($n = 0; $n < count($collection_resources); $n++)
         {
         collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames,$id);
         }
+    else
+        {
+        $newfile = set_unique_filename($filename,$filenames);    
+        }
 
     if(hook("downloadfilenamealt"))
         {
@@ -305,7 +309,7 @@ else
     job_queue_update($jobref, $job_data, STATUS_COMPLETE);
     }
 
-$download_url   = $baseurl . "/pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $randstring . $suffix . "&filename=" . pathinfo($filename,PATHINFO_FILENAME);
+$download_url   = $baseurl_short . "pages/download.php?userfile=" . $user_data[0]["ref"] . "_" . $randstring . $suffix . "&filename=" . pathinfo($filename,PATHINFO_FILENAME);
 message_add($job["user"], $job_success_text, $download_url);
 
 $delete_job_data=array();

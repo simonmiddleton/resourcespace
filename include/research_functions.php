@@ -8,10 +8,32 @@ function send_research_request(array $rr_cfields)
 	
 	# Resolve resource types
 	$rt="";
-	$types=get_resource_types();for ($n=0;$n<count($types);$n++) {if (getval("resource" . $types[$n]["ref"],"")!="") {if ($rt!="") {$rt.=", ";} $rt.=$types[$n]["ref"];}}
+	$types=get_resource_types();
+	for ($n=0;$n<count($types);$n++) {
+		if (getval("resource" . $types[$n]["ref"],"")!="") {
+			if ($rt!="") {
+				$rt.=", ";
+			} 
+			$rt.=$types[$n]["ref"];
+		}
+	}
 	
 	global $userref, $custom_researchrequest_fields;
-	$as_user=getvalescaped("as_user",$userref,true); # If userref submitted, use that, else use this user
+	$as_user=getval("as_user",$userref,true); # If userref submitted, use that, else use this user
+	$rr_name=getval("name","");
+	$rr_description=getval("description","");
+	$parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
+
+	$rr_deadline = getval("deadline","00-00-00")." 00:00:00";
+	$rr_contact = getval("contact","");
+	$rr_email = getval("email","");
+	$rr_finaluse = getval("finaluse","");
+	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
+
+	# $rt
+	$rr_noresources = ( (getval("noresources","")=="") ? "0" : "'".getval("noresources","")."'");
+	$rr_shape = getval("shape","");
+	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
     /**
     * @var string JSON representation of custom research request fields after removing the generated HTML properties we 
@@ -23,14 +45,11 @@ function send_research_request(array $rr_cfields)
         {
         trigger_error(json_last_error_msg());
         }
-    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "NULL" : "'" . escape_check($rr_cfields_json) . "'");
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : "'".$rr_cfields_json."'");
+	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
-	sql_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
-	values (now(),'$as_user','" . getvalescaped("name","") . "','" . getvalescaped("description","") . "'," .
-	((getvalescaped("deadline","")=="")?"null":"'" . getvalescaped("deadline","") . "'") . 
-	",'" . getvalescaped("contact","") . "','" . getvalescaped("email","") . "','" . getvalescaped("finaluse","") . "','" . $rt . "'," .
-	((getvalescaped("noresources","")=="")?"null":"'" . getvalescaped("noresources","") . "'") . 
-	",'" . getvalescaped("shape","") . "', {$rr_cfields_json_sql})");
+	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
+				values (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $parameters);
 	
 	# E-mails a resource request (posted) to the team
 	global $applicationname,$email_from,$baseurl,$email_notify,$username,$userfullname,$useremail,$lang, $admin_resource_access_notifications;
@@ -80,14 +99,37 @@ function send_research_request(array $rr_cfields)
 
 function get_research_requests($find="",$order_by="name",$sort="ASC")
 	{
-	if ($find!="") {$searchsql="where name like '%$find%' or description like '%$find%' or contact like '%$find%' or ref='$find'";} else {$searchsql="";}
-	return sql_query("select *,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r $searchsql order by $order_by $sort");
+	$searchsql="";
+	$use_order_by = "";
+	$use_sort = "";
+	$parameters=array();
+	if ($find!="") {
+		$searchsql="WHERE name like ? or description like ? or contact like ? or ref=?"; 
+		$parameters=array("s","%{$find}%", "s","%{$find}%", "s","%{$find}%", "i",(int)$find);
+	}
+	if (in_array($order_by, array("ref","name","created","status","assigned_to","collection")))
+		{
+		$use_order_by = $order_by;		
+		}
+	if (in_array($sort, array("ASC","DESC")))
+		{
+		$use_sort = $sort;		
+		}
+	return ps_query("select *,(select username from user u where u.ref=r.user) username, 
+		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r 
+		$searchsql 
+		order by $use_order_by $use_sort", $parameters);
 	}
 
 function get_research_request($ref)
 	{
-    $ref = escape_check($ref);
-	$return=sql_query("select *,email,(select username from user u where u.ref=r.user) username, (select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref='$ref'");
+	$rr_sql="SELECT rr.ref,rr.name,rr.description,rr.deadline,rr.email,rr.contact,rr.finaluse,rr.resource_types,rr.noresources,rr.shape,
+					rr.created,rr.user,rr.assigned_to,rr.status,rr.collection,rr.custom_fields_json,
+					(select u.username from user u where u.ref=rr.user) username, 
+					(select u.username from user u where u.ref=rr.assigned_to) assigned_username from research_request rr where rr.ref=?";
+	$rr_parameters=array("i",$ref);
+
+	$return=ps_query($rr_sql, $rr_parameters);
 	if (count($return) == 0)
 	    {
 	    return false;
@@ -100,33 +142,35 @@ function save_research_request($ref)
 	# Save
 	global $baseurl,$email_from,$applicationname,$lang;
 	
+	$parameters=array("i",$ref);
+
 	if (getval("delete","")!="")
 		{
 		# Delete this request.
-		sql_query("delete from research_request where ref='$ref' limit 1");
+		ps_query("delete from research_request where ref=? limit 1", $parameters);
 		return true;
 		}
+
 	# Check the status, if changed e-mail the originator
-	$currentrequest=sql_query("select status, assigned_to, collection from research_request where ref='$ref'");
+	$currentrequest=ps_query("select status, assigned_to, collection from research_request where ref=?", $parameters);
+
 	$oldstatus=(count($currentrequest)>0)?$currentrequest[0]["status"]:0;
-	$newstatus=getvalescaped("status",0);
+	$newstatus=getval("status",0);
 	$collection=(count($currentrequest)>0)?$currentrequest[0]["collection"]:0;
 	$oldassigned_to=(count($currentrequest)>0)?$currentrequest[0]["assigned_to"]:0;
-	$assigned_to=getvalescaped("assigned_to",0);
+	$assigned_to=getval("assigned_to",0);
 	
 	$templatevars['url']=$baseurl . "/?c=" . $collection;
 	$templatevars['teamresearchurl']=$baseurl."/pages/team/team_research_edit.php?ref=" . $ref;	
 	
 	if ($oldstatus!=$newstatus)
 		{
-		$requesting_user=sql_query("select u.email, u.ref from user u,research_request r where u.ref=r.user and r.ref='$ref'");
+		$requesting_user=ps_query("select u.email, u.ref from user u,research_request r where u.ref=r.user and r.ref=?", $parameters);
 		$requesting_user = $requesting_user[0];
-		//$email=sql_value("select u.email value from user u,research_request r where u.ref=r.user and r.ref='$ref'","");
 		$message="";
 		if ($newstatus==1) 
 			{
 			$message=$lang["researchrequestassignedmessage"];$subject=$lang["researchrequestassigned"];
-			//$message="'$username' ($userfullname - $useremail) " . $lang["haspostedresearchrequest"] . ".\n\n";
 			$notification_message = $message;
 			$message.=$templatevars['url'];
 			get_config_option($requesting_user['ref'],'email_user_notifications', $send_email);    
@@ -162,40 +206,49 @@ function save_research_request($ref)
 		}
 		
 	if ($oldassigned_to!=$assigned_to)
+		{
+		$message = $lang["researchrequestassigned"];
+		$subject = $lang["researchrequestassigned"];
+		$assigned_message = $message;
+		$message .= $templatevars['teamresearchurl'];
+		$assigned_to_user=get_user($assigned_to);
+		get_config_option($assigned_to,'email_user_notifications', $send_email);    
+		if($send_email && $assigned_to_user["email"]!="")
 			{
-			$message = $lang["researchrequestassigned"];
-			$subject = $lang["researchrequestassigned"];
-			$assigned_message = $message;
-			$message .= $templatevars['teamresearchurl'];
-			$assigned_to_user=get_user($assigned_to);
-			get_config_option($assigned_to,'email_user_notifications', $send_email);    
-			if($send_email && $assigned_to_user["email"]!="")
-				{
-				send_mail ($assigned_to_user['email'],$applicationname . ": " . $subject,$assigned_message,"","","emailresearchrequestassigned",$templatevars);
-				}        
-			else
-				{
-				message_add($assigned_to,$assigned_message,$templatevars['teamresearchurl']);
-				}
+			send_mail ($assigned_to_user['email'],$applicationname . ": " . $subject,$assigned_message,"","","emailresearchrequestassigned",$templatevars);
+			}        
+		else
+			{
+			message_add($assigned_to,$assigned_message,$templatevars['teamresearchurl']);
 			}
-			
-	sql_query("update research_request set status='" . $newstatus . "',assigned_to='" . $assigned_to . "' where ref='$ref'");
+		}
+	
+	$parameters=array("i",$newstatus, "i",$assigned_to, "i",$ref);
+
+	ps_query("update research_request set status=?, assigned_to=? where ref=?", $parameters);
 	
 	# Copy existing collection
-	if (getvalescaped("copyexisting","")!="" && is_numeric($collection))
+	$rr_copyexisting=getval("copyexisting","");
+	$rr_copyexistingref=getval("copyexistingref","");
+	if ($rr_copyexisting !="" && is_numeric($collection))
 		{
-		sql_query("insert into collection_resource(collection,resource) select '$collection',resource from collection_resource where collection='" . getvalescaped("copyexistingref","") . "' and resource not in (select resource from collection_resource where collection='$collection');");
+		$parameters=array("i",$collection, "i",$rr_copyexistingref, "i",$collection);
+		ps_query("insert into collection_resource(collection,resource) 
+		           select ?, resource from collection_resource 
+				   where collection=? and resource not in (select resource from collection_resource where collection=?)", $parameters);
 		}
 	}
 
 
 function get_research_request_collection($ref)
 	{
-	$return=sql_value("select collection value from research_request where ref='$ref'",0);
+	$parameters=array("i",$ref);
+	$return=ps_value("select collection value from research_request where ref=?",$parameters,0);
 	if (($return==0) || (strlen($return)==0)) {return false;} else {return $return;}
 	}
 
 function set_research_collection($research,$collection)
 	{
-	sql_query("update research_request set collection='$collection' where ref='$research'");
+	$parameters=array("i",$collection, "i",$research);
+	ps_query("update research_request set collection=? where ref=?", $parameters);
 	}

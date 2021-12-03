@@ -1,6 +1,6 @@
 <?php
 /* -------- Dynamic Keywords List ----------- */ 
-global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and;
+global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and, $k;
 
 if(!isset($selected_nodes))
     {
@@ -64,7 +64,7 @@ foreach($nodes_in_sequence as $node)
         continue;
         }
 
-    $i18n_node_name = addslashes(i18n_get_translated($node['name']));
+    $i18n_node_name = htmlspecialchars(i18n_get_translated($node['name']));
 
     $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
     }
@@ -188,6 +188,7 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
             field: '<?php echo $field["ref"]; ?>',
             ajax: true,
             keyword: keyword,
+            k: '<?php echo htmlspecialchars($k) ?>',
             <?php echo generateAjaxToken("selectKeyword_{$js_keywords_suffix}"); ?>
             };
 
@@ -235,7 +236,7 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
 
 jQuery('#<?php echo $name; ?>_selector').autocomplete(
     {
-    source : "<?php echo $baseurl; ?>/pages/edit_fields/9_ajax/suggest_keywords.php?field=<?php echo $field['ref']; ?>&readonly=<?php echo $readonly; ?>",
+    source : "<?php echo $baseurl; ?>/pages/edit_fields/9_ajax/suggest_keywords.php?field=<?php echo $field['ref']; ?>&k=<?php echo htmlspecialchars($k) ?>&readonly=<?php echo $readonly; ?>",
     select : selectKeyword_<?php echo $js_keywords_suffix; ?>
     });
 

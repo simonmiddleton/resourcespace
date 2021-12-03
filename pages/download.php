@@ -5,6 +5,7 @@ we will clear the buffer and start over right before we download the file*/
 ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/db.php';
 include_once dirname(__FILE__) . '/../include/resource_functions.php';
+include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
 
 $k="";
@@ -32,15 +33,45 @@ if(!($direct_download_noauth && $direct))
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
 
-$ref            = getvalescaped('ref', '', true);
-$size           = getvalescaped('size', '');
-$alternative    = getvalescaped('alternative', -1, true);
-$page           = getvalescaped('page', 1);
-$usage          = getvalescaped('usage', '-1');
-$usagecomment   = getvalescaped('usagecomment', '');
-$ext            = getvalescaped('ext', '');
-$snapshot_frame = getvalescaped('snapshot_frame', 0, true);
-$modal          = (getval("modal","")=="true");
+$ref                = getvalescaped('ref', '', true);
+$size               = getvalescaped('size', '');
+$alternative        = getvalescaped('alternative', -1, true);
+$page               = getvalescaped('page', 1);
+$iaccept            = getvalescaped('iaccept', 'off');
+$usage              = getvalescaped('usage', '-1');
+$usagecomment       = getvalescaped('usagecomment', '');
+$email              = getvalescaped('email', '');
+$ext                = getvalescaped('ext', '');
+$snapshot_frame     = getvalescaped('snapshot_frame', 0, true);
+$modal              = (getval("modal","")=="true");
+$tempfile           = getval("tempfile","");
+$slideshow          = getval("slideshow",0,true);
+$userfiledownload   = getvalescaped('userfile', '');
+
+// Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
+$checktermsusage =  !in_array($size, $sizes_always_allowed)
+    && $tempfile == ""
+    && $slideshow == 0
+    && $userfiledownload == ""
+    && (!$video_preview_original && get_resource_access($ref));
+if($terms_download && $checktermsusage)
+    {
+    if ($iaccept != 'on')
+        {
+        exit($lang["mustaccept"]);
+        }
+    }
+if ($download_usage && $checktermsusage)
+    {
+    if ( !(is_numeric($usage) && $usage >= 0) )
+        {
+        exit($lang["termsmustindicateusage"]);
+        }
+    if ($usagecomment == '' && !$usage_comment_blank)
+        {
+        exit($lang["termsmustspecifyusagecomment"]);
+        }            
+    }
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
@@ -48,7 +79,6 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     }
 
 // Is this a user specific download?
-$userfiledownload = getvalescaped('userfile', '');
 if('' != $userfiledownload)
     {
     $noattach       = '';
@@ -65,16 +95,16 @@ if('' != $userfiledownload)
         }
     hook('modifydownloadpath');
     }
-elseif(getval("slideshow",0,true) != 0)
+elseif($slideshow != 0)
     {
     $noattach       = true;
     $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
     }
-elseif(getval("tempfile","") != "")
+elseif($tempfile != "")
     {
     $noattach       = true;
     $exiftool_write = false;
-    $filedetails    = explode('_', getval("tempfile",""));
+    $filedetails    = explode('_', $tempfile);
     $code           = safe_file_name($filedetails[0]);
     $ref            = (int)$filedetails[1];
     $downloadkey    = strip_extension($filedetails[2]);
@@ -84,6 +114,20 @@ elseif(getval("tempfile","") != "")
 else
     {
     $resource_data = get_resource_data($ref);
+    if (!is_array($resource_data)){
+        $error = $lang["resourcenotfound"];
+        if(getval("ajax","") != "")
+            {
+            error_alert($error, true,200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = array("title" => $lang["error"],"text" => $error);
+            include "../include/footer.php";
+            }
+        exit();
+    }
 
     resource_type_config_override($resource_data['resource_type']);
 
@@ -129,11 +173,47 @@ else
 
     // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
     if ($size == 'videojs' && $ext == 'mp3')
-    {
+        {
         $size="";
-    }
-    
-    $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+        }
+
+    // Provide a tile region if enabled and requested for the main resource.
+    if($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
+        {
+        $tile_scale = (int) getval('tile_scale', 1, true);
+        $tile_row = (int) getval('tile_row', 0, true);
+        $tile_col = (int) getval('tile_col', 0, true);
+        $fulljpgsize = strtolower($ext) != "jpg" ? "hpr" : "";
+        $fullpath = get_resource_path($ref, true,$fulljpgsize, false, "jpg");
+        $image_size = get_original_imagesize($ref,$fullpath, "jpg");
+        if($image_size === false)
+            {
+            debug("PAGES/DOWNLOAD.PHP: File does not exist!");        
+            header('HTTP/1.0 404 Not Found');
+            exit();
+            }
+        else
+            {
+            $image_width = (int) $image_size[1];
+            $image_height = (int) $image_size[2];
+
+            debug(sprintf('PAGES/DOWNLOAD.PHP: Requesting a tile region with scale=%s, row=%s, col=%s', $tile_scale, $tile_row, $tile_col));
+
+            $tiles = compute_tiles_at_scale_factor($tile_scale, $image_width, $image_height);
+            foreach($tiles as $tile)
+                {
+                if($tile['column'] == $tile_col && $tile['row'] == $tile_row)
+                    {
+                    $size = $tile['id'];
+                    $ext = 'jpg';
+                    break;
+                    }
+                }
+            }
+        }
+
+    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $download_extra = hook('download_resource_extra', '', array($path));
 
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
@@ -142,6 +222,12 @@ else
         }
 
     hook('modifydownloadpath');
+    // Hook to modify the download path.
+    $path_modified = hook('modifydownloadpath2', '', array($download_extra));
+    if(isset($path_modified) && $path_modified != '' && is_string($path_modified))
+        {
+        $path = $path_modified;
+        }
         
     if(!file_exists($path) && '' != $noattach)
         {
@@ -210,7 +296,8 @@ if('' == $noattach)
     {
     daily_stat('Resource download', $ref);
 
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, '', '', $usage, ($alternative != -1 ? $alternative : $size));
+    $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email: "";
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, ($alternative != -1 ? $alternative : $size));
 
     hook('moredlactions');
 
@@ -345,6 +432,9 @@ if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpf
     delete_exif_tmpfile($tmpfile);
     }
 
-hook('beforedownloadresourceexit');
+if (isset($download_extra)) 
+    {
+    hook('beforedownloadresourceexit', '', array($download_extra));
+    }
 
 exit();

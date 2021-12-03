@@ -4,8 +4,8 @@
 #
 include('../../include/db.php');
 include('../../include/authenticate.php');
-include('../../include/image_processing.php');
-include('../../include/pdf_functions.php');
+include_once('../../include/image_processing.php');
+include_once('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/vendor/autoload.php';
 
 use Spipu\Html2Pdf\Html2Pdf;
@@ -18,6 +18,10 @@ $size              = getvalescaped('size', '');
 if(strpos($size,"x") !== false)
     {
     $size = explode("x",$size);
+    }
+else
+    {
+    $size = strtoupper($size);
     }
 $columns           = getvalescaped('columns', 1);
 $order_by          = getvalescaped('orderby', 'relevance');
@@ -196,7 +200,13 @@ foreach($results as $result_data)
         {
         $contact_sheet_value = '';
 
-        if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
+        $ref = isset($contact_sheet_field['ref']) ? $contact_sheet_field['ref'] : "";
+        if ($ref == "")
+            {
+            continue;
+            }
+        
+        if(array_key_exists("field{$ref}", $result_data))
             {
             # Include field unless hide restriction is in effect
             if( !($contact_sheet_field['hide_when_restricted'] && 1 == $access) ) 

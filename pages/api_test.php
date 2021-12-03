@@ -1,8 +1,6 @@
 <?php
 include "../include/db.php";
-
 include "../include/authenticate.php";
-include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
@@ -86,18 +84,39 @@ if ($api_function!="")
     foreach($fct_params as $fparam)
         {
         $param_name = $fparam->getName();
-        $required = ($fparam->isOptional() ? "" : " *");
-        $required_attr = ($fparam->isOptional() ? "" : "required");
+
+        if($fparam->isOptional())
+            {
+            $required = '';
+            $required_attr = '';
+
+            $send_param = getval("send_{$param_name}", '') === 'yes';
+            $send_param_input = sprintf(
+                '<input type="checkbox" name="send_%s" value="yes" %s onchange="ToggleSendParam(this);">',
+                $param_name,
+                ($send_param ? 'checked' : '')
+            );
+            $disabled_attr = ($send_param ? '' : 'disabled');
+            }
+        else
+            {
+            $required = ' *';
+            $required_attr = 'required';
+            $send_param_input = '';
+            $disabled_attr = '';
+            }
         ?>
         <div class="Question">
-            <label><?php echo $param_name; echo $required; ?></label>
-            <input type="text" name="<?php echo $param_name; ?>" class="stdwidth" value="<?php echo htmlspecialchars(getval($param_name, "")); ?>" <?php echo $required_attr; ?>>
+            <label><?php echo $send_param_input . $param_name . $required; ?></label>
+            <input type="text"
+                   name="<?php echo $param_name; ?>"
+                   class="stdwidth"
+                   value="<?php echo htmlspecialchars(getval($param_name, "")); ?>"
+                   <?php echo "{$required_attr} {$disabled_attr}"; ?>>
         </div>
         <?php
         }
     }
-
-
 ?>
 <div class="QuestionSubmit">
     <label></label>
@@ -107,7 +126,22 @@ if ($api_function!="")
 
 </form>
 
-<?php if ($output!="") { ?>
+<?php if ($output!="") { 
+    //rebuild params for output to include encoding if needed
+    $query="function=" . $api_function;
+    foreach($fct_params as $fparam)
+        {
+        $param_name = $fparam->getName();
+        $param_val = trim(getval($param_name, ""));
+
+        if($fparam->isOptional() && $param_val == "")
+            {
+            continue;
+            }
+
+        strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
+        }
+    ?>
 <pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo htmlspecialchars($output) ?></pre>
 
 
@@ -121,10 +155,10 @@ if ($api_function!="")
 
 <span class="codecomment">// Set the private API key for the user (from the user account page) and the user we're accessing the system as.</span>
 $private_key="<?php echo get_api_key($userref) ?>";
-$user="<?php echo $username ?>";
+$user=<?php echo strpos(urlencode($username), '%') === false?'"' . $username . '"':'urlencode("' . $username . '")'; ?>;
 
 <span class="codecomment">// Formulate the query</span>
-$query="user=" . $user . "&amp;<?php echo htmlspecialchars($query) ?>";
+$query="user=" . $user . "&amp;<?php echo substr($query, -4)!=' . "'?htmlspecialchars($query) . '"':substr(htmlspecialchars($query), 0, -9); ?>;
 
 <span class="codecomment">// Sign the query using the private key</span>
 $sign=hash("sha256",$private_key . $query);
@@ -139,6 +173,35 @@ print_r($results);
 
 </div>
 </div>
+<script>
+function ToggleSendParam(el)
+    {
+    console.debug('ToggleSendParam(%o)', el);
+
+    var send_param = jQuery(el);
+    var param_name = send_param.attr('name').replace('send_', '');
+    var param_input = jQuery('input[name="' + param_name + '"]').not('[required]');
+
+    console.debug('param_name = %o', param_name);
+    console.debug('param_input = %o', param_input);
+
+    if(param_input.length == 0)
+        {
+        console.error('Unable to find an input with name %o', param_name);
+        return false;
+        }
+
+    if(send_param.is(':checked'))
+        {
+        param_input.prop('disabled', false);
+        }
+    else
+        {
+        param_input.prop('disabled', true);
+        }
+
+    return true;
+    }
+</script>
 <?php
 include "../include/footer.php";
-?>

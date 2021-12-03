@@ -103,7 +103,11 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 		$tmsdata = tms_link_get_tms_data('', $tms_object_id);
 
 		// Make sure we actually do save this data, even if we return an error
-		update_field($ref, $module['rs_uid_field'], $tms_object_id);
+        $result_update_field = update_field($ref, $module['rs_uid_field'], $tms_object_id);
+        if ($result_update_field !== true)
+            {
+            return $result_update_field; // return error message
+            }
         
         if(!is_array($tmsdata) && $ref < 0)
 			{

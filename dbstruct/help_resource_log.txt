@@ -1,14 +1,14 @@
 Logs all activity relating to a resource.
 ref,int(11),
-date,datetime,
+date,datetime,Date the log was recorded
 user,int(11),
 resource,int(11),
-type,char(1),
+type,char(1),Log type. See include/definitions.php for a full list of available types.
 resource_type_field,int(11),
-notes,text,
-diff,mediumtext,
-usageoption,int(11),
-purchase_size,varchar(10),
-purchase_price,decimal(10§2),
-access_key,char(50),
-previous_value,longtext,
+notes,text,Log notes
+diff,mediumtext,Diff between old value and new one
+usageoption,int(11),The resource download usage option
+purchase_size,varchar(10),Purchase size
+purchase_price,decimal(10§2),Purchase price
+access_key,char(50),External access key (added/deleted)
+previous_value,longtext,The original value - before the change being logged.

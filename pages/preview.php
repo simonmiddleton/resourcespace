@@ -355,7 +355,7 @@ if($annotate_enabled)
     ?>
     <!-- Annotorious -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.js"></script>
 
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
@@ -446,7 +446,7 @@ if($annotate_enabled)
         preview_image_copy.width(<?php echo $image_width; ?>);
         preview_image_copy.height(<?php echo $image_height; ?>);
 
-        preview_image_copy.appendTo(preview_image_link.parent());
+        preview_image_copy.prependTo(preview_image_link.parent());
         preview_image_link.hide();
 
         anno.makeAnnotatable(document.getElementById(img_copy_id));

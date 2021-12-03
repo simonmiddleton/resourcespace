@@ -126,13 +126,14 @@ function purge_plugin_config($name)
  *
  * @param string $path Path to .yaml file to open.
  * @param bool $validate Check that the .yaml file is complete. [optional, default=false]
- * @return array Associative array of yaml values.
+ * @return array|bool Associative array of yaml values. If validate is false, this function will return an array of 
+ *                    blank values if a yaml isn't available
  */
 function get_plugin_yaml($path, $validate=true)
     {
     #We're not using a full YAML structure, so this parsing function will do
-    #If validate is false, this function will return an array of blank values if a yaml isn't available
-    $yaml_file_ptr = @fopen($path, 'r');
+    $plugin_yaml['name'] = basename($path, '.yaml');
+    $plugin_yaml['version'] = '0';
     $plugin_yaml['author'] = '';
     $plugin_yaml['info_url'] = '';
     $plugin_yaml['update_url'] = '';
@@ -142,6 +143,13 @@ function get_plugin_yaml($path, $validate=true)
     $plugin_yaml['disable_group_select'] = '0';
     $plugin_yaml['title'] = '';
     $plugin_yaml['icon'] = '';
+
+    if(!(file_exists($path) && is_readable($path)))
+        {
+        return ($validate ? false : $plugin_yaml);
+        }
+    $yaml_file_ptr = fopen($path, 'r');
+
     if ($yaml_file_ptr!=false)
         {
         while (($line = fgets($yaml_file_ptr))!='')
@@ -173,15 +181,7 @@ function get_plugin_yaml($path, $validate=true)
         {
         return false;
         }
-    if (!isset($plugin_yaml['name']))
-        {
-        $plugin_yaml['name'] = basename($path,'.yaml');
-        }
-    if (!isset($plugin_yaml['version']))
-        {
-        $plugin_yaml['version'] = '0';
-        }
-        
+
     return $plugin_yaml;
     }
 
@@ -361,7 +361,7 @@ function set_plugin_config($plugin_name, $config)
     }
 
 /**
- * Check is a plugin is activated.
+ * Check if a plugin is activated.
  *
  * Returns true is a plugin is activated in the plugins database.
  *
@@ -381,92 +381,15 @@ function is_plugin_activated($name)
         }
     }
 
-/**
- * Handle the POST for an upload of a plugin configuration (.rsc) file
- *
- * Typically invoked near the beginning of a plugin's setup.php file
- * something like this:
- *
- *  if (getval('upload','')!='')
- *      {
- *      handle_rsc_upload($plugin_name);
- *      )
- *  elseif (getval('submit','')!='')
- *     {
- *     ...
- *     }
- *
- * @param string $plugin_name - the name of the plugin
- * @return string a translated string giving the status of the upload
- */
-function handle_rsc_upload($plugin_name)
-    {
-    global$lang;
-    $upload_status=$lang['plugins-goodrsc'];
-    if (!function_exists('json_decode'))
-        {
-        $upload_status = str_replace('%version','5.2',$lang['error-oldphp']);
-        }
-    elseif (($_FILES['rsc_file']['error'] != 0) || (pathinfo($_FILES['rsc_file']['name'], PATHINFO_EXTENSION)!='rsc') ||
-            !is_uploaded_file($_FILES['rsc_file']['tmp_name']) || ($_FILES['rsc_file']['size'] > 32768))
-        {
-        $upload_status = $lang['plugins-didnotwork'];
-        }
-    else
-        {
-        $json = file_get_contents($_FILES['rsc_file']['tmp_name']);
-        if (substr($json, 0, 3) == (chr(0xEF) . chr(0xBB) . chr(0xBF))) // Discard UTF-8 BOM if present
-            {
-            $json = substr($json, 3);
-            }
-        $tok = "\n";
-        $rsc_plugin_name = json_decode(strtok($json, $tok),true);
-        if ($rsc_plugin_name['ResourceSpacePlugin'] == $plugin_name)
-            {
-            $config = json_decode(strtok($tok), true);
-            foreach($config as $key=>$value)
-                $GLOBALS[$key] = $value;
-            }
-        elseif ($rsc_plugin_name == '')
-            {
-            $upload_status = $lang['plugins-badrsc'];
-            }
-        else
-            {
-            $upload_status = str_replace('%plugin',$rsc_plugin_name['ResourceSpacePlugin'],$lang['plugins-wrongplugin']);
-            }
-        }
-    return $upload_status;
-    }
 
 /**
- * Display hmtl form for uploading a plugin configuration (.rsc) file
- *
- * Typically invoked in a plugins's setup.php file just after the form for setting individual plugin
- * configuration parameters.
- *
- * @param string $upload_status string the status message (or '' if none) resulting from handling
- *          the POST of a .rsc file. Typically the return value from handle_rsc_upload or ''.
+ * Get active plugins
+ * 
+ * @return array
  */
-function display_rsc_upload($upload_status)
+function get_active_plugins()
     {
-    global $lang;
-    if (!function_exists('json_encode')) return; // i.e. if before json support in PHP
-?>
-  <br />
-  <h2><?php echo $lang['plugins-upload-title']?></h2>
-  <?php if ($upload_status!='') echo '<p>' . $upload_status . '</p>'?>
-  <form id="form2" enctype="multipart/form-data" name="form2" method="post" action="">
-    <div class="Question">
-      <?php generateFormToken("form2"); ?>
-      <input type="hidden" name="MAX_FILE_SIZE" value="32768" />
-      <label for="rsc_file"><?php echo $lang['plugins-getrsc'] ?></label>
-      <input type="file" name="rsc_file" id="rsc_file" size=80 />
-      <input type="submit" name="upload" value="<?php echo $lang['plugins-upload'] ?>" />
-      <div class="clearerleft"></div>
-    </div>
-  </form>
-<?php
+    return sql_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', 'plugins');
     }
 
 /**
@@ -492,15 +415,11 @@ function display_rsc_upload($upload_status)
  * @param $page_def mixed an array whose elements are generated by calls to config_add_xxxx functions
  *        each of which describes how one of the plugin's configuration variables.
  * @param $plugin_name string the name of the plugin for which the function is being invoked.
- * @return string containing a status message if the post was of an .rsc file.
+ * @return void|string Returns NULL 
  */
 function config_gen_setup_post($page_def,$plugin_name)
     {
-    if (getval('upload','')!='')
-        {
-        return handle_rsc_upload($plugin_name);
-        }
-    else if((getval('submit', '') != '' || getval('save','') != '') && enforcePostRequest(false))
+    if((getval('submit', '') != '' || getval('save','') != '') && enforcePostRequest(false))
         {
         $config=array();
         foreach ($page_def as $def)
@@ -610,7 +529,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         echo $plugin_page_frontm;
         }
 ?>
-        <form id="form1" name="form1" method="post" action="">
+        <form id="form1" name="form1" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     <?php
     generateFormToken("form1");
 
@@ -624,7 +543,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             }
         
         hook ("custom_config_def", '', array($def)); //this comes first so overriding the below is possible
-        
+
         switch ($def[0])
             {
             case 'section_header':
@@ -634,7 +553,11 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
                  config_html($def[1]);
                  break;     
             case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                break;
+            case 'text_hidden_input':
+                $value = (trim($def[2]) !== '' ? $def[2] : $GLOBALS[$def[1]]);
+                render_hidden_input($def[1], $value);
                 break;
             case 'text_list':
             if (!empty($array_offset)) 
@@ -695,7 +618,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     
             }
         }
-?>
+        ?>
         <div class="Question">
           <label for="submit">&nbsp;</label>
           <input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']?>">
@@ -703,9 +626,6 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
           <div class="clearerleft"></div>
         </div>
       </form>
-<?php
-    display_rsc_upload($upload_status);
-?>
     </div>
 <?php
     }
@@ -1145,7 +1065,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
     foreach($choices as $statekey => $statename)
         {
         echo '<span id="archivestate' . $statekey . '"><input type="checkbox" value="'. $statekey . '" name="' . $name . '[]" id="' . $name . $statekey . '" ' 
-            . (in_array($statekey,$current)?' checked="checked"':'') . '> '. $statename . '<br /></span>';
+            . (isset($current) && $current!='' && in_array($statekey,$current)?' checked="checked"':'') . '> '. $statename . '<br /></span>';
         }
 ?>
     </fieldset>
@@ -1374,7 +1294,8 @@ function config_custom_select($name, $label, $available, $value)
     config_single_select($name, $label, $value, $available, false);
     }
 
-function get_plugin_css(){
+function get_plugin_css()
+    {
 	global $plugins,$baseurl,$language,$css_reload_key;
 
 	$plugincss="";
@@ -1388,20 +1309,19 @@ function get_plugin_css(){
 		';
 		}	
 
-	# Allow language specific CSS files
-	$csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
-	if (file_exists($csspath))
-		{
-		$plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
-		';
-		}
-	
-	# additional plugin css functionality
-	$plugincss.=hook('moreplugincss','',array($plugins, $n));
+        # Allow language specific CSS files
+        $csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
+        if (file_exists($csspath))
+            {
+            $plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />';
+            }
         
-	}
+        # additional plugin css functionality
+        $plugincss.=hook('moreplugincss','',array($plugins, $n));
+            
+        }
 	return $plugincss;
-}
+    }
 /*
 Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
 
@@ -1433,16 +1353,16 @@ function plugin_activate_for_setup($plugin_name)
 
 	
 
-    function include_plugin_config($plugin_name,$config="",$config_json="")
+function include_plugin_config($plugin_name,$config="",$config_json="")
     {
     global $mysql_charset;
     
     $pluginpath=get_plugin_path($plugin_name);
     
     $configpath = $pluginpath . "/config/config.default.php";
-    if (file_exists($configpath)) {include $configpath;}
+    if (file_exists($configpath)) {include_once $configpath;}
     $configpath = $pluginpath . "/config/config.php";
-    if (file_exists($configpath)) {include $configpath;}
+    if (file_exists($configpath)) {include_once $configpath;}
 
     if ($config_json != "" && function_exists('json_decode'))
         {
@@ -1474,6 +1394,7 @@ function plugin_activate_for_setup($plugin_name)
 		global $$name;
 		$$name = $value;
 		}
+    debug_track_vars('end@include_plugin_config', get_defined_vars());
 	}
 
 function register_plugin_language($plugin)
@@ -1546,4 +1467,27 @@ function register_plugin($plugin)
 	
 	return true;	
 	}
-	
+
+/**
+* Encode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
+* 
+* @param mixed $c Configuration requiring encoding
+* 
+* @return string
+*/
+function plugin_encode_complex_configs($c)
+    {
+    return base64_encode(serialize($c));
+    }
+
+/**
+* Decode complex plugin configuration (e.g mappings defined by users on plugins' setup page)
+* 
+* @param string $b64sc Configuration encoded prior with {@see plugin_encode_complex_configs()}
+* 
+* @return mixed
+*/
+function plugin_decode_complex_configs(string $b64sc)
+    {
+    return unserialize(base64_decode($b64sc));
+    }

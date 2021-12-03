@@ -149,7 +149,7 @@ function HookAdobe_linkViewBefore_footer_always()
 function HookAdobe_linkViewDownloadbuttonreplace()
 	{
     global $userref, $baseurl, $urlparams, $ref, $resource, $size_info_array, $lang, $adobe_link_asset_extensions;
-    global $adobe_link_document_extensions, $edit_access; 
+    global $adobe_link_document_extensions, $edit_access, $CSRF_token_identifier, $usersession; 
         
     # Adds a special link to the download button.
     $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
@@ -159,13 +159,15 @@ function HookAdobe_linkViewDownloadbuttonreplace()
         !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($adb_ext),$adobe_link_asset_extensions) && !in_array(strtolower($adb_ext),$adobe_link_document_extensions))
-        ||
-        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
       )
         {
         return false;
         }
 
+    if(in_array(strtolower($adb_ext),$adobe_link_document_extensions) && is_int_loose($resource["lock_user"]) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        {
+        return false;
+        }
     $adobefilename = get_download_filename($ref,'',-1,$adb_ext);
     $extraparams = array();
     $extraparams["noattach"] = "true";
@@ -197,7 +199,8 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     if($edit_access && in_array(strtolower($adb_ext),$adobe_link_document_extensions))
         {
         $extraparams["replace_resource"] =  $ref;
-        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $extraparams[$CSRF_token_identifier] =  generateCSRFToken($usersession, "adobe_upload");
+        $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "' ";
         $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
@@ -219,13 +222,14 @@ function HookAdobe_linkViewOrigdownloadlink()
         !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions) && !in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
-        ||
-        ($resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
         )
         {
         return false;
         }
-
+    if(in_array(strtolower($adb_ext),$adobe_link_document_extensions) && is_int_loose($resource["lock_user"]) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
+        {
+        return false;
+        }
     $extraparams = array();
     $extraparams["noattach"] = "true";
     $extraparams["ext"] = $resource['file_extension'];
@@ -262,7 +266,7 @@ function HookAdobe_linkViewOrigdownloadlink()
      if($edit_access && in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
         {
         $extraparams["replace_resource"] =  $ref;
-        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "'";
         $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";

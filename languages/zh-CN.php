@@ -97,13 +97,7 @@ $lang["uploadinprogress"]="上传中";
 $lang["donotmoveaway"]="重要提示:文件上传中，请不要离开!";
 $lang["pleaseselectfiles"]="请选择一个或以上的档案上传.";
 $lang["uploadcomplete"]="上传完成";
-$lang["specifyftpserver"]="指定远程 FTP 服务器";
-$lang["ftpserver"]="FTP 服务器";
-$lang["ftpusername"]="FTP 用户名";
-$lang["ftppassword"]="FTP 密码";
-$lang["ftpfolder"]="FTP 夹";
 $lang["connect"]="连结";
-$lang["uselocalupload"]="或者: 使用本地服务器上传资料";
 
 # User contributions
 $lang["contributenewresource"]="贡献新资源";
@@ -513,9 +507,7 @@ $lang["warningexpiredtext"]="警告! 这个资源已过了有效期限. 请单�
 $lang["warningexpiredok"]="&gt; 容许资源下载";
 $lang["userrequestcomment"]="反馈";
 $lang["addresourcebatchbrowser"]="增加收藏夹批次 - 使用";
-$lang["addresourcebatchbrowserjava"]="增加资源批次 - 使用 Java （建议）";
 
-$lang["addresourcebatchftp"]="增加资源批次 - 使用 FTP server";
 $lang["replaceresourcebatch"]="取代资源批次";
 $lang["editmode"]="编辑模式";
 $lang["replacealltext"]="取代文本";
@@ -652,7 +644,7 @@ $lang["noattachedusers"]="未有用户被加入.";
 $lang["confirmdeleteaccess"]="您确定要删除使用键吗? 使用该使用键的用户将不能浏览收藏夹.";
 $lang["noexternalsharing"]="不供外部分享.";
 $lang["sharedcollectionaddwarning"]="警告: 此收藏夹已和外部用户分享.您新加入的资源也可被他们使用. 想管理外部使用者对此收藏夹的使用权限，请点击 '分享' .";
-$lang["addresourcebatchlocalfolder"]="加入彼此资源";
+
 # Setup Script
 $lang["setup-alreadyconfigured"]="Your ResourceSpace installation is already configured.  To reconfigure, you may delete <pre>include/config.php</pre> and point your browser to this page again.";
 $lang["setup-successheader"]="Congratulations!";
@@ -836,20 +828,10 @@ $lang['plugins-installedheader'] = '已启动的Plugins';
 $lang['plugins-author'] = '作者';
 $lang['plugins-version'] = '版本';
 $lang['plugins-instversion'] = '已安装的版本';
-$lang['plugins-uploadheader'] = '上传Plugin';
-$lang['plugins-uploadtext'] = '=安装一个rsp文件.';
 $lang['plugins-deactivate'] = '未启动';
 $lang['plugins-moreinfo'] = '更多资料';
 $lang['plugins-activate'] = '启动';
 $lang['plugins-purge'] = '清理配置';
-$lang['plugins-rejmultpath'] = '存档包括多项路径. (安全的磁盘)';
-$lang['plugins-rejrootpath'] = '存档包括绝对的路径. (安全的磁盘)';
-$lang['plugins-rejparentpath'] = '存档包括现有的路径 (../). (安全的磁盘)';
-$lang['plugins-rejmetadata'] = '未发现存档的说明文件.';
-$lang['plugins-rejarchprob'] = '存档中发现问题:';
-$lang['plugins-rejfileprob'] = '上传的 plugin必须是一个.rsp档.';
-$lang['plugins-rejremedy'] = '你可以将储存挡加入 plugins 指南中.';
-$lang['plugins-uploadsuccess'] = 'Plugin成功上传.';
 $lang['plugins-headertext'] = 'Plugins可以加强资源库的功能.';
 $lang['plugins-legacyinst'] = '已透过config.php启动';
 

@@ -16,7 +16,7 @@ function HookGrant_editEditeditbeforeheader()
 			$remove_user=escape_check(getvalescaped("remove_user","",TRUE));
 			if($remove_user!="")
 				{
-				sql_query("delete from grant_edit where resource='$ref' and user=$remove_user");
+				ps_query("delete from grant_edit where resource = ? and user = ?", array("i",$ref,"i",$remove_user));
 				exit ("SUCCESS");
 				}
 			}
@@ -32,44 +32,47 @@ function HookGrant_editEditeditbeforeheader()
 		# Build a new list and insert
 		$users=resolve_userlist_groups($users);
 		$ulist=array_unique(trim_array(explode(",",$users)));
-		$urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
+        $ulist = array_map("escape_check",$ulist);
+		$urefs = ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist,"s"));
 		
 		if (count($urefs)>0)
 			{
-			$inserttext=array();
 			$grant_edit_expiry=getvalescaped("grant_edit_expiry","");
-			foreach ($urefs as $uref)
+			if ((int)$collection > 0)
 				{
-				if($grant_edit_expiry!="")
+				global $items;							
+				foreach ($items as $collection_resource)
 					{
-					$inserttext[]=$uref . ",'" . $grant_edit_expiry . "'";
-					}
-				else
-					{
-					$inserttext[]=$uref. ",NULL" ;
-					}
-				}
-				if ((int)$collection > 0)
-					{
-					global $items;							
-					foreach ($items as $collection_resource)
+					$parameters = array();
+					$insertvalue = array();
+					foreach ($urefs as $uref)
 						{
-						sql_query("delete from grant_edit where resource='$collection_resource' and user in (" . implode(",",$urefs) . ")");
-						sql_query("insert into grant_edit(resource,user,expiry) values ($collection_resource," . join("),(" . $collection_resource . ",",$inserttext) . ")");
-						#log this
-						global $lang;
-						resource_log($collection_resource,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));
-						}					
-							
-					}
-				else
-					{
-					sql_query("delete from grant_edit where resource='$ref' and user in (" . implode(",",$urefs) . ")");
-					sql_query("insert into grant_edit(resource,user,expiry) values ($ref," . join("),(" . $ref . ",",$inserttext) . ")");
+						$insertvalue[] = "(? ,? ,?)";
+						$expiry = ($grant_edit_expiry == "") ? NULL : $grant_edit_expiry;
+						$parameters = array_merge($parameters, array("i",$collection_resource,"i",$uref,"s",$expiry));
+						}
+					ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$collection_resource), ps_param_fill($urefs,"i")));
+					ps_query("insert into grant_edit(resource,user,expiry) values " . implode(",", $insertvalue), $parameters);
 					#log this
 					global $lang;
-					resource_log($ref,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));	
-					}					
+					resource_log($collection_resource,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));
+					}
+				}
+			else
+				{
+				$parameters = array();
+				foreach ($urefs as $uref)
+					{
+					$insertvalue[] = "(? ,? ,?)";
+					$expiry = ($grant_edit_expiry == "") ? NULL : $grant_edit_expiry;
+					$parameters = array_merge($parameters, array("i",$ref,"i",$uref,"s",$expiry));
+					}
+				ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$ref), ps_param_fill($urefs,"i")));
+				ps_query("insert into grant_edit(resource,user,expiry) values " . implode(",", $insertvalue), $parameters);
+				#log this
+				global $lang;
+				resource_log($ref,'s',"","Grant Edit -  " . $users . " - " . $lang['expires'] . ": " . (($grant_edit_expiry!="")?nicedate($grant_edit_expiry):$lang['never']));	
+				}					
 			}
 		}
 	
@@ -96,7 +99,7 @@ function HookGrant_editEditReplacesubmitbuttons()
 	// Do we have access to see this?
 	if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}
 	
-	$grant_editusers=sql_query("select ea.user, u.fullname, u.username, ea.expiry from grant_edit ea left join user u on u.ref=ea.user where ea.resource='$ref' and (ea.expiry is NULL or ea.expiry>=NOW()) order by expiry, u.username");
+	$grant_editusers=ps_query("select ea.user, u.fullname, u.username, ea.expiry from grant_edit ea left join user u on u.ref = ea.user where ea.resource = ? and (ea.expiry is NULL or ea.expiry >= NOW()) order by expiry, u.username", array("i",$ref));
 	//print_r($grant_editusers);
 	//exit();
 	?>

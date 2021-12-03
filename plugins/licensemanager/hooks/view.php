@@ -11,7 +11,6 @@ function HookLicensemanagerViewCustompanels()
 
 	$licenses=sql_query("select license.ref,license.outbound,license.holder,license.license_usage,license.description,license.expires from license join resource_license on license.ref=resource_license.license where resource_license.resource='$ref' order by ref");
 	?>
-    <!-- Begin Geolocation Section -->
     <div class="RecordBox">
     <div class="RecordPanel">
     <div class="Title"><?php echo $lang["license_management"] ?></div>

@@ -160,13 +160,7 @@ $lang["donotmoveaway"]="VIKTIG: Ikke naviger vekk fra siden før opplastingen er
 $lang["pleaseselectfiles"]="Velg en eller flere filer å laste opp";
 $lang["upload_failed_for_path"]="Opplasting mislyktes for %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Opplasting fullført";
-$lang["specifyftpserver"]="Spesifiser en FTP-tjener";
-$lang["ftpserver"]="FTP-tjener";
-$lang["ftpusername"]="FTP brukernavn";
-$lang["ftppassword"]="FTP passord";
-$lang["ftpfolder"]="FTP-mappe";
 $lang["connect"]="Koble til";
-$lang["uselocalupload"]="ELLER: Bruk lokal opplastingsfolder istedet for en FTP-tjener";
 
 # User contributions
 $lang["contributenewresource"]="Legg til nytt materiale";
@@ -615,9 +609,7 @@ $lang["warningexpiredtext"]="Advarsel! Denne filen har gått ut på dato. Du må
 $lang["warningexpiredok"]="&gt; Slå på filnedlasting";
 $lang["userrequestcomment"]="Kommentar";
 $lang["addresourcebatchbrowser"]="Batch-opplasting - i nettleseren";
-$lang["addresourcebatchbrowserjava"]="Batch-opplasting - i nettleseren (Java)";
 
-$lang["addresourcebatchftp"]="Batch-opplasting - hent filer fra FTP-tjener";
 $lang["replaceresourcebatch"]="Erstatt filer - Batch";
 $lang["editmode"]="Redigeringsmodus";
 $lang["replacealltext"]="Erstatt all tekst";
@@ -754,7 +746,6 @@ $lang["noattachedusers"]="Ingen tilknyttede brukere.";
 $lang["confirmdeleteaccess"]="Er du sikker på at du vil slette denne tilgansnøkkelen? Brukere som har hatt tilgang via denne nøkkelen vil ikke lenger få tilgang til dette lysbordet.";
 $lang["noexternalsharing"]="Ingen ekstern deling.";
 $lang["sharedcollectionaddwarning"]="Advarsel: Dette lybordet har blitt delt med eksterne brukere. Filen du har lagt til har nå blitt tilgjenelig for disse brukerne. Klikk på 'Dele' for å behandle den eksterne tilgangen til dette lysbordet.";
-$lang["addresourcebatchlocalfolder"]="Batch-opplasting - hent filer fra lokal opplastingsmappe";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Din ResourceSpace-installasjon er allerede konfigurert. For å rekonfigurere kan du slette <pre>include/config.php</pre> og åpne denne siden på nytt i nettleseren din.";
 $lang["setup-successheader"]="Gratulerer!";
@@ -942,22 +933,12 @@ $lang['plugins-author'] = 'Forfatter';
 $lang['plugins-version'] = 'Versjon';
 $lang['plugins-instversion'] = 'Installert versjon';
 $lang['plugins-uploadheader'] = 'Last opp programtillegg';
-$lang['plugins-uploadtext'] = 'Velg en .rsp-fil å installere.';
 $lang['plugins-deactivate'] = 'Deaktiver';
 $lang['plugins-moreinfo'] = 'Mer informasjon';
 $lang['plugins-activate'] = 'Aktiver';
 $lang['plugins-purge'] = 'Gjenoppfrisk programtillegg';
-$lang['plugins-rejmultpath'] = 'Arkivet inneholder flere stier. (Sikkerhetsrisiko)';
-$lang['plugins-rejrootpath'] = 'Arkivet inneholder absolutte stier. (Sikkerhetsrisiko)';
-$lang['plugins-rejparentpath'] = 'Arkivet inneholder overliggende stier (../). (Sikkerhetsrisiko)';
-$lang['plugins-rejmetadata'] = 'Arkivets dokumentasjonsfil ble ikke funnet.';
-$lang['plugins-rejarchprob'] = 'Det oppstod et problem under filutpakkingen:';
-$lang['plugins-rejfileprob'] = 'Programtillegget må være en .rsp-fil.';
-$lang['plugins-rejremedy'] = 'Hvis du stoler på dette programtillegget kan du installere det manuelt ved å pakke ut arkivet direkte i din programtilleggsmappe.';
-$lang['plugins-uploadsuccess'] = 'Opplastingen av programtillegget var vellykket';
 $lang['plugins-headertext'] = 'Programtillegget utvider fuksjonaliteten til mediearkivet.';
 $lang['plugins-legacyinst'] = 'Aktivert via config.php';
-$lang['plugins-uploadbutton'] = 'Opplastings-plugin';
 
 #Location Data
 $lang['location-title'] = 'Stedsdata';

@@ -22,6 +22,13 @@ $page_def[] = config_add_single_select(
 	true
 );
 
+$page_def[] = config_add_boolean_select(
+	'only_show_changes',
+	$lang['search_notifications_config_only_changes'],
+	'',
+	75
+);
+
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

@@ -267,13 +267,7 @@ $lang["resources_uploaded-n"]="%done% resurssia ladattu onnistuneesti."; # %done
 $lang["resources_failed-0"]="0 resurssia epäonnistui.";
 $lang["resources_failed-1"]="1 resurssi epäonnistui.";
 $lang["resources_failed-n"]="%done% resurssia epäonnistui."; # %failed% will be replaced, e.g. 2 resources failed.
-$lang["specifyftpserver"]="Määrittele etäkäytön FTP-palvelin";
-$lang["ftpserver"]="FTP-palvelin";
-$lang["ftpusername"]="FTP-käyttäjänimi";
-$lang["ftppassword"]="FTP-salasana";
-$lang["ftpfolder"]="FTP-kansio";
 $lang["connect"]="Ota yhteys";
-$lang["uselocalupload"]="TAI: käytä paikallista 'latauskansiota' FTP-palvelimen etäkäytön sijasta";
 
 # User contributions
 $lang["contributenewresource"]="Lisää uusi resurssi";
@@ -793,8 +787,6 @@ $lang["warningexpiredtext"]="Varoitus! Resurssin voimassaolo on päättynyt. Nap
 $lang["warningexpiredok"]="&gt; Salli resurssien lataaminen";
 $lang["userrequestcomment"]="Kommentti";
 $lang["addresourcebatchbrowser"]="Lisää resurssijoukko - selaimessa";
-$lang["addresourcebatchbrowserjava"]="Lisää resurssijoukko - selaimessa - Javalla (vanha versio) ";
-$lang["addresourcebatchftp"]="Lisää joukko resursseja - hae FTP-palvelimelta";
 $lang["replaceresourcebatch"]="Korvaa joukko resursseja";
 $lang["editmode"]="Muokkaustila";
 $lang["replacealltext"]="Korvaa kaikki teksti / valinnat";
@@ -918,7 +910,6 @@ $lang["hidealllanguages"]="Piilota kaikki kielet";
 $lang["clicktologinasthisuser"]="Napsauta kirjautuaksesi tänä käyttäjänä";
 $lang["addkeyword"]="Lisää avainsana";
 $lang["selectedresources"]="Valitut resurssit";
-$lang["addresourcebatchlocalfolder"]="Lisää resurssijoukko - Lataa paikallisesta latauskansiosta";
 $lang["phpextensions"]="PHP-tiedostopäätteet";
 
 # Setup Script
@@ -1004,8 +995,6 @@ $lang["setup-storage_directory"]="Varastohakemisto";
 $lang["setup-if_storagedirectory"]="Minne mediatiedostot laitetaan. Voi olla absoluuttinen (/var/www/blah/blah) tai relatiivinen polku suhteessa asennukseen. HUOMAA: ei kauttaviivaa polun loppuun.";
 $lang["setup-storage_url"]="Varaston URL";
 $lang["setup-if_storageurl"]="Missä storagedir on saatavilla. Voi olla absoluuttinen (http://files.example.com) tai relatiivinen asennukseen nähden. HUOMAA: Ei kauttaviivaa loppuun.";
-$lang["setup-ftp_settings"]="FTP-asetukset";
-$lang["setup-if_ftpserver"]="Tarvitaan vain FTP-tiedostonsiirtoa käytettäessä.";
 $lang["setup-login_to"]="Kirjaudu sisään";
 $lang["setup-configuration_file_output"]="Asetustiedoston ulostulo";
 
@@ -1134,32 +1123,17 @@ $lang['plugins-installedheader'] = 'Tällä hetkellä toiminnassa olevat lisäos
 $lang['plugins-author'] = 'Tekijä';
 $lang['plugins-version'] = 'Versio';
 $lang['plugins-instversion'] = 'Asennettu versio';
-$lang['plugins-uploadheader'] = 'Lataa lisäosa';
-$lang['plugins-uploadtext'] = 'Valitse .rsp-tiedosto asennettavaksi.';
 $lang['plugins-deactivate'] = 'Poista toiminnasta';
 $lang['plugins-moreinfo'] = 'Lisää&nbsp;tietoa';
 $lang['plugins-activate'] = 'Aktivoi';
 $lang['plugins-purge'] = 'Poista&nbsp;asetukset';
-$lang['plugins-rejmultpath'] = 'Arkisto sisältää monta polkua. (Turvallisuusriski)';
-$lang['plugins-rejrootpath'] = 'Arkisto sisältää absoluuttisia polkuja. (Turvallisuusriski)';
-$lang['plugins-rejparentpath'] = 'Arkisto sisältää kantapolkuja (../). (Turvallisuusriski)';
-$lang['plugins-rejmetadata'] = 'Arkiston kuvaustiedostoa ei löytynyt.';
-$lang['plugins-rejarchprob'] = 'Arkistoa purettaessa oli ongelma:';
-$lang['plugins-rejfileprob'] = 'Ladatun lisäosan täytyy olla .rsp-tiedosto.';
-$lang['plugins-rejremedy'] = 'Jos luotat tähän lisäosaan, voit asentaa sen käsin purkamalla arkiston lisäosahakemistoosi.';
-$lang['plugins-uploadsuccess'] = 'Lisäosa ladattu onnistuneesti.';
 $lang['plugins-headertext'] = 'Lisäosat laajentavat ResourceSpacen toiminnallisuutta.';
 $lang['plugins-legacyinst'] = 'Aktivoitu config.php-tiedostossa';
-$lang['plugins-uploadbutton'] = 'Lataa lisäosa';
 $lang['plugins-download'] = 'Lataa&nbsp;asetukset';
 $lang['plugins-upload-title'] = 'Hanki asetukset tiedostosta';
 $lang['plugins-upload'] = 'Lataa asetukset';
 $lang['plugins-getrsc'] = 'Käytettävä tiedosto:';
 $lang['plugins-saveconfig'] = 'Tallenna asetukset';
-$lang['plugins-didnotwork'] = 'Tämä ei valitettavasti toiminut. Valitse kelvollinen .rsc-tiedosto tälle lisäosalle ja napsauta \'Lataa asetukset\'-nappia.';
-$lang['plugins-goodrsc'] = 'Asetukset ladattu onnistuneesti. Napsauta \'Tallenna asetukset\'-nappia tallentaaksesi.';
-$lang['plugins-badrsc'] = 'Valitettavasti tämä ei ollut kelvollinen .rsc-tiedosto.';
-$lang['plugins-wrongplugin'] = 'Valitettavasti tämä on .rsc-tiedosto lisäosalle %plugin. Valitse tämän lisäosan asetustiedosto.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Asettaa asetusten muuttujan: $%cvn'; //%cvn is replaced by the name of the config variable being set
 
 #Location Data
@@ -1521,12 +1495,8 @@ $lang["error-collectionnotfound"]="Kokoelmaa ei löydy.";
 
 $lang["header-upload-subtitle"] = "Askel %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
 $lang["local_upload_path"] = "Paikallinen latauskansio";
-$lang["ftp_upload_path"] = "FTP-kansio";
 $lang["foldercontent"] = "Kansion sisältö";
 $lang["intro-local_upload"] = "Valitse yksi tai usempi tiedosto paikallisesta latauskansiosta ja napsauta <b>Lataa</b>. Kun tiedostot on ladattu, ne voidaan poistaa latauskansiosta.";
-$lang["intro-ftp_upload"] = "Valitse yksi tai useampi tiedosto FTP-kansiosta ja napsauta <b>Lataa</b>.";
-$lang["intro-java_upload"] = "Napsauta <b>Selaa</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Lataa</b>.";
-$lang["intro-java_upload-replace_resource"] = "Napsauta <b>Selaa</b> löytääksesi tiedoston ja napsauta sitten <b>Lataa</b>.";
 $lang["intro-single_upload"] = "Napsauta <b>Selaa</b> löytääksesi tiedoston ja napsauta sitten <b>Lataa</b>.";
 $lang["intro-plupload"] = "Napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>.";
 $lang["intro-plupload_dragdrop"] = "Vedä ja pudota tai napsauta <b>Lisää tiedostoja</b> valitaksesi yhden tai useamman tiedoston ja napsauta sitten <b>Aloita lataus</b>.";

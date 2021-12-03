@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 15);
+define('SYSTEM_UPGRADE_LEVEL', 17);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -10,7 +10,7 @@ if (!defined('PHP_VERSION_ID'))
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
     }
-define('PHP_VERSION_SUPPORTED', 70000); // 7.0 is the minimum supported.
+define('PHP_VERSION_SUPPORTED', 70205); // 7.2.5 is the minimum supported, a requirement for Uppy.
 
 // ------------------------- FIELD TYPES -------------------------
 
@@ -109,6 +109,8 @@ define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
 define ('LOG_CODE_UNLOCKED',            'Y');
+define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
+define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
 define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
@@ -126,6 +128,8 @@ define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
 define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
 define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
 define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',        'Z');
+define ('LOG_CODE_COLLECTION_SHARED_UPLOAD',                'SEU');
+define ('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE',            'EEU');
 
 
 // validates LOG_CODE is legal
@@ -167,6 +171,12 @@ define ('STATUS_ACTIVE',				1);
 define ('STATUS_COMPLETE',				2);	
 define ('STATUS_INPROGRESS',            3);	
 define ('STATUS_ERROR',					5);
+
+// ------------------------- JOB PRIORITY CODES -------------------------
+define ('JOB_PRIORITY_IMMEDIATE',   0);
+define ('JOB_PRIORITY_USER',		1);
+define ('JOB_PRIORITY_SYSTEM',		2);
+define ('JOB_PRIORITY_COMPLETED',   9);
 
 // -------------------- General definitions --------------------
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
@@ -259,14 +269,23 @@ $permitted_html_tags =  array(
             'b',
             'u',
             'p',
-            'i'
+            'i',
+            'big',
+            'cite',
+            'q',
+            'var',
+            'samp',
+            'kbd',
+            'tt'
         );
 
 // Array of default html attributes that are permitted in field data
 $permitted_html_attributes = array('id', 'class', 'style');
 
-$jquery_path = "/lib/js/jquery-3.3.1.min.js";
+// Standard paths (e.g libraries)
+$jquery_path = "/lib/js/jquery-3.6.0.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
+define('LIB_OPENSEADRAGON', '/lib/openseadragon_2.4.2');
 
 // Define dropdown action categories
 define ('ACTIONGROUP_RESOURCE',     1);
@@ -276,6 +295,10 @@ define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
 
+
+// Global variable that contains variable names that reference metadata fields considered to be core to ResourceSpace 
+// and shouldn't be deleted. Plugins can register their own with config_register_core_fieldvars()
+// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_fieldvars().
 $corefields = array(
     "BASE" => array(
         'filename_field',
@@ -311,6 +334,11 @@ $corefields = array(
         )
     );
 
+// Similar to $corefields but holds list of field refs we want the system to prevent from deleting. Mostly plugins will want
+// to register these IF the plugin is configured to use certain metadata fields.
+// IMPORTANT - not an actual definition/constant, the value will change when using the config_register_core_field_refs().
+$core_field_refs = [];
+
 
 // ----------------------------------------------
 // COLLECTIONS
@@ -320,6 +348,9 @@ define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then ed
 define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
 define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
 define("COLLECTION_TYPE_PUBLIC",    4); # public collections
+define("COLLECTION_SHARE_UPLOAD",   5); # public collections
+
+
 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "no_image" => 0,
     "most_popular_image" => 1,
@@ -338,7 +369,12 @@ define("RESOURCE_ACCESS_RESTRICTED", 1); # 1 = Restricted Access (download only 
 define("RESOURCE_ACCESS_CONFIDENTIAL", 2); # Confidential (no access)
 define("RESOURCE_ACCESS_CUSTOM_GROUP", 3); # custom group access
 define("RESOURCE_ACCESS_INVALID_REQUEST", 99); # invalid resource request eg. invalid resource ref
-
+const RESOURCE_ACCESS_TYPES = [
+    RESOURCE_ACCESS_FULL,
+    RESOURCE_ACCESS_RESTRICTED,
+    RESOURCE_ACCESS_CONFIDENTIAL,
+    RESOURCE_ACCESS_CUSTOM_GROUP,
+];
 
 // ----------------------------------------------
 // MESSAGES
@@ -346,7 +382,7 @@ define("RESOURCE_ACCESS_INVALID_REQUEST", 99); # invalid resource request eg. in
 // Enumerated types of message.  Note the base two offset for binary combination.
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN",1);
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL",2);
-DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_1",4);
+DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE",4);
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_2",8);
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_3",16);
 
@@ -399,3 +435,30 @@ $offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","
 # Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
 $regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
 
+// LEAFLET MAPS - AVAILABLE COLOURS
+$MARKER_COLORS = array(
+    0 => 'Blue',
+    1 => 'Red',
+    2 => 'Green',
+    3 => 'Orange',
+    4 => 'Yellow',
+    5 => 'Black',
+    6 => 'Grey',
+    7 => 'Violet',
+    8 => 'Gold'
+    );
+
+// Reports
+const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';
+
+// SYSTEM - GENERAL
+const SYSTEM_REQUIRED_PHP_MODULES = [
+    'curl' => 'curl_init',
+    'gd' => 'imagecrop',
+    'xml' => 'xml_parser_create',
+    'mbstring' => 'mb_strtoupper',
+    'intl' => 'locale_get_default',
+    'json' => 'json_decode',
+    'zip' => 'zip_open',
+    'apcu' => 'apcu_fetch',
+];

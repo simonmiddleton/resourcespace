@@ -2,12 +2,12 @@
 include "../include/db.php";
 
 include "../include/authenticate.php";
-include "../include/image_processing.php";
+include_once "../include/image_processing.php";
 
 $ref=getvalescaped("ref","",true);
 
 $search=getvalescaped("search","");
-$offset=getvalescaped("offset","",true);
+$offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
@@ -131,6 +131,7 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
 <label for="name"><?php echo $lang["description"]?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo htmlspecialchars($file["description"]) ?>" maxlength="200">
 <div class="clearerleft"> </div>
 </div>
+<?php hook('alternative_file_question', ''); ?>
 
 <?php
 	// if the system is configured to support a type selector for alt files, show it

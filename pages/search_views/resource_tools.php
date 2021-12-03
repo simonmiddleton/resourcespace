@@ -1,9 +1,11 @@
+<?php hook('add_to_resource_tools', '', array($ref)); ?>
+
 <!-- Edit icon -->
 <?php
 // The permissions check here is intentionally more basic. It doesn't check edit_filter as this would be computationally intensive
 // when displaying many resources. As such this is a convenience feature for users that have system-wide edit access to the given
 // access level.
-if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook("iconedit")) 
+if($search_results_edit_icon && !hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_access_for_contributor && $userref==$result[$n]["created_by"])))
         { 
         if ($allow_share && ($k=="" || $internal_share_access)) 
                 { ?>
@@ -68,13 +70,14 @@ if(!hook("iconemail"))
         
 <!-- Remove from collection icon -->
 <?php 
+$basket=$userrequestmode==2 || $userrequestmode==3;
+
 if(!checkperm('b') && ($k == '' || $internal_share_access))
     {
     $col_link_class = ['fa-minus-circle'];
     if(
         isset($usercollection_resources)
         && is_array($usercollection_resources)
-        && !empty($usercollection_resources)
         && !in_array($ref, $usercollection_resources)
     )
         {
@@ -82,7 +85,7 @@ if(!checkperm('b') && ($k == '' || $internal_share_access))
         }
 
     $onclick = 'toggle_addremove_to_collection_icon(this);';
-    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onclick) . '</a>';
+    echo remove_from_collection_link($ref, $search, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, $basket) . '</a>';
     }
     ?>
         
@@ -92,11 +95,10 @@ if(!hook('iconcollect') && $pagename!="collections")
     {
     if(!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
-        $col_link_class = (2 == $userrequestmode || 3 == $userrequestmode ? ['fa-shopping-cart'] : ['fa-plus-circle']);
+        $col_link_class = ($basket ? ['fa-shopping-cart'] : ['fa-plus-circle']);
         if(
             isset($usercollection_resources)
             && is_array($usercollection_resources)
-            && !empty($usercollection_resources)
             && in_array($ref, $usercollection_resources)
         )
             {
@@ -104,7 +106,7 @@ if(!hook('iconcollect') && $pagename!="collections")
             }
 
         $onclick = 'toggle_addremove_to_collection_icon(this);';
-        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
+        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $basket) . '</a>';
         }
     } # end hook iconcollect
     ?>

@@ -1,10 +1,9 @@
 <?php
-
-
-
-
 # User functions
 # Functions to create, edit and generally deal with user accounts
+
+include_once __DIR__ . '/login_functions.php';
+
 
 /**
 * Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
@@ -110,7 +109,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
 function setup_user($userdata)
-	{        
+	{
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
@@ -177,25 +176,11 @@ function setup_user($userdata)
         $usercollection=$userdata["current_collection"];
         // Check collection actually exists
         $validcollection=$userdata["current_collection_valid"];
-        if($validcollection==0)
+        if($validcollection==0 || $usercollection==0 || !is_numeric($usercollection))
             {
             // Not a valid collection - switch to user's primary collection if there is one
-            $usercollection=sql_value("select ref value from collection where user='$userref' and name like 'Default Collection%' order by created asc limit 1",0);
-            if ($usercollection!=0)
-                {
-                # set this to be the user's current collection
-                sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-                }
-            }
-        
-        if ($usercollection==0 || !is_numeric($usercollection))
-            {
-            # Create a collection for this user
-            # The collection name is translated when displayed!
-            $usercollection=create_collection($userref,"Default Collection",0,1); # Do not translate this string!
-            # set this to be the user's current collection
-            sql_query("update user set current_collection='$usercollection' where ref='$userref'");
-            }
+            $usercollection = get_default_user_collection(true);
+            }        
         }
     
     $USER_SELECTION_COLLECTION = get_user_selection_collection($userref);
@@ -203,7 +188,7 @@ function setup_user($userdata)
         {
         // Don't create a new collection on every anonymous page load, it will be created when an action is performed
         $USER_SELECTION_COLLECTION = create_collection($userref, "Selection Collection (for batch edit)", 0, 1);
-        update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION);
+        update_collection_type($USER_SELECTION_COLLECTION, COLLECTION_TYPE_SELECTION, false);
         }
 
     $newfilter = false;
@@ -276,7 +261,11 @@ function setup_user($userdata)
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
         eval($config_options);
+        debug_track_vars('end@setup_user', get_defined_vars());
         }
+
+    hook('after_setup_user');
+
     return true;
     }
     
@@ -292,25 +281,35 @@ function setup_user($userdata)
  * @param  string $approvalstate
  * @param  boolean $returnsql
  * @param  string $selectcolumns
+ * @param  boolean $selectcolumns    Denotes $find must be an exact username
  * @return array  Matching user records 
  */
-function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
+function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
     global $usergroup, $U_perm_strict;
 
     $sql = "";
-    $find=strtolower($find);
+    $find=escape_check(strtolower($find));
     if ($group != 0 && (string)(int)$group == (string)$group) {$sql = "where usergroup IN ($group)";}
-    if (strlen($find)>1)
-      {
-      if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-      $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
-      }
-    if (strlen($find)==1)
-      {
-      if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-      $sql .= "LOWER(username) like '$find%'";
-      }
+    if ($exact_username_match)
+        {
+        # $find is an exact username
+        if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+        $sql .= "LOWER(username)='$find'";
+        }
+    else    
+        {
+        if (strlen($find)>1)
+            {
+            if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+            $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
+            }
+            if (strlen($find)==1)
+            {
+            if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+            $sql .= "LOWER(username) like '$find%'";
+            }
+        }
     if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict)))
         {
         # Only return users in children groups to the user's group
@@ -407,6 +406,10 @@ function get_user_by_email($email)
  */
 function get_user_by_username($username)
     {
+    if(!is_string($username))
+        {
+        return false;
+        }
     return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
     }
 
@@ -497,7 +500,7 @@ function get_usergroup($ref)
  * Return the user group record matching $ref
  *
  * @param  integer $ref
- * @return array
+ * @return array|bool
  */
 function get_user($ref)
     {
@@ -530,7 +533,7 @@ function save_user($ref)
     if('' != getval('deleteme', ''))
         {
         delete_profile_image($ref);
-        sql_query("DELETE FROM user WHERE ref = '{$ref}'");
+        sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
 
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
@@ -593,7 +596,7 @@ function save_user($ref)
             # Save password.
             if($suggest == '')
                 {
-                $password = hash('sha256', md5('RS' . $username . $password));
+                $password = rs_password_hash("RS{$username}{$password}");
                 }
 
             $passsql = ",password='" . $password . "',password_last_change=now()";
@@ -715,21 +718,24 @@ function email_reset_link($email,$newuser=false)
         return false;
         }
 
-    $details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
-
+    $details = sql_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
+    sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        sleep($password_brute_force_delay);
         return false;
         }
-
     $details = $details[0];
+
+    // Don't send password reset links if we don't control the password
+    $blockreset = isset($details["origin"]) && trim($details["origin"]) != "";
 
     global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
 
-    $password_reset_url_key = create_password_reset_key($details['username']);        
-
-    $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
+    if(!$blockreset)
+        {
+        $password_reset_url_key = create_password_reset_key($details['username']);        
+        $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
+        }
         
     if($newuser)
         {
@@ -744,24 +750,42 @@ function email_reset_link($email,$newuser=false)
             }
 
         $templatevars['welcome']=i18n_get_translated($welcome);
-
-        $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-        send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+        $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+        if($blockreset)
+            {
+            $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            }
+        else
+            {
+            $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            }
         }
     else
         {
         $templatevars['username']=$details["username"];
         $message=$lang["username"] . ": " . $templatevars['username'];
-        $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-        send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+        if($blockreset)
+            {
+            $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
+            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            }
+        else
+            {
+            $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
+            send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            }
         }   
     
     return true;
     }
 
 /**
- * Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
- *
+ * Automatically creates a user account
+ *   The request can be auto approved if $auto_approve_accounts is true
+ *   Otherwise the approval is managed by admins via notification messages and/or emails
+ * 
  * @param  string $hash
  * @return boolean Success?
  */
@@ -801,7 +825,7 @@ function auto_create_user_account($hash="")
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
     $password=make_password();
-    $password = hash('sha256', md5('RS' . $newusername . $password));
+    $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
     $approve=false;
@@ -899,7 +923,7 @@ function auto_create_user_account($hash="")
         }
     else
         {
-        # Not auto approving.
+        # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
         
@@ -922,10 +946,13 @@ function auto_create_user_account($hash="")
          
         foreach($approval_notify_users as $approval_notify_user)
             {
+            // Is notification required
             get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
-            if(!$send_message){continue;} 
+            if(!$send_message) { continue; } // Skip this user 
             
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications); 
+            // Is an email required
+            get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications); 
+            get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications); 
             
             // get preferred language for approval_notify_user
             $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
@@ -933,27 +960,25 @@ function auto_create_user_account($hash="")
             // get preferred language for approval_notify_user
             $lang_pref = $language_strings_all[$message_language];
 
-            if($send_email && $approval_notify_user["email"]!="")
-                {
+            // Send email if required
+            if( ($approval_notify_user["email"]!="") && ($email_user_notifications || $email_and_user_notifications) ) {
                 $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
                 send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
                 }        
-            else
-                {
-                $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
-                message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
-          
-                }
+
+            // Send notification because it is required
+            $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
+            message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
             }
 
-             // set language back to cookie setting
-          $language = setLanguage();
-          $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
-          if(file_exists($langfile))
-              {
-              include $langfile;
-              }
-      
+        // set language back to cookie setting
+        $language = setLanguage();
+        $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        if(file_exists($langfile))
+            {
+            include $langfile;
+            }
+    
         }
 
     return true;
@@ -961,7 +986,8 @@ function auto_create_user_account($hash="")
 
 
 /**
-* Email user request to admins
+* Send user request to admins in form of notification messages and/or emails
+* Send email confirmation to requesting user
 * 
 * @return boolean
 */
@@ -993,14 +1019,13 @@ function email_user_request()
 
     foreach($approval_notify_users as $approval_notify_user)
         {
+        // Is notification required
         get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
+        if(!$send_message) { continue; } // Skip this user
 
-        if(false == $send_message)
-            {
-            continue;
-            }
-
-        get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
+        // Is an email required
+        get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications);
+        get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications);
 
         // get preferred language for approval_notify_user
         $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
@@ -1008,11 +1033,9 @@ function email_user_request()
         // get preferred language for approval_notify_user
         $lang_pref = $language_strings_all[$message_language];
 
-        if($send_email && '' != $approval_notify_user['email'])
-            {
-            // Build a message
+        // Send email if required
+        if( ($approval_notify_user['email'] != '') && ($email_user_notifications || $email_and_user_notifications) ) {
             $message = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-       
             send_mail(
                 $approval_notify_user['email'],
                 "{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",
@@ -1023,13 +1046,12 @@ function email_user_request()
                 '',
                 $name);
             }
-        else
-            {
-            $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
 
-            message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
-            }
+        // Send notification because it is required
+        $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
+        message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
         }
+
     // set language back to cookie setting
     $language = setLanguage();
     $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
@@ -1136,8 +1158,8 @@ function change_password($password)
     if ($message!==true) {return $message;}
 
     # Generate new password hash
-    $password_hash=hash('sha256', md5("RS" . $username . $password));
-    
+    $password_hash = rs_password_hash("RS{$username}{$password}");
+
     # Check password is not the same as the current
     if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
     
@@ -1294,20 +1316,23 @@ function get_user_log($user, $fetchrows=-1)
 
 
 /**
- * Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+ * Given an array or comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
  * Note that this function can't decode default groupnames containing special characters.
  *
- * @param  string $userlist
+ * @param  string|array $userlist
  * @return string The resolved list
  */
 function resolve_userlist_groups($userlist)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["group"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1377,11 +1402,14 @@ function resolve_userlist_groups($userlist)
 function resolve_userlist_groups_smart($userlist,$return_usernames=false)
     {
     global $lang;
-    $ulist=explode(",",$userlist);
-    $newlist="";
-    for ($n=0;$n<count($ulist);$n++)
+    if(!is_array($userlist))
         {
-        $u=trim($ulist[$n]);
+        $userlist=explode(",",$userlist);
+        }
+    $newlist="";
+    for ($n=0;$n<count($userlist);$n++)
+        {
+        $u=trim($userlist[$n]);
         if (strpos($u,$lang["groupsmart"] . ": ")===0)
             {
             # Group entry, resolve
@@ -1445,14 +1473,18 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
 /**
  * Remove smart lists from the provided user lists.
  *
- * @param  string $ulist    Comma separated list of user list names
+ * @param  string|array $ulist    Comma separated list of user list names
  * @return string   The updated list with smart groups removed.
  */
 function remove_groups_smart_from_userlist($ulist)
     {
     global $lang;
     
-    $ulist=explode(",",$ulist);
+    if(!is_array($ulist))
+        {
+        $ulist=explode(",",$ulist);
+        }
+    
     $new_ulist='';
     foreach($ulist as $option)
         {
@@ -1528,11 +1560,12 @@ function resolve_users($users)
  * @return boolean Valid?
  */
 function check_access_key($resources,$key)
-    {    
+    {
     if(!is_array($resources))
         {
         $resources = array($resources);
         }
+    array_filter($resources,'is_int_loose');
 
     foreach($resources as $resource)
         {
@@ -1545,14 +1578,14 @@ function check_access_key($resources,$key)
         }
     hook("external_share_view_as_internal_override");
 
-    global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short;
 
     if(
         $external_share_view_as_internal
         && (
             isset($_COOKIE["user"])
             && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
-            && !(isset($is_authenticated) && $is_authenticated)
+            && !is_authenticated()
         ))
             {
             return false;
@@ -1577,6 +1610,21 @@ function check_access_key($resources,$key)
 
     if(count($keys) == 0 || count(array_diff($resources,array_column($keys,"resource"))) > 0)
         {
+        // Check if this is a request for a resource uploaded to an upload_share
+        $upload_sharecol = upload_share_active();
+        if($upload_sharecol && check_access_key_collection($upload_sharecol,$key))
+            {
+            $uploadsession = get_rs_session_id();
+            $uploadcols = get_session_collections($uploadsession);
+            foreach($uploadcols as $uploadcol)
+                {
+                $sessioncol_resources = get_collection_resources($uploadcol);
+                if(!array_diff($sessioncol_resources,$resources))
+                    {                       
+                    return true;
+                    }
+                }
+            }
         return false;
         }
 
@@ -1611,9 +1659,9 @@ function check_access_key($resources,$key)
             }
         }
         
-    # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
-    $user=$keys[0]["user"];
-    $expires=$keys[0]["expires"];
+    $user       = $keys[0]["user"];
+    $group      = $keys[0]["usergroup"];
+    $expires    = $keys[0]["expires"];
             
     # Has this expired?
     if ($expires!="" && strtotime($expires)<time())
@@ -1627,6 +1675,8 @@ function check_access_key($resources,$key)
         <?php
         exit();
         }
+    # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
+    emulate_user($user, $group);
     
     global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
             $groupjoin="u.usergroup=g.ref";
@@ -1735,13 +1785,13 @@ function check_access_key($resources,$key)
 */
 function check_access_key_collection($collection, $key)
     {
-    if('' == $collection || !is_numeric($collection))
+    if(!is_int_loose($collection))
         {
         return false;
         }
 
     hook("external_share_view_as_internal_override");
-    global $external_share_view_as_internal;
+    global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
         // We want to authenticate the user so we can show the page as internal
@@ -1753,12 +1803,29 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
+    
+    $key_escaped = escape_check($key);
+    // Get key info 
+    $keyinfo = sql_query("
+                    SELECT user,
+                           usergroup,
+                           expires,
+                           upload,
+                           password_hash,
+                           collection
+                      FROM external_access_keys
+                     WHERE access_key = '{$key_escaped}'
+                       AND (expires IS NULL OR expires > now())");
+    
+    if(count($keyinfo) == 0)
+        {
+        return false;
+        }
     $collection_resources = get_collection_resources($collection["ref"]);
     $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
     $is_featured_collection_category = is_featured_collection_category($collection);
 
-    if(!$is_featured_collection_category && !$collection["has_resources"])
+    if(!$is_featured_collection_category && (!$collection["has_resources"] && !(bool)$keyinfo[0]["upload"]))
         {
         return false;
         }
@@ -1767,7 +1834,32 @@ function check_access_key_collection($collection, $key)
     // get_featured_collection_categ_sub_fcs() does the check internally
     $collections = (!$is_featured_collection_category ? array($collection["ref"]) : get_featured_collection_categ_sub_fcs($collection, array("access_control" => false)));
 
-    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '%s' AND access_key = '{$key}'";
+    if($keyinfo[0]["password_hash"] != "" && PHP_SAPI != "cli")
+        {
+        // A share password has been set. Check if user has a valid cookie set
+        $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
+        $check = check_share_password($key,"",$share_access_cookie);
+        if(!$check)
+            {
+            $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"return_url" => $baseurl . (isset($_SERVER["REQUEST_URI"]) ? urlencode(str_replace($baseurl_short,"/",$_SERVER["REQUEST_URI"])) : "/c=" . $collection["ref"] . "&k=" . $key)));
+            redirect($url);
+            exit();
+            }
+        }
+       
+    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '" . $collection["ref"] . "' AND access_key = '{$key}'";
+
+    if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
+        {
+        // External upload link -set session to use for creating temporary collection
+        $shareopts = array(
+            "collection"    => $collection["ref"],
+            "usergroup"     => $keyinfo[0]["usergroup"],
+            "user"          => $keyinfo[0]["user"],
+            );        
+        upload_share_setup($key,$shareopts);
+        return true;
+        }
 
     foreach($collections as $collection_ref)
         {
@@ -2051,15 +2143,16 @@ function create_password_reset_key($username)
  */
 function get_rs_session_id($create=false)
     {
-    global $baseurl, $anonymous_login, $usergroup;
-    // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
-    if(isset($_COOKIE["rs_session"]))
+    global $baseurl, $anonymous_login, $usergroup, $rs_session;
+    // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users or users accessing external upload links 
+    $existing_session = isset($rs_session) ? $rs_session : (isset($_COOKIE["rs_session"]) ? $_COOKIE["rs_session"] : "");
+    if($existing_session != "")
         {
         if (!headers_sent())
             {
-            rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
+            rs_setcookie("rs_session",$existing_session, 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
             }
-        return($_COOKIE["rs_session"]);
+        return($existing_session);
         }
     if ($create) 
         {
@@ -2071,26 +2164,29 @@ function get_rs_session_id($create=false)
             rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
             }
 
-        if(is_array($anonymous_login))
+        if(!upload_share_active())
             {
-            foreach($anonymous_login as $key => $val)
+            if(is_array($anonymous_login))
                 {
-                if($baseurl == $key)
+                foreach($anonymous_login as $key => $val)
                     {
-                    $anonymous_login = $val;
+                    if($baseurl == $key)
+                        {
+                        $anonymous_login = $val;
+                        }
                     }
                 }
-            }
 
-        $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
+            $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
 
-        if (count($valid) >= 1)
-            {
-            // setup_user hasn't been called yet, we just need the usergroup
-            $usergroup = $valid[0]["usergroup"];
+            if (count($valid) >= 1)
+                {
+                // setup_user hasn't been called yet, we just need the usergroup
+                $usergroup = $valid[0]["usergroup"];
 
-            // Log this in the daily stats
-            daily_stat("User session", $valid[0]["ref"]);
+                // Log this in the daily stats
+                daily_stat("User session", $valid[0]["ref"]);
+                }
             }
 
         return $rs_session;
@@ -2124,7 +2220,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
     if(is_array($email_notify_usergroups) && count($email_notify_usergroups)>0)
         {
         // If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
-        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
+        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email, lang from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
         return $notification_users_cache[$userpermissionindex];
         }
     
@@ -2191,22 +2287,37 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
  */ 
 function verify_antispam($spamcode="",$usercode="",$spamtime=0)
     {
-    global $scramble_key,$password_brute_force_delay;
-    if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
-    if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
+    global $scramble_key, $password_brute_force_delay;
+
+    $data_valid = ($usercode !== '' || $spamcode !== '' || (int) $spamtime > 0);
+    $honeypot_intact = (isset($_REQUEST['antispam_user_code']) && $_REQUEST['antispam_user_code'] === '');
+    $antispam_code_valid = ($spamcode === hash("SHA256", strtoupper($usercode) . $scramble_key . $spamtime));
+    $previous_hash = in_array(
+        md5($usercode . $spamtime),
+        sql_array("SELECT unique_hash AS `value` FROM user WHERE unique_hash IS NOT null", '')
+    );
+
+    if($data_valid && $honeypot_intact && $antispam_code_valid && !$previous_hash)
         {
-        debug("antispam failed: invalid code entered. IP: " . get_ip());
-        sleep($password_brute_force_delay);
-        return false;
+        return true;
         }
-    $prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
-    if(in_array(md5($usercode . $spamtime),$prevhashes))
+
+    if(!$antispam_code_valid)
         {
-        debug("antispam failed: code has previously been used  IP: " . get_ip());
-        sleep($password_brute_force_delay);
-        return false;
+        $dbgr = 'invalid code entered';
         }
-    return true;
+    else if($previous_hash)
+        {
+        $dbgr = 'code has previously been used';
+        }
+    else
+        {
+        $dbgr = 'unknown';
+        }
+    debug(sprintf('antispam failed: Reason: %s. IP: %s', $dbgr, get_ip()));
+
+    sleep($password_brute_force_delay);
+    return false;
     }
 
 /**
@@ -2422,8 +2533,8 @@ function checkperm_user_edit($user)
 */
 function internal_share_access()
     {
-    global $k, $external_share_view_as_internal, $is_authenticated;
-    return ($k != "" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+    global $k, $external_share_view_as_internal;
+    return ($k != "" && $external_share_view_as_internal && is_authenticated());
     }
 
 /**
@@ -2539,7 +2650,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         delete_profile_image($user_ref);
 
         # Create profile image filename .
-        $profile_image_name = md5($scramble_key . $user_ref . time()) . "." .$extension;
+        $profile_image_name = $user_ref . "_" . md5($scramble_key . $user_ref . time()) . "." .$extension;
         $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
         
         # Create profile image - cropped to square from centre.
@@ -2547,17 +2658,21 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         $output = run_command($command);
 
         # Store reference to user image.
-        sql_query("update user set profile_image = '$profile_image_name' where ref = '$user_ref'");
+        sql_query("update user set profile_image = '$profile_image_name' where ref = '" . escape_check($user_ref) . "'");
 
         # Remove temp file.
         if (file_exists($profile_image_path))
             {
             unlink($image_path);
             }
+        else
+            {
+            return false;
+            }
         }
 
     # Update user to set user.profile
-    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '$user_ref'");
+    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '" . escape_check($user_ref) . "'");
 
     return true;
     }
@@ -2573,7 +2688,7 @@ function delete_profile_image($user_ref)
     {
     global $storagedir;
 
-    $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+    $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
     
     if ($profile_image_name != "")
         {
@@ -2584,7 +2699,7 @@ function delete_profile_image($user_ref)
             unlink($path_to_file);
             }
     
-        sql_query("update user set profile_image = '' where ref = '$user_ref'");
+        sql_query("update user set profile_image = '' where ref = '" . escape_check($user_ref) . "'");
         }
     }
     
@@ -2598,14 +2713,14 @@ function delete_profile_image($user_ref)
  */
 function get_profile_image($user_ref = "", $by_image = "")
     {
-    global $storagedir, $baseurl;
+    global $storagedir, $storageurl, $baseurl;
 
     if (is_dir($storagedir.'/user_profiles'))
         {
         # Only check the db if the profile image name has not been provided.
         if ($by_image == "" && $user_ref != "")
             {
-            $profile_image_name = sql_value("select profile_image value from user where ref = '$user_ref'","");
+            $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
             }
         else
             {
@@ -2614,7 +2729,7 @@ function get_profile_image($user_ref = "", $by_image = "")
 
         if ($profile_image_name != "")
             {
-            return $baseurl . '/filestore/user_profiles' . '/' . $profile_image_name;
+            return $storageurl . '/user_profiles/' . $profile_image_name;
             }
         else
             {
@@ -2633,7 +2748,7 @@ function get_profile_image($user_ref = "", $by_image = "")
  */
 function get_profile_text($user_ref)
     {
-    return sql_value("select profile_text value from user where ref = '$user_ref'","");
+    return sql_value("select profile_text value from user where ref = '" . escape_check($user_ref) . "'","");
     }
 
 
@@ -2650,28 +2765,210 @@ function get_languages_notify_users(array $languages = array())
     {
     global $applicationname,$defaultlanguage;
     
-    $language_strings_all = array();
+    $language_strings_all   = array();
+    $lang_file_en           = dirname(__FILE__)."/../languages/en.php";
+    $lang_file_default      = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+
+     // add en and default language lang array values - always need en as some lang arrays do not contain all strings
+    include $lang_file_en;
+    $language_strings_all["en"] = $lang; 
+
+    include $lang_file_default;
+    $language_strings_all[$defaultlanguage] = $lang; 
        
-        // load language files into array for each language
+    // remove en and default language from array of languages to use
+    $langs2remove = array_unique(array("en", $defaultlanguage));
+    foreach($langs2remove as $lang2remove)
+        {
+        if (in_array($lang2remove, $languages))
+            {
+            unset($languages[$lang2remove]);
+            }
+        }
+
+    // load lang array values into array for each language
     foreach($languages as $language)
         {
         $lang = array();
 
-        // load default values
-        $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
-        include $defaultlangfile;
+        // include en and default lang array values
+        include $lang_file_en;
+        include $lang_file_default;
 
-        // load preferred language, overwriting default values where preferred language strings exist
-        $message_language = $language != "" ? $language : $defaultlanguage;
-        $messagelangfile = dirname(__FILE__)."/../languages/" . safe_file_name($message_language) . ".php";
-        include $messagelangfile;
-        $language_strings_all[$message_language] = $lang; // append $lang array 
+        $lang_file = dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+
+        if (file_exists($lang_file))
+            {
+            include $lang_file;
+            }
+        
+        $language_strings_all[$language] = $lang; // append $lang array 
         }     
-
-    // load default language
-    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
-    include $defaultlangfile;
-    $language_strings_all[] = $lang; // append $lang array 
 
     return $language_strings_all;
     }
+
+/**
+ * Generate upload URL - alters based on $upload_then_edit setting and external uploads
+ *
+ * @param  string $collection - optional collection
+ * @param  string $accesskey - used for external users
+ * @return string
+ */
+function get_upload_url($collection="",$k="")
+    {
+    global $upload_then_edit, $userref, $baseurl;
+    if ($upload_then_edit || $k != "" || !isset($userref))
+        {
+        $url = generateURL($baseurl . "/pages/upload_batch.php",array("k" => $k,"collection_add"=>$collection));
+        }
+    elseif(isset($userref))
+        {
+        $url = generateURL($baseurl . "/pages/edit.php", array("ref" => "-" . $userref,"collection_add"=>$collection));
+        }
+    return $url;
+    }
+
+/**
+ * Used to emulate system users when accessing system anonymously or via external shares
+ * Sets global array such as $userpermissions, $username and sets any relevant config options
+ *
+ * @param  int $user            User ID
+ * @param  int $usergroup       usergroup ID  
+ * @return void
+ */
+function emulate_user($user, $usergroup="")
+    {
+    debug_function_call("emulate_user",func_get_args());
+    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes, $userresourcedefaults;
+    global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
+    global $username,$baseurl, $anonymous_login, $upload_link_workflow_state;
+
+
+    if(!is_numeric($user) || ($usergroup != "" && !is_numeric($usergroup)))
+        {
+        return false;
+        }
+
+    $groupjoin="u.usergroup=g.ref";
+    $permissionselect="g.permissions";
+
+    if ($usergroup!="")
+        {
+        # Select the user group from the access key instead.
+        $groupjoin="g.ref='" . escape_check($usergroup) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
+        $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+        }
+    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id, g.derestrict_filter_id, g.resource_defaults from user u join usergroup g on $groupjoin where u.ref='$user'");
+    if (count($userinfo)>0)
+        {
+        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+        $userpermissions=explode(",",$userinfo[0]["permissions"]);
+
+        if(upload_share_active())
+            {
+            // Disable some permissions for added security
+            $addperms = array('D','b','p');
+            $removeperms = array('v','q','i','A','h','a','t','r','m','u','exup');
+
+            // add access to the designated workflow state
+            $addperms[] = "e" . $upload_link_workflow_state;
+
+            $userpermissions = array_merge($userpermissions, $addperms);
+            $userpermissions = array_diff($userpermissions, $removeperms);
+            $userpermissions = array_values($userpermissions);
+            $userref = $user;
+            }
+
+        if(isset($userinfo[0]["resource_defaults"]))
+            {
+            $userresourcedefaults = $userinfo[0]["resource_defaults"];
+            }
+        
+        if ($search_filter_nodes)
+            {
+            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
+                }
+            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userinfo[0]["search_filter_id"];
+                }
+            }
+        else
+            {
+            // Old style search filter that hasn't been migrated
+            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            }
+
+        if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
+        $userrequestmode=0; # Always use 'email' request mode for external users
+        
+        # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
+        if ($emulate_plugins_set!==true)
+            {
+            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            foreach($enabled_plugins as $plugin)
+                {
+                $s=explode(",",$plugin['enabled_groups']);
+                if (in_array($usergroup,$s))
+                    {
+                    include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+                    register_plugin($plugin['name']);
+                    $plugins[]=$plugin['name'];
+                    }
+                }
+            for ($n=count($plugins)-1;$n>=0;$n--)
+                {
+                register_plugin_language($plugins[$n]);
+                }
+            $emulate_plugins_set=true;                  
+            }
+        
+        if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
+            {
+            # Apply config override options
+            $config_options=trim($userinfo[0]["config_options"]);
+
+            // We need to get all globals as we don't know what may be referenced here
+            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
+            eval($config_options);
+            }
+        }
+    
+    # Special case for anonymous logins.
+    # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
+    if (isset($anonymous_login))
+        {
+        if(is_array($anonymous_login))
+            {
+            foreach($anonymous_login as $key => $val)
+                {
+                if($baseurl==$key){$anonymous_login=$val;}
+                }
+            }
+        $username=$anonymous_login;     
+        }
+    }
+
+function is_authenticated()
+    {
+    global $is_authenticated;
+    return isset($is_authenticated) && $is_authenticated;
+    }
+
+
+/**
+ * Determine whether the user is setup as an e-commerce user
+ *
+ * @return boolean
+ */
+function is_ecommerce_user()
+    {
+    global $userrequestmode;
+    return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
+    }
+

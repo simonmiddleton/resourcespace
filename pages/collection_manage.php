@@ -6,10 +6,11 @@ if (checkperm("b"))
     {exit("Permission denied");}
 
 $k=getvalescaped("k","");
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
 $col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
 $sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
+if (!in_array(mb_strtoupper($sort), array('ASC','DESC'))) {$sort = "ASC";}
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
@@ -53,54 +54,72 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     redirect($redirect_url);
     }
 
-$delete=getvalescaped("delete","");
-if ($delete != '' && enforcePostRequest(getval("ajax", false)))
-	{
-	// Check user is actually allowed to delete the collection first
-	$collection_data = get_collection($delete);
-	if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
-		{
-		header('HTTP/1.1 401 Unauthorized');
-		die('Permission denied!');
-		}
-
-	# Delete collection
-	delete_collection($collection_data);
-
-	# Get count of collections
-	$c=get_user_collections($userref);
-	
-	# If the user has just deleted the collection they were using, select a new collection
-	if ($usercollection==$delete && count($c)>0)
-		{
-		# Select the first collection in the dropdown box.
-		$usercollection=$c[0]["ref"];
-		set_user_collection($userref,$usercollection);
-		}
-
-	# User has deleted their last collection? add a new one.
-	if (count($c)==0)
-		{
-		# No collections to select. Create them a new collection.
-		$usercollection=create_collection ($userref,"Default Collection");
-		set_user_collection($userref,$usercollection);
-		}
-
-	if(getvalescaped('ajax', '') !== '' && getvalescaped('dropdown_actions', '') !== '')
-		{
-		$response = array(
-			'success'                => 'Yes',
-			'redirect_to_collection' => $usercollection,
-			'k'                      => getvalescaped('k', ''),
-			'nc'                     => time()
-		);
-		
-		echo json_encode($response);
-		exit();
-		}
-
-	refresh_collection_frame($usercollection);
+$delete_collections = array();
+if (getvalescaped("delete","") != "")
+    {
+	$delete_cols = explode(',', getvalescaped("delete",""));
+	foreach($delete_cols as $col_ref)
+	    {
+	    $delete_collections[] = $col_ref;	
+	    }
 	}
+
+foreach ($delete_collections as $delete)
+    {
+    if ($delete != '' && enforcePostRequest(getval("ajax", false)))
+	    {
+	    // Check user is actually allowed to delete the collection first
+	    $collection_data = get_collection($delete);
+	    if(!can_delete_collection($collection_data, $userref, $k))
+	    	{
+	    	header('HTTP/1.1 401 Unauthorized');
+		    die('Permission denied!');
+		    }
+
+	    # Delete collection
+	    delete_collection($collection_data);
+
+	    # Get count of collections
+	    $c=get_user_collections($userref);
+	
+	    # If the user has just deleted the collection they were using, select a new collection
+	    if ($usercollection==$delete && count($c)>0)
+		    {
+	    	# Select the first collection in the dropdown box.
+	    	$usercollection=$c[0]["ref"];
+	    	set_user_collection($userref,$usercollection);
+	    	}
+
+	    # User has deleted their last collection? add a new one.
+	    if (count($c)==0)
+	    	{
+		    # No collections to select. Create them a new collection.
+		    $usercollection=create_collection ($userref,"Default Collection");
+	    	set_user_collection($userref,$usercollection);
+	    	}
+        
+		# To update the page only when all collections have been deleted, remove from the array those already processed.
+        $id_col_deleted = array_search($delete,$delete_collections);
+	    if ($id_col_deleted !== false)
+	        {
+			unset($delete_collections[$id_col_deleted]);
+	    	}
+
+	    if(getvalescaped('ajax', '') !== '' && getvalescaped('dropdown_actions', '') !== '' && count($delete_collections) == 0)
+	        {
+	    	$response = array(
+		    	'success'                => 'Yes',
+		    	'redirect_to_collection' => $usercollection,
+		    	'k'                      => getvalescaped('k', ''),
+		    	'nc'                     => time()
+		    );
+		
+		    echo json_encode($response);
+		    exit();
+		    }
+        }
+	}
+refresh_collection_frame($usercollection);
 
 $removeall=getvalescaped("removeall","");
 if ($removeall!="" && enforcePostRequest(false)){
@@ -287,20 +306,204 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
   	<?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo htmlspecialchars($list_display_array[$n]) ?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=<?php echo urlencode($list_display_array[$n])?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($list_display_array[$n]) ?></a><?php } ?>&nbsp;|
   	<?php } ?>
   	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo $lang["all"]?></a><?php } ?>
-  	</div> </div><?php pager(false); ?><div class="clearerleft"></div></div><?php	
+  	</div> </div><?php pager(false,true,array("confirm_page_change" => "return promptBeforePaging();")); ?><div class="clearerleft"></div></div><?php	
 ?>
 
+<script>
+
+function check_delete_all(select_all)
+    {
+	var check_value = select_all.checked;
+	var all_checkboxes = document.getElementsByClassName("check_delete");
+    for (var i = 0; i < all_checkboxes.length; i++) 
+	    {
+	    all_checkboxes[i].checked = check_value;
+        }
+	show_delete();
+	}
+
+function show_delete()
+    {
+	var display_opt = "hidden";
+	var all_checkboxes = document.getElementsByClassName("check_delete");
+    for (var i = 0; i < all_checkboxes.length; i++) 
+	    {
+	    if (all_checkboxes[i].checked == true)
+		    {
+			display_opt = "visible";
+			break;
+			}
+        }
+	document.getElementById("collection_delete").style.visibility = display_opt;
+    }
+
+function delete_collections()
+    {
+	var all_checkboxes = document.getElementsByClassName("check_delete");
+	var to_delete = "";
+    for (var i = 0; i < all_checkboxes.length; i++) 
+	    {
+	    if (all_checkboxes[i].checked == true)
+		    {
+			if (to_delete != "")
+			    {
+                to_delete += ",";
+			    }
+		    to_delete += all_checkboxes[i].value;
+		    }
+		}
+	if (to_delete != "")
+	    {
+		if (confirm('<?php echo $lang["delete_multiple_collections"] ?>'))
+		    {
+			var post_data = 
+			    {
+                ajax: true,
+                dropdown_actions: true,
+                delete: to_delete,
+                <?php echo generateAjaxToken("delete_collection"); ?>
+                };
+			jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, function(response) 
+			    {
+                if(response.success === 'Yes')
+                    {
+                    CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + response.redirect_to_collection + '&k=' + response.k + '&nc=' + response.nc);
+                    CentralSpaceLoad(document.URL);
+                    }
+                }, 'json');    
+            }
+			
+		}
+	}
+
+    jQuery(document).ready(function()
+        {
+        var collection_starting=null; // Regular click collection marks the start of a range
+        var collection_ending=null; // Shifted click collection marks the end of a range
+        var primary_action = null;
+
+        // Process the clicked box
+        jQuery(".check_delete").click(function(e)
+            {
+            var collection_selections=[];
+            var input = e.target;
+            var box_collection = jQuery(input).prop("value");
+            var box_checked = jQuery(input).prop("checked");
+            if (!e.shiftKey) {
+                // Regular click; note the action required if there is a range to be processed
+                primary_action=box_checked;
+                collection_starting=box_collection;
+                collection_ending=null;
+            } else {
+                if (!collection_starting) {
+                    styledalert('<?php echo $lang["range_no_start_header"]; ?>', '<?php echo $lang["range_no_start"]; ?>');
+                    if(jQuery(input).prop("checked")) {
+                        this.removeAttribute("checked");
+                        } 
+                    else  {
+                        this.setAttribute("checked", "checked");
+                        }
+                    return false;
+                }
+                collection_ending=box_collection; // Shifted click collection
+            }
+
+            // Process all clicked boxes
+            jQuery(".check_delete").each(function()
+                {
+                // Fetch the event and store it in the selection array
+                var toggle_event = jQuery.Event("click", { target: this });
+                var toggle_input = toggle_event.target;
+                var box_collection = jQuery(toggle_input).prop("value");
+                var box_checked = jQuery(toggle_input).prop("checked");
+                collection_selections.push({box_collection: box_collection, box_checked: box_checked});
+                });
+
+            // Process collections within a clicked range
+            var res_list=[];
+            if (collection_starting && collection_ending) {
+                console.log("PROCESS " + collection_starting + " TO " + collection_ending);
+                var found_start = false;
+                var found_end = false;
+                for (i = 0; i < collection_selections.length; i++) {
+                    if (collection_selections[i].box_collection == collection_starting) {
+                        // Range starting point is being processed; skip because already processed by single shot; move on
+                        found_start = true;
+                    }
+                    else if (collection_selections[i].box_collection == collection_ending) {
+                        // Range ending point is being processed; process it and move on (because it may be before the startin point)
+                        found_end = true;
+                        res_list.push(collection_selections[i].box_collection); // collection to process
+                    }
+                    else {
+                        // Element is not at the starting point or ending point; check whether its within the range
+                        if ( !found_start && !found_end ) {
+                            // Range is not yet being processed; skip
+                        }
+                        else if (found_start && found_end) {
+                            // Both starting and ending points have been processed; quit loop
+                            break;
+                        }
+                        else {
+                            // Process the element within the range
+                            res_list.push(collection_selections[i].box_collection); // collection to process
+                        }
+                    }
+                }
+                
+				collection_selections.forEach(function (collection)
+                    {
+                    if(res_list.includes(collection.box_collection))
+						{
+                        jQuery("#check_" + collection.box_collection).prop('checked', true);
+						}
+                    });
+
+                // Reset processing points
+                collection_starting=null;
+                collection_ending=null;
+                primary_action = null;
+                }
+
+            else if (collection_starting) {
+                console.log("PROCESS " + collection_starting + " ONLY");
+                }
+
+            else if (collection_ending) {
+                console.log("ERROR - ENDING ONLY");
+                }
+
+            console.log("collection_LIST\n" + JSON.stringify(res_list));
+
+            });
+        });
+
+// Add confirmation message to advise selected collections will be cleared on paging.
+
+function promptBeforePaging()
+    {
+
+	if (document.getElementById("collection_delete").style.visibility == "visible")
+	    {
+		$proceed = confirm('<?php echo $lang["page_collections_message"] ?>');
+	    return $proceed;
+		}
+    }
+
+</script>
+
+<a id="collection_delete" style="visibility:hidden; margin-left:10px" title = "<?php echo $lang["delete_all_selected"] ?>" onClick="delete_collections()"><i aria-hidden="true" class="fa fa-fw fa-trash"></i></a>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_manage.php">
 <?php generateFormToken("collectionform"); ?>
 <input type=hidden name="delete" id="collectiondelete" value="">
 <input type=hidden name="remove" id="collectionremove" value="">
 <input type=hidden name="add" id="collectionadd" value="">
-
-
+<input type=hidden name="collection_delete_multiple" id="collection_delete_multiple" value="">
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
+<td> <input type="checkbox" onclick='check_delete_all(this)'> </td>
 <td class="name"><?php if ($col_order_by=="name") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=name&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["collectionname"]?></a><?php if ($col_order_by=="name") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
 <td class="fullname"><?php if ($col_order_by=="fullname") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=fullname&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["owner"]?></a><?php if ($col_order_by=="fullname") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
@@ -326,6 +529,10 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     $colusername=$collections[$n]['fullname'];
     $count_result = $collections[$n]["count"];
 	?><tr <?php hook("collectionlistrowstyle");?>>
+	<td> <?php if (can_delete_collection($collections[$n], $userref, $k)) 
+	               { 
+				   echo '<input type="checkbox" class="check_delete" id="check_' . $collections[$n]['ref'] . '" value="' . $collections[$n]['ref'] . '" onClick="show_delete()">'; 
+				   } ?> </td>
 	<td class="name"><div class="ListTitle">
 		<a <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
 	<td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
@@ -411,7 +618,7 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 ?>
 </div>
 
-<?php pager(false); ?><div class="clearerleft"></div></div>
+<?php pager(false,true,array("confirm_page_change" => "return promptBeforePaging();")); ?><div class="clearerleft"></div></div>
 
 </div>
 

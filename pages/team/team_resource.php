@@ -23,22 +23,14 @@ include "../../include/header.php";
 	<?php if (checkperm("c")): // Check if user can create resources ?>
 
         <?php if($upload_methods['single_upload']):// Test if Add Single Resource is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-file"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;noupload=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresource"]?></a></li>
+			<li><i aria-hidden="true" class="fa fa-fw fa-file"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;noupload=true&amp;recordonly=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresource"]?></a></li>
 		<?php endif // Test if Add Single Resource is allowed. ?>
 
 		<?php if($upload_methods['in_browser_upload']): // Test if Add Resource Batch - In Browser is allowed. 
-			$url = ($upload_then_edit) ? "upload_plupload.php" : "edit.php?ref=-$userref&amp;uploader=plupload";
+			$url = ($upload_then_edit) ? "upload_batch.php" : "edit.php?ref=-$userref&amp;uploader=batch";
 		?>
             <li><i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/<?php echo $url?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchbrowser"]?></a></li>
         <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
-
-		<?php if($upload_methods['fetch_from_ftp']): // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-exchange"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&uploader=ftp" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchftp"]?></a></li>
-		<?php endif // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
-
-		<?php if($upload_methods['fetch_from_local_folder']): // Test if Add Resource Batch - Fetch from local upload folder is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;local=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchlocalfolder"]?></a></li>
-		<?php endif // Test if Add Resource Batch - Fetch from local upload folder is allowed. ?>
 
 		<?php 
 		hook("addteamresourcetool");

@@ -19,20 +19,29 @@ function HookFormat_chooserViewReplacedownloadoptions()
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
 
-    $inputFormat = $resource['file_extension'];
+	// Disable for e-commerce
+	if (is_ecommerce_user()) { return false; }
 
-    if ($resource["has_image"] != 1 || !$download_multisize || $save_as
-            || !supportsInputFormat($inputFormat))
+    $inputFormat = $resource['file_extension'];
+    $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
+
+    if ($resource["has_image"] != 1
+        || !$download_multisize
+        || $save_as
+        || !supportsInputFormat($inputFormat)
+        || !file_exists($origpath)
+        )
         return false;
 
     $defaultFormat = getDefaultOutputFormat($inputFormat);
     $tableHeadersDrawn = false;
+    $block_original_size=false;
 
     ?><table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions"><?php
     hook("formatchooserbeforedownloads");
     $sizes = get_image_sizes($ref, false, $resource['file_extension'], false);
     $downloadCount = 0;
-    $originalSize = -1;
+    $originalSize = array();
     # Show original file download
 	for ($n = 0; $n < count($sizes); $n++)
         {
@@ -92,6 +101,17 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		add_download_column($ref, $sizes[$n], $downloadthissize);
 		}
 
+    if(!isset($originalSize) || $originalSize ===array())
+        {
+        $originalSize = array();
+        $fileinfo = get_original_imagesize($ref,$origpath,$resource['file_extension']);
+        $originalSize['file_size'] = $fileinfo[0];
+        $originalSize['width']     = $fileinfo[1];
+        $originalSize['height']    = $fileinfo[2];
+        $originalSize['id']='';
+        $block_original_size=true;
+        }
+
 	# Add drop down for all other sizes
 	$closestSize = 0;
 	if ($downloadCount > 0)
@@ -143,7 +163,10 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
 			$name = $size['name'];
 			if ($size['width'] == $closestSize)
+                {
+                if($block_original_size){continue;}
 				$name = $lang['format_chooser_original_size'];
+                }
             ?><option value="<?php echo $n ?>"><?php echo $name ?></option><?php
             }
             
@@ -319,7 +342,18 @@ if ($alt_access)
 		?>
 		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && isset($alternative_file_previews_mouseover) && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_width=jQuery('#previewimage').width();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').width(orig_width);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
 		<td class="DownloadFileName AlternativeFile">
-		<?php if ($alt_thm!="") { ?><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a><?php } ?>
+		<?php if ($alt_thm!="") { 
+        $qs = [
+            'ref' => $ref,
+            'alternative' => $altfiles[$n]["ref"],
+            'k' => $k,
+            'search' => $search,
+            'offset' => $offset,
+            'order_by' => $order_by,
+            'sort' => $sort,
+            'archive' => $archive,
+        ];    
+        ?><a href="<?php echo generateURL($baseurl_short . 'pages/preview.php', $qs) . '&' . hook('previewextraurl'); ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a><?php } ?>
 		<h2 class="breakall"><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
 		<p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
 		</td>
@@ -330,24 +364,53 @@ if ($alt_access)
 		
 		<?php if ($access==0){?>
 		<td class="DownloadButton">
-		<?php 		
+		<?php
+        $download_alternative_url_qs = [
+            'ref' => $ref,
+            'ext' => $altfiles[$n]['file_extension'],
+            'k' => $k,
+            'alternative' => $altfiles[$n]['ref'],
+        ];
+
 		if ($terms_download || $save_as)
 			{
 			if(!hook("downloadbuttonreplace"))
 				{
-				?><a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) { ?>href="<?php echo $baseurl_short?>pages/terms.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search) ?>&url=<?php echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&alternative=" . $altfiles[$n]["ref"] . "&search=" . urlencode($search) . "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by=" . urlencode($order_by))?>"<?php } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a><?php 
+                $qs = [
+                    'ref' => $ref,
+                    'k' => $k,
+                    'search' => $search,
+                    'url' => generateURL(
+                        'pages/download_progress.php',
+                        $download_alternative_url_qs,
+                        [
+                            'search' => $search,
+                            'offset' => $offset,
+                            'archive' => $archive,
+                            'sort' => $sort,
+                            'order_by' => $order_by,
+                        ]
+                    ),
+                ];
+				?><a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) { ?>href="<?php echo generateURL($baseurl_short . 'pages/terms.php', $qs); ?>"<?php } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a><?php 
 				}
 			}
 		elseif ($download_usage)
 		// download usage form displayed - load into main window
-			{ ?>
-		<a href="<?php echo $baseurl_short?>pages/download_usage.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>"><?php echo $lang["action-download"]?></a>
-		<?php
+			{
+            ?>
+            <a href="<?php echo generateURL($baseurl_short . 'pages/download_usage.php', $download_alternative_url_qs); ?>"><?php echo $lang["action-download"]?></a>
+            <?php
 			}
-		else { ?>
-			<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $altfiles[$n]["file_extension"]?>&k=<?php echo urlencode($k)?>&alternative=<?php echo $altfiles[$n]["ref"]?>')"><?php echo $lang["action-download"]?></a>
-		<?php } ?></td></td>
-		<?php } 
+        else
+            {
+            ?>
+			<a href="#" onclick="directDownload('<?php echo generateURL($baseurl_short . 'pages/download_progress.php', $download_alternative_url_qs); ?>');"><?php echo $lang["action-download"]?></a>
+            <?php
+            }
+            ?></td></td>
+            <?php
+            } 
 		else if (checkperm("q"))
 		{
 			?><td class="DownloadButton"><a href="<?php echo generateURL($baseurl."/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-request"]?></td></td><?php

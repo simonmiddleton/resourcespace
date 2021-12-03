@@ -99,44 +99,71 @@ if ($exiftool_fullpath!=false)
     if ($extension=="indd" && !isset($newfile))
         {
         $indd_thumbs = extract_indd_pages ($file);
+        $filesize_indd=filesize_unlimited($file); 
         $pagescommand="";
         if (is_array($indd_thumbs))
             {
-            
             $n=0;
-            foreach ($indd_thumbs as $indd_page){
-                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
-                $pagescommand.=" " . $target_pg;
-                base64_to_jpeg( str_replace("base64:","",$indd_page), $target_pg);
-                
+            foreach ($indd_thumbs as $indd_page)
+                {
                 $n++;
-            }
-        } 
-        
-        
-        // process jpgs as a pdf so the existing pdf paging code can be used.   
-        if (is_array($indd_thumbs)){
-            $file=get_resource_path($ref,true,"",false,"pdf");      
-            $jpg2pdfcommand = $convert_fullpath . " " . $pagescommand . " " . escapeshellarg($file);
+                # Set up target file and create a jpg for each preview embedded in indd file.
+                $size="";if ($n>1) {$size="scr";} # Use screen size for other previews.
+                $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative); 
+                if (file_exists($target)) {unlink($target);}   
 
-            $output=run_command($jpg2pdfcommand);
+                base64_to_jpeg( str_replace("base64:","",$indd_page), $target);
 
-            $n=0;
-            foreach ($indd_thumbs as $indd_page){
-                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
-                if (file_exists($target_pg)){   
-                    unlink($target_pg);
+                if (file_exists($target) && $n==1)
+                    {
+                    # Set the first preview to be the cover preview image.
+                    $newfile=$target;
+                    }
+                else
+                    {
+                    # Watermark creation for additional pages.
+                    global $watermark;
+                    $preview_quality=get_preview_quality($size);
+                    $scr_size=sql_query("select width,height from preview_size where id='scr'");
+                    if(empty($scr_size))
+                        {
+                        # since this is not an application required size we can't assume there's a record for it
+                        $scr_size=sql_query("select width,height from preview_size where id='pre'");
+                        }
+                    $scr_width=$scr_size[0]['width'];
+                    $scr_height=$scr_size[0]['height'];            
+                    if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative)))
+                        {
+                        if (isset($watermark) && $alternative==-1)
+                            {
+                            $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
+                            if (file_exists($path)) {unlink($path);}
+                            $watermarkreal=dirname(__FILE__). "/../" . $watermark;
+                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                            $output=run_command($command2);
+                            }
+                        }
+                    }
                 }
-                $n++;
-            }
-            
-            $extension="pdf";
-            $dUseCIEColor=false;
-            $n=0;   
-            }
+
+                # Set (new resource) / update (recreate previews) page count for multi page preview if more than one preview present.
+                $ref_escaped = escape_check($ref);
+                $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = '$ref_escaped'";
+                $query = sql_value($sql, 0);
+        
+                if($query == 0)
+                    {
+                    sql_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES ('{$ref_escaped}', '{$n}', '{$filesize_indd}')");
+                    }
+                else
+                    {
+                    sql_query("UPDATE resource_dimensions SET page_count = '{$n}' WHERE resource = '{$ref_escaped}'");
+                    } 
+
+                $n=0;
+            } 
         }
     }   
-    
     
 /* ----------------------------------------
     Try PhotoshopThumbnail
@@ -342,6 +369,19 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     $cmd=($config_windows ? escapeshellarg($cmd_uno_python_path) . ' ' : '') . escapeshellarg($unocommand) . " --format=pdf " . escapeshellarg($file);
     $output=run_command($cmd);
 
+    # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
+    global $extracted_text_field;
+    $extract_pdf_text = false;
+    if (isset($extracted_text_field))
+        {
+        $extract_pdf_text = true;
+        $current_extracted_text = sql_value("select value from resource_data where resource='$ref' and resource_type_field='$extracted_text_field'","");
+        if (!empty($current_extracted_text))
+            {
+            $extract_pdf_text = false;    
+            }
+        }
+
     $path_parts=pathinfo($file);
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
@@ -361,21 +401,23 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
         // includes preview_preprocessing.php.
-        global $offline_job_queue, $offline_job_in_progress;
-
-        if($offline_job_queue && !$offline_job_in_progress)
+        if ($extract_pdf_text)
             {
-            $extract_text_job_data = array(
-                'ref'       => $ref,
-                'extension' => $extension,
-                'path'      => $file,
-            );
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $ref,
+                    'extension' => $extension,
+                    'path'      => $file,
+                );
 
-            job_queue_add('extract_text', $extract_text_job_data);
-            }
-        else
-            {
-            extract_text($ref, $extension, $pdffile);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($ref, $extension, $pdffile);
+                }
             }
         }
     else if (file_exists($pdffile))
@@ -395,21 +437,23 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
 
         // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
         // includes preview_preprocessing.php.
-        global $offline_job_queue, $offline_job_in_progress;
-
-        if($offline_job_queue && !$offline_job_in_progress)
+        if ($extract_pdf_text)
             {
-            $extract_text_job_data = array(
-                'ref'       => $ref,
-                'extension' => $extension,
-                'path'      => $alt_path,
-            );
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $ref,
+                    'extension' => $extension,
+                    'path'      => $alt_path,
+                );
 
-            job_queue_add('extract_text', $extract_text_job_data);
-            }
-        else
-            {
-            extract_text($ref, $extension, $alt_path);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($ref, $extension, $alt_path);
+                }
             }
         }
     }
@@ -716,7 +760,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 
     if(!hook('previewpskipthumb', '', array($file)))
         {
-        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 -ss ' . $snapshottime . ' ' . escapeshellarg($target);
+        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -ss ' . $snapshottime . ' -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 ' . escapeshellarg($target);
         $output = run_command($cmd);
 
         debug("FFMPEG-VIDEO: Get snapshot: {$cmd}");
@@ -924,8 +968,8 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
                     else{
                         $pdf_max_dim=$pdfinfo[1];
                         }
+                    $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
                 }
-                $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
             }
         }
         
@@ -962,7 +1006,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         # resize directly to the screen size (no other sizes needed)
          if (file_exists($target)&& $n!=1)
             {
-            $command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $preview_quality -resize ".$scr_width."x".$scr_height . " ".escapeshellarg($target);
+            $command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " ".escapeshellarg($target);
             $output=run_command($command2); $pagecount=$n;
 
             # Add a watermarked image too?
@@ -974,7 +1018,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
                 if (file_exists($path)) {unlink($path);}
                     $watermarkreal=dirname(__FILE__). "/../" . $watermark;
                     
-                $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $preview_quality -resize ".$scr_width."x".$scr_height. " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
                     $output=run_command($command2);
                 }
             }
@@ -1037,10 +1081,11 @@ $non_image_types = config_merge_non_image_types();
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))
     {
-    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension, $GLOBALS['non_image_types']))
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types()))
         {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
-
+        // Don't create tiles for these
+        $GLOBALS['preview_tiles']=false;
         if(copy($newfile, $file_used_for_previewonly))
             {
             $previewonly = true;

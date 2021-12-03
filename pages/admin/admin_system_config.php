@@ -107,6 +107,14 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('.CollectionPanelShell').css('background-color',value);jQuery('#CollectionDiv select').css('background-color',value); jQuery('.ui-layout-resizer').css('background',value);"
 );
+$page_def[] = config_add_colouroverride_input(
+    'button_colour_override',
+    $lang["setup-buttoncolouroverride"],
+    '',
+    null,
+    true,
+    "jQuery('button:not(.search-icon),input[type=submit],input[type=button],.RecordPanel .RecordDownloadSpace .DownloadDBlend a,.UploadButton a').css('background-color',value);"
+);
 $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, '', true);
@@ -220,6 +228,7 @@ $page_def[] = config_add_html('</div>');
 // Featured Collection section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_featured_collections'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
 // Workflow section
@@ -427,7 +436,20 @@ $GLOBALS = $system_wide_config_options;
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['systemconfig']; ?></h1>
+    <?php
+	$links_trail = array(
+	    array(
+	        'title' => $lang["systemsetup"],
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+	    ),
+	    array(
+	        'title' => $lang["systemconfig"],
+	    )
+	);
+
+	renderBreadcrumbs($links_trail);
+	?>
+
     <p><?php echo $lang['systemconfig_description']; ?></p>
     <div class="CollapsibleSections">
     <?php

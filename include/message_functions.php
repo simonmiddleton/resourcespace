@@ -7,19 +7,51 @@
  * @param  array $messages  Array that will be populated by messages. Passed by reference
  * @param  int $user        User ID
  * @param  bool $get_all    Retrieve all messages? Setting to TRUE will include all seen and expired messages
- * @param  bool $sort_desc  Sort by message ID in descending order? False = Ascending
+ * @param  bool $sort       Sort by message ID in ascending or descending order
+ * @param  string $order_by Order of messages returned
  * @return bool             Flag to indicate if any messages exist
  */
-function message_get(&$messages,$user,$get_all=false,$sort_desc=false)
+function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref")
 	{
-	$messages=sql_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url " .
+	switch ($order_by)
+        {
+        case "ref":
+            $sql_order_by = "user_message.ref";
+            break;
+        case "created":
+            $sql_order_by = "message.created";
+            break;
+        case "from":
+            $sql_order_by = "owner";
+            break;
+        case "fullname":
+            $sql_order_by = "user.fullname";
+            break;
+        case "message":
+            $sql_order_by = "message.message";
+            break;
+        case "expires":
+            $sql_order_by = "message.expires";
+            break;
+        case "seen":
+            $sql_order_by = "user_message.seen";
+            break;  
+        }
+
+    // Check sort value is valid
+    if (!in_array(strtolower($sort), array("asc", "desc")))
+    {
+    $sort = "ASC";
+    }
+
+    $messages=ps_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
 		"FROM `user_message`
 		INNER JOIN `message` ON user_message.message=message.ref " .
 		"LEFT OUTER JOIN `user` ON message.owner=user.ref " .
-		"WHERE user_message.user='{$user}'" .
+		"WHERE user_message.user = ?" .
 		($get_all ? " " : " AND message.expires > NOW()") .
 		($get_all ? " " : " AND user_message.seen='0'") .
-		" ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC"));
+		" ORDER BY " . $sql_order_by . " " . $sort, array("i",$user));
 	return(count($messages) > 0);
 	}
 
@@ -40,40 +72,37 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 	{
 	global $userref,$applicationname,$lang, $baseurl, $baseurl_short;
 	
-	if(!is_int($notification_type))
+	if(!is_int_loose($notification_type))
 		{
 		$notification_type=intval($notification_type); // make sure this in an integer
 		}
 	
 	$orig_text=$text;
-	$text = escape_check($text);
-	$url = escape_check($url);
 
 	if (!is_array($users))
 		{
 		$users=array($users);
 		}
 
-	if(is_null($owner))
+    if(checkperm('E'))
+        {
+        $validusers = get_users(0,"","u.username",true,1);
+        $validuserrefs = array_column($validusers,"ref");
+        $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
+        }
+
+	if(is_null($owner) || (isset($userref) && $userref != $owner))
 		{
+        // Can't send messages from another user
 		$owner=$userref;
 		}
 
-	if (is_null($owner))
-		{
-		$owner_escaped = 'NULL';
-		}
-	else
-		{
-		$owner_escaped = "'" . escape_check($owner) . "'";
-		}
-
-	sql_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`) VALUES ({$owner_escaped}, NOW(), DATE_ADD(NOW(), INTERVAL {$ttl_seconds} SECOND), '{$text}', '{$url}', '{$related_activity}', '{$related_ref}' )");
+	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
 	$message_ref = sql_insert_id();
 
 	foreach($users as $user)
 		{
-		sql_query("INSERT INTO `user_message` (`user`, `message`) VALUES ($user,$message_ref)");
+		ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
 		
 		// send an email if the user has notifications and emails setting and the message hasn't already been sent via email
 		if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
@@ -81,10 +110,10 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 			get_config_option($user,'email_and_user_notifications', $notifications_always_email);
 			if($notifications_always_email)
 				{
-				$email_to=sql_value("select email value from user where ref={$user}","");
+				$email_to=ps_value("select email value from user where ref = ?", array("i",$user), "");
 				if($email_to!=='')
 					{
-                    if(strpos($url,$baseurl) === false)
+                    if(substr($url,0,1) == "/")
                         {
                         // If a relative link is provided make sure we add the full URL when emailing
                         $url = $baseurl . $url;
@@ -95,7 +124,6 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 				}
 			}
 		}
-
 	}
 
 /**
@@ -106,12 +134,9 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
  */
 function message_remove($message)
 	{
-    $message = escape_check($message);
-
-	sql_query("DELETE FROM user_message WHERE message='{$message}'");
-	sql_query("DELETE FROM message WHERE ref='{$message}'");	
+	ps_query("DELETE FROM user_message WHERE message = ?", array("i",$message));
+	ps_query("DELETE FROM message WHERE ref = ?", array("i",$message));	
 	}
-
 
 /**
  * Mark a message as seen
@@ -122,10 +147,7 @@ function message_remove($message)
  */
 function message_seen($message,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
 	{
-    $seen_type = escape_check($seen_type);
-    $message   = escape_check($message);
-
-	sql_query("UPDATE `user_message` SET seen=seen | {$seen_type} WHERE `ref`='{$message}'");
+	ps_query("UPDATE `user_message` SET seen = seen | ? WHERE `ref` = ?", array("i",$seen_type,"i",$message));
 	}
     
 /**
@@ -136,9 +158,7 @@ function message_seen($message,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
  */
 function message_unseen($message)
 	{
-    $message = escape_check($message);
-
-	sql_query("UPDATE `user_message` SET seen='0' WHERE `ref`='{$message}'");
+	ps_query("UPDATE `user_message` SET seen = '0' WHERE `ref` = ?", array("i",$message));
 	}
 
 /**
@@ -168,11 +188,61 @@ function message_seen_all($user,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN
  */
 function message_purge()
 	{
-	sql_query("DELETE FROM user_message WHERE message IN (SELECT ref FROM message where expires < NOW())");
-	sql_query("DELETE FROM message where expires < NOW()");
+	ps_query("DELETE FROM user_message WHERE message IN (SELECT ref FROM message where expires < NOW())", array());
+	ps_query("DELETE FROM message where expires < NOW()", array());
 	}
 
-
+/**
+ * Delete all selected messages
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_deleteselusrmsg($messages)
+    {
+    global $userref;
+ 
+    $parameters = array("i",(int)$userref);
+    $messages = json_decode($messages, true);
+    $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
+ 
+    ps_query("DELETE FROM user_message WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    }
+ 
+/**
+ * Mark all selected messages as seen
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_selectedseen($messages)
+    {
+    global $userref;
+ 
+    $parameters = array("i",(int)$userref);
+    $messages = json_decode($messages, true);
+    $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
+ 
+    ps_query("UPDATE user_message SET seen = '1' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    }
+ 
+/**
+ * Mark all selected messages as unseen
+ *
+ * @param $messages List of message refs in JSON list format
+ * @return void
+ */
+function message_selectedunseen($messages)
+    {
+    global $userref;
+ 
+    $parameters = array("i",(int)$userref);
+    $messages = json_decode($messages, true);
+    $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
+ 
+    ps_query("UPDATE user_message SET seen = '0' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    }
+ 
 /**
  * Send a summary of all unread notifications as an email
  * from the standard cron_copy_hitcount
@@ -222,8 +292,15 @@ function message_send_unread_emails()
         }
         
 	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
-	$unreadmessages=sql_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref=um.user JOIN message m ON m.ref=um.message WHERE um.seen=0 AND u.ref IN ('" . implode("','",$digestusers) . "') AND u.email<>'' AND (m.created>'" . $lastrun . "'" . (count($sendall) > 0 ? " OR u.ref IN ('" . implode("','",$sendall) . "')" : "") . ") ORDER BY m.created DESC");
-	
+    # Build array of sql query parameters
+    $parameters = ps_param_fill($digestusers,"i");
+    $parameters = array_merge($parameters, array("s",$lastrun));
+    if (count($sendall) > 0)
+        {
+        $parameters = array_merge($parameters, ps_param_fill($sendall,"i"));
+        }
+    $unreadmessages=ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0 AND u.ref IN (" . ps_param_insert(count($digestusers)) . ") AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
+
     $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
 	foreach($digestusers as $digestuser)
 		{
@@ -276,7 +353,13 @@ function message_send_unread_emails()
 				// Message applies to this user
 				$messageflag=true;
 				$usermail = $unreadmessage["email"];
-				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
+                $msgurl = $unreadmessage["url"];
+                if(substr($msgurl,0,1) == "/")
+                    {
+                    // If a relative link is provided make sure we add the full URL when emailing
+                    $msgurl = $baseurl . $msgurl;
+                    }
+				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $msgurl . "'>" . $lang["link"] . "</a></td></tr>";
 				$messagerefs[]=$unreadmessage["messageref"];
 				}
 			}
@@ -362,7 +445,10 @@ function message_send_unread_emails()
 		get_config_option($digestuser,'user_pref_daily_digest_mark_read', $mark_read);
 		if($mark_read && count($messagerefs) > 0)
 			{
-			sql_query("UPDATE user_message SET seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' WHERE message IN ('" . implode("','",$messagerefs) . "') and user = '" . $digestuser . "'");
+            $parameters = array("i",MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL);
+            $parameters = array_merge($parameters,ps_param_fill($messagerefs,"i"));
+            $parameters = array_merge($parameters, array("i",$digestuser));
+            ps_query("UPDATE user_message SET seen = ? WHERE message IN (" . ps_param_insert(count($messagerefs)) . ") and user = ?", $parameters);
 			}
 		}
 
@@ -382,29 +468,17 @@ function message_remove_related($remote_activity=0,$remote_refs=array())
 	{
 	if($remote_activity==0 || $remote_refs==0 || (is_array($remote_refs) && count($remote_refs)==0) ){return false;}
 	if(!is_array($remote_refs)){$remote_refs=array($remote_refs);}
-    $relatedmessages = sql_array("select ref value from message where related_activity='$remote_activity' and related_ref in (" . implode(',',$remote_refs) . ");","");
+    $parameters = array("i", $remote_activity);
+    $parameters = array_merge($parameters, ps_param_fill($remote_refs,"i"));
+
+    $relatedmessages = ps_array("select ref value from message where related_activity = ? and related_ref in (" . ps_param_insert(count($remote_refs)) . ");", $parameters, "");
     if(count($relatedmessages)>0)
-        {            
-        sql_query("DELETE FROM message WHERE ref in (" . implode(',',$relatedmessages) . ");");
-        sql_query("DELETE FROM user_message WHERE message in (" . implode(',',$relatedmessages) . ");");
+        {
+        $parameters = ps_param_fill($relatedmessages,"i");
+        ps_query("DELETE FROM message WHERE ref in (" . ps_param_insert(count($relatedmessages)) . ");", $parameters);
+        ps_query("DELETE FROM user_message WHERE message in (" . ps_param_insert(count($relatedmessages)) . ");", $parameters);
         }
 	}
-
-/**
- * Remove an instance of a message from user_message table 
- *
- * @param  int $usermessage Message ID
- * @return void
- */
-function message_user_remove($usermessage)
-    {
-    global $userref;
-
-    $userref     = escape_check($userref);
-    $usermessage = escape_check($usermessage);
-
-    sql_query("DELETE FROM user_message WHERE user = {$userref} AND ref = '{$usermessage}'");
-    }
 
 /**
 * Send a system notification or email to the system administrators according to preference
@@ -426,7 +500,7 @@ function system_notification($message, $url="")
         get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);
         if($send_message==false)
             {
-            $continue;
+            continue;
             }
         get_config_option($notify_user['ref'],'email_user_notifications', $send_email);
         if($send_email && $notify_user["email"]!="")
@@ -448,6 +522,121 @@ function system_notification($message, $url="")
 
     if (count($admin_notify_users)>0)
         {
-        message_add($admin_notify_users,escape_check($message),$url, 0);
+        message_add($admin_notify_users, $message, $url, 0);
         }
+    }
+
+/**
+* Get all message refs for a given user
+* 
+* @param string  $user      User ID
+* 
+* @return void
+*/ 
+function message_getrefs($user)
+    {
+    $user_messages = ps_query("SELECT ref FROM user_message WHERE user = ?", array("i",$user));
+ 
+    $js_array = array_values($user_messages);
+ 
+    echo json_encode($js_array);
+    }
+
+/**
+ * Get all messages between the given user IDs
+ *  
+ * @param  int        $users    User ID
+ * @param  array      $msgusers Array of other user IDs
+ * 
+ * @param  array    $filteropts Array of extra options to filter and sort messages returned
+ *                              "msgfind"    - (string) Text to find
+ *                              "sort_desc"  - (bool) Sort by message ID in descending order? False = Ascending
+ *                              "msglimit"   - (int) Maximum number of messages to return
+ * 
+ * @return array   Array of messages
+ */
+function message_get_conversation(int $user, $msgusers = array(),$filteropts = array())
+	{
+    array_map("is_int_loose",$msgusers);
+    if(count($msgusers) == 0 || !is_int_loose($user))
+        {
+        return array();
+        }
+    $validfilterops = array(
+        "msgfind",
+        "sort_desc",
+        "limit",
+    );
+    foreach($validfilterops as $validfilterop)
+        {
+        if(isset($filteropts[$validfilterop]))
+            {
+            $$validfilterop = $filteropts[$validfilterop];
+            }
+        else
+            {
+            $$validfilterop = NULL;
+            }
+        }
+
+    # Build array of sql query parameters
+    $parameters = ps_param_fill($msgusers,"i");
+    $parameters = array_merge($parameters, array("i",$user), array("i",$user));
+    $parameters = array_merge($parameters, ps_param_fill($msgusers,"i"));
+    if ($msgfind != "" )
+        {
+        $parameters = array_merge($parameters, array("s", $msgfind));
+        }
+    if ($limit != "")
+        {
+        $parameters = array_merge($parameters, array("i", (int)$limit));
+        }
+    $msgquery = "SELECT message.created,
+                        message.owner,
+                        message.message,
+                        message.url,
+                        message.expires,
+                        message.type,
+                        user_message.user,
+                        user_message.ref,
+                        user_message.seen
+                   FROM message
+              LEFT JOIN user_message ON user_message.message=message.ref
+                  WHERE ((owner IN(" . ps_param_insert(count($msgusers)) . ") AND user_message.user = ?)
+                     OR (owner = ? AND user_message.user IN(" . ps_param_insert(count($msgusers)) . ")))"
+           .  ($msgfind != "" ? (" AND message.message LIKE ?") : " " )
+           . " AND type & '" . MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE . "'"
+		   . " ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC")
+           . ($limit != "" ? " LIMIT ?" : "");
+	
+    $messages = ps_query($msgquery, $parameters);
+    
+    return $messages;
+	}
+
+/**
+ * Send a user to user(s) message
+ *
+ * @param  array $users     Array of user IDs or usernames/groupnames from user select
+ * @param  string $text     Message text
+ * @return bool|string      True if sent ok or error message
+ */
+function send_user_message($users,$text)
+    {
+    global $userref, $lang;
+    $users=explode(",",resolve_userlist_groups($users));
+    for($n=0;$n<count($users);$n++)
+        {
+        if(!is_int_loose($users[$n]))
+            {
+            $uref = get_user_by_username(trim($users[$n]));
+            if (!$uref)
+                {
+                return $lang["error_invalid_user"];
+                }
+            $users[$n] = $uref; 
+            }
+        }
+    message_add($users,$text,"",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE + MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,30*24*60*60);
+    return true;
     }

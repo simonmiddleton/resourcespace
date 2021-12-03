@@ -1,7 +1,12 @@
 <?php
 include '../../include/db.php';
-include '../../include/authenticate.php';
-include_once '../../include/node_functions.php';
+
+$k = getvalescaped('k','');
+$upload_collection = getval('upload_share_active',''); 
+if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
+    {
+    include "../../include/authenticate.php";
+    }
 
 // Initialise
 $ajax           = ('' != getval('ajax', '') ? true : false);

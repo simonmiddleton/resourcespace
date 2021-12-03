@@ -1,9 +1,11 @@
 Resource types, such as photo / video / case study. The choice of resource type will determine the metadata fields a resource has.
 ref,int(11),
-name,varchar(200),
-allowed_extensions,TEXT,
-order_by,int(11),
+name,varchar(200),Resource type name.
+allowed_extensions,TEXT,List of allowed extensions for this resource type.
+order_by,int(11),Order defined by the adminstrators.
 config_options,text,Supports separate configuration options for resources depending on resource type.
-tab_name,varchar(50),
-push_metadata,int(11),
+tab_name,varchar(50),Setting a tab name means that related resources of this type will be displayed in that tab along with the metadata.
+push_metadata,int(11),If set, the metadata for this resource will be displayed on the resource view page for any related resources.
 inherit_global_fields,tinyint(1),Should resources of this type inherit the global fields?
+colour,smallint,Colour used for map marker when using map view search results. 
+icon,tinytext,Font Awesome class name for icon displayed in thumbnail search results. 

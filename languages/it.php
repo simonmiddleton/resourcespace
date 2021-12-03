@@ -91,13 +91,7 @@ $lang["donotmoveaway"]="IMPORTANTE: Non chiudere questa pagina finche' l'upload 
 $lang["pleaseselectfiles"]="Selezionare uno o più file da uploadare.";
 $lang["upload_failed_for_path"]="Upload fallito per %path%"; # %path% will be replaced, e.g. Upload failed for abc123.jpg
 $lang["uploadcomplete"]="Upload completato";
-$lang["specifyftpserver"]="Specifica un server ftp remoto";
-$lang["ftpserver"]="FTP Server";
-$lang["ftpusername"]="FTP Username";
-$lang["ftppassword"]="FTP Password";
-$lang["ftpfolder"]="FTP Folder";
 $lang["connect"]="Connetti";
-$lang["uselocalupload"]="Oppure: Usa una cartella locale invece di un ftp remoto";
 
 # User contributions
 $lang["contributenewresource"]="Upload di una nuova risorsa";
@@ -474,7 +468,6 @@ $lang["warningexpiredtext"]="Attenzione! Questa risorsa ha superato la data di s
 $lang["warningexpiredok"]="&gt; Attiva scaricamento della risorsa";
 $lang["userrequestcomment"]="Commento";
 $lang["addresourcebatchbrowser"]="Aggiungi risorse batch - Nel Browser (raccomandato)";
-$lang["addresourcebatchftp"]="Aggiungi risorse batch - FTP";
 $lang["replaceresourcebatch"]="Sostituisci risorse batch";
 $lang["editmode"]="Modalita' modifica";
 $lang["replacealltext"]="Sostituisci tutto il testo";
@@ -514,7 +507,7 @@ $lang["collectionlog"]="log collezione";
 $lang["externalselectresourceaccess"]="Se vuoi mandare una mail a utenti esterni, seleziona il livello di accesso che desideri correlare alla risorsa.";
 $lang["externalselectresourceexpires"]="Se vuoi mandare una mail a utenti esterni, seleziona una data di scadenza dell'url.";
 $lang["requestfeedback"]="Richiedi un feedback <br />(ti verrà mandata una mail di risposta)";
-$lang["emailfromuser"]="Manda questa mail da...Se non selezioni l'opzione, la mail verrà mandata dall'indirizzo del sistema noreply@stcitaly.montala.com ";
+$lang["emailfromuser"]="Invia l'e-mail da ";
 
 $lang["never"]="Mai";
 $lang["noattachedusers"]="nessun utente allegato";

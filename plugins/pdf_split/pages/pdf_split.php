@@ -1,7 +1,7 @@
 <?php
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; 
-include '../../../include/image_processing.php';
+include_once '../../../include/image_processing.php';
 
 $ref=getvalescaped("ref","");
 
@@ -62,12 +62,12 @@ if (getval("method","")!="" && enforcePostRequest(false))
 				create_previews($ref,false,"pdf",false,false,$aref);
 				}
 			# Update size.
-			sql_query("update resource_alt_files set file_size='" . filesize_unlimited($copy_path) . "' where ref='$aref'");
+			ps_query("UPDATE resource_alt_files SET file_size = ? WHERE ref = ?", ['i', filesize_unlimited($copy_path), 'i', $aref]);
 			}
 		else
 			{
 			# Update the file extension
-			sql_query("update resource set file_extension='pdf' where ref='$copy'");
+			ps_query("UPDATE resource SET file_extension ='pdf' WHERE ref = ?", ['i', $copy]);
 			
 			# Create preview for the page.
 			create_previews($copy,false,"pdf");
@@ -160,18 +160,18 @@ function UpdateRanges()
 
 <form method="post" action="pdf_split.php">
 <?php generateFormToken("pdf_split"); ?>
-<input type="hidden" name="ref" value="<?php echo $ref ?>">
-<input type="hidden" name="ranges" id="ranges" value="<?php echo getval("ranges","1:$page") ?>">
+<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref); ?>">
+<input type="hidden" name="ranges" id="ranges" value="<?php echo htmlspecialchars(getval("ranges","1:$page")); ?>">
 <div id="ranges_html">
 </div>
-<p>&gt;&nbsp;<a href="#" onclick="AddRange();return false;"><?php echo $lang["addrange"] ?></a></p>
+<p>&gt;&nbsp;<a href="#" onclick="AddRange();return false;"><?php echo htmlspecialchars($lang["addrange"]); ?></a></p>
 <br />
 <p>
-<input type="radio" name="method" checked value="alternativefile"><?php echo $lang["splitpdf_createnewalternativefile"] ?>
+<input type="radio" name="method" checked value="alternativefile"><?php echo htmlspecialchars($lang["splitpdf_createnewalternativefile"]); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="radio" name="method" value="resource"><?php echo $lang["splitpdf_createnewresource"] ?>
+<input type="radio" name="method" value="resource"><?php echo htmlspecialchars($lang["splitpdf_createnewresource"]); ?>
 </p>
-<p><input type="submit" value="<?php echo $lang["splitpdf"] ?>"></p>
+<p><input type="submit" value="<?php echo htmlspecialchars($lang["splitpdf"]); ?>"></p>
 </form>
 
 

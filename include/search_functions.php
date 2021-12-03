@@ -649,31 +649,6 @@ function compile_search_actions($top_actions)
             $o++;
             }
 
-        /*// Wasn't able to see this working even in the old code
-        // so I left it here for reference. Just uncomment it and it should work
-        global $smartsearch;
-        if($allow_smart_collections && substr($search, 0, 11) == '!collection' && (is_array($smartsearch[0]) && !empty($smartsearch[0])))
-            {
-            $smartsearch = $smartsearch[0];
-
-            $extra_tag_attributes = sprintf('
-                    data-url="%spages/search.php?search=%s&restypes=%s&archive=%s&starsearch=%s&daylimit=%s"
-                ',
-                $baseurl_short,
-                urlencode($smartsearch['search']),
-                urlencode($smartsearch['restypes']),
-                urlencode($smartsearch['archive']),
-                urlencode($smartsearch['starsearch']),
-                urlencode($daylimit)
-            );
-
-            $options[$o]['value']='do_saved_search';
-            $options[$o]['label']=$lang['dosavedsearch'];
-            $options[$o]['data_attr']=array();
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-            $o++;
-            }*/
-
         if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
@@ -728,20 +703,15 @@ function compile_search_actions($top_actions)
     // If all resources are editable, display an edit all link
     if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
-        $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
-
-        if (is_array($editable_resources) && $resources_count == count($editable_resources))
-            {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
-            $options[$o]['value']='editsearchresults';
-            $options[$o]['label']=$lang['edit_all_resources'];
-            $options[$o]['data_attr']=$data_attribute;
-            $options[$o]['category'] = ACTIONGROUP_EDIT;
-            $options[$o]['order_by']  = 130;
-            $o++;
-            }
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
+        $options[$o]['value']='editsearchresults';
+        $options[$o]['label']=$lang['edit_all_resources'];
+        $options[$o]['data_attr']=$data_attribute;
+        $options[$o]['category'] = ACTIONGROUP_EDIT;
+        $options[$o]['order_by']  = 130;
+        $o++;
         }
-        
+
     if($top_actions && ($k == '' || $internal_share_access))
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
@@ -757,6 +727,19 @@ function compile_search_actions($top_actions)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
+        $o++;
+        }
+
+    // Run report on search results
+    if($top_actions && checkperm('t'))
+        {
+        $backurl_to_search = generateURL("{$baseurl_short}pages/search.php", get_search_params(), $urlparams);
+
+        $options[$o]['value'] = 'run_report_on_search_results';
+        $options[$o]['label'] = $lang['run_report_on_search_results'];
+        $options[$o]['data_attr']['url'] = generateURL("{$baseurl_short}pages/team/team_report.php", ['backurl' => $backurl_to_search]);
+        $options[$o]['category'] = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 280;
         $o++;
         }
 
@@ -854,6 +837,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     # append resource type restrictions based on 'T' permission 
     # look for all 'T' permissions and append to the SQL filter.
     $rtfilter=array();
+    
     for ($n=0;$n<count($userpermissions);$n++)
         {
         if (substr($userpermissions[$n],0,1)=="T")
@@ -1106,6 +1090,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             }
 
+        if (count($blockedrestypes) > 0)
+            {
+            $blockrestypesor="";
+            if ($edit_access_for_contributor)
+                {
+                $blockrestypesor .= " created_by='" . $userref . "'";
+                }
+            if ($editable_filter != "")
+                {
+                $editable_filter .= " AND ";
+                }
+            $editable_filter.="(resource_type NOT IN ('" . implode("','",$blockedrestypes) . "')" . (($blockrestypesor != "") ? " OR " . $blockrestypesor : "") . ")";
+            }
 
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
@@ -1129,7 +1126,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
     {
     # Process special searches. These return early with results.
-    global $FIXED_LIST_FIELD_TYPES, $lang;
+    global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1143,57 +1140,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $direction=((strpos($order_by,"DESC")===false)?"ASC":"DESC");
             $order_by="r2.ref " . $direction;
             }
-       
+        
+        # add date field, if access allowed, for use in $order_by
+        if(metadata_field_view_access($date_field) && strpos($select, "field" . $date_field) === false )
+            {
+            $select .= ", field{$date_field} ";
+            }
         
         # Extract the number of records to produce
         $last=explode(",",$search);
         $last=str_replace("!last","",$last[0]);
 
-        
-        if (!is_int($last)) {$last=1000;$search="!last1000";} # 'Last' must be an integer. SQL injection filter.
+        # !Last must be followed by an integer. SQL injection filter.
+        if (ctype_digit($last))
+            {
+            $last=(int)$last;
+            } 
+            else
+            {
+            $last=1000;
+            $search="!last1000";
+            }
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
         $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
-    
-     # Collections containing resources
-     # NOTE - this returns collections not resources! Not intended for use in user searches.
-     # This is used when the $collection_search_includes_resource_metadata option is enabled and searches collections based on the contents of the collections.
-    if (substr($search,0,19)=="!contentscollection")
-        {
-        $flags=substr($search,19,((strpos($search," ")!==false)?strpos($search," "):strlen($search)) -19); # Extract User/Public/Theme flags from the beginning of the search parameter.
-        
-        if ($flags=="") {$flags="TP";} # Sensible default
-
-        # Add collections based on the provided collection type flags.
-        $collection_filter="(";
-        if (strpos($flags,"T")!==false) # Include themes
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_FEATURED);
-            }
-    
-     if (strpos($flags,"P")!==false) # Include public collections
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            $collection_filter .= sprintf(" c.`type` = %s", COLLECTION_TYPE_PUBLIC);
-            }
-        
-        if (strpos($flags,"U")!==false) # Include the user's own collections
-            {
-            if ($collection_filter!="(") {$collection_filter.=" OR ";}
-            global $userref;
-            $collection_filter .= sprintf(" (c.`type` = %s AND c.user = '%s')", COLLECTION_TYPE_STANDARD, escape_check($userref));
-            }
-        $collection_filter.=")";
-        
-        # Formulate SQL
-        $sql="SELECT DISTINCT c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count FROM collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref AND cr.collection=c.ref WHERE $sql_filter AND $collection_filter GROUP BY c.ref ORDER BY $order_by ";
-        return $returnsql ? $sql : sql_query($sql);
-        }
-    
+   
     # View Resources With No Downloads
     if (substr($search,0,12)=="!nodownloads") 
         {
@@ -1255,7 +1229,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
         # Special case if a key has been provided.
-        if(getval('k', '') != '')
+        if($k != '')
             {
             $sql_filter = 'r.ref > 0';
             }
@@ -1267,19 +1241,47 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = (int)$collection[0];
 
         # Check access
-        if(in_array($collection, array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref")) || featured_collection_check_access_control($collection))
+        $validcollections = [];
+        if(upload_share_active() !== false)
+            {
+            $validcollections = get_session_collections(get_rs_session_id(), $userref);
+            }
+        else
+            {
+            $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+            $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
+            # include collections of requested resources
+            $request_collections = array();
+            if (checkperm("R"))
+                {
+                include_once('request_functions.php');
+                $request_collections = array_column(get_requests(), 'collection');
+                }
+            # include collections of research resources
+            $research_collections = array();
+            if (checkperm("r"))
+                {
+                include_once('research_functions.php');
+                $research_collections = array_column(get_research_requests(), 'collection');
+                }
+            $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
+            }
+
+        // Attach the negated user reference special collection
+        $validcollections[] = (0 - $userref);
+            
+        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
             {
             if(!collection_readable($collection))
                 {
                 return array();
                 }
             }
-        else
+        elseif($k == "" || upload_share_active() !== false)
             {
-            exit($lang["error-permissiondenied"]);
+            return [];
             }
         
-
         # Smart collections update
         global $allow_smart_collections, $smart_collections_async;
         if($allow_smart_collections)
@@ -1742,6 +1744,13 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
         $resultcount=count($results);
         for($n=0;$n<$resultcount;$n++)
             {
+            // if using fetchrows some results may just be == 0 - remove from results array
+            if ($results[$n]==0) 
+                {
+                unset($results[$n]); 
+                continue;
+                }
+
             global $access;
             $access=get_resource_access($results[$n]);
             $use_watermark=check_use_watermark();
@@ -1767,7 +1776,6 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
 function get_upload_here_selected_nodes($search, array $nodes)
     {
     $upload_here_nodes = resolve_nodes_from_string($search);
-
     if(empty($upload_here_nodes))
         {
         return $nodes;
@@ -1814,6 +1822,10 @@ function get_filter_sql($filterid)
     global $userref, $access_override, $custom_access_overrides_search_filter, $open_access_for_contributor;
 
     $filter         = get_filter($filterid);
+    if (!$filter)
+        {
+        return false;
+        }
     $filterrules    = get_filter_rules($filterid);
 
     $modfilterrules=hook("modifysearchfilterrules");
@@ -2119,50 +2131,57 @@ function add_partial_index($keywords)
 
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
     {
+    global $noadd;
     # do not highlight if the field is not indexed, so it is clearer where results came from.   
-    if ($keywords_index!=1){return $text;}
+    if ($keywords_index!=1)
+        {
+        return $text;
+        }
 
     # Highlight searched keywords in $text
     # Optional - depends on $highlightkeywords being set in config.php.
-    global $highlightkeywords;
+    global $highlightkeywords, $stemming;
     # Situations where we do not need to do this.
     if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
-
 
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
         # a search is a small array so I don't think there is much to lose by processing it.
         $hlkeycache=array();
-        $wildcards_found=false;
         $s=split_keywords($search);
         for ($n=0;$n<count($s);$n++)
+            {
+            if (strpos($s[$n],":")!==false)
                 {
-                if (strpos($s[$n],":")!==false) {
-                        $c=explode(":",$s[$n]);
-                        # only add field specific keywords
-                        if($field_name!="" && $c[0]==$field_name){
-                                $hlkeycache[]=$c[1];            
-                        }   
+                $c=explode(":",$s[$n]);
+                // Only add field specific keywords
+                if($field_name!="" && $c[0]==$field_name)
+                    {
+                    $hlkeycache[]=$c[1];
+                    }
                 }
-                # else add general keywords
-                else {
-                        $keyword=$s[$n];
-            
-                        global $stemming;
-                        if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
-                            {
-                            $keyword=GetStem($keyword);
-                            }
-                        
-                        if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
-                        $hlkeycache[]=$keyword;
-                }   
+            else
+                {
+                // Add general keywords
+                $keyword=$s[$n];
+                if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
+                    {
+                    continue;
+                    }
+                if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
+                    {
+                    $keyword=GetStem($keyword);
+                    }
+                if (strpos($keyword,"*")!==false)
+                    {
+                    $keyword=str_replace("*","",$keyword);
+                    }
+                $hlkeycache[]=$keyword;
                 }
-        
+            }
     # Parse and replace.
     return str_highlight($text, $hlkeycache, $str_highlight_options);
     }
  
-
 /**
  * Highlight the relevant text in a string
  *
@@ -2837,7 +2856,7 @@ function update_search_from_request($search)
 
 function get_search_default_restypes()
 	{
-	global $search_includes_resources, $collection_search_includes_resource_metadata;
+	global $search_includes_resources;
 	$defaultrestypes=array();
 	if($search_includes_resources)
 		{
@@ -2846,8 +2865,6 @@ function get_search_default_restypes()
 	  else
 		{
 		$defaultrestypes[] = "Collections";
-		if($search_includes_user_collections){$defaultrestypes[] = "mycol";}
-		if($search_includes_public_collections){$defaultrestypes[] = "pubcol";}
 		if($search_includes_themes){$defaultrestypes[] = "themes";}
 		}	
 	return $defaultrestypes;
@@ -2855,7 +2872,7 @@ function get_search_default_restypes()
 	
 function get_selectedtypes()
     {
-    global $search_includes_resources, $collection_search_includes_resource_metadata;
+    global $search_includes_resources, $default_advanced_search_mode;
 
 	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
 	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
@@ -2876,7 +2893,7 @@ function get_selectedtypes()
         {
         if (isset($default_advanced_search_mode)) 
             {
-            $selectedtypes = explode(',',$default_advanced_search_mode);
+            $selectedtypes = explode(',',trim($default_advanced_search_mode, ' ,'));
             }
         else
             {
@@ -2900,28 +2917,17 @@ function get_selectedtypes()
 
 function render_advanced_search_buttons() 
     {
-    global $lang, $swap_clear_and_search_buttons, $baseurl_short;
- 
-    $button_search = "<input name=\"dosearch\" class=\"dosearch\" type=\"submit\" value=\"" . $lang["action-viewmatchingresults"] . "\" />";
-    $button_reset = "<input name=\"resetform\" class=\"resetform\" type=\"submit\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "')\" value=\"". $lang["clearbutton"] . "\" />";
-        
-    $html= '
-            <div class="QuestionSubmit QuestionSticky">
-            <label for="buttons"> </label>
-            {button1}
-            &nbsp;
-            {button2}
-            </div>';
-        
-    if ($swap_clear_and_search_buttons)
-            {
-            $content_replace = array("{button1}" => $button_search, "{button2}" => $button_reset);
-            } else 
-            {	
-            $content_replace = array("{button1}" => $button_reset, "{button2}" => $button_search);
-            }
-        
-    echo strtr($html, $content_replace);
+    global $lang, $baseurl_short;
+    ?>
+
+    <div class="QuestionSubmit QuestionSticky">
+        <label for="buttons"> </label>
+        <input name="resetform" class="resetform" type="submit" onClick="unsetCookie('search_form_submit','<?php echo $baseurl_short; ?>')" value="<?php echo $lang["clearbutton"]; ?>" />
+        &nbsp;
+        <input name="dosearch" class="dosearch" type="submit" value="<?php echo $lang["action-viewmatchingresults"]; ?>" />
+    </div>
+    
+    <?php
     }
     
 /**
@@ -2970,4 +2976,68 @@ function get_collections_resource_count(array $refs)
         }
 
     return $return;
+    }
+
+/**
+ * Get all search request parameters. Note that this does not escape the
+ * parameters which must be sanitised using escape_check() before using in SQL
+ * or e.g. htmlspecialchars() or urlencode() before rendering on page
+ *
+ * @return array()
+ */
+function get_search_params()
+    {
+    $searchparams = array(
+        "search"        =>"",
+        "restypes"      =>"",
+        "archive"       =>"",
+        "order_by"      =>"",
+        "sort"          =>"",
+        "offset"        =>"",
+        "k"             =>"",
+        "access"        =>"",
+        "foredit"       =>"",
+        "recentdaylimit"=>"",
+        "go"            =>"",
+        );
+    $requestparams = array();
+    foreach($searchparams as $searchparam => $default)
+        {
+        $requestparams[$searchparam] = getval($searchparam,$default);
+        }
+    return $requestparams;
+    }
+
+
+/**
+* Helper function to check a string is not just the asterisk.
+* 
+* @param string $str The string to be checked.
+* 
+* @return boolean
+*/
+function is_not_wildcard_only(string $str)
+    {
+    return trim($str) !== '*';
+    }
+
+
+/**
+ * Convert node searches into a friendly syntax. Used by search_title_processing.php
+ *
+ * @param  string $string   Search string
+ * @return string
+ */
+function search_title_node_processing($string)
+    {
+    if(substr(ltrim($string), 0, 2)==NODE_TOKEN_PREFIX)
+        {
+        # convert to shortname:value
+        $node_id=substr(ltrim($string), 2);
+        $node_data=array();
+        get_node($node_id, $node_data);
+        $field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
+        return $field_title . ":" . $node_data['name'];
+        }
+    return $string;
     }

@@ -8,7 +8,7 @@ function HookResource_usageViewCustompanels()
         return false;
         }
 
-    $usages = sql_query("SELECT * FROM resource_usage WHERE resource = '" . escape_check($ref) . "' ORDER BY ref");
+    $usages = ps_query("SELECT * FROM resource_usage WHERE resource = ? ORDER BY ref", array("i",$ref));
     ?>
     <div class="RecordBox">
     <div class="RecordPanel">

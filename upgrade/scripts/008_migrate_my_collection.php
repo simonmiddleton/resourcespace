@@ -1,6 +1,5 @@
 <?php
 
-include_once __DIR__ . "/../../include/db.php";
 
 
 // Rename existing 'My collection' collections

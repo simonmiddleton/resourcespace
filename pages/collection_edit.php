@@ -7,7 +7,7 @@ if(checkperm("b") || $system_read_only)
 
 $ref=getvalescaped("ref","",true);
 $copycollectionremoveall=getvalescaped("copycollectionremoveall","");
-$offset=getval("offset",0);
+$offset=getval("offset",0,true);
 $find=getvalescaped("find","");
 $col_order_by=getvalescaped("col_order_by","name");
 $sort=getval("sort","ASC");
@@ -60,6 +60,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     $coldata["public"] = getval('public', 0, true);
     $coldata["keywords"] = getval("keywords","");
     $coldata["description"] = getval("description","");
+    $coldata["result_limit"] = getval("result_limit",0,true);
+    $coldata["users"] = getval("users","");
+    $coldata["deleteall"] = getval("deleteall","") != "";
 
     if($collection["public"] == 1 && getval("update_parent", "") == "true")
         {
@@ -364,7 +367,7 @@ if(isset($error))
 			}
 		}
 
-	if (isset($collection['savedsearch'])&& $collection['savedsearch']==null)
+	if (!isset($collection['savedsearch']) || $collection['savedsearch']==null)
 		{
 		# disallowing share breaks smart collections 
 		?>

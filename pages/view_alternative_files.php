@@ -58,7 +58,7 @@ if ($alt_access)
                 }
             }
             ?>
-		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_width=jQuery('#previewimage').width();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').width(orig_width);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
+		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_height=jQuery('#previewimage').height();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').height(orig_height);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
 		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
 		<?php if(!hook("renderaltthumb")): ?>
 		<?php if ($alt_thm!="") { ?><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a><?php } ?>
@@ -66,6 +66,7 @@ if ($alt_access)
 		<h2 class="breakall"><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
 		<p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
 		</td>
+        <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
 		<td class="DownloadFileSize"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>
 		
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
@@ -86,13 +87,24 @@ if ($alt_access)
 			// download usage form displayed - load into main window
 				{ 
 				?>
-					<a href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>"><?php echo $lang["action-download"]?></a>			
-				<?php
+					<a <?php 
+					if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) 
+					    {
+					    ?>href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) . '"';
+					    }	
+					?>><?php echo $lang["action-download"]?></a><?php
 				}	
-		else { ?>
-            <a href="#" onclick="directDownload('<?php echo generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"><?php echo $lang["action-download"]?></a>
-		<?php } ?></td></td>
-		<?php } else { ?>
+		else 
+		    { 
+			?> <a
+		    <?php 
+			if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) 
+			    {
+			    echo 'href="#" onclick="directDownload(\'' . generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"<?php
+			    }	
+			    ?>><?php echo $lang["action-download"]?></a><?php
+            } ?></td></td>
+		<?php } elseif (checkperm("q")) { ?>
 		<td class="DownloadButton"><?php
 			if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
 				{
@@ -103,7 +115,11 @@ if ($alt_access)
 				?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
 				}
 			echo $lang["action-request"]?></a></td>
-		<?php } ?>
+		<?php } 
+		else
+		    {
+		    ?><td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td><?php
+		    } ?>
 		</tr>
 		<?php	
 		}

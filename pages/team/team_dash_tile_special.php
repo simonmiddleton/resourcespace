@@ -38,7 +38,7 @@ renderBreadcrumbs($links_trail);
 		</a>
 	</li>
 	<li>
-		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&freetext=true&title=Upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=plupload";?>">
+		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&freetext=true&title=Upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=batch";?>">
 			<?php echo $lang["createdashtileuserupload"];?>
 		</a>
 	</li>
@@ -58,7 +58,7 @@ renderBreadcrumbs($links_trail);
 	</li>
 	<?php 
 	/* Old Configuration tiles */
-	if($enable_themes)
+	if($enable_themes && !$home_themeheaders)
 		{ ?>
 		<li>
 			<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=conf&tlstyle=thmsl&title=themeselector&tile_audience=true&link=pages/collections_featured.php&url=pages/ajax/dash_tile.php%3Ftltype=conf%26tlstyle=thmsl";?>">

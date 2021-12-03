@@ -2,10 +2,11 @@
 include_once "../include/db.php";
 
 $k = trim(getval("k", ""));
-$parent = (int) getval("parent", 0, true);
+$parent = (int) getval("parent", $featured_collections_root_collection, true);
 if($k == "" || !check_access_key_collection($parent, $k))
     {
     include "../include/authenticate.php";
+    $parent = (int) getval("parent", $featured_collections_root_collection, true);
     }
 
 if(!$enable_themes)
@@ -51,16 +52,23 @@ if($enable_theme_breadcrumbs && $parent > 0)
         )
     );
 
+    $fc_branch_path = move_featured_collection_branch_path_root(compute_node_branch_path($all_fcs, $parent));
+    if(empty($fc_branch_path))
+        {
+        $links_trail = [];
+        }
+
     $branch_trail = array_map(function($branch) use ($baseurl_short, $general_url_params)
         {
         return array(
             "title" => strip_prefix_chars(i18n_get_translated($branch["name"]),"*"),
             "href"  => generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $branch["ref"]))
         );
-        }, compute_node_branch_path($all_fcs, $parent));
+        }, $fc_branch_path);
 
     renderBreadcrumbs(array_merge($links_trail, $branch_trail), "", "BreadcrumbsBoxTheme");
     }
+hook('collections_featured_below_breadcrumbs', '', array($parent, $parent_collection_data));
 
 // Default rendering options (should apply to both FCs and smart FCs)
 $full_width = !$themes_simple_view;
@@ -148,7 +156,7 @@ if($k == "" && $smart_rtf == 0)
         );
         if($upload_then_edit)
             {
-            $upload_url = generateURL("{$baseurl_short}pages/upload_plupload.php", array("collection_add" => $parent));
+            $upload_url = generateURL("{$baseurl_short}pages/upload_batch.php", array("collection_add" => $parent));
             }
 
         $rendering_options["html_h2_span_class"] = "fa fa-fw fa-upload";

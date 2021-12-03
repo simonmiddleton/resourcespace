@@ -91,13 +91,7 @@ $lang["uploadinprogress"]="Proses Upload dan Mengubah ukuran";
 $lang["donotmoveaway"]="PENTING: Jangan meninggalkan halaman ini sampai upload selesai!!";
 $lang["pleaseselectfiles"]="Silahkan memilih satu file atau lebih untuk upload.";
 $lang["uploadcomplete"]="selesai Upload";
-$lang["specifyftpserver"]="Tentukan FTP Server Jarak Jauh";
-$lang["ftpserver"]="FTP Server";
-$lang["ftpusername"]="Pengguna FTP";
-$lang["ftppassword"]="Sandi FTP";
-$lang["ftpfolder"]="Kitab FTP";
 $lang["connect"]="Hubungkan";
-$lang["uselocalupload"]="ATAU: Gunakan Upload setempat sebagai ganti FTP Server Jarak Jauh";
 
 # User contributions
 $lang["contributenewresource"]="Tambahkan Aset Baru";
@@ -478,9 +472,7 @@ $lang["warningexpiredtext"]="Perhatian! Aset ini telah melewati tanggal kadaluwa
 $lang["warningexpiredok"]="&gt; Mengembalikan kemampuan download aset";
 $lang["userrequestcomment"]="Komentar";
 $lang["addresourcebatchbrowser"]="Tambahkan Kumpulan Aset - Pada Browser";
-$lang["addresourcebatchbrowserjava"]="Tambahkan Kumpulan Aset - Pada Browser (Java)";
 
-$lang["addresourcebatchftp"]="Tambahkan Kumpulan Aset - Fetch dari FTP server";
 $lang["replaceresourcebatch"]="Gantikan Kumpulan Aset";
 $lang["editmode"]="Mode Ubah";
 $lang["replacealltext"]="Gantikan Semua teks";
@@ -614,7 +606,6 @@ $lang["noattachedusers"]="Tidak ada pengguna yang terhubung";
 $lang["confirmdeleteaccess"]="Apakah anda yakin anda akan  menghapus kunci akses ini? Pengguna yang memiliki kunci akses ini tidak akan bisa memliki akses ke koleksi ini.";
 $lang["noexternalsharing"]="Tidak ada penyebaran external.";
 $lang["sharedcollectionaddwarning"]="Perhatian: Koleksi ini telah disebarkan kepada pengguna external. Aset yang anda tambahkan sekarang akan tersedia bagai pengguna-pengguna tersebut. Klik 'penyebaran' untuk mengatur akses eksternal untuk koleksi ini..";
-$lang["addresourcebatchlocalfolder"]="Tambahkan Kumpulan Aset- Fetch dari upload kitab lokal";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Instalasi ResourceSpace anda telah di konfigurasi. Untuk meng-konfigurasi ulang, anda boleh menghapus  <pre>include/config.php</pre> dan menggunakan browser anda untuk mengakses halaman ini lagi.";
 $lang["setup-successheader"]="Selamat!";

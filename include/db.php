@@ -28,6 +28,8 @@ include_once dirname(__FILE__) . '/config_functions.php';
 include_once dirname(__FILE__) . '/plugin_functions.php';
 include_once dirname(__FILE__) . '/migration_functions.php';
 include_once dirname(__FILE__) . '/metadata_functions.php';
+include_once dirname(__FILE__) . '/map_functions.php';
+include_once dirname(__FILE__) . '/job_functions.php';
 
 # Switch on output buffering.
 ob_start(null,4096);
@@ -51,21 +53,38 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 
 # *** LOAD CONFIG ***
 # Load the default config first, if it exists, so any new settings are present even if missing from config.php
-if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FILE__) . "/config.default.php";}
-if (file_exists(dirname(__FILE__)."/config.deprecated.php")) {include dirname(__FILE__) . "/config.deprecated.php";}
+if (file_exists(dirname(__FILE__)."/config.default.php"))
+    {
+    include dirname(__FILE__) . "/config.default.php";
+    $track_vars_after_config_default = get_defined_vars();
+    }
+if (file_exists(dirname(__FILE__)."/config.deprecated.php"))
+    {
+    include dirname(__FILE__) . "/config.deprecated.php";
+    $track_vars_after_config_deprecated = get_defined_vars();
+    }
 
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
+$track_vars_after_config = get_defined_vars();
+
+// Set exception_ignore_args so that if $log_error_messages_url is set it receives all the necessary 
+// information to perform troubleshooting
+ini_set("zend.exception_ignore_args","Off");
 
 error_reporting($config_error_reporting);
-
 
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
+debug('[db.php] Remote config support...');
+debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config_url)));
+debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
+debug('[db.php] getenv("RESOURCESPACE_URL") != "") = ' . json_encode(getenv("RESOURCESPACE_URL") != ""));
 if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
 	{
+    debug("[db.php] \$remote_config_url = {$remote_config_url}");
 	sql_connect(); # Connect a little earlier
 	if(isset($_SERVER['HTTP_HOST']))
 		{
@@ -78,14 +97,17 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 		$host=getenv("RESOURCESPACE_URL");
 		}
 	$hostmd=md5($host);
+    debug("[db.php] \$host = {$host}");
+    debug("[db.php] \$hostmd = {$hostmd}");
 
 	# Look for configuration for this host (supports multiple hosts)
 	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
 	$remote_config=get_sysvar($remote_config_sysvar);
-        $remote_config_expiry = get_sysvar("remote_config-exp" .  $hostmd,0);
+    $remote_config_expiry = get_sysvar("remote_config-exp" .  $hostmd,0);
 	if ($remote_config!==false && $remote_config_expiry>time() && !isset($_GET["reload_remote_config"]))
 		{
 		# Local cache exists and has not expired. Use this copy.
+        debug("[db.php] Using local cached version of remote config. \$remote_config_expiry = {$remote_config_expiry}");
 		}
 	elseif(function_exists('curl_init'))
 		{
@@ -103,20 +125,22 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 
         if (!curl_errno($ch))
             {
-			# Fetch remote config was a success.
-			# Validate the return to make sure it's an expected config file
-			# The last 33 characters must be a hash and the sign of the previous characters.
-			$sign=substr($r,-32); # Last 32 characters is a signature
-			$r=substr($r,0,strlen($r)-33);
-			if ($sign==md5($remote_config_key . $r))
+            # Fetch remote config was a success.
+            # Validate the return to make sure it's an expected config file
+            # The last 33 characters must be a hash and the sign of the previous characters.
+            $sign=substr($r,-32); # Last 32 characters is a signature
+            $r=substr($r,0,strlen($r)-33);
+
+            if ($sign == md5($remote_config_key . $r))
                 {
-                $remote_config=$r;
-                set_sysvar($remote_config_sysvar,$remote_config);
+                $remote_config = $r;
+                set_sysvar($remote_config_sysvar, $remote_config);
                 }
             else
                 {
                 # Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
                 # Do nothing; proceed with old config and try again later.
+                debug('[db.php][warn] Failed to authenticate the signature of the remote config');
                 }
 			}
 		else
@@ -124,14 +148,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 			# The attempt to fetch the remote configuration failed.
 			# Do nothing; the cached copy will be used and we will try again later.
             $errortext = curl_strerror(curl_errno($ch));
-            debug("Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
+            debug("[db.php][warn] Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
             }
         curl_close($ch);
 
 		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
 		}
+
 	# Load and use the config
 	eval($remote_config);
+    debug_track_vars('after@remote_config', get_defined_vars());
 	}
 #
 # End of remote config support
@@ -166,6 +192,12 @@ if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 
 sql_connect();
 
+// Track variables for any process that matters but is before we connect to the database (it needs access to sysvars table)
+debug_track_vars('after@include/config.default.php', $track_vars_after_config_default);
+debug_track_vars('after@include/config.deprecated.php', $track_vars_after_config_deprecated);
+debug_track_vars('after@include/config.php', $track_vars_after_config);
+unset($track_vars_after_config_default, $track_vars_after_config_deprecated, $track_vars_after_config);
+
 # Automatically set a HTTPS URL if running on the SSL port.
 if(isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"]==443)
     {
@@ -194,16 +226,29 @@ if ($use_plugins_manager)
         {
         if ($plugin_name!='')
             {
-            if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'',"plugins")=='')
+            if (ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins")=='')
                 {
                 # Installed plugin isn't marked as installed in the DB.  Update it now.
                 # Check if there's a plugin.yaml file to get version and author info.
                 $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
                 $p_y = get_plugin_yaml($plugin_yaml_path, false);
                 # Write what information we have to the plugin DB.
-                sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) ".
-                        "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
-                        "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}','{$p_y['title']}','{$p_y['icon']}')");
+                ps_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                    ,array
+                        (
+                        "s",$p_y['version'],
+                        "s",$p_y['author'],
+                        "s",$p_y['desc'],
+                        "s",$plugin_name,
+                        "s",$p_y['info_url'],
+                        "s",$p_y['update_url'],
+                        "s",$p_y['config_url'],
+                        "s",$p_y['default_priority'],
+                        "s",$p_y['disable_group_select'],
+                        "s",$p_y['title'],
+                        "s",$p_y['icon']
+                        )
+                    );
                 clear_query_cache("plugins");
                 }
             }
@@ -211,7 +256,7 @@ if ($use_plugins_manager)
     # Need verbatim queries for this query
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
-	$active_plugins = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE inst_version>=0 order by priority","plugins");
+    $active_plugins = get_active_plugins();
     $mysql_verbatim_queries = $mysql_vq;
 
     $active_yaml = array();
@@ -377,33 +422,32 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 // Facial recognition setup
 if($facial_recognition)
     {
-    include __DIR__ . '/facial_recognition_functions.php';
+    include_once __DIR__ . '/facial_recognition_functions.php';
     $facial_recognition = initFacialRecognition();
     }
 
 # Pre-load all text for this page.
-$pagefilter="AND (page = '" . $pagename . "' OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
-if ($pagename=="admin_content") {$pagefilter="";} # Special case for the team content manager. Pull in all content from all pages so it's all overridden.
-
 $site_text=array();
-$results=sql_query("select language,name,text from site_text where (page='$pagename' or page='all' or page='') and (specific_to_group is null or specific_to_group=0)","sitetext");
+$results=ps_query("select language,name,text from site_text where (page=? or page='all' or page='') and (specific_to_group is null or specific_to_group=0)",array("s",$pagename),"sitetext");
 for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];}
 
-$query = sprintf('
-		SELECT `name`,
+$query = " SELECT `name`,
 		       `text`,
 		       `page`,
 		       `language`, specific_to_group 
 		  FROM site_text
-		 WHERE (`language` = "%s" OR `language` = "%s")
-		   %s  #pagefilter
-		   AND (specific_to_group IS NULL OR specific_to_group = 0);
-	',
-	escape_check($language),
-	escape_check($defaultlanguage),
-	$pagefilter
-);
-$results=sql_query($query,"sitetext");
+		 WHERE (`language` = ? OR `language` = ?)
+		   AND (specific_to_group IS NULL OR specific_to_group = 0)
+	";
+$parameters=array("s",$language,"s",$defaultlanguage);
+
+if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
+    {
+    $query.="AND (page = ? OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
+    $parameters[]="s";$parameters[]=$pagename;
+    }
+
+$results=ps_query($query,$parameters,"sitetext");
 
 // Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
 $customsitetext=array();
@@ -440,7 +484,7 @@ $headerinsert="";
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
 # Needs to be actioned before the 'initialise' hook or plugins can't use get_sysvar()
-$systemvars = sql_query("SELECT name, value FROM sysvars");
+$systemvars = ps_query("SELECT name, value FROM sysvars",array());
 $sysvars = array();
 foreach($systemvars as $systemvar)
     {

@@ -6,18 +6,25 @@ $results_per_page = 20;
 if ($same_page_callback)
 	{
 	include "../../include/db.php";
-	
 	include "../../include/authenticate.php";
 	}
 
+
 $callback = getval("callback","");
 $actasuser = getval("actasuser","");
-$offset = getval("offset",0);
+$offset = getval("offset",0,true);
 
 if (!checkperm("a") && $callback!="activitylog")		// currently only activity log is allowed for callback
 	{
 	exit ("Permission denied.");
 	}
+
+$error = '';
+include_once '../../include/stream_filters.php';
+if(!stream_filter_register('resourcespace.tail_search', '\ResourceSpace\Stream\Filter\FindInFileTail'))
+    {
+    $error = str_replace('%FILTER_NAME', 'resourcespace.tail_search', $lang['error-unable_to_register_filter']);
+    }
 
 if (!checkperm_user_edit($userref))	// if not an admin then force act as user as current user
 	{
@@ -31,8 +38,9 @@ if ($callback == "")
 	if ($same_page_callback)
 		{
 		include "../../include/header.php";
+        render_top_page_error_style($error);
 		}
-	foreach (array("debuglog","memorycpu","database","sqllogtransactions") as $section)
+	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
 		?><script>
 			var timeOutControl<?php echo $section; ?> = null;
@@ -111,7 +119,19 @@ if(strlen($sortby) > 1)
 		}
 	}
 
-$filter = getval("filter","");
+$filters = [];
+$filter = trim(getval('filter', ''));
+if($filter !== '')
+    {
+    $filters = [
+        [
+            'name' => 'resourcespace.tail_search',
+            'params' => [
+                'search_terms' => [$filter]
+            ]
+        ],
+    ];
+    }
 
 $results = array();
 $actions = array();
@@ -384,6 +404,142 @@ switch ($callback)
 			}
 
 		break;
+
+        case 'trackVars':
+            if(!checkperm('v'))
+                {
+                clear_tracking_vars_info([$userref]);
+                break;
+                }
+
+            $track_vars = trim(getval('track_vars', ''));
+            $track_var_duration = (int) getval('track_var_duration', 0);
+
+            // Stop tracking variables if session expired
+            $tracking_vars_session_active = is_tracking_vars_active($userref);
+            if(!$tracking_vars_session_active)
+                {
+                clear_tracking_vars_info([$userref]);
+                }
+
+            // Start/Stop tracking variables in ResourceSpace
+            if(getval('save', '') === '1' && $track_vars !== '' && is_int($track_var_duration))
+                {
+                set_sysvar("track_var_{$userref}", $track_vars);
+                set_sysvar("track_var_{$userref}_duration", $track_var_duration);
+                set_sysvar("track_var_{$userref}_start_datetime", date('Y-m-d H:i:s'));
+                }
+            else if(getval('cancel', '') === '1')
+                {
+                clear_tracking_vars_info([$userref]);
+                }
+
+            render_text_question(
+                $lang['systemconsole_label_input_vars'],
+                'track_vars',
+                sprintf('<div id="help_track_vars" class="FormHelp" style="display: none;"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_vars'])),
+                false,
+                ' id="track_vars" class="stdwidth" onblur="HideHelp(\'track_vars\'); return false;" onfocus="ShowHelp(\'track_vars\'); return false;"',
+                get_sysvar("track_var_{$userref}", '')
+            );
+
+            render_text_question(
+                $lang['systemconsole_label_input_track_period'],
+                'track_var_duration',
+                sprintf('<div id="help_track_var_duration" class="FormHelp" style="display: none;"><div class="FormHelpInner">%s</div></div>', htmlspecialchars($lang['systemconsole_help_track_period'])),
+                true,
+                ' id="track_var_duration" class="stdwidth" min="0" onblur="HideHelp(\'track_var_duration\'); return false;" onfocus="ShowHelp(\'track_var_duration\'); return false;"',
+                get_sysvar("track_var_{$userref}_duration", 0) ?? 0
+            );
+
+            ?>
+            <div class="Question">
+                <label for="submit">&nbsp;</label>
+                <input type="submit"
+                       name="save"
+                       value="<?php echo htmlspecialchars($lang['save']); ?>"
+                       onclick="SystemConsoletrackVarsLoad(-1, '&save=1&track_vars=' + encodeURIComponent(jQuery('#track_vars_input').val()) + '&track_var_duration=' + jQuery('#track_var_duration_input').val());">
+                <input class="ClearSelectedButton"
+                       type="submit"
+                       name="cancel"
+                       value="<?php echo htmlspecialchars($lang['cancel']); ?>"
+                       onclick="SystemConsoletrackVarsLoad(-1, '&cancel=1');">
+                <div class="clearerleft"></div>
+            </div>
+            <?php
+            // ----- start of tail read
+            $track_vars_dbg_log_path = $debug_log_location ?? get_debug_log_dir() . '/debug.txt';
+            if(!$tracking_vars_session_active)
+                {
+                // DO NOT process the log file since tracking session expired
+                }
+            else if(file_exists($track_vars_dbg_log_path) && is_readable($track_vars_dbg_log_path))
+                {
+                // Prepend filter specific to tracking vars so we can expect the right log format being in place
+                array_unshift(
+                    $filters,
+                    [
+                        'name' => 'resourcespace.tail_search',
+                        'params' => [
+                            'search_terms' => ['tracking var', $filter]
+                        ]
+                    ]
+                );
+
+                $lines = preg_split('/' . PHP_EOL . '/', tail($track_vars_dbg_log_path, $default_perpage_list, 4096, $filters));
+                foreach($lines as $line)
+                    {
+                    $line = trim($line);
+                    if($line === '' || strpos($line, 'tracking var') === false)
+                        {
+                        continue;
+                        }
+                    // Remove the identifying string as it's just poluting the log entry from this point on
+                    $line = str_replace('tracking var:', '', $line);
+
+                    if($filter === '' || strpos($line, $filter) !== false)
+                        {
+                        $entry = [$lang['log'] => $line];
+
+                        // Preprocess the line and extract out to their own columns common structured data (e.g PID, 
+                        // RID - request ID, User and the place the tracking took place)
+                        if(
+                            preg_match_all('/(\w+)="([a-zA-Z0-9_@\/.\[\]-]+)"/', $line, $matches) !== false
+                            && !empty($matches)
+                            // safety checks (preg_match_all might ensure internally the below)
+                            && isset($matches[0], $matches[1], $matches[2])
+                            && count($matches[0]) === count($matches[1])
+                            && count($matches[1]) === count($matches[2])
+                        )
+                            {
+                            $entry = [];
+                            // Iterate through param names in the structured data (for the data that we know about the event)
+                            foreach($matches[1] as $idx => $param_name)
+                                {
+                                if(in_array($param_name, ['pid', 'rid', 'user', 'place']))
+                                    {
+                                    $entry[$param_name] = $matches[2][$idx];
+                                    $line = str_replace($matches[0][$idx], '', $line);
+                                    }
+                                }
+                            $line = preg_replace('/\[\s*\]/', '', $line);
+                            $entry[$lang['log']] = $line;
+                            }
+
+                        array_push($results, $entry);
+                        }
+                    }
+                }
+            else
+                {
+                ?><br />
+                <?php
+                echo $lang["systemconsoleondebuglognotsetorfound"];
+                ?><br />
+                <?php
+                }
+            // ----- end of tail read
+            break;
 	} // end of callback switch
 
 	if($same_page_callback)	// do not display any filters if page being directly included

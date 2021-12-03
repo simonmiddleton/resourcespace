@@ -51,19 +51,19 @@ if (getval("submitted","")!="")
         }
 
     // It's unlikely we have permission to drop the whole DB so we drop the tables one by one. Omit user so a default user can be created.
-    $tables=sql_query("show tables");
+    $tables=ps_query("show tables");
     foreach ($tables as $table)
         {
         $table=(array_values($table)[0]); # Get table name
         if ($table!="user")
             {
-            sql_query("drop table " . $table,false,-1,false);
+            ps_query("drop table " . $table,false,-1,false);
             }
         }
     
     // Create a default user 
-    sql_query("delete from user",false,-1,false);
-    sql_query("insert into user (username,password,usergroup) values ('admin','admin',3);",false,-1,false);
+    ps_query("delete from user",array(),false,-1,false);
+    ps_query("insert into user (username,password,usergroup) values ('admin','admin',3);",array(),false,-1,false);
 
     // Back to login screen
     sleep (5); // Wait for any background DB creation to finish.

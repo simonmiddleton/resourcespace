@@ -1,10 +1,31 @@
 <?php
+/**
+ * Get the title field value (as configured in the plugin)
+ * 
+ * @param integer $resource Resource ID
+ * @return string Returns the i18l translated string of the field that represents the title for Flickr purposes.
+ */
+function flickr_get_title_field_value(int $resource)
+    {
+    $title_field = $GLOBALS['flickr_title_field'] ?? 0;
+    $title = array_values(
+        array_filter(
+            get_resource_field_data($resource),
+            function($f) use ($title_field) { return $f['ref'] == $title_field && $f['type'] == FIELD_TYPE_TEXT_BOX_SINGLE_LINE; }
+        )
+    );
+    $title = array_reverse($title);
+    $title = array_pop($title);
+
+    return i18n_get_translated($title['value'] ?? '');
+    }
 
 function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$private=0)
 	{
 	# For the resources matching $search, synchronise with Flickr.
-	
-	global $flickr,$flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up, $flickr_nice_progress,$flickr_default_size,$flickr_alt_image_sizes;
+
+	global $flickr,$flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up,
+    $flickr_nice_progress,$flickr_default_size,$flickr_alt_image_sizes, $FIXED_LIST_FIELD_TYPES;
 			
 	$results=do_search($search);
 	
@@ -18,13 +39,27 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 	
 	foreach ($results as $result)
 		{
-		global $flickr, $view_title_field;
+		global $flickr;
 
 		# Fetch some resource details.
-		$title=i18n_get_translated($result["field" . $view_title_field]);
-		$description=sql_value("select value from resource_data where resource_type_field=$flickr_caption_field and resource='" . $result["ref"] . "'","");
-		$keywords=sql_value("select value from resource_data where resource_type_field=$flickr_keywords_field and resource='" . $result["ref"] . "'","");
-		$photoid=sql_value("select flickr_photo_id value from resource where ref='" . $result["ref"] . "'","");
+        $title = flickr_get_title_field_value($result['ref']);
+		$description=ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_caption_field,"i",$result["ref"]), "");
+		
+		$field_type=ps_value("select type value from resource_type_field where ref = ?", array("i",$flickr_keywords_field), "", "schema");
+		if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
+		    {
+		    $keyword_node_values = get_resource_nodes($result["ref"], $flickr_keywords_field, true);
+		    $keyword_node_values = array_column($keyword_node_values,'name');
+		    # flickr requires a space separated string of tag words - adding comma allows flickr to pick up multi word tags.
+		    $keywords = array_map(function($kw) {return $kw . ',';}, $keyword_node_values);
+		    $keywords = implode(" ", array_unique($keywords));
+		    }
+		else
+		    {
+		    $keywords = ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_keywords_field,"i",$result["ref"]), "");
+		    }
+
+		$photoid=ps_value("select flickr_photo_id value from resource where ref = ?", array("i",$result["ref"]), "");
 		if($flickr_nice_progress)
             {
 			$nice_title=$result["ref"]." - ".$title;
@@ -126,7 +161,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
                     }
 
 				# Update Flickr tag ID
-				sql_query("update resource set flickr_photo_id='" . escape_check($photoid) . "' where ref='" . $result["ref"] . "'");
+				ps_query("update resource set flickr_photo_id = ? where ref = ?", array("s",$photoid,"i",$result["ref"]));
                 }
 
 			$created_new_photoset=false;
@@ -202,7 +237,7 @@ function flickr_get_access_token($userref,$fromrequest=false)
     {
 	global $flickr, $flickr_api_key,$flickr_api_secret,$flickr_token,$lang,$theme,$baseurl,$last_xml;
 	
-	$flickr_tokens=sql_query("select flickr_token, flickr_token_secret from user where ref='$userref'");
+	$flickr_tokens = ps_query("select flickr_token, flickr_token_secret from user where ref = ?", array("i",$userref));
         
 	if(isset($flickr_tokens[0]) && $flickr_tokens[0]["flickr_token"] != "" && $flickr_tokens[0]["flickr_token_secret"] != "")
         {
@@ -248,7 +283,7 @@ function flickr_get_photoset()
     $photosets = $psetinfo["photosets"]["photoset"];
 	
     # Look for the name of the current collection.
-	$photoset_name=sql_value("select name value from collection where ref='$theme'","");
+	$photoset_name=ps_value("select name value from collection where ref = ?", array("i",$theme), "");
     $photosetid=0;
     foreach($photosets as $photoset)
         {
@@ -270,7 +305,7 @@ function flickr_update_tokens($userref = 0, $OauthToken,$OauthSecretToken)
         {
         return false;
         }
-    sql_query("update user set flickr_token='" . escape_check($OauthToken) . "', flickr_token_secret='" . escape_check($OauthSecretToken)  . "' where ref='$userref'");
+    ps_query("update user set flickr_token = ?, flickr_token_secret = ? where ref = ?", array("s",$OauthToken,"s",$OauthSecretToken,"i",$userref));
     return true;
     }
 

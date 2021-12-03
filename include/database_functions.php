@@ -7,6 +7,37 @@
 
 
 /**
+ * Simple class to use when required to obtain/build SQL (sub) statements from various functions.
+ * 
+ * @internal
+ */
+final class PreparedStatementQuery {
+    /**
+     * @var string $sql SQL prepared (sub) statement with placeholders in place
+     */
+    public $sql;
+
+    /**
+     * @var array $parameters Bind parameters
+     */
+    public $parameters;
+
+    /**
+     * Create a new PreparedStatementQuery
+     * 
+     * @param string $sql        SQL prepared (sub) statement with placeholders in place
+     * @param array  $parameters Bind parameters
+     */
+    public function __construct(string $sql = '', array $parameters = [])
+        {
+        $this->sql = $sql;
+        $this->parameters = $parameters;
+        }
+}
+
+
+
+/**
  * Centralised error handler. Display friendly error messages.
  *
  * @param  integer $errno
@@ -60,7 +91,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                     } ?>
                 <hr style="margin-top:20px;">
                 <?php
-                if ($show_detailed_errors===true)
+                if ($show_detailed_errors)
                     {?>
                     <p style="font-size:11px;color:black;"><?php echo htmlspecialchars($error_info); ?></p>
                     <?php
@@ -146,20 +177,12 @@ function db_use_multiple_connection_modes()
 * 
 * @return void
 */
-function db_set_connection_mode($name)
+function db_set_connection_mode(string $name)
     {
-    if(
-        !(is_string($name) && trim($name) !== "")
-        || !db_use_multiple_connection_modes()
-        || !array_key_exists($name, $GLOBALS["db"])
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db'][$name]) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        $GLOBALS['db_connection_mode'] = $name;
         }
-
-    // IMPORTANT: It is the responsibility of each function to clear the current db mode once it finished running the 
-    // query as the variable is not meant to persist between queries.
-    $GLOBALS["db_connection_mode"] = $name;
 
     return;
     }
@@ -172,15 +195,12 @@ function db_set_connection_mode($name)
 */
 function db_get_connection_mode()
     {
-    if(
-        !db_use_multiple_connection_modes()
-        || !(isset($GLOBALS["db_connection_mode"]) && trim($GLOBALS["db_connection_mode"]) !== "")
-    )
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']))
         {
-        return "";
+        return trim($GLOBALS['db_connection_mode']);
         }
 
-    return $GLOBALS["db_connection_mode"];
+    return '';
     }
 
 
@@ -192,12 +212,10 @@ function db_get_connection_mode()
 */
 function db_clear_connection_mode()
     {
-    if(!db_use_multiple_connection_modes() || !isset($GLOBALS["db_connection_mode"]))
+    if(db_use_multiple_connection_modes() && isset($GLOBALS['db_connection_mode']) && !isset($GLOBALS['sql_transaction_in_progress']))
         {
-        return;
+        unset($GLOBALS['db_connection_mode']);
         }
-
-    unset($GLOBALS["db_connection_mode"]);
 
     return;
     }
@@ -303,6 +321,9 @@ function db_begin_transaction($name)
 
 	if(function_exists('mysqli_begin_transaction'))
 		{
+        db_set_connection_mode('read_write');
+        $GLOBALS['sql_transaction_in_progress'] = true;
+
         debug("SQL: begin transaction '{$name}'");
 		return mysqli_begin_transaction($db["read_write"], 0, $name);
 		}
@@ -310,44 +331,6 @@ function db_begin_transaction($name)
     return false;
 	}
 
-
-/**
- * Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
- *  Useful for re-indexing fields etc.
- * 
- * Example usage:
- * sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
- * Where first array parameter indicates types of bind data:
- * i=integer
- * s=string
- *
- * @param  string $sql
- * @param  array $bind_data
- * @return void
- */
-function sql_query_prepared($sql,$bind_data)
-    {
-    global $prepared_statement_cache,$db;
-    if(!isset($prepared_statement_cache[$sql]))
-        {
-        if(!isset($prepared_statement_cache))
-            {
-            $prepared_statement_cache=array();
-            }
-        $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
-        if($prepared_statement_cache[$sql]===false)
-            {
-            die('Bad prepared SQL statement:' . $sql);
-            }
-        }
-    $bind_data_processed = array();
-    foreach($bind_data as $key => $value)
-        {
-        $bind_data_processed[$key] = &$bind_data[$key];
-        }
-    call_user_func_array(array($prepared_statement_cache[$sql], 'bind_param'), $bind_data_processed);
-    mysqli_stmt_execute($prepared_statement_cache[$sql]);
-    }
 
 /**
 * Tell the database to commit the current transaction.
@@ -367,6 +350,9 @@ function db_end_transaction($name)
 
 	if(function_exists('mysqli_commit'))
 		{
+        unset($GLOBALS['sql_transaction_in_progress']);
+        db_clear_connection_mode();
+
         debug("SQL: commit transaction '{$name}'");
 		return mysqli_commit($db["read_write"], 0, $name);
 		}
@@ -392,6 +378,9 @@ function db_rollback_transaction($name)
 
 	if(function_exists('mysqli_rollback'))
 		{
+        unset($GLOBALS['sql_transaction_in_progress']);
+        db_clear_connection_mode();
+
         debug("SQL: rollback transaction '{$name}'");
 		return mysqli_rollback($db["read_write"], 0, $name);
 		}
@@ -399,6 +388,303 @@ function db_rollback_transaction($name)
     return false;
 	}        
 
+/**
+ * Execute a prepared statement and return the results as an array.
+ * 
+ * @param  string $sql						The SQL to execute
+ * @param  string $parameters				An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d","This is the second parameter which is a double")
+ * @param  string $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  integer $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  boolean $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  integer $logthis					No longer used
+ * @param  boolean $reconnect
+ * @param  mixed $fetch_specific_columns
+ * @return array
+ */
+function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
+    {
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang, $prepared_statement_cache;
+	
+    // Check cache for this query
+    $cache_write=false;
+    $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
+    if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
+        {
+        $cache_write=true;
+        $cache_location=get_query_cache_location();
+        $cache_file=$cache_location . "/" . $cache . "_" . md5($serialised_query) . "_" . md5($scramble_key . $serialised_query) . ".json"; // Scrambled path to cache
+        if (file_exists($cache_file))
+            {
+            $cachedata=json_decode(file_get_contents($cache_file),true);
+            if (!is_null($cachedata)) // JSON decode success
+                {
+                if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
+                    {
+                    if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
+                        {
+                        debug("[sql_query] returning cached data (source: {$cache_file})");
+                        db_clear_connection_mode();
+                        return $cachedata["results"];
+                        }
+                    }
+                }
+            }
+        }
+
+    if(!isset($debug_log_override))
+        {
+        $original_con_mode = db_get_connection_mode();
+        db_clear_connection_mode();
+        check_debug_log_override();
+        db_set_connection_mode($original_con_mode);
+        }
+
+    if ($config_show_performance_footer)
+        {
+        # Stats
+        # Start measuring query time
+        $time_start = microtime(true);
+        global $querycount;
+        $querycount++;
+        }
+
+    if (($debug_log || $debug_log_override) && !$suppress_sql_log)
+        {
+        debug("SQL: " . $sql);
+        }
+
+    // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
+    // available using db_set_connection_mode(). An example use case for this can be reports.
+    $db_connection_mode = 'read_write';
+    $db_connection = $db['read_write'];
+    if(
+        db_use_multiple_connection_modes()
+        && !isset($GLOBALS['sql_transaction_in_progress'])
+        && (db_get_connection_mode() === 'read_only' || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) === 'SELECT'))
+    )
+        {
+        $db_connection_mode = 'read_only';
+        $db_connection = $db['read_only'];
+
+        // In case it needs to retry and developer has forced a read-only
+        $logthis = 2;
+
+        db_clear_connection_mode();
+        }
+
+    if (count($parameters)>0)
+        {
+        // Execute prepared statement
+        if(!isset($prepared_statement_cache[$sql]))
+            {
+            if(!isset($prepared_statement_cache))
+                {
+                $prepared_statement_cache=array();
+                }
+            $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+            if($prepared_statement_cache[$sql]===false)
+                {
+                $error="Bad prepared SQL statement: " . $sql;
+                if (!$dbstruct) // if the second pass, this still didn't work after checking dbstruct, throw a proper error.
+                    {
+                    errorhandler("N/A", $error, "(database)", "N/A");
+                    }
+                }
+            }
+        $params_array = array();
+        $types="";
+        for($n=0;$n<count($parameters);$n+=2)
+            {
+            $types.=$parameters[$n];
+            if (!array_key_exists($n+1,$parameters)) {trigger_error("Count of \$parameters array must be even (ensure types specified) for query: $sql" . print_r($parameters,true));}
+            $params_array[] = $parameters[$n+1];
+            }
+        if (!(isset($error) && $error!=""))
+            {
+            mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
+            mysqli_stmt_execute($prepared_statement_cache[$sql]);
+            $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+            }
+        if ($error=="")
+            {
+            // Results section
+
+            // Buffering of result set
+            $prepared_statement_cache[$sql]->store_result();
+
+            // Fetch result set
+            $metadata=$prepared_statement_cache[$sql]->result_metadata();
+            if ($metadata===false)
+                {
+                // Did not return a result set, execution of an update/insert etc.
+                $result=true;
+                } 
+            else
+                {
+                // Bind results -> standard associative array
+                $fields = $metadata->fetch_fields();
+                $args = array();
+                foreach($fields AS $field)
+                    {
+                    $key = str_replace(' ', '_', $field->name);
+                    $args[$key] = &$field->name;
+                    }
+                call_user_func_array(array($prepared_statement_cache[$sql], "bind_result"), array_values($args));
+                $result = array();
+                $count=0;
+                while($prepared_statement_cache[$sql]->fetch() && ($fetchrows==-1 || $count<$fetchrows)) // Return requested no. of rows
+                    {
+                    $count++;
+                    $result[] = array_map("copy_value", $args);
+                    }
+                $prepared_statement_cache[$sql]->free_result();
+                }
+            // Clear buffered results
+            $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
+            }
+        }
+    else    
+        {
+        // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
+        $result_set=mysqli_query($db_connection,$sql);
+        $return_row_count=0;$result=array();
+        $error=mysqli_error($db_connection);
+        if ($error=="")
+            {
+            while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result_set))
+                {
+                $return_row_count++;
+                $result[]=$result_row;
+                }
+            }
+        mysqli_free_result($result_set);
+        }
+
+    if ($config_show_performance_footer){
+    	# Stats
+   		# Log performance data		
+		global $querytime,$querylog;
+		
+		$time_total=(microtime(true) - $time_start);
+		if (isset($querylog[$sql]))
+			{
+			$querylog[$sql]['dupe']=$querylog[$sql]['dupe']+1;
+			$querylog[$sql]['time']=$querylog[$sql]['time']+$time_total;
+			}
+		else
+			{
+			$querylog[$sql]['dupe']=1;
+			$querylog[$sql]['time']=$time_total;
+			}	
+		$querytime += $time_total;
+	}
+	
+	$return_rows=array();
+    if ($error!="")
+        {
+        if ($error=="Server shutdown in progress")
+        	{
+			echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
+        	}
+        elseif (substr($error,0,15)=="Too many tables")
+        	{
+			echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
+        	}
+        elseif (strpos($error,"has gone away")!==false && $reconnect)
+			{
+			# SQL server connection has timed out or been killed. Try to reconnect and run query again.
+			sql_connect();
+            db_set_connection_mode($db_connection_mode);
+			return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
+			}
+        else
+        	{
+        	# Check that all database tables and columns exist using the files in the 'dbstruct' folder.
+        	if ($dbstruct) # should we do this?
+        		{
+                db_clear_connection_mode();
+				check_db_structs();
+                db_set_connection_mode($db_connection_mode);
+
+        		# Try again (no dbstruct this time to prevent an endless loop)
+        		return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect);
+        		}
+
+	        errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
+	        }
+
+        exit();
+        }
+    elseif ($result===false)
+        {
+		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
+        }
+
+    if($cache_write)
+        {
+        $cachedata = array();
+        $cachedata["query"] = $sql;
+        $cachedata["time"] = time();
+        $cachedata["results"] = $result;
+
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            if(!file_exists($storagedir . "/tmp"))
+                {
+                mkdir($storagedir . "/tmp", 0777, true);
+                }
+
+            if(!file_exists($cache_location))
+                {
+                mkdir($cache_location, 0777);
+                }
+
+            file_put_contents($cache_file, json_encode($cachedata));
+            }
+        catch(Exception $e)
+            {
+            debug("SQL_CACHE: {$e->getMessage()}");
+            }
+        unset($GLOBALS["use_error_exception"]);
+        }
+
+    if($fetchrows == -1)
+        {
+        return $result;
+        }
+
+    /*
+    COMMENTED - this should no longer be needed; it was added for search results however in that situation a separate count() query
+    should be executed first.
+
+	# If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
+	# is still correct (even though these rows won't be shown).
+    if(count($result) < $query_returned_row_count)
+        {
+        // array_pad has a hardcoded limit of 1,692,439 elements. If we need to pad the results more than that, we do it in
+        // 1,000,000 elements batches.
+        while(count($result) < $query_returned_row_count)
+            {
+            $padding_required = $query_returned_row_count - count($result);
+            $pad_by = ($padding_required > 1000000 ? 1000000 : $query_returned_row_count);
+            $result = array_pad($result, $pad_by, 0);
+            }
+       }
+    */
+
+
+    return $result;        
+    }
+
+/**
+* Copy value as value (flatten / no references)
+*/
+function copy_value($v) {
+    return $v;
+}
 /**
  * Execute a query and return the results as an array.
  * 
@@ -408,7 +694,7 @@ function db_rollback_transaction($name)
  * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
  * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
  * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  mixed $logthis					No longer used
  * @param  mixed $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
@@ -416,7 +702,8 @@ function db_rollback_transaction($name)
 function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_already_completed_this_time;
+    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang;
 	
     // Check cache for this query
     $cache_write=false;
@@ -452,76 +739,75 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         }
 
     if ($config_show_performance_footer)
-    	{
-    	# Stats
-    	# Start measuring query time
-    	$time_start = microtime(true);
-   	    global $querycount;
-		$querycount++;
-    	}
-    	
+        {
+        # Stats
+        # Start measuring query time
+        $time_start = microtime(true);
+        global $querycount;
+        $querycount++;
+        }
+
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
-		{
-		debug("SQL: " . $sql);
-		}
-	
+        {
+        debug("SQL: " . $sql);
+        }
+
     if($mysql_log_transactions && !($logthis==0))
-    	{	
-		global $mysql_log_location, $lang;
+        {	
+        $requirelog = true;
 
-		$requirelog = true;
-
-		if($logthis==2)
-			{
-			// Ignore any SELECTs if the decision to log has not been indicated by function call, 	
-			if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-				{
+        if($logthis==2)
+            {
+            // Ignore any SELECTs if the decision to log has not been indicated by function call, 	
+            if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
+                {
                 $requirelog = false;
                 }
-			}
-			
-		if($logthis==1 || $requirelog)
-			{
-			# Log this to a transaction log file so it can be replayed after restoring database backup
-			$mysql_log_dir = dirname($mysql_log_location);
-			if (!is_dir($mysql_log_dir))
-				{
-				@mkdir($mysql_log_dir, 0333, true);
-				if (!is_dir($mysql_log_dir))
-					{exit("ERROR: Unable to create  folder for \$mysql_log_location specified in config file: " . $mysql_log_location);}
-				}	
-			
-			if(!file_exists($mysql_log_location))
-				{
-				global $mysql_db;
-				$mlf=@fopen($mysql_log_location,"wb");
-				@fwrite($mlf,"USE " . $mysql_db . ";\r\n");
-				if(!file_exists($mysql_log_location))
-					{exit("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);}
-				// Set the permissions if we can to prevent browser access (will not work on Windows)
-				chmod($mysql_log_location,0333);
-				}
-			
-			$mlf=@fopen($mysql_log_location,"ab");
-			fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
-			fclose ($mlf);
-			}
-		}
+            }
+
+        if($logthis==1 || $requirelog)
+            {
+            # Log this to a transaction log file so it can be replayed after restoring database backup
+            $mysql_log_dir = dirname($mysql_log_location);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                if (!is_dir($mysql_log_dir))
+                    {
+                    mkdir($mysql_log_dir, 0333, true);
+                    }
+                if(!file_exists($mysql_log_location))
+                    {
+                    $mlf=fopen($mysql_log_location,"wb");
+                    fwrite($mlf,"USE " . $mysql_db . ";\r\n");
+                    // Set the permissions if we can to prevent browser access (will not work on Windows)
+                    chmod($mysql_log_location,0333);
+                    }
+                $mlf=fopen($mysql_log_location,"ab");
+                fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
+                fclose ($mlf);
+                }
+            catch(Exception $e)
+                {
+                debug("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);
+                $mysql_log_transactions = false;
+                }
+            unset($GLOBALS["use_error_exception"]);
+            }
+        }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.
-    $db_connection_mode = "read_write";
-    $db_connection = $db["read_write"];
-    
-    if(db_use_multiple_connection_modes()
-        && (
-            db_get_connection_mode() == "read_only"
-            || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-        )
+    $db_connection_mode = 'read_write';
+    $db_connection = $db['read_write'];
+    if(
+        db_use_multiple_connection_modes()
+        && !isset($GLOBALS['sql_transaction_in_progress'])
+        && (db_get_connection_mode() === 'read_only' || ($logthis == 2 && strtoupper(substr(trim($sql), 0, 6)) === 'SELECT'))
     )
         {
-        $db_connection_mode = "read_only";
-        $db_connection = $db["read_only"];
+        $db_connection_mode = 'read_only';
+        $db_connection = $db['read_only'];
 
         // In case it needs to retry and developer has forced a read-only
         $logthis = 2;
@@ -632,16 +918,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     if($cache_write)
         {
-        if(!file_exists($storagedir . "/tmp"))
-            {
-            mkdir($storagedir . "/tmp", 0777, true);
-            }
-
-        if(!file_exists($cache_location))
-            {
-            mkdir($cache_location, 0777);
-            }
-
         $cachedata = array();
         $cachedata["query"] = $sql;
         $cachedata["time"] = time();
@@ -650,6 +926,16 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         $GLOBALS["use_error_exception"] = true;
         try
             {
+            if(!file_exists($storagedir . "/tmp"))
+                {
+                mkdir($storagedir . "/tmp", 0777, true);
+                }
+
+            if(!file_exists($cache_location))
+                {
+                mkdir($cache_location, 0777);
+                }
+
             file_put_contents($cache_file, json_encode($cachedata));
             }
         catch(Exception $e)
@@ -713,6 +999,60 @@ function sql_value($query, $default, $cache="")
         return $result[0]["value"];
     }
 
+/**
+* Return a single value from a database query, or the default if no rows
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses ps_query()
+* 
+* @param string $query      SQL query
+* @param string $parameters SQL parameters with types, as for ps_query()
+* @param mixed  $default    Default value to return if no rows returned
+* @param string  $cache      Cache category (optional)
+* 
+* @return string
+*/
+function ps_value($query, $parameters, $default, $cache="")
+    {
+    db_set_connection_mode("read_only");
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
+
+    if(count($result) == 0)
+        {
+        return $default;
+        }
+
+    return $result[0]["value"];
+    }
+
+/**
+* Like ps_value() but returns an array of all values found
+* 
+* NOTE: The value returned must have the column name aliased to 'value'
+* 
+* @uses ps_query()
+* 
+* @param string $query      SQL query
+* @param string $parameters SQL parameters with types, as for ps_query()
+* @param string  $cache      Cache category (optional)
+* 
+* @return array
+*/
+function ps_array($query,$parameters,$cache="")
+	{
+	$return = array();
+
+    db_set_connection_mode("read_only");
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
+
+    for($n = 0; $n < count($result); $n++)
+    	{
+    	$return[] = $result[$n]["value"];
+    	}
+
+    return $return;
+	}
 
 /**
 * Like sql_value() but returns an array of all values found
@@ -759,8 +1099,15 @@ function sql_insert_id()
  */
 function get_query_cache_location()
 	{
-	global $storagedir;
-	return $storagedir . "/tmp/querycache";
+	global $storagedir,$tempdir;
+    if(!is_null($tempdir))
+        {
+        return $tempdir . "/querycache";
+        }
+    else
+        {
+        return $storagedir . "/tmp/querycache";
+        }
 	}
 
 	
@@ -803,6 +1150,7 @@ function clear_query_cache($cache)
  */
 function check_db_structs($verbose=false)
 	{
+    global $lang;
     // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
     if(is_process_lock('database_update_in_progress'))
         {
@@ -1110,4 +1458,55 @@ function sql_is_null_or_eq_val(string $v, bool $cond)
 function sql_null_or_val(string $v, bool $cond)
     {
     return ($cond ? "NULL" : "'" . escape_check($v) . "'");
+    }
+
+
+/**
+* Query helper to ensure code honours the database schema constraints on text columns.
+* IMPORTANT: please use where appropriate! In some cases, truncating may mean losing useful information (e.g contextual data),
+*            in which case changing the column type may be a better option.
+* 
+* @param string  $v   String value that may require truncating
+* @param integer $len Desired length (limit as imposed by the database schema). {@see https://www.resourcespace.com/knowledge-base/developers/database_schema}
+* 
+* @return string
+*/
+function sql_truncate_text_val(string $v, int $len)
+    {
+    if(mb_strlen($v) > $len)
+        {
+        $truncated_sql_val = mb_strcut($v, 0, $len);
+        }
+
+    return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
+    }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in outputting the correct number of parameters. 
+* 
+* @param integer $count How many parameters to insert, e.g. 3 returns "?,?,?"
+* 
+* @return string
+*/
+function ps_param_insert($count)
+    {
+    return join(",",array_fill(0,$count,"?"));
+    }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in preparing the parameter array. 
+* 
+* @param array $array The input array, to prepare for output. Will return this array but with type entry inserted before each value.
+* @param integer $type The column type as per ps_query
+* 
+* @return array
+*/
+function ps_param_fill($array,$type)
+    {
+    $parameters=array();
+    foreach ($array as $a)
+        {
+        $parameters[]=$type;$parameters[]=$a;
+        }
+    return $parameters;
     }

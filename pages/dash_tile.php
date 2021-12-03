@@ -26,6 +26,8 @@ if($submitdashtile && enforcePostRequest(false))
 	{
 	$buildurl = getvalescaped("url","");
     $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+	
+	$buildurl = validate_build_url($buildurl);
 
 	if ($buildurl=="")
 		{
@@ -358,6 +360,7 @@ if($create)
 
         unset($tile_style);
 
+        $srch = urldecode($srch);
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
 		
@@ -430,7 +433,12 @@ else if($edit)
 		$tile_nostyle = true;
 		}
 
-	#Only show freetext field if tile style is not analytics
+	if (!isset($tile_style)) 
+		{
+		$tile_style = "";
+		}
+		
+	# Show freetext field if the tile style is not analytics
 	if ($tile_style != 'analytics') 
     	{
     	$freetext = empty($tile["txt"])? "true" : $tile["txt"];
@@ -479,7 +487,7 @@ if(!$validpage)
         </label>
         <br />
         <div class="HomePanel DashTile">
-        <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>">
+        <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash">
         </div>
         </div>
         <div class="clearerleft"></div>
@@ -526,7 +534,7 @@ if(!$validpage)
 		?>
 		<div class="Question">
 			<label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
-			<input type="text" id="previewtext" name="freetext" value="<?php echo htmlspecialchars(ucfirst($freetext));?>"/>
+			<textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo htmlspecialchars(ucfirst($freetext));?></textarea>
 			<div class="clearerleft"></div>
 		</div>
 		<?php
@@ -770,7 +778,7 @@ if('' != $tile_type && $tile_type !== "conf")
 	function updateDashTilePreview() {
 		var prevstyle = jQuery(".tlstyle:checked").val();
 		var width = 250;
-		var height = 180;
+		var height = 160;
 		var pretitle = encodeURIComponent(jQuery("#previewtitle").val());
 		var pretxt = encodeURIComponent(jQuery("#previewtext").val());
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());
@@ -780,7 +788,7 @@ if('' != $tile_type && $tile_type !== "conf")
         // Some tile types don't have style
         if(typeof prevstyle === 'undefined')
             {
-            prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
+            prevstyle = '<?php echo validate_tile_style($tile_type, (isset($tile_style)?$tile_style:"")); ?>';
             }
 		<?php
 		if($tile_type=="srch")

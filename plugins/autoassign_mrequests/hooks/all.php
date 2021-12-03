@@ -57,31 +57,10 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         return false;
         }
 
-    $request_query = sprintf("
-            INSERT INTO request(
-                                    user,
-                                    collection,
-                                    created,
-                                    request_mode,
-                                    `status`,
-                                    comments,
-                                    assigned_to
-                               )
-                 VALUES (
-                             '%s',  # user
-                             '%s',  # collection
-                             NOW(),   #created
-                             1,       # request_mode
-                             0,       # status
-                             '%s',  # comments
-                             '%s'   # assigned_to
-                        );
-        ",
-        escape_check($user_ref),
-        escape_check($collection_ref),
-        escape_check($message),
-        $assigned_administrator
-    );
+    $request_query = new PreparedStatementQuery();
+    $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
+                                  VALUES (?, ?, NOW(), 1, 0, ?, ?)";
+    $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message, "i",$assigned_administrator);
 
     $assigned_to_user = get_user($assigned_administrator);
     $notify_manage_request_admin = true;
@@ -94,7 +73,8 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $collection_data, $message, $manage_collection_request)
 {
-    global $manage_request_admin, $assigned_to_user, $email_notify, $lang, $baseurl, $applicationname, $request_query, $notify_manage_request_admin;
+    global $manage_request_admin, $assigned_to_user, $email_notify, $lang, $baseurl, $applicationname, 
+           $request_query, $notify_manage_request_admin;
 
     // Do not process this any further as this should only handle collection requests
     if(!$manage_collection_request) {
@@ -156,60 +136,24 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     if(!empty($collections)) {
         foreach ($collections as $assigned_to => $collection_id) {
             $assigned_to_user = get_user($assigned_to);
-            $request_query    = sprintf("
-                    INSERT INTO request(
-                                            user,
-                                            collection,
-                                            created,
-                                            request_mode,
-                                            `status`,
-                                            comments,
-                                            assigned_to
-                                       )
-                         VALUES (
-                                     '%s',  # user
-                                     '%s',  # collection
-                                     NOW(), # created
-                                     1,     # request_mode
-                                     0,     # status
-                                     '%s',  # comments
-                                     '%s'   # assigned_to
-                                );
-                ",
-                escape_check($user_ref),
-                $collection_id,
-                escape_check($message),
-                $assigned_to
-            );
+
+            $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
+                                    VALUES (?, ?, NOW(), 1, 0, ?, ?)";
+            $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message, "i",$assigned_to);
 
             if($assigned_to === 'not_managed' || !$assigned_to_user) {
                 $assigned_to_user['email'] = $email_notify;
-                $request_query             = sprintf("
-                        INSERT INTO request(
-                                                user,
-                                                collection,
-                                                created,
-                                                request_mode,
-                                                `status`,
-                                                comments
-                                           )
-                             VALUES (
-                                         '%s',  # user
-                                         '%s',  # collection
-                                         NOW(), # created
-                                         1,     # request_mode
-                                         0,     # status
-                                         '%s'   # comments
-                                    );
-                    ",
-                    escape_check($user_ref),
-                    $collection_id,
-                    escape_check($message),
-                    $assigned_to
-                );
+
+                # Note: The refactored sprintf code had an $assigned_to parameter, but no corresponding '%s' placeholder
+                #       This has been dropped from refactored code
+
+                $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
+                VALUES (?, ?, NOW(), 1, 0, ?)";
+                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message);
+    
             }
 
-            sql_query($request_query);
+            ps_query($request_query->sql, $request_query->parameters);
             $request = sql_insert_id();
 
             // Send the mail:
@@ -248,7 +192,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         }
 
     // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
-    sql_query($request_query);
+    ps_query($request_query->sql, $request_query->parameters);
     $request = sql_insert_id();
 
     $templatevars['request_id']    = $request;
@@ -281,7 +225,9 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
     if(isset($resource_type_request_emails)  )
         {
-        $requestrestypes=array_unique(sql_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection='$ref'"));
+        $parameters=array("i",$ref);    
+        $requestrestypes=ps_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection=?", $parameters);
+        $requestrestypes=array_unique($requestrestypes);
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
             {
             $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];

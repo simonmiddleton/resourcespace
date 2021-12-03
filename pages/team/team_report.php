@@ -14,7 +14,9 @@ set_time_limit(0);
 $report=getvalescaped("report","");
 $period=getvalescaped("period",$reporting_periods_default[0]);
 $period_init=$period;
-$backurl=getvalescaped("backurl","");
+$backurl = getval('backurl', '');
+$backurl_path = parse_url($backurl, PHP_URL_PATH);
+$backurl_query = parse_url($backurl, PHP_URL_QUERY);
 
 if ($period==0)
 	{
@@ -52,35 +54,38 @@ $from=getvalescaped("from","");
 $to=getvalescaped("to","");
 $output="";
 
+$search_params = [];
+$run_report_on_search_results = false;
+if("{$baseurl_short}pages/search.php" === $backurl_path)
+    {
+    $run_report_on_search_results = true;
+    parse_str($backurl_query, $search_params);
+    }
+
 
 # Execute report.
 if ($report!="" && (getval("createemail","")==""))
 	{
 	$download=getval("download","")!="";
-	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d,$download);
+	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, false, false, $search_params);
 	}
 
 include "../../include/header.php";	
-	
+
 if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 	{
-	$send_all_users       = false;
 	$report_receiver      = getval('report_receiver', '');
 	$user_group_selection = array();
 
 	switch($report_receiver)
 		{
-		case 'all_users':
-			$send_all_users       = true;
-			break;
-
 		case 'specific_user_groups':
 			$user_group_selection = getval('user_group_selection', array());
 			break;
 		}
 
 	# Create a new periodic e-mail report
-	create_periodic_email($userref, $report, $period, getval('email_days', ''), $send_all_users, $user_group_selection);
+	create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection, $search_params);
 	?>
 	<script type="text/javascript">
 	alert("<?php echo $lang["newemailreportcreated"] ?>");
@@ -163,11 +168,19 @@ if($unsubscribe != '')
 else
 	{
 	# Normal behaviour.
-?>
-
+    ?>
 <div class="BasicsBox"> 
 	<?php
-	if (strpos($backurl, "pages/admin/admin_report_management.php") !== false)
+	if($run_report_on_search_results)
+        {
+        $links_trail = [
+            [
+                'title' => $lang['searchresults'],
+                'href'  => generateURL("{$baseurl_short}pages/search.php", $search_params),
+            ],
+        ];
+        }
+    else if (mb_strpos($backurl, "pages/admin/admin_report_management.php") !== false)
 	    {
 	    // Arrived from Manage reports page
 	    $links_trail = array(
@@ -191,29 +204,42 @@ else
 		);
 		}
 
-	$links_trail[] = array(
-	    'title' => $lang["viewreports"]
-	);
-
+	$links_trail[] = ['title' => $lang['viewreports']];
 	renderBreadcrumbs($links_trail);
+
+    $reports = get_reports();
+    $report_options = [];
+    foreach($reports as $report_opt)
+    {
+    // Filter out reports not valid for the context you're in:
+    // - if running report on search results, then drop the ones that don't have support for non-correlated SQL
+    // - if viewing reports normally (from team centre), then remove the ones that support search results
+    if($run_report_on_search_results != $report_opt['support_non_correlated_sql'])
+        {
+        continue;
+        }
+    $report_options[] = $report_opt;
+    }
+    $error = (empty($report_options) ? $lang['report_error_no_reports_supporting_search_results'] : '');
 	?>
  	<p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
-  
+<?php render_top_page_error_style($error); ?>
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>
+    <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
 <div class="Question">
-<label for="report"><?php echo $lang["viewreport"]?></label><select id="report" name="report" class="stdwidth">
+<label for="report"><?php echo $lang["viewreport"]?></label>
+<select id="report" name="report" class="stdwidth">
+    <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
 <?php
-$reports=get_reports();
-
-$ref=getval("ref","");
-
-for($n=0;$n<count($reports);$n++)
-	{
-	?>
-	<option value="<?php echo $reports[$n]['ref']; ?>"<?php if($reports[$n]['ref'] == $report) { ?> selected="selected"<?php } ?>><?php echo $reports[$n]['name']; ?></option>
-	<?php
-	}
+foreach($report_options as $report_opt)
+    {
+    echo sprintf(
+        '<option value="%s"%s>%s</option>',
+        $report_opt['ref'],
+        ($report_opt['ref'] == $report ? ' selected' : ''),
+        htmlspecialchars($report_opt['name']));
+    }
 	?>
 </select>
 <div class="clearerleft"> </div>
@@ -269,10 +295,6 @@ for($n=0;$n<count($reports);$n++)
 				{
 				?>
 				<br />
-				<label for="send_all_users">
-					<input id="send_all_users" type="radio" name="report_receiver" value="all_users" onClick="document.getElementById('user_group_selection').style.display = 'none';" /> <?php echo $lang['report_periodic_email_option_all_users']; ?>
-				</label>
-				<br />
 				<label for="selected_user_groups">
 					<input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo $lang['report_periodic_email_option_selected_user_groups']; ?>
 				</label>
@@ -308,8 +330,6 @@ var do_download=false;
 <?php echo $output; ?>
 
 </div>
-
 <?php
 }
 include "../../include/footer.php";
-?>

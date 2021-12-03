@@ -1,5 +1,6 @@
 <?php
 include "../../include/db.php";
+include_once dirname(__DIR__, 2) . '/include/login_functions.php';
 
 $password_reset_mode=false;
 $resetvalues=getvalescaped("rp","");
@@ -50,9 +51,20 @@ if($resetvalues!="")
 
 if(!$password_reset_mode)
     {
-    include "../../include/authenticate.php"; if (checkperm("p") || !$allow_password_change || (isset($anonymous_login) && $anonymous_login==$username)) {exit("Not allowed.");}
+    include "../../include/authenticate.php";
+
+    if (checkperm("p") || !$allow_password_change || (isset($anonymous_login) && $anonymous_login==$username))
+        {
+        exit("Not allowed.");
+        }
+
+    // Reset $not_authenticated_pages (used in header) when this runs in an authenticated context. This will allow showing
+    // the header and search bar as normal.
+    $GLOBALS['modify_header_not_authenticated_pages'] = [];
+    $GLOBALS['modify_header_omit_searchbar_pages'] = [];
     }
-   
+$is_authenticated_ctx = is_authenticated();
+
 hook("preuserpreferencesform");
 
 if(getval("save", "") != "" && enforcePostRequest(false))
@@ -66,10 +78,10 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 		{
 		# The above hook may return true in order to prevent the password from being updated
 		}
-	else if (!$password_reset_mode && hash('sha256', md5("RS" . $username . getvalescaped("currentpassword","")))!=$userpassword)
-		{
-		$error3=$lang["wrongpassword"];
-		}
+    else if(!$password_reset_mode && !rs_password_verify(getval('currentpassword', ''), $userpassword, ['username' => $username]))
+        {
+        $error3 = $lang['wrongpassword'];
+        }
 	else {
         if (getval("password","")!=getval("password2","")) {$error2=true;}
     	else
@@ -94,12 +106,28 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 		    }
 		}
 	}
-	
+
 include "../../include/header.php";
-?>
-<div class="BasicsBox"> 
-	<?php if ($userpassword=="b58d18f375f68d13587ce8a520a87919" || $userpassword=="b58d18f375f68d13587ce8a520a87919"){?><div class="FormError" style="margin:0;"><?php echo $lang['secureyouradminaccount'];?></div><p></p><?php } ?>
-	<?php if (!hook("replaceuserpreferencesheader")) { ?>
+if($is_authenticated_ctx)
+    {
+    ?><div class="BasicsBox"><?php
+    }
+else
+    {
+    include '../../include/login_background.php';
+    ?>
+    <div id="LoginHeader">
+        <img src="<?php echo get_header_image(); ?>" class="LoginHeaderImg"></img>
+    </div>
+    <?php
+    }
+
+    if ($userpassword=="b58d18f375f68d13587ce8a520a87919")
+        {
+        ?><div class="FormError" style="margin:0;"><?php echo $lang['secureyouradminaccount'];?></div><p></p><?php
+        }
+	
+    if (!hook("replaceuserpreferencesheader")) { ?>
 	<h1><?php echo $lang["changeyourpassword"]?></h1>
 	<?php } ?> <!-- End hook("replaceuserpreferencesheader") -->
 
@@ -122,7 +150,7 @@ include "../../include/header.php";
 	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getvalescaped("expired",""))?>">
 	<?php
     generateFormToken("user_change_password");
-	
+
 	if(!$password_reset_mode)
 	    {
 	    // Additional user preferences only available in use cases other than password reset
@@ -176,9 +204,10 @@ if(!$password_reset_mode)
     {
     hook("afteruserpreferencesform");
     }
-    ?>
 
-</div>
-<?php
+if($is_authenticated_ctx)
+    {
+    // Close BasicsBox container
+    ?></div><?php
+    }
 include "../../include/footer.php";
-?>

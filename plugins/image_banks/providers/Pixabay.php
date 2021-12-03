@@ -12,28 +12,11 @@ class Pixabay extends Provider
     );
     protected $warning = "";
 
-
-    public function getId()
-        {
-        return $this->id;
-        }
-
-    public function getName()
-        {
-        return $this->name;
-        }
-
-    public function getAllowedDownloadEndpoint()
-        {
-        return $this->download_endpoint;
-        }
-
-
     public function checkDependencies()
         {
             if (!function_exists('curl_version'))
             {
-            return $this->lang["image_banks_pixabay_error_detail_curl"];
+            return $this->lang["image_banks_error_detail_curl"];
             }
             else
             {
@@ -90,6 +73,9 @@ class Pixabay extends Provider
             }
 
         $provider_results = new ProviderSearchResults();
+
+        // More cleanly handle an unexpected result.
+        if (!isset($search_results["hits"])) {echo "<h1>Sorry, your query could not be completed.</h1><pre>Provider said: " . json_encode($search_results,JSON_PRETTY_PRINT) . "</pre>";exit();}
 
         foreach($search_results["hits"] as $result)
             {

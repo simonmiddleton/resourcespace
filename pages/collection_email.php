@@ -5,12 +5,18 @@ include "../include/authenticate.php";
 
 $collection_url	= getvalescaped("collection","");
 $find			= getvalescaped('find', '');
-$offset 		= getvalescaped("offset","");
+$offset 		= getvalescaped("offset",0,true);
 $order_by 		= getvalescaped("order_by","");
 $sort 			= getvalescaped("sort","");
 $search 		= getvalescaped("search","");
 $starsearch		= getvalescaped('starsearch', '', true);
 $ref			= getvalescaped("ref", 0, true);
+
+// Share options
+$expires        = getvalescaped("expires","");
+$access         = getval("access",-1, true);	
+$group          = getval("usergroup",0,true);
+$sharepwd       = getvalescaped('sharepassword', '');
 
 $collection = get_collection($ref);
 if($collection === false)
@@ -129,13 +135,9 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	# Build a new list and insert
 	$users=getvalescaped("users","");
 	$message=getvalescaped("message","");
-	$access=getvalescaped("access",-1);
 	$add_internal_access=(getvalescaped("grant_internal_access","")!="");
-	$expires=getvalescaped("expires","");	
 	$feedback=getvalescaped("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
 	$list_recipients=getvalescaped("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
-	$group=getvalescaped("usergroup","");
-    $sharepwd = getvalescaped('sharepassword', '');
 	
 	$use_user_email=getvalescaped("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
@@ -143,7 +145,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
-    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "",$list_recipients,$add_internal_access,$group, $sharepwd);
+    $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "?parent=" . $collection["ref"],$list_recipients,$add_internal_access,$group, $sharepwd);
 	if ($errors=="")
 		{
 		# Log this	
@@ -202,24 +204,6 @@ render_help_link("user/sharing-resources");?>
 <?php
 generateFormToken("collectionform");
 
-if ($email_multi_collections && !$themeshare) { ?>
-<script type="text/javascript">
-   function getSelected(opt) {
-      var sel = '';
-	  var newref = '';
-      var index = 0;
-      for (var intLoop=0; intLoop < opt.length; intLoop++) { 
-         if (opt[intLoop].selected) 
-		 {  sel = sel + ', ' +  '<?php echo $collection_prefix?>' + opt[intLoop].value;
-		 	newref = newref + ',' +  opt[intLoop].value;
-		 }
-      }
-	  document.collectionform.ref.value = newref.substring(1, newref.length );
-      return sel.substring(2, sel.length );
-   }
-</script>
-<?php } 
-
 if($themeshare)
     {
     ?>
@@ -234,12 +218,12 @@ else
 	{?>	
 	<div class="Question">
 	<label><?php if ($themeshare) {echo $lang["themes"];} else {echo $lang["collectionname"];}?></label><div class="Fixed"><?php 
-		if (!$email_multi_collections &&  !$themeshare) { 
+		if (!$themeshare) { 
 			echo i18n_get_collection_name($collection);
 		} else { ##  this select copied from collections.php 
 			
 			?>		
-			<select name="collection" multiple="multiple" size="10" class="SearchWidthExt" style="width:365px;" 
+			<select name="collection" multiple size="10" class="stdwidth MultiSelect" style="height:100%;" 
 				onchange="document.getElementById('ref').value = getSelected(this); " >
 			<?php
 			
@@ -327,8 +311,14 @@ if($allow_edit)
 <?php
 if(!$internal_share_only)
 	{
-	render_share_options(true, $ref, true);  
-	} // End of section checking $internal_share_only
+    $shareoptions = array(
+        "password"          => $sharepwd != "",
+        "editaccesslevel"   => $access,
+        "editexpiration"    => $expires,
+        "editgroup"         => $group,
+        );
+	render_share_options($shareoptions);
+	}
 	
 	hook("collectionemailafterexternal");
 	?>

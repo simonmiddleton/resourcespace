@@ -90,7 +90,7 @@ if(isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0)
     {
     // We have a valid CSV, get a checksum and save it to a temporary location for processing	
     // Needs whole file checksum
-    $csvchecksum = get_checksum($csvfile, true);
+    $csvchecksum = get_checksum($_FILES[$fd]['tmp_name'], true);
     $csv_set_options["csvchecksum"] = $csvchecksum;
     $csv_set_options["csv_filename"] = $_FILES[$fd]["name"];   
 
@@ -101,7 +101,6 @@ if(isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0)
         }
     $result=move_uploaded_file($_FILES[$fd]['tmp_name'], $csvfile);
     }
-
 rs_setcookie("saved_csv_options",json_encode($csv_set_options));
 
 $csvuploaded = file_exists($csvfile);
@@ -112,6 +111,10 @@ if($csvuploaded)
     {
     $messages = array();
     $csv_info = csv_upload_get_info($csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv",$messages);
+    $offline_limit = $csv_info["row_count"] > 1000;
+    $force_offline = $offline_limit && $offline_job_queue;
+    $offline_text = $force_offline ? $lang["csv_upload_force_offline"] : $lang["csv_upload_recommend_offline"];
+    unset($csv_info["row_count"]); // No longer needed
     }
 
 
@@ -222,7 +225,7 @@ switch($csvstep)
         ?>
         <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" >
             <?php generateFormToken("upload_csv_form"); ?>
-            <input type="hidden" id="csvstep" name="csvstep" value="2" > 			
+            <input type="hidden" id="csvstepmain" name="csvstep" value="2" > 			
             <div class="Question">
                 <label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file'] ?></label>
                 <input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } ">	
@@ -249,7 +252,7 @@ switch($csvstep)
             <h2><?php echo $lang["csv_upload_mapping config"]; ?></h2>
             <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_config_form" method="post" enctype="multipart/form-data" >
                 <?php generateFormToken("upload_csv_config_form"); ?>
-                <input type="hidden" id="csvstep" name="csvstep" value="1" > 			
+                <input type="hidden" id="csvstepconfig" name="csvstep" value="1" > 			
 
 
                 <?php
@@ -293,6 +296,10 @@ switch($csvstep)
         if(!$csv_set_options["update_existing"])
             {
             // Step 2(a) Create new resources
+            if($offline_limit)
+                {
+                echo "<div class='PageInformal'>" . $offline_text . "</div>";
+                }
             echo "<h2>" . $lang["csv_upload_create_new_title"] . "</h2>";
             echo "<p>" . $lang["csv_upload_create_new_notes"] . "</p>";
             ?>
@@ -416,7 +423,11 @@ switch($csvstep)
             }
         else
             {
-            // Step 2(b) Update existing            
+            // Step 2(b) Update existing       
+            if($offline_limit)
+                {
+                echo "<div class='PageInformal'>" . $offline_text . "</div>";
+                }     
             echo "<h2>" . $lang["csv_upload_update_existing_title"] . "</h2>";
             echo "<p>" . $lang["csv_upload_update_existing_notes"] . "</p>";
             ?>
@@ -521,6 +532,11 @@ switch($csvstep)
         break;
     case 3:
         // Map metadata
+        // Step 2(b) Update existing       
+        if($offline_limit)
+            {
+            echo "<div class='PageInformal'>" . $offline_text . "</div>";
+            }     
         if(is_array($csv_info))
             {
             echo "<p>" . $lang["csv_upload_map_fields_notes"] . "</p>";
@@ -582,6 +598,17 @@ switch($csvstep)
                 <div class="clearerleft"> </div>
                 </div>
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
+                <?php 
+                if($offline_job_queue)
+                    {?>
+                        <div class="Question">
+                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline_quick"] ?></label>
+                        <input type="checkbox" id="process_offline" name="process_offline" value="1" onclick="if(this.checked){jQuery('#csvstep').val('5');}else{jQuery('#csvstep').val('4');}">
+                        <div class="clearerleft"></div>
+                    </div>
+                    <?php
+                    }?>                
+                <div class="Question">
                     <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
@@ -606,6 +633,10 @@ switch($csvstep)
         $prelog_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
         $csv_set_options["log_file"] = $prelog_file;
         $valid_csv = csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
+        if($offline_limit)
+            {
+            echo "<div class='PageInformal'>" . $offline_text . "</div>";
+            }
         echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
         if(count($messages) > 1000)
             {
@@ -626,29 +657,32 @@ switch($csvstep)
             <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" onSubmit="return CentralSpacePost(this,true);">
                 <?php generateFormToken("upload_csv_form"); ?>
 
-                <div class="Question" >
-                    <label for="process_offline"><?php echo $lang["csv_upload_process_offline"] ?></label>
-                    <?php 
-                    if($offline_job_queue)
-                        {?>
-                        <input type="checkbox" id="process_offline" name="process_offline" value="1">
-                        <?php
-                        }
-                    else
-                        {
-                        echo "<div class='Fixed'>" . $lang["offline_processing_disabled"] . "</div>";
-                        }?>
-                    <div class="clearerleft"> </div>
-                </div>
+                <?php
+                if(!$force_offline)
+                    {?>
+                    <div class="Question" >
+                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline"] ?></label>
+                        <?php 
+                        if($offline_job_queue)
+                            {?>
+                            <input type="checkbox" id="process_offline" name="process_offline" value="1">
+                            <?php
+                            }
+                        else
+                            {
+                            echo "<div class='Fixed'>" . $lang["offline_processing_disabled"] . "</div>";
+                            }?>
+                        <div class="clearerleft"> </div>
+                    </div>
+                    <?php
+                    }?>
 
                 <input type="hidden" id="csvstep" name="csvstep" value="5" > 
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                     <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
-                   <?php if ($valid_csv) { ?>
-                    <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>">
-                   <?php } ?>
+                    <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>" <?php if (!$valid_csv){echo "onclick=\"return confirm('" . $lang["csv_upload_ignore_errors"] . "');\"";} ?>>
                     <div class="clearerleft"> </div>
                 </div>    
             </form>
@@ -660,7 +694,7 @@ switch($csvstep)
     case 5:
         // Process file
         $meta=meta_get_map();
-        $csv_set_options["process_offline"] = getval("process_offline","") != "";
+        $csv_set_options["process_offline"] = $force_offline || getval("process_offline","") != "";
         if($csv_set_options["process_offline"])
             {            
             // Move the CSV to a new location so that it doesn't get overwritten

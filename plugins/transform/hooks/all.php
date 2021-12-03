@@ -2,9 +2,10 @@
 
 function HookTransformAllAdditionalheaderjs()
     {
-    global $baseurl,$baseurl_short;?>
-    <link rel="stylesheet" href="<?php echo $baseurl_short?>plugins/transform/lib/jcrop/css/jquery.Jcrop.min.css" type="text/css" />
-    <script type="text/javascript" src="<?php echo $baseurl?>/plugins/transform/lib/jcrop/js/jquery.Jcrop.min.js" language="javascript"></script>
+    global $baseurl,$baseurl_short, $css_reload_key;?>
+    <link rel="stylesheet" href="<?php echo $baseurl_short?>plugins/transform/lib/jcrop/css/jquery.Jcrop.min.css?css_reload_key=<?php echo $css_reload_key; ?>" type="text/css" />
+    <script type="text/javascript" src="<?php echo $baseurl_short ?>plugins/transform/lib/jcrop/js/jquery.Jcrop.min.js?css_reload_key=<?php echo $css_reload_key; ?>" language="javascript"></script>
+    <script type="text/javascript" src="<?php echo $baseurl_short?>lib/jQueryRotate/jQueryRotate.js?css_reload_key=<?php echo $css_reload_key; ?>" language="javascript"></script>
     <?php
     }
 
@@ -19,7 +20,8 @@ function HookTransformAllRender_actions_add_collection_option($top_actions,$opti
         {
         return false;
         }
-
+    
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
         // @see hook() for an explanation about the hook_return_value global
@@ -87,53 +89,4 @@ function HookTransformAllAdditional_title_pages()
         echo "document.title = \"$applicationname - $pagetitle\";\n";
         echo "</script>";
         }
-    }
-
-function HookTransformAllAfteruilayout()
-    {
-    global $CSRF_enabled, $CSRF_token_identifier, $usersession;
-
-    $form_append_csrf = '';
-    if($CSRF_enabled)
-        {
-        $form_append_csrf = sprintf('
-            form.append(
-                jQuery("<input></input>")
-                    .attr("type", "hidden")
-                    .attr("name", "%s")
-                    .attr("value", "%s")
-            );',
-            $CSRF_token_identifier,
-            generateCSRFToken($usersession, 'transform_download_file')
-        );
-        }
-    ?>
-    <!-- Transform plugin custom functions -->
-    <script>
-    function transform_download_file(resource, url)
-        {
-        event.preventDefault();
-
-        var iaccept = document.getElementById('iaccept').checked;
-        if(iaccept == false)
-            {
-            return false;
-            }
-
-        var crop_url = url + '&iaccept=on';
-
-        var form = jQuery('<form id="TransformDownloadFile"></form>')
-            .attr("action", crop_url)
-            .attr("method", "post");
-
-        <?php echo $form_append_csrf; ?>
-
-        form.appendTo('body').submit().remove();
-
-        var view_page_anchor = document.createElement("a");
-        view_page_anchor.setAttribute("href", baseurl_short + "?r=" + resource);
-        CentralSpaceLoad(view_page_anchor, true, false);
-        }
-    </script>
-    <?php
     }

@@ -57,7 +57,7 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $order_by = getvalescaped("order_by", "relevance");
 $archive = getvalescaped("archive", "0");
 $per_page = getvalescaped("per_page", null, true);
-$offset = getvalescaped("offset", null, true);
+$offset = getvalescaped("offset", 0, true);
 $sort = getvalescaped("sort", "desc");
 $starsearch = getvalescaped("starsearch", 0, true);
 $recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
@@ -108,10 +108,9 @@ if($ajax && $process_action)
         ajax_send_response(200, ajax_response_ok_no_data());
         }
 
-    foreach($resources as $resource)
-        {
-        update_archive_status($resource["ref"], $action["statusto"], $resource["archive"]);
-        }
+    $r_refs = array_column($affected_resources, 'ref');
+    $r_states = array_column($affected_resources, 'archive');
+    update_archive_status($r_refs, $action['statusto'], $r_states);
 
     // send user a message of confirmation with link to all resources in that new wf state
     $url = generateURL(

@@ -15,7 +15,7 @@ if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $pr
 include "../include/request_functions.php";
 
 $ref=getvalescaped("ref","",true);
-$error=false;
+$error = '';
 hook("addcustomrequestfields");
 
 if ($k == "" && isset($anonymous_login) && $username == $anonymous_login){
@@ -23,6 +23,7 @@ if ($k == "" && isset($anonymous_login) && $username == $anonymous_login){
 } else {
 	$user_is_anon = false;
 }
+$use_antispam = ($k !== '' || $user_is_anon);
 
 # Allow alternative configuration settings for this resource type.
 $resource            = get_resource_data($ref);
@@ -55,7 +56,23 @@ foreach($resource_field_data as $resource_field)
 
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
-	if ($k!="" || $user_is_anon || $userrequestmode==0)
+    $antispamcode = getval('antispamcode', '');
+    $antispam = getval('antispam', '');
+    $antispamtime = getval('antispamtime', 0);
+
+    // Check the anti-spam time is recent
+    if($use_antispam && ($antispamtime < (time() - 180) ||  $antispamtime > time()))
+        {
+        $result = false;
+        $error = $lang["expiredantispam"];    
+        }
+    // Check the anti-spam code is correct
+    else if($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
+        {
+        $result = false;
+        $error = $lang["requiredantispam"];
+        }
+	else if ($k!="" || $user_is_anon || $userrequestmode==0)
 		{
 		# Request mode 0 : Simply e-mail the request.
 		if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getvalescaped("email","")==""))
@@ -79,7 +96,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	
 	if ($result===false)
 		{
-		$error=$lang["requiredfields-general"];
+		$error = ($error ?: $lang["requiredfields-general"]);
 		}
 	else
 		{
@@ -100,7 +117,7 @@ include "../include/header.php";
 
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext");render_help_link("resourceadmin/user-resource-requests")?></p>
-  
+    <?php render_top_page_error_style($error); ?>
 	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("resource_request"); ?>
 	<input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
@@ -122,21 +139,21 @@ include "../include/header.php";
 	<div class="Question">
 	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
 	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-	<input name="fullname" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("fullname","")) ?>">
+	<input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("fullname","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	
 	<div class="Question">
 	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
 	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
+	<input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 
 	<div class="Question">
 	<label><?php echo $lang["contacttelephone"]?></label>
 	<input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
-	<input name="contact" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("contact","")) ?>">
+	<input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("contact","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php } ?>
@@ -208,11 +225,16 @@ if (isset($custom_request_fields))
 			}
 		}
 	}
+
+if($use_antispam)
+    {
+    render_antispam_question();
+    }
+
 hook("resource_request_form_bottom");
 ?>
 
 	<div class="QuestionSubmit">
-	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
 	<label for="buttons"> </label>			
 	<input name="save" value="true" type="hidden" />
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;

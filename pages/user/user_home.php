@@ -68,11 +68,17 @@ $introtext=text("introtext");
         if($offline_job_queue)
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR, $userref);
-            $failedjobcount = 2;
-            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount>0?"<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
+            $failedjobcount = count($failedjobs);
+            echo "<li><a href='" . $baseurl_short . "pages/manage_jobs.php?job_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-tasks'></i><br />" . $lang['my_jobs'] . ($failedjobcount > 0 ? "&nbsp;<span class='FailedJobCountPill Pill'>" . $failedjobcount . "</span>":"") . "</a>";
             echo "</li>";
             }
 
+        if($allow_share)
+            {
+            echo "<li><a href='" . $baseurl_short . "pages/manage_external_shares.php?share_user=" . $userref  . "' onClick='return CentralSpaceLoad(this, true);'><i aria-hidden='true' class='fa fa-fw fa-share-alt'></i><br />" . $lang['my_shares'] . "</a>";
+            echo "</li>";
+            }
+            
 		if($home_dash && checkPermission_dashmanage())
 			{ ?>
 			<li><a href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-th"></i><br /><?php echo $lang["manage_own_dash"];?></a></li>

@@ -35,3 +35,22 @@ function HookSimplesamlTeam_user_editAdditionaluserfields()
         <?php
         }
     }
+
+function HookSimplesamlTeam_user_editPassword($user)
+    {
+    if (isset($user["origin"]) && $user["origin"] == "simplesaml")
+        {
+        return true;
+        }
+    return false;
+    }
+
+function HookSimplesamlTeam_user_editTicktoemailpassword()
+    {
+    global $user;
+    if (isset($user["origin"]) && $user["origin"] == "simplesaml")
+        {
+        return true;
+        }
+    return false;
+    }

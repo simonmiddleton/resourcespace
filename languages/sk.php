@@ -2,6 +2,7 @@
 # Slovak
 # Language File for ResourceSpace
 # -------
+# Note: when translating to a new language, preserve the original case if possible.
 
 # User group names (for the default user groups)
 $lang["usergroup-administrators"]="Administrátori";
@@ -88,7 +89,7 @@ $lang["fieldtype-warning_message"]="Upozornenie";
 $lang["fieldtype-date_range"]="Rozsah dátumov";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Pozrite si <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> pre ďalšie informácie o povoleniach.";
+$lang["documentation-permissions"]="Pozrite si <b><a href=../../documentation/permissions.txt target=_blank> súbor pomocníka k oprávneniam </a></b> pre ďalšie informácie o povoleniach.";
 $lang["property-reference"]="Referencie";
 $lang["property-name"]="Názov";
 $lang["property-permissions"]="Oprávnenia";
@@ -117,6 +118,7 @@ $lang["property-field_id"]="ID poľa";
 $lang["property-title"]="Nadpis";
 $lang["property-resource_type"]="Typ zdroja";
 $lang["property-field_type"]="Typ poľa";
+$lang["property-field_active"]="Aktívne";
 $lang["property-field_constraint"]="Obmedzenie poľa";
 $lang["property-field_constraint-none"]="Žiadne";
 $lang["property-field_constraint-number"]="Číslo";
@@ -262,13 +264,13 @@ $lang["viewnewmaterial"]="Zobraziť nový materiál";
 $lang["researchrequestservice"]="Služba výskumných žiadostí";
 
 # Admin
-$lang["manageresources"]="Spravovať zdroje";
+$lang["manageresources"]="Správa zdrojov";
 $lang["overquota"]="Kvóta na disku prekročená; nie je možné pridať ďalšie zdroje";
-$lang["managearchiveresources"]="Spravovať archívne prostriedky";
+$lang["managearchiveresources"]="Správa archívnych prostriedkov";
 $lang["managethemes"]="Spravovať vybrané zbierky";
-$lang["manageresearchrequests"]="Spravovať žiadosti o asistenciu";
-$lang["manageusers"]="Spravovať používateľov";
-$lang["managecontent"]="Spravovať obsah";
+$lang["manageresearchrequests"]="Správa žiadostí o asistenciu";
+$lang["manageusers"]="Správa používateľov";
+$lang["managecontent"]="Správa obsahu";
 $lang["viewreports"]="Správy";
 $lang["viewreport"]="Pozrieť si správu";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
@@ -290,7 +292,7 @@ $lang["searchcontenteg"]="(stránka, názov, text)";
 $lang["copyresource"]="Kopírovanie zdrojov";
 $lang["resourceidnotfound"]="ID prostriedku sa nenašlo";
 $lang["inclusive"]="(vrátane)";
-$lang["pluginssetup"]="Spravovať doplnky";
+$lang["pluginssetup"]="Správa doplnkov";
 $lang["pluginmanager"]="Správca doplnkov";
 $lang["users"]="Používatelia";
 
@@ -524,6 +526,7 @@ $lang["asadded"]="Ako bolo pridané";
 $lang["popularity"]="Popularita";
 $lang["rating"]="Hodnotenie";
 $lang["colour"]="Farba";
+$lang["modified"]="Upravená";
 $lang["jumptopage"]="Strana";
 $lang["jump"]="Skok";
 $lang["titleandcountry"]="Názov / krajina";
@@ -812,7 +815,7 @@ $lang["continuetohome"]="Pokračovať na domovskú stránku";
 $lang["backtohelphome"]="Späť na domovskú stránku pomoci";
 $lang["backtosearch"]="Späť na výsledky vyhľadávania";
 $lang["backtoview"]="Zobrazenie zdrojov";
-$lang["backtoeditmetadata"]="Späť na editáciu zdroja";
+$lang["backtoeditresource"]="Späť na editáciu zdroja";
 $lang["backtouser"]="Späť na prihlásenie používateľa";
 $lang["continuetouser"]="Pokračujte na prihlásenie používateľa";
 $lang["termsandconditions"]="Podmienky používania";
@@ -1160,7 +1163,7 @@ $lang["phpextensions"]="PHP rozšírenia";
 # Setup Script
 $lang["setup-alreadyconfigured"]="Vaša inštalácia ResourceSpace je už nakonfigurovaná. Ak chcete spustit nanovo konfiguráciu, môžete odstrániť <pre> include/config.php </pre> a znova načítať túto stránku.";
 $lang["setup-successheader"]="Blahoželáme!";
-$lang["setup-successdetails"]="Vaše počiatočné nastavenie ResourceSpace je dokončené. Nezabudnite sa pozrieť na 'include/config.default.php', kde nájdete ďalšie možnosti konfigurácie.";
+$lang["setup-successdetails"]="Vaše počiatočné nastavenie ResourceSpace je dokončené. Nezabudnite sa pozrieť na 'include/default.config.php', kde nájdete ďalšie možnosti konfigurácie.";
 $lang["setup-successnextsteps"]="Ďalšie kroky:";
 $lang["setup-successremovewrite"]="Teraz môžete odstrániť právo na zápis do priečinka „include/“.";
 $lang["setup-visitwiki"]='Navštívte <a target="_blank" href="https://www.resourcespace.com/knowledge-base/"> znalostnú základňu ResourceSpace </a> pre ďalšie informácie o prispôsobení inštalácie.';
@@ -1321,9 +1324,9 @@ $lang["userrequestnotification3"]="Ak ide o platnú požiadavku, kliknutím na o
 
 $lang["ticktoapproveuser"]="Ak chcete aktivovať tento účet, musíte nastaviť jeho stav na schválený";
 
-$lang["managerequestsorders"]="Správa požiadaviek / objednávok";
-$lang["editrequestorder"]="Upraviť požiadavku / objednávku";
-$lang["requestorderid"]="ID požiadavky / objednávky";
+$lang["managerequestsorders"]="Správa požiadaviek";
+$lang["editrequestorder"]="Upraviť požiadavku";
+$lang["requestorderid"]="ID požiadavky";
 $lang["viewrequesturl"]="Ak chcete zobraziť túto žiadosť, kliknite na odkaz nižšie:";
 $lang["requestreason"]="Dôvod žiadosti";
 
@@ -1358,7 +1361,7 @@ $lang["alternativelocalupload"]="Nahrať alternatívne súbory - načítať z mi
 
 $lang["confirmdeletefieldoption"]="Naozaj chcete odstrániť túto voľbu poľa?";
 
-$lang["cannotshareemptycollection"]="Táto zbierka je prázdna a preto sa nedá zdieľať.";	
+$lang["cannotshareemptycollection"]="Táto zbierka je prázdna a preto sa nedá zdieľať."; 
 $lang["cannotshareemptythemecategory"]="Táto kategória odporúčaných zbierok neobsahuje žiadne odporúčané zbierky a preto ju nemožno zdieľať.";
 
 $lang["requestall"]="Vyžiadať si všetky";
@@ -1402,32 +1405,18 @@ $lang['plugins-author'] = 'Autor';
 $lang['plugins-version'] = 'Verzia';
 $lang['plugins-instversion'] = 'Nainštalovaná verzia';
 $lang['plugins-uploadheader'] = 'Nahrať rozšírenie';
-$lang['plugins-uploadtext'] = 'Vyberte súbor .rsp, ktorý chcete nainštalovať.';
 $lang['plugins-deactivate'] = 'Deaktivácia';
 $lang['plugins-moreinfo'] = 'Viac&nbsp;informácií';
 $lang['plugins-activate'] = 'Aktivovať';
 $lang['plugins-purge'] = 'Odstrániť konfiguráciu';
-$lang['plugins-rejmultpath'] = 'Archív obsahuje viacero ciest. (Bezpečnostné riziko)';
-$lang['plugins-rejrootpath'] = 'Archív obsahuje absolútne cesty. (Bezpečnostné riziko)';
-$lang['plugins-rejparentpath'] = 'Archív obsahuje cesty k nadradeným adresárom (../). (Bezpečnostné riziko)';
-$lang['plugins-rejmetadata'] = 'Súbor s popisom archívu sa nenašiel.';
-$lang['plugins-rejarchprob'] = 'Pri extrahovaní archívu sa vyskytol problém:';
-$lang['plugins-rejfileprob'] = 'Nahrané rozšírenie musí byť súbor typu .rsp.';
-$lang['plugins-rejremedy'] = 'Ak tomuto rozšíreniu dôverujete, môžete ho nainštalovať ručne, extrahovaním archívu do adresára s rozšíreniami.';
-$lang['plugins-uploadsuccess'] = 'Rozšírenie sa úspešne nahralo na server.';
 $lang['plugins-headertext'] = 'Doplnky rozširujú funkčnosť ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Aktivované v config.php';
-$lang['plugins-uploadbutton'] = 'Nahrať doplnok na server';
 $lang['plugins-download'] = 'Stiahnuť&nbsp;konfiguráciu';
 $lang['plugins-upload-title'] = 'Získať konfiguráciu zo súboru';
 $lang['plugins-upload'] = 'Nahrať konfiguráciu na server';
 $lang['plugins-getrsc'] = 'Súbor na použitie:';
 $lang['plugins-saveconfig'] = 'Uložiť konfiguráciu';
 $lang['plugins-saveandexit'] = 'Uložiť a ukončiť';
-$lang['plugins-didnotwork'] = 'Ospravedlňujeme sa, ale toto nefungovalo. Vyberte platný súbor .rsc súbor pre toto rozšírenie a potom kliknite na tlačidlo \'Nahrať konfiguráciu na server\'.';
-$lang['plugins-goodrsc'] = 'Konfigurácia bola nahraná. Uložte ju kliknutím na tlačidlo „Uložiť konfiguráciu“.';
-$lang['plugins-badrsc'] = 'Ľutujeme, ale toto nebol platný súbor typu .rsc.';
-$lang['plugins-wrongplugin'] = 'Ľutujeme, toto je súbor typu .rsc pre rozšírenie %plugin. Vyberte súbor .rsc pre toto rozšírenie.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Nastaví konfiguračnú premennú: $%cvn'; //%cvn is replaced by the name of the config variable being set
 $lang['plugins-search-plugin-placeholder'] = 'Vyhľadajte rozšírenia';
 $lang['plugins-disabled-plugin-message'] = 'Zakázané v konfiguračnom súbore';
@@ -1650,12 +1639,12 @@ $lang["close"]="Zavrieť";
 $lang["repeatinstallationcheck"]="Zopakovať kontrolu inštalácie";
 $lang["shouldbeversion"]="by mala byť ? alebo viac"; # E.g. "mala by byť 4,4 alebo vyššia"
 $lang["phpinivalue"]="Hodnota PHP.INI pre „?“"; # E.g. "Hodnota PHP.INI pre 'memory_limit'"
-$lang["writeaccesstofilestore"]="Oprávnenie na zápis do priečinka ";
-$lang["nowriteaccesstofilestore"]=" Priečinok nie je zapisovateľný";
+$lang["writeaccesstofilestore"]="Oprávnenie na zápis do priečinka $storagedir";
+$lang["nowriteaccesstofilestore"]="Priečinok $storagedir nie je zapisovateľný";
 $lang["writeaccesstoplugins"]="Oprávnenie na zápis do priečinka /plugins";
 $lang["nowriteaccesstoplugins"]="Nieje možné zapisovať do priečinka /plugins";
-$lang["writeaccesstohomeanim"]="Oprávnenie na zápis do priečinka ";
-$lang["nowriteaccesstohomeanim"]=" do folder nie je možné zapisovať. Pridajte oprávnenia na zápis pre umožnenie funkcie orezania domácej animácie v doplnku Transformácie.";
+$lang["writeaccesstohomeanim"]="Oprávnenie na zápis do priečinka $homeanim_folder";
+$lang["nowriteaccesstohomeanim"]="Do $homeanim_folder nie je možné zapisovať. Pridajte oprávnenia na zápis pre umožnenie funkcie orezania domácej animácie v doplnku Transformácie.";
 $lang["blockedbrowsingoffilestore"]="Je zablokované prehľadávanie adresára „filestore“";
 $lang["noblockedbrowsingoffilestore"]="Zdá sa, že adresára filestore je prehľadávateľný; odstráňte direktívu 'Indexes' zo zoznamu Apache Options, v nastavení virtuálneho hosta.";
 $lang["execution_failed"]="Neočakávaný výstup pri vykonávaní príkazu %command. Výstup bol '%output'.";  # %command and %output will be replaced, e.g. Execution failed; unexpected output when executing convert command. Output was '[stdout]'.
@@ -1996,7 +1985,7 @@ $lang['metadata-pdf-title'] = 'Stiahnutie metadát pre zdroj';
 # Comments field titles, prompts and default placeholders
 $lang['comments_box-title']="Komentáre";
 $lang['comments_box-policy']="Pravidlá pre komentáre";
-$lang['comments_box-policy-placeholder']="Doplňte text k položke comments_policy v textoch webu";		# only shown if Admin User and no policy set
+$lang['comments_box-policy-placeholder']="Doplňte text k položke comments_policy v textoch webu";       # only shown if Admin User and no policy set
 $lang['comments_in-response-to']="v reakcii na";
 $lang['comments_respond-to-this-comment']="Odpovedať";
 $lang['comments_in-response-to-on']="na";
@@ -2091,7 +2080,7 @@ $lang['send_collection_to_admin_collectionname'] = 'Názov zbierky: ';
 $lang['send_collection_to_admin_numberofresources'] = 'Počet zdrojov: ';
 
 # User group management
-$lang['page-title_user_group_management'] = "Spravovať skupiny používateľov";
+$lang['page-title_user_group_management'] = "Správa skupín používateľov";
 $lang['page-subtitle_user_group_management'] = "Táto sekcia slúži na pridanie, odstránenie a úpravu skupín používateľov.";
 $lang['action-title_create_user_group_called'] = "Vytvoriť skupinu používateľov s názvom...";
 $lang['action-title_filter_by_parent_group'] = "Filter nadradenej skupiny používateľov";
@@ -2102,7 +2091,7 @@ $lang["fieldhelp-permissions_filter"]="Môžete zadať jedno povolenie alebo via
 $lang['page-title_user_group_management_edit'] = "Upraviť skupinu používateľov";
 $lang['page-subtitle_user_group_management_edit'] = "Táto časť sa používa na úpravu vlastností skupiny používateľov.";
 $lang["action-title_remove_user_group_logo"]="Zaškrtnite, ak chcete odstrániť logo skupiny používateľov";
-$lang["action-title_see_wiki_for_user_group_advanced_options"]="Prosím pozrite si <a href='https://www.resourcespace.com/knowledge-base/systemadmin/advanced-user-group-options'>Znalostná základňa</a> pre ďalšiu pomoc s pokročilými možnosťami.";
+$lang["action-title_see_wiki_for_advanced_options"]="Prosím pozrite si <a href='https://www.resourcespace.com/knowledge-base/'>Znalostná základňa</a> pre ďalšiu pomoc s pokročilými možnosťami.";
 
 # admin web edit
 $lang['page-title_web_edit'] = "Upraviť súbor";
@@ -2113,9 +2102,9 @@ $lang['page-title_user_group_permissions_edit'] = "Upraviť povolenia skupiny po
 $lang['page-subtitle_user_group_permissions_edit'] = "V tejto časti môžete upraviť povolenia skupiny používateľov.";
 
 # Report management
-$lang['page-title_report_management'] = "Spravovať hlásenia/prehľady";
+$lang['page-title_report_management'] = "Správa reportov";
 $lang['page-subtitle_report_management'] = "Táto časť sa používa na úpravu systémových hlásení/prehľadov.";
-$lang['action-title_create_report_called'] = "Vytvoriť prehľad s názvom ...";
+$lang['action-title_create_report_called'] = "Vytvoriť report s názvom ...";
 
 # Report management edit
 $lang['page-title_report_management_edit'] = "Upraviť prehľad/hlásenie";
@@ -2123,7 +2112,7 @@ $lang['page-subtitle_report_management_edit'] = "V tejto časti môžete upravi�
 $lang["fieldtitle-tick_to_delete_report"] = "Začiarknutím toto hlásenie odstránite";
 
 # size management
-$lang['page-title_size_management'] = "Spravovať veľkosti/rozmery";
+$lang['page-title_size_management'] = "Správa veľkostí";
 $lang['page-subtitle_size_management'] = "V tejto časti môžete upraviť veľkosti/rozmery sťahovaných súborov a ukážok.";
 $lang['action-title_create_size_with_id'] = "Vytvorte veľkosť pomocou " . $lang['property-id'] . "...";
 
@@ -2133,7 +2122,7 @@ $lang['page-subtitle_size_management_edit'] = "V tejto časti môžete upraviť 
 $lang["fieldtitle-tick_to_delete_size"] = "Začiarknutím túto veľkosť odstránite";
 
 # Resource type management
-$lang["resource_types_manage"]      = "Spravovať typy zdrojov";
+$lang["resource_types_manage"]      = "Správa typov zdrojov";
 $lang["resource_type_new"]          = "Nový typ zdroja";
 $lang["resource_type_field_new"]    = "Nové pole metaúdajov";
 
@@ -2144,7 +2133,7 @@ $lang["resource_type_field_new"]    = "Nové pole metaúdajov";
 $lang["admin_advanced_field_properties"]="Rozšírené vlastnosti poľa";
 $lang["admin_delete_field_confirm"]="Existujú %%AFFECTEDRESOURCES%% zdrojov s prostriedkami v tomto poli. ID niekoľkých ovplyvnených prostriedkov sú uvedené nižšie. Ak budete pokračovať, metadáta spojené s týmto poľom sa stratia. Naozaj chcete pokračovať v mazaní?";
 $lang["admin_resource_type_create"]="Vytvoriť typ prostriedku s názvom ...";
-$lang["admin_resource_type_field"]="Spravovať polia metadát";
+$lang["admin_resource_type_field"]="Správa polí metadát";
 $lang["admin_resource_type_field_count"]="Polia metaúdajov";
 $lang["admin_resource_type_field_create"]="Vytvoriť pole metadát s názvom ...";
 $lang["admin_resource_type_field_reorder_information"]="Ak chcete zmeniť poradie zobrazenia, presuňte riadky v tabuľke ťahaním.";
@@ -2153,7 +2142,7 @@ $lang["admin_resource_type_field_reorder_information_tab_order"]="Zmena poradia 
 $lang["admin_resource_type_field_reorder_mode"]="Kliknutím sem, zobrazíte metadáta v poradí zobrazenia, pre umožnenie preskupenia polí pomocou metódy ťahaj a pusť";
 $lang["admin_resource_type_field_reorder_mode_all"]="Zobraziť všetky polia v predvolenom poradí zobrazenia, aby sa umožnilo preskupenie polí pomocou metódy ťahaj a pusť";
 $lang["admin_resource_type_field_reorder_select_restype"]="Ak chcete povoliť zmenu poradia, vyberte jeden typ prostriedku alebo globálne polia";
-$lang["admin_resource_type_fields"]="Spravovať polia metaúdajov";
+$lang["admin_resource_type_fields"]="Správa polí metadát";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Želáte si migrovať existujúce údaje?";
 $lang["admin_resource_type_field_migrate_data"]="Migrvať existujúce údaje do pevného zoznamu možností";
 $lang["admin_resource_type_field_migrate_delete_data"]="Chcete odstrániť nadbytočné údaje po migrácii?";
@@ -2204,20 +2193,20 @@ $lang["all__comments_flag_notification_email_body"]="";
 $lang["all__comments_flag_notification_email_subject"]="";
 $lang["all__comments_policy"]="";
 $lang["all__comments_removal_message"]="";
-$lang["all__emailbulk"]="<br /><br />\n[text]<br /><br />\n[text_footer]\n";
-$lang["all__emailcollection"]="<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcollectionexternal"]="<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcontactadmin"]="<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
-$lang["all__emaillogindetails"]="<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnewresearchrequestwaiting"]="<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesapproved"]="<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcessubmitted"]="<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesunsubmitted"]="<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailreminder"]="<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestassigned"]="<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestcomplete"]="<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresource"]="<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresourcerequest"]="<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
+$lang["all__emailbulk"]="[img_gfx/titles/title.gif]<br /><br />\n[text]<br /><br />\n[text_footer]\n";
+$lang["all__emailcollection"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
+$lang["all__emailcollectionexternal"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
+$lang["all__emailcontactadmin"]="[img_../gfx/titles/title.gif]<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
+$lang["all__emaillogindetails"]="[img_gfx/titles/title.gif]<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnewresearchrequestwaiting"]="[img_gfx/titles/title.gif]<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcesapproved"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcessubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailnotifyresourcesunsubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailreminder"]="[img_gfx/titles/title.gif]<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresearchrequestassigned"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
+$lang["all__emailresearchrequestcomplete"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresource"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
+$lang["all__emailresourcerequest"]="[img_gfx/titles/title.gif]<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
 $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace Open Source Digital Asset Management</a>";
 $lang["all__researchrequest"]="Nechajte náš tím nájsť pre Vás potrebné zdroje.";
 $lang["all__searchpanel"]="Vyhľadávajte pomocou popisov, kľúčových slov a čísel zdrojov";
@@ -2246,8 +2235,11 @@ $lang["downloadfile_nofile"]="Požadovaný súbor nebol nájdený.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Vyberte, ktoré polia chcete prepísať. Polia, ktoré nevyberiete, zostanú nedotknuté.";
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["home__help"]="Pomoc a rady, ako využiť ResourceSpace naplno.";
+$lang["home__mycollections"]="Usporiadajte, spolupracujte a zdieľajte svoje zdroje.S pomocou týchto nástrojov môžete pracovať efektívnejšie.";
 $lang["home__restrictedtext"]="Kliknutím na odkaz, ktorý vám bol zaslaný e-mailom, získate prístup k vybraným zdrojom.";
 $lang["home__restrictedtitle"]="Vitajte v ResourceSpace [ver]";
+$lang["home__themes"]="Najlepšie zdroje, ručne vyberané a zoskupené.";
 $lang["home__welcometext"]="Jednoduchý, rýchle a bezplatný spôsob usporiadania digitálnych diel.";
 $lang["home__welcometitle"]="Vitajte v ResourceSpace [ver]";
 $lang["login__welcomelogin"]="Vitajte v ResourceSpace, prosím prihláste sa ...";
@@ -2271,10 +2263,12 @@ $lang["team_stats__introtext"]="Grafy sa generujú na požiadanie, na základe a
 $lang["team_user__introtext"]="V tejto časti môžete pridávať, odstraňovať a upravovať používateľov.";
 $lang["terms__introtext"]="Predtým, než budete pokračovať musíte akceptovať podmienky používania. \n\n";
 $lang["terms__terms"]="Podmienky používania nájdete tu.";
+$lang["terms and conditions__terms and conditions"]="Podmienky používania nájdete tu.";
 $lang["themes__findpublic"]="Verejné zbierky sú zbierky zdrojov, zdieľané ostatními používateľmi.";
 $lang["themes__introtext"]="Odporúčané zbierky sú skupiny zdrojov vytvorené správcami aby poskytli prehľad o zdrojoch dostupných v systéme.";
 $lang["themes__manage"]="Usporiadajte a upravujte vybrané zbierky dostupné online. Vybrané zbierky sú propagované zbierky. <br /><br /><strong> 1 Ak chcete vytvoriť nový záznam v odporúčaných zbierkach - vytvorte zbierku </strong><br /> Zvoľte <strong> Moje zbierky </strong> z hlavnej ponuky a vztvorte úplne novú <strong> verejnú </strong> zbierku. Nezabudnite uviesť názov odporúčanej zbierky. Použite existujúci názov odporúčanej zbierky na zoskupenie zbierky do uvedenej zbierky alebo vyberte nový názov a vytvorte úplne novú odporúčanú zbierku. Nikdy neumožnujte používateľom pridávať / odoberať zdroje z odporúčaných zbierok. <br /><br /><strong> 2 Upraviť obsah existujúceho záznamu v rámci odporúčanej kolekcie </strong><br /> Zvoľte <strong> upraviť kolekciu </strong> . Položky v tejto zbierke sa zobrazia v sekcii <strong> Moje zbierky </strong> panela v dolnej časti obrazovky. Na úpravu, odstránenie alebo pridanie zdrojov použite štandardné nástroje. <br /><br /><strong> 3 Ak chcete zmeniť názov odporúčanej zbierky alebo presunúť zbierku pod inú vybranú kolekciu </strong><br /> zvoľte <strong> upravovať vlastnosti </strong> a upravte uvedenú kategóriu zbierky alebo názov zbierky. Použite existujúci názov odporúčanej zbierky na zoskupenie zbierky do aktuálnej vybranej zbierky (nezabudnite napísať presne to isté), alebo vyberte nový názov a vytvorte úplne novú odporúčanú zbierku. <br /><br /><strong> 4 Odstránenie zbierky z odporúčaných zbierok </strong><br /> Zvoľte <strong>upravovať vlastnosti </strong> a odstráňte slová z poľa kategórie odporúčaných zbierok.";
 $lang["upload__introtext"]="";
+$lang["upload_swf__introtext"]="";
 $lang["user_password__introtext"]="Zadajte svoju e-mailovú adresu a bude vám zaslané Vaše používateľské meno a heslo.";
 $lang["user_preferences__introtext"]="Ak chcete zmeniť svoje heslo, nižšie zadajte nové heslo.";
 $lang["user_preferences__introtext_new"]="Zadajte heslo nižšie.";
@@ -2301,7 +2295,7 @@ $lang["externalshare_using_permissions_from_user_group"]="Ak posielate e-mail ex
 $lang["delete__nopassword"]="Potvrďte, že chcete tento zdroj skutočne odstrániť.";
 
 $lang["collection_download_too_large"]="Ľutujeme, táto zbierka je príliš veľká na stiahnutie vo forme jedného súboru. Skúste zmenšiť veľkosť zbierky alebo vyberte menšiu veľkosť obrázka.";
-$lang["all__passwordnewemailhtml"]="<br /><br /> Kliknutím na odkaz nižšie nastavíte nové heslo pre svoj účet. <br /><br /> URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br /> používateľské meno: [username]<br />[text_footer]" ;
+$lang["all__passwordnewemailhtml"]="[img_gfx/titles/title.gif]<br /><br /> Kliknutím na odkaz nižšie nastavíte nové heslo pre svoj účet. <br /><br /> URL: <a href=\"[url]\" target=\"_blank\" >[url]</a><br /> používateľské meno: [username]<br />[text_footer]" ;
 
 $lang['disk_size_no_upload_heading']="Nahrávanie je dočasne nedostupné";
 $lang['disk_size_no_upload_explain']="Z dôvodu kapacitných obmedzení bolo nahrávanie dočasne zakázané. Ospravedlňujeme sa za vzniknuté nepríjemnosti.";
@@ -2349,13 +2343,13 @@ $lang["dashtilevisitlink"]="Navštíviť odkaz";
 $lang["alluserprebuiltdashtiles"]="Vytvorte pred-definované dlaždice dashboardov (pridané pre všetkých používateľov)";
 $lang["manageowndashinto"]="Spravovať dlaždice, ktoré sú k dispozícii pre vašu palubovku. Ak máte na to oprávnenie, môžete na svojej palubovke pridať / odstrániť alebo upraviť dlaždice.";
 $lang['manage_all_user_dash_tiles_note'] = 'Poznámka: Dlaždice s červeným okrajom sú pre používateľov skryté. Správcovia ich vidia, ale pred týmito používateľmi sú skryté';
-$lang['manage_dash_tiles'] = 'Spravovať dlaždice na palubovke';
+$lang['manage_dash_tiles'] = 'Správa palubovky';
 $lang['view_tiles'] = 'Zobraziť dlaždice';
 $lang['upgrade_available_title'] = 'K dispozícii je aktualizácia';
 $lang['upgrade_available_text'] = 'Kliknutím zobrazíte ďalšie informácie o novej verzii';
 
 /* User group dash tiles */
-$lang['manage_user_group_dash_tiles']  = 'Spravovať dlaždice palubovky skupiny používateľov';
+$lang['manage_user_group_dash_tiles']  = 'Správa dlaždíc pre skupinu používateľov';
 $lang['who_should_see_dash_tile']      = 'Kto by mal vidieť túto dlaždicu?';
 $lang['dash_tile_audience_me']         = 'iba ja';
 $lang['dash_tile_audience_all_users']  = 'všetci používatelia';
@@ -2544,15 +2538,15 @@ $lang['metadata_first_option_is_default']='Prvá možnosť sa použije ako predv
 $lang['metadata_populate_default_node_for_empty_values']='Vyplniť predvolenou hodnotou';
 
 /* Manage slideshows */
-$lang["manage_slideshow"] = "Spravovať prezentáciu";
+$lang["manage_slideshow"] = "Správa prezentácie";
 $lang["action-add-new"] = "Pridať novú";
 $lang["action-submit-button-label"] = "Odoslať";
 $lang["slideshow_use_static_image"] = "Použite jeden náhodný obrázok zo sady (obrázok sa nezmení, pokiaľ sa stránka neobnoví)";
 $lang["slideshow-image"] = "obrázok prezentácie";
 $lang["manage-slideshow-instructions"] = "Obrázok prezentácie môže byť zobrazený vo viacerých oblastiach systému. Ak chcete vybrať ďalšie miesta, začiarknite políčka nižšie. Môžete tiež kliknúť na ukážku obrázka a zobraziť podrobnosti o prostriedku, s ktorým je prepojený (ak taký existuje).";
 
-$lang["emailcollectionrequest"] = " <br /> Nasledujúci používateľ predložil požiadavku: <br /> Požívateľské meno: [username]<br /> E-mail používateľa: [useremail]<br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požiadavku. <br /><a href='[requesturl]'>[requesturl]</a>";
-$lang["emailusercollectionrequest"] = "<br /> Vaša požiadavka na zdroje bola odoslaná na schválenie a čoskoro bude vyhodnotená: <br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požadované zdroje. <br /><a href='[url]'>[url]</a>";
+$lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif] <br /> Nasledujúci používateľ predložil požiadavku: <br /> Požívateľské meno: [username]<br /> E-mail používateľa: [useremail]<br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požiadavku. <br /><a href='[requesturl]'>[requesturl]</a>";
+$lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br /> Vaša požiadavka na zdroje bola odoslaná na schválenie a čoskoro bude vyhodnotená: <br /><br /> Dôvod požiadavky: [requestreason]<br /><br /> Kliknutím na odkaz nižšie zobrazíte požadované zdroje. <br /><a href='[url]'>[url]</a>";
 $lang['user_pref_show_notifications'] = "Zobraziť systémové notifikácie na obrazovke. Ak je vypnutá, počítadlo správ sa bude stále aktualizovať, aby indikovalo prítomnosť nových správ";
 $lang['user_pref_daily_digest'] = "Pošlite mi denný e-mail so všetkými neprečítanými upozorneniami z posledných 24 hodín";
 $lang['email_daily_digest_subject'] = "Zhrnutie oznámení";
@@ -2756,7 +2750,7 @@ $lang["filter_migration"]           = "Migrácia filtrov";
 $lang["filter_search_success"]      = "Vyhľadávací filter bol úspešne migrovaný.";
 $lang["filter_search_error"]        = "Pri migrácii vyhľadávacieho filtra sa vyskytla chyba. Skontrolujte filter vyhľadávania.";
 $lang["filter_search_delete_error"] = "Filter používajú nasledujúci používatelia alebo skupiny";
-$lang["filter_manage"]              = "Spravovať filtre";
+$lang["filter_manage"]              = "Správa filtrov";
 $lang["filter_edit"]                = "Upraviť filter";
 $lang["filter_new"]                 = "Nový filter";
 $lang["filter_none"]                = "Žiadny filter";
@@ -2826,14 +2820,10 @@ $lang["collection_actiontype_6"]        = "Pokročilé";
 $lang["collection_actiontype_999"]      = "Iné";
 
 //RS 9.2
-$lang["property-field_active"]="Aktívne";
-$lang["property-field_constraint"]="Obmedzenie poľa";
-$lang["mycollection"]="Predvolená zbierka";
-$lang["modified"]="Modifikovaná";
 $lang['log-f']="Nahradený súbor";
 $lang["backtoshareresource"]="Späť na zdieľanie zdrojov";
 $lang["backtosharecollection"]="Späť na zdieľanú zbierku";
-$lang["db-default-encoding"] = "(kódovanie znakov databázy: %encoding)"; # %encoding will be replaced
+$lang["db-default-encoding"] = "(kódovanie znakov databázy: %encoding)";
 $lang["unauthorized"] = "Neoprávnený";
 $lang["warning_duplicate_shortname_fields"] = "Pole typu prostriedku s rovnakým krátkym menom už existuje. Prosím, zvoľte jedinečné meno!";
 $lang['relateallresources_confirmation'] = 'Všetky zdroje v tejto zbierke sú súvisiace';
@@ -2883,4 +2873,94 @@ $lang["invalid_date_error"]                 = "Chyba: %row% '%date%' v poli [%fi
 $lang["error_server_missing_module"]        = "Na serveri chýba požadovaný softvér: %%MODULE%%. Obráťte sa na správcu systému";
 $lang["error_check_config"]                 = "Skontrolujte konfiguračnú možnosť %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Použiť ako ukážku obrázka";
+$lang["filechecksum"]                       = "Kontrolný súčet";
+$lang["system_notification"]                = "%%APPLICATION_NAME%% - notifikácia";
+$lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["error_edit_filter_invalid"]          = "Filter pre editáciu nieje správne nakonfigurovaný pre túto skupinu používateľov. Prosím kontaktujte správcu.";
+$lang["action_lock"]                        = "Zamknúť";
+$lang["action_unlock"]                      = "Odomknúť";
+$lang["status_locked"]                      = "Zamknutý";
+$lang["status_unlocked"]                    = "Odomnutý";
+$lang["status_locked_by"]                   = "Zamkol %%USER%%";
+$lang["status_locked_self"]                 = "Tento zdroj ste uzamkli";
+$lang["error_locked_by_user"]               = "Tento zdroj uzamkol %%USER%%";
+$lang["error_locked_other_user"]            = "Tento zdroj je uzamknutý iným používateľom";
+$lang["error-edit_noaccess_resources"]      = "K editácii nasledovných zdrojov nemáte oprávnenie: ";
+$lang["error-edit_locked_resources"]        = "Nasledujúce zdroje sú uzamknuté: ";
+$lang["locked_resource_search"]             = "Uzamknuté zdroje";
+$lang["autocomplete_log_note"]              = "(Autocomplete)";
+$lang["posted-file-not-found"]              = "Nahraný súbor nebol nájdený";
+$lang["error-theme-missing"]                = "Odporúčaná zbierka chýba alebo nebola vytvorená.";
+$lang["system_config_search_engines"]       = "Webové vyhľadávače";
+$lang["search_engine_noindex"] = "Odmietnutie indexovania obsahu tohto webu webovými vyhľadávačmi";
+$lang["search_engine_noindex_external_shares"] = "Odmietnutie indexovania obsahu externých zdieľaní webovými vyhľadávačmi";
+
+$lang["job_details"]                        = "Detaily úlohy";
+$lang["job_text"]                           = "Úloha";
+$lang['manage_jobs']                        = "Úlohy";
+$lang["manage_jobs_title"]                  = "Úlohy";
+$lang["my_jobs"]                            = "Úlohy";
+$lang["job_reset"]                          = "Reset";
+$lang["job_status_0"]                       = "Neaktívna";
+$lang["job_status_1"]                       = "Aktívna";
+$lang["job_status_2"]                       = "Hotová";
+$lang["job_status_3"]                       = "Vykonáva sa";
+$lang["job_status_5"]                       = "Zlyhala";
+$lang['jobs_action_purge_complete']         = "Odstrániť hotové a zlyhané úlohy";
+$lang["job_filter_type"]                    = "Filter podľa typu";
+$lang["job_filter_status"]                  = "Filter podľa statusu";
+$lang["job_filter_user"]                    = "Filter podľa používateľa";
+$lang["job_confirm_purge"]                  = "Ste si istý, že chcete odstrániť všetky hotové a zlyhané úlohy?";
+$lang["job_data"]                           = "Dáta úlohy";
+$lang["job_value"]                          = "Hodnota";
+
+$lang['csv_export_offline_option']          = "Generovať súbor CSV na pozadí? Použite pre veľké dátové sety. O pripravenosti CSV budete notifikovaný emailom.";
+$lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME%%";
+$lang["csv_export_file_ready"]              = "Váš export do CSV je pripravený";
+$lang["offline_processing_disabled"]        = "Vykonávanie úloh na pozadí nieje povolené. Pre povolenie kontaktujte správcu systému.";
+$lang['csv_export_offline_only']            = "Vykonávanie úloh na pozadí je vyžadované pre export viac než %%RESOURCE_COUNT%% zdrojov";
+
+$lang["setup_google_vision_settings"]       = "Nastavenia Google Vision";
+$lang["setup_google_vision_enable"]         = "Aktivovať doplnok Google Vision?";
+
+$lang["tagged_notification"]="Boli ste označený/ná v komentári: ";
+
+// Share upload link
+$lang["action-share-upload-link"]           = "Zdieľať odkaz pre nahratie zdroja";
+$lang["action-email-upload-link"]           = "Odoslať odkaz emailom";
+$lang["title-upload-link-create"]           = "Vytvoriť odkaz pre externý upload zdrojov";
+$lang["permission_share_upload_link"]       = "Môže vytvárať odkazy pre nahrávanie externých zbierok";
+$lang["button-upload-link-create"]          = "Vytvoriť odkaz";
+$lang["title-upload-link-edit"]             = "Editovať odkaz pre externý upload zdrojov";
+$lang["warning-upload-link"]                = "UPOZORNENIE: vytvorenie odkazu pre nahrávanie externých zbierok umožní komukoľvek so znalosťou tohto odkazu nahrávať zdroje";
+$lang["warning-upload-instructions"]        = "Prosím nastavte požadované možnosti pre odkaz";
+$lang["upload_share_email_users"]           = "Poslať emailom používateľom<br><br>Zadajte emailové adresy oddelené čiarkou";
+$lang["upload_share_email_subject"]         = "Odkaz pre nahratie zdroja od ";
+$lang["upload_share_email_text"]            = " Vám odoslal odkaz pre nahratie zdrojov do ";
+$lang["upload_share_email_password"]        = "Použite nasledovné heslo pre sprístupnenie obsahu odkazu";
+$lang["upload_share_email_clicklink"]       = "Kliknutím na odkaz nižšie zahájite nahrávanie/upload";
+$lang["upload_share_email_template"]        = "<br />\n[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> \n[lang_message] : [message]<br /><br />\n[lang_upload_share_email_clicklink]<br />\n<br />\n[link]\n<br />\n<br />\n[passwordtext]";
+$lang["upload_share_complete"]              = "Ďakujeme za Váš upload. Pre nahratie ďalších zdrojov kliknite na odkaz nižšie";
+$lang["error_invalid_usergroup"]            = "Nesprávna skupina používateľov";
+$lang["error_invalid_date"]                 = "Nesprávny dátum";
+$lang["error_invalid_key"]                  = "Nesprávny kľúč";
+$lang["error_invalid_email"]                = "Nesprávna emailová adresa";
+$lang["upload_shares_emailed"]              = "Zdieľania boli vytvorené a nasledovné odkazy URL sú aktívne";
+$lang["error_no_resources_edit"]            = "Nenašli sa zdroje pre editáiu. Pokiaľ ste práve nahrali súbory, prosím oznámte túto chybu administrátorovi.";
+$lang["password_unchanged"]                 = "(nezmenené)";
+$lang["notify_upload_share_new"]            = "Boli nahrané zdroje do Vašej zdieľanej zbierky";
+$lang["notify_upload_share_new_subject"]    = "Nový externý upload";
+$lang["all__emailnotifyuploadsharenew"]     = "<br />\n[lang_notify_upload_share_new]\n<br />\n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["my_shares"]                          = "Moje zdieľania";
+$lang["manage_shares_title"]                = "Externé zdieľania";
+$lang["share_purge_text"]                   = "Odstrániť expirované zdieľania";
+$lang["shares_purged_message"]              = "Bolo odstránenných %%DELETEDCOUNT%% zdieľaní";
+$lang["share_confirm_purge"]                = "Určite chcete odstránit všetky expirované zdieľania?";
+$lang["external_shares_view_existing"]      = "Zobraziť existujúce zdieľania pre nahratie zdrojov, pre túto zbierku.";
+$lang["share_user"]                         = "Zdieľa";
+$lang["share_usergroup"]                    = "Zdieľať ako";
+$lang["share_type"]                         = "Typ zdieľania";
+$lang["share_type_view"]                    = "Zobraziť";
+$lang["share_type_upload"]                  = "Nahrať";
+$lang["intro-plupload_external_share"]      = "Pomocou tejto stránky nahrajte Vase súbory. Po ich úspešnom nahraní budete presmerovaný na stránku kde môžete doplniť informácie o Vás ako aj o nahraných zdrojoch. Neuvedenie týchto informácií môže viesť k odstráneniu Vami nahratých zdrojov.";
 

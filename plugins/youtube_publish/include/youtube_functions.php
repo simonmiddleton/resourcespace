@@ -20,7 +20,7 @@ function youtube_publish_initialize()
     $client->setAccessType('offline');
     $client->setApprovalPrompt('force');
     
-    $access_tokens = sql_query("select youtube_access_token,youtube_refresh_token from user where ref='$userref'");
+    $access_tokens = ps_query("SELECT youtube_access_token,youtube_refresh_token FROM user WHERE ref = ?", array("i", $userref));
     $access_token=$access_tokens[0]["youtube_access_token"];
     $refresh_token=$access_tokens[0]["youtube_refresh_token"];
     
@@ -44,7 +44,7 @@ function youtube_publish_initialize()
                 {
                 $refresh_token = $access_token_array->refresh_token;
                 debug("YouTube plugin: Refresh token: " . $refresh_token);
-                sql_query("update user set youtube_refresh_token='$refresh_token' where ref='$userref'");
+                ps_query("UPDATE user SET youtube_refresh_token = ? WHERE ref = ?", array("s", $refresh_token, "i", $userref));
                 }
             else
                 {
@@ -54,8 +54,7 @@ function youtube_publish_initialize()
                 }
             
             debug("YouTube plugin: Retrieved access token: " . $access_token);               
-            sql_query("update user set youtube_access_token='$access_token' where ref='$userref'");
-            
+            ps_query("UPDATE user SET youtube_access_token = ? WHERE ref = ?", array("s", $access_token, "i", $userref));
             }
         }
 
@@ -107,7 +106,7 @@ function youtube_publish_initialize()
               ));
 
         $youtube_username = escape_check($listResponse[0]['snippet']['title']);
-        sql_query("update user set youtube_username='$youtube_username' where ref='$userref'");
+        ps_query("UPDATE user SET youtube_username = ? WHERE ref = ?", array("s", $youtube_username, "i", $userref));
         }
     catch (Google_ServiceException $e)
         {
@@ -144,7 +143,7 @@ function get_youtube_authorization_code()
 function delete_youtube_tokens()
     {
     global $userref;
-    sql_query("update user set youtube_access_token='', youtube_refresh_token='' where ref='$userref'");
+    ps_query("UPDATE user SET youtube_access_token = '', youtube_refresh_token = '' WHERE ref = ?", array("i", $userref));
     }
 
 function upload_video()

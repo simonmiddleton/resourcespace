@@ -10,7 +10,12 @@
  */
 function get_request($request)
     {
-    $result=sql_query("select u.username,u.fullname,u.email,r.user,r.collection,r.created,r.request_mode,r.status,r.comments,r.expires,r.assigned_to,r.reason,r.reasonapproved,u2.username assigned_to_username from request r left outer join user u  on r.user=u.ref left outer join user u2 on r.assigned_to=u2.ref where r.ref='$request'");
+    $parameters=array("i",$request);
+    $result=ps_query("select u.username,u.fullname,u.email,r.user,r.collection,r.created,r.request_mode,r.status,r.comments,r.expires,r.assigned_to,
+                        r.reason,r.reasonapproved,u2.username assigned_to_username 
+                from request r 
+                left outer join user u on r.user=u.ref 
+                left outer join user u2 on r.assigned_to=u2.ref where r.ref=?", $parameters);
     if (count($result)==0)
         {
         return false;
@@ -32,8 +37,16 @@ function get_user_requests($excludecompleted=false,$returnsql=false)
     {
     global $userref;
     if (!is_numeric($userref)){ return false; }
-    $sql="select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, (select count(*) from collection_resource cr where cr.collection=r.collection) c from request r left outer join user u on r.user=u.ref left join collection on r.collection = collection.ref where r.user = '" . $userref . "'" . ($excludecompleted?" AND status<>2":"") . " order by ref desc";
-    return $returnsql?$sql:sql_query($sql);
+
+    $query_spec = new PreparedStatementQuery();
+    $query_spec->parameters=array("i",$userref);
+    $query_spec->sql="select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, 
+            (select count(*) from collection_resource cr where cr.collection=r.collection) c 
+        from request r 
+        left outer join user u on r.user=u.ref 
+        left join collection on r.collection = collection.ref 
+        where r.user = ?" . ($excludecompleted?" AND status<>2":"") . " order by ref desc";
+    return $returnsql ? $query_spec : ps_query($query_spec->sql, $query_spec->parameters);
     }
     
 /**
@@ -64,12 +77,12 @@ function save_request($request)
         if ($assigned_to==0)
             {
             # Cancel assignment
-            sql_query("update request set assigned_to=null where ref='$request'");
+            ps_query("update request set assigned_to=null where ref=?", array("i",$request));
             }
         else
             {
             # Update and notify user
-            sql_query("update request set assigned_to='$assigned_to' where ref='$request'");
+            ps_query("update request set assigned_to=? where ref=?",array("i",$assigned_to, "i",$request));
             $message=$lang["requestassignedtoyoumail"] . "\n\n$baseurl/?q=" . $request . "\n";
             
             get_config_option($assigned_to,'user_pref_resource_access_notifications', $send_message, true);       
@@ -185,23 +198,22 @@ function save_request($request)
             }
         }
 
-        // Escape again because we had to unescape it before adding it to the e-mail body
-        $reasonapproved = escape_check($reasonapproved);
-        $reason = escape_check($reason);
-
     # Save status
-    sql_query("update request set status='$status',expires=" . ($expires==""?"null":"'$expires'") . ",reason='$reason',reasonapproved='$reasonapproved' where ref='$request'");
+    $expires_parm=($expires=="" ? "null" : $expires);
+    $parameters=array("i",$status, "s",$expires_parm, "s",$reason, "s",$reasonapproved, "i",$request);
+    ps_query("update request set status=?, expires=?, reason=?, reasonapproved=? where ref=?", $parameters);
 
     # Set user that approved or declined the request
     if ($approved_declined)
         {
-        sql_query("update request set approved_declined_by='" . escape_check($userref) . "' where ref='" . escape_check($request) . "'");
+        $parameters=array("i",$userref, "i",$request);
+        ps_query("update request set approved_declined_by=? where ref=?", $parameters);
         }
 
     if (getval("delete","")!="")
         {
         # Delete the request - this is done AFTER any e-mails have been sent out so this can be used on approval.
-        sql_query("delete from request where ref='$request'");
+        ps_query("delete from request where ref=?",array("i",$request));
         
         # Clear any outstanding notifications about this request that may have been sent to other admins
         message_remove_related(MANAGED_REQUEST,$request);
@@ -217,21 +229,27 @@ function save_request($request)
  *
  * @param  boolean $excludecompleted    Exclude completed requests?
  * @param  boolean $excludeassigned     Exclude assigned requests? (e.g. if the user is able to assign unassigned requests)
- * @param  boolean $returnsql           Return SQL instead of the results?
- * @return array The set of request records
+ * @param  boolean $returnsql           Return SQL query object instead of the results?
+ * @return mixed                        Resulting array of requests or an SQL query object
  */
 function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=false)
     {
-    $condition="";global $userref;
+    global $userref;
+    $condition="";
+    
+    $parameters=array();
+
     # Include requests assigned to the user if the user can accept requests (permission "Rb")
     if (checkperm("Rb")) 
         {
-        $condition="WHERE r.assigned_to='" . $userref . "'";
+        $condition="WHERE r.assigned_to=?";
+        $parameters=array("i",$userref);
         }
     # Include all requests if the user can assign requests (permission "Ra")
     if (checkperm("Ra")) 
         {
         $condition="";
+        $parameters=array();
         # Excluding assigned requests only makes sense if user is able to assign requests 
         if ($excludeassigned) 
             {
@@ -244,8 +262,22 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
         $condition .= (($condition!="") ? " AND" : "WHERE") . " r.status=0";
         }
         
-    $sql="SELECT u.username,u.fullname,r.*,(SELECT count(*) FROM collection_resource cr WHERE cr.collection=r.collection) c,u2.username assigned_to_username FROM request r LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
-    return $returnsql?$sql:sql_query($sql);
+    $sql="SELECT u.username,u.fullname,r.*,
+          (SELECT count(*) FROM collection_resource cr WHERE cr.collection=r.collection) c,
+          u2.username assigned_to_username 
+          FROM request r 
+          LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
+    
+    $request_query = new PreparedStatementQuery($sql, $parameters);
+
+    if ($returnsql) 
+        {
+        return $request_query;
+        }
+    else 
+        {
+        return ps_query($request_query->sql,$request_query->parameters);
+        }
     }
   
 /**
@@ -302,6 +334,7 @@ function email_collection_request($ref,$details,$external_email)
     
     $templatevars['username']=$username . " (" . $useremail . ")";
     $userdata=get_user($userref);
+    if($userdata===false){return false;} # Unable to get user credentials
     $templatevars["fullname"]=$userdata["fullname"];
     
     reset ($_POST);
@@ -358,7 +391,9 @@ function email_collection_request($ref,$details,$external_email)
     # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
     if(isset($resource_type_request_emails))
         {
-        $requestrestypes=array_unique(sql_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection='$ref'"));
+        $requestrestypes=ps_array("SELECT r.resource_type as value from collection_resource cr 
+                                    left join resource r on cr.resource=r.ref where cr.collection=?",array("i",$ref));
+        $requestrestypes=array_unique($requestrestypes);
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
             {
             $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];
@@ -416,8 +451,8 @@ function email_collection_request($ref,$details,$external_email)
         }    
     
     # Increment the request counter for each resource in the requested collection
-    sql_query("update resource set request_count=request_count+1 " 
-             ."where ref in(select cr.resource from collection_resource cr where cr.collection='$ref' and cr.resource = ref)");
+    ps_query("UPDATE resource set request_count=request_count+1
+               where ref in(select cr.resource from collection_resource cr where cr.collection=? and cr.resource = ref)",array("i",$ref));
     
     return true;
     }
@@ -433,7 +468,9 @@ function email_collection_request($ref,$details,$external_email)
  */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
     {   
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $resource_type_request_emails_and_email_notify, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,
+        $view_title_field,$access,$resource_type_request_emails, $resource_type_request_emails_and_email_notify, $manage_request_admin, 
+        $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -548,10 +585,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $message=$amendedmessage;
         }
         
-    # Setup the create request SQL
+    # Setup the principal create request SQL
+    $request_query = new PreparedStatementQuery();
     global $request_query;
-    $request_query = "insert into request(user,collection,created,request_mode,status,comments) values ('$userref','$ref',now(),1,0,'" . escape_check($message) . "')";
-    
+    $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments) 
+                            VALUES (?, ?, NOW(), 1, 0, ?)";
+    $request_query->parameters = array("i",$userref, "i",$ref, "s",$message);
+
     // Set flag to send default notifications unless we override e.g. by $manage_request_admin 
     $send_default_notifications = true;
             
@@ -560,6 +600,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $notify_manage_request_admin = false;
     $notification_sent = false;
 
+    // The following hook determines the assigned administrator
+    // If there isn't one, then the principal request_query setup earlier remains as-is without an assigned_to
+    // If there is one then the hook replaces the request_query with one which has an assigned_to 
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
 
     // Regular Processing: autoassign using the resource type - one resource was requested and no plugin is preventing this from running
@@ -571,31 +614,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             {
             $admin_notify_user=$manage_request_admin[$request_resource_type];
 
-            $request_query = sprintf("
-                    INSERT INTO request(
-                                            user,
-                                            collection,
-                                            created,
-                                            request_mode,
-                                            `status`,
-                                            comments,
-                                            assigned_to
-                                       )
-                         VALUES (
-                                     '%s',
-                                     '%s',
-                                     NOW(),
-                                     1,
-                                     0,
-                                     '%s',
-                                     '%s'
-                                );
-                ",
-                $userref,
-                $ref,
-                escape_check($message),
-                $admin_notify_user
-            );
+            $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments, assigned_to)
+                                    VALUES (?, ?, NOW(), 1, 0, ?, ?)";
+            $request_query->parameters = array("i",$userref, "i",$ref, "s",$message, "i",$admin_notify_user);
 
             // Setup assigned to user for bypass hook later on    
             if($admin_notify_user !== 0) 
@@ -691,59 +712,18 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                     
                 if(trim($assigned_to) != '')
                     {
-                    $request_query = sprintf("
-                        INSERT INTO request(
-                                                user,
-                                                collection,
-                                                created,
-                                                request_mode,
-                                                `status`,
-                                                comments,
-                                                assigned_to
-                                           )
-                             VALUES (
-                                         '%s',
-                                         '%s',
-                                         NOW(),
-                                         1,
-                                         0,
-                                         '%s',
-                                         '%s'
-                                    );
-                    ",
-                    $userref,
-                    $collection_id,
-                    escape_check($message),
-                    $assigned_to
-                    );
+                    $request_query = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
+                                            VALUES (?, ?, NOW(), 1, 0, ?, ?);";
+                    $parameters=array("i", $userref, "i",$collection_id, "s",$message, "i",$assigned_to);
                     }
                 else
                     {
-                    $request_query = sprintf("
-                        INSERT INTO request(
-                                                user,
-                                                collection,
-                                                created,
-                                                request_mode,
-                                                `status`,
-                                                comments
-                                           )
-                             VALUES (
-                                         '%s',
-                                         '%s',
-                                         NOW(),
-                                         1,
-                                         0,
-                                         '%s'
-                                    );
-                    ",
-                    $userref,
-                    $collection_id,
-                    escape_check($message)
-                    );
+                    $request_query = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
+                                           VALUES (?, ?, NOW(), 1, 0, ?);";
+                    $parameters=array("i", $userref, "i",$collection_id, "s",$message);
                     }
 
-                sql_query($request_query);
+                ps_query($request_query, $parameters);
                 $request = sql_insert_id();
                 
                 // Send the mail
@@ -771,7 +751,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                     message_add($assigned_to_notify_users,$lang['requestassignedtoyou'],$baseurl . "/?q=" . $request,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,MANAGED_REQUEST, $request);
                     }    
                 unset($email_message);
-                }
+                } # End for each collection
 
             $notify_manage_request_admin = false;
             $notification_sent = true;
@@ -779,6 +759,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         else
             {
+            # No collections
             return false;
             }
 
@@ -792,7 +773,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         else
             // Back to regular processing
             {
-            sql_query($request_query);
+            ps_query($request_query->sql, $request_query->parameters);
             $request=sql_insert_id();
             }
         }
@@ -828,7 +809,10 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
         if(isset($resource_type_request_emails)  )
             {
-            $requestrestypes=array_unique(sql_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection='$ref'"));
+            $requestrestypes=ps_array("SELECT r.resource_type as value from collection_resource cr 
+                                        left join resource r on cr.resource=r.ref where cr.collection=?", array("i",$ref));
+            $requestrestypes=array_unique($requestrestypes);
+
             if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
                 {
                 $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];
@@ -889,8 +873,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         }    
     
     # Increment the request counter for each resource in the requested collection
-    sql_query("update resource set request_count=request_count+1 " 
-             ."where ref in(select cr.resource from collection_resource cr where cr.collection='$ref' and cr.resource = ref)");
+    ps_query("UPDATE resource set request_count=request_count+1  
+               where ref in(select cr.resource from collection_resource cr where cr.collection=? and cr.resource = ref)", array("i",$ref));
 
     return true;
     }
@@ -905,7 +889,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  */
 function email_resource_request($ref,$details)
     {
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $admin_resource_access_notifications, $user_dl_limit, $user_dl_days, $k, $user_is_anon;
     
     if(intval($user_dl_limit) > 0)
         {
@@ -933,9 +917,19 @@ function email_resource_request($ref,$details)
     $templatevars['url']=$baseurl."/?r=".$ref;
     $templatevars["requesturl"]=$templatevars['url'];
     
-    $userdata=get_user($userref);
-    $templatevars["fullname"]=$userdata["fullname"];
     
+    // for anon user access use form vars
+    if ($k!="" || $user_is_anon)
+        {
+        $templatevars["fullname"] = getvalescaped("fullname","");
+        $useremail = getvalescaped("email","");
+        }
+    else 
+        {
+        $userdata=get_user($userref);
+        $templatevars["fullname"]= isset($userdata["fullname"]) ? $userdata["fullname"] : ""; 
+        }
+
     $htmlbreak="";
     global $use_phpmailer;
     if ($use_phpmailer){$htmlbreak="<br /><br />";}
@@ -1057,7 +1051,7 @@ function email_resource_request($ref,$details)
         }
     
     # Increment the request counter
-    sql_query("update resource set request_count=request_count+1 where ref='$ref'");
+    ps_query("update resource set request_count=request_count+1 where ref=?", array("i",$ref));
     }
 
 

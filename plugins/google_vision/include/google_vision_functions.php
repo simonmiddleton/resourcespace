@@ -116,7 +116,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
         foreach ($labels as $label)
             {
             # Create new or fetch existing node
-            $nodes[]=set_node(null, $google_vision_label_field, ucfirst($label), null, 9999,true);  
+            $nodes[]=set_node(null, $google_vision_label_field, ucfirst($label), null, 9999);  
            if ($title=="") {$title=$label;}
             }
                 
@@ -261,7 +261,8 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
         }
     
     # Mark as processed
-    sql_query("update resource set google_vision_processed=1 where ref='" . escape_check($resource) . "'");
+    $parameters=array("i",$resource);
+    ps_query("update resource set google_vision_processed=1 where ref=?", $parameters);
     
     return true;
     }

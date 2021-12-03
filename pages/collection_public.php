@@ -3,7 +3,7 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 $find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
 $col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
 $sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
@@ -52,7 +52,7 @@ include "../include/header.php";
     </form>
 </div>
 <?php
-$collections=search_public_collections($find,$col_order_by,$sort,$public_collections_exclude_themes,false,true,$override_group_restrict=="true");
+$collections=search_public_collections($find,$col_order_by,$sort,$public_collections_exclude_themes,true,$override_group_restrict=="true");
 
 $results=count($collections);
 $totalpages=ceil($results/$per_page);

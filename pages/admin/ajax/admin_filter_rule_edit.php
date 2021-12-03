@@ -157,12 +157,21 @@ function processFilterRules()
     rule_elements = new Array();
     jQuery('.filter_rule_question').each(function () {
         rule_nodes = jQuery(this).children('.filter_rule_nodes').val();
-        rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
-        rule_element = [rule_condition,rule_nodes];
-        rule_elements.push(rule_element);
+        // Empty rule because no nodes selected, so skip this and move onto next filter rule in case there is one further down
+        if (rule_nodes.length!=0) {
+            rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
+            rule_element = [rule_condition,rule_nodes];
+            rule_elements.push(rule_element);
+        }
         });        
-        
+
     jQuery ('#filter_rule_data').val(JSON.stringify(rule_elements));
+
+    // No rules present
+    if (rule_elements.length==0) {
+        return false;
+    }
+
     }
 
 function updateFieldOptions(question)
@@ -172,28 +181,25 @@ function updateFieldOptions(question)
     selectedField =  jQuery(question).children('#filter_rule_field').val();
 
     var post_data = {
-        ajax: true,
-        field: selectedField,
-        <?php echo generateAjaxToken("filter_rule_field"); ?>
+        'ref': selectedField,
+        'nodeinfo':true
     };
-    options_url = baseurl_short + 'pages/ajax/field_options.php';
 
-    jQuery.post(options_url, post_data, function(response) {
-            if(response.success === true)
+    api("get_field_options", post_data, function(response) {
+            if(response!= false)
                 {
-                nodeoptions = response.options;
                 nodeselect =  jQuery(question).children('.filter_rule_nodes');
-                
-                jQuery.each(nodeoptions, function (i, item) {
+
+                jQuery.each(response, function () {
                     nodeselect.append(jQuery('<option>', { 
-                        value: i,
-                        text : item 
+                        value: this.ref,
+                        text : this.name 
                     }));
                 });
-                jQuery('.filter_rule_nodes').chosen();
 
+                jQuery('.filter_rule_nodes').chosen();
                 }
-        }, 'json');
+        });
     jQuery('#modal').css('overflow', 'visible');
     }
 

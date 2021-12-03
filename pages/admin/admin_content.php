@@ -10,7 +10,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 if (array_key_exists("findpage",$_POST) ||array_key_exists("findname",$_POST) || array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
 $findpage=getvalescaped("findpage","");
 $findname=getvalescaped("findname","");

@@ -26,7 +26,7 @@ function HookImage_banksAllSearchfiltertop()
         <label>
             <span><?php echo $search_image_banks_text; ?></span>
         </label>
-        <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));">
+        <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));SimpleSearchFieldsHideOrShow(true);">
             <option value=""></option>
             <?php
             foreach($providers as $provider)
@@ -42,7 +42,6 @@ function HookImage_banksAllSearchfiltertop()
         function toggleUnwantedElementsFromSimpleSearch(selector)
             {
             var selected_option = selector.val();
-            
             SetCookie("image_bank_provider_id",selected_option);
             
             var siblings = jQuery("#SearchImageBanksItem")
@@ -56,16 +55,24 @@ function HookImage_banksAllSearchfiltertop()
 
             if(selected_option == "")
                 {
+                // Image bank is not selected, so show the siblings
+                // When showing the siblings, we need to honour the display conditions
                 if(typeof search_show == 'undefined' || search_show)
                     {
-                    siblings.show();
-                    
-                    TriggerChangesForRenderedFields();
-
+                    siblings.each(function()
+						{
+                        searchfield_id = this.id.substring(13);
+                        // If the field is not in the fieldsToHideOnClear array, then show it 
+                        if( (typeof fieldsToHideOnClear == "undefined") || (typeof fieldsToHideOnClear == "object" && !fieldsToHideOnClear.includes(searchfield_id)) )
+                            {
+                            jQuery(this).show();
+                            }
+						});
                     }
                 return;
                 }
 
+            // Image bank is selected, so hide the siblings
             siblings.hide();
 
             return;

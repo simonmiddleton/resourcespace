@@ -15,7 +15,7 @@ $job_data['checksum_required'] - Optional
 */
 include_once __DIR__ . '/../image_processing.php';
 
-global $lang, $baseurl, $offline_job_delete_completed;
+global $lang, $baseurl, $offline_job_delete_completed, $baseurl_short;
 
 // Defaults for create_previews
 $resource          = 0;
@@ -29,7 +29,7 @@ $ingested          = false;
 $checksum_required = true;
 
 // For messages
-$url = isset($job_data['resource']) ? "{$baseurl}/?r={$job_data['resource']}": '';
+$url = isset($job_data['resource']) ? "{$baseurl_short}?r={$job_data['resource']}": '';
 
 // Overwrite defaults
 foreach($job_data as $arg => $value)

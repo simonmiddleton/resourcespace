@@ -31,6 +31,9 @@ $allow_save_search=true;
 # Display resource title on alternative file management page
 $alternative_file_resource_title=true;
 
+# option to always send emails from the logged in user
+$always_email_from_user=false;
+
 # Always record the name of the resource creator for new records.
 # If false, will only record when a resource is submitted into a provisional status.
 $always_record_resource_creator = true;
@@ -119,9 +122,6 @@ $collections_footer = true;
 # when indexing. Format for this argument is as described in PHP trim() documentation.
 # leave blank for no extra trimming.
 $config_trimchars="";
-
-# Enable work-arounds required when installed on Microsoft Windows systems (rarely used in the code)
-$config_windows=false;
 
 // Display help links on pages
 $contextual_help_links=true;
@@ -215,6 +215,9 @@ $dynamic_keyword_and = false;
 $email_errors=false;
 $email_errors_address="";
 
+#enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
+$email_from_user=false;
+
 ##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
@@ -303,11 +306,6 @@ $inactive_message_auto_digest_period=7;
 
 # Index the resource type, so searching for the resource type string will work (e.g. if you have a resource of type "photo" then "cat photo" will match even if the resource metadata itself doesn't contain the word 'photo')
 $index_resource_type=true;
-
-# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
-# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
-# easily faked.
-$ip_forwarded_for=false;
 
 # Show friendly error to user instead of 403 if IP not in permitted range.
 $iprestrict_friendlyerror=false;
@@ -401,7 +399,7 @@ $plupload_max_retries=5;
 
 # Plupload settings
 # Specify the supported runtimes and priority
-$plupload_runtimes = 'html5,gears,silverlight,browserplus,html4';
+$plupload_runtimes = 'html5,gears,silverlight,html4';
 
 # Keep failed uploads in the queue after uploads have completed
 $plupload_show_failed=true;
@@ -485,9 +483,6 @@ $search_anchors_highlight=false;
 # Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
 $search_filter_strict=true;
 
-# Set to false to omit results for public collections on numeric searches.
-$search_public_collections_ref=true;
-
 # Show an edit icon/link in the search results.
 $search_results_edit_icon=true;
 
@@ -515,9 +510,6 @@ $show_edit_all_link = true;
 
 // Show required field legend on upload
 $show_required_field_label = true;
-
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
 
 # Show the link to 'user contributed assets' on the My Contributions page
 # Allows non-admin users to see the assets they have contributed
@@ -626,3 +618,10 @@ $wildcard_always_applied=false;
 # $zip_contents_field=18;
 $zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
 
+# Enable speed tagging feature? (development)
+$speedtagging=false;
+$speedtaggingfield=1;
+# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
+# default will be $speedtaggingfield
+# example to add speed tags for Photo type(1) to the Caption(18) field:
+# $speedtagging_by_type[1]=18; 

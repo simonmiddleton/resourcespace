@@ -8,7 +8,7 @@ include_once "../include/ajax_functions.php";
 include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
 
-if (!$enable_remote_apis) {exit("API not enabled.");}
+if (!$enable_remote_apis) {http_response_code(403);exit("API not enabled.");}
 
 debug("API:");
 define("API_CALL", true);
@@ -29,17 +29,14 @@ $query = http_build_query($query_params);
 # Support POST request where 'query' is POSTed and is the full query string.
 if (getval("query","")!="") {$query=getval("query","");}
 
-# If a GET, remove the sign and authmode parameters as these would not have been present when signed on the client.
-if ($_SERVER['REQUEST_METHOD'] === 'GET')
+# Remove the sign and authmode parameters if passed as these would not have been present when signed on the client.
+$strip_params = array("sign","authmode");
+parse_str($query,$params);
+foreach($strip_params as $strip_param)
     {
-    $strip_params = array("sign","authmode");
-    parse_str($query,$params);
-    foreach($strip_params as $strip_param)
-        {
-        unset($params[$strip_param]);
-        }
-    $query = http_build_query($params);
+    unset($params[$strip_param]);
     }
+$query = http_build_query($params);
 
 $validauthmodes = array("userkey", "native", "sessionkey");
 $function = getval("function","");
@@ -59,28 +56,19 @@ if($function != "login")
         if(!check_api_key($user, $query, $sign, $authmode))
             {
             debug("API: Invalid signature");
+            http_response_code(401);
             exit("Invalid signature");
             }
     
-        # Log user in (if permitted)
-        
+        # Log user in (if permitted)        
         $validuser = setup_user(get_user(get_user_by_username($user)));
         if(!$validuser)
             {
             ajax_permission_denied();
             }
-        debug("API: set up user '{$user}' signed with '{$sign}'");
         }
     }
 # Run the requested query
 echo execute_api_call($query, $pretty);
 debug("API: finished execute_api_call({$query});");
 
-
-/*
- * API v2 - To Do
- *
- * POST requirement for anything that performs an action
- * Better support for parameters - URL/GET perhaps a bit too limiting in some cases? Perhaps support for parameters being JSON encoded?
- *
- */

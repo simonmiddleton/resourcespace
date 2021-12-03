@@ -6,7 +6,7 @@ function HookRse_search_notificationsCron_copy_hitcountAddplugincronjob()
     {
     echo "\r\n\r\nrse_search_notifications plugin: starting cron process...\r\n";
 
-    $users = sql_query("SELECT DISTINCT owner FROM search_saved WHERE enabled = 1");
+    $users = ps_query("SELECT DISTINCT owner FROM search_saved WHERE enabled = 1", array());
 
     foreach($users as $user)
         {
@@ -18,6 +18,7 @@ function HookRse_search_notificationsCron_copy_hitcountAddplugincronjob()
             continue;    
             }
         setup_user($userdata);
+        $GLOBALS['userdata'][0] = $userdata;
         search_notification_process($user);
         }
 

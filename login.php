@@ -49,7 +49,13 @@ if (!hook("replaceauth")) {
 $ip=get_ip();
 $lockouts=sql_value("select count(*) value from ip_lockout where ip='" . escape_check($ip) . "' and tries>='" . $max_login_attempts_per_ip . "' and date_add(last_try,interval " . $max_login_attempts_wait_minutes . " minute)>now()",0);
 
-$username=trim(getvalescaped("username",""));
+$username=getvalescaped("username","");
+if (is_array($username))
+    {
+    redirect($baseurl . "/login.php");
+    }
+
+$username=trim($username);
 if($case_insensitive_username)
     {
     $username=sql_value("select username value from user where lower(username)=lower('" . $username ."')",$username);       
@@ -191,6 +197,10 @@ if (!hook("replaceloginform"))
         
         <h1><?php echo text("welcomelogin")?></h1>
 
+        <p class="ExternalLoginLinks">
+            <?php hook("loginformlink") ?> 
+        </p>
+
         <div class="Question">
             <label for="username"><?php echo $lang["username"]?> </label>
             <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" />
@@ -280,7 +290,6 @@ if (!hook("replaceloginform"))
         <?php if ($allow_password_reset) { ?>
             <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo $lang["forgottenpassword"]?></a>
         <?php } ?>
-        <?php hook("loginformlink") ?> 
         </p>
 
 	</form>

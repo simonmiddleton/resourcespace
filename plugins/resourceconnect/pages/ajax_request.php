@@ -9,7 +9,7 @@ $affiliate=$resourceconnect_affiliates[getval("affiliate","")];
 $abaseurl=$affiliate["baseurl"];
 
 $search=getval("search","");
-$offset=getval("offset","");
+$offset=getval("offset",0,true);
 $pagesize=getval("pagesize","");
 $restypes=getval("restypes","");
 

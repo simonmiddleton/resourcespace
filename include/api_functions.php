@@ -51,7 +51,16 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
 
     # Calculate the expected signature and check it matches
     $expected=hash("sha256",$userkey . $querystring);
-    return $expected==$sign; 
+    if ($expected==$sign)
+	{
+	return true;
+	}
+    # Also try matching against the username - allows remote API use without knowing the user ID, e.g. in the event of managing multiple systems each with a common username but different ID.
+    if (hash("sha256",get_api_key($username) . $querystring)==$sign)
+	{
+	return true;
+	} 
+    return false;
     }
     
 /**
@@ -78,23 +87,50 @@ function execute_api_call($query,$pretty=false)
         {
         $paramkey = $n + 1;
         $param_name = $fparam->getName();
-        debug ("API Checking for parameter " . $param_name . " (param" . $paramkey . ")");
+        debug("API: Checking for parameter " . $param_name . " (param" . $paramkey . ")");
         if (array_key_exists("param" . $paramkey,$params))
             {
-            debug ("API " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
+            debug ("API: " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
             $setparams[$n] = $params["param" . $paramkey];
             }
         else if(array_key_exists($param_name, $params))
             {
-            debug("API: {$param_name} - value has been passed (by name): '{$params[$param_name]}'");
+            debug("API: {$param_name} - value has been passed (by name): '" . json_encode($params[$param_name]) . "'");
 
-            if($fparam->hasType() && $fparam->isArray() && gettype($params[$param_name]) != "array")
+            // Check if array;
+            $type = $fparam->getType();
+            if(gettype($type) == "object")
                 {
-                $error = str_replace(
-                    array("%arg", "%expected-type", "%type"),
-                    array($param_name, "array", gettype($params[$param_name])),
-                    $lang["error-type-mismatch"]);
-                return json_encode($error);
+                // type is an object 
+                $type = $type->getName();
+                }
+            if($fparam->hasType() && gettype($type) == "string" && $type == "array")
+                {
+                // Decode as must be json encoded if array
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    $decoded = json_decode($params[$param_name],JSON_OBJECT_AS_ARRAY);
+                    }
+                catch (Exception $e)
+                    {
+                    $error = str_replace(
+                        array("%arg", "%expected-type", "%type"),
+                        array($param_name, "array (json encoded)",$lang['unknown']),
+                        $lang["error-type-mismatch"]);
+                    return json_encode($error);
+                    }
+                unset($GLOBALS["use_error_exception"]);
+                // Check passed data type after decode
+                if(gettype($decoded) != "array")
+                    {
+                    $error = str_replace(
+                        array("%arg", "%expected-type", "%type"),
+                        array($param_name, "array (json encoded)", $lang['unknown']),
+                        $lang["error-type-mismatch"]);
+                    return json_encode($error);
+                    }
+                $params[$param_name] = $decoded;
                 }
 
             $setparams[$n] = $params[$param_name];
@@ -102,19 +138,19 @@ function execute_api_call($query,$pretty=false)
         elseif ($fparam->isOptional())
             {
             // Set default value if nothing passed e.g. from API test tool
-            debug ("API " . $param_name . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: " . $param_name . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = $fparam->getDefaultValue();
             }
         else
             {
              // Set as empty
-            debug ("API " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
             $setparams[$n] = "";    
             }
         $n++;
         }
     
-    debug("API - calling api_" . $function);
+    debug("API: calling api_" . $function);
     $result = call_user_func_array("api_" . $function, $setparams);
 
     if($pretty)
@@ -344,14 +380,7 @@ function iiif_error($errorcode = 404, $errors = array())
         {
         http_response_code($errorcode); # Send error status
         }
-    if($iiif_debug)
-        {
-        echo implode("<br />",$errors);	 
-        }
-    else
-        {
-        echo implode("<br />",$errors);
-        }
+    echo json_encode($errors);	 
     exit();
     }
 
@@ -365,7 +394,7 @@ function get_session_api_key($user)
     {
     global $scramble_key;
     $private_key = get_api_key($user);
-    $usersession = sql_value("SELECT session value FROM user where ref ='" . $user . "'", "");
+    $usersession = ps_value("SELECT session value FROM user where ref = ?", array("i",$user), "");
     return hash_hmac("sha256", "{$usersession}{$private_key}", $scramble_key);
     }
 

@@ -1,7 +1,8 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
+include dirname(__FILE__)."/../../../include/authenticate.php";
+if (!checkperm("t")) {exit ("Permission denied.");}
 global $baseurl;
 
 
@@ -9,7 +10,7 @@ global $baseurl;
 include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset",0,true);
 if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
 $findtext=getvalescaped("findtext","");
 

@@ -17,7 +17,7 @@ function get_reports()
     # The reports are always listed in the same order - regardless of the used language. 
 
     # Executes query.
-    $r = sql_query("select * from report order by name");
+    $r = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report ORDER BY name");
 
     # Translates report names in the newly created array.
     $return = array();
@@ -50,15 +50,22 @@ function get_reports()
  * @param  mixed $download          Output as CSV attachment (default)/output directly to client
  * @param  mixed $add_border        Optional table border (not for download)
  * @param  mixed $foremail          Sending as email?
+ * @param  array $search_params     Search parameters - {@see get_search_params()} - will run the report on the search 
+ *                                  results and replace the '[non_correlated_sql]' placeholder with the search query.
+ * 
  * @return void | string | array    Outputs CSV file, returns HTML table or returns an array with path to the CSV file, rows and filename
  */
-function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false)
+function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true,$add_border=false,$foremail=false, array $search_params=array())
     {
     # Run report with id $ref for the date range specified. Returns a result array.
     global $lang, $baseurl, $report_rows_attachment_limit;
 
-    $report=sql_query("select * from report where ref='$ref'");$report=$report[0];
+    $ref_escaped = escape_check($ref);
+
+    $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+    $report=$report[0];
     $report['name'] = get_report_name($report);
+
     if($download || $foremail)
         {
         $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
@@ -81,10 +88,37 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 
         global $view_title_field;
         $sql=str_replace("[title_field]",$view_title_field,$sql);
-        $results=sql_query($sql);
+
+        // IF report supports being run on search results
+        if($report['support_non_correlated_sql'] === '1' && !empty($search_params))
+            {
+            $search_sql = do_search(
+                $search_params['search'],
+                $search_params['restypes'],
+                $search_params['order_by'],
+                $search_params['archive'],
+                -1, # fetchrows
+                $search_params['sort'],
+                false, # access_override
+                $search_params['starsearch'],
+                false, # ignore_filters
+                false, # return_disk_usage
+                $search_params['recentdaylimit'],
+                false, # go
+                false, # stats_logging
+                true, # return_refs_only
+                false, # editable_only
+                true # returnsql
+            );
+            $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
+
+            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
+            }
+
+        $results = sql_query($sql);
         }
     
-    $resultcount = count($results);    
+    $resultcount = count($results);
     if($resultcount == 0)
         {
         // No point downloading as the resultant file will be empty
@@ -154,11 +188,27 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         {
         # Not downloading - output a table
 
+        // If report results are too big, display the first rows and notify user they should download it instead
+        $output = '';
+        if($resultcount > $report_rows_attachment_limit)
+            {
+            $results = array_slice($results, 0, $report_rows_attachment_limit);
+
+            // Catch the error now and place it above the table in the output
+            render_top_page_error_style($lang['team_report__err_report_too_long']);
+            $output = ob_get_contents();
+            ob_clean();
+            ob_start();
+            }
+
         // Pre-render process: Process nodes search syntax (e.g @@228 or @@!223) and add a new column that contains the node list and their names
-        $results = process_node_search_syntax_to_names($results, 'search_string');
+        if(isset($results[0]['search_string']))
+            {
+            $results = process_node_search_syntax_to_names($results, 'search_string');
+            }
         $border="";
         if ($add_border) {$border="border=\"1\"";}
-        $output="<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";
+        $output .= "<br /><h2>" . $report['name'] . "</h2><style>.InfoTable td {padding:5px;}</style><table $border class=\"InfoTable\">";
         for ($n=0;$n<count($results);$n++)
             {
             $result=$results[$n];
@@ -223,7 +273,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 * Creates a new automatic periodic e-mail report
 *
 */
-function create_periodic_email($user, $report, $period, $email_days, $send_all_users, array $user_groups)
+function create_periodic_email($user, $report, $period, $email_days, array $user_groups, array $search_params)
     {
     # Delete any matching rows for this report/period.
     $query = sprintf("
@@ -245,19 +295,22 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
                                                    user,
                                                    report,
                                                    period,
-                                                   email_days
+                                                   email_days,
+                                                   search_params
                                                )
                  VALUES (
                             '%s',  # user
                             '%s',  # report
                             '%s',  # period
-                            '%s'   # email_days
+                            '%s',  # email_days
+                            '%s'   # search_params
                         );
         ",
         escape_check($user),
         escape_check($report),
         escape_check($period),
-        escape_check($email_days)
+        escape_check($email_days),
+        escape_check(json_encode($search_params, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK))
     );
     sql_query($query);
     $ref = sql_insert_id();
@@ -265,11 +318,6 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
     # Send to all users?
     if (checkperm('m'))
         {
-        if($send_all_users)
-            {
-            sql_query("UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = '" . escape_check($ref) . "';");
-            }
-
         if(!empty($user_groups))
             {
 
@@ -299,11 +347,19 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
 function send_periodic_report_emails($echo_out = true, $toemail=true)
     {
     # For all configured periodic reports, send a mail if necessary.
-    global $lang,$baseurl, $report_rows_zip_limit;
+    global $lang,$baseurl, $report_rows_zip_limit, $email_notify_usergroups;
 
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
-        SELECT pe.*,
+        SELECT pe.ref,
+               pe.user,
+               pe.send_all_users,
+               pe.user_groups,
+               pe.report,
+               pe.period,
+               pe.email_days,
+               pe.last_sent,
+               pe.search_params,
                u.email,
                r.name
           FROM report_periodic_emails pe
@@ -332,8 +388,10 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
         // Translates the report name.
         $report["name"] = lang_or_i18n_get_translated($report["name"], "report-");
 
+        $search_params = (trim($report['search_params']) !== '' ? json_decode($report['search_params'], true) : []);
+
         # Generate report (table or CSV)
-        $output=do_report($report["report"], $from_y, $from_m, $from_d, $to_y, $to_m, $to_d,false,true, $toemail);
+        $output=do_report($report["report"], $from_y, $from_m, $from_d, $to_y, $to_m, $to_d,false,true, $toemail, $search_params);
 
         // Formulate a title
         $title = $report["name"] . ": " . str_replace("?",$report["period"],$lang["lastndays"]);
@@ -398,12 +456,31 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             continue;
             }
 
-        # Send to all other active users, if configured.
-        # Send the report to all active users.
-        $users = get_users(0,"","u.username",false,-1,1);
-
+        $users = array();
         // Send e-mail reports to users belonging to the specific user groups
-        if(!empty($report['user_groups']))
+        if(empty($report['user_groups']))
+            {
+            if ($report['send_all_users'])
+                {
+                // Send to all users is deprecated. Send to $email_notify_usergroups or Super Admin if not set
+                if (!empty($email_notify_usergroups))
+                    {
+                    foreach ($email_notify_usergroups as $usergroup)
+                        {
+                        if(get_usergroup($usergroup)!==false)
+                            {
+                            $addusers = get_users($usergroup,"","u.username",false,-1,1);
+                            $users = array_merge($users,$addusers);
+                            }
+                        }
+                    }
+                else
+                    {
+                    $users = get_notification_users("SYSTEM_ADMIN");
+                    }
+                }
+            }
+        else
             {
             $users = get_users($report['user_groups'],"","u.username",false,-1,1);
             }

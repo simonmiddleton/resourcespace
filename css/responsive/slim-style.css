@@ -51,11 +51,20 @@ body {
 
     body{
         height: 100% !important;
-        overflow: scroll !important;
+        overflow-y: scroll !important;
     }
     
-    .Question .stdwidth, .stdwidth {
+    .Question .stdwidth, .stdwidth, #iconpicker-question {
         width:100%;
+    }
+
+    input[type="text"]#iconpicker-input {
+        width: calc(100% - 41px);
+    }
+
+    #iconpicker-container {
+        left: unset;
+        right: 16px;
     }
     
     #SearchBarContainer {
@@ -163,6 +172,17 @@ body {
     #login_box .Question.KeepLoggedIn {
         margin-left: 3px;
     }
+    .CommentFormBody {
+        width: 100%;
+    }
+    .CommentEntry,
+    .comment_form_container {
+        max-width: 600px;
+        width: auto;
+    }
+    .RecordBox {
+        margin: 20px 0 15px 0;
+    }
 }
 @media(max-width:700px) {
     .FormHelp {
@@ -184,9 +204,14 @@ body {
     .CategoryBox {
         width:100%;
     }
+
+    #iconpicker-container {
+        left: 4px;
+        width: 100%;
+    }
 }
+
 /* Login Forms */
-}
 @media(max-width:750px) {
     #AntiSpamImage {
         margin-left: 0 !important;
@@ -232,6 +257,7 @@ body {
 #HeaderButtons {
     display:none;
 }
+
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
@@ -335,6 +361,10 @@ body {
         box-shadow: 0 1px 3px rgba(0,0,0,0.25);
         color: #ffffff;
         border: #1378BF;        
+    }
+
+    .Question .customFieldLabel {
+        max-width: 600px;
     }
 }
 @media(max-width:990px) {
@@ -571,7 +601,16 @@ body {
         text-align: center;
         float: none;
     }
-
+    #Header {
+        position: relative !important;
+        height: auto !important;
+    }
+}
+@media(max-width:1100px) {
+    #FooterThemes img {
+        width:20px;
+        height:20px;
+    }
     #SearchBarContainer {
         position: relative !important;
         height: auto !important;
@@ -591,17 +630,6 @@ body {
         top:0 !important;
         margin-left: 1% !important;
         margin-right: 1% !important;
-    }
-
-    #Header {
-        position: relative !important;
-        height: auto !important;
-    }
-}
-@media(max-width:1100px) {
-    #FooterThemes img {
-        width:20px;
-        height:20px;
     }
 }
 @media(max-width:390px) {
@@ -721,7 +749,7 @@ body {
         text-align: center;
     }
  }
- @media(max-width:1280px) {
+ @media(max-width:1430px) {
     .TopInpageNavLeft {
         padding: 0;
         margin: 10px 0;
@@ -882,7 +910,7 @@ body {
         margin-bottom: 12px;    
     }
 }
-@media(min-width:1301px) {
+@media(min-width:1601px) {
     .InpageNavLeftBlock {
         display:inline-block!important;
     }
@@ -903,6 +931,10 @@ body {
     }
 }
 @media(max-width:1100px) {
+
+    .QuestionSubmit{
+        padding-bottom:150px;
+    }
     #previewimage {
         width:100%;
     }
@@ -1081,6 +1113,11 @@ body {
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1); /* 0, 1, 2, or 3 which will rotate the element 0, 90, 180 or 270 degrees respectively */
 }
 @media (max-width:900px) {
+
+    div.QuestionSubmit{
+        padding-bottom:0px;
+    }
+
     #cover {
         background: rgba(0, 0, 0, 0.6);
         width: 100%;
@@ -1171,4 +1208,45 @@ body {
         margin-top: 3px;
         width: 100%;
     }
+}
+
+/* Edit page preview */
+@media (max-width: 1366px) {
+    .BasicsBoxEdit {
+        grid-template-columns: 1fr 200px;
+    }
+    #preview {
+        max-width: 200px;
+    }
+    .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
+    .BasicsBoxEdit .RecordHeader {
+        width: calc(100% + 200px);
+    }
+}
+@media (max-width:  1280px) {
+    .BasicsBoxEdit .Question .stdwidth,
+    .BasicsBoxEdit .stdwidth, 
+    .BasicsBoxEdit .dynamickeywords,
+    .BasicsBox .CategoryBox {
+        width: 380px;
+    }
+    .FormHelpInner {
+        width: 368px;
+    }
+}
+@media (max-width: 850px) {
+    .BasicsBoxEdit {
+        display: block;
+    }
+    .Question.QuestionStickyRight {
+        height: auto;
+        border-left: none;
+        box-shadow: none;
+        padding-left: 0.5em;
+    }
+    .BasicsBoxEdit .QuestionSubmit.QuestionSticky,
+    .BasicsBoxEdit .RecordHeader {
+        width: 100%;
+    }
+    
 }

@@ -35,11 +35,9 @@
  *    https://yoururl.com/pages/tools/fix_resource_field_column.php?field=8");
 */
 
-
 /* ---------------------------------------------------
 BASIC PARAMETERS
 ------------------------------------------------------ */
-
 #######################################
 ################################ MySQL:
 #######################################
@@ -65,10 +63,6 @@ $mysql_bin_path = '/usr/bin';
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared = false;
-
 # Enable establishing secure connections using SSL
 # Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
 $use_mysqli_ssl = false;
@@ -84,7 +78,6 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
-$email_from_user=true; #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
@@ -105,6 +98,8 @@ $query_cache_expires_minutes=30;
 # The level of PHP error reporting to use. By default, hide warnings.
 $config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE;
 
+# Enable work-arounds required when installed on Microsoft Windows systems
+$config_windows=false;
 
 # ---- Paths to various external utilities ----
 
@@ -215,6 +210,9 @@ $home_colour_style_override='';
 $collection_bar_background_override='';
 $collection_bar_foreground_override='';
 
+# Used for changing colour of default blue buttons
+$button_colour_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
@@ -253,13 +251,6 @@ $show_language_chooser=true;
 # Allow Browser Language Detection
 $browser_language=true;
 
-# FTP settings for batch upload
-# Only necessary if you plan to use the FTP upload feature.
-$ftp_server="my.ftp.server";
-$ftp_username="my_username";
-$ftp_password="my_password";
-$ftp_defaultfolder="temp/";
-
 # Can users change passwords?
 $allow_password_change=true;
 
@@ -290,7 +281,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 $homeanim_folder="gfx/homeanim/gfx";
 
 # Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
-# Can be used as config override in conjunction with $homeanim_folder as above.
+# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
 
@@ -314,14 +305,15 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank');
+$tile_styles['conf']  = array('blank', 'analytics');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
-# use shadows on all tile content (Built in support for transparent tiles)
-$dash_tile_shadows=false;
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
 # Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
+
+# Options to show/hide the tiles on the home page
+$home_themeheaders=false;
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
@@ -590,7 +582,7 @@ $ffmpeg_snapshot_frames = 20;
 $ffmpeg_preview_force = true;
 
 # Option to always try and play the original file instead of preview - useful if recent change to $ffmpeg_preview_force doesn't suit e.g. if all users are
-# on internal network and want to see HQ video
+# on internal network and want to see HQ video. Setting this config will override $download_usage=true; for the purpose of displaying the video preview.
 $video_preview_original=false;
 
 # Encode preview asynchronous?
@@ -782,12 +774,6 @@ $list_display_array=array(15,30,60);
 # How many results per page? (default)
 $default_perpage_list=15;
 
-
-# Group based upload folders? (separate local upload folders for each group)
-$groupuploadfolders=false;
-# Username based upload folders? (separate local upload folders for each user based on username)
-$useruploadfolders=false;
-
 # Enable order by rating? (require rating field updating to rating column)
 $orderbyrating=false;
 
@@ -842,23 +828,9 @@ $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
 
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 
-
 
 # A list of types which get the extra video icon in the search results
 $videotypes=array(3);
-
-# Small icon above thumbnails showing the resource type
-$resource_type_icons=false;
-# Map the resource type to a font awesome 4 icon
-$resource_type_icons_mapping = array(1 => "camera", 2 => "file", 3 => "video-camera", 4 => "music");
-
 
 /** USER PREFERENCES **/
 $user_preferences = true;
@@ -866,10 +838,8 @@ $user_preferences = true;
 /* Should the "purge users" function be available? */
 $user_purge=true;
 
-# List of active plugins.
-# Note that multiple plugins must be specified within array() as follows:
-# $plugins=array("loader","rss","messaging","googledisplay"); 
-$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager');
+# List of active plugins, enabled by default and cannot be disabled in the UI.
+$plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
@@ -1000,11 +970,11 @@ $contact_sheet_link_on_collection_bar = true;
 # e.g.
 # <option value="216x343">Foolscap</option>
 $papersize_select = '
-<option value="a4">A4 - 210mm x 297mm</option>
-<option value="a3">A3 - 297mm x 420mm</option>
-<option value="letter">US Letter - 8.5" x 11"</option>
-<option value="legal">US Legal - 8.5" x 14"</option>
-<option value="tabloid">US Tabloid - 11" x 17"</option>';
+<option value="A4">A4 - 210mm x 297mm</option>
+<option value="A3">A3 - 297mm x 420mm</option>
+<option value="LETTER">US Letter - 8.5" x 11"</option>
+<option value="LEGAL">US Legal - 8.5" x 14"</option>
+<option value="TABLOID">US Tabloid - 11" x 17"</option>';
 
 #Optional array to set customised title and margins for named templates
 # e.g.
@@ -1044,6 +1014,9 @@ $basic_simple_search=false;
 
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
+
+# Hide the resource type selector on the simple search and advanced search pages
+$hide_search_resource_types = false;
 
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
@@ -1300,6 +1273,12 @@ $max_login_attempts_wait_minutes=10;
 # This can help to deter 'brute force' attacks, trying to find user's passwords or e-mail addresses in use.
 $password_brute_force_delay=4;
 
+// Password hash information - algorithm and options. @see https://www.php.net/manual/en/function.password-hash.php
+$password_hash_info = [
+    'algo' => PASSWORD_BCRYPT,
+    'options' => ['cost' => 12]
+];
+
 # Use imperial instead of metric for the download size guidelines
 $imperial_measurements=false;
 
@@ -1308,6 +1287,11 @@ $date_d_m_y=true;
 
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
+
+# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
+# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
+# easily faked.
+$ip_forwarded_for=false;
 
 # When extracting text from documents (e.g. HTML, DOC, TXT, PDF) which field is used for the actual content?
 # Comment out the line to prevent extraction of text content
@@ -1389,7 +1373,7 @@ $log_resource_views=false;
 
 # A list of file extentions of file types that cannot be uploaded for security reasons.
 # For example; uploading a PHP file may allow arbirtary execution of code, depending on server security settings.
-$banned_extensions=array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash');
+$banned_extensions=array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar');
 
 #Set a default access value for the upload page. This will override the default resource template value.
 #Change the value of this option to the access id number
@@ -1460,8 +1444,6 @@ $simple_search_display_condition=array();
 
 # When searching, also include themes/public collections at the top?
 $search_includes_themes=false;
-$search_includes_public_collections=false;
-$search_includes_user_collections=false;
 $search_includes_resources=true;
 
 # Should the Clear button leave collection searches off by default?
@@ -1532,9 +1514,6 @@ $enable_find_similar=true;
 
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
-
-# Allow multiple collections to be e-mailed at once
-$email_multi_collections = false;
 
 #  Link back to collections from log page - if "" then link is ignored.
 #  suggest 
@@ -1612,14 +1591,13 @@ $themes_in_my_collections=false;
 $top_nav_upload=true;
 # Show an upload link in the top navigation in addition to 'my contributions' for standard user? (if 'd' permission for the current user)
 $top_nav_upload_user=false;
-$top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, local
+$top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
 # Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $plupload_max_file_size = '50M';
+# $upload_max_file_size = '50M';
 
-# You can set the following line to ''  to disable chunking. May resolve issues with flash uploader.
-$plupload_chunk_size='5mb';
-
+# You can set the following line to ''  to disable chunking.
+$upload_chunk_size='5mb';
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
@@ -1708,6 +1686,9 @@ $no_preview_extensions=array("icm","icc");
 # If this is not set and the script is executed notifications will be sent to resource admins, or users in groups specified in $email_notify_usergroups 
 # $expiry_notification_mail="myaddress@mydomain.example";
 
+// Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
+// $notify_on_resource_expiry_days = 1;
+
 # What is the default display mode for search results? (smallthumbs/thumbs/list)
 $default_display="thumbs";
 
@@ -1754,17 +1735,21 @@ $themes_simple_images=true;
 # Option to show single home slideshow image on featured collection page (collections_featured.php) if $themes_simple_view is enabled
 $featured_collection_static_bg = false;
 
+// Change featured collections root by pointing at a new featured collection category (using a collection has an undefined behaviour).
+// Used mainly in combination with "$use_theme_as_home = true;"
+// IMPORTANT: access control must still be enforced through permissions. DO NOT rely on this configuration to hide featured collections from users!
+$featured_collections_root_collection = 0;
+
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
-# If a theme header contains a single collection, allow the title to be a direct link to the collection.
-# Drilling down is still possible via the >Expand tool, which replaces >Select when a deeper level exists
-$themes_single_collection_shortcut=false;
 
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;
 
 # Ask the user the intended usage when downloading
 $download_usage=false;
+# include email address field in download usage form
+$download_usage_email=false;
 $download_usage_options=array("Press","Print","Web","TV","Other");
 # Option to block download (hide the button) if user selects specific option(s). Only used as a guide for the user e.g. to indicate that permission should be sought.
 #$download_usage_prevent_options=array("Press");
@@ -1865,8 +1850,9 @@ $smartsearch_accessoverride=true;
 # Allow special searches to honor resource type settings.
 $special_search_honors_restypes=false;
 
-# Image preview zoom using jQuery.zoom (hover over the preview image to zoom in on the resource view page)
-$image_preview_zoom=false;
+# Image preview zoom. IF $preview_tiles is enabled, it will have enhanced zooming capability otherwise it will use a 
+# static image of a higher resolution (lpr/scr).
+$image_preview_zoom = false;
 
 # How many characters from the fields are 'mirrored' on to the resource table. This is used for field displays in search results.
 # This is the varchar length of the 'field' columns on the resource table.
@@ -1918,13 +1904,10 @@ $staticsync_whitelist_folders = array();
 
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
-$staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
+# Automatically create featured collections (formerly known as themes) based on the sync folder structure.
+# Note that files found in the root of the $syncdir location will not be allocated to a featured collection
+$staticsync_autotheme=true;
 
-# Mapping extensions to resource types for sync'd files
-# Format: staticsync_extension_mapping[resource_type]=array("extension 1","extension 2");
-$staticsync_extension_mapping_default=1;
-$staticsync_extension_mapping[3]=array("mov","3gp","avi","mpg","mp4","flv"); # Video
-$staticsync_extension_mapping[4]=array("flv");
 # Uncomment and set the next line to specify a category tree field to use to store the retieved path information for each file. The tree structure will be automatically modified as necessary to match the folder strucutre within the sync folder (performance penalty).
 # $staticsync_mapped_category_tree=50;
 # Uncomment and set the next line to specify a text field to store the retrieved path information for each file. This is a time saving alternative to the option above.
@@ -1960,7 +1943,7 @@ $staticsync_ignore_deletion_states = array(2, 3);
 # It is possible to take path information and map selected parts of the path to metadata fields.
 # For example, if you added a mapping for '/projects/' and specified that the second level should be 'extracted' means that 'ABC' would be extracted as metadata into the specified field if you added a file to '/projects/ABC/'
 # Hence meaningful metadata can be specified by placing the resource files at suitable positions within the static
-# folder heirarchy.
+# folder hierarchy.
 # Use the line below as an example. Repeat this for every mapping you wish to set up
 #	$staticsync_mapfolders[]=array
 #		(
@@ -2052,18 +2035,10 @@ $advanced_search_buttons_top=false;
 # Controls are :
 # - single_upload            : Enable / disable "Add Single Resource"
 # - in_browser_upload        : Enable / disable "Add Resource Batch - In Browser"
-# - fetch_from_ftp           : Enable / disable "Add Resource Batch - Fetch from FTP server"
-# - fetch_from_local_folder  : Enable / disable "Add Resource Batch - Fetch from local upload folder"
 $upload_methods = array(
 		'single_upload' => true,
-		'in_browser_upload' => true,
-		'fetch_from_ftp' => true,
-		'fetch_from_local_folder' => true,
+		'in_browser_upload' => true
 	);
-
-# Allow to change the location of the upload folder, so that it is not in the
-# web visible path. Relative and abolute paths are allowed.
-$local_ftp_upload_folder = '';
 
 # Hide links to other uploader
 $hide_uploadertryother = false;
@@ -2133,62 +2108,218 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Allow Plugin Upload
-$enable_plugin_upload = true;
+// GEOLOCATION MAP CONFIGURATION------------
+    // Disable maps and geocoding features?
+    $disable_geocoding = false;
 
-# Disable geocoding features?
-$disable_geocoding = false;
+    // Hide map location panel by default (a link to show it will be displayed instead)?
+    $hide_geolocation_panel = false;
 
-# After obtaining an API key, please set the following config option:
-# $google_maps_api_key = '';
+    // Show map search results in a modal?
+    $geo_search_modal_results = false;
 
-#Enable geolocating multiple assets on a map that are part of a collection
-$geo_locate_collection = false;
+    // Enable geolocating multiple resources on a map that are part of a collection?
+    $geo_locate_collection = true;
 
-# OpenLayers: The default center and zoom for the map view when searching or selecting a new location. This is a world view.
-# For example, to specify the USA use: #$geolocation_default_bounds="-10494743.596017,4508852.6025659,4";
-# For example, to specify Utah, use $geolocation_default_bounds="-12328577.96607,4828961.5663655,6";
-$geolocation_default_bounds="-3.058839178216e-9,2690583.3951564,2";
-
-# The layers to make available. The first is the default.
-$geo_layers="osm";
-# To enable Google layers, use:
-# $geo_layers="osm, gmap, gsat, gphy";
+    // Geolocate collection preview image size.
+    $geolocate_image_size = 'pre'; // Use 'thm' or 'pre' for thumbnail and preview image size, respectively.
 
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-$geo_tile_caching=true;
+    // OpenLayers default center and zoom for the map view when selecting a new location, as a world view.
+    // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
+    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
 
-# Optional path to tile cache directory
-#$geo_tile_cache_directory="";
+    // OpenLayers basemap layers to make available, the first is the default.
+    // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
 
+    // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
+    // Note that server caching is bypassed if $leaflet_maps_enable=true and $geo_leaflet_maps_sources = true;
+    // Since the client then fetches tiles directly from the source
+    $geo_tile_caching = true;
 
-# Add OpenLayers configuration options to this variable to overwrite all other options. 
-$geo_override_options = "";
+    // How long will tiles be cached? Set to one year by default
+    // Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
+    $geo_tile_cache_lifetime = 31536000; # 60*60*24*365
 
-// Only high level tiles are included by default. If you require higher resolution tiles 
-// you need permitted access to a full tile server, or you can set up your own. 
-// See https://wiki.openstreetmap.org/wiki/Tile_servers for more information
-// If no servers are available then your zoom ability will be limited
+    // User agent string to use when server requests tiles from sources
+    $geo_tile_user_agent = "ResourceSpace";
 
-$geo_tile_servers = array();
-//$geo_tile_servers[] = 'a.tile.sometileserver.org';
-//$geo_tile_servers[] = 'b.tile.sometileserver.org';
-//$geo_tile_servers[] = 'c.tile.sometileserver.org';
+    // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
+    # $geo_tile_cache_directory = '';    
 
-// How long will tiles be cached? Set to one year by default
-// Unless absolutely necessary this should be a long period to avoid too many requests to the tile server
-$geo_tile_cache_lifetime = 60*60*24*365;
+    // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
+    // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
+    // information. If no servers are available, then your zoom ability will be limited.
+    // After 9.6 any defined will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable=true
+    $geo_tile_servers = array();
+    // $geo_tile_servers[] = 'a.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'b.tile.sometileserver.org';
+    // $geo_tile_servers[] = 'c.tile.sometileserver.org';
 
-# Log developer debug information to the debug log (filestore/tmp/debug.txt)?
-# As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
+    // $geo_tile_servers['OpenStreetMap'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'a.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
+    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
+
+    // Add OpenLayers configuration options to this variable to overwrite all other options.
+    $geo_override_options = "";
+
+    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
+    $geo_search_restrict = array(
+        # array(50,-3,54,3)      // Example omission zone 1.
+        # ,array(-10,-20,-8,-18) // Example omission zone 2.
+        # ,array(1,1,2,2)        // Example omission zone 3.
+    );
+
+    // Map height in pixels on the Resource View page.
+    $view_mapheight = 350;
+
+    // Map height in pixels on the Geographic/Map Search page.
+    $mapsearch_mapheight = 625;
+
+    // Map height in pixels on the Resource Edit page.
+    $mapedit_mapheight = 625;
+
+    // New settings for leaflet maps
+    $leaflet_maps_enable = false;
+
+    // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
+    // If this is enabled please refer to /include/map_basemaps to see the available config options that enable specific defined map providers
+    $geo_leaflet_maps_sources = false;
+    $map_usgstopo = true;
+    $map_usgsimagery = true;
+    $map_usgsimagerytopo = true;
+
+    // $geo_leaflet_sources = define available tile servers. 
+    // Configured sources need to follow the default template as below
+    $geo_leaflet_sources = array();
+    $geo_leaflet_sources[] = array(
+        "name"          => "The National Map",
+        "code"          => "USGSTNM",
+        "url"           => "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+        "maxZoom"       => 8,
+        "detectRetina"  => true,
+        "attribution"   => "<a href=\"https://www.doi.gov\">U.S. Department of the Interior</a> | <a href=\"https://www.usgs.gov\">U.S. Geological Survey</a>",
+        "default"       => true,
+        "extension"     => "jpeg",
+        "variants"      => array(
+            "USTopo"        => array(
+                "name"          => "US Topographic",
+            ),
+            "USImagery"     => array(
+                "name"          => "US Imagery",
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
+                ),
+            "USImageryTopo" => array(
+                "name"          => "US Imagery & Topographic",
+                "url"           => 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}',
+            ),
+            )
+        );
+
+    // Limit number of search results that can be displayed in map view. Set to 0 for no limit
+    $search_map_max_results = 5000;
+    
+    // Use zoom slidebar instead of standard +/- buttons?
+    $map_zoomslider = true;
+
+    // Leaflet: Show zoom history navigation bar?
+    $map_zoomnavbar = true;
+
+    // Leaflet: Cache map layer tiles in the browser (recommended to reduce tile server load)?
+    $map_default_cache = true; # Default basemap?
+    $map_layer_cache = true; # All basemaps?
+
+    // Enable retina display tiles (four tiles of half size and a larger zoom level in place of one to utilize higher resolution)?
+    $map_retina = false;
+
+    // Leaflet: default basemap to show
+    // Set to be '{CODE}.{variant} - matching the definitions from the $geo_leaflet_source code array 
+    // e.g. "OSM.Mapnik" 
+    $map_default = 'USGSTNM.USTopo';
+
+    // Open resource when clicking on a search result marker, instead of resource tooltip?
+    $marker_resource_preview = true;
+
+    // Leaflet: Custom map marker coloring based on a selected numeric value metadata field, instead of coloring by resource type, enable by setting a metadata field ID and descriptive text value.
+    # $marker_metadata_field = 85; # Example is fieldID 85.
+    $lang['custom_metadata_markers'] = ''; # Custom metadata field map legend header text.
+
+    // Array of minimum and maximum numeric values for the markers on the map, up to eight marker pairs (min >=, max <=) when using custom marker coloring.  Example below shows a range of years.
+    $marker_metadata_array = [
+        0 => ['min' => 1935, 'max' => 1939], # Blue marker
+        1 => ['min' => 1940, 'max' => 1949], # Red marker
+        2 => ['min' => 1950, 'max' => 1959], # Green marker
+        3 => ['min' => 1960, 'max' => 1969], # Orange marker
+        4 => ['min' => 1970, 'max' => 1979], # Yellow marker
+        5 => ['min' => 1980, 'max' => 1989], # Black marker
+        6 => ['min' => 1990, 'max' => 1999], # Grey marker
+        7 => ['min' => 2000, 'max' => 2010], # Violet marker
+        8 => ['min' => 2010, 'max' => 2020]  # Gold marker
+    ];
+
+    // Leaflet: Show a KML overlay on the map?
+    $map_kml = false;
+    $map_kml_file = ''; # Place KML file in ../filestore/system/, example: overlay.kml
+
+    // Resource metadata field integer ID containing polygon footprint location string, blank '' if not used.  String in (latitude, longitude) coordinate pairs separated by a comma: (40.75,-111.51), (40.75,-111.49), (40.73,-111.49), (40.73,-111.51) or using braces [].  String can also contain a fifth pair that closes the polygon and equal to the first pair.
+    # $map_polygon_field = 84;
+
+// Option to add a 'heatmap' when performing a geographic search to aid searching
+// Heatmap data relies on presence of a file that is generated by a ResourceSpace cron job (scheduled task)
+// Please note the following:-
+//  - This should be disabled in multi-client environments
+//  - Cached location co-ordinates are rounded to one decimal place to improve handling of large numbers of resources
+//  - Only resources that are currently in the default search states will be included in the heatmap
+//  - This can be enabled per usergroup as a configuration option
+$geo_search_heatmap = false;
+
+# QuickLook previews (Mac Only)
+# If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
+# This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
+# $qlpreview_path="/usr/bin";
+
+// A list of extensions that QuickLook previews should NOT be used for.
+$qlpreview_exclude_extensions = array("tif","tiff");
+
+// Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
-# Optional extended debugging information from backtrace (records pagename and calling functions)
-# debug_extended_info = true;
+// Allow debug log to be readable by ResourceSpace? This must be set to true if using the sytem console to access the log.
+// Unless this is set to true ResourceSpace will attempt to make the file write-only (this will not work on Windows servers). 
+// Please note that if the debug log is located under the web root then extra care should be taken to prevent unauthorised access e.g. by configuring web server rules to deny direct access
+$debug_log_readable=false;
 
-# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access to both the file and the containing folder by web service account
-#$debug_log_location="d:/logs/resourcespace.log";
-#$debug_log_location="/var/log/resourcespace/resourcespace.log";
+// Optional extended debugging information from backtrace (records pagename and calling functions).
+$debug_extended_info = false;
+
+// Optional debug log location. Used to specify a full path to debug file and ensure folder permissions allow write access to both the file and the containing folder by web service account.
+# $debug_log_location = "d:/logs/resourcespace.log";
+# $debug_log_location = "/var/log/resourcespace/resourcespace.log";
+
+# enable a list of collections that a resource belongs to, on the view page
+// Suppress SQL information in the debug log?
+$suppress_sql_log = false;
+
+# Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
+# Metadata templates can be selected on the resource edit screen to pre-fill fields.
+# The intention is that you will create a new resource type named "Metadata Template" and enter its ID below.
+# This resource type can be hidden from view if necessary, using the restrictive resource type permission.
+#
+# Metadata template resources act a little differently in that they have editable fields for all resource types. This is so they can be used with any 
+# resource type, e.g. if you complete the photo fields then these will be copied when using this template for a photo resource.
+# 
+# $metadata_template_resource_type=5;
+#
+# The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
+# $metadata_template_title_field=10; # ** SEE NOTE (1)
+
+// Ability to default metadata templates to a particular resource ID
+$metadata_template_default_option = 0;
+
+// Force selection of a metadata template
+$metadata_template_mandatory = false;
 
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
@@ -2388,9 +2519,6 @@ $site_text_use_ckeditor=false;
 # Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top=false;
 
-# option to always send emails from the logged in user
-$always_email_from_user=false;
-
 # option to always cc admin on emails from the logged in user
 $always_email_copy_admin=false;
 
@@ -2414,6 +2542,7 @@ $comments_responses_max_level=10 ;				# maximum number of nested comments / thre
 $comments_max_characters=2000;					# maximum number of characters for a comment
 $comments_email_notification_address="";		# email address to use for flagged comment notifications
 $comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
+$comments_policy_enable=false;                  # show a Comments Policy link to the site text comments_policy
 $comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
 $comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
 
@@ -2427,9 +2556,6 @@ $hide_resource_share_link=false; // Configurable option to hide the "Share" link
 
 # Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
 $user_resources_approved_email=false; 
-
-# Set to true to move the Search button before the Clear button
-$swap_clear_and_search_buttons=false;
 
 # Option to have default date left blank, instead of current date.
 $blank_date_upload_template=false;
@@ -2474,11 +2600,9 @@ $usage_comment_blank=false;
 # Option to add a link to the resource view page that allows a user to email the $email_notify address about the resource
 $resource_contact_link=false;
 
-# Hide geolocation panel by default (a link to show it will be displayed instead)
-$hide_geolocation_panel=false;
-
 # Option to move the welcome text into the Home Picture Panel. Stops text from falling behind other panels.
 $welcome_text_picturepanel=false;
+
 # Hide Welcome Text
 $no_welcometext = false;
 
@@ -2594,8 +2718,8 @@ $purge_temp_folder_age=0;
 # If it is set to 1 the link will also be valid all the next day
 $password_reset_link_expiry =1;
 
-# Show the resource view in a modal when accessed from search results.
-$resource_view_modal=true;
+# Show the resource view in a modal when accessed from search results?
+$resource_view_modal = true;
 
 # Option to show other standard pages e.g. resource requests in a modal
 $modal_default=false;
@@ -2611,6 +2735,16 @@ $resource_view_use_pre = false;
 $resource_view_large_orientation = true;
 
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
+# Show an edit icon/link in the search results.
+$search_results_edit_icon=true;
+
+# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
+$pending_submission_prompt_review=true;
+
+# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
+$thumbs_previews_via_download=false;
+
+# Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
 
 # How many times must a keyword be used before it is considered eligable for suggesting, when a matching keyword is not found?
@@ -2624,11 +2758,6 @@ $custom_access_overrides_search_filter=false;
 
 # When requesting a resource or resources, is the "reason for request" field mandatory?
 $resource_request_reason_required=true;
-
-# Allow ResourceSpace to upload multiple times the same file in a row
-# Set to true only if you want RS to create duplicates when client is losing
-# connection with the server and tries again to send the last chunk
-$plupload_allow_duplicates_in_a_row = false;
 
 # Create all preview sizes at the full target size if image is smaller (except for HPR as this would result in massive images)
 $previews_allow_enlarge=false;
@@ -2743,9 +2872,6 @@ $replace_resource_preserve_default=false;
 # Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
 $replace_batch_existing = false;
 
-# When searching collections, return results based on the metadata of the resources inside also
-$collection_search_includes_resource_metadata=false;
-
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
@@ -2799,17 +2925,18 @@ $actions_modal=true;
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
 
-/*
-Mappings between resource types and file extensions.
-Can be used to automatically create resources in the system based on
-the extension of the file.
-*/
+
+// Mappings between resource types and file extensions.
+// Can be used to automatically create resources in the system based on the extension of the file.
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
     2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl', 'ott' , 'rtf' , 'txt' , 'xml'),
     3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv'),
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
+
+// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
+$view_in_browser_extensions=array("pdf","mp3","svg");
 
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
@@ -2868,7 +2995,7 @@ $iiif_custom_sizes = false;
 $iiif_max_width  = 1024;
 $iiif_max_height = 1024;
 
-// Tile settings (currently only used by IIIF when $iiif_level is 1)
+// Tile settings (used by IIIF when $iiif_level is 1 and by $image_preview_zoom)
 $preview_tiles = false;
 // Tiles can be generated along with normal previews or created upon request.
 // If enabling IIIF on an existing system then it is recommended to add all IIIF published resources to a collection first and use the batch/recreate_previews.php script
@@ -2934,7 +3061,7 @@ $social_media_links = array("facebook", "twitter", "linkedin");
 
 /*
 Set the suffix used to identify alternatives for a particular resource when both the original file and its alternatives
-are being uploaded in a batch using the UI (plupload)
+are being uploaded in a batch using upload_batch.php 
 IMPORTANT: This will only work if the user uploads all files (resource and its alternatives) into the same 
 collection.
 */
@@ -2959,7 +3086,7 @@ $CORS_whitelist = array();
 
 
 /* Font selection */
-$global_font="WorkSans";
+$global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
@@ -3080,3 +3207,107 @@ $report_rows_zip_limit = 10000;
 // Set sytem-wide read-only system with global permissions mask
 // This also stops all offline jobs with the exception of user downloads and stops ResoureSpace sql query logging ($mysql_log_transactions).
 $system_read_only = false;
+
+// External upload options
+// Optional array of usergroup ids that external collection upload links can be 'shared as' in order to limit metadata field and resource type visibility etc.
+$upload_link_usergroups = array();
+// Workflow state that will be set for all resources uploaded using the share link
+$upload_link_workflow_state = -1;
+
+// Video splice configurations
+// Used for video splice plugins to decide commands used for video output.
+// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
+$ffmpeg_std_video_options= array(
+    "MP4 700kbps"=>array(
+        "command"=>"mp4 -b:v 700k -crf 20",
+        "extension"=>"mp4"),
+    "MP4 1500kbps"=>array(
+        "command"=>"mp4 -b:v 1500k -crf 20",
+        "extension"=>"mp4"),
+    "MP4 2500kbps"=>array(
+        "command"=>"mp4 -b:v 2500k -crf 20",
+        "extension"=>"mp4",
+        "default"=>true),
+    "MP4 4000kbps"=>array(
+        "command"=>"mp4 -b:v 4000k -crf 20",
+        "extension"=>"mp4"),
+        );
+
+// Used for video splice plugins to decide commands used for audio output.
+// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
+$ffmpeg_std_audio_options= array(
+    "AAC 32 kbps 22.05 kHz Mono"=>array(
+        "command"=>"-acodec aac -b:a 32k -ar 22050 -ac 1"),
+    "AAC 64 kbps 44.1 kHz Mono"=>array(
+        "command"=>"-acodec aac -b:a 64k -ar 44100 -ac 1",
+        "default"=>true),
+    "AAC 64 kbps 48 kHz Mono"=>array(
+        "command"=>"-acodec aac -b:a 64k -ar 48000 -ac 1"),
+    "AAC 96 kbps 44.1 kHz Mono"=>array(
+        "command"=>"-acodec aac -b:a 96k -ar 44000 -ac 1"),
+    "AAC 96 kbps 48 kHz Mono"=>array(
+        "command"=>"-acodec aac -b:a 96k -ar 48000 -ac 1"),
+    "MP3 64 kbps 22.05 kHz Mono"=>array(
+        "command"=>"-acodec mp3 -b:a 64k -ar 22050 -ac 1"),
+    "MP3 96 kbps 44.1 kHz Mono"=>array(
+        "command"=>"-acodec mp3 -b:a 96k -ar 44100 -ac 1"),
+    "MP3 96 kbps 48 kHz Mono"=>array(
+        "command"=>"-acodec mp3 -b:a 96k -ar 48000 -ac 1"),
+    "MP3 128 kbps 44.1 kHz Mono"=>array(
+        "command"=>"-acodec mp3 -b:a 128k -ar 44100 -ac 1"),
+    "MP3 128 kbps 48 kHz Mono"=>array(
+        "command"=>"-acodec mp3 -b:a 128k -ar 48000 -ac 1")
+        );
+
+// Used by video splice plugin to decide common resolution for all video files to be merged
+$ffmpeg_std_resolution_options= array(
+    "2560 x 1440"=>array(
+        "width"=>"2560",
+        "height"=>"1440"),
+    "1920 x 1080"=>array(
+        "width"=>"1920",
+        "height"=>"1080"),
+    "1280 x 720"=>array(
+        "width"=>"1280",
+        "height"=>"720",
+        "default"=>true),
+    "960 x 540"=>array(
+        "width"=>"960",
+        "height"=>"540"),
+    "854 x 480"=>array(
+        "width"=>"854",
+        "height"=>"480"),
+    "640 x 360"=>array(
+        "width"=>"640",
+        "height"=>"360"),
+    "480 x 270"=>array(
+        "width"=>"480",
+        "height"=>"270"),
+    "426 x 240"=>array(
+        "width"=>"426",
+        "height"=>"240")
+    );
+
+// Used by video splice plugin to decide common frame rate for all video files to be merged
+$ffmpeg_std_frame_rate_options= array(
+    "23.98(fps)"=>array(
+        "value"=>"23.98"),
+    "30(fps)"=>array(
+        "value"=>"30",
+        "default"=>true),
+    "60(fps)"=>array(
+        "value"=>"60")
+    );
+
+// Folder location used for video exports in video track and video splice plugins. Video tracks will use its own config if provided to keep
+// backwards compatibility
+$video_export_folder = "";
+// End of video splice configurations 
+
+// Specify file extensions that will not be 'flattened' by ImageMagick
+$preview_no_flatten_extensions = array("gif","png","tif","svg");
+// Specify file extensions that will have their transparency layer replaced with a checkerboard pattern. If the alpha layer has just been used for construction then tou may need to remove 'tif' from this array
+$preview_keep_alpha_extensions = array("gif","png","tif","svg");
+
+// Array of sizes that will always be permitted through download.php and won't require terms/usage to be entered - needed when hide_real_filepath=true;
+$sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');

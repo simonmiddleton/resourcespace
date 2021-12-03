@@ -33,8 +33,12 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     $resourcebatches = array_chunk($resources, 2000);
 
     $csv_field_headers["resource_type"] = $lang["resourcetype"];
+    $csv_field_headers["status"] = $lang['status'];
     $csv_field_headers["created_by"] = $lang["contributedby"];
-    $csv_field_headers["file_checksum"] = $lang["filechecksum"];
+    if($file_checksums && $alldata)
+        {
+        $csv_field_headers["file_checksum"] = $lang["filechecksum"];
+        }
     // Add original size URL column
     if($csv_export_add_original_size_url_column)
         {
@@ -48,7 +52,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         {
         $resources_fields_data = array();
         $fullresdata = get_resource_field_data_batch($resourcebatches[$n],true,$k != '',true,$csvoptions);
-        
+
         // Get data for all resources
         $resource_data_array = get_resource_data_batch($resourcebatches[$n]);
         foreach($resourcebatches[$n] as $resource)
@@ -62,7 +66,10 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             // Add resource type
             $restype = get_resource_type_name($resdata["resource_type"]);
             $resources_fields_data[$resource]["resource_type"] = $restype;
-            
+
+            // Add resource status
+            $resources_fields_data[$resource]['status'] = $lang["status{$resource_data_array[$resource]['archive']}"] ?? $lang['unknown'];
+
             // Add contributor
             $udata=get_user($resdata["created_by"]);
             if ($udata!==false)
@@ -174,7 +181,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                     {
                     if($column_header == $field_name)
                         {
-                        $csv_row .= '"' . str_replace(array("\n","\r","\""),array("","","\"\""),i18n_get_translated($field_value)) . '",';
+                        $csv_row .= '"' . str_replace(array("\""),array("\"\""),i18n_get_translated($field_value)) . '",';
                         }
                     }
                 }

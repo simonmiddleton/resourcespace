@@ -25,6 +25,9 @@ $page     = getvalescaped('page', 0, true);
 // Get annotation data if an ID has been provided
 $annotation_id = getvalescaped('annotation_id', 0, true);
 $annotation    = getval('annotation', array());
+
+debug(sprintf('[annotations][annotations.php] AJAX request: action = %s | resource = %s | annotation_id = %s', $action, $resource, $annotation_id));
+
 if(0 < $annotation_id)
     {
     $annotation = getAnnotation($annotation_id);
@@ -38,8 +41,11 @@ if('get_resource_annotations' == $action)
 // Create new annotation
 if('create' == $action && 0 < $resource)
     {
+    debug('[annotations][annotations.php] Request to create new annotation...');
+    debug('[annotations][annotations.php] annotation object is ' . json_encode($annotation));
     if(0 === count($annotation))
         {
+        debug('[annotations][annotations.php][error] No annotation object');
         $return['error'] = array(
             'status' => 400,
             'title'  => 'Bad Request',
@@ -50,9 +56,11 @@ if('create' == $action && 0 < $resource)
         }
 
     $annotation_id = createAnnotation($annotation);
+    debug('[annotations][annotations.php] newly created annotation_id = ' . json_encode($annotation_id));
 
     if(false === $annotation_id)
         {
+        debug('[annotations][annotations.php][error] No annotation_id!');
         $return['error'] = array(
             'status' => 500,
             'title'  => 'Internal Server Error',
@@ -98,9 +106,14 @@ if('get_allowed_fields' == $action)
         // Make sure user has access to this field
         if(metadata_field_view_access($annotate_field))
             {
-            $field_data['title'] = i18n_get_translated($field_data['title']);
-
-            $return['data'][] = $field_data;
+            $return['data'][] = 
+                array(
+                    "ref"=> $annotate_field, 
+                    "title" => i18n_get_translated($field_data['title']),
+                    "name" => $field_data['name'],
+                    "order_by" => $field_data['order_by'],
+                    "type" => $field_data['type']
+                );
             }
         }
 

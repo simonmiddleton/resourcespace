@@ -18,7 +18,7 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	# Check if a user with that username already exists
 	if ($user_preferences_change_username && $username != $newUsername)
 		{
-		$existing = sql_query('select ref from user where username=\'' . escape_check($newUsername) . '\'');
+		$existing = ps_query('SELECT ref FROM user WHERE username = ?', ['s', $newUsername]);
 		if (!empty($existing))
 			{
 			$GLOBALS['errorUsername'] = $lang['useralreadyexists'];
@@ -29,7 +29,7 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	# Check if a user with that email already exists
 	if ($user_preferences_change_email && $useremail != $newEmail)
 		{
-		$existing = sql_query('select ref from user where email=\'' . escape_check($newEmail) . '\'');
+		$existing = ps_query('SELECT ref FROM user WHERE email = ?', ['s', $newEmail]);
 		if (!empty($existing))
 			{
 			$GLOBALS['errorEmail'] = $lang['useremailalreadyexists'];
@@ -40,17 +40,17 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	# Store changed values in DB, and update the global variables as header.php is included next
 	if ($user_preferences_change_username && $username != $newUsername)
 		{
-		sql_query("update user set username='" . escape_check($newUsername) . "' where ref='" . $userref . "'");
+		ps_query("UPDATE user SET username = ? WHERE ref = ?", ['s', $newUsername, 'i', $userref]);
 		$username = $newUsername;
 		}
 	if ($user_preferences_change_email && $useremail != $newEmail)
 		{
-		sql_query("update user set email='" . escape_check($newEmail) . "' where ref='" . $userref . "'");
+		ps_query("UPDATE user SET email = ? WHERE ref = ?", ['s', $newEmail, 'i', $userref]);
 		$useremail = $newEmail;
 		}
 	if ($user_preferences_change_name && $userfullname != $newFullname)
 		{
-		sql_query("update user set fullname='" . escape_check($newFullname) . "' where ref='" . $userref . "'");
+		ps_query("UPDATE user SET fullname = ? WHERE ref = ?", ['s', $newFullname, 'i', $userref]);
 		$userfullname = $newFullname;
 		}
 

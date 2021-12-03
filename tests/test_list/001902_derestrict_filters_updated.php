@@ -8,6 +8,7 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 $saved_search_filter_nodes = $search_filter_nodes;
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
+$original_user_data = $userdata;
 
 function test_derestrict_filter_text_update($user,$group,$filtertext)
     {
@@ -97,6 +98,7 @@ if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse
 
 // Reset saved settings
 $search_filter_nodes = $saved_search_filter_nodes;
-$userpermissions = $savedpermissions;
+$userdata = $original_user_data;
+setup_user($original_user_data);
 
 return true;

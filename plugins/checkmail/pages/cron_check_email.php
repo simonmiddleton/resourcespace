@@ -1,13 +1,11 @@
 <?php 
 include '../../../include/db.php';
-include '../../../include/image_processing.php';
-include '../include/checkmail_functions.php';
-
-
+include_once '../../../include/image_processing.php';
+include_once '../include/checkmail_functions.php';
 
 
 // required: check that this plugin is activated
-$activated=sql_value("select inst_version value from plugins where name='checkmail'","");
+$activated = ps_value("select inst_version value from plugins where name = 'checkmail'", array(), "");
 if ($activated==""){die("checkmail plugin deactivated\r\n");}
 $process_locks_max_seconds=600;
 
@@ -50,10 +48,11 @@ set_process_lock("checkmail");
 
 
 // manually include plugin config since authenticate isn't being run
-$config = sql_value("select config value from plugins where name='checkmail'","");
+$config = ps_value("select config value from plugins where name = 'checkmail'", array(), "");
 include_plugin_config("checkmail",$config);
 
-$temp_dir=$storagedir."/tmp/checkmail_in";
+if (!isset($temp_dir) || $temp_dir=''){$temp_dir=$storagedir."/tmp/checkmail_in";}
+else {$temp_dir .= "/checkmail_in";}
 if (!is_dir($temp_dir)){mkdir($temp_dir,0777);}
 
 
@@ -62,14 +61,21 @@ $delete=false; // set to true only after all files are transferred
 $build_collection=false;
 $collection="";
 
+$GLOBALS["use_error_exception"] = true;
+try
+    {
+    // get the first unseen message, one email is processed in this script
+    $imap=imap_open("{".$checkmail_imap_server. "}INBOX", $checkmail_email, $checkmail_password ) or die("can't connect: " . imap_last_error());
+    }
+catch (Exception $e)
+    {
+    die("can't open IMAP connection" . PHP_EOL);
+    }
+unset($GLOBALS["use_error_exception"]);
 
 
-
-// get the first unseen message, one email is processed in this script
-$imap=imap_open("{".$checkmail_imap_server. "}INBOX", $checkmail_email, $checkmail_password ) or die("can't connect: " . imap_last_error());
-
-sql_query("delete from sysvars where name='last_checkmail'");
-sql_query("insert into sysvars (value,name) values (now(),'last_checkmail')");
+ps_query("delete from sysvars where name = 'last_checkmail'", array());
+ps_query("insert into sysvars (value,name) values (now(),'last_checkmail')", array());
 
 $msgnos=imap_search($imap, 'UNSEEN');
 if ($msgnos==null){
@@ -354,7 +360,7 @@ for ($n=0;$n<count($files);$n++){
 	fclose($fp);
 
 	// Get resource defaults for user's group
-	$userresourcedefaults=sql_query("select resource_defaults from usergroup where ref='" . $fromuser['groupref'] . "'");
+	$userresourcedefaults = ps_query("select resource_defaults from usergroup where ref = ?", array("i",$fromuser['groupref']));
 	if (isset($userresourcedefaults)){
 		$userresourcedefaults=$userresourcedefaults[0];
 		$userresourcedefaults=$userresourcedefaults["resource_defaults"];
@@ -362,8 +368,8 @@ for ($n=0;$n<count($files);$n++){
 
 	// Create resource
 	$r=create_resource($resource_type,$checkmail_archive_state,$fromuser_ref);  echo "Creating Resource $r \r\n";
-	sql_query("update resource set access='".$access."',file_extension='".$file['extension']."',preview_extension='jpg',file_modified=now() where ref='$r'");
-		
+	ps_query("update resource set access = ?, file_extension = ?, preview_extension = 'jpg', file_modified = now() where ref = ?", array("i",$access,"s",$file['extension'],"i",$r));
+
 	// Update metadata fields  // HTML OPTIONS
 	update_field($r,$filename_field,$file['filename']); 
 	update_field($r,$checkmail_subject_field,$subject);

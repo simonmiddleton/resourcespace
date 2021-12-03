@@ -2,33 +2,47 @@
 include_once dirname(__FILE__) . "/../../include/db.php";
 include_once dirname(__FILE__) . "/../../include/image_processing.php";
 
-$cli_short_options = 'h';
-$cli_long_options  = array(
-    'help',
-    'send-notifications'
-);
-
-$sapi_type = php_sapi_name();
-if (substr($sapi_type, 0, 3) != 'cli')
+if(PHP_SAPI != 'cli')
     {
     exit("Command line execution only.");
     }
 
-$send_notification = false;
+$send_notification  = false;
+$suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;
 
 // CLI options check
+$cli_short_options = 'hc';
+$cli_long_options  = array(
+    'help',
+    'send-notifications',
+    'suppress-output',
+    'clearlock'
+);
 foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
     if(in_array($option_name, array('h', 'help')))
         {
-        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notifiaction please run php staticsync.php --send-notifications' . PHP_EOL;
+        echo "To clear the lock after a failed run, ";
+        echo "pass in '--clearlock'" . PHP_EOL;
+        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notification please run php staticsync.php --send-notifications' . PHP_EOL;
         exit(1);
+        }
+    if (in_array($option_name, array('clearlock', 'c')) )
+        {
+        if (is_process_lock("staticsync") )
+            {
+            clear_process_lock("staticsync");
+            }
         }
 
     if('send-notifications' == $option_name)
         {
         $send_notification = true;
         }
+    if('suppress-output' == $option_name)
+        {
+        $suppress_output = true;
+        }    
     }
 
 if(isset($staticsync_userref))
@@ -41,28 +55,12 @@ if(isset($staticsync_userref))
     }
 
 ob_end_clean();
-set_time_limit(60*60*40);
-
-if ($argc == 2)
+if($suppress_output)
     {
-    if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
-        {
-        echo "To clear the lock after a failed run, ";
-        echo "pass in '--clearlock', '-clearlock', '-c' or '--c'." . PHP_EOL;
-        exit("Bye!");
-        }
-    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
-        {
-        if ( is_process_lock("staticsync") )
-            {
-            clear_process_lock("staticsync");
-            }
-        }
-    else
-        {
-        exit("Unknown argv: " . $argv[1]);
-        }
-    } 
+    ob_start();
+    }
+
+set_time_limit(60*60*40);
 
 # Check for a process lock
 if (is_process_lock("staticsync")) 
@@ -84,7 +82,7 @@ $merge_filename_with_title=false;
 $count = 0;
 $done=array();
 $errors = array();
-$syncedresources = sql_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0 AND file_path LIKE '%/%'");
+$syncedresources = sql_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0");
 foreach($syncedresources as $syncedresource)
     {
     $done[$syncedresource["file_path"]]["ref"]=$syncedresource["ref"];
@@ -94,6 +92,7 @@ foreach($syncedresources as $syncedresource)
     
 // Set up an array to monitor processing of new alternative files
 $alternativefiles=array();
+$restypes = get_resource_types();
 
 if (isset($numeric_alt_suffixes) && $numeric_alt_suffixes > 0)
     {
@@ -192,22 +191,32 @@ function touch_category_tree_level($path_parts)
 function ProcessFolder($folder)
     {
     global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $ffmpeg_preview_extension, 
-           $staticsync_autotheme, $staticsync_extension_mapping_default, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS,
-           $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
-           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
+           $staticsync_autotheme, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $staticsync_mapped_category_tree, 
+           $staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix,
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
            $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents,
-           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref;
+           $staticsync_alt_suffixes, $staticsync_alt_suffix_array, $staticsync_file_minimum_age, $userref,
+           $resource_type_extension_mapping_default, $resource_type_extension_mapping, $restypes;
     
     $collection = 0;
-    $treeprocessed=false;
+    $treeprocessed=false;   
     
+    if(!file_exists($folder))
+        {
+        echo "Sync folder does not exist: " . $folder . PHP_EOL;
+        return false;
+        }
     echo "Processing Folder: " . $folder . PHP_EOL;
     
     # List all files in this folder.
+    
+    $directories_arr = array();
+    $files_arr = array();
+    $import_paths = array();
+
     $dh = opendir($folder);
     while (($file = readdir($dh)) !== false)
         {
@@ -217,12 +226,29 @@ function ProcessFolder($folder)
             }
 
         $fullpath = "{$folder}/{$file}";
+        $filetype = filetype($fullpath);
+        
+        # Sort directory content so files are processed first.
+        if ($filetype == 'dir' || $filetype == 'link')
+            {
+            $directories_arr[] = $fullpath;
+            }
+        if ($filetype == 'file')
+            {
+            $files_arr[] = $fullpath;
+            }
+        }
+        $import_paths = array_merge($files_arr, $directories_arr);
+        $fullpath = '';
+    
+    foreach ($import_paths as $fullpath)
+        {
         if(!is_readable($fullpath))
             {
             echo "Warning: File '{$fullpath}' is unreadable!" . PHP_EOL;
             continue;
             }
-
+        $skipfc_create = false; // Flag to prevent creation of new FC
         $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
             
@@ -252,10 +278,15 @@ function ProcessFolder($folder)
         )
             {
             // Recurse
-            ProcessFolder("{$folder}/{$file}");
+            ProcessFolder("{$fullpath}");
             }
 
         # -------FILES---------------
+        if ($filetype == "file") 
+            {
+            $file = basename($fullpath);
+            }
+            
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
             {
             if (isset($staticsync_file_minimum_age) && (time() -  filectime($folder . "/" . $file) < $staticsync_file_minimum_age))
@@ -267,7 +298,7 @@ function ProcessFolder($folder)
 
             # Work out extension
             $fileparts  = pathinfo($file);
-            $extension  = isset($fileparts["extension"]) ? $fileparts["extension"] : '';
+            $extension  = isset($fileparts["extension"]) ? mb_strcut($fileparts["extension"], 0, 10) : '';
             $filename   = $fileparts["filename"];
 
             if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false && !$staticsync_ingest_force)
@@ -343,124 +374,140 @@ function ProcessFolder($folder)
 
                 echo "Processing file: $fullpath" . PHP_EOL;
 
-                if ($collection == 0 && $staticsync_autotheme)
+                if ($collection == 0 && $staticsync_autotheme && !$skipfc_create)
                     {
-                    # Make a new collection for this folder.
+                    # Find or create a featured collection for this folder as required.
                     $e = explode("/", $shortpath);
                     $fallback_fc_categ_name = ucwords($e[0]);
                     $name = (count($e) == 1) ? '' : $e[count($e)-2];
                     echo "Collection '{$name}'" . PHP_EOL;
-
                     // The real featured collection will always be the last directory in the path
-                    $proposed_fc_categories = array_diff($e, array_slice($e, -2));
-                    echo "Proposed Featured Collection Categories: " . join(" / ", $proposed_fc_categories) . PHP_EOL;
-
-                    // Build the tree first, if needed
-                    $proposed_branch_path = array();
-                    for($b = 0; $b < count($proposed_fc_categories); $b++)
+                    $proposed_fc_categories = array_values(array_diff($e, array_slice($e, -2)));
+                    if(count($proposed_fc_categories) == 0)
                         {
-                        $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
-                        $fc_categ_name = ucwords($proposed_fc_categories[$b]);
-
-                        $fc_categ_ref_sql = sprintf(
-                              "SELECT DISTINCT ref AS `value`
-                                 FROM collection AS c
-                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                WHERE `type` = %s
-                                  AND parent %s
-                                  AND `name` = '%s'
-                             GROUP BY c.ref
-                               HAVING count(DISTINCT cr.resource) = 0",
-                            COLLECTION_TYPE_FEATURED,
-                            sql_is_null_or_eq_val($parent, $parent == 0),
-                            escape_check($fc_categ_name)
-                        );
-                        $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
-
-                        if($fc_categ_ref == 0)
+                        if(count($e) > 1)
                             {
-                            echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
-                            $fc_categ_ref = create_collection($userref, $fc_categ_name);
-                            echo "Created '{$fc_categ_name}' with ref #{$fc_categ_ref}" . PHP_EOL;
+                            // This is a top level folder - this is needed to ensure no duplication of existing top level FCs
+                            echo "File is in a top level folder" . PHP_EOL;
+                            $proposed_fc_categories = array($e[0]);
+                            }
+                        else
+                            {
+                            // This file is in the root folder, no FC needs to be created
+                            echo "File is not in a folder, skipping FC creation" . PHP_EOL;
+                            $skipfc_create = true;
+                            }
+                        }
+                    if(!$skipfc_create)
+                        {
+                        echo "Proposed Featured Collection Categories: " . join(" / ", $proposed_fc_categories) . PHP_EOL;
+                        // Build the tree first, if needed
+                        $proposed_branch_path = array();
+                        for($b = 0; $b < count($proposed_fc_categories); $b++)
+                            {
+                            $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
+                            $fc_categ_name = ucwords($proposed_fc_categories[$b]);
 
-                            $updated_fc_category = save_collection(
-                                $fc_categ_ref,
+                            $fc_categ_ref_sql = sprintf(
+                                "SELECT DISTINCT ref AS `value`
+                                    FROM collection AS c
+                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                    WHERE `type` = %s
+                                    AND parent %s
+                                    AND `name` = '%s'
+                                GROUP BY c.ref
+                                HAVING count(DISTINCT cr.resource) = 0",
+                                COLLECTION_TYPE_FEATURED,
+                                sql_is_null_or_eq_val($parent, $parent == 0),
+                                escape_check($fc_categ_name)
+                            );
+                            $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
+                            if($fc_categ_ref == 0)
+                                {
+                                echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
+                                $fc_categ_ref = create_collection($userref, $fc_categ_name);
+                                echo "Created '{$fc_categ_name}' with ref #{$fc_categ_ref}" . PHP_EOL;
+
+                                $updated_fc_category = save_collection(
+                                    $fc_categ_ref,
+                                    array(
+                                        "featured_collections_changes" => array(
+                                            "update_parent" => $parent,
+                                            "force_featured_collection_type" => true,
+                                            "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                        )   
+                                    ));
+                                if($updated_fc_category === false)
+                                    {
+                                    echo "Unable to update '{$fc_categ_name}' with ref #{$fc_categ_ref} to a Featured Collection Category" . PHP_EOL;
+                                    }
+                                }
+
+                            $proposed_branch_path[] = $fc_categ_ref;
+                            }
+
+                        $collection_parent = array_pop($proposed_branch_path);
+                        if(is_null($collection_parent))
+                            {
+                            // We don't have enough folders to create categories so the first one will do (legacy logic)
+                            $collection_parent = create_collection($userref, $fallback_fc_categ_name);
+                            save_collection(
+                                $collection_parent,
                                 array(
                                     "featured_collections_changes" => array(
-                                        "update_parent" => $parent,
+                                        "update_parent" => 0,
+                                        "force_featured_collection_type" => true,
+                                        "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
+                                    )   
+                                ));
+                            }
+                        echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
+
+                        $collection = sql_value(
+                            sprintf(
+                                "SELECT DISTINCT ref AS `value`
+                                    FROM collection AS c
+                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                                    WHERE `type` = %s
+                                    AND parent %s
+                                    AND `name` = '%s'
+                                GROUP BY c.ref
+                                HAVING count(DISTINCT cr.resource) > 0",
+                                COLLECTION_TYPE_FEATURED,
+                                sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
+                                escape_check(ucwords($name))
+                            ),
+                            0);
+
+                        if($collection == 0)
+                            {
+                            $collection = create_collection($userref, ucwords($name));
+                            echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
+
+                            $updated_fc_category = save_collection(
+                                $collection,
+                                array(
+                                    "featured_collections_changes" => array(
+                                        "update_parent" => $collection_parent,
                                         "force_featured_collection_type" => true,
                                         "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
                                     )   
                                 ));
                             if($updated_fc_category === false)
                                 {
-                                echo "Unable to update '{$fc_categ_name}' with ref #{$fc_categ_ref} to a Featured Collection Category" . PHP_EOL;
+                                echo "Unable to update '{$name}' with ref #{$collection} to be a Featured Collection under parent ref #{$collection_parent}" . PHP_EOL;
                                 }
-                            }
-
-                        $proposed_branch_path[] = $fc_categ_ref;
-                        }
-
-                    $collection_parent = array_pop($proposed_branch_path);
-                    if(is_null($collection_parent))
-                        {
-                        // We don't have enough folders to create categories so the first one will do (legacy logic)
-                        $collection_parent = create_collection($userref, $fallback_fc_categ_name);
-                        save_collection(
-                            $collection_parent,
-                            array(
-                                "featured_collections_changes" => array(
-                                    "update_parent" => 0,
-                                    "force_featured_collection_type" => true,
-                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
-                                )   
-                            ));
-                        }
-                    echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
-
-                    $collection = sql_value(
-                        sprintf(
-                              "SELECT DISTINCT ref AS `value`
-                                 FROM collection AS c
-                            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                WHERE `type` = %s
-                                  AND parent %s
-                                  AND `name` = '%s'
-                             GROUP BY c.ref
-                               HAVING count(DISTINCT cr.resource) > 0",
-                            COLLECTION_TYPE_FEATURED,
-                            sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
-                            escape_check($name)
-                        ),
-                        0);
-
-                    if($collection == 0)
-                        {
-                        $collection = create_collection($userref, $name);
-                        echo "Created '{$name}' with ref #{$collection}" . PHP_EOL;
-
-                        $updated_fc_category = save_collection(
-                            $collection,
-                            array(
-                                "featured_collections_changes" => array(
-                                    "update_parent" => $collection_parent,
-                                    "force_featured_collection_type" => true,
-                                    "thumbnail_selection_method" => $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
-                                )   
-                            ));
-                        if($updated_fc_category === false)
-                            {
-                            echo "Unable to update '{$name}' with ref #{$collection} to be a Featured Collection under parent ref #{$collection_parent}" . PHP_EOL;
                             }
                         }
                     }
 
                 # Work out a resource type based on the extension.
-                $type = $staticsync_extension_mapping_default;
-                reset($staticsync_extension_mapping);
-                foreach ($staticsync_extension_mapping as $rt => $extensions)
+                $type = (isset($GLOBALS['staticsync_extension_mapping_default']) ? $GLOBALS['staticsync_extension_mapping_default'] : $resource_type_extension_mapping_default);
+                $rt_ext_mappings = (isset($GLOBALS['staticsync_extension_mapping']) ? $GLOBALS['staticsync_extension_mapping'] : $resource_type_extension_mapping);
+                reset($rt_ext_mappings);
+                foreach($rt_ext_mappings as $rt => $extensions)
                     {
-                    if (in_array($extension,$extensions)) { $type = $rt; }
+                    if(in_array($extension, $extensions)) { $type = $rt; }
                     }
                 $modified_type = hook('modify_type', 'staticsync', array( $type ));
                 if (is_numeric($modified_type)) { $type = $modified_type; }
@@ -503,7 +550,6 @@ function ProcessFolder($folder)
                             $match = $mapfolder["match"];
                             $field = $mapfolder["field"];
                             $level = $mapfolder["level"];
-
                             if (strpos("/" . $shortpath, $match) !== false)
                                 {
                                 # Match. Extract metadata.
@@ -515,9 +561,7 @@ function ProcessFolder($folder)
                                         {
                                         # access level is a special case
                                         # first determine if the value matches a defined access level
-
                                         $value = $path_parts[$level-1];
-
                                         for ($n=0; $n<3; $n++){
                                             # if we get an exact match or a match except for case
                                             if ($value == $lang["access" . $n] || strtoupper($value) == strtoupper($lang['access' . $n]))
@@ -526,23 +570,30 @@ function ProcessFolder($folder)
                                                 echo "Will set access level to " . $lang['access' . $n] . " ($n)" . PHP_EOL;
                                                 }
                                             }
-
                                         }
                                     else if ($field == 'archive')
-										{
-										# archive level is a special case
-										# first determine if the value matches a defined archive level
-										
-										$value = $mapfolder["archive"];
-										$archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);
-										
-										if(in_array($value,$archive_array))
-											{
-											$archiveval = $value;
-											echo "Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
-											}
-										
-										}
+                                        {
+                                        # archive level is a special case
+                                        # first determine if the value matches a defined archive level                                        
+                                        $value = $mapfolder["archive"];
+                                        $archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);                                        
+                                        if(in_array($value,$archive_array))
+                                            {
+                                            $archiveval = $value;
+                                            echo "Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
+                                            }                                        
+                                        }
+                                    else if ($field == 'resource_type')
+                                        {
+                                        # first determine if the value matches a valid resource type                                        
+                                        $value = $path_parts[$level-1];
+                                        $typeidx = array_search($value,array_column($restypes,"name"));                                        
+                                        if($typeidx !== false)
+                                            {
+                                            $maprestype = $restypes[$typeidx]["ref"];
+                                            echo "\$staticsync_mapfolders - set resource type to " . $value . " ($maprestype)". PHP_EOL;
+                                            }                                        
+                                        }
                                     else 
                                         {
                                         # Save the value
@@ -561,7 +612,7 @@ function ProcessFolder($folder)
                                             if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
                                                 {
                                                 // Add this to array of nodes to add
-                                                $newnode = set_node(null, $field, trim($value), null, null, true);
+                                                $newnode = set_node(null, $field, trim($value), null, null);
                                                 echo "Adding node" . trim($value) . "\n";
                                                 
                                                 $newnodes = array($newnode);
@@ -592,7 +643,7 @@ function ProcessFolder($folder)
                                                 {
                                                 $given_value=$value;
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-                                                if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                if(in_array($field_info['type'],array(0,1,4,5,6,8)))
                                                     {
                                                     $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
                                                     $value=append_field_value($field_info,$value,$old_value);
@@ -634,8 +685,26 @@ function ProcessFolder($folder)
 						update_field($r,$staticsync_filepath_to_field,$shortpath);
 						}
 
-                    # update access level
-                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' " . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref = '$r'");
+                    # Update resource table
+                    $setvals = array();
+                    $setvals["access"] = $accessval;
+                    $setvals["archive"] = $staticsync_defaultstate;
+                    if(isset($maprestype) && $maprestype != $type)
+                        {
+                        $setvals["resource_type"] = $maprestype;
+                        }
+                    if(!$enable_thumbnail_creation_on_upload)
+                        {                        
+                        $setvals["has_image"] = 0;
+                        $setvals["preview_attempts"] = 0;
+                        }
+                    $updatesql = array();
+                    foreach($setvals as $name => $val)
+                        {
+                        $updatesql[] = $name . "='" . escape_check($val) . "'";
+                        }
+
+                    sql_query("UPDATE resource SET " . implode(",",$updatesql) . " WHERE ref = '" . $r . "'");
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
@@ -679,7 +748,7 @@ function ProcessFolder($folder)
                         }
 
                     # Add to collection
-                    if ($staticsync_autotheme)
+                    if ($staticsync_autotheme && !$skipfc_create)
                         {
                         // Featured collection categories cannot contain resources. At this stage we need to distinguish
                         // between categories and collections by checking for children collections.
@@ -1122,6 +1191,11 @@ if(count($errors) > 0)
     }
         
 echo "...Complete" . PHP_EOL;
+
+if($suppress_output)
+    {
+    ob_clean();
+    }
 
 sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 

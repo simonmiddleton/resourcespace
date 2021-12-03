@@ -276,10 +276,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
     }
     hook("additional_title_pages");
 }   
-?>
-<script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 
-<?php
 if(isset($onload_message["text"]))
 	{?>
 	<script>
@@ -421,6 +418,7 @@ if (getval("ajax","") == "")
             east__spacing_open:0,
             east__spacing_closed:8,
             east_resizable: true,
+            east__closable: false,
             east__size: 295,
 
             north_resizable: false,
@@ -570,7 +568,7 @@ if (getval("ajax","") == "")
 		var responsive_hide;
 		var responsive_newpage = true;
 		
-		if(jQuery(window).width() <= 1200)
+		if(jQuery(window).width() <= 1100)
 			{
 			jQuery('.ResponsiveViewFullSite').css('display', 'block');
 			SetCookie("browse_show","hide");

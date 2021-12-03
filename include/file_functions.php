@@ -111,3 +111,70 @@ function get_checksum($path, $forcefull = false)
         }
     return $checksum;
     }
+
+
+/**
+ * Download remote file to the temp filestore location.
+ * 
+ * @param string $url Source URL
+ * 
+ * @return string|bool Returns the new temp filestore location or false otherwise.
+ */
+function temp_local_download_remote_file(string $url)
+    {
+    $userref = $GLOBALS['userref'] ?? 0;
+    if($userref === 0)
+        {
+        return false;
+        }
+
+    $url = trim($url);
+    $url_original = $url;
+    // Remove query string from URL
+    $url = explode('?', $url);
+    $url = reset($url);
+
+    // Get the file name + extension (if found)
+    $path_parts = pathinfo(basename($url));
+    $filename = safe_file_name($path_parts['filename'] ?? '');
+    $extension = $path_parts['extension'] ?? '';
+    if($filename === '')
+        {
+        return false;
+        }
+    $filename .= ($extension !== '' ? ".{$extension}" : '');
+
+    // Get temp location
+    $tmp_uniq_path_id = sprintf('remote_files/%s_%s', $userref, generateUserFilenameUID($userref));
+    $tmp_file_path = sprintf('%s/%s',
+        get_temp_dir(false, $tmp_uniq_path_id),
+        $filename);
+
+    if($tmp_file_path == $url)
+        {
+        // Already downloaded earlier by API call 
+        return $tmp_file_path;
+        }
+
+    // Download the file
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        if(copy($url_original, $tmp_file_path))
+            {
+            return $tmp_file_path;
+            }
+        }
+    catch(Throwable $t)
+        {
+        debug(sprintf(
+            'Failed to download remote file from "%s" to temp location "%s". Reason: %s',
+            $url_original,
+            $tmp_file_path,
+            $t->getMessage()
+        ));
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    return false;
+    }

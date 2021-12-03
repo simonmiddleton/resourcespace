@@ -18,8 +18,13 @@ $lang["image_banks_try_again_later"] = "Please try again later!";
 $lang["image_banks_warning"] = "WARNING: ";
 $lang["image_banks_warning_rate_limit_almost_reached"] = "Provider '%PROVIDER' will only allow %RATE-LIMIT-REMAINING more searches. This limit will reset in %TIME";
 $lang["image_banks_try_something_else"] = "Try something else.";
-$lang["image_banks_pixabay_error_detail_curl"] = "php-curl package is not installed";
+$lang["image_banks_error_detail_curl"] = "php-curl package is not installed";
 
 // Logs
 $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' using the ImageBank plugin by pointing to a system which is not part of allowed providers";
 $lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource with '%FILE' file using the ImageBank plugin by pointing to a system which is not part of allowed providers";
+
+$lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
+$lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
+$lang["image_banks_shutterstock_id"]="Shutterstock image ID";
+

@@ -63,7 +63,7 @@ function do_search(
            $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
-           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access;
+           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators;
 
     if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
         {
@@ -74,6 +74,12 @@ function do_search(
     if ($alternativeresults)
         {
         return $alternativeresults;
+        }
+
+    if(!is_not_wildcard_only($search))
+        {
+        $search = '';
+        debug('do_search(): User searched only for "*". Converting this into an empty search instead.');
         }
 
     $modifyfetchrows = hook("modifyfetchrows", "", array($fetchrows));
@@ -117,6 +123,7 @@ function do_search(
         "file_path"       => "file_path $sort,r.ref $sort",
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
+        "extension"       => "file_extension $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
         "status"          => "archive $sort",
@@ -207,8 +214,7 @@ function do_search(
         }
 
     $search=trim($search);
-    # Dedupe keywords 
-    $keywords=array_values(array_unique($keywords));
+    $keywords = array_values(array_filter(array_unique($keywords), 'is_not_wildcard_only'));
 
     $modified_keywords=hook('dosearchmodifykeywords', '', array($keywords, $search));
     if ($modified_keywords)
@@ -218,7 +224,7 @@ function do_search(
 
     # -- Build up filter SQL that will be used for all queries
     $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
-    debug("do_search: \$sql_filter = {$sql_filter}");
+    debug("do_search(): \$sql_filter = {$sql_filter}");
 
     # Initialise variables.
     $sql="";
@@ -253,7 +259,7 @@ function do_search(
         }
 
     # Join thumbs_display_fields to resource table
-    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified ";
+    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
     $sql_hitcount_select="r.hit_count";
     
     $modified_select=hook('modifyselect');
@@ -502,21 +508,24 @@ function do_search(
                         $rangefield=$rangefieldinfo["ref"];
                         $rangestring=substr($keystring,8);
                         $minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
-                        if ($max=='' || $min=='')
+                        if ($max!='' || $min !='')
                             {
-                            // if only one number is entered, do a direct search
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                                $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
+                            // At least the min or max should be set
+                            if ($max=='' || $min=='')
+                                {
+                                // if only one number is entered, do a direct search
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                    $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
+                                }
+                            else
+                                {
+                                // else use min and max values as a range search
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                $sql_filter.="rd" . $c . ".value >= " . $min . " ";
+                                if ($sql_filter!="") {$sql_filter.=" AND ";}
+                                $sql_filter.="rd" . $c . ".value <= " . $max." ";
+                                }
                             }
-                        else
-                            {
-                            // else use min and max values as a range search
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                            $sql_filter.="rd" . $c . ".value >= " . $min . " ";
-                            if ($sql_filter!="") {$sql_filter.=" AND ";}
-                            $sql_filter.="rd" . $c . ".value <= " . $max." ";
-                            }
-                            
                         $sql_join.=" JOIN resource_data rd" . $c . " ON rd" . $c . ".resource=r.ref AND rd" . $c . ".resource_type_field='" .$rangefield . "'";
 						$keywordprocessed=true;
                         }
@@ -619,6 +628,25 @@ function do_search(
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
+                            
+                            if ($keyref === false)
+                            {
+                            // Check keyword for defined separators and if found each part of the value is added as a keyword for checking.
+                            $contains_separators = false;
+                            foreach ($config_separators as $separator)
+                                {
+                                if (strpos($keyword, $separator) !== false)
+                                    {
+                                    $contains_separators = true;
+                                    }
+                                }
+                            if ($contains_separators === true)
+                                {
+                                $keyword_split = split_keywords($keyword);
+                                $keywords = array_merge($keywords,$keyword_split);
+                                continue;
+                                }
+                            }
 
                             // Attempt related keywords for the original keyword before determining there were no keywords matched
                             if($keyref === false)
@@ -1064,15 +1092,15 @@ function do_search(
                 $suggestjoin=", ";
                 }
 
-            for ($n=0;$n<count($suggested);$n++)
+            foreach ($suggested as $suggestion)
                 {
-                if ($suggested[$n]!="")
+                if ($suggestion != "")
                     {
                     if ($suggest!="")
                         {
                         $suggest.=$suggestjoin;
                         }
-                    $suggest.=$suggested[$n];
+                    $suggest.=$suggestion;
                     }
                 }
             debug ("Suggesting $suggest");
@@ -1139,6 +1167,10 @@ function do_search(
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
         $search_filter_sql = get_filter_sql($usersearchfilter);
+        if (!$search_filter_sql)
+            {
+            exit($lang["error_edit_filter_invalid"]);
+            }
         if($search_filter_sql)
             {
             if ($sql_filter != "")
@@ -1286,7 +1318,14 @@ function do_search(
             {
             // Migrate unless marked not to due to failure
             $usereditfilter = edit_filter_to_restype_permission($usereditfilter, $usergroup, $userpermissions);
-            $migrateresult = migrate_filter($usereditfilter);
+            if(trim($usereditfilter) !== "")
+                {
+                $migrateresult = migrate_filter($usereditfilter);
+                }
+            else
+                {
+                $migrateresult = 0; // filter was only for resource type, hasn't failed but no need to migrate again
+                }
             if(is_numeric($migrateresult))
                 {
                 debug("Migrated . " . $migrateresult);
@@ -1308,6 +1347,10 @@ function do_search(
         if ($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
             {
             $edit_filter_sql = get_filter_sql($usereditfilter);
+            if (!$edit_filter_sql)
+                {
+                exit($lang["error_edit_filter_invalid"]);
+                }
             if($edit_filter_sql)
                 {
                 if ($sql_filter != "")
@@ -1521,8 +1564,9 @@ function do_search(
         $score="h.score";
         }
 
-    # Can only search for resources that belong to featured collections
-    if(checkperm("J"))
+    # Can only search for resources that belong to featured collections. Doesn't apply to user's special upload collection to allow for upload then edit mode.
+    $upload_collection = '!collection' . (0 - $userref);
+    if(checkperm("J") && $search != $upload_collection)
         {
         $collection_join = " JOIN collection_resource AS jcr ON jcr.resource = r.ref JOIN collection AS jc ON jcr.collection = jc.ref";
         $collection_join .= featured_collections_permissions_filter_sql("AND", "jc.ref");
@@ -1581,7 +1625,6 @@ function do_search(
         {
         $max_results=$fetchrows;
         }
-
   
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
     

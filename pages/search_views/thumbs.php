@@ -2,34 +2,30 @@
 if (!hook("renderresultthumb")) 
     {
     # Establish various metrics for use in thumbnail rendering
-    # Note that only $resolved_title_trim is currently used
     $resolved_title_trim=0; 
-    $resolved_title_height=0;
-    $resolved_title_wordwrap=0; 
-    if ($display == "xlthumbs") 
+    $field_height = 31;
+    $resource_id_height = 21;
+
+    hook("thumbstextheight");
+
+    if ($display == "xlthumbs")
         {
-        $resolved_title_trim=$xl_search_results_title_trim;
-        $resolved_title_height = 351 + (31 * count($xl_thumbs_display_fields));
-        $resolved_title_wordwrap = $xl_search_results_title_wordwrap;
+        $resolved_title_trim = $xl_search_results_title_trim;
+        $resource_panel_height = 375;
         }
-    else 
+    else
         {
-        $resolved_title_trim=$search_results_title_trim;
-        $resolved_title_height = 206 + (31 * count($thumbs_display_fields));
-        $resolved_title_wordwrap = $search_results_title_wordwrap;
+        $resolved_title_trim = $search_results_title_trim;
+        $resource_panel_height = 228;
         }
 
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 351 : 206) + (31 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * count($thumbs_display_fields));
 
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
-        $thumbs_displayed_fields_height += 31;
+        $thumbs_displayed_fields_height += $field_height;
         }
 
-    if($resource_type_icons)
-        {
-        $thumbs_displayed_fields_height += 22;
-        }
     # Increase height of search panel for each extended field
     if(isset($search_result_title_height))
         {
@@ -41,11 +37,12 @@ if (!hook("renderresultthumb"))
                 }
             }
         }
+
     hook('thumbs_resourceshell_height');
     
     if($display_resource_id_in_thumbnail)
         { 
-        $thumbs_displayed_fields_height += 21;
+        $thumbs_displayed_fields_height += $resource_id_height;
         $br = '<br />';
         }; 
 
@@ -54,24 +51,36 @@ if (!hook("renderresultthumb"))
         {
         $class[] = "Selected";
         }
+
+    $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displayed_fields_height,$resource_panel_height_max);
     ?>
 
     <!--Resource Panel -->    
     <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
+    <?php hook('renderadditionalthumbattributes', '', [$result[$n]]);?>
     >
-        <?php  
-        if ($resource_type_icons && !hook("replaceresourcetypeicon")) 
-            {
-            ?>
-            <div class="ResourceTypeIcon<?php
-            if (array_key_exists($result[$n]['resource_type'], $resource_type_icons_mapping))
-                {
-                echo ' fa fa-fw fa-' . $resource_type_icons_mapping[$result[$n]['resource_type']];  
+        <div class="ResourcePanelTop">
+            <?php
+            if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "")
+                { ?>
+                <span class="thumbs-file-extension"><?php echo strtoupper(htmlspecialchars($result[$n]['file_extension'])) ?></span>
+                <?php
                 }
-            ?>" ></div>
-            <?php 
-            }
+
+            if (!hook("replaceresourcetypeicon"))
+                {
+                foreach ($types as $type)
+                    {
+                    if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]))
+                        {
+                        echo '<div class="ResourceTypeIcon fa-fw ' . htmlspecialchars($type["icon"]) . '" title="' . htmlspecialchars($type["name"]) . '"></div>';  
+                        }
+                    }
+                }
+            ?>
+        </div>
+        <?php
         hook ("resourcethumbtop");
         if (!hook("renderimagethumb")) 
             {
