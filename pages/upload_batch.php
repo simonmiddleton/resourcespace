@@ -878,6 +878,7 @@ var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
 // Set flag allowing for blocking auto redirect after upload if errors are encountered
 upRedirBlock = false;
+logopened = false;
 // A mapping used by subsequent file uploads of alternatives to know to which resource to add the files as alternatives
 // Used when the original file and its alternatives are uploaded in a batch to a collection
 var resource_ids_for_alternatives = [];
@@ -1265,10 +1266,9 @@ function processFile(file, forcepost)
             if (uploadresponse.status != true)
                 {
                 error = uploadresponse.error;
-
+                upRedirBlock = true;
                 if(uploadresponse.error==108)
                     {
-                    styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourcefound"]?>');   
                     message = '<?php echo $lang['error-duplicatesfound']?>';
                     jQuery("#upload_log").append("\r\n" + file.name + "&nbsp;" + uploadresponse.message);
                     if(!logopened)
