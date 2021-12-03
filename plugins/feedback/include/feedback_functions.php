@@ -22,36 +22,34 @@ function get_feedback_config($dir = '')
     }
 
 function make_new_results_file($storagedir)
-    {	
-    if (file_exists($storagedir . '/feedback/results.csv'))
-        {  
-        rename($storagedir . '/feedback/results.csv',$storagedir . '/feedback/'.file_newname($storagedir . '/feedback/','results.csv'));
-        touch($storagedir . '/feedback/results.csv');
-        chmod($storagedir . '/feedback/results.csv',0777);
+    {
+    
+    $filename = get_feedback_results_file($storagedir . '/feedback/', 'results', false);
+
+    if(file_exists($storagedir . '/feedback/' . $filename) && filesize($storagedir . '/feedback/' . $filename) !== 0)
+        {
+        rename($storagedir . '/feedback/' . $filename,$storagedir . '/feedback/'.get_feedback_results_file($storagedir . '/feedback/','results'));
+        touch($storagedir  . '/feedback/' . $filename);
+        chmod($storagedir  . '/feedback/' . $filename,0777);
 	    }
 
     }
 
-function file_newname($path, $filename)
+function get_feedback_results_file($dir, $basename, $create_new_file = true)
     {
-    if ($pos = strrpos($filename, '.')) {
-        $name = substr($filename, 0, $pos);
-        $ext = substr($filename, $pos);
-    } else {
-        $name = $filename;
-    }
-
-    $newpath = $path.'/'.$filename;
-    $newname = $filename;
-    $counter = 0;
-    while (file_exists($newpath) && file_get_contents($newpath)!="")
+    global $scramble_key;
+    
+    srand((int)$scramble_key);
+    $n = 0;
+    $filename = md5(str_shuffle($basename) . $n);
+    while(file_exists($dir.$filename.'.csv') && $create_new_file === true)
         {
-        $newname = $name .'_'. $counter . $ext;
-        $newpath = $path.'/'.$newname;
-        $counter++;
+        $n++;
+        $filename = md5(str_shuffle($basename) . $n);
         }
+    srand();
 
-    return $newname;
+    return $filename . '.csv';
     }
 
 /** This function is used to save data from the feedback plugin back to the database
@@ -81,7 +79,7 @@ function save_feedback_data(array $data)
                     # This is to skip fields that are marked as lables so that the question ids match up correctly 
                     $type = sql_value('SELECT type AS value FROM feedback_fields WHERE id = '. ($offset+$n) ,'');;
                     }
-                sql_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES("'. ($offset+$n) .'","'. escape_check($datum) .'","'. $date .'", "'. escape_check($user) .'")');
+                sql_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES("'. ($offset+$n) .'","'. escape_check($datum) .'","'. escape_check($date) .'", "'. escape_check($user) .'")');
                 $n++;
                 }
             }

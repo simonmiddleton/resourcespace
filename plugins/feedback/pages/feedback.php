@@ -105,21 +105,21 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		{
 		# Write results.
 		$sent=true;
-		$f=fopen($storagedir . "/feedback/results.csv","a+b");
+		$f=fopen($storagedir . "/feedback/" . get_feedback_results_file($storagedir . '/feedback/', 'results', false),"a+b");
 		
 		# avoid writing headers again
-		$line = file($storagedir . '/feedback/results.csv');
+		$line = file($storagedir . '/feedback/' . get_feedback_results_file($storagedir . '/feedback/', 'results', false));
 		if (isset($line[0])){$line=$line[0];} 
 		if ($line==$csvheaders."\n"){$csvheaders="";} else {$csvheaders=$csvheaders."\n";}
 		
-		fwrite($f, $csvheaders .file_get_contents($storagedir . '/feedback/results.csv').$csvline."\n" );
+		fwrite($f, $csvheaders .file_get_contents($storagedir . '/feedback/' . get_feedback_results_file($storagedir . '/feedback/', 'results', false)).$csvline."\n" );
 		fclose($f);
 		
 		# install email template
 		$result = ps_query("SELECT * FROM site_text WHERE page='all' AND name = 'emailfeedback'");
 		if (count($result) == 0)
 			{
-			$email_text = "[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_" . $storagedir . "/feedback/results.csv]";
+			$email_text = "[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_" . $storagedir . "/feedback/". get_feedback_results_file($storagedir . '/feedback/', 'results', false) ."]";
 			$wait = ps_query('INSERT INTO site_text (page,name,text,language) VALUES ("all","emailfeedback",?,"en-US")', array("s", $email_text));
 			}
 		
