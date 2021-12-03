@@ -258,8 +258,7 @@ EOT;
         $sql_values = array_merge($sql_values,array("i",$ref));
         if (!$comments_flat_view)
             {
-            $sql .= " and c.ref_parent is ?";
-            $sql_values = array_merge($sql_values,array("i",NULL));
+            $sql .= " and c.ref_parent is NULL";
             }
         }
     else
