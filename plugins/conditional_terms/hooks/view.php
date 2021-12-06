@@ -29,7 +29,6 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
         $additional_params = array(
             'direct' => '1',
             'noattach' => 'true',
-            'target' => '"_blank"&'
             );
         }
 
@@ -55,14 +54,13 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
         'offset' => $offset,
         'archive' => $archive,
         'sort' => $sort,
-        'order_by' => $order_by,
-        'noredir' => 'true'
+        'order_by' => $order_by
     ));
 
     $redirect_url = generateURL($redirect, $redirect_params, $additional_params);
 
     $link_params = array_merge($link_params, array('search' => $search, 'url' => $redirect_url));
-    $return_url = generateURL($baseurl . '/pages/terms.php', $link_params);
+    $return_url = generateURL($baseurl . '/pages/terms.php', $link_params, array('noredir' => 'true'));
 
     ?>href="<?php echo $return_url ;?>"<?php
 
