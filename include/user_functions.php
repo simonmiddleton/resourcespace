@@ -934,8 +934,8 @@ function auto_create_user_account($hash="")
         $templatevars['linktouser']="$baseurl?u=$new";
 
         // Need to global the usergroup so that we can find the appropriate admins
-        global $usergroup;
-        $approval_notify_users=get_notification_users("USER_ADMIN"); 
+
+        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup); 
         $message_users=array();
         global $user_pref_user_management_notifications, $email_user_notifications;
 
@@ -2210,9 +2210,15 @@ function get_rs_session_id($create=false)
  * @param  string $userpermission
  * @return array
  */
-function get_notification_users($userpermission="SYSTEM_ADMIN")
+function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = NULL)
     {    
-    global $notification_users_cache, $usergroup,$email_notify_usergroups;
+    global $notification_users_cache, $email_notify_usergroups;
+
+    if (is_null($usergroup))
+        {
+        global $usergroup;
+        }
+
     $userpermissionindex=is_array($userpermission)?implode("_",$userpermission):$userpermission;
     if(isset($notification_users_cache[$userpermissionindex]))
         {return $notification_users_cache[$userpermissionindex];}
@@ -2231,7 +2237,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
             {
             case "USER_ADMIN";
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
