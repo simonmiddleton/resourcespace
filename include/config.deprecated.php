@@ -58,8 +58,6 @@ $basket_stores_size=true;
 // Default browse bar width;
 $browse_default_width = 295;
 
-$camera_autorotation_checked = true;
-
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
 

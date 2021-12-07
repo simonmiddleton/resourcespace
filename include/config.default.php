@@ -2369,6 +2369,9 @@ $camera_autorotation = false;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 
+// Default for upload rotation. Will be overridden by user preference.
+$camera_autorotation_checked = true;
+
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
 # Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \

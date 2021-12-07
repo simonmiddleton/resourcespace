@@ -40,7 +40,7 @@ if($camera_autorotation)
 
     if($autorotate == "")
         {
-        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : $camera_autorotation_checked);
         }
     else
         {
