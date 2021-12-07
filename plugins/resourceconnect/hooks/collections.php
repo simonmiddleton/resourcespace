@@ -6,10 +6,11 @@ function HookResourceconnectCollectionsThumblistextra()
 	$thumbs=sql_query("select * from resourceconnect_collection_resources where collection='$usercollection' order by date_added asc");
 
 	foreach ($thumbs as $thumb)
-		{	
+		{
+        $identifier = (empty($thumb['source_ref'])) ? $thumb['ref'] : $thumb['source_ref']; 
 		?>
 		<!--Resource Panel--> 
-		<div class="CollectionPanelShell"> 
+		<div class="CollectionPanelShell" data-identifier="<?php echo htmlspecialchars($identifier);?>">
 
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 		<div class="overlay-link-container"><i class="overlay-link fas fa-link"></i></div>
@@ -19,7 +20,7 @@ function HookResourceconnectCollectionsThumblistextra()
 		<div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/plugins/resourceconnect/pages/view.php?url=<?php echo urlencode($thumb["url"]) ?>&k=<?php echo getval("k","") ?>&col=<?php echo $usercollection ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($thumb["title"]),15) ?></a>&nbsp;</div> 
 
 		<div class="CollectionPanelTools"> 
-		<a class="removeFromCollection fa fa-minus-circle" href="<?php echo $baseurl ?>/pages/collections.php?resourceconnect_remove=<?php echo $thumb["ref"] ?>&nc=<?php echo time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>
+		<a class="removeFromCollection fa fa-minus-circle" href="<?php echo generateURL($baseurl . '/pages/collections.php', ['resourceconnect_remove_ref' => $thumb['ref'],'resourceconnect_remove' => $thumb["source_ref"], 'resourceconnect_remove_col' => $usercollection, 'nc' => time()]); ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>
         
 		</div>
 		<?php
@@ -28,9 +29,12 @@ function HookResourceconnectCollectionsThumblistextra()
 
 function HookResourceconnectCollectionsProcessusercommand()
 	{
-	if (getval("resourceconnect_remove","")!="")
+	if (getval("resourceconnect_remove","")!="" && getval('resourceconnect_remove_col', '') != '')
 		{
-		sql_query("delete from resourceconnect_collection_resources where ref='" . getvalescaped("resourceconnect_remove","") . "'");
+		ps_query("DELETE FROM resourceconnect_collection_resources WHERE source_ref = ? AND collection = ?", ['i',getval("resourceconnect_remove",""), 'i',getval('resourceconnect_remove_col', '')]);
 		}
-
+    elseif(getval('resourceconnect_remove_ref', '') !== '')
+        {
+        ps_query('DELETE FROM resourceconnect_collection_resources WHERE ref = ?', ['i', getval('resourceconnect_remove_ref','')]);
+        }
 	}

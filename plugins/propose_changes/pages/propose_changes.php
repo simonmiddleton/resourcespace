@@ -26,7 +26,11 @@ if(isset($propose_changes_always_allow))
     if(!$propose_changes_always_allow)
         {
         # Check user has permission.
-        $proposeallowed=sql_value("select r.ref value from resource r left join collection_resource cr on r.ref='$ref' and cr.resource=r.ref left join user_collection uc on uc.user='$userref' and uc.collection=cr.collection left join collection c on c.ref=uc.collection where c.propose_changes=1","");
+		$parameters=array("i",$ref, "i",$userref);
+        $proposeallowed=ps_value("SELECT r.ref value from resource r 
+				left join collection_resource cr on r.ref=? and cr.resource=r.ref 
+				left join user_collection uc on uc.user=? and uc.collection=cr.collection 
+				left join collection c on c.ref=uc.collection where c.propose_changes=1", $parameters, "");
             if($proposeallowed=="" && $propose_changes_allow_open)
                 {
                 include_once '../../../include/search_do.php';
@@ -58,7 +62,9 @@ if($editaccess)
         delete_proposed_changes($ref, $view_user);
         }        
         
-    $userproposals = sql_query("select pc.user, u.username from propose_changes_data pc left join user u on u.ref=pc.user where resource='$ref' group by pc.user order by u.username asc");
+    $userproposals = ps_query("SELECT pc.user, u.username from propose_changes_data pc 
+			left join user u on u.ref=pc.user where resource=? 
+			group by pc.user order by u.username asc", array("i",$ref));
     if(!in_array($view_user,array_column($userproposals,"user")) && count($userproposals) > 0)
         {
         $view_user = $userproposals[0]["user"];
@@ -128,7 +134,9 @@ if(
 				$acceptedchangescount++;
 
 				// remove this from the list of proposed changes
-				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}' AND resource = '{$ref}'");
+				$parameters=array("i",$view_user, "i",$proposefields[$n]['ref'], "i",$ref);
+				ps_query("DELETE FROM propose_changes_data 
+					WHERE user = ? AND resource_type_field = ? AND resource = ?", $parameters);
 				}
 
 			# Has this field been deleted?
@@ -146,7 +154,9 @@ if(
 					}					
 
 				// remove this from the list of proposed changes
-				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}' AND resource = '{$ref}'");
+				$parameters=array("i",$view_user, "i",$proposefields[$n]['ref'], "i",$ref);
+				ps_query("DELETE FROM propose_changes_data 
+					WHERE user = ? AND resource_type_field = ? AND resource = ?", $parameters);
 				}
 			}	
 			

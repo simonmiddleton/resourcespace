@@ -187,7 +187,7 @@ if ($submitted != "")
             'includetext'           => $includetext,
             'count_data_only_types' => $count_data_only_types,
             'usage'                 => $usage,
-            'usagecomment'          => $usagecomment,
+            'usagecomment'          => str_replace(array('\r','\n'), " ", $usagecomment),
             'settings_id'           => $settings_id,
             'include_csv_file'      => $include_csv_file
         );

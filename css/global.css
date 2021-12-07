@@ -353,7 +353,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0 0;}
 #CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0 0;padding: 0;}
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
-.NumberSearchWidth {width:80px;font-size: 0.9em;margin: 0 0;padding: 0;margin-bottom:3px;}
+input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 
 .CollectionPanelShell {padding:5px;float: left;margin: 0 10px 10px 0;width: 110px;text-align: left;border-radius: 4px;}
 .CollectionPanelInfo{width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -598,9 +598,9 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
-.RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0 10px 2px 0;padding: 0;}
+.RecordPanel .SearchSimilar {float: left;width: auto; margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
-.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #999;}
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
 .RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
@@ -772,7 +772,7 @@ div.autocomplete ul li {
 
 #overlay{position: absolute; top: 0; left: 0; z-index: 90; width: 100%; height: 500px;}
 
-.FormHelp{margin: 0 0 10px 310px;padding: 0;}
+.FormHelp{margin: 0 0 10px 310px;padding: 0; word-wrap:break-word;}
 .FormHelpInner{width:408px;padding:5px;margin:10px 0 0 0;}
 
 #ThemeBox {padding:0;margin:0;text-align:left;width: 170px;}
@@ -865,6 +865,13 @@ div.autocomplete ul li {
 
 .uppy-StatusBar {
     line-height: normal;
+}
+
+.uppy-Dashboard-Item.is-complete > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
+}
+.uppy-Dashboard-Item.is-inprogress > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
 }
 
 #showlog,#hidelog
@@ -1706,6 +1713,12 @@ form.FormFilter button.ClearButton {
     margin-left:3px;
     vertical-align: text-bottom;
     max-width: 1000px;
+}
+.SearchSimilar .customFieldLabel {
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 3px;
+    vertical-align: text-bottom;
 }
 
 .keywordselected {

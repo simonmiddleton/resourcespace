@@ -1,5 +1,6 @@
 <?php
 include "../../../include/db.php";
+include_once "../include/feedback_functions.php";
 
 
 # Make a folder for this
@@ -10,17 +11,19 @@ if(!is_dir($storagedir . "/feedback"))
     }
     
 # Load config
-if (file_exists($storagedir . '/feedback/config.php')) {include $storagedir . '/feedback/config.php';}
+$config 			  = get_feedback_config(__DIR__ . '../config/config.php');
+$feedback_questions   = $config['questions'];
+$feedback_prompt_text = $config['prompt_text'];
 
 
 if (array_key_exists("user",$_COOKIE))
    	{
 	# Check to see if this user is logged in.
 	$session_hash=$_COOKIE["user"];
-	$loggedin=sql_value("select count(*) value from user where session='" . escape_check($session_hash) . "' and approved=1 and timestampdiff(second,last_active,now())<(30*60)",0);
+	$loggedin = ps_value("SELECT count(*) value FROM user WHERE session = ? and approved = 1 and timestampdiff(second, last_active, now()) < (30*60)", array("s", $session_hash), 0);
 	if ($loggedin>0 || $session_hash=="|") // Also checks for dummy cookie used in external authentication
-        	{
-	        # User is logged in. Proceed to full authentication.
+		{
+		# User is logged in. Proceed to full authentication.
 		include "../../../include/authenticate.php";
 		}
 	}
@@ -43,12 +46,20 @@ $sent=false;
 
 if (getval("send","")!="" && enforcePostRequest(false))
 	{
+	//Initialize array used to write to database
+	$feebackData = [];
+
     debug("feedback.php: Sending user survey...");
 	$csvheaders="\"date\"";
 	$csvline="\"" . date("Y-m-d") . "\"";
 	$message="Date: ". date("Y-m-d")."\n";
+
+	//add intial values to the data array
+	$feebackData['date'] = date("Y-m-d");
+	$feebackData['user'] = $username;
+
     debug("feedback.php: count(\$feedback_questions) = " . count($feedback_questions));
-	for ($n=1;$n<=count($feedback_questions);$n++)
+	for ($n=0;$n<count($feedback_questions);$n++)
 		{
 		$type=$feedback_questions[$n]["type"];
         debug("feedback.php: \$type = {$type}");
@@ -82,9 +93,10 @@ if (getval("send","")!="" && enforcePostRequest(false))
             debug("feedback.php: \$csvline = {$csvline}");
 			$csvheaders.="\"".str_replace("\"","'",str_replace("\n","",$feedback_questions[$n]['text']))."\"";
 			if ($value!=""){$message.=$feedback_questions[$n]['text'].": \n". $value."\n\n";}
+			$feebackData[$feedback_questions[$n]['text']] = $value;
 			}
 		}
-	
+
 	# Append user name and group to CSV file
 	$message="\n\nUser: " .$username."\nUsergroup: ".$usergroupname."\n".$message;
 	$csvline="\"$username\",\"$usergroupname\"," . $csvline;
@@ -93,20 +105,23 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		{
 		# Write results.
 		$sent=true;
-		$f=fopen($storagedir . "/feedback/results.csv","a+b");
+		$f=fopen($storagedir . "/feedback/" . get_feedback_results_file($storagedir . '/feedback/', 'results', false),"a+b");
 		
 		# avoid writing headers again
-		$line = file($storagedir . '/feedback/results.csv');
+		$line = file($storagedir . '/feedback/' . get_feedback_results_file($storagedir . '/feedback/', 'results', false));
 		if (isset($line[0])){$line=$line[0];} 
 		if ($line==$csvheaders."\n"){$csvheaders="";} else {$csvheaders=$csvheaders."\n";}
 		
-		fwrite($f, $csvheaders .file_get_contents($storagedir . '/feedback/results.csv').$csvline."\n" );
+		fwrite($f, $csvheaders .file_get_contents($storagedir . '/feedback/' . get_feedback_results_file($storagedir . '/feedback/', 'results', false)).$csvline."\n" );
 		fclose($f);
 		
 		# install email template
-		//sql_query("delete from site_text where name='emailfeedback'");
-		$result=sql_query("select * from site_text where page='all' and name='emailfeedback'");
-		if (count($result)==0){$wait=sql_query('insert into site_text (page,name,text,language) values ("all","emailfeedback","[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_' . $storagedir . '/feedback/results.csv]","en-US")');}
+		$result = ps_query("SELECT * FROM site_text WHERE page='all' AND name = 'emailfeedback'");
+		if (count($result) == 0)
+			{
+			$email_text = "[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_" . $storagedir . "/feedback/". get_feedback_results_file($storagedir . '/feedback/', 'results', false) ."]";
+			$wait = ps_query('INSERT INTO site_text (page,name,text,language) VALUES ("all","emailfeedback",?,"en-US")', array("s", $email_text));
+			}
 		
         debug("feedback.php: Send form results to email_notify...");
 		# send form results and results.csv to email_notify
@@ -114,7 +129,9 @@ if (getval("send","")!="" && enforcePostRequest(false))
             debug("feedback.php: \$use_phpmailer = " . ($use_phpmailer ? 'true' : 'false'));
 			$templatevars['message']=$message . "Survey results attached\n\n";
 			send_mail($email_notify,$username." has submitted feedback for ".$applicationname,$message,"","","emailfeedback",$templatevars);
-			} 
+			}
+		
+		save_feedback_data($feebackData);
 		}
 
 	}
@@ -142,7 +159,7 @@ generateFormToken("feedback");
 if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><br /><?php } ?>
 <?php 
 	
-for ($n=1;$n<=count($feedback_questions);$n++)
+for ($n=0;$n<count($feedback_questions);$n++)
 	{
 	$type=$feedback_questions[$n]["type"];
 	$text=$feedback_questions[$n]["text"];	

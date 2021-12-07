@@ -511,9 +511,6 @@ $show_edit_all_link = true;
 // Show required field legend on upload
 $show_required_field_label = true;
 
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
-
 # Show the link to 'user contributed assets' on the My Contributions page
 # Allows non-admin users to see the assets they have contributed
 $show_user_contributed_resources=true;

@@ -7,6 +7,37 @@
 
 
 /**
+ * Simple class to use when required to obtain/build SQL (sub) statements from various functions.
+ * 
+ * @internal
+ */
+final class PreparedStatementQuery {
+    /**
+     * @var string $sql SQL prepared (sub) statement with placeholders in place
+     */
+    public $sql;
+
+    /**
+     * @var array $parameters Bind parameters
+     */
+    public $parameters;
+
+    /**
+     * Create a new PreparedStatementQuery
+     * 
+     * @param string $sql        SQL prepared (sub) statement with placeholders in place
+     * @param array  $parameters Bind parameters
+     */
+    public function __construct(string $sql = '', array $parameters = [])
+        {
+        $this->sql = $sql;
+        $this->parameters = $parameters;
+        }
+}
+
+
+
+/**
  * Centralised error handler. Display friendly error messages.
  *
  * @param  integer $errno
@@ -365,7 +396,7 @@ function db_rollback_transaction($name)
  * @param  string $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
  * @param  integer $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
  * @param  boolean $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  integer $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  integer $logthis					No longer used
  * @param  boolean $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
@@ -424,55 +455,6 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         debug("SQL: " . $sql);
         }
 
-    /*
-    COMMENTED - This needs work. A transaction text log will not work with prepared statements.
-
-    if($mysql_log_transactions && !($logthis==0))
-        {	
-        $requirelog = true;
-
-        if($logthis==2)
-            {
-            // Ignore any SELECTs if the decision to log has not been indicated by function call, 	
-            if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-                {
-                $requirelog = false;
-                }
-            }
-
-
-        if($logthis==1 || $requirelog)
-            {
-            # Log this to a transaction log file so it can be replayed after restoring database backup
-            $mysql_log_dir = dirname($mysql_log_location);
-            $GLOBALS["use_error_exception"] = true;
-            try
-                {
-                if (!is_dir($mysql_log_dir))
-                    {
-                    mkdir($mysql_log_dir, 0333, true);
-                    }
-                if(!file_exists($mysql_log_location))
-                    {
-                    $mlf=fopen($mysql_log_location,"wb");
-                    fwrite($mlf,"USE " . $mysql_db . ";\r\n");
-                    // Set the permissions if we can to prevent browser access (will not work on Windows)
-                    chmod($mysql_log_location,0333);
-                    }
-                $mlf=fopen($mysql_log_location,"ab");
-                fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " *" . "/ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
-                fclose ($mlf);
-                }
-            catch(Exception $e)
-                {
-                debug("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);
-                $mysql_log_transactions = false;
-                }
-            unset($GLOBALS["use_error_exception"]);
-            }
-        }
-    */
-
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.
     $db_connection_mode = 'read_write';
@@ -527,7 +509,39 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             }
         if ($error=="")
             {
-            $result=fetch_assoc_stmt($prepared_statement_cache[$sql],true,$fetchrows);
+            // Results section
+
+            // Buffering of result set
+            $prepared_statement_cache[$sql]->store_result();
+
+            // Fetch result set
+            $metadata=$prepared_statement_cache[$sql]->result_metadata();
+            if ($metadata===false)
+                {
+                // Did not return a result set, execution of an update/insert etc.
+                $result=true;
+                } 
+            else
+                {
+                // Bind results -> standard associative array
+                $fields = $metadata->fetch_fields();
+                $args = array();
+                foreach($fields AS $field)
+                    {
+                    $key = str_replace(' ', '_', $field->name);
+                    $args[$key] = &$field->name;
+                    }
+                call_user_func_array(array($prepared_statement_cache[$sql], "bind_result"), array_values($args));
+                $result = array();
+                $count=0;
+                while($prepared_statement_cache[$sql]->fetch() && ($fetchrows==-1 || $count<$fetchrows)) // Return requested no. of rows
+                    {
+                    $count++;
+                    $result[] = array_map("copy_value", $args);
+                    }
+                $prepared_statement_cache[$sql]->free_result();
+                }
+            // Clear buffered results
             $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
             }
         }
@@ -665,56 +679,12 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
     return $result;        
     }
 
-
 /**
-* Fetches the results of a prepared statement as an array of associative
-* arrays such that each stored array is keyed by the result's column names.
-* @param stmt       Must have been successfully prepared and executed prior to calling this function
-* @param buffer     Whether to buffer the result set; if true, results are freed at end of function
-* @param fetchrows  The maximum numbers of rows to return; results will be truncated if necessary
-
-* @return An array, possibly empty, containing one associative array per result row OR true if there was no result set.
-*/
-function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true, $fetchrows=-1)
-    {
-    if ($buffer)
-        {
-        $stmt->store_result();
-        }
-    $metadata=$stmt->result_metadata();
-    if ($metadata===false) {return true;} // Did not return a result set, execution of an update/insert etc.
-    $fields = $metadata->fetch_fields();
-    $args = array();
-    foreach($fields AS $field)
-        {
-        $key = str_replace(' ', '_', $field->name); // space may be valid SQL, but not PHP
-        $args[$key] = &$field->name; // this way the array key is also preserved
-        }
-    call_user_func_array(array($stmt, "bind_result"), array_values($args));
-    $results = array();
-    $count=0;
-    while($stmt->fetch() && ($fetchrows==-1 || $count<$fetchrows))
-        {
-        $count++;
-        $results[] = array_map("copy_value", $args);
-        }
-    if ($buffer)
-        {
-        $stmt->free_result();
-        }
-    return $results;
-    }
-
-/**
-* Copy value as value
+* Copy value as value (flatten / no references)
 */
 function copy_value($v) {
     return $v;
 }
-
-
-
-
 /**
  * Execute a query and return the results as an array.
  * 
@@ -724,7 +694,7 @@ function copy_value($v) {
  * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
  * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
  * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
+ * @param  mixed $logthis					No longer used
  * @param  mixed $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
@@ -1526,17 +1496,17 @@ function ps_param_insert($count)
 /**
 * When constructing prepared statements and using e.g. ref in (some list of values), assists in preparing the parameter array. 
 * 
-* @param integer $array The input array, to prepare for output. Will return this array but with type entry inserted before each value.
+* @param array $array The input array, to prepare for output. Will return this array but with type entry inserted before each value.
 * @param integer $type The column type as per ps_query
 * 
 * @return array
 */
 function ps_param_fill($array,$type)
-{
-$parameters=array();
-foreach ($array as $a)
     {
-    $parameters[]=$type;$parameters[]=$a;
+    $parameters=array();
+    foreach ($array as $a)
+        {
+        $parameters[]=$type;$parameters[]=$a;
+        }
+    return $parameters;
     }
-return $parameters;
-}

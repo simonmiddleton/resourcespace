@@ -129,6 +129,7 @@ function temp_local_download_remote_file(string $url)
         }
 
     $url = trim($url);
+    $url_original = $url;
     // Remove query string from URL
     $url = explode('?', $url);
     $url = reset($url);
@@ -149,11 +150,17 @@ function temp_local_download_remote_file(string $url)
         get_temp_dir(false, $tmp_uniq_path_id),
         $filename);
 
+    if($tmp_file_path == $url)
+        {
+        // Already downloaded earlier by API call 
+        return $tmp_file_path;
+        }
+
     // Download the file
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        if(copy($url, $tmp_file_path))
+        if(copy($url_original, $tmp_file_path))
             {
             return $tmp_file_path;
             }
@@ -162,7 +169,7 @@ function temp_local_download_remote_file(string $url)
         {
         debug(sprintf(
             'Failed to download remote file from "%s" to temp location "%s". Reason: %s',
-            $url,
+            $url_original,
             $tmp_file_path,
             $t->getMessage()
         ));

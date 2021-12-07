@@ -261,7 +261,8 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
         }
     
     # Mark as processed
-    sql_query("update resource set google_vision_processed=1 where ref='" . escape_check($resource) . "'");
+    $parameters=array("i",$resource);
+    ps_query("update resource set google_vision_processed=1 where ref=?", $parameters);
     
     return true;
     }

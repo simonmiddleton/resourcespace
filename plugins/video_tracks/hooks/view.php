@@ -1,24 +1,5 @@
 <?php
 
-function HookVideo_tracksViewHtml5videoextra()
-	{
-    global $ref, $context, $display,$video_altfiles;
-    $video_altfiles=get_alternative_files($ref);
-	
-    foreach ($video_altfiles as $video_altfile)
-      {
-	  $converted_vtt=array();
-      if(mb_strtolower($video_altfile["file_extension"]) =="vtt")
-		{
-		$video_altfile["path"] = get_resource_path($ref, false, '', true, $video_altfile["file_extension"], -1, 1, false, '',  $video_altfile["ref"]);
-		?>
-		<track class="videojs_alt_track" kind="subtitles" src="<?php echo $video_altfile["path"] ?>" label="<?php echo $video_altfile["description"]; ?>" ></track>
-		<?php
-		$converted_vtt[$video_altfile["description"]]=$video_altfile["ref"];
-		}	  
-	  }
-	}
-
 function HookVideo_tracksViewModifydownloadbutton()
 	{
 	global $video_altfiles,$n, $alt_access;   

@@ -18,7 +18,10 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         $image="";
        
         # Attempt to find the image. For the latest upload, this is the current file.
-        $latest=sql_query("select previous_file_alt_ref from resource_log where resource='$resource' and type='u' and ref>'" . $logentry["ref"] . "' order by ref limit 1");
+        $parameters=array("i",$resource, "i",$logentry["ref"]);
+        $latest=ps_query("SELECT previous_file_alt_ref from resource_log 
+                where resource=? and type='u' and ref>? 
+                order by ref limit 1", $parameters);
 
         if (count($latest)==0)
             {

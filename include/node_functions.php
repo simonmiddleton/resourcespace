@@ -473,12 +473,9 @@ function get_tree_node_level($ref)
 * 
 * @return integer|boolean
 */
-function get_root_node_by_leaf($ref, $level)
+function get_root_node_by_leaf(int $ref, int $level)
     {
-    $ref   = escape_check($ref);
-    $level = escape_check($level);
-
-    if(!is_numeric($level) && 0 >= $level)
+    if(0 >= $level)
         {
         return false;
         }
@@ -494,20 +491,14 @@ function get_root_node_by_leaf($ref, $level)
 
         if(0 === $level)
             {
-            $query .= " WHERE n{$from_level}.ref = '{$ref}'";
+            $query .= " WHERE n{$from_level}.ref = ?";
+            $placeholders = ['i', $ref];
             }
 
         $level--;
         }
-        
-    $root_node = sql_value($query, '');
 
-    if('' == $root_node)
-        {
-        $root_node = 0;
-        }
-
-    return (int) $root_node;
+    return (int) ps_value($query, $placeholders, 0);
     }
 
 
@@ -731,7 +722,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         else    
             {
             $query.=" AND parent = ? ";
-            $parameters=array("i",$parent);
+            $parameters=array_merge($parameters,array("i",$parent));
             }
         $query.="ORDER BY order_by ASC;";
         

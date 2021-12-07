@@ -13,8 +13,7 @@ $delete_code=getval("delete_code","");
 if ($delete_code!="" && enforcePostRequest(false))
     {
     # Delete discount code.
-    $delete_code_escaped = escape_check($delete_code);
-    sql_query("delete from discount_code where code='$delete_code_escaped'");
+    ps_query("DELETE FROM discount_code WHERE code = ?", array("s", $delete_code));
     }
 elseif (getval("add","")!="" && enforcePostRequest(false))
     {
@@ -22,8 +21,11 @@ elseif (getval("add","")!="" && enforcePostRequest(false))
     if($dateParsed)
         {
         # Add discount code.
-        sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
-        sql_query("insert into discount_code(code,percent,expires) values ('" . getvalescaped("code","") . "','" . getvalescaped("percent","") . "','" . getvalescaped("expires","") . "');");
+        $code = getval("code", "");
+        $percent = getval("percent", "");
+        $expires = getval("expires", "");
+        ps_query("DELETE FROM discount_code WHERE code = ?", array("s", $code)); # Clear any existing matching code.
+        ps_query("INSERT INTO discount_code (code, percent, expires) VALUES (?, ?, ?);", array("s", $code, "i", $percent, "s", $expires));
         }
     else
         {
@@ -31,7 +33,7 @@ elseif (getval("add","")!="" && enforcePostRequest(false))
         }
     }
 
-$discount_codes=sql_query("select code,percent,expires from discount_code order by code");
+$discount_codes = ps_query("SELECT code, percent, expires FROM discount_code ORDER BY code");
 
 include "../../../include/header.php";
 ?>

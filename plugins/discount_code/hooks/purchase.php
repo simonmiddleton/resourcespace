@@ -30,7 +30,7 @@ function HookDiscount_codePurchaseAdjust_item_price ($origprice,$resource,$size)
 	if ($discount_code=="") {return $origprice;} # No code specified
 	
 	# Check that the discount code exists.
-	$discount_info=sql_query("select * from discount_code where upper(code)='$discount_code'");
+	$discount_info = ps_query("SELECT * FROM discount_code WHERE upper(code) = ?", array("s", $discount_code));
 	if (count($discount_info)==0)
 		{
 		$discount_error=$lang["error-invalid-discount-code"];
@@ -43,7 +43,7 @@ function HookDiscount_codePurchaseAdjust_item_price ($origprice,$resource,$size)
 	
 	# Check that the user has not already used this discount code
 	global $userref;
-	$used=sql_value("select count(*) value from discount_code_used where user='$userref' and upper(code)='$discount_code'",0);
+	$used = ps_value("SELECT count(*) value FROM discount_code_used WHERE user = ? AND upper(code) = ?", array("i", $userref, "s", $discount_code), 0);
 	if ($used>0)		
 		{
 		$discount_error=$lang["error-discount-code-already-used"];
@@ -54,7 +54,7 @@ function HookDiscount_codePurchaseAdjust_item_price ($origprice,$resource,$size)
 	
 	# Update collection with code, so it can be retrieved when we get the callback from PayPal and then insert a row into discount_code_used to mark that the user has used this discount code.
 	global $usercollection;
-	sql_query("update collection_resource set discount_code='" . $discount_code . "' where collection='" . $usercollection . "'");
+	ps_query("UPDATE collection_resource SET discount_code = ? WHERE collection = ?", array("s", $discount_code, "i", $usercollection));
 	
 	$return=round(((100-$discount_info["percent"])/100) * $origprice,2);
 	$purchase_pipeline_price[$resource][$size]=$return; # Use this price instead for future hook calls.

@@ -126,13 +126,18 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
 
             # Work out the filename.
-            if (isset($_REQUEST['name']))
+            if (isset($_REQUEST['file_name']))
                 {
-                $filename=$_REQUEST['name']; # For PLupload
+                $filename=$_REQUEST['file_name'];
                 }
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                if(base64_encode(base64_decode($filename)) == $filename)
+                   {
+                   // Should have been encoded by Uppy
+                   $filename = base64_decode($filename);
+                   }
                 }
             else
                 {
@@ -365,9 +370,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
                 $original_filename = '';
-                if(isset($_REQUEST['name'])) 
+                if(isset($_REQUEST['file_name'])) 
                     {
-                    $original_filename = $_REQUEST['name'];
+                    $original_filename = $_REQUEST['file_name'];
                     }
                 else
                     {
@@ -815,8 +820,8 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
                             $original_filename = '';
-                            if(isset($_REQUEST['name'])) {
-                                $original_filename = $_REQUEST['name'];
+                            if(isset($_REQUEST['file_name'])) {
+                                $original_filename = $_REQUEST['file_name'];
                             } else {
                                 $original_filename = $processfile['name'];
                             }
@@ -886,8 +891,8 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
                             $original_filename = '';
-                            if(isset($_REQUEST['name'])) {
-                                $original_filename = $_REQUEST['name'];
+                            if(isset($_REQUEST['file_name'])) {
+                                $original_filename = $_REQUEST['file_name'];
                             } elseif(isset($processfile)) {
                                 $original_filename = $processfile['name'];
                             }
@@ -946,7 +951,7 @@ function extract_exif_comment($ref,$extension="")
             debug ("EXIF - custom option for filename field " . $filename_field . " : " . $exiffilenameoption);
             if ($exiffilenameoption!="yes") // We are not using the extracted filename as usual
                 {
-                $uploadedfilename=isset($_REQUEST['name'])?$_REQUEST['name']:$processfile['name'];
+                $uploadedfilename=isset($_REQUEST['file_name'])?$_REQUEST['file_name']:$processfile['name'];
                 
                 global $userref, $amended_filename;
                 $entered_filename=get_data_by_field(-$userref,$filename_field);
@@ -3637,7 +3642,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $keep_transparency=true;
         $cmd_args['%sourcepath'] = $sourcepath;
-        $command .= ' -background transparent %sourcepath';
+        $command .= ' -background transparent %sourcepath[0]';
         }
     else
         {

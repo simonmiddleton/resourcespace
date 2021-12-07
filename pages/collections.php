@@ -801,7 +801,7 @@ else if ($basket)
 	if ($count_result>0) 
 		{
 		# Loop through resources for thumbnails
-		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
+		for ($n=0;$n<count($result) && $n<$count_result;$n++)					
 			{
 			$ref=$result[$n]["ref"];
 			?>
@@ -810,7 +810,8 @@ else if ($basket)
 		{ ?>
 		<!--Resource Panel-->
 		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if (in_array($ref,$addarray) || $n>=$max_collection_thumbs) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if($n<$max_collection_thumbs) {?>
         
 		<?php if (!hook("rendercollectionthumb")){?>
         <?php
@@ -894,11 +895,11 @@ else if ($basket)
         include "search_views/resource_tools.php";  
             
 		} # End of remove link condition 
-		?>
+        }?>
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook
@@ -1165,7 +1166,7 @@ else
 	if ($count_result>0) 
 	{
 		# Loop through resources for thumbnails for standard display
-		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
+		for ($n=0;$n<count($result) && $n<$count_result;$n++)					
 			{
 			$ref=$result[$n]["ref"];
 			?>
@@ -1174,7 +1175,8 @@ else
 		{ ?>
 		<!--Resource Panel-->
 		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if (in_array($ref,$addarray) || $n>=$max_collection_thumbs) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        <?php if($n<$max_collection_thumbs) {?>
         
 		<?php if (!hook("rendercollectionthumb")){?>
         <?php
@@ -1263,7 +1265,7 @@ else
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        } ?>
 		</div>
 		<?php
 		} # End of ResourceView hook

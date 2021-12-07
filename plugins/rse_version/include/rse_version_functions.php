@@ -72,25 +72,26 @@ function revert_collection_state($collection, $ref)
     {
     global $baseurl;
 
-    $logs = sql_query(sprintf("
-        SELECT `ref`, `type`, resource
+    $parameters=array("i",$collection, 
+                      "s",LOG_CODE_COLLECTION_ADDED_RESOURCE, 
+                      "s",LOG_CODE_COLLECTION_REMOVED_RESOURCE, 
+                      "s",LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES,
+                      "i",$ref);
+
+    # The binary operators ensure that only "a", "r" and "D" entries are selected
+    # Ignore LOG_CODE_COLLECTION_ACCESS_CHANGED (A) because it is irrelevant
+    # Ignore LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES (R) because individual logs will be available as LOG_CODE_COLLECTION_REMOVED_RESOURCE (r)
+    # Ignore LOG_CODE_COLLECTION_DELETED_RESOURCE (d) - Why? 
+    $logs = ps_query("SELECT `ref`, `type`, resource
             FROM collection_log
-           WHERE collection = '%s'
+           WHERE collection = ?
              AND (
-                `type` = '%s' AND BINARY `type` <> BINARY UPPER(`type`)
-                # Ignore LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES (R) as individual logs will be available
-                # as LOG_CODE_COLLECTION_REMOVED_RESOURCE (r)
-                OR `type` = '%s' AND BINARY `type` <> BINARY UPPER(`type`)
-                OR `type` = '%s' AND BINARY `type` = BINARY UPPER(`type`)
+                   `type` = ? AND BINARY `type` <> BINARY UPPER(`type`)
+                OR `type` = ? AND BINARY `type` <> BINARY UPPER(`type`)
+                OR `type` = ? AND BINARY `type` =  BINARY UPPER(`type`)
              )
-             AND `ref` < '%s'
-        ORDER BY `ref` ASC;",
-        escape_check($collection),
-        LOG_CODE_COLLECTION_ADDED_RESOURCE,
-        LOG_CODE_COLLECTION_REMOVED_RESOURCE,
-        LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES,
-        escape_check($ref)
-    ));
+             AND `ref` < ?
+        ORDER BY `ref` ASC;",$parameters);
 
     if(count($logs) == 0)
         {

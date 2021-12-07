@@ -140,6 +140,11 @@ $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
 set_time_limit(0);
 
+// Increase this DB session idle timeout to 24 hours
+sql_query('SET session wait_timeout=86400;');
+$sql_session_wait_timeout = array_column(sql_query('SHOW SESSION VARIABLES LIKE "wait_timeout"'), 'Value', 'Variable_name');
+logScript("Database session 'wait_timeout' variable is set to {$sql_session_wait_timeout['wait_timeout']} seconds");
+
 $get_file_handler = function($file_path, $mode)
     {
     $file_handler = fopen($file_path, $mode);
@@ -303,6 +308,12 @@ $rtf_src_resource_ref = 0;
 
 // Fixed list field options that will be applied to all imported SRC resources. List of node IDs.
 $nodes_applied_to_all_merged_resources = [];
+
+
+// A resource access moves across as is. Exception are resources with custom access which need to be converted to a
+// different access level (e.g open, restricted or confidential)
+// Acceptable values are: RESOURCE_ACCESS_FULL -or- RESOURCE_ACCESS_RESTRICTED -or- RESOURCE_ACCESS_CONFIDENTIAL
+$custom_access_new_value_spec = RESOURCE_ACCESS_RESTRICTED;
 
 ' . PHP_EOL);
     fclose($spec_fh);
@@ -656,6 +667,13 @@ if($import && isset($folder_path))
         exit(1);
         }
     include_once $spec_file_path;
+
+    // Quick spec file validation
+    if(!in_array($custom_access_new_value_spec, array_diff(RESOURCE_ACCESS_TYPES, [RESOURCE_ACCESS_CUSTOM_GROUP])))
+        {
+        logScript('ERROR: Specification file - invalid $custom_access_new_value_spec');
+        exit(1);
+        }
 
     /*
     progress.php is used to override the specification file that was provided as original input by keeping track of new 
@@ -1347,6 +1365,22 @@ if($import && isset($folder_path))
             exit(1);
             }
 
+        // Move across the resource access. Custom access gets remapped.
+        if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
+            {
+            sql_query(sprintf(
+                "UPDATE resource SET access = '%s' WHERE ref = '%s'",
+                escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
+                escape_check($new_resource_ref)
+            ));
+            }
+        else
+            {
+            logScript("ERROR: unknown resource access type - '{$src_resource['access']}'");
+            exit(1);
+            }
+
+
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
             "resource" => $new_resource_ref,
@@ -1440,6 +1474,8 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_rn["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
@@ -1464,12 +1500,16 @@ if($import && isset($folder_path))
         if(in_array($src_rn["node"], $nodes_not_created))
             {
             logScript("Skipping as the node was not created on the destination system!");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
         if(!isset($new_nodes_mapping[$src_rn["node"]]))
             {
             logScript("WARNING: unable to find a node mapping!");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
@@ -1501,12 +1541,16 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_rd["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_data[] = $process_rd_value;
+            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
             }
 
         if(in_array($src_rd["resource_type_field"], $resource_type_fields_not_created))
             {
             logScript("WARNING: Resource type field was not created. Skipping");
+            $processed_resource_data[] = $process_rd_value;
+            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
             }
 
@@ -1553,19 +1597,21 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_rdms["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_dimensions[] = $process_rdms_value;
+            fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
             continue;
             }
 
-        $page_count = is_numeric($src_rdms["page_count"]) ? $src_rdms["page_count"] : "NULL";
-
-        sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count)
-                        VALUES ('{$resources_mapping[$src_rdms["resource"]]}',
-                                '{$src_rdms["width"]}',
-                                '{$src_rdms["height"]}',
-                                '{$src_rdms["file_size"]}',
-                                '{$src_rdms["resolution"]}',
-                                '{$src_rdms["unit"]}',
-                                {$page_count})");
+        sql_query(sprintf(
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', %s)",
+            $resources_mapping[$src_rdms["resource"]],
+            $src_rdms["width"],
+            $src_rdms["height"],
+            $src_rdms["file_size"],
+            $src_rdms["resolution"],
+            escape_check($src_rdms["unit"]),
+            sql_null_or_val((string) $src_rdms["page_count"], !is_int_loose($src_rdms["page_count"]))
+        ));
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
@@ -1594,6 +1640,8 @@ if($import && isset($folder_path))
             || !array_key_exists($src_rr["related"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
+            $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
+            fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
             continue;
             }
 
@@ -1624,6 +1672,8 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_raf["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_alt_files[] = "{$src_raf["resource"]}_{$src_raf["ref"]}";
+            fwrite($progress_fh, "\$processed_resource_alt_files[] = \"{$src_raf["resource"]}_{$src_raf["ref"]}\";" . PHP_EOL);
             continue;
             }
 

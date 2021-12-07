@@ -109,14 +109,14 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 					Maybe w should also check groups as well? So if group membership has changed the user will be updated!
 				*/
 				
-				$uexists=sql_query('select ref from user where username="'.$uname.$ldapauth['usersuffix'].'"');
+				$uexists=ps_query('SELECT ref FROM user WHERE username = ?', ['s', $uname.$ldapauth['usersuffix']]);
 				if (count($uexists)>=1) 
 				{
 					if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  User has allready been added to RS, updating password") ; }
 					// if we get here, the user has already been added to RS.
 					$username=$uname.$ldapauth['usersuffix'];
 					$password_hash = hash('sha256', md5('RS' . $username . $password));
-					sql_query('update user set password="'.$password_hash.'" where username="'.$username.'"');
+					ps_query('UPDATE user SET password = ? WHERE username = ?', ['s', $password_hash, 's', $username]);
 					//          $password=sql_value('select password value from user where username="'.$uname.$ldapauth['usersuffix'].'"',"");
 					return true;
 				}
@@ -206,9 +206,8 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 								return false; # Shouldn't ever get here.  Something strange happened
 							}
 							// Update with information from LDAP
-							sql_query('update user set password="'.$nuser['password'].
-								'", fullname="'.$nuser['fullname'].'", email="'.$nuser['email'].'", usergroup="'.
-								$nuser['usergroup'].'", comments="Auto create from LDAP" where ref="'.$ref.'"');
+							ps_query('UPDATE user SET password = ?, fullname = ?, email = ?, usergroup = ?, comments = "Auto create from LDAP" WHERE ref = ?'
+									, ['s', $nuser['password'], 's', $nuser['fullname'], 's', $nuser['email'], 's', $nuser['usergroup'], 'i', $ref]);
 								
 							$username=$nuser['username'];
 							$password=$nuser['password'];
@@ -231,9 +230,8 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 								return false; # Shouldn't ever get here.  Something strange happened
 							}
 		                    // Update with information from LDAP
-		                    sql_query('update user set password="'.$nuser['password'].
-		                            '", fullname="'.$nuser['fullname'].'", email="'.$nuser['email'].'", usergroup="'.
-		                            $ldapauth['newusergroup'].'", comments="Auto create from LDAP" where ref="'.$ref.'"');
+		                    ps_query('UPDATE user SET password = ?, fullname = ?, email = ?, usergroup = ?, comments ="Auto create from LDAP" WHERE ref = ?'
+								, ['s', $nuser['password'], 's', $nuser['fullname'], 's', $nuser['email'], 's', $ldapauth['newusergroup'], 'i', $ref]);
 		
 		                    $username=$nuser['username'];
 		                    $password=$nuser['password'];

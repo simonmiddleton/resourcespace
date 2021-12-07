@@ -8,8 +8,10 @@
 include_once "../include/db.php";
 
 $k = getval('k', '');
-if(is_array($k) || trim($k) === '') { include '../include/authenticate.php'; }
-
+if((is_array($k) || trim($k) === '') && getval('noauth','') != true) 
+    {
+    include '../include/authenticate.php';
+    }
 
 header("Content-type: text/css");
 

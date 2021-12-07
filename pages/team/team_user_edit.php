@@ -109,15 +109,15 @@ if(getval('loginas', '') != '')
 
     global $CSRF_token_identifier, $usersession;
 
-    $_POST                         = [];
-    $_POST['username']             = $user['username'];
-    $_POST['password']             = $user["password"];
-    $_POST['userkey']              = md5(escape_check($user["username"]) . $scramble_key);
+    //userkey and CSRF tokens still need to be placed in post array as preform_login() references these directly
+    $_POST = [];
+    $_POST['username'] = $user['username'];
+    $_POST['password'] = $user['password'];
+    $_POST['userkey'] = md5(escape_check($user["username"]) . $scramble_key);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
-    include __DIR__ . '/../../login.php';
+    include '../../login.php';
     exit();
-
     }
 ?>
 <div class="BasicsBox">

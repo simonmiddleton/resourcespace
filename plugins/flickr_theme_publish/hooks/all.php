@@ -10,7 +10,7 @@ function HookFlickr_theme_publishAllRender_actions_add_collection_option($top_ac
 	if ($count_result>0) # Don't show the option if the collection is empty.
 		{
 			$lang_string=$lang["publish_to_flickr"];
-			$unpublished = sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $collection_data["ref"] . "' and flickr_photo_id is null",0);
+			$unpublished = ps_value("select count(*) value from resource join collection_resource on resource.ref = collection_resource.resource where collection_resource.collection = ? and flickr_photo_id is null", array("i",$collection_data["ref"]), 0);
 			if ($unpublished>0) {
 				$lang_string.=" <strong>(" . ($unpublished==1 ? $lang["unpublished-1"] : str_replace("%number", $unpublished, $lang["unpublished-2"])) . ")</strong>";
 			}

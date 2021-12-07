@@ -51,7 +51,7 @@ body {
 
     body{
         height: 100% !important;
-        overflow: scroll !important;
+        overflow-y: scroll !important;
     }
     
     .Question .stdwidth, .stdwidth, #iconpicker-question {

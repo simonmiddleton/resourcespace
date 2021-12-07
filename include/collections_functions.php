@@ -14,144 +14,150 @@
  * @return array
  */
 function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetchrows=-1,$auto_create=true)
-	{
-	global $usergroup;
+    {
+    global $usergroup, $themes_in_my_collections, $rs_session;
+    global $anonymous_login,$username,$anonymous_user_session_collection;
 
-    $sql = "";
+    $condsql = "";
+    $condparams = [];
     $keysql = "";
+    $keyparams = [];
     $extrasql = "";
+    $extraparams = [];
+    $sort = strtoupper($sort) == "ASC" ? "ASC" : "DESC";
 
-	if ($find=="!shared")
-		{
-		# only return shared collections
-		$sql=" where (c.`type` = " . COLLECTION_TYPE_PUBLIC . " or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
-		}
-	elseif (strlen($find)==1 && !is_numeric($find))
-		{
-		# A-Z search
-		$sql=" where c.name like '" . escape_check($find) . "%'";
-		}
-	elseif (strlen($find)>1 || is_numeric($find))
-		{  
-		$keywords=split_keywords($find);
-		$keyrefs=array();
-		$keysql="";
-		for ($n=0;$n<count($keywords);$n++)
-			{
-			$keyref=resolve_keyword($keywords[$n],false);
-			if ($keyref!==false) {$keyrefs[]=$keyref;}
+    if ($find=="!shared")
+        {
+        # only return shared collections
+        $condsql = " WHERE (c.`type` = ? OR c.ref IN (SELECT DISTINCT collection FROM user_collection WHERE user<>? UNION SELECT DISTINCT collection FROM external_access_keys))";
+        $condparams = array("i",COLLECTION_TYPE_PUBLIC,"i",$user);
+        }
+    elseif (strlen($find)==1 && !is_numeric($find))
+        {
+        # A-Z search
+        $condsql=" WHERE c.name LIKE ?";
+        $condparams = array("s",$find);
+        }
+    elseif (strlen($find)>1 || is_numeric($find))
+        {  
+        $keywords=split_keywords($find);
+        $keyrefs=array();
+        $keysql="";
+        $keyparams = array();
+        for ($n=0;$n<count($keywords);$n++)
+            {
+            $keyref=resolve_keyword($keywords[$n],false);
+            if ($keyref!==false) {$keyrefs[]=$keyref;}
+            $keysql.=" JOIN collection_keyword k" . $n . " ON k" . $n . ".collection=ref AND (k" . $n . ".keyword=?)";
+            $keyparams = array("i",$keyref);
+            }
+        }
 
-			$keysql.=" join collection_keyword k" . $n . " on k" . $n . ".collection=ref and (k" . $n . ".keyword='$keyref')";	
-			}
-		}
-
-    // Type filter
-    global $themes_in_my_collections;
-    $sql .= sprintf(
-        "%s c.`type` IN (%s, %s%s)",
-        ($sql == "" ? "WHERE" : " AND"),
-        COLLECTION_TYPE_STANDARD,
-        COLLECTION_TYPE_PUBLIC,
-        ($themes_in_my_collections ? ", " . COLLECTION_TYPE_FEATURED : ""));
+    $validtypes = [COLLECTION_TYPE_STANDARD,COLLECTION_TYPE_PUBLIC];
+    if($themes_in_my_collections)
+        {
+        $validtypes[] = COLLECTION_TYPE_FEATURED;
+        }
+    $condsql .= $condsql == "" ? "WHERE" : " AND";
+    $condsql .= " c.`type` IN (" . ps_param_insert(count($validtypes)) . ")";
+    $condparams =  array_merge($condparams,ps_param_fill($validtypes,"i"));
 
     if($themes_in_my_collections)
         {
         // If we show featured collections, remove the categories
-        $keysql .= sprintf(
-            " WHERE (clist.`type` IN (%s, %s) OR (clist.`type` = %s AND clist.`count` > 0))",
-            COLLECTION_TYPE_STANDARD,
-            COLLECTION_TYPE_PUBLIC,
-            COLLECTION_TYPE_FEATURED);
+        $keysql .= " WHERE (clist.`type` IN (?,?) OR (clist.`type` = ? AND clist.`count` > 0))";
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_STANDARD;
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_PUBLIC;
+        $keyparams[] = "i";$keyparams[] = COLLECTION_TYPE_FEATURED;
         }
-
-	global $anonymous_login,$username,$anonymous_user_session_collection;
 
     if(isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
         {
         // Anonymous user - only get the user's own collections that are for this session - although we can still join to 
         // get collections that have been specifically shared with the anonymous user 
-        if('' == $sql)
+        if('' == $condsql)
             {
-            $extrasql = " where ";
+            $extrasql = " WHERE ";
             }
         else
             {
-            $extrasql .= " and ";
+            $extrasql .= " AND ";
             }
 
-        global $rs_session;
-
-        $extrasql .= " (c.session_id='{$rs_session}')";
+        $extrasql .= " (c.session_id=?)";
+        $extraparams = array("s",$rs_session);
+        }
+   
+    $order_sort="";
+    $validsort =  array("name","ref","user","created","public","home_page_publish","type","parent");
+    if ($order_by!="name" && in_array(strtolower($order_by),$validsort))
+        {
+        $order_sort=" ORDER BY $order_by $sort";
         }
 
-   
-	$order_sort="";
-	if ($order_by!="name"){$order_sort=" order by $order_by $sort";}
-
-    $return = sprintf(
-        'SELECT * FROM (
+    $query = "SELECT * FROM (
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM user AS u
-                           JOIN collection AS c ON u.ref = c.user AND c.user = \'%1$s\'
+                           JOIN collection AS c ON u.ref = c.user AND c.user = ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
-                          %2$s %3$s
+                       $condsql 
+                       $extrasql
                        GROUP BY c.ref
         
                           UNION
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM user_collection AS uc
-                           JOIN collection AS c ON uc.collection = c.ref AND uc.user = \'%1$s\' AND c.user <> \'%1$s\'
+                           JOIN collection AS c ON uc.collection = c.ref AND uc.user = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
                       LEFT JOIN user AS u ON c.user = u.ref
-                          %2$s
+                       $condsql
                        GROUP BY c.ref
         
                           UNION
                          SELECT c.*, u.username, u.fullname, count(r.resource) AS count
                            FROM usergroup_collection AS gc
-                           JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = \'%4$s\' AND c.user <> \'%1$s\'
+                           JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
                       LEFT JOIN user AS u ON c.user = u.ref
-                          %2$s
+                       $condsql
                         GROUP BY c.ref
         ) AS clist
-        %5$s
-        GROUP BY ref %6$s',
-        escape_check($user), # %1$s
-        $sql, # %2$s
-        $extrasql, # %3$s
-        escape_check($usergroup), # %4$s
-        $keysql, # %5$s
-        $order_sort # %6$s
-    );
-    $return = sql_query($return);
-	
-	if ($order_by=="name"){
-		if ($sort=="ASC"){usort($return, 'collections_comparator');}
-		else if ($sort=="DESC"){usort($return,'collections_comparator_desc');}
-	}
-	
-	// To keep Default Collection creation consistent: Check that user has at least one collection of his/her own  (not if collection result is empty, which may include shares), 
-	$hasown=false;
-	for ($n=0;$n<count($return);$n++){
-		if ($return[$n]['user']==$user){
-			$hasown=true;
-		}
-	}
+        $keysql
+        GROUP BY ref $order_sort";
 
-	if (!$hasown && $auto_create && $find=="") # User has no collections of their own, and this is not a search. Make a new 'Default Collection'
-		{
-		# No collections of one's own? The user must have at least one Default Collection
-		global $usercollection;
-		$usercollection=create_collection ($user,"Default Collection",0,1); // make not deletable
-		set_user_collection($user,$usercollection);
-		
-		# Recurse to send the updated collection list.
-		return get_user_collections($user,$find,$order_by,$sort,$fetchrows,false);
-		}
+    $queryparams = array_merge(array("i",$user),$condparams,$extraparams,array("i", $user,"i", $user),$condparams,array("i", $usergroup,"i",$user),$condparams,$keyparams);
 
-	return $return;
-	}
+    $return = ps_query($query,$queryparams);
+
+    if ($order_by=="name")
+        {
+        if ($sort=="ASC"){usort($return, 'collections_comparator');}
+        else if ($sort=="DESC"){usort($return,'collections_comparator_desc');}
+        }
+
+    // To keep Default Collection creation consistent: Check that user has at least one collection of his/her own  (not if collection result is empty, which may include shares), 
+    $hasown=false;
+    for ($n=0;$n<count($return);$n++)
+        {
+        if ($return[$n]['user']==$user)
+            {
+            $hasown=true;
+            }
+        }
+
+    if (!$hasown && $auto_create && $find=="") # User has no collections of their own, and this is not a search. Make a new 'Default Collection'
+        {
+        # No collections of one's own? The user must have at least one Default Collection
+        global $usercollection;
+        $usercollection=create_collection ($user,"Default Collection",0,1); // make not deletable
+        set_user_collection($user,$usercollection);
+        
+        # Recurse to send the updated collection list.
+        return get_user_collections($user,$find,$order_by,$sort,$fetchrows,false);
+        }
+
+    return $return;
+    }
 
 
 $GLOBALS['get_collection_cache'] = array();
@@ -164,47 +170,71 @@ $GLOBALS['get_collection_cache'] = array();
  * @return array|boolean
  */
 function get_collection($ref, $usecache = false)
-	{
+    {
+    global $lang, $userref,$k,$attach_user_smart_groups;
     if(isset($GLOBALS['get_collection_cache'][$ref]) && $usecache)
         {
         return $GLOBALS['get_collection_cache'][$ref];
         }
-    $return=sql_query("select c.*, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description, c.thumbnail_selection_method, c.bg_img_resource_ref from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+
+    $columns = "c.ref,
+        c.type,
+        c.name,
+        c.parent,
+        c.user,
+        c.keywords,
+        c.public,
+        c.created,
+        c.allow_changes,
+        c.cant_delete,
+        c.home_page_publish,
+        c.home_page_text,
+        c.home_page_image,
+        c.savedsearch,
+        c.session_id,
+        c.description,
+        c.thumbnail_selection_method,
+        c.bg_img_resource_ref,
+        u.fullname,
+        u.username";
+        
+    $return = ps_query("SELECT " . $columns . " FROM collection c LEFT OUTER JOIN user u ON u.ref = c.user WHERE c.ref = ?",array("i",$ref));
+
     if (count($return)==0)
         {
         return false;
         }
     else 
-		{
-		$return=$return[0];
-		$return["users"]=join(", ",sql_array("select u.username value from user u,user_collection c where u.ref=c.user and c.collection='" . escape_check($ref) . "' order by u.username"));
-		global $attach_user_smart_groups,$lang;
-		if($attach_user_smart_groups)
-			{
-			$return["groups"]=join(", ",sql_array("select concat('{$lang["groupsmart"]}: ',u.name) value from usergroup u,usergroup_collection c where u.ref=c.usergroup and c.collection='" . escape_check($ref) . "' order by u.name"));
-			}
-			
-		global $userref,$k,$attach_user_smart_groups;
-		$request_feedback=0;
-		if ($return["user"]!=$userref)
-			{
-			# If this is not the user's own collection, fetch the user_collection row so that the 'request_feedback' property can be returned.
-			$request_feedback=sql_value("select request_feedback value from user_collection where collection='" . escape_check($ref) . "' and user='$userref'",0);
-			if(!$request_feedback && $attach_user_smart_groups && $k=="")
-				{
-				# try to set via usergroup_collection
-				global $usergroup;
-				$request_feedback=sql_value("select request_feedback value from usergroup_collection where collection='" . escape_check($ref) . "' and usergroup='$usergroup'",0);
-				}
-			}
-		if ($k!="")
-			{
-			# If this is an external user (i.e. access key based) then fetch the 'request_feedback' value from the access keys table
-			$request_feedback=sql_value("select request_feedback value from external_access_keys where access_key='$k' and request_feedback=1",0);
-			}
-		
-		$return["request_feedback"]=$request_feedback;
-		
+        {
+        $return=$return[0];
+        $users = ps_array("SELECT u.username value FROM user u,user_collection c WHERE u.ref=c.user AND c.collection = ? ORDER BY u.username",array("i",$ref));
+        $return["users"]=join(", ",$users);
+        if($attach_user_smart_groups)
+            {
+            $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
+            $return["groups"]=join(", ",$groups);
+            }
+
+        $request_feedback=0;
+        if ($return["user"]!=$userref)
+            {
+            # If this is not the user's own collection, fetch the user_collection row so that the 'request_feedback' property can be returned.
+            $request_feedback=ps_value("SELECT request_feedback value FROM user_collection WHERE collection = ? AND user = ?",array("i",$ref,"i",$userref),0);
+            if(!$request_feedback && $attach_user_smart_groups && $k=="")
+                {
+                # try to set via usergroup_collection
+                global $usergroup;
+                $request_feedback=ps_value("SELECT request_feedback value FROM usergroup_collection WHERE collection = ? AND usergroup = ?",array("i",$ref,"i",$usergroup),0);
+                }
+            }
+        if ($k!="")
+            {
+            # If this is an external user (i.e. access key based) then fetch the 'request_feedback' value from the access keys table
+            $request_feedback=ps_value("SELECT request_feedback value FROM external_access_keys WHERE access_key = ? AND request_feedback = 1",array("s",$k),0);
+            }
+        
+        $return["request_feedback"]=$request_feedback;
+        
         // Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
         global $COLLECTION_PUBLIC_TYPES;
         $return["public"] = (int) in_array($return["type"], $COLLECTION_PUBLIC_TYPES);
@@ -212,9 +242,9 @@ function get_collection($ref, $usecache = false)
         $GLOBALS['get_collection_cache'][$ref] = $return;
         return $return;
         }
-	
-	return false;
-	}
+
+    return false;
+    }
 
 /**
  * Returns all resources in collection
@@ -228,7 +258,7 @@ function get_collection_resources($collection)
     global $userref;
 
     # For many cases (e.g. when displaying a collection for a user) a search is used instead so permissions etc. are honoured.
-    if((string)(int)$collection != (string)$collection)
+    if(!is_int_loose($collection))
         {
         return false;
         }
@@ -243,9 +273,9 @@ function get_collection_resources($collection)
     if(is_array($plugin_collection_resources))
         {
         return $plugin_collection_resources;
-        }	
+        }
 
-    return sql_array("select resource value from collection_resource where collection='" . escape_check($collection) . "' order by sortorder asc, date_added desc, resource desc"); 
+    return ps_array("SELECT resource value FROM collection_resource WHERE collection = ? ORDER BY sortorder ASC, date_added DESC, resource DESC",array("i",$collection)); 
     }
 
 /**
@@ -266,13 +296,15 @@ function get_collection_resources_with_data($ref)
 
     $ref = escape_check($ref);
 
-    $result = sql_query("
+    $result = ps_query("
             SELECT r.*
               FROM collection_resource AS cr
         RIGHT JOIN resource AS r ON cr.resource = r.ref
-             WHERE cr.collection = '{$ref}'
+             WHERE cr.collection = ?
           ORDER BY cr.sortorder ASC , cr.date_added DESC , cr.resource DESC
-    ");
+    ",
+    array("i",$ref)
+    );
 
     if(!is_array($result))
         {
@@ -291,20 +323,32 @@ function get_collection_resources_with_data($ref)
  * @param  boolean $smartadd
  * @param  string $size
  * @param  string $addtype
+ * @param  boolean $col_access_control  Collection access control. Is user allowed to add to it? You can leave it null 
+ *                                      to allow this function to determine it but it may have performance issues.
+ * @param  array $external_shares  List of external share keys. {@see get_external_shares()}. You can leave it null 
+ *                                 to allow this function to determine it but it will affect performance.
+ * 
  * @return boolean | string
  */
-function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
+function add_resource_to_collection(
+    $resource,
+    $collection,
+    $smartadd=false,
+    $size="",
+    $addtype="",
+    bool $col_access_control = null,
+    array $external_shares = null
+)
     {
     global $lang;
 
-    if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
+    if(!is_int_loose($collection) || !is_int_loose($resource))
         {
         return $lang["cantmodifycollection"];
         }
 
     global $collection_allow_not_approved_share, $collection_block_restypes;
-
-    $addpermitted = (
+    $addpermitted = $col_access_control ?? (
         (collection_writeable($collection) && !is_featured_collection_category_by_children($collection))
         || $smartadd
     );
@@ -313,7 +357,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 		{
 		if($addtype=="")
 			{
-			$addtype=sql_value("select resource_type value from resource where ref='" . escape_check($resource) . "'",0);
+			$addtype=ps_value("SELECT resource_type value FROM resource WHERE ref = ?",["i",$resource],0);
 			}
 		if(in_array($addtype,$collection_block_restypes))
 			{
@@ -325,10 +369,10 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
+        $keys = $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
         if (count($keys)>0)
             {
-            $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
+            $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$resource],"");
             if ($archivestatus<0 && !$collection_allow_not_approved_share) {global $lang; $lang["cantmodifycollection"]=$lang["notapprovedresources"] . $resource;return false;}
 
             // Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
@@ -337,7 +381,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
             # Set the flag so a warning appears.
             global $collection_share_warning;
             # Check to see if all shares have expired
-            $expiry_dates=sql_array("select distinct expires value from external_access_keys where collection='" . escape_check($collection) . "'");
+            $expiry_dates=ps_array("SELECT DISTINCT expires value FROM external_access_keys WHERE collection = ?",["i",$collection]);
             $datetime=time();
             $collection_share_warning=true;
             foreach($expiry_dates as $key => $date)
@@ -349,24 +393,35 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 				{
 				# Insert a new access key entry for this resource/collection.
 				global $userref;
-				
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
-				
-				#log this
+                ps_query(
+                    'INSERT INTO external_access_keys(resource, access_key, user, collection, `date`, expires, access, usergroup, password_hash) VALUES (?, ?, ?, ?, now(), ?, ?, ?, ?)',
+                    [
+                        'i', $resource,
+                        's', $keys[$n]['access_key'],
+                        'i', $userref,
+                        'i', $collection ?: null,
+                        's', $keys[$n]['expires'] ?: null,
+                        'i', $keys[$n]['access'],
+                        'i', $keys[$n]['usergroup'] ?: null,
+                        's', $keys[$n]['password_hash'] ?: null,
+                    ]
+                );				
 				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
 				}
 			
 			}
-		
+
 		hook("Addtocollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
 		
 		if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
 			{
-			sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
-			sql_query("insert into collection_resource(resource,collection,purchase_size) values ('" . escape_check($resource) . "','" . escape_check($collection) . "','$size')");
+            ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
+            ps_query(
+                'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
+                ['i', $collection, 'i', $resource, 's', $size ?: null]
+            );
 			}
 		
-		// log this
 		collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
 
 		// Clear theme image cache
@@ -436,14 +491,21 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 function collection_add_resources($collection,$resources='',$search='',$selected=false)
     {
     global $USER_SELECTION_COLLECTION,$lang;
-    if(     (string)(int)$collection != (string)$collection 
+    if(
+            !is_int_loose($collection)
         ||  ($resources == '' && $search == '')
-        ||  (!collection_writeable($collection))
+        ||  !collection_writeable($collection)
         ||  is_featured_collection_category_by_children($collection)
     )
         {
         return $lang["cantmodifycollection"];
         }
+    $access_control = true;
+    $external_share_keys = get_external_shares([
+        'share_collection' => $collection,
+        'share_type' => 0,
+        'ignore_permissions' => true,
+    ]);
 
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
     else if($resources ==''){$resources=do_search($search);}
@@ -455,7 +517,10 @@ function collection_add_resources($collection,$resources='',$search='',$selected
     $errors=0;
     foreach($refs_to_add as $ref)
         {
-        if(!add_resource_to_collection($ref,$collection)){$errors ++;}
+        if(!add_resource_to_collection($ref,$collection, false, '', '', $access_control, $external_share_keys))
+            {
+            $errors++;
+            }
         }
     
     if($errors ==0){return true;}
@@ -2355,7 +2420,7 @@ function get_featured_collection_resources(array $c, array $ctx)
             $colstack->push($child_fc);
             }
 
-        while(count($fcresources) < $themes_simple_images && !$colstack->isEmpty())
+        while(count($fcresources) < $limit && !$colstack->isEmpty())
             {
             $checkfc = $colstack->pop();
             if(!in_array($checkfc,$all_fcs_rp))
@@ -5527,6 +5592,8 @@ function compute_featured_collections_access_control()
                     {
                     // Collection access has been explicitly denied
                     $excluderefs[] = $fcid;
+                    // Also deny access to child collections.
+                    $excluderefs = array_merge($excluderefs,array_keys($all_fcs_rp,$fcid));
                     }                
                 }
             }
@@ -5583,7 +5650,7 @@ function compute_featured_collections_access_control()
     $return = array();
     foreach($all_fcs_rp as $fc => $fcp)
         {
-        if(in_array($fc, $includerefs) && !in_array($fc,$excluderefs))
+        if((in_array($fc, $includerefs) || checkperm("j*")) && !in_array($fc,$excluderefs))
             {
             $return[] = $fc;
             }

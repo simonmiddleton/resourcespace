@@ -48,7 +48,17 @@ if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 
 if ($entry_exists == 0)
     {
     # Add to collection
-    sql_query("INSERT INTO resourceconnect_collection_resources (collection,thumb,large_thumb,xl_thumb,url,title) VALUES ('$usercollection','$thumb','$large_thumb','$xl_thumb','$url','$title')");
+    $params = [
+        'i', $usercollection,
+        's', $thumb,
+        's', $large_thumb,
+        's', $xl_thumb,
+        's', $url,
+        's', $title
+    ];
+    
+    if(isset($ref)){$params[]='i'; $params[]=explode('=', $ref)[1];}
+    ps_query("INSERT INTO resourceconnect_collection_resources (collection,thumb,large_thumb,xl_thumb,url,title".((isset($ref))?',source_ref':'').") VALUES (". ps_param_insert(count($params)/2) .")", $params);
     }
 
 redirect("pages/collections.php?nc=" . time());

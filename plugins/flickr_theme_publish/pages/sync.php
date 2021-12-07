@@ -46,14 +46,14 @@ if(!metadata_field_view_access($flickr_title_field))
 # Handle clear photo IDs
 if (getval("clear_photoid","")!="")
 	{
-	sql_query("update resource set flickr_photo_id=null where ref in (select resource from collection_resource where collection='$theme')");
+	ps_query("update resource set flickr_photo_id = null where ref in (select resource from collection_resource where collection = ?)", array("i",$theme));
 	
 	}
 
 # Handle log out
 if (getval("logout","")!="")
 	{
-	sql_query("update user set flickr_token='',flickr_token_secret='' where ref='$userref'");
+	ps_query("update user set flickr_token = '', flickr_token_secret = '' where ref = ?", array("i",$userref));
 	}
 
 if (getval("publish_all","")!="" || getval("publish_new","")!="")
@@ -77,10 +77,10 @@ elseif (getval("publish_new","")!="" && enforcePostRequest(false))
 else
 	{
 	# Display option for sync
-	$unpublished=sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $theme . "' and flickr_photo_id is null",		0);
+	$unpublished=ps_value("select count(*) value from resource join collection_resource on resource.ref = collection_resource.resource where collection_resource.collection = ? and flickr_photo_id is null", array("i",$theme), 0);
 	
 	# Count for all resources in selection
-	$all=sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $theme . "'",0);
+	$all=ps_value("select count(*) value from resource join collection_resource on resource.ref = collection_resource.resource where collection_resource.collection = ?", array("i",$theme), 0);
 
 	
 	?>

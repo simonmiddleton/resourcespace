@@ -1277,7 +1277,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
 				{
 				?><a id="downloadlink" <?php
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
-							. "&ext=" . $size_info["extension"])))
+							. "&ext=" . $size_info["extension"], $view_in_browser)))
 						{
                         if ($view_in_browser)
                             {
@@ -1312,11 +1312,11 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
             else
                 {
                 ?> <a id="downloadlink" <?php
-                if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
+                if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"], $view_in_browser)))
                     {
                     if ($view_in_browser)
                         {
-                        echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . '" target="_blank"';
+                        echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
                         }
                     else
                         {
@@ -2355,7 +2355,7 @@ if (count($keywords)!=0)
 			{
 			?>
 			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+			onClick="<?php echo $context ?>UpdateFSResultCount();"><label class="customFieldLabel" for="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>"><?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
 			<?php
 			}
 	
@@ -2389,7 +2389,7 @@ if($annotate_enabled)
     ?>
     <!-- Annotorious -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
+    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.js"></script>
 
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
