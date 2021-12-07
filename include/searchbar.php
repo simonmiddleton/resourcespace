@@ -318,8 +318,14 @@ var categoryTreeChecksArray = [];
                     minLength: 3,
                     });
                 
-                // Ensure any previously hidden searchfields remain hidden
-                SimpleSearchFieldsHideOrShow();
+                <?php
+                if(!$basic_simple_search)
+                    {
+                    ?>
+                   // Ensure any previously hidden searchfields remain hidden
+                   SimpleSearchFieldsHideOrShow();
+                   <?php
+                    }?>
                 
             });
             <?php
