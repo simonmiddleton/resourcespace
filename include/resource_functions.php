@@ -1781,12 +1781,12 @@ function save_resource_data_multi($collection,$editsearch = array())
         $related = explode(',', getvalescaped('related', ''));
 
         // Make sure all submitted values are numeric
-        $ok = array();
+        $resources_to_relate = array();
         for($n = 0; $n < count($related); $n++)
             {
             if(is_numeric(trim($related[$n])))
                 {
-                $ok[] = trim($related[$n]);
+                $resources_to_relate[] = trim($related[$n]);
                 }
             }
 
@@ -1805,18 +1805,20 @@ function save_resource_data_multi($collection,$editsearch = array())
             $existing_relations = ps_array("SELECT related value FROM resource_related WHERE resource = ?", array("i", $ref));
 
             // Don't relate a resource to itself
-            $for_relate = array();
-            foreach ($ok as $resource_to_relate)
+            $for_relate_sql = array();
+            $for_relate_parameters = array();
+            foreach ($resources_to_relate as $resource_to_relate)
                 {
                 if ($ref != $resource_to_relate && !in_array($resource_to_relate, $existing_relations))
                     {
-                    $for_relate[] = $resource_to_relate;
+                    $for_relate_sql = array_merge($for_relate_sql, array('(?, ?)'));
+                    $for_relate_parameters = array_merge($for_relate_parameters, array("i", $ref, "i", $resource_to_relate));
                     }
                 }
 
-            if(0 < count($for_relate))
+            if(0 < count($for_relate_sql))
                 {
-                sql_query("INSERT INTO resource_related (resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$for_relate) . ")");
+                ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",", $for_relate_sql), $for_relate_parameters);
                 $successfully_edited_resources[] = $ref;
                 }
             }
