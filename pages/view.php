@@ -1784,7 +1784,7 @@ hook ("resourceactions") ?>
         if (!(in_array($resource['resource_type'], $data_only_resource_types)) && !resource_file_readonly($ref) && (checkperm("c") || checkperm("d")))
             { ?>
             <li>
-                <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);}else{return ModalLoad(this,true}">
+                <a id="view_replace_link" href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="if(jQuery('#uploader').length){return CentralSpaceLoad(this,true);}else{return ModalLoad(this,true}">
                     <?php if ($resource["file_extension"] != "")
                         { ?>
                         <i class='fa fa-fw fa-file-import'></i>&nbsp;<?php echo $lang["replacefile"];
@@ -1812,7 +1812,7 @@ hook ("resourceactions") ?>
         if (!$disable_upload_preview && !resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
             { ?>
             <li>
-                <a href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
+                <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
                     <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo $lang["uploadpreview"]?>
                 </a>
             </li>
@@ -1844,7 +1844,7 @@ hook ("resourceactions") ?>
 
 	if (checkperm('v')) 
 		{ ?>
-		<li><a href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
+		<li><a id="view_log_link" href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
 		<?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}

@@ -4358,18 +4358,19 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($ref < 0 || $upload_review_mode)
             {
-            echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
+            echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
                name="save"
+               id="edit_save_button"
                class="editsave"
                type="submit"
                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
             <?php
             }
 
