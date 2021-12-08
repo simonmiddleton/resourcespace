@@ -1245,11 +1245,14 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
 *  
 * @return boolean
 */        
-function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $logthis=true)
+function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, $logthis=true)
     {
     global $userref;
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
+
+    $sql = '';
+    $sql_params = [];
 
     # check $nodes array values are positive integers and valid for int type node db field
     $options_db_int = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
@@ -1259,7 +1262,14 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
             {
             return false;
             }
+
+        $sql .= ',(?, ?)';
+        $sql_params[] = 'i';
+        $sql_params[] = $resourceid;
+        $sql_params[] = 'i';
+        $sql_params[] = $node;
         }
+    $sql = ltrim($sql, ',');
 
     if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
@@ -1284,7 +1294,7 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true, $log
     if(!is_array($nodes))
         {$nodes=array($nodes);}
 
-    sql_query("insert into resource_node (resource, node) values ('" . escape_check($resourceid) . "','" . implode("'),('" . escape_check($resourceid) . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+    ps_query("INSERT INTO resource_node(resource, node) VALUES {$sql} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
 
     if($logthis)
         {
@@ -1344,17 +1354,30 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     if(!is_array($nodes))
         {$nodes=array($nodes);}
 
-    $nodes_escaped = escape_check_array_values($nodes);
-
-    $sql = "INSERT INTO resource_node (resource, node) VALUES ";
     $nodesql = "";
+    $sql_params = [];
     foreach($resources as $resource)
         {
-        if($nodesql!=""){$nodesql .= ",";}
-        $nodesql .= " ('" . escape_check($resource) . "','" . implode("'),('" . escape_check($resource) . "','",$nodes_escaped) . "') ";
+        if(!is_int_loose($resource))
+            {
+            continue;
+            }
+
+        foreach($nodes as $node)
+            {
+            if(is_int_loose($node))
+                {
+                $nodesql .= ',(?, ?)';
+                $sql_params[] = 'i';
+                $sql_params[] = $resource;
+                $sql_params[] = 'i';
+                $sql_params[] = $node;
+                }
+            }
         }
-    $sql = "INSERT INTO resource_node (resource, node) VALUES " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
-    sql_query($sql);
+    $nodesql = ltrim($nodesql, ',');
+
+    ps_query("INSERT INTO resource_node (resource, node) VALUES {$nodesql} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
     return true;
     }
 
@@ -1371,17 +1394,19 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
 function get_resource_nodes($resource, $resource_type_field = null, $detailed = false, $node_sort = null)
     {
     $sql_select = 'n.ref AS `value`';
-
     if($detailed)
         {
-        $sql_select = 'n.*';
+        $sql_select = 'n.ref, n.resource_type_field, n.`name`, n.parent, n.order_by';
         }
 
-    $query = "SELECT {$sql_select} FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = '" . escape_check($resource) . "'";
+    $query = "SELECT {$sql_select} FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = ?";
+    $params = ['i', $resource];
 
     if(!is_null($resource_type_field) && is_numeric($resource_type_field))
         {
-        $query .= " AND n.resource_type_field = '" . escape_check($resource_type_field) . "'";
+        $query .= " AND n.resource_type_field = ?";
+        $params[] = 'i';
+        $params[] = $resource_type_field;
         }
 
     if(!is_null($node_sort))
@@ -1398,10 +1423,10 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
 
     if($detailed)
         {
-        return sql_query($query);
+        return ps_query($query, $params);
         }
 
-    return sql_array($query);
+    return ps_array($query, $params);
     }
 
 /**
@@ -1413,16 +1438,23 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
 *  
 * @return void
 */
-function delete_resource_nodes($resourceid,$nodes=array(),$logthis=true)
+function delete_resource_nodes(int $resourceid,$nodes=array(),$logthis=true)
     {
     if(!is_array($nodes))
         {
         $nodes = array($nodes);
         }
 
-    $nodes = array_filter($nodes, "is_numeric");
+    $nodes = array_filter($nodes, 'is_int_loose');
+    $nodes_count = count($nodes);
+    if($nodes_count === 0)
+        {
+        return;
+        }
 
-    sql_query("DELETE FROM resource_node WHERE resource = '" . escape_check($resourceid) . "' AND node IN ('" . implode("', '", escape_check_array_values($nodes)) . "')"); 
+    ps_query('DELETE FROM resource_node WHERE resource = ? AND node IN (' . ps_param_insert($nodes_count) . ')',
+        array_merge(['i', $resourceid], ps_param_fill($nodes, 'i'))
+    );
 
     if($logthis)
         {
