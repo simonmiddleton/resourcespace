@@ -28,8 +28,12 @@ function HookPropose_changesResource_emailAdditional_email_collection($colrefs,$
 		if($propose_changes)
 			{
 			$colrefs_array=explode(",",$colrefs);
-			$parameters=ps_param_fill($colrefs_array,"i");
-			ps_query("update collection set propose_changes=1 where ref in (". ps_param_insert(count($colrefs_array)).")", $parameters);
+			$colrefs_array = array_filter($colrefs_array, 'is_int_loose');
+			if(count($colrefs_array) > 0) 
+				{
+				$parameters=ps_param_fill($colrefs_array,"i");
+				ps_query("update collection set propose_changes=1 where ref in (". ps_param_insert(count($colrefs_array)).")", $parameters);
+				}
 			}
 		
 		}
