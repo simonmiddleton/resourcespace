@@ -335,11 +335,11 @@ function HookAction_datesCronCron()
             FROM resource_data rd 
                 LEFT JOIN resource r ON r.ref=rd.resource 
             WHERE r.ref > 0 
-                AND rd.resource_type_field = '$field' 
-                AND rd.value <>'' 
+                AND rd.resource_type_field = ? 
+                AND rd.value <> '' 
                 AND rd.value IS NOT null 
-                AND r.archive<>'$resource_deletion_state' 
-                AND r.archive<>'$newstatus'";
+                AND r.archive<> ? 
+                AND r.archive<> ?";
             
             $sql_params=array(
                 "i",$field,
