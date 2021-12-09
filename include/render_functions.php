@@ -2969,22 +2969,26 @@ function render_share_options($shareopts=array())
 * 
 * @param string     $label      label for the field
 * @param string     $name       name of form select
-* @param array      $ftypes     array of field types to include
+* @param array      $ftypes     Array of integer field type ids to include. See definitions.php. Will return all types if incorrect value or empty array supplied.
 * @param string     $class      array CSS class to apply
 * @param boolean    $hidden     optionally hide the question usng CSS display:none
 * @param array      $current    Current selected value
 * 
 * @return void
 */
-function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false, $current = 0)
+function render_field_selector_question($label, $name, $ftypes, $class = "stdwidth", $hidden = false, $current = 0)
     {
     global $lang;
     $fieldtypefilter = "";
     $parameters = array();
+
+    // Check only valid field types supplied. An empty array is valid i.e. return all types.
+    $ftypes = array_filter($ftypes, function($t) {global $field_types; return is_int($t) && in_array($t, array_keys($field_types));});
+        
     if(count($ftypes)>0)
         {
         $fieldtypefilter = " WHERE type IN (" . ps_param_insert(count($ftypes)) . ")";
-        $parameters = ps_param_fill($ftypes,"i");
+        $parameters = ps_param_fill($ftypes, "i");
         }
 
     $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
