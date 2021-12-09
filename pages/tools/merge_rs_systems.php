@@ -1369,7 +1369,7 @@ if($import && isset($folder_path))
         if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
             {
             sql_query(sprintf(
-                "UPDATE resource SET access = '%s' WHERE ref = '%s'",
+                "UPDATE resource SET access = '%u' WHERE ref = '%s'",
                 escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
                 escape_check($new_resource_ref)
             ));
