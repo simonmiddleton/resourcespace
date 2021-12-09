@@ -44,9 +44,14 @@ function HookAction_datesCronCron()
         echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
 
         $sql = "SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource ";
-        $sql .= (!empty($eligible_states) ? "" : "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ");
+        $sql_params = array();
+        if(!empty($eligible_states))
+            {
+            $sql .= "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ";
+            $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
+            }
+
         $sql .= "WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = ? and rd.value <>'' and rd.value is not null";
-        $sql_params = ps_param_fill($eligible_states,"i");
         $sql_params = array_merge($sql_params, array('i',$action_dates_restrictfield));
 
         $restrict_resources=ps_query($sql,$sql_params);
@@ -93,9 +98,14 @@ function HookAction_datesCronCron()
             {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
             $sql  ="SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource ";
-            $sql .=(!empty($eligible_states) ? "" : " AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ");
+            $sql_params = array();
+            if(!empty($eligible_states))
+                {
+                $sql .= "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
+                }
             $sql .="WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL";
-            $sql_params=array("i",$action_dates_deletefield);
+            $sql_params=array_merge($sql_params,array("i",$action_dates_deletefield));
             $candidate_resources = ps_query($sql,$sql_params);
             }
         else
@@ -112,14 +122,14 @@ function HookAction_datesCronCron()
 
             if (!empty($eligible_states))
                 {
-                $sql .= " AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ")";
+                $sql .= "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ";
                 $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
                 }
 
             $sql .= " AND r.archive NOT IN (?,?) ";
             $sql_params = array_merge($sql_params,["i",$resource_deletion_state,"i",$action_dates_new_state]);
 
-            $sql .= " WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL";
+            $sql .= "WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL ";
             $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
 
             $candidate_resources = ps_query($sql,$sql_params);
