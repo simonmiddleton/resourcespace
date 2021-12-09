@@ -411,11 +411,27 @@ if($userref != $ref)
     }  
 hook("usertool")?>
 
-<?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
-<div class="Question"><label><?php echo $lang["login"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
-<div class="clearerleft"> </div></div>
-<?php } ?>
+<?php 
+if ($user["approved"]==1 && !hook("loginasuser"))
+    { 
+    if (($user['account_expires'] == "" || strtotime($user['account_expires']) > time()) && ($password_expiry == 0 || ($password_expiry > 0 && strtotime($user['password_last_change']) != "" && (time()-strtotime($user['password_last_change'])) < $password_expiry*60*60*24)))
+        {
+        ?>
+        <div class="Question"><label><?php echo $lang["login"]?></label>
+        <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
+        <div class="clearerleft"> </div></div>
+        <?php
+        }
+    else
+        {
+        ?>
+        <div class="Question"><label><?php echo $lang["login"]?></label>
+        <div class="Fixed"><?php echo $lang["accountorpasswordexpired"]?></div>
+        <div class="clearerleft"> </div></div>
+        <?php
+        }
+    }
+?>
 
 
 
