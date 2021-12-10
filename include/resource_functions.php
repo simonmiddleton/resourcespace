@@ -4109,7 +4109,7 @@ function write_metadata($path, $ref, $uniqid="")
                 $group_tag = strtolower($group_tag); # E.g. IPTC:Keywords -> iptc:keywords
                 if (strpos($group_tag,":")===false) {$tag = $group_tag;} # E.g. subject -> subject
                 else {$tag = substr($group_tag, strpos($group_tag,":")+1);} # E.g. iptc:keywords -> keywords
-                if(strpos($group_tag,"-") !== false)
+                if(strpos($group_tag,"-") !== false && stripos($group_tag,"xmp") !== false)
                     {
                     // Remove the XMP namespace for XMP data if included
                     $group_tag = substr($group_tag,0,(strpos($group_tag,"-")));
