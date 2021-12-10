@@ -3,7 +3,7 @@
 function HookGrant_editAllCustomediteaccess($ref)
 	{
 	global $userref;
-	$access=sql_value("SELECT resource value FROM grant_edit WHERE resource='$ref' AND user='$userref' AND (expiry IS null OR expiry>=NOW())","");
+	$access = ps_value("SELECT resource value FROM grant_edit WHERE resource = ? AND user = ? AND (expiry IS null OR expiry >= NOW())", array("i",$ref,"i",$userref), "");
 	if($access!=""){return true;}
 	return false;
 	}

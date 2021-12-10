@@ -1,7 +1,7 @@
 <?php
 $suppress_headers = true;
 include "../../include/db.php";
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
     {
@@ -63,24 +63,31 @@ else
 
         $resourceid = $xpath[1];
         if (is_numeric($resourceid))
-			{
-			$resource =  get_resource_data($resourceid);
-			$resource_access =  get_resource_access($resourceid);
-			}
-		else
-			{
-			$resource_access = 2;	
-			}
+            {
+            $resource =  get_resource_data($resourceid);
+            $resource_access =  get_resource_access($resourceid);
+            }
+        else
+            {
+            $resource_access = 2;	
+            }
             
-		if($resource_access==0)
+        if($resource_access==0 && !in_array($resource["file_extension"], config_merge_non_image_types()))
             {
             // Check resource actually exists and is active
-            $img_path = get_resource_path($resourceid,true,'',false);
-            $image_size = get_original_imagesize($resourceid,$img_path);
+            $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
+            $img_path = get_resource_path($resourceid,true,$fulljpgsize,false, "jpg");
+            if(!file_exists($img_path))
+                {
+                // Missing file
+                $errors[] = "No image available for this identifier";
+                iiif_error(404,$errors);
+                }
+            $image_size = get_original_imagesize($resourceid,$img_path, "jpg");
             $imageWidth = (int) $image_size[1];
             $imageHeight = (int) $image_size[2];
             $portrait = ($imageHeight >= $imageWidth) ? TRUE : FALSE;
-            
+
             // Get all available sizes
             $sizes = get_image_sizes($resourceid,true,"jpg",false);
             $availsizes = array();
@@ -96,7 +103,7 @@ else
                         $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
                         }
                     else
-                        {                    
+                        {
                         $prewidth = $size['width'];
                         $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
                         }
@@ -108,17 +115,17 @@ else
                 }
 
             if($xpath[2] == "info.json")
-				{
-				// Image information request. Only fullsize available in this initial version
-				$response["@context"] = "http://iiif.io/api/image/2/context.json";
-				$response["@id"] = $rootimageurl . $resourceid;
-                				
-				$response["height"] = $imageHeight;
-				$response["width"]  = $imageWidth;
+                {
+                // Image information request. Only fullsize available in this initial version
+                $response["@context"] = "http://iiif.io/api/image/2/context.json";
+                $response["@id"] = $rootimageurl . $resourceid;
+                                
+                $response["height"] = $imageHeight;
+                $response["width"]  = $imageWidth;
                 
                 $response["profile"] = array();
-				$response["profile"][] = "http://iiif.io/api/image/2/level0.json";
-				if($iiif_custom_sizes)
+                $response["profile"][] = "http://iiif.io/api/image/2/level0.json";
+                if($iiif_custom_sizes)
                     {
                     $response["profile"][] = array(
                         "formats" => array("jpg"),
@@ -138,44 +145,44 @@ else
                         );
                     }
 
-				$response["protocol"] = "http://iiif.io/api/image";
-				$response["sizes"] = $availsizes;
+                $response["protocol"] = "http://iiif.io/api/image";
+                $response["sizes"] = $availsizes;
                 if($preview_tiles)
                     {
                     $response["tiles"] = array();
                     $response["tiles"][] = array("height" => $preview_tile_size, "width" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
                     }
-				$iiif_headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
-				$validrequest = true;
-				}
+                $iiif_headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
+                $validrequest = true;
+                }
             elseif(!isset($xpath[3]) || !isset($xpath[4]) || !isset($xpath[5]) || !isset($xpath[5]) || $xpath[5] != "default.jpg")
-				{
-                // Not request for image infomation document and no sizes specified
-				$errors[] = "Invalid image request format.";
-				iiif_error(400,$errors);
-				}
+                {
+                // Not request for image information document and no sizes specified
+                $errors[] = "Invalid image request format.";
+                iiif_error(400,$errors);
+                }
             else
-				{
-				// Check the request parameters
-				$region = $xpath[2];
-				$size = $xpath[3];
-				$rotation = $xpath[4];
-				$formatparts = explode(".",$xpath[5]);
-				if(count($formatparts) != 2)
-					{
-					// Format. As we only support IIIF Image level 0 a value of 'jpg' is required 
-					$errors[] = "Invalid quality or format requested. Try using 'default.jpg'";
+                {
+                // Check the request parameters
+                $region = $xpath[2];
+                $size = $xpath[3];
+                $rotation = $xpath[4];
+                $formatparts = explode(".",$xpath[5]);
+                if(count($formatparts) != 2)
+                    {
+                    // Format. As we only support IIIF Image level 0 a value of 'jpg' is required 
+                    $errors[] = "Invalid quality or format requested. Try using 'default.jpg'";
                     iiif_error(400,$errors);
-					}
-				else
-					{
-					$quality = $formatparts[0];
-					$format = $formatparts[1];
-					}
+                    }
+                else
+                    {
+                    $quality = $formatparts[0];
+                    $format = $formatparts[1];
+                    }
 
                 // Process requested region
                 if(!isset($errorcode) && $region != "full" && $region != "max" && $preview_tiles)
-					{
+                    {
                     // If the request specifies a region which extends beyond the dimensions reported in the image information document,
                     // then the service should return an image cropped at the image’s edge, rather than adding empty space.
                     // If the requested region’s height or width is zero, or if the region is entirely outside the bounds
@@ -201,7 +208,7 @@ else
                             // Invalid region
                             $errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
                             iiif_error(400,$errors);
-                            }                            
+                            }
                         else
                             {
                             $tile_request = true;
@@ -213,8 +220,7 @@ else
                     // Full image requested
                     $tile_request = false;
                     }
-                
-                
+
                 // Process size
                 if(strpos($size,",") !== false)
                     {
@@ -222,11 +228,6 @@ else
                     $getdims    = explode(",",$size);
                     $getwidth   = (int)$getdims[0];
                     $getheight  = (int)$getdims[1];
-                    //    
-                    //echo ("regionx" . $regionx . "regiony" . $regiony) . "<br />";
-                    //echo ("regionw" . $regionw . "regionh" . $regionh) . "<br />";
-                    //echo("getwidth" . $getwidth . "getheight" . $getheight). "<br />";
-                    //
                     if($tile_request)
                         {
                         if(($regionx + $regionw) >= $imageWidth || ($regiony + $regionh) >= $imageHeight)
@@ -337,8 +338,7 @@ else
                             $getext = "jpg";
                             $getsize = count($availsizes) > 0 ? $availsizes[0]["id"] : "thm";
                             }
-                        }                   
-                        
+                        }
                     }
                 else
                     {
@@ -415,9 +415,7 @@ else
             }
         else
             {
-            //$errorcode=404;
             $errors[] = "Missing or invalid identifier";
-            //$errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
             iiif_error(404,$errors);
             }
         } // End of image API

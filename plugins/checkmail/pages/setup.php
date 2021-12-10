@@ -9,8 +9,8 @@ $plugin_name = 'checkmail';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['checkmail_configuration'];
-$last_checkmail=sql_value("select value from sysvars where name='last_checkmail'",""); 
-$now=sql_value("select now() value","");
+$last_checkmail = ps_value("select value from sysvars where name = 'last_checkmail'", array(), ""); 
+$now = ps_value("select now() value", array(), "");
 if (!extension_loaded("imap")){$page_intro=$lang['checkmail_install_php_imap_extension']."<br /><br />";}
 else if ($last_checkmail==""){
 	$page_intro = $lang['checkmail_cronhelp']."<br /><br />";

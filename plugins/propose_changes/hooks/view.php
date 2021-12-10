@@ -7,9 +7,9 @@ function HookPropose_changesViewAfterresourceactions()
     
 	if($edit_access)
 		{
-		$userproposals= sql_value("select count(*) value from propose_changes_data where resource='$ref'",0);
+		$userproposals= ps_value("select count(*) value from propose_changes_data where resource=?",array("i",$ref),0);
 		//print_r($userproposals);
-                if ($userproposals>0)
+        if ($userproposals>0)
 			{
 			global $baseurl, $lang;
 			?>
@@ -19,30 +19,26 @@ function HookPropose_changesViewAfterresourceactions()
 		}
 	else
 		{
-                $proposeallowed="";
+        $proposeallowed="";
 		if(!$propose_changes_always_allow)
 			{
 			# Check user has permission.
 			if($propose_changes_allow_open && $access==0)
-                            {
-                            $proposeallowed=$ref;
-                            }
-                        else
-                            {
-                            $proposeallowed=sql_value("select cr.resource value 
-                                from user_collection uc 
-                                left join collection_resource cr
-                                on uc.collection=cr.collection
-                                left join collection c
-                                on c.ref=uc.collection 
-                                where
-                                uc.user='$userref' and 
-                                cr.resource='$ref'and 
-                                c.propose_changes=1
-                                ",""
-                                );
-                            }                        
-                        }
+				{
+				$proposeallowed=$ref;
+				}
+			else
+				{
+				$parameters=array("i",$userref, "i",$ref);
+				$proposeallowed=ps_value("SELECT cr.resource value 
+					from user_collection uc 
+					left join collection_resource cr
+					on uc.collection=cr.collection
+					left join collection c
+					on c.ref=uc.collection 
+					where uc.user=? and cr.resource=? and c.propose_changes=1",$parameters,"");
+				}                        
+			}
 
 		if($propose_changes_always_allow || $proposeallowed!="")    
 			{

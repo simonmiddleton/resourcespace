@@ -425,6 +425,29 @@ else { ?>
 			jQuery('#CentralSpace').trigger('prepareDragDrop');
 			CheckHideCollectionBar();
 		});
+
+        jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).addClass("Selected");
+                    jQuery("#check" + resource).prop('checked','checked');
+                });
+        
+            UpdateSelColSearchFilterBar();
+            CentralSpaceHideLoading();
+        });
+
+        jQuery('#CentralSpace').on('resourcesremovedfromcollection', function(response,resource_list) {
+            resource_list.forEach(function (resource)
+                {
+                    jQuery("#ResourceShell" + resource).removeClass("Selected");
+                    jQuery("#check" + resource).prop('checked','');
+                });
+            
+            CentralSpaceHideLoading();
+            UpdateSelColSearchFilterBar();
+        });
+
 	</script>
 	<!-- End of Drag and Drop -->
 	<style>
@@ -725,7 +748,9 @@ if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3) && $
 		}
 	}
 ?><div>
-
+<script>
+    var collection_resources = <?php echo json_encode(array_column($result,'ref'));?>; 
+</script>
 <div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
 
 hook('before_collectionmenu');
@@ -871,11 +896,11 @@ else if ($basket)
         include "search_views/resource_tools.php";  
             
 		} # End of remove link condition 
-		?>
+        ?>
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook
@@ -1071,7 +1096,7 @@ else
         hook("beforecollectiontoolscolumn");
 
         $resources_count = $count_result;
-        render_actions($cinfo, false,true,'',$result);
+        render_actions($cinfo, false,!hook('renderactionsononeline', 'collections'),'',$result);
 
         hook("aftercollectionsrenderactions");
         ?>
@@ -1240,7 +1265,7 @@ else
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook

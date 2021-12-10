@@ -69,8 +69,11 @@ if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/set
 include (dirname(__FILE__)."/config.php");
 $track_vars_after_config = get_defined_vars();
 
-error_reporting($config_error_reporting);
+// Set exception_ignore_args so that if $log_error_messages_url is set it receives all the necessary 
+// information to perform troubleshooting
+ini_set("zend.exception_ignore_args","Off");
 
+error_reporting($config_error_reporting);
 
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
@@ -122,19 +125,16 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 
         if (!curl_errno($ch))
             {
-			# Fetch remote config was a success.
-			# Validate the return to make sure it's an expected config file
-			# The last 33 characters must be a hash and the sign of the previous characters.
-			$sign=substr($r,-32); # Last 32 characters is a signature
-			$r=substr($r,0,strlen($r)-33);
+            # Fetch remote config was a success.
+            # Validate the return to make sure it's an expected config file
+            # The last 33 characters must be a hash and the sign of the previous characters.
+            $sign=substr($r,-32); # Last 32 characters is a signature
+            $r=substr($r,0,strlen($r)-33);
 
             if ($sign == md5($remote_config_key . $r))
                 {
-                if(validate_remote_code($r))
-                    {
-                    $remote_config = $r;
-                    set_sysvar($remote_config_sysvar, $remote_config);
-                    }
+                $remote_config = $r;
+                set_sysvar($remote_config_sysvar, $remote_config);
                 }
             else
                 {
@@ -226,16 +226,29 @@ if ($use_plugins_manager)
         {
         if ($plugin_name!='')
             {
-            if (sql_value("SELECT inst_version AS value FROM plugins WHERE name='$plugin_name'",'',"plugins")=='')
+            if (ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins")=='')
                 {
                 # Installed plugin isn't marked as installed in the DB.  Update it now.
                 # Check if there's a plugin.yaml file to get version and author info.
                 $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
                 $p_y = get_plugin_yaml($plugin_yaml_path, false);
                 # Write what information we have to the plugin DB.
-                sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) ".
-                        "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
-                        "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}','{$p_y['title']}','{$p_y['icon']}')");
+                ps_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                    ,array
+                        (
+                        "s",$p_y['version'],
+                        "s",$p_y['author'],
+                        "s",$p_y['desc'],
+                        "s",$plugin_name,
+                        "s",$p_y['info_url'],
+                        "s",$p_y['update_url'],
+                        "s",$p_y['config_url'],
+                        "s",$p_y['default_priority'],
+                        "s",$p_y['disable_group_select'],
+                        "s",$p_y['title'],
+                        "s",$p_y['icon']
+                        )
+                    );
                 clear_query_cache("plugins");
                 }
             }
@@ -409,33 +422,32 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 // Facial recognition setup
 if($facial_recognition)
     {
-    include __DIR__ . '/facial_recognition_functions.php';
+    include_once __DIR__ . '/facial_recognition_functions.php';
     $facial_recognition = initFacialRecognition();
     }
 
 # Pre-load all text for this page.
-$pagefilter="AND (page = '" . $pagename . "' OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
-if ($pagename=="admin_content") {$pagefilter="";} # Special case for the team content manager. Pull in all content from all pages so it's all overridden.
-
 $site_text=array();
-$results=sql_query("select language,name,text from site_text where (page='$pagename' or page='all' or page='') and (specific_to_group is null or specific_to_group=0)","sitetext");
+$results=ps_query("select language,name,text from site_text where (page=? or page='all' or page='') and (specific_to_group is null or specific_to_group=0)",array("s",$pagename),"sitetext");
 for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];}
 
-$query = sprintf('
-		SELECT `name`,
+$query = " SELECT `name`,
 		       `text`,
 		       `page`,
 		       `language`, specific_to_group 
 		  FROM site_text
-		 WHERE (`language` = "%s" OR `language` = "%s")
-		   %s  #pagefilter
-		   AND (specific_to_group IS NULL OR specific_to_group = 0);
-	',
-	escape_check($language),
-	escape_check($defaultlanguage),
-	$pagefilter
-);
-$results=sql_query($query,"sitetext");
+		 WHERE (`language` = ? OR `language` = ?)
+		   AND (specific_to_group IS NULL OR specific_to_group = 0)
+	";
+$parameters=array("s",$language,"s",$defaultlanguage);
+
+if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
+    {
+    $query.="AND (page = ? OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
+    $parameters[]="s";$parameters[]=$pagename;
+    }
+
+$results=ps_query($query,$parameters,"sitetext");
 
 // Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
 $customsitetext=array();
@@ -472,7 +484,7 @@ $headerinsert="";
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
 # Needs to be actioned before the 'initialise' hook or plugins can't use get_sysvar()
-$systemvars = sql_query("SELECT name, value FROM sysvars");
+$systemvars = ps_query("SELECT name, value FROM sysvars",array());
 $sysvars = array();
 foreach($systemvars as $systemvar)
     {

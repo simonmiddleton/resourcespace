@@ -15,7 +15,7 @@ $requesteduser = getval('actasuser',0, true);
 $actasuser = $requesteduser === $userref ? $userref : $requesteduser;
 
 // Filter by a particular table and its reference
-$table = getval('table', '');
+$table = getvalescaped('table', '');
 $table_reference = getval('table_reference', 0, true);
 $tables_data = array(
     'resource_type_field' => array(
@@ -104,7 +104,6 @@ $jumpcount = 0;
 
 include "../../include/header.php";
 ?>
-
 <script>
 jQuery(document).ready(function()
     {
@@ -139,7 +138,16 @@ if($table != '' && $table_reference > 0 && array_key_exists($table, $tables_data
         }
     }
 
-if (strpos($backurl, "pages/team/team_user.php") !== false)
+
+// Breadcrumbs
+if(strpos($backurl, 'pages/admin/admin_resource_type_fields.php') !== false)
+    {
+    $links_trail = [
+        ['title' => $lang["systemsetup"], 'href' => "{$baseurl_short}pages/admin/admin_home.php"],
+        ['title' => $lang["admin_resource_type_fields"], 'href' => $backurl],
+    ];
+    }
+else if (strpos($backurl, "pages/team/team_user.php") !== false)
     {
     // Arrived from Manage users page
     $links_trail = array(
@@ -171,18 +179,20 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
         )
     );
     }
-
 $links_trail[] = array(
     'title' => htmlspecialchars($title),
     'href'  => ""
 );
-
 renderBreadcrumbs($links_trail);
 ?>
     <h1>
         <form class="ResultsFilterTopRight" method="get">
             <input type="hidden" name="actasuser" value="<?php echo $actasuser; ?>">
             <input type="hidden" name="backurl" value="<?php echo $backurl; ?>">
+            <input type="hidden" name="table" value="<?php echo $table; ?>">
+            <input type="hidden" name="table_reference" value="<?php echo $table_reference; ?>">
+            <input type="hidden" name="logyear" value="<?php echo $logyear; ?>">
+            <input type="hidden" name="logmonth" value="<?php echo $logmonth; ?>">
             <input type="text" name="log_search" placeholder="<?php echo htmlspecialchars($log_search); ?>">
             <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
         <?php
@@ -238,7 +248,7 @@ $select_table_url = generateURL(
         </select>    
     </div>   
     <?php
-    if($table == "")
+    if($table_reference == "")
         {
         ?>
         <select class="SplitSearch" name="table">
@@ -262,17 +272,34 @@ $select_table_url = generateURL(
                 }
                 ?>
         </select>
+
         <?php
         }
+    else
+        {
         ?>
+        <input type="hidden" name="table" value="<?php echo $table;?>">
+        <?php
+        }
+
+    if ($table_reference != '')
+        {
+        ?>
+        <input type="hidden" name="table_reference" value="<?php echo $table_reference;?>">
+        <?php
+        }
+    
+    if ($log_search != '')
+        {
+        ?>
+        <input type="hidden" name="log_search" value="<?php echo $log_search;?>">
+        <?php
+        }
+    ?>
 
 <input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('TableFilterForm'));">
-<div class="clearerleft"></>
-</div>
-
+<div class="clearerleft"></div>
 </form>
-
-
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">&nbsp;</div>
        
@@ -313,7 +340,8 @@ $select_table_url = generateURL(
             <?php
             $original_permitted_html_tags = $permitted_html_tags;
             $permitted_html_tags = array("html", "body");
-            foreach(get_activity_log($log_search, $offset, $per_page, $log_tables_where_statements, $table, $table_reference) as $record)
+            $activity_log_records = get_activity_log($log_search, $offset, $per_page, $log_tables_where_statements, $table, $table_reference);
+            foreach($activity_log_records as $record)
                 {
                 ?>
                 <tr>

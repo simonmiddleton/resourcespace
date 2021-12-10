@@ -10,7 +10,7 @@ if (!defined('PHP_VERSION_ID'))
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
     }
-define('PHP_VERSION_SUPPORTED', 70000); // 7.0 is the minimum supported.
+define('PHP_VERSION_SUPPORTED', 70205); // 7.2.5 is the minimum supported, a requirement for Uppy.
 
 // ------------------------- FIELD TYPES -------------------------
 
@@ -369,7 +369,12 @@ define("RESOURCE_ACCESS_RESTRICTED", 1); # 1 = Restricted Access (download only 
 define("RESOURCE_ACCESS_CONFIDENTIAL", 2); # Confidential (no access)
 define("RESOURCE_ACCESS_CUSTOM_GROUP", 3); # custom group access
 define("RESOURCE_ACCESS_INVALID_REQUEST", 99); # invalid resource request eg. invalid resource ref
-
+const RESOURCE_ACCESS_TYPES = [
+    RESOURCE_ACCESS_FULL,
+    RESOURCE_ACCESS_RESTRICTED,
+    RESOURCE_ACCESS_CONFIDENTIAL,
+    RESOURCE_ACCESS_CUSTOM_GROUP,
+];
 
 // ----------------------------------------------
 // MESSAGES

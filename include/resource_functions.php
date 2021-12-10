@@ -742,8 +742,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                         
 						$newval = $rangestart . $range_separator . $rangeend;
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
+						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
+						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
 						}
 					else
 						{
@@ -776,7 +776,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							$newval.= ($newval!=""?$range_separator:"") . $val;
 							if($val!=="")
 								{
-								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
+								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
 								}
 							}
                         }
@@ -1463,8 +1463,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                     
                     $newval = $rangestart . $range_separator . $rangeend;
-                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null,true);
-                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null,true);
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
+                    $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
                     }
                 else
                     {
@@ -1496,7 +1496,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                             }
                         $newval.= ($newval!=""?$range_separator:"") . $val;if($val!=="")
                             {
-                            $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
+                            $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
                             }
                         }
                     }
@@ -1781,12 +1781,12 @@ function save_resource_data_multi($collection,$editsearch = array())
         $related = explode(',', getvalescaped('related', ''));
 
         // Make sure all submitted values are numeric
-        $ok = array();
+        $resources_to_relate = array();
         for($n = 0; $n < count($related); $n++)
             {
             if(is_numeric(trim($related[$n])))
                 {
-                $ok[] = trim($related[$n]);
+                $resources_to_relate[] = trim($related[$n]);
                 }
             }
 
@@ -1801,10 +1801,24 @@ function save_resource_data_multi($collection,$editsearch = array())
         for($m = 0; $m < count($list); $m++)
             {
             $ref = $list[$m];
+            // Only add new relationships
+            $existing_relations = ps_array("SELECT related value FROM resource_related WHERE resource = ?", array("i", $ref));
 
-            if(0 < count($ok))
+            // Don't relate a resource to itself
+            $for_relate_sql = array();
+            $for_relate_parameters = array();
+            foreach ($resources_to_relate as $resource_to_relate)
                 {
-                sql_query("INSERT INTO resource_related(resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$ok) . ")");
+                if ($ref != $resource_to_relate && !in_array($resource_to_relate, $existing_relations))
+                    {
+                    $for_relate_sql = array_merge($for_relate_sql, array('(?, ?)'));
+                    $for_relate_parameters = array_merge($for_relate_parameters, array("i", $ref, "i", $resource_to_relate));
+                    }
+                }
+
+            if(0 < count($for_relate_sql))
+                {
+                ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",", $for_relate_sql), $for_relate_parameters);
                 $successfully_edited_resources[] = $ref;
                 }
             }
@@ -2112,7 +2126,7 @@ function add_keyword_mappings(int $ref,$string,$resource_type_field,$partial_ind
  */
 function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
-    global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
+    global $unnormalized_index,$stemming,$noadd;
     
     debug("add_keyword_to_resource: resource:" . $ref . ", keyword: " . $keyword);
     if(!$normalized)
@@ -2142,36 +2156,19 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
 
-            $stm_bind_data = array('iiii', $ref, $keyref, $position, $resource_type_field);
-            $stm_prep_values = "?,?,?,?";
-
             $sql_extra_select = "";
             $sql_extra_value = "";
             if($optional_column != '' && $optional_value != '')
                 {
                 $sql_extra_select = ", `{$optional_column}`";
                 $sql_extra_value = ", '" . escape_check($optional_value) . "'";
-
-                $stm_prep_values .= ",?";
-                $stm_bind_data[0] .= "s";
-                $stm_bind_data[] = $optional_value;
                 }
-
-            # create mapping, increase hit count.
-            if(isset($use_mysqli_prepared) && $use_mysqli_prepared)
-                {
-                sql_query_prepared("INSERT INTO `resource_keyword`(`resource`,`keyword`,`position`,`resource_type_field` {$sql_extra_select}) VALUES ($stm_prep_values)",
-                    $stm_bind_data);
-                }
-            else
-                {
-                $ref = escape_check($ref);
-                $keyref = escape_check($keyref);
-                $position = escape_check($position);
-                $resource_type_field = escape_check($resource_type_field);
-                sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
-                                VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
-                }
+            $ref = escape_check($ref);
+            $keyref = escape_check($keyref);
+            $position = escape_check($position);
+            $resource_type_field = escape_check($resource_type_field);
+            sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
+                            VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
 
             sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
             
@@ -2260,7 +2257,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                 $nodes_to_add[]   = $newnode;
                 $currentoptions[] = trim($newvalue);
 
@@ -2309,7 +2306,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                 $nodes_to_add[]   = $newnode;
                 $currentoptions[] = trim($newvalue);
 
@@ -2388,7 +2385,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
     else
         {
-        if (trim($value) == trim($existing))
+        if (trim($value) === trim($existing))
             {
             // Nothing to do
             return true;
@@ -3245,24 +3242,42 @@ function get_resource_types($types = "", $translate = true)
     {
     # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
     // support getting info for a comma-delimited list of restypes (as in a search)
+    $parameters=array();
     if ($types==""){$sql="";} else
         {
         # Ensure $types are suitably quoted and escaped
         $cleantypes="";
         $s=explode(",",$types);
+        
         foreach ($s as $type)
             {
             if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
                 {
-                if (strpos($type,"'")===false) {$type="'" . $type . "'";}
                 if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.=$type;
+                $cleantypes.="?";
+                $parameters[]="i";$parameters[]=$type;
                 }
             }
-        $sql=" where ref in ($cleantypes) ";
+        $sql=" WHERE ref IN ($cleantypes) ";
         }
     
-    $r=sql_query("select *, colour, icon from resource_type $sql order by order_by,ref","schema");
+    $r=ps_query("SELECT ref,
+                        name,
+                        allowed_extensions,
+                        order_by,
+                        config_options,
+                        tab_name,
+                        push_metadata,
+                        inherit_global_fields,
+                        colour,
+                        icon
+                   FROM resource_type
+                        $sql
+               ORDER BY order_by,
+                        ref",
+                        $parameters,
+                        "schema");
+
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -3732,7 +3747,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","", "schema"),"resourcetype-");
+	return lang_or_i18n_get_translated(ps_value("select name value from resource_type where ref=?",array("i",$type), "schema"),"resourcetype-");
 	}
 	
 function get_resource_custom_access($resource)
@@ -4091,15 +4106,19 @@ function write_metadata($path, $ref, $uniqid="")
                 $group_tag = strtolower($group_tag); # E.g. IPTC:Keywords -> iptc:keywords
                 if (strpos($group_tag,":")===false) {$tag = $group_tag;} # E.g. subject -> subject
                 else {$tag = substr($group_tag, strpos($group_tag,":")+1);} # E.g. iptc:keywords -> keywords
-                
+                if(strpos($group_tag,"-") !== false && stripos($group_tag,"xmp") !== false)
+                    {
+                    // Remove the XMP namespace for XMP data if included
+                    $group_tag = substr($group_tag,0,(strpos($group_tag,"-")));
+                    }                
                 $exifappend=false; // Need to replace values by default
                 if(isset($writtenfields[$group_tag])) 
-                        { 
-                        // This embedded field is already being updated, we need to append values from this field                          
-                        $exifappend=true;
-                        debug("write_metadata - more than one field mappped to the tag '" . $group_tag . "'. Enabling append mode for this tag. ");
-                        }
-                        
+                    { 
+                    // This embedded field is already being updated, we need to append values from this field                          
+                    $exifappend=true;
+                    debug("write_metadata - more than one field mapped to the tag '" . $group_tag . "'. Enabling append mode for this tag. ");
+                    }
+
                 switch ($tag)
                     {
                     case "filesize":
@@ -4111,29 +4130,31 @@ function write_metadata($path, $ref, $uniqid="")
                     case "directory":
                         # Do nothing, we don't want metadata to control this
                         break;
-                    case "keywords":                  
-                        # Keywords shall be written one at a time and not all together.
-						if(!isset($writtenfields["keywords"])){$writtenfields["keywords"]="";} 
-						$keywords = explode(",", $writevalue); # "keyword1,keyword2, keyword3" (with or without spaces)
-						if (implode("", $keywords) != "")
-                        	{
-                        	# Only write non-empty keywords/ may be more than one field mapped to keywords so we don't want to overwrite with blank
-	                        foreach ($keywords as $keyword)
-	                            {
-                                $keyword = trim($keyword);
-	                            if ($keyword != "")
-	                            	{
-                                    debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
-									$writtenfields[$group_tag].="," . $keyword;
-										 
-									# Convert the data to UTF-8 if not already.
-									if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, mb_detect_encoding($keyword), 'UTF-8');}
-									$command.= escapeshellarg("-" . $group_tag . "-=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " "; // In case value is already embedded, need to manually remove it to prevent duplication
-									$command.= escapeshellarg("-" . $group_tag . "+=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " ";
-									}
-	                            }
-	                        }
-                        break;
+                    case "keywords": 
+                        if(substr($group_tag,0,3) != "xmp")
+                            {
+                            # Only IPTC Keywords are a list type - these are written one at a time and not all together.
+                            if(!isset($writtenfields["keywords"])){$writtenfields["keywords"]="";} 
+                            $keywords = explode(",", $writevalue); # "keyword1,keyword2, keyword3" (with or without spaces)
+                            if (implode("", $keywords) != "")
+                                {
+                                # Only write non-empty keywords/ may be more than one field mapped to keywords so we don't want to overwrite with blank
+                                foreach ($keywords as $keyword)
+                                    { 
+                                    $keyword = trim($keyword);
+                                    if ($keyword != "")
+                                        {                                      
+                                        debug("[write_metadata()][ref={$ref}] Writing keyword '{$keyword}'");
+                                        $writtenfields["keywords"].="," . $keyword;
+                                        # Convert the data to UTF-8 if not already.
+                                        if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, mb_detect_encoding($keyword), 'UTF-8');}
+                                        $command.= escapeshellarg("-" . $group_tag . "-=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " "; // In case value is already embedded, need to manually remove it to prevent duplication
+                                        $command.= escapeshellarg("-" . $group_tag . "+=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " ";
+                                        }
+                                    }
+                                }
+                            break; // The break is in here so that Non-IPTC keywords continue to be handled by default
+                            }
                     default:
                         if($exifappend && ($writevalue=="" || ($writevalue!="" && strpos($writtenfields[$group_tag],$writevalue)!==false)))
                             {                                                            
@@ -4372,17 +4393,40 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
 	{
 	# Returns a list of alternative files for the given resource
-	if ($order_by!="" && $sort!=""){
+	if ($order_by!="" && $sort!="" 
+        && in_array(strtoupper($order_by),array("ALT_TYPE")) 
+        && in_array(strtoupper($sort),array("ASC","DESC")) )
+        {
 		$ordersort=$order_by." ".$sort.",";
-	} else {
+	    } 
+    else 
+        {
 		$ordersort="";
-	}
+	    }
+
+    # The following hook now returns a query object
     $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
     
-    # Filter by type, if provided.
-    if ($type!="") {$extrasql.= " and alt_type='" . escape_check($type) . "'";}
+    if (!$extrasql)
+        {
+        # Hook inactive, ensure we have an empty query object
+        $extrasql = new PreparedStatementQuery();
+        }
 
-	return sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='".escape_check($resource)."' $extrasql order by ".escape_check($ordersort)." name asc, file_size desc");
+    # Filter by type, if provided.
+    if ($type!="") 
+        {
+        $extrasql->sql.=" AND alt_type=?";
+        $extrasql->parameters=array_merge($extrasql->parameters,array("s",$type));
+        }
+
+    $alt_files_sql="SELECT ref,name,description,file_name,file_extension,file_size,creation_date,alt_type 
+                    FROM resource_alt_files where resource=? ". $extrasql->sql . 
+                   " order by ".$ordersort." name asc, file_size desc";
+
+    $alt_files_parameters=array_merge($extrasql->parameters,array("i",$resource));
+
+	return ps_query($alt_files_sql,$alt_files_parameters);
 	}
 
 /**
@@ -4466,6 +4510,8 @@ function delete_alternative_file($resource,$ref)
 	
 	# Update disk usage
 	update_disk_usage($resource);
+
+    return true;
 	}
 	
 function get_alternative_file($resource,$ref)
@@ -4600,7 +4646,7 @@ function process_notify_user_contributed_submitted($ref,$htmlbreak)
  */
 function notify_user_contributed_submitted($refs,$collection=0)
 	{
-	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
+	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer,$userref;
 	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
 	$htmlbreak="\r\n";
 	if ($use_phpmailer){$htmlbreak="<br /><br />";}
@@ -5566,14 +5612,17 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
+        # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
-            # Empty value. Autocomplete and set.
+            # Autocomplete and update using the returned value
             $value = eval($field['autocomplete_macro']);
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
+                # Multiple values are comma separated
                 $autovals = str_getcsv($value);
                 $autonodes = array();
+                # Establish an array of nodes from the values
                 foreach($autovals as $autoval)
                     {
                     $nodeid = get_node_id($autoval,$field['ref']);
@@ -5582,10 +5631,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                         $autonodes[] = $nodeid;
                         }
                     }
-                natsort($autonodes);
-                add_resource_nodes($resource,$autonodes,false,false);
-                log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
-                $fields_updated[$field['ref']] = implode(",",$autonodes);
+                # Add nodes if any were established
+                if (count($autonodes) > 0)
+                    {
+                    natsort($autonodes);
+                    add_resource_nodes($resource,$autonodes,false,false);
+                    log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
+                    $fields_updated[$field['ref']] = implode(",",$autonodes);
+                    }
                 }
             else
                 {
@@ -5876,169 +5929,186 @@ function notify_user_resources_approved($refs)
 			message_add($key,$notificationmessage,$notifyuser["url"]);
 			}
 		}
-	}
-	
-		
+	}		
 
+/**
+ * Get size of specified image file
+ *
+ * @param  int $ref             Resource ID
+ * @param  string $path         File path
+ * @param  string $extension    File extension
+ * @param  bool $forcefromfile  Get info from file instead of database cache
+ * 
+ * @return array|bool           Fil size info. Returns false if not available
+ */
 function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfile=false)
 	{
 	$fileinfo=array();
 	if($ref=="" || $path==""){return false;}
 	global $imagemagick_path, $imagemagick_calculate_sizes;
+
+    if(!file_exists($path))
+        {
+        return false;
+        }
+
     $file=$path;
     
     // check for valid image
-    $mime_content_type = mime_content_type($file);
+    if (function_exists('mime_content_type'))
+        {
+        $mime_content_type = mime_content_type($file);
+        }
+    else
+        {
+        $mime_content_type = get_mime_type($file);
+        }
     $is_image = strpos($mime_content_type, "image/");
     if ($is_image === false)
         {
         return false;
         }
 
-
     $ref_escaped = escape_check($ref);
-	$o_size=sql_query("select * from resource_dimensions where resource='{$ref_escaped}'");
-	if(!empty($o_size))
-		{
-		if(count($o_size)>1)
-			{
-			# delete all the records and start fresh. This is a band-aid should there be multiple records as a result of using api_search
-			sql_query("delete from resource_dimensions where resource='{$ref_escaped}'");
-			$o_size=false;
-			$forcefromfile=true;
-			}
-		else
-			{
-			$o_size=$o_size[0];
-			}
-		}
-	else
-		{
-		$o_size=false;
-		}
-		
-	if($o_size!==false && !$forcefromfile && $o_size['file_size'] > 0){
-		
-		$fileinfo[0]=$o_size['file_size'];
-		$fileinfo[1]=$o_size['width'];
-		$fileinfo[2]=$o_size['height'];
-		return $fileinfo;
-	}
+    $o_size=sql_query("SELECT * FROM resource_dimensions WHERE resource='{$ref_escaped}'");
+    if(!empty($o_size))
+        {
+        if(count($o_size)>1)
+            {
+            # delete all the records and start fresh. This is a band-aid should there be multiple records as a result of using api_search
+            sql_query("DELETE FROM resource_dimensions WHERE resource='{$ref_escaped}'");
+            $o_size=false;
+            $forcefromfile=true;
+            }
+        else
+            {
+            $o_size=$o_size[0];
+            }
+        }
+    else
+        {
+        $o_size=false;
+        }
+        
+    if($o_size!==false && !$forcefromfile && $o_size['file_size'] > 0)
+        {
+        $fileinfo[0]=$o_size['file_size'];
+        $fileinfo[1]=$o_size['width'];
+        $fileinfo[2]=$o_size['height'];
+        return $fileinfo;
+        }
 	
 	$filesize=filesize_unlimited($file);
 	
 	# imagemagick_calculate_sizes is normally turned off 
 	if (isset($imagemagick_path) && $imagemagick_calculate_sizes)
-		{
-		# Use ImageMagick to calculate the size
-		
-		$prefix = '';
-		# Camera RAW images need prefix
-		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)) { $prefix = $rawext[0] .':'; }
+        {
+        # Use ImageMagick to calculate the size		
+        $prefix = '';
+        # Camera RAW images need prefix
+        if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)) { $prefix = $rawext[0] .':'; }
 
-		# Locate imagemagick.
-		$identify_fullpath = get_utility_path("im-identify");
-		if ($identify_fullpath==false) {exit("Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");}	
-		# Get image's dimensions.
-		$identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
-		$identoutput=run_command($identcommand);
-		preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
-		@list(,$sw,$sh) = $smatches;
-		if (($sw!='') && ($sh!=''))
-			{
-			if(!$o_size)
-				{
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
-				}
-			else
-				{
-				sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
-				}
-			}
-		}	
-	else 
-		{
-		# check if this is a raw file.	
-		$rawfile = false;
-		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)){$rawfile=true;}
-			
-		# Use GD to calculate the size
-		if (!((@list($sw,$sh) = @getimagesize($file))===false)&& !$rawfile)
-			{
-			if(!$o_size)
-				{	
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
-				}
-			else
-				{
-				sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
-				}
-			}
-		else
-			{
+        # Locate imagemagick.
+        $identify_fullpath = get_utility_path("im-identify");
+        if ($identify_fullpath==false) {exit("Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");}	
+        # Get image's dimensions.
+        $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
+        $identoutput=run_command($identcommand);
+        preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
+        @list(,$sw,$sh) = $smatches;
+        if (($sw!='') && ($sh!=''))
+            {
+            if(!$o_size)
+                {
+                sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                }
+            else
+                {
+                sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
+                }
+            }
+        }	
+    else 
+        {
+        # check if this is a raw file.	
+        $rawfile = false;
+        if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)){$rawfile=true;}
+            
+        # Use GD to calculate the size
+        if (!((@list($sw,$sh) = @getimagesize($file))===false)&& !$rawfile)
+            {
+            if(!$o_size)
+                {	
+                sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                }
+            else
+                {
+                sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
+                }
+            }
+        else
+            {
 
-			# Assume size cannot be calculated.
-			$sw="?";$sh="?";
+            # Assume size cannot be calculated.
+            $sw="?";$sh="?";
 
-			global $ffmpeg_supported_extensions;
-			if (in_array(strtolower($extension), $ffmpeg_supported_extensions) && function_exists('json_decode'))
-			    {
-			    $file=get_resource_path($ref,true,"",false,$extension);
-			    $ffprobe_array=get_video_info($file);
+            global $ffmpeg_supported_extensions;
+            if (in_array(strtolower($extension), $ffmpeg_supported_extensions) && function_exists('json_decode'))
+                {
+                $file=get_resource_path($ref,true,"",false,$extension);
+                $ffprobe_array=get_video_info($file);
                 
-			    # Different versions of ffprobe store the dimensions in different parts of the json output. Test both.
-			    if (!empty($ffprobe_array['width'] )) { $sw = intval($ffprobe_array['width']);  }
-			    if (!empty($ffprobe_array['height'])) { $sh = intval($ffprobe_array['height']); }
-			    if (isset($ffprobe_array['streams']) && is_array($ffprobe_array['streams']))
-					{
-					foreach( $ffprobe_array['streams'] as $stream )
-						{
-						if (!empty($stream['codec_type']) && $stream['codec_type'] === 'video')
-							{
-							$sw = intval($stream['width']);
-							$sh = intval($stream['height']);
-							break;
-							}
-						}
-					}
-				}
+                # Different versions of ffprobe store the dimensions in different parts of the json output. Test both.
+                if (!empty($ffprobe_array['width'] )) { $sw = intval($ffprobe_array['width']);  }
+                if (!empty($ffprobe_array['height'])) { $sh = intval($ffprobe_array['height']); }
+                if (isset($ffprobe_array['streams']) && is_array($ffprobe_array['streams']))
+                    {
+                    foreach( $ffprobe_array['streams'] as $stream )
+                        {
+                        if (!empty($stream['codec_type']) && $stream['codec_type'] === 'video')
+                            {
+                            $sw = intval($stream['width']);
+                            $sh = intval($stream['height']);
+                            break;
+                            }
+                        }
+                    }
+                }
 
-			if ($sw!=='?' && $sh!=='?')
-			    {
-			    # Size could be calculated after all
-			    if(!$o_size)
-					{
-					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
-					}
-				else
-					{
-					sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
-					}
-			    }
-			else
+            if ($sw!=='?' && $sh!=='?')
+                {
+                # Size could be calculated after all
+                if(!$o_size)
+                    {
+                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                    }
+                else
+                    {
+                    sql_query("UPDATE resource_dimensions SET width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    }
+                }
+            else
 			    {
 
 			    # Size cannot be calculated.
-			    $sw="?";$sh="?";
-				if(!$o_size)
-					{
-					# Insert a dummy row to prevent recalculation on every view.
-					sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}','0', '0', '" . escape_check((int)$filesize) . "')");
-					}
-				else
-					{
-					sql_query("update resource_dimensions set width='0', height='0', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
-					}
-				}
-			}
-		}
-		
-		
-		$fileinfo[0]=$filesize;
-		$fileinfo[1]=$sw;
-		$fileinfo[2]=$sh;
-		return $fileinfo;
-	
+                $sw="?";$sh="?";
+                if(!$o_size)
+                    {
+                    # Insert a dummy row to prevent recalculation on every view.
+                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}','0', '0', '" . escape_check((int)$filesize) . "')");
+                    }
+                else
+                    {
+                    sql_query("UPDATE resource_dimensions SET width='0', height='0', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    }
+                }
+            }
+        }		
+
+    $fileinfo[0]=$filesize;
+    $fileinfo[1]=$sw;
+    $fileinfo[2]=$sh;
+    return $fileinfo;	
 	}
         
 function generate_resource_access_key($resource,$userref,$access,$expires,$email,$group="",$sharepwd="")
@@ -8954,3 +9024,55 @@ function relate_all_resources(array $related = [])
         }
     return !$error;
     }
+
+/**
+ * Apply new order to metadata fields
+ *
+ * @param  array $neworder  Field IDs in new order
+ *
+ * @return void
+ */
+function update_resource_type_field_order($neworder)
+	{
+	global $lang;
+	if (!is_array($neworder)) {
+		exit ("Error: invalid input to update_resource_type_field_order function.");
+	}
+
+	$updatesql= "update resource_type_field set order_by=(case ref ";
+	$counter = 10;
+	foreach ($neworder as $restype){
+		$updatesql.= "when '$restype' then '$counter' ";
+		$counter = $counter + 10;
+	}
+	$updatesql.= "else order_by END)";
+	sql_query($updatesql);
+	clear_query_cache("schema");
+	log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
+	}
+	
+/**
+ * Apply a new order to resource types
+ *
+ * @param  array $neworder  Resource type IDs in new order
+ *
+ * @return void
+ */
+function update_resource_type_order($neworder)
+	{
+	global $lang;
+	if (!is_array($neworder)) {
+		exit ("Error: invalid input to update_resource_type_field_order function.");
+	}
+
+	$updatesql= "update resource_type set order_by=(case ref ";
+	$counter = 10;
+	foreach ($neworder as $restype){
+		$updatesql.= "when '$restype' then '$counter' ";
+		$counter = $counter + 10;
+	}
+	$updatesql.= "else order_by END)";
+	sql_query($updatesql);
+	clear_query_cache("schema");
+	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
+	}

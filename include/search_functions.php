@@ -2131,6 +2131,7 @@ function add_partial_index($keywords)
 
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
     {
+    global $noadd;
     # do not highlight if the field is not indexed, so it is clearer where results came from.   
     if ($keywords_index!=1)
         {
@@ -2162,6 +2163,10 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
                 {
                 // Add general keywords
                 $keyword=$s[$n];
+                if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
+                    {
+                    continue;
+                    }
                 if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
                     {
                     $keyword=GetStem($keyword);
@@ -2867,7 +2872,7 @@ function get_search_default_restypes()
 	
 function get_selectedtypes()
     {
-    global $search_includes_resources;
+    global $search_includes_resources, $default_advanced_search_mode;
 
 	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
 	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
@@ -2888,7 +2893,7 @@ function get_selectedtypes()
         {
         if (isset($default_advanced_search_mode)) 
             {
-            $selectedtypes = explode(',',$default_advanced_search_mode);
+            $selectedtypes = explode(',',trim($default_advanced_search_mode, ' ,'));
             }
         else
             {
@@ -2912,28 +2917,17 @@ function get_selectedtypes()
 
 function render_advanced_search_buttons() 
     {
-    global $lang, $swap_clear_and_search_buttons, $baseurl_short;
- 
-    $button_search = "<input name=\"dosearch\" class=\"dosearch\" type=\"submit\" value=\"" . $lang["action-viewmatchingresults"] . "\" />";
-    $button_reset = "<input name=\"resetform\" class=\"resetform\" type=\"submit\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "')\" value=\"". $lang["clearbutton"] . "\" />";
-        
-    $html= '
-            <div class="QuestionSubmit QuestionSticky">
-            <label for="buttons"> </label>
-            {button1}
-            &nbsp;
-            {button2}
-            </div>';
-        
-    if ($swap_clear_and_search_buttons)
-            {
-            $content_replace = array("{button1}" => $button_search, "{button2}" => $button_reset);
-            } else 
-            {	
-            $content_replace = array("{button1}" => $button_reset, "{button2}" => $button_search);
-            }
-        
-    echo strtr($html, $content_replace);
+    global $lang, $baseurl_short;
+    ?>
+
+    <div class="QuestionSubmit QuestionSticky">
+        <label for="buttons"> </label>
+        <input name="resetform" class="resetform" type="submit" onClick="unsetCookie('search_form_submit','<?php echo $baseurl_short; ?>')" value="<?php echo $lang["clearbutton"]; ?>" />
+        &nbsp;
+        <input name="dosearch" class="dosearch" type="submit" value="<?php echo $lang["action-viewmatchingresults"]; ?>" />
+    </div>
+    
+    <?php
     }
     
 /**

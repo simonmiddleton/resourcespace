@@ -8,12 +8,12 @@ $ref=getvalescaped("ref","");
 if($ref!=''){
 	$path=get_resource_path($ref,false,"thm",false);
 	
-	$title=sql_value("select value from resource_data where resource_type_field=$view_title_field and resource=$ref","");
+	$title=ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$view_title_field,"i",$ref), "");
 	$title=i18n_get_translated($title);
 	
-	$description=sql_value("select value from resource_data where resource_type_field=$flickr_caption_field and resource=$ref","");
-	$keywords=sql_value("select value from resource_data where resource_type_field=$flickr_keywords_field and resource=$ref","");
-	$photoid=sql_value("select flickr_photo_id value from resource where ref=$ref","");
+	$description=ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_caption_field,"i",$ref), "");
+	$keywords=ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_keywords_field,"i",$ref), "");
+	$photoid=ps_value("select flickr_photo_id value from resource where ref = ?", array("i",$ref), "");
 	
 	$results=array($path,$title,$description,$keywords,$photoid);
 	echo json_encode($results);

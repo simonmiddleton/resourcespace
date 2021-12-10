@@ -26,6 +26,7 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
         }
     }
 
+$noauth_page = ($pagename == "login");
 	
 ?><!DOCTYPE html>
 <html lang="<?php echo $language ?>">	
@@ -250,7 +251,7 @@ $extrafooterhtml="";
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Override stylesheet -->
-<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo htmlspecialchars($k); ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo htmlspecialchars($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
@@ -516,7 +517,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo $lang['myaccount']; ?>" title="<?php echo $lang['myaccount']; ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {
@@ -558,15 +559,17 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
-                    <?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
+                    <?php 
+                        if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
-                            $pending=sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0);
-                            if ($pending>0)
-                                {
-                                ?><span class="Pill"><?php echo $pending ?></span><?php
-                                }
+                            $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
+                            ?><span id="TeamMessages" class="Pill" <?php echo $pending>0?'data-value="'.$pending.'"':'style="display:none"'?>><?php echo $pending>0?$pending:'' ?></span><?php
+                            }
+                        else
+                            {
+                            ?><span id="TeamMessages" class="Pill" style="display:none"></span><?php
                             }
                         ?>
                     </li><?php

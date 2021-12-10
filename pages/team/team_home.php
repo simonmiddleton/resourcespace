@@ -135,8 +135,10 @@ include "../../include/header.php";
     <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
 
    	<?php hook("customteamfunction")?>
-
+	
 	<?php
+	# Get failed job count
+	$pending = count(job_queue_get_jobs("",STATUS_ERROR, 0));
 	# Include a link to the System Setup area for those with the appropriate permissions.
 	if (checkperm("a")) { ?>
 
@@ -154,7 +156,9 @@ include "../../include/header.php";
 	  <?php
 	  }
 	?>
-	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a></li>
+	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a>
+	<br><span class="Pill <?php echo ($pending == 0)? 'DisplayNone' : '' ?>"><?php echo $pending;?></span>
+	</li>
 	<?php hook("customteamfunctionadmin")?>
 	<?php } ?>
 

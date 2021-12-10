@@ -2013,13 +2013,8 @@ function get_temp_dir($asUrl = false,$uniqid="")
     
     if ($uniqid!="")
         {
-        //restrict to forward-only movements
-        $path_components = explode('/',$uniqid);
-        $path_components_filtered = array_filter($path_components, function($p) {return $p != '..';});
-        $uniqid = implode('/',$path_components_filtered);
-
-        $result.="/$uniqid";
-
+        $uniqid = md5($uniqid);
+        $result .= "/$uniqid";
         if(!is_dir($result))
             {
             mkdir($result, 0777, true);
@@ -4692,14 +4687,14 @@ function get_system_status()
         }
 
 
-    // Check that the cron process executed within the last 5 days* (FAIL)
+    // Check that the cron process executed within the last day (FAIL)
     $last_cron = strtotime(get_sysvar('last_cron', ''));
     $diff_days = (time() - $last_cron) / (60 * 60 * 24);
-    if($diff_days > 5)
+    if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
             'status' => 'FAIL',
-            'info' => 'Cron was executed ' . round($diff_days, 0) . ' days ago.',
+            'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
 
         return $return;
@@ -4823,14 +4818,24 @@ function get_system_status()
         'info' => implode(', ', array_column(get_active_plugins(), 'name')),
     ];
 
-
     // Return active user count (last 7 days)
     $return['results']['recent_user_count'] = [
         'status' => 'OK',
         'info' => get_recent_users(7)
     ];
 
-
+    // Check if plugins have any warnings
+    $extra_warn_checks = hook('extra_warn_checks');
+    if($extra_warn_checks !== false && is_array($extra_warn_checks) )
+        {
+        foreach ($extra_warn_checks as $extra_warn_check)
+            {
+            $return['results'][$extra_warn_check['name']] = [
+                'status' => 'WARN',
+                'info' => $extra_warn_check['info'],
+                ];
+            }
+        }
 
     if($warn_tests > 0)
         {

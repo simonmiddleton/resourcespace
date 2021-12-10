@@ -63,10 +63,6 @@ $mysql_bin_path = '/usr/bin';
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared = false;
-
 # Enable establishing secure connections using SSL
 # Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
 $use_mysqli_ssl = false;
@@ -214,6 +210,9 @@ $home_colour_style_override='';
 $collection_bar_background_override='';
 $collection_bar_foreground_override='';
 
+# Used for changing colour of default blue buttons
+$button_colour_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
@@ -306,7 +305,7 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank');
+$tile_styles['conf']  = array('blank', 'analytics');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
@@ -775,12 +774,6 @@ $list_display_array=array(15,30,60);
 # How many results per page? (default)
 $default_perpage_list=15;
 
-
-# Group based upload folders? (separate local upload folders for each group)
-$groupuploadfolders=false;
-# Username based upload folders? (separate local upload folders for each user based on username)
-$useruploadfolders=false;
-
 # Enable order by rating? (require rating field updating to rating column)
 $orderbyrating=false;
 
@@ -977,11 +970,11 @@ $contact_sheet_link_on_collection_bar = true;
 # e.g.
 # <option value="216x343">Foolscap</option>
 $papersize_select = '
-<option value="a4">A4 - 210mm x 297mm</option>
-<option value="a3">A3 - 297mm x 420mm</option>
-<option value="letter">US Letter - 8.5" x 11"</option>
-<option value="legal">US Legal - 8.5" x 14"</option>
-<option value="tabloid">US Tabloid - 11" x 17"</option>';
+<option value="A4">A4 - 210mm x 297mm</option>
+<option value="A3">A3 - 297mm x 420mm</option>
+<option value="LETTER">US Letter - 8.5" x 11"</option>
+<option value="LEGAL">US Legal - 8.5" x 14"</option>
+<option value="TABLOID">US Tabloid - 11" x 17"</option>';
 
 #Optional array to set customised title and margins for named templates
 # e.g.
@@ -1294,6 +1287,11 @@ $date_d_m_y=true;
 
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
+
+# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
+# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
+# easily faked.
+$ip_forwarded_for=false;
 
 # When extracting text from documents (e.g. HTML, DOC, TXT, PDF) which field is used for the actual content?
 # Comment out the line to prevent extraction of text content
@@ -1688,6 +1686,9 @@ $no_preview_extensions=array("icm","icc");
 # If this is not set and the script is executed notifications will be sent to resource admins, or users in groups specified in $email_notify_usergroups 
 # $expiry_notification_mail="myaddress@mydomain.example";
 
+// Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
+// $notify_on_resource_expiry_days = 1;
+
 # What is the default display mode for search results? (smallthumbs/thumbs/list)
 $default_display="thumbs";
 
@@ -1741,9 +1742,6 @@ $featured_collections_root_collection = 0;
 
 # Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
 $themes_category_navigate_levels=false;
-# If a theme header contains a single collection, allow the title to be a direct link to the collection.
-# Drilling down is still possible via the >Expand tool, which replaces >Select when a deeper level exists
-$themes_single_collection_shortcut=false;
 
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;
@@ -2371,6 +2369,9 @@ $camera_autorotation = false;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 
+// Default for upload rotation. Will be overridden by user preference.
+$camera_autorotation_checked = true;
+
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
 # Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
@@ -2558,9 +2559,6 @@ $hide_resource_share_link=false; // Configurable option to hide the "Share" link
 
 # Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
 $user_resources_approved_email=false; 
-
-# Set to true to move the Search button before the Clear button
-$swap_clear_and_search_buttons=false;
 
 # Option to have default date left blank, instead of current date.
 $blank_date_upload_template=false;
@@ -2940,6 +2938,9 @@ $resource_type_extension_mapping         = array(
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
 
+// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
+$view_in_browser_extensions=array("pdf","mp3","svg");
+
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
@@ -3088,7 +3089,7 @@ $CORS_whitelist = array();
 
 
 /* Font selection */
-$global_font="WorkSans";
+$global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;

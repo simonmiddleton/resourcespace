@@ -40,7 +40,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 	}
 	if($flickr_nice_progress_previews){
 		// get max dimensions of thm
-		$max_size=sql_query("select width,height from preview_size where id='thm'");
+		$max_size=ps_query("select width, height from preview_size where id = 'thm'", array());
 		$width=$max_size[0]['width'];
 		$height=$max_size[0]['height'];
 		// show previews of file being processed

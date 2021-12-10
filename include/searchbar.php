@@ -225,9 +225,9 @@ var categoryTreeChecksArray = [];
     if(!hook("replacesearchbox") && !$header_search)
         {
         ?>
-        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>" placeholder="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>" placeholder="<?php echo htmlspecialchars($lang["searchbutton"]); ?>" alt="<?php echo htmlspecialchars($lang["simplesearch"]); ?>">
         <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo $ssearchhiddenfields; ?>">
-        <button class="fas fa-search fa-flip-horizontal search-icon" type="submit"></button>
+        <button class="fas fa-search fa-flip-horizontal search-icon" type="submit" alt="<?php echo htmlspecialchars($lang['searchbutton']); ?>" title="<?php echo htmlspecialchars($lang['searchbutton']); ?>"></button>
         <script>
         <?php
         $autocomplete_src = '';
@@ -248,6 +248,7 @@ var categoryTreeChecksArray = [];
                 'forceLowercase': false,
                 'autocomplete': {
                     'source': '<?php echo $autocomplete_src; ?>',
+                    'minLength:': 3,
                 },
                 onChange: function(field, editor, tags)
                     {
@@ -312,10 +313,19 @@ var categoryTreeChecksArray = [];
             {
             ?>
             jQuery(document).ready(function () {
-                jQuery('#ssearchbox').autocomplete({source: "<?php echo $autocomplete_src; ?>"});
+                jQuery('#ssearchbox').autocomplete({
+                    source: "<?php echo $autocomplete_src; ?>",
+                    minLength: 3,
+                    });
                 
-                // Ensure any previously hidden searchfields remain hidden
-                SimpleSearchFieldsHideOrShow();
+                <?php
+                if(!$basic_simple_search)
+                    {
+                    ?>
+                   // Ensure any previously hidden searchfields remain hidden
+                   SimpleSearchFieldsHideOrShow();
+                   <?php
+                    }?>
                 
             });
             <?php
@@ -934,10 +944,6 @@ elseif($restypes=='')
     <?php } ?>
 
 <?php hook("searchbarbottomtoolbar"); ?>
-
-<?php if ($swap_clear_and_search_buttons){?>
-<script type="text/javascript">jQuery("#clearbutton").before(jQuery("#searchbutton"));</script>
-<?php } ?>
 
 </div>
 <?php

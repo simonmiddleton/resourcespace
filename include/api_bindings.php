@@ -110,7 +110,6 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
-    
     if (!is_int($ref))
         {
         return false;
@@ -119,8 +118,14 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
+        $tmp_dld_fpath = temp_local_download_remote_file($url);
+        if($tmp_dld_fpath === false)
+            {
+            return "FAILED: Resource #{$ref} was created, but the file was not uploaded. Enable debug log and try again to identify why uploading it failed.";
+            }
+
         #Check for duplicates if required
-        $duplicates=check_duplicate_checksum($url,false);
+        $duplicates=check_duplicate_checksum($tmp_dld_fpath,false);
         if (count($duplicates)>0)
             {
             $duplicates_string=implode(",",$duplicates);
@@ -128,7 +133,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
             }   
         else 
             {
-            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
             if ($return===false) {return false;}
             } 
         }
@@ -186,7 +191,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
     if(!is_numeric($field))
         {
         // Name may have been passed    
-        $field = sql_value("select ref value from resource_type_field where name='" . escape_check($field) . "'","", "schema");
+        $field = ps_value("select ref value from resource_type_field where name= ?", ['s',$field],"", "schema");
         }
         
     if(!$editaccess || !metadata_field_edit_access($field))
@@ -286,7 +291,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     if(!in_array($newvalue, $currentoptions) && $newvalue != '')
                         {
                         # Append the option and update the field
-                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
                         $nodes_to_add[]   = $newnode;
                         $currentoptions[] = trim($newvalue);
                         $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue)); 
@@ -357,7 +362,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
                     }	
 
-                sql_query("UPDATE resource SET field".$field."='" . $truncated_value . "' WHERE ref='" . escape_check($resource) . "'");
+                ps_query("UPDATE resource SET field".$field."= ? WHERE ref= ?", ['s', $truncated_value, 'i', $resource]);
                 }
             }
 
@@ -502,7 +507,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
     $resource = escape_check($resource);
 
-    sql_query("UPDATE resource_alt_files SET file_size='{$file_size}', creation_date = NOW() WHERE resource = '{$resource}' AND ref = '{$alternative_ref}'");
+    ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
 
     global $alternative_file_previews_batch;
     if($alternative_file_previews_batch)
@@ -573,8 +578,14 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
-    
-    $duplicates=check_duplicate_checksum($url,false);
+
+    $tmp_dld_fpath = temp_local_download_remote_file($url);
+    if($tmp_dld_fpath === false)
+        {
+        return "FAILED: The file for resource #{$ref} was not uploaded. Enable debug log and try again to identify why uploading it failed.";
+        }
+
+    $duplicates=check_duplicate_checksum($tmp_dld_fpath,false);
     if (count($duplicates)>0)
         {
         $duplicates_string=implode(",",$duplicates);
@@ -582,7 +593,7 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
         }   
     else 
         {
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
         if ($return===false) {return false;}
         } 
 
@@ -608,7 +619,7 @@ function api_get_field_options($ref, $nodeinfo = false)
     if(!is_numeric($ref))
         {
         // Name may have been passed    
-        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","", "schema");
+        $ref = ps_value("select ref value from resource_type_field where name= ?", ['i',$ref], "", "schema");
         }
         
     if(!metadata_field_view_access($ref))
@@ -627,14 +638,44 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection)
+function api_add_resource_to_collection($resource,$collection='')
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return add_resource_to_collection($resource,$collection);
     }
     
-function api_remove_resource_from_collection($resource,$collection)
+function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
     {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_add_resources($collection,$resources,$search,$selected);
+    }
+
+function api_remove_resource_from_collection($resource,$collection='')
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
     return remove_resource_from_collection($resource,$collection);                  
+    }
+
+function api_collection_remove_resources($collection='',$resources='',$removeall = false,$selected=false)
+    {
+    global $usercollection;
+    if($collection=='')
+        {
+        $collection = $usercollection;
+        }
+    return collection_remove_resources($collection,$resources,$removeall,$selected);
     }
     
 function api_create_collection($name,$forupload=false)
@@ -693,7 +734,7 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
         }
     if(strtoupper($ref) == 'NULL'){$ref = null;}
     if(strtoupper($parent) == 'NULL'){$parent = null;}
-    return set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting = false);  
+    return set_node($ref, $resource_type_field, $name, $parent, $order_by);  
     }
 
 function api_add_resource_nodes($resource,$nodestring)
@@ -728,7 +769,7 @@ function api_add_resource_nodes($resource,$nodestring)
     foreach ($joined_fields_to_update as $field_update)
         {
         $resource_node_data = get_data_by_field($resource, $field_update);
-        sql_query("UPDATE resource SET field".$field_update."='" . $resource_node_data . "' WHERE ref='$resource'");
+        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $resource_node_data, 'i', $resource]);
         }
     
     return true;

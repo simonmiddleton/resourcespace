@@ -6,7 +6,7 @@ if('cli' !== php_sapi_name())
 
 
 // Add a new node
-$resource_type_field = 2000;
+$resource_type_field = create_resource_type_field('nodes_testing', 1, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST, 'nodes_testing', false);
 
 $node_id_1 = set_node(null, $resource_type_field, 'New option added via test', null, null);
 $node_id_2 = set_node(null, $resource_type_field, 'Option assigned order_by', null, 40);
@@ -72,7 +72,7 @@ if(0 === $i)
     }
 
 // Creating some nodes to be used as parents or children
-$resource_type_field = 2001;
+$resource_type_field = create_resource_type_field('nodes_testing_tree', 1, FIELD_TYPE_CATEGORY_TREE, 'nodes_testing_tree', false);
 
 $parent_node_id_1 = set_node(null, $resource_type_field, 'Parent 1', null, null);
 $parent_node_id_2 = set_node(null, $resource_type_field, 'Parent 2 without children', null, null);
@@ -85,6 +85,10 @@ $child_node_id_31 = set_node(null, $resource_type_field, 'Child 3.1', $parent_no
 $child_node_id_32 = set_node(null, $resource_type_field, 'Child 3.2', $parent_node_id_3, null);
 $child_node_id_33 = set_node(null, $resource_type_field, 'Child 3.3', $parent_node_id_3, null);
 
+// Duplicate check - allow for different parents only.
+$child_node_id_34 = set_node(null, $resource_type_field, 'Child 1.1', $parent_node_id_3, null);
+$child_node_id_35 = set_node(null, $resource_type_field, 'Child 3.3', $parent_node_id_3, null);
+
 $parent_children_nodes = array(
     $parent_node_id_1,
     $parent_node_id_2,
@@ -96,6 +100,13 @@ $parent_children_nodes = array(
     $child_node_id_32,
     $child_node_id_33
 );
+
+if (in_array($child_node_id_34,$parent_children_nodes) || !in_array($child_node_id_35,$parent_children_nodes))
+    {
+    return false;
+    }
+
+$parent_children_nodes[] = $child_node_id_34;
 
 foreach(get_nodes($resource_type_field, null, true) as $nodes)
     {

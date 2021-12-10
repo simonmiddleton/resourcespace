@@ -10,7 +10,7 @@ function HookFeedbackAllToptoolbaradder()
 
 function HookFeedbackAllHeadertop()
     {
-    global $baseurl,$feedback_prompt_text,$pagename,$lang,$k;
+    global $baseurl,$pagename,$lang,$k,$feedback_prompt_text;
     $expages = array(
         "setup",
         "feedback",
@@ -24,6 +24,12 @@ function HookFeedbackAllHeadertop()
         return true;
         }
 
+    $feedback_config = get_plugin_config('feedback');
+    if(is_array($feedback_config))
+        {
+        $feedback_prompt_text = $feedback_config['prompt_text'];
+        }
+        
     if (getval("feedback_completed","")=="")
         {
         ?>

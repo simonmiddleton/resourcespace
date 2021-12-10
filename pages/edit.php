@@ -40,7 +40,7 @@ if($camera_autorotation)
 
     if($autorotate == "")
         {
-        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : $camera_autorotation_checked);
         }
     else
         {
@@ -316,12 +316,15 @@ if($ref < 0 && $resource_type_force_selection)
   $resource["resource_type"] = "";
   }
 
+// Create metadata resource record without uploading a file e.g. template, text only resource.
+$create_record_only = getval("recordonly", "") != "";
+
 // Set initial value for noupload
 $noupload = getval("noupload","") != "" || in_array($resource['resource_type'], $data_only_resource_types);
 
 # Allow to specify resource type from url for new resources
 $resource_type=getval("resource_type","");
-if ($ref<0 && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && $resource_type != "" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
+if ($ref<0 && !$create_record_only && $resource_type != "" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
     {
     update_resource_type($ref,intval($resource_type));
     $resource["resource_type"] = $resource_type;
@@ -1138,6 +1141,10 @@ if($ref < 0)
         $uploadparams["forcesingle"] = "";
         $uploadparams["noupload"] = "";
         }
+    if ($create_record_only)
+        {
+        $uploadparams["recordonly"] = "true";
+        }
     $form_action = generateURL($baseurl_short . "pages/edit.php",array_merge($urlparams,$uploadparams));
     }
 else
@@ -1283,7 +1290,7 @@ else
             }
         else
             {
-            // Defualt - batch upload
+            // Default - batch upload
             $titleh1 = $lang["addresourcebatchbrowser"];
             }?>        
         <h1><?php echo $titleh1 ?></h1>
@@ -1696,7 +1703,7 @@ if($tabs_on_edit)
     {
         sort($tab_names);
     }
-    
+
     // create new array of fields, maintaining field order, and the tab order as defined above
     $fields_tab_ordered = array();
 
@@ -1715,18 +1722,12 @@ if($tabs_on_edit)
     #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;
-  if (count($fields)>0 && ($n==0 || $fields[0]["tab_name"]!=""))
+  if (count($fields)>0)
     { 
     $extra="";
     $tabname=null;
     $tabcount=0;
     $tabtophtml="";
-    $tabs_set = false;
-
-    foreach ($fields as $field)
-        {
-        $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
-        }
 
     $fields_count = count($fields);
     for ($n=0;$n<$fields_count;$n++)
@@ -1736,14 +1737,8 @@ if($tabs_on_edit)
             {
             if ( $fields[$n]["tab_name"] !== $tabname )
                 {
-                if ($tabs_set === true)
-                    {
-                    $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
-                    }
-                else
-                    {
-                    $newtabname = "";
-                    }
+                $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+
                 if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
                 $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
                 if($tabcount==0){$tabtophtml.=" TabSelected ";}
@@ -2030,18 +2025,22 @@ else
            </label><?php
 
         # Autosave display
-          if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
+        if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
-          <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
-          if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
-          
-          $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
-          $related = get_related_resources($relatedref);
+        <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
+        if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
+        
+        if (!$editsearch)
+            {
+            $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+            $related = get_related_resources($relatedref);
 
-          echo ((getval("resetform","")!="")?"":join(", ", $related))?></textarea>
+            echo ((getval("resetform","")!="")?"":join(", ", $related));
+            }
+        ?></textarea>
 
-          <div class="clearerleft"> </div>
-          </div><?php
+        <div class="clearerleft"> </div>
+        </div><?php
        } 
     }
     
@@ -2250,16 +2249,21 @@ if ($multiple && !$disable_geocoding)
             map3.setView([geoLat, geoLong], currentZoom);
         });
     </script>
-
+    </div>
     <div class="clearerleft"> </div> <?php
     hook("locationextras");
     }
 
 if($disablenavlinks)
-        { ?>
-        <input type=hidden name="disablenav" value="true">
-        <?php
-        }
+    { ?>
+    <input type=hidden name="disablenav" value="true">
+    <?php
+    }
+
+if(is_int_loose($collection_add))
+    { 
+    echo "<input type=hidden name='collection_add' value='" . htmlspecialchars($collection_add) . "'>";
+    }
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
 
@@ -2392,13 +2396,13 @@ if ($ref>0 && !$multiple)
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
   {
-  $error_datetime = date('Y-m-d H:i:s');
+  foreach ($save_errors as &$save_error) 
+    {
+    $save_error=htmlspecialchars($save_error);
+    }
   ?>
   <script>
   preventautoscroll = true;
-  var errorHeading='<?php echo $lang["error"]; ?>';
-  
-  var errorBody='<?php echo offset_user_local_timezone($error_datetime, 'Y-m-d H:i:s')."<br />".implode("<br />",$save_errors); ?>';
   // Find the first field that triggered the error:
   var error_fields;
   error_fields = document.getElementsByClassName('FieldSaveError');
@@ -2406,7 +2410,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
     {
     error_fields[0].scrollIntoView();
     }
-  styledalert(errorHeading, errorBody, 450);
+    styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
   <?php
   }

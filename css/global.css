@@ -67,6 +67,11 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     border: none;
 }
 
+.vjs-menu-button, .vjs-menu-button-popup, .vjs-resolution-button, .vjs-button {
+    box-shadow:none;
+    margin: 0px;
+}
+
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
     background-color: #1988d7;
@@ -170,6 +175,7 @@ select::-ms-expand
 .underline{text-decoration: underline;}
 .pageline{border-bottom: 1px solid #d7d7d7;  margin-right:10px;margin-left:5px;}
 .DisplayNone { display: none !important; }
+.AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
 
 /* General Form tags */
 .checkoption {vertical-align: top;display: inline-block;width: 195px;margin: 2px; *display:inline;*zoom: 1;}
@@ -298,12 +304,12 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
-#CentralSpace {text-align:left;position:relative;}
+#CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%;}
 
-.TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;min-height: 30px;}
+.TopInpageNav {clear: left;margin-bottom:15px;margin-right: 0;position:relative;min-height: 30px;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
-.TopInpageNavLeft{float:left;}
+.TopInpageNavLeft{float:left; width: 90%;}
 .TopInpageNavRight{position:absolute;right:0;top:3px;width:max-content;text-align:right;}
 .InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 0 0;}
 .InpageNavRightBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 15px 0 0;}
@@ -347,7 +353,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0 0;}
 #CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0 0;padding: 0;}
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
-.NumberSearchWidth {width:80px;font-size: 0.9em;margin: 0 0;padding: 0;margin-bottom:3px;}
+input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 
 .CollectionPanelShell {padding:5px;float: left;margin: 0 10px 10px 0;width: 110px;text-align: left;border-radius: 4px;}
 .CollectionPanelInfo{width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -403,7 +409,8 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px;text-align:justify;text-overflow: ellipsis;}   
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0;float: left;clear: left;display:inline;}
 .ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
-.ResourcePanelSmallIcons {padding-left: 5px;}   
+.ResourcePanelSmallIcons {padding-left: 5px;}
+.ResourcePanelTop {height: 22px;} 
 .ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
@@ -446,6 +453,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     font-size: 12px;
     padding: 3px;
     margin: 1px;
+    cursor: default;
 }
 
 /*Resource Panel layout*/
@@ -590,9 +598,9 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; margin-top: 10px;padding-left: 10px;} 
-.RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0 10px 2px 0;padding: 0;}
+.RecordPanel .SearchSimilar {float: left;width: auto; margin: 0 10px 2px 0;padding: 0;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
-.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #999;}
+.RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
 .RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
@@ -764,7 +772,7 @@ div.autocomplete ul li {
 
 #overlay{position: absolute; top: 0; left: 0; z-index: 90; width: 100%; height: 500px;}
 
-.FormHelp{margin: 0 0 10px 310px;padding: 0;}
+.FormHelp{margin: 0 0 10px 310px;padding: 0; word-wrap:break-word;}
 .FormHelpInner{width:408px;padding:5px;margin:10px 0 0 0;}
 
 #ThemeBox {padding:0;margin:0;text-align:left;width: 170px;}
@@ -818,6 +826,16 @@ div.autocomplete ul li {
     background-color: #1988d7 !important;
     color: #fff;
 }
+.uppy-DashboardContent-back:hover,
+.uppy-DashboardContent-addMore:hover {
+    color: #fff;
+}
+
+.uppy-Dashboard-Item-action--remove {
+    border: unset;
+    box-shadow: unset;
+    background-color: unset;
+}
 
 .uppy-Dashboard-browse{
     font-size: 20px;
@@ -828,7 +846,7 @@ div.autocomplete ul li {
     display:none;
 }
 
-.uppy-Dashboard-Item-action--remove, .uppy-Dashboard-Item-previewInnerWrap {
+.uppy-Dashboard-Item-previewInnerWrap {
     background-color: #f2f2f2 !important;
 }
 
@@ -847,6 +865,13 @@ div.autocomplete ul li {
 
 .uppy-StatusBar {
     line-height: normal;
+}
+
+.uppy-Dashboard-Item.is-complete > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
+}
+.uppy-Dashboard-Item.is-inprogress > .uppy-Dashboard-Item-fileInfoAndButtons > .uppy-Dashboard-Item-fileInfo > .uppy-Dashboard-Item-name {
+    display:none;
 }
 
 #showlog,#hidelog
@@ -985,6 +1010,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #SearchResultFound {
     padding-top: 3px;
     min-width: 90px;
+    padding-left: 10px;
 }
 
 #contactadminbox  textarea{
@@ -1211,6 +1237,7 @@ a.HomePanel:hover {
     left: 45%;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    z-index: 102;
 }
 .trash_bin_text {
     min-width: 100%;
@@ -1447,6 +1474,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-right: 5px;    
 }
 
+.HomePanel.DashTile .HomePanelIN img:not(img:only-of-type),
 .FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; box-shadow: 0 0 25px #000; }
 
 .FeaturedSimpleTile.FullWidth { height: 40px; }
@@ -1477,6 +1505,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding: 20px 25px 5px 25px;
     border-radius: 15px;
     box-shadow: 0 1px 10px 1px rgba(0,0,0,0.25);
+    display: inline-block;
 }
 
 #login_box h1 {
@@ -1538,6 +1567,10 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 p.LoginLinks {
     line-height: 28px;
     padding-bottom: 5px;
+}
+p.ExternalLoginLinks {
+    line-height: 28px;
+    padding: 10px 0 0 0;
 }
 #login_opt_in {
     float: left;
@@ -1656,6 +1689,7 @@ form.FormFilter button.ClearButton {
 #CentralSpaceResources  
     {
     text-align:justify;
+    margin: 10px 8px 0 8px;
     }
 .ImageTools
     {
@@ -1679,6 +1713,12 @@ form.FormFilter button.ClearButton {
     margin-left:3px;
     vertical-align: text-bottom;
     max-width: 1000px;
+}
+.SearchSimilar .customFieldLabel {
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 3px;
+    vertical-align: text-bottom;
 }
 
 .keywordselected {
@@ -1765,7 +1805,7 @@ a.Enabled, a:visited.Enabled {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    margin: 1em 1em 0.8em 0;;
+    margin: 1em 1em 0.8em 0;
     padding: 8px 10px;
     background: gray;
 }
@@ -1775,6 +1815,10 @@ a.Enabled, a:visited.Enabled {
 .BreadcrumbsBox .fa {
     padding-left: 10px;
     padding-right: 3px;
+}
+
+.BreadcrumbsBox.BreadcrumbsBoxSlim {
+    margin: 1em 1em 0 0;
 }
 
 /* Colour picker */
@@ -1789,6 +1833,8 @@ a.Enabled, a:visited.Enabled {
 .lock_icon {
     float: right;
     height: 30px;
+    vertical-align: top;
+    margin: 0;
 }
 
 /* jQuery UI */
@@ -2215,7 +2261,7 @@ a.BrowseRefresh{
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
 
 /* Fixes for form checkboxes and date range fields */
-.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 200px;}
+.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 250px;}
 .BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
 .BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
 
@@ -2291,6 +2337,18 @@ input[type="text"]#iconpicker-input {
 }
 
 .iconpicker-content-icon:hover {background-color: #0000001f;}
+
+.BasicsBox.SearchSticky {
+    top: 0;
+    position: -webkit-sticky; 
+    position: sticky;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #c1c1c1;
+    box-shadow: 0 12px 10px -12px #bbbbbb;
+    z-index: 101;
+    padding-top: 15px;
+    margin-top: 0;
+}
 
 /* jQuery tagEditor */
 

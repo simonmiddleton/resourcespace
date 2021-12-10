@@ -360,6 +360,7 @@ if($create)
 
         unset($tile_style);
 
+        $srch = urldecode($srch);
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
 		
@@ -533,7 +534,7 @@ if(!$validpage)
 		?>
 		<div class="Question">
 			<label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
-			<input type="text" id="previewtext" name="freetext" value="<?php echo htmlspecialchars(ucfirst($freetext));?>"/>
+			<textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo htmlspecialchars(ucfirst($freetext));?></textarea>
 			<div class="clearerleft"></div>
 		</div>
 		<?php
@@ -777,7 +778,7 @@ if('' != $tile_type && $tile_type !== "conf")
 	function updateDashTilePreview() {
 		var prevstyle = jQuery(".tlstyle:checked").val();
 		var width = 250;
-		var height = 180;
+		var height = 160;
 		var pretitle = encodeURIComponent(jQuery("#previewtitle").val());
 		var pretxt = encodeURIComponent(jQuery("#previewtext").val());
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());

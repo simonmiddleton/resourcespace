@@ -156,7 +156,7 @@ jQuery(document).ready(function() {
         action_dates_new_state = jQuery('#action_dates_new_state').val();
         jQuery('#action_dates_new_state').prop('disabled', false);
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-        jQuery('#archivestate'+action_dates_new_state).hide();
+        jQuery('#action_dates_eligible_states > #archivestate'+action_dates_new_state).hide();
     }
 
     jQuery('#action_dates_reallydelete').on('change', function() {
@@ -172,7 +172,7 @@ jQuery(document).ready(function() {
             // New state is relevant
             action_dates_new_state = jQuery('#action_dates_new_state').val();
             jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-            jQuery('#archivestate'+action_dates_new_state).hide();
+            jQuery('#action_dates_eligible_states > #archivestate'+action_dates_new_state).hide();
             jQuery('#action_dates_new_state').prop('disabled', false).focus();
         }
 
@@ -184,7 +184,7 @@ jQuery(document).ready(function() {
         jQuery('#action_dates_eligible_states').children().show();
         // The new state is not eligible
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-        jQuery('#archivestate'+action_dates_new_state).hide();
+        jQuery('#action_dates_eligible_states> #archivestate'+action_dates_new_state).hide();
     });
 });
 

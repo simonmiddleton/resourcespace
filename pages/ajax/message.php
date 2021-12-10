@@ -123,11 +123,16 @@
             }
         if($offline_job_queue)
 			{
-            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref));
-            $failedjobcount = count($failedjobs);
-            if($failedjobcount>0)
+            $userfailedjobs = count(job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
+			$allfailedjobs  = count(job_queue_get_jobs("",STATUS_ERROR));
+			$jobcounts 		= [];
+
+			if($userfailedjobs > 0){$jobcounts['user'] = $userfailedjobs;}
+			if($allfailedjobs > 0){$jobcounts['all'] = $allfailedjobs;}
+
+			if(!empty($jobcounts))
 				{
-                $extramessage['failedjobcount'] = $failedjobcount;
+                $extramessage['failedjobcount'] = $jobcounts;
                 $extramessages = true;
 				}
             }
@@ -190,8 +195,9 @@
                         }
                     if (typeof(messages[messages.length - 1]['failedjobcount']) !== 'undefined') 
                         {
-                        failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
-                        totalcount=totalcount+failedjobcount;
+                        userfailedjobcount = parseInt(messages[messagecount]['failedjobcount']['user']);
+						totalcount         = totalcount + userfailedjobcount;
+						failedjobcount 	   = parseInt(messages[messagecount]['failedjobcount']['all']);
                         }
                     jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
                     if (activeSeconds > 0 || message_poll_first_run)
@@ -251,7 +257,13 @@
                         }
                     if (failedjobcount>0)
                         {
-                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();;
+                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();
+						let teampill = jQuery('#TeamMessages');
+						if(teampill.attr('data-value') != undefined)
+							{
+							failedjobcount = failedjobcount + teampill.attr('data-value');
+							}
+						teampill.html(failedjobcount).fadeIn();
                         }
                     else
                         {
@@ -381,7 +393,7 @@
 						jQuery( this ).dialog( "close" );
 						}}],
 			dialogClass: 'message',
-			width:'auto',
+			width: 400,
 			draggable: true,
 			open: function(event, ui) { jQuery('.ui-widget-overlay').bind('click', function(){ jQuery("#modal_dialog").dialog('close'); }); },
 			close: function( event, ui ) {

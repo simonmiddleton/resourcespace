@@ -264,17 +264,16 @@ function HookSimplesamlAllProvideusercredentials()
             $groups = $attributes[$simplesaml_group_attribute];
             }
 
-        $password_hash = rs_password_hash('RSSAML' . generateSecureKey(64) . $username);
-
         $userid = 0;
-        $currentuser = sql_query("SELECT ref, usergroup FROM user WHERE username='" . escape_check($username) . "'");
+        $update_hash = false; // Only update password hash if necessary as computationally intensive
+        $currentuser = sql_query("SELECT ref, usergroup, last_active FROM user WHERE username='" . escape_check($username) . "'");
         $legacy_username_used = false;
 
         // Attempt one more time with ".sso" suffix. Legacy way of distinguishing between SSO accounts and normal accounts
         if(is_array($currentuser) && count($currentuser) == 0)
             {
             $legacy_username_escaped = escape_check("{$username}.sso");
-            $currentuser = sql_query("SELECT ref, usergroup FROM user WHERE username = '{$legacy_username_escaped}'");
+            $currentuser = sql_query("SELECT ref, usergroup, last_active FROM user WHERE username = '{$legacy_username_escaped}'");
             $legacy_username_used = true;
             }
 
@@ -287,6 +286,13 @@ function HookSimplesamlAllProvideusercredentials()
                 $username_escaped = escape_check($username);
                 $userid_escaped = escape_check($userid);
                 sql_query("UPDATE user SET username = '{$username_escaped}' WHERE ref = '{$userid_escaped}'");
+                }
+
+            // Update hash if not logged on in last day
+            $lastactive = strtotime($currentuser[0]["last_active"]);
+            if($lastactive < date(time() - (60*60*24)))
+                {
+                $update_hash = true;
                 }
             }
 
@@ -351,6 +357,7 @@ function HookSimplesamlAllProvideusercredentials()
                     $userid = $email_matches[0]["ref"];
                     $origin = $email_matches[0]["origin"];
 					$comment = $lang["simplesaml_usermatchcomment"]; 
+                    $update_hash = true;
                     }
 				else
                     {
@@ -392,6 +399,7 @@ function HookSimplesamlAllProvideusercredentials()
                             }
                         include_once __DIR__ . '/../../../include/dash_functions.php';
                         build_usergroup_dash($group, $userid);
+                        $update_hash = true;
                         }
                     }
                 }
@@ -401,6 +409,7 @@ function HookSimplesamlAllProvideusercredentials()
                 $userid=new_user($username,$group);
                 include_once __DIR__ . '/../../../include/dash_functions.php';
                 build_usergroup_dash($group, $userid);
+                $update_hash = true;
                 }
             }
             
@@ -408,7 +417,13 @@ function HookSimplesamlAllProvideusercredentials()
 			{
 			// Update user info
 			global $simplesaml_update_group, $session_autologout;
-            $sql = "UPDATE user SET origin='simplesaml', username='" . escape_check($username) . "', password = '$password_hash', fullname='" . escape_check($displayname) . "'";
+            $hash_update = "";
+            if($update_hash)
+                {
+                $password_hash = rs_password_hash('RSSAML' . generateSecureKey(64) . $username);
+                $hash_update = "password = '$password_hash', ";
+                }
+            $sql = "UPDATE user SET origin='simplesaml', username='" . escape_check($username) . "'," . $hash_update . " fullname='" . escape_check($displayname) . "'";
             
             if(isset($email) && $email != "")
                 {
@@ -457,7 +472,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a>
+		<a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a><br/>
 		<?php
         }
 
@@ -603,6 +618,7 @@ function HookSimplesamlAllCheck_access_key()
 
 function HookSimplesamlAllExtra_fail_checks()
     {
+    // Check if incompatible with PHP version
     $simplesaml_fail = [
         'name' => 'simplesaml',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
@@ -611,7 +627,7 @@ function HookSimplesamlAllExtra_fail_checks()
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_config_check() && simplesaml_php_check();
+        $samlok = simplesaml_php_check();
         }
     catch (Exception $e)
         {
@@ -620,4 +636,26 @@ function HookSimplesamlAllExtra_fail_checks()
     unset($GLOBALS['use_error_exception']);
 
     return $samlok ? false : $simplesaml_fail;
+    }
+
+function HookSimplesamlAllExtra_warn_checks()
+    {
+    // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
+    $simplesaml_warn = [
+        'name' => 'simplesaml',
+        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+    ];
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $samlok = simplesaml_config_check();
+        }
+    catch (Exception $e)
+        {
+        return array($simplesaml_warn);
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    return $samlok ? false : array($simplesaml_warn);
     }

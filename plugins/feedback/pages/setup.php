@@ -1,73 +1,44 @@
 <?php
 include "../../../include/db.php";
+include_once "../include/feedback_functions.php";
 
 include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permission denied.");}
 
 $plugin_name = 'feedback';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
-	
-# Make a folder for this
+
+# Make a folder for storing results
 if(!is_dir($storagedir . "/feedback"))
-    {
-    // If it does not exist, create it.
-    mkdir($storagedir . "/feedback", 0777);
-    }
-
+	{
+	// If it does not exist, create it.
+	mkdir($storagedir . "/feedback", 0777);
+	}
 # Load config
-if (file_exists($storagedir . '/feedback/config.php')) {include $storagedir . '/feedback/config.php';}
-
-function file_newname($path, $filename){
-    if ($pos = strrpos($filename, '.')) {
-           $name = substr($filename, 0, $pos);
-           $ext = substr($filename, $pos);
-    } else {
-           $name = $filename;
-    }
-
-    $newpath = $path.'/'.$filename;
-    $newname = $filename;
-    $counter = 0;
-    while (file_exists($newpath) && file_get_contents($newpath)!="") {
-           $newname = $name .'_'. $counter . $ext;
-           $newpath = $path.'/'.$newname;
-           $counter++;
-     }
-
-    return $newname;
-}
-
+$config 			  = get_feedback_config(__DIR__ . '../config/config.php');
+$feedback_questions   = $config['questions'];
+$feedback_prompt_text = $config['prompt_text'];
 
 if (!isset($feedback_prompt_text)) {$feedback_prompt_text="";}
 
 if((getval("submit", "") != "" || getval("add", "") != "") && enforcePostRequest(false))
 	{
-	if (file_exists($storagedir . '/feedback/results.csv'))
-	    {
-	    rename($storagedir . '/feedback/results.csv',$storagedir . '/feedback/'.file_newname($storagedir . '/feedback/','results.csv'));
-	    touch($storagedir . '/feedback/results.csv');
-	    chmod($storagedir . '/feedback/results.csv',0777);
-	    }
-	    
-	$f=fopen($storagedir . "/feedback/config.php","w");
-	fwrite($f,"<?php\n\n\$feedback_questions=array();");
-
-	fwrite($f,"\n\n\$feedback_prompt_text=\"" . str_replace("\"","\\\"",getval("feedback_prompt_text","")) . "\";\n\n");
+	make_new_results_file($storagedir);
 	
 	$readfrom=0;
 	if (getval("delete_1","")!="") {$readfrom++;} # Delete first question.
-			
-	for ($n=1;$readfrom<count($feedback_questions);$n++)
+	$count = count($feedback_questions); $feedback_questions = [];
+	for ($n=0;$readfrom<$count;$n++)
 		{
-		$readfrom++;
-
 		# Deleting next question? Skip ahead
 		if (getval("delete_" . ($readfrom),"")=="")
 			{	
-			# Save question
-			fwrite ($f,"\$feedback_questions[" . $n . "]['text']=\"" . str_replace("\"","\\\"",getval("text_" . $readfrom,"")) . "\";\n");
-			fwrite ($f,"\$feedback_questions[" . $n . "]['type']=" . getval("type_" . $readfrom,1) . ";\n");
-			fwrite ($f,"\$feedback_questions[" . $n . "]['options']=\"" . str_replace("\"","\\\"",getval("options_" . $readfrom,"")) . "\";\n");
+			# add question to array
+			$feedback_questions[$n] = [
+				'text'    => getval("text_" . $readfrom,""),
+				'type'    => getval("type_" . $readfrom,1),
+				'options' => getval("options_" . $readfrom,""),
+			];
 			}		
 		else
 			{
@@ -78,24 +49,31 @@ if((getval("submit", "") != "" || getval("add", "") != "") && enforcePostRequest
 		if (getval("add_" . $readfrom,"")!="")
 			{
 			$n++;
-			fwrite ($f,"\$feedback_questions[" . $n . "]['text']=\"\";\n");
-			fwrite ($f,"\$feedback_questions[" . $n . "]['type']=1;\n");
-			fwrite ($f,"\$feedback_questions[" . $n . "]['options']=\"\";\n");
+			$feedback_questions[$n] = [
+				'text'    => "",
+				'type'    => 1,
+				'options' => "",
+			];
 			}
+		$readfrom++;
 		}
 	
 	$add="";
 	if (getval("add","")!="")
 		{
 		# Add a new question
-		fwrite ($f,"\$feedback_questions[" . $n . "]['text']=\"\";\n");
-		fwrite ($f,"\$feedback_questions[" . $n . "]['type']=1;\n");
-		fwrite ($f,"\$feedback_questions[" . $n . "]['options']=\"\";\n");
+		$feedback_questions[$n] = [
+			'text'    => "",
+			'type'    => 1,
+			'options' => "",
+		];
 		$add="#add";
 		}
-
-	fwrite($f,"?>");
-	fclose($f);
+	$config['prompt_text'] = getval('feedback_prompt_text', '');
+	$config['questions'] = $feedback_questions;
+	update_feedback_fields($feedback_questions);
+	
+	set_plugin_config($plugin_name, $config);
 	redirect("plugins/feedback/pages/setup.php?nc=". time() . $add);exit();
 	}
 
@@ -115,7 +93,7 @@ include "../../../include/header.php";
 <h2><?php echo $lang["feedback_questions"]?></h2>
 <hr />
 
-<?php for ($n=1;$n<=count($feedback_questions);$n++)
+<?php for ($n=0;$n<count($feedback_questions);$n++)
 	{
 	?>
    <p><?php echo $lang["feedback_type"]?>

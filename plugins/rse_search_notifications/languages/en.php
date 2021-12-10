@@ -13,6 +13,7 @@ $lang['search_notifications_show_for_all_users']="Show watched searches for all 
 
 $lang['search_notifications_config_heading']="Search notifications setup";
 $lang['search_notifications_config_thumbnail_count']="Number of preview thumbnail images to display in notification";
+$lang['search_notifications_config_only_changes']="Only show resources that have been added or removed from searches";
 
 $lang['search_notifications_new match_found']="new match found";
 $lang['search_notifications_new matches_found']="new matches found";

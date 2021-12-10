@@ -20,27 +20,10 @@ if(getval('add_new', '') !== '' && enforcePostRequest(false)) {
 
 if($user_group_new != '' && $field_new != '' && $field_value_new != '' && $user_new != '')
     {
-    $query = sprintf('
-            INSERT INTO assign_request_map (
-                            user_id,
-                            user_group_id,
-                            field_id,
-                            field_value
-                        )
-                 VALUES (
-                            \'%s\', # user_id
-                            \'%s\', # user_group_id
-                            \'%s\', # field_id
-                            \'%s\' # field_value
-                        );
-        ',
-        escape_check($user_new),
-        escape_check($user_group_new),
-        escape_check($field_new),
-        escape_check($field_value_new)
-    );
-
-    sql_query($query);
+    $query = "INSERT INTO assign_request_map (user_id, user_group_id, field_id, field_value)
+                 VALUES (?, ?, ?, ?)";
+    $parameters=array("i",$user_new, "i",$user_group_new, "i",$field_new, "s",$field_value_new);
+    ps_query($query, $parameters);
     }
 }
 
@@ -53,59 +36,33 @@ $user_id_row     = getval('user_id_row', '');
 
 // Save map
 if(getval('save', '') !== '' && enforcePostRequest(false)) {
-    $save_query = sprintf('
-            UPDATE assign_request_map
-               SET user_id = \'%s\',
-                   user_group_id = \'%s\',
-                   field_id = \'%s\',
-                   field_value = \'%s\'
-             WHERE id = \'%s\';
-        ',
-        escape_check($user_id_row),
-        escape_check($user_group_row),
-        escape_check($field_row),
-        escape_check($field_value_row),
-        escape_check($id_row)
-    );
-
-    sql_query($save_query);
+    $save_query = "UPDATE assign_request_map
+                    SET user_id = ?, user_group_id = ?, field_id = ?, field_value = ?
+                    WHERE id = ?";
+    $parameters=array("i",$user_id_row, "i",$user_group_row, "i",$field_row, "s",$field_value_row, "i",$id_row);
+    ps_query($save_query, $parameters);
 }
 
 // Delete map
 if(getval('delete', '') !== '' && enforcePostRequest(false)) {
-    $delete_query = sprintf('
-            DELETE FROM assign_request_map
-                  WHERE id = \'%s\';
-        ',
-        escape_check($id_row)
-    );
-
-    sql_query($delete_query);
+    $delete_query = "DELETE FROM assign_request_map WHERE id = ?";
+    ps_query($delete_query, array("i",$id_row));
 }
-
 
 
 include '../../../include/header.php';
 
 // Get information to populate options later on
 $user_groups = get_usergroups();
-$fields = sql_query(
-    'SELECT ref, 
-            title 
-       FROM resource_type_field 
-   ORDER BY title, name;', "schema"
-);
+$fields = ps_query("SELECT ref, title 
+                    FROM resource_type_field 
+                    ORDER BY title, name;", array(), "schema");
 $users = get_users();
 
 // Get maps
-$rows = sql_query(
-    'SELECT id,
-            user_id,
-            user_group_id,
-            field_id,
-            field_value 
-       FROM assign_request_map;'
-);
+$rows = ps_query("SELECT id, user_id, user_group_id, field_id, field_value 
+                    FROM assign_request_map;", array());
+
 ?>
 
 <div class="BasicsBox">

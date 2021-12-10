@@ -58,8 +58,6 @@ $basket_stores_size=true;
 // Default browse bar width;
 $browse_default_width = 295;
 
-$camera_autorotation_checked = true;
-
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
 
@@ -307,11 +305,6 @@ $inactive_message_auto_digest_period=7;
 # Index the resource type, so searching for the resource type string will work (e.g. if you have a resource of type "photo" then "cat photo" will match even if the resource metadata itself doesn't contain the word 'photo')
 $index_resource_type=true;
 
-# If ResourceSpace is behind a proxy, enabling this will mean the "X-Forwarded-For" Apache header is used
-# for the IP address. Do not enable this if you are not using such a proxy as it will mean IP addresses can be
-# easily faked.
-$ip_forwarded_for=false;
-
 # Show friendly error to user instead of 403 if IP not in permitted range.
 $iprestrict_friendlyerror=false;
 
@@ -515,9 +508,6 @@ $show_edit_all_link = true;
 
 // Show required field legend on upload
 $show_required_field_label = true;
-
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
 
 # Show the link to 'user contributed assets' on the My Contributions page
 # Allows non-admin users to see the assets they have contributed

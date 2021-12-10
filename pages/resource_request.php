@@ -139,21 +139,21 @@ include "../include/header.php";
 	<div class="Question">
 	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
 	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-	<input name="fullname" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("fullname","")) ?>">
+	<input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("fullname","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	
 	<div class="Question">
 	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
 	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
+	<input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 
 	<div class="Question">
 	<label><?php echo $lang["contacttelephone"]?></label>
 	<input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
-	<input name="contact" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("contact","")) ?>">
+	<input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("contact","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php } ?>

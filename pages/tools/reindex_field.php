@@ -9,7 +9,7 @@
 include "../../include/db.php";
 
 if (!(PHP_SAPI == 'cli')) {include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 set_time_limit(0);
 $reindex_chunk_size=100; // Number of resources to reindex in each batch to prevent wiping out the index.

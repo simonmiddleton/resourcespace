@@ -21,7 +21,7 @@
 
 		if ($debug_expires < time())
 			{
-			sql_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'");
+			ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
 			return;
 			}
 
@@ -33,11 +33,10 @@
 
 	function create_debug_log_override($debug_user = -1, $debug_expires = 60)
 		{
-		sql_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'");
+		ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
 		$debug_expires += time();
-		$debug_user_escaped = escape_check($debug_user);
-		$debug_expires_escaped = escape_check($debug_expires);
-		sql_query("INSERT INTO sysvars VALUES ('debug_override_user','{$debug_user_escaped}'), ('debug_override_expires','{$debug_expires_escaped}')");
+		ps_query("INSERT INTO sysvars VALUES ('debug_override_user',?), ('debug_override_expires',?)",
+        array("s",$debug_user,"s",$debug_expires));
 		}
 
 
@@ -103,6 +102,7 @@ function debug_function_call($name, array $args)
 */
 function clear_tracking_vars_info(array $users)
     {
+    global $tracked_var_cache;
     foreach($users as $uref)
         {
         if(!is_numeric($uref))
@@ -113,6 +113,7 @@ function clear_tracking_vars_info(array $users)
         set_sysvar("track_var_{$uref}", null);
         set_sysvar("track_var_{$uref}_duration", null);
         set_sysvar("track_var_{$uref}_start_datetime", null);
+        unset($tracked_var_cache[$uref]);
         }
     }
 
@@ -167,17 +168,25 @@ function is_tracking_vars_active(int $user)
 */
 function get_tracked_vars(int $user)
     {
+    global $tracked_var_cache;
+    if(isset($tracked_var_cache[$user]))
+        {
+        return $tracked_var_cache[$user];
+        }
     if($user > 0)
         {
         $vars_csv = get_sysvar("track_var_{$user}", '');
         $vars_list = explode(',', $vars_csv);
         $vars_trimmed = array_map('trim', $vars_list);
         $vars_not_empty = array_filter($vars_trimmed);
-        return array_values(array_unique($vars_not_empty));
+        
+        $return = array_values(array_unique($vars_not_empty));
+        $tracked_var_cache[$user] = $return;
+        return $return;
         }
 
     $all_tracked_vars = [];
-    $all_users_tracked_vars = sql_array("SELECT `value` FROM sysvars WHERE `name` REGEXP '^track_var_[[:digit:]]+$'");
+    $all_users_tracked_vars = ps_array("SELECT `value` FROM sysvars WHERE `name` REGEXP '^track_var_[[:digit:]]+$'",array());
     foreach($all_users_tracked_vars as $vars_csv)
         {
         $vars_list = explode(',', $vars_csv);
@@ -187,7 +196,9 @@ function get_tracked_vars(int $user)
         $all_tracked_vars = array_merge($all_tracked_vars, $vars_not_empty);
         }
 
-    return array_values(array_unique($all_tracked_vars));
+    $return = array_values(array_unique($all_tracked_vars));
+    $tracked_var_cache[$user] = $return;
+    return $return;
     }
 
 

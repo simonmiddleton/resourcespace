@@ -17,7 +17,7 @@ $ajax = (!$cli ? getval("ajax", false) : false);
 $ajax = filter_var($ajax, FILTER_VALIDATE_BOOLEAN);
 // Don't trigger upgrade if request is done via ajax or requests are done via no upgrade routes. Checking if upgrade is 
 // in progress can be done through ajax
-$no_upgrade_routes = array("setup", "healthcheck");
+$no_upgrade_routes = array("setup");
 if((!$cli && $ajax) || in_array($pagename, $no_upgrade_routes)) 
     {
     return;

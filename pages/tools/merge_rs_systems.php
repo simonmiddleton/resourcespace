@@ -2,7 +2,7 @@
 /**
 * @package ResourceSpace\Tools
 * 
-* A script to help administrators merge two ResourceSpace systems.
+* A tool to help administrators merge two ResourceSpace systems.
 */
 if('cli' != PHP_SAPI)
     {
@@ -11,7 +11,7 @@ if('cli' != PHP_SAPI)
     }
 
 $help_text = "NAME
-    merge_rs_systems - a script to help administrators merge two ResourceSpace systems.
+    merge_rs_systems - a tool for merging two ResourceSpace systems.
 
 SYNOPSIS
     On the system (also known as SRC system) that is going to merge with the other (DEST) system:
@@ -21,20 +21,20 @@ SYNOPSIS
         php path/tools/merge_rs_systems.php [OPTION...] SRC
 
 DESCRIPTION
-    A script to help administrators merge two ResourceSpace systems.
+    A tool to help administrators merge two ResourceSpace systems.
 
-    A specification file is required for the migration to be possible. The spec file will contain:
+    A specification file is required for the migration to be possible. The spec file will contain:-
     - A mapping between the SRC system and the DEST systems' records. Use the --generate-spec-file option to get
       an example.
-    - If new workflow states will have to be created, the script will attempt to update config.php with this extra 
-      information.
 
 OPTIONS SUMMARY
-    Here is a short summary of the options available in merge_rs_systems. Please refer to the detailed description below 
-    for a complete description.
 
     -h, --help              display this help and exit
     -u, --user              run script as a ResourceSpace user. Use the ID of the user
+    -l, --language          Set the language when translating i18n strings (see https://www.resourcespace.com/knowledge-base/systemadmin/translations)
+                            Useful to prevent duplicate fixed list field options because one side has translations and
+                            the other doesn't.
+                            Please note if using the option multiple times, only the last occurence will take precedence.
     --dry-run               perform a trial run with no changes made. IMPORTANT: unavailable for import!
     --clear-progress        clear the progress file which is automatically generated at import
     --generate-spec-file    generate an example specification file
@@ -42,6 +42,9 @@ OPTIONS SUMMARY
     --export                export information from ResourceSpace
     --import                import information to ResourceSpace based on the specification file (Requires spec-file and 
                             user options)
+
+DEPENDENCIES
+    The tool requires rse_workflow plugin to be enabled.
 
 EXAMPLES
     Export
@@ -54,12 +57,13 @@ EXAMPLES
     " . PHP_EOL;
 
 
-$cli_short_options = "hu:";
+$cli_short_options = "hu:l:";
 $cli_long_options  = array(
     "help",
     "dry-run",
     "clear-progress",
     "user:",
+    "language:",
     "spec-file:",
     "export",
     "import",
@@ -118,12 +122,28 @@ foreach($options as $option_name => $option_value)
 
         $user = $option_value;
         }
+
+    if(in_array($option_name, ["l", "language"]))
+        {
+        if(is_array($option_value))
+            {
+            fwrite(STDERR, "ERROR: Language should only be set once. Use either -l or --language." . PHP_EOL);
+            fwrite(STDOUT, PHP_EOL . $help_text);
+            exit(1);
+            }
+
+        $language = trim($option_value);
+        }
     }
 
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
+set_time_limit(0);
 
-include_once "{$webroot}/include/log_functions.php";
+// Increase this DB session idle timeout to 24 hours
+sql_query('SET session wait_timeout=86400;');
+$sql_session_wait_timeout = array_column(sql_query('SHOW SESSION VARIABLES LIKE "wait_timeout"'), 'Value', 'Variable_name');
+logScript("Database session 'wait_timeout' variable is set to {$sql_session_wait_timeout['wait_timeout']} seconds");
 
 $get_file_handler = function($file_path, $mode)
     {
@@ -172,7 +192,8 @@ $json_decode_file_data = function($fh)
 
 if(isset($generate_spec_file) && $generate_spec_file)
     {
-    $spec_fh = $get_file_handler("spec_file_example.php", "w+b");
+    $spec_fpath = (getcwd() ?: dirname(__DIR__, 2)) . '/spec_file_example.php';
+    $spec_fh = $get_file_handler($spec_fpath, "w+b");
     fwrite($spec_fh, '<?php
 // All of the following configuration options have the left side (keys) represent the SRC and DEST on the right (values)
 
@@ -201,7 +222,8 @@ $archive_states_spec = array(
 
 // Resource types can either be mapped to an existing record or be created as a new state on the DEST system
 $resource_types_spec = array(
-    0 => 0, # Global
+    0 => 0, # Global (magic type)
+    999 => 999, # Archive Only (magic type)
     1 => 1, # Photo
     5 => null, # Case Study
 );
@@ -215,6 +237,15 @@ Resource type fields can be configured in three ways:
 
 IMPORTANT: make sure you map to a compatible field on the DEST system. This is especially true for a category tree which
 can end up a flat structure if mapped to a fixed list field of different type.
+
+When it comes to field mappings, these are the rules the script goes by:-
+- one SRC field can only be mapped to one DEST field;
+- different SRC fixed list fields could be mapped to the same DEST field;
+- when mapping fields, all the options from the SRC fixed list field move over to the DEST fixed list field (this also 
+  applies to fields that are created as new on the destination system - ie. there\'s no mapping)
+
+For fixed list fields, if required, there can be extra rules for the options. See nodes_spec rules. Please bear in mind 
+that the metadata field mapping becomes the fallback rule for nodes.
 */
 $resource_type_fields_spec = array(
     // Note: when mapping to a field on DEST system, the "create" property should still be true
@@ -237,10 +268,65 @@ $resource_type_fields_spec = array(
         "ref" => null,
     ), # Display condition child | text box
 );
-    ' . PHP_EOL);
+
+/*
+Allow nodes (ie fixed list field options) mapping between SRC and DEST. This is optional and should only be done as 
+needed (ie. where a SRC field needs to become something else on DEST and its import is no longer required).
+
+The rules governing nodes mapping is as follows:-
+- one SRC node can be mapped to multiple DEST nodes (the DEST node can be under a different DEST field - compared 
+  to the mapping of the SRC nodes\' field);
+- different SRC nodes can be mapped to the same DEST node;
+
+IMPORTANT: this is the true source of truth for mapping a SRC node to DEST node(s).
+*/
+$nodes_spec = [
+    // from field 89
+    280 => [260],
+    281 => [181, 261,],
+    282 => [262],
+
+    // from field 91
+    288 => [287], # Example of a map to a category tree ==> "Folder 1/1.2/1.2.1"
+    289 => [181],
+];
+/*
+Considering the configuration for both resource_type_fields_spec and nodes_spec, you can expect the following behaviour:-
+
+SRC RTF        | Create on DEST? | Map to DEST RTF? | Options mapped | Outcome
+===============|=================|==================|================|========
+fixed list rtf | no              | no               | no             | discard all options
+fixed list rtf | no              | no               | yes            | use only mapped DEST nodes, discard everything else
+fixed list rtf | yes             | no               | yes            | move only mapped nodes to their DEST nodes, everything else is added as an option on the new field 
+fixed list rtf | yes             | yes              | yes            | move only mapped nodes to their DEST node, everything else is moved to the mapped DEST field
+*/
+
+
+// Metadata field to store the SRC resource ID. MUST be of type "Text box (single line)". Set to zero to disable.
+$rtf_src_resource_ref = 0;
+
+
+// Fixed list field options that will be applied to all imported SRC resources. List of node IDs.
+$nodes_applied_to_all_merged_resources = [];
+
+
+// A resource access moves across as is. Exception are resources with custom access which need to be converted to a
+// different access level (e.g open, restricted or confidential)
+// Acceptable values are: RESOURCE_ACCESS_FULL -or- RESOURCE_ACCESS_RESTRICTED -or- RESOURCE_ACCESS_CONFIDENTIAL
+$custom_access_new_value_spec = RESOURCE_ACCESS_RESTRICTED;
+
+' . PHP_EOL);
     fclose($spec_fh);
-    logScript("Successfully generated an example of the spec file. Location: '" . __DIR__ . "/spec_file_example.php'");
+    logScript("Successfully generated an example of the spec file. Location: '{$spec_fpath}'");
     exit(0);
+    }
+
+// Advanced workflow plugin is required to be enabled
+$active_plugins = array_column(get_active_plugins(), 'name');
+if(!in_array('rse_workflow', $active_plugins))
+    {
+    logScript("ERROR: Missing requirement - 'Advanced workflow' plugin is not enabled.");
+    exit(1);
     }
 
 if($import && !isset($user))
@@ -265,12 +351,14 @@ if(isset($user))
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
     }
+logScript("Running script with language set to '{$language}'");
+
 
 /*
 For the following usage:
  - php path/tools/merge_rs_systems.php [OPTION...] --export DEST
  - php path/tools/merge_rs_systems.php [OPTION...] --import SRC
-Ensure DEST/SRC folder has been provided when exporting or importing data
+Ensure DEST/SRC folder has been provided when exporting/importing data
 */
 if($export || $import)
     {
@@ -278,13 +366,16 @@ if($export || $import)
     if(!file_exists($folder_path) || !is_dir($folder_path))
         {
         $folder_type = $export ? "DEST" : ($import ? "SRC" : "");
-        logScript("ERROR: {$folder_type} MUST be folder. Value provided: '{$folder_path}'");
+        logScript("ERROR: {$folder_type} MUST be an existing folder. Value provided: '{$folder_path}'");
         exit(1);
         }
     }
 
 if($export && isset($folder_path))
-    {   
+    {
+    logScript('Script disabled $hide_real_filepath configuration option.');
+    $hide_real_filepath = false;
+
     $tables = array(
         array(
             "name" => "usergroup",
@@ -359,13 +450,7 @@ if($export && isset($folder_path))
                     AND (file_extension IS NOT NULL AND trim(file_extension) <> '')
                     AND (preview_extension IS NOT NULL AND trim(preview_extension) <> '')",
             ),
-            "additional_process" => function($record) use ($hide_real_filepath) {
-                if($hide_real_filepath)
-                    {
-                    logScript("ERROR: --export requires configuration option '\$hide_real_filepath' to be disabled (ie. set to FALSE)");
-                    exit(1);
-                    }
-
+            "additional_process" => function($record) {
                 // new fake column used at import for ingesting the file in the DEST system
                 $record["merge_rs_systems_file_url"] = "";
 
@@ -582,6 +667,13 @@ if($import && isset($folder_path))
         exit(1);
         }
     include_once $spec_file_path;
+
+    // Quick spec file validation
+    if(!in_array($custom_access_new_value_spec, array_diff(RESOURCE_ACCESS_TYPES, [RESOURCE_ACCESS_CUSTOM_GROUP])))
+        {
+        logScript('ERROR: Specification file - invalid $custom_access_new_value_spec');
+        exit(1);
+        }
 
     /*
     progress.php is used to override the specification file that was provided as original input by keeping track of new 
@@ -828,35 +920,20 @@ if($import && isset($folder_path))
 
         if(array_key_exists($archive_state["ref"], $archive_states_spec) && is_null($archive_states_spec[$archive_state["ref"]]))
             {
-            logScript("Updating config.php with extra workflow state:");
-
-            $new_archive_state = end($dest_archive_states) + 1;
-            $additional_archive_states[] = $new_archive_state;
-            $lang["status{$new_archive_state}"] = $archive_state["lang"];
-            $dest_archive_states[] = $new_archive_state;
-
-            $processed_archive_states[] = $archive_state["ref"];
-            fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state["ref"]};" . PHP_EOL);
-
-            $config_fh = fopen("{$webroot}/include/config.php", "a+b");
-            if($config_fh === false)
+            $new_archive_state = rse_workflow_create_state(['name' => $archive_state['lang']]);
+            if($new_archive_state === false)
                 {
-                logScript("WARNING: Unable to open output file '{$file_path}'! Please add manually to the file the following:");
-                logScript("CONFIG.PHP: \$additional_archive_states[] = {$new_archive_state};");
-                logScript("CONFIG.PHP: \$lang['status{$new_archive_state}'] = '{$archive_state["lang"]}';");
-                continue;
+                logScript("ERROR: Unable to create new workflow state!");
+                exit(1);
                 }
-
-            fwrite(
-                $config_fh,
-                PHP_EOL
-                . "\$additional_archive_states[] = {$new_archive_state};"
-                . PHP_EOL
-                . "\$lang['status{$new_archive_state}'] = '{$archive_state["lang"]}';");
-            fclose($config_fh);
+            $dest_archive_states[] = $new_archive_state['code'];
+            $processed_archive_states[] = $archive_state['ref'];
+            fwrite($progress_fh, "\$processed_archive_states[] = {$archive_state['ref']};" . PHP_EOL);
+            logScript("Created new workflow state with code #{$new_archive_state['code']}");
             }
         }
     unset($src_archive_states);
+    clear_query_cache('workflow');
 
 
     # RESOURCE TYPES
@@ -1032,6 +1109,8 @@ if($import && isset($folder_path))
         // This is merged as a new field
         if(is_null($mapped_rtf_ref))
             {
+            $db_rtf_known_columns = array_column(sql_query('DESCRIBE resource_type_field', '', -1, false), 'Field');
+
             db_begin_transaction(TX_SAVEPOINT);
             $new_rtf_ref = create_resource_type_field(
                 $src_rtf["title"],
@@ -1050,8 +1129,13 @@ if($import && isset($folder_path))
             $sql = "";
             foreach($src_rtf as $column => $value)
                 {
-                // Ignore columns that have been used for creating this field
-                if(in_array($column, array("ref", "name", "title", "type", "keywords_index", "resource_type")))
+                if(
+                    // SRC may be very old and contain columns no longer in use which are unavailable on DEST
+                    !in_array($column, $db_rtf_known_columns)
+
+                    // Ignore columns that have been used for creating this field
+                    || in_array($column, array("ref", "name", "title", "type", "keywords_index", "resource_type"))
+                )
                     {
                     continue;
                     }
@@ -1099,7 +1183,12 @@ if($import && isset($folder_path))
 
         if(!in_array($found_rtf["type"], $compatible_rtf_types[$src_rtf["type"]]))
             {
-            logScript("ERROR: incompatible types! Consider mapping to a field with one of these types: " . implode(", ", $compatible_rtf_types[$found_rtf["type"]]));
+            $compat_rtf_type_names_msg = '';
+            foreach($compatible_rtf_types[$found_rtf["type"]] as $compatible_rtf_type)
+                {
+                $compat_rtf_type_names_msg .= PHP_EOL . " - {$lang[$field_types[$compatible_rtf_type]]}";
+                }
+            logScript("ERROR: incompatible types! Consider mapping to a field with one of these types: {$compat_rtf_type_names_msg}");
             exit(1);
             }
 
@@ -1119,18 +1208,49 @@ if($import && isset($folder_path))
     logScript("");
     logScript("Importing nodes...");
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
-    $nodes_mapping = (isset($nodes_mapping) ? $nodes_mapping : array());
-    $nodes_not_created = (isset($nodes_not_created) ? $nodes_not_created : array());
+    $nodes_spec = $nodes_spec ?? [];
+    $new_nodes_mapping = $new_nodes_mapping ?? [];
+    $nodes_not_created = $nodes_not_created ?? [];
     $src_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "nodes_export.json", "r+b"));
+    $dest_node_refs = sql_array('SELECT ref AS `value` FROM node');
     foreach($src_nodes as $src_node)
         {
-        if(array_key_exists($src_node["ref"], $nodes_mapping) || in_array($src_node["ref"], $nodes_not_created))
+        if(array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created))
             {
             continue;
             }
 
         logScript("Processing #{$src_node["ref"]} '{$src_node["name"]}'");
 
+        // Check if the specification has a mapping defined for this node to other DEST node(s).
+        if(isset($nodes_spec[$src_node['ref']]))
+            {
+            if(!is_array($nodes_spec[$src_node['ref']]))
+                {
+                logScript('ERROR: Invalid nodes specification! Reason: expected a list of nodes, received type is ' . gettype($nodes_spec[$src_node['ref']]));
+                exit(1);
+                }
+
+            $nodes_spec[$src_node['ref']] = array_filter($nodes_spec[$src_node['ref']], 'is_int_loose');
+            if(empty($nodes_spec[$src_node['ref']]))
+                {
+                logScript('ERROR: Invalid nodes specification! Reason: no mapping defined.');
+                exit(1);
+                }
+
+            // Safe check: error if any of the mappings for this node is invalid (ie ref doesn't exist).
+            $found_invalid_nodes_map = array_diff($nodes_spec[$src_node['ref']], $dest_node_refs);
+            if(!empty($found_invalid_nodes_map))
+                {
+                logScript('ERROR: Invalid DEST node(s) mapping found: ' . implode(', ', $found_invalid_nodes_map));
+                exit(1);
+                }
+
+            logScript('Found direct mapping to DEST node(s): ' . implode(', ', $nodes_spec[$src_node['ref']]));
+            continue;
+            }
+
+        // If this nodes' resource type field was specified to not be created on the DEST system (via $resource_type_fields_spec), skip it
         if(in_array($src_node["resource_type_field"], $resource_type_fields_not_created))
             {
             logScript("Skipping as resource type field was not created on the destination system!");
@@ -1155,39 +1275,52 @@ if($import && isset($folder_path))
             && in_array($src_node["parent"], $nodes_not_created)
         )
             {
-            logScript("WARNING: unable to create new node because its parent was not created!");
-            $nodes_not_created[] = $src_node["ref"];
-            fwrite($progress_fh, "\$nodes_not_created[] = {$src_node["ref"]};" . PHP_EOL);
-            continue;
+            logScript("ERROR: Unable to create new node because its parent was not created!");
+            exit(1);
             }
         else if(
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
             && (!is_null($src_node["parent"]) || trim($src_node["parent"]) != "")
             && !in_array($src_node["parent"], $nodes_not_created)
-            && isset($nodes_mapping[$src_node["parent"]])
+            && isset($new_nodes_mapping[$src_node["parent"]])
         )
             {
-            $node_parent = $nodes_mapping[$src_node["parent"]];
+            $node_parent = $new_nodes_mapping[$src_node["parent"]];
+            $node_parent_sql = " AND parent = '" . escape_check($node_parent) . "'";
             }
         else
             {
             $node_parent = null;
+            $node_parent_sql = '';
             }
 
-        db_begin_transaction(TX_SAVEPOINT);
-        $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "", true);
-        if($new_node_ref === false)
+
+        // Check if we can find an existing node for this metadata field (taking into account language translations as well)
+        $all_nodes_for_rtf = sql_query("SELECT ref, `name` FROM node WHERE resource_type_field = '" . escape_check($mapped_rtf_ref) . "'{$node_parent_sql}");
+        $found_matching_node_i18n = get_node_by_name($all_nodes_for_rtf, $src_node['name'], true);
+        if(!empty($found_matching_node_i18n))
             {
-            logScript("ERROR: unable to create new node!");
-            exit(1);
+            logScript("Found matching node after translation: '{$found_matching_node_i18n['name']}'");
+            $new_nodes_mapping[$src_node['ref']] = $found_matching_node_i18n['ref'];
+            fwrite($progress_fh, "\$new_nodes_mapping[{$src_node['ref']}] = {$found_matching_node_i18n['ref']};" . PHP_EOL);
             }
+        else
+            {
+            db_begin_transaction(TX_SAVEPOINT);
+            $new_node_ref = set_node(null, $mapped_rtf_ref, $src_node["name"], $node_parent, "");
+            if($new_node_ref === false)
+                {
+                logScript("ERROR: unable to create new node!");
+                exit(1);
+                }
 
-        logScript("Created new record #{$new_node_ref} '{$src_node["name"]}'");
-        $nodes_mapping[$src_node["ref"]] = $new_node_ref;
-        fwrite($progress_fh, "\$nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
-        db_end_transaction(TX_SAVEPOINT);
+            logScript("Created new node record #{$new_node_ref} '{$src_node["name"]}'. Node set for resource type field {$mapped_rtf_ref}");
+            $new_nodes_mapping[$src_node["ref"]] = $new_node_ref;
+            fwrite($progress_fh, "\$new_nodes_mapping[{$src_node["ref"]}] = {$new_node_ref};" . PHP_EOL);
+            db_end_transaction(TX_SAVEPOINT);
+            }
         }
-    unset($src_nodes);
+    unset($src_nodes, $dest_node_refs, $all_nodes_for_rtf);
 
 
     # RESOURCES
@@ -1214,7 +1347,7 @@ if($import && isset($folder_path))
             exit(1);
             }
 
-        $created_by = isset($user) && isset($userref) ? $userref : -1;
+        $created_by = $userref ?? -1;
         if(!in_array($src_resource["created_by"], $users_not_created) && isset($usernames_mapping[$src_resource["created_by"]]))
             {
             $created_by = $usernames_mapping[$src_resource["created_by"]];
@@ -1231,6 +1364,22 @@ if($import && isset($folder_path))
             logScript("ERROR: unable to create new resource!");
             exit(1);
             }
+
+        // Move across the resource access. Custom access gets remapped.
+        if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
+            {
+            sql_query(sprintf(
+                "UPDATE resource SET access = '%u' WHERE ref = '%s'",
+                escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
+                escape_check($new_resource_ref)
+            ));
+            }
+        else
+            {
+            logScript("ERROR: unknown resource access type - '{$src_resource['access']}'");
+            exit(1);
+            }
+
 
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
@@ -1271,10 +1420,39 @@ if($import && isset($folder_path))
             $src_resource["ref"],
             $new_resource_ref);
 
+        // If configured, also store the SRC resource ID in a text field
+        if($rtf_src_resource_ref > 0)
+            {
+            $rtf_src_resource_ref_data = get_resource_type_field($rtf_src_resource_ref);
+            $ursrr_errors = [];
+            if(
+                $rtf_src_resource_ref_data !== false
+                && $rtf_src_resource_ref_data['type'] == FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                && !update_field($new_resource_ref, $rtf_src_resource_ref, $src_resource['ref'], $ursrr_errors)
+            )
+                {
+                logScript("WARNING: unable to update the new resource and store the source resource ID! Reason: " . implode('; ', $ursrr_errors));
+                }
+            }
+
         logScript("Created new record #{$new_resource_ref}");
         $resources_mapping[$src_resource["ref"]] = $new_resource_ref;
         fwrite($progress_fh, "\$resources_mapping[{$src_resource["ref"]}] = {$new_resource_ref};" . PHP_EOL);
         db_end_transaction(TX_SAVEPOINT);
+        }
+
+    // If specification is configured to add certain nodes to all imported resources, do it now
+    if(!empty($nodes_applied_to_all_merged_resources))
+        {
+        if(add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false))
+            {
+            logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
+            }
+        else
+            {
+            logScript('ERROR: Failed to update all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
+            exit(1);
+            }
         }
     unset($src_resources);
 
@@ -1293,28 +1471,50 @@ if($import && isset($folder_path))
             continue;
             }
 
+        logScript("Processing SRC resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
+
         if(!array_key_exists($src_rn["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
-        logScript("Processing resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
+        // If specification defined a mapping for a SRC node, apply it
+        if(isset($nodes_spec[$src_rn['node']]))
+            {
+            if(add_resource_nodes($resources_mapping[$src_rn['resource']], $nodes_spec[$src_rn['node']], false, true))
+                {
+                logScript("Found direct mapping ==> added to DEST resource #{$resources_mapping[$src_rn['resource']]} the mapped DEST nodes: " . implode(', ', $nodes_spec[$src_rn['node']]));
+                $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+                fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
+                }
+            else
+                {
+                logScript("WARNING: Failed to add found mapped DEST nodes to the resource (ie. resource_node)");
+                }
+            continue;
+            }
 
         if(in_array($src_rn["node"], $nodes_not_created))
             {
             logScript("Skipping as the node was not created on the destination system!");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
-        if(!isset($nodes_mapping[$src_rn["node"]]))
+        if(!isset($new_nodes_mapping[$src_rn["node"]]))
             {
             logScript("WARNING: unable to find a node mapping!");
+            $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
+            fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
 
         sql_query("INSERT INTO resource_node (resource, node, hit_count, new_hit_count)
-                        VALUES ('{$resources_mapping[$src_rn["resource"]]}', '{$nodes_mapping[$src_rn["node"]]}', '{$src_rn["hit_count"]}', '{$src_rn["new_hit_count"]}')");
+                        VALUES ('{$resources_mapping[$src_rn["resource"]]}', '{$new_nodes_mapping[$src_rn["node"]]}', '{$src_rn["hit_count"]}', '{$src_rn["new_hit_count"]}')");
         $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
         }
@@ -1341,12 +1541,16 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_rd["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_data[] = $process_rd_value;
+            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
             }
 
         if(in_array($src_rd["resource_type_field"], $resource_type_fields_not_created))
             {
             logScript("WARNING: Resource type field was not created. Skipping");
+            $processed_resource_data[] = $process_rd_value;
+            fwrite($progress_fh, "\$processed_resource_data[] = \"{$process_rd_value}\";" . PHP_EOL);
             continue;
             }
 
@@ -1393,19 +1597,21 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_rdms["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_dimensions[] = $process_rdms_value;
+            fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
             continue;
             }
 
-        $page_count = is_numeric($src_rdms["page_count"]) ? $src_rdms["page_count"] : "NULL";
-
-        sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count)
-                        VALUES ('{$resources_mapping[$src_rdms["resource"]]}',
-                                '{$src_rdms["width"]}',
-                                '{$src_rdms["height"]}',
-                                '{$src_rdms["file_size"]}',
-                                '{$src_rdms["resolution"]}',
-                                '{$src_rdms["unit"]}',
-                                {$page_count})");
+        sql_query(sprintf(
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', %s)",
+            $resources_mapping[$src_rdms["resource"]],
+            $src_rdms["width"],
+            $src_rdms["height"],
+            $src_rdms["file_size"],
+            $src_rdms["resolution"],
+            escape_check($src_rdms["unit"]),
+            sql_null_or_val((string) $src_rdms["page_count"], !is_int_loose($src_rdms["page_count"]))
+        ));
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
@@ -1434,10 +1640,12 @@ if($import && isset($folder_path))
             || !array_key_exists($src_rr["related"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
+            $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
+            fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
             continue;
             }
 
-        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$src_rr["resource"]}', '{$src_rr["related"]}')");
+        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')");
 
         $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
         fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
@@ -1464,6 +1672,8 @@ if($import && isset($folder_path))
         if(!array_key_exists($src_raf["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
+            $processed_resource_alt_files[] = "{$src_raf["resource"]}_{$src_raf["ref"]}";
+            fwrite($progress_fh, "\$processed_resource_alt_files[] = \"{$src_raf["resource"]}_{$src_raf["ref"]}\";" . PHP_EOL);
             continue;
             }
 

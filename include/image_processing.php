@@ -126,13 +126,18 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
 
             # Work out the filename.
-            if (isset($_REQUEST['name']))
+            if (isset($_REQUEST['file_name']))
                 {
-                $filename=$_REQUEST['name']; # For PLupload
+                $filename=$_REQUEST['file_name'];
                 }
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                if(base64_encode(base64_decode($filename)) == $filename)
+                   {
+                   // Should have been encoded by Uppy
+                   $filename = base64_decode($filename);
+                   }
                 }
             else
                 {
@@ -365,9 +370,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
                 $original_filename = '';
-                if(isset($_REQUEST['name'])) 
+                if(isset($_REQUEST['file_name'])) 
                     {
-                    $original_filename = $_REQUEST['name'];
+                    $original_filename = $_REQUEST['file_name'];
                     }
                 else
                     {
@@ -610,7 +615,7 @@ function extract_exif_comment($ref,$extension="")
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
         # We then split the lines in the result into an array
-        $command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -G " . escapeshellarg($image);
+        $command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 " . escapeshellarg($image);
         $output=run_command($command);
         $metalines = explode("\n",$output);
         
@@ -680,6 +685,13 @@ function extract_exif_comment($ref,$extension="")
                     # Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
                     $metadata[$tagname] = escape_check($value);
                     $metadata[$groupname . ":" . $tagname] = escape_check($value);
+
+                    if(strpos($groupname,"-") !== false)
+                        {
+                        // Remove XMP sub namespace for XMP data if it has been entered without full qualified namespace to accommodate multiple file formats
+                        $groupname = substr($groupname,0,(strpos($groupname,"-")));
+                        $metadata[$groupname . ":" . $tagname] = escape_check($value);
+                        }
 
                     debug("[extract_exif_comment()][ref={$ref}] Extracted field '{$groupname}:{$tagname}', value = {$value}");
                     }
@@ -808,8 +820,8 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
                             $original_filename = '';
-                            if(isset($_REQUEST['name'])) {
-                                $original_filename = $_REQUEST['name'];
+                            if(isset($_REQUEST['file_name'])) {
+                                $original_filename = $_REQUEST['file_name'];
                             } else {
                                 $original_filename = $processfile['name'];
                             }
@@ -868,7 +880,7 @@ function extract_exif_comment($ref,$extension="")
                             unset($newval);
                         }
 
-                    }   
+                    }
                     else {
                         debug("[extract_exif_comment()][ref={$ref}] Unable to find embedded field mapping for subfield '{$subfield}'");
                         // Process if no embedded title is found:
@@ -879,8 +891,8 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
                             $original_filename = '';
-                            if(isset($_REQUEST['name'])) {
-                                $original_filename = $_REQUEST['name'];
+                            if(isset($_REQUEST['file_name'])) {
+                                $original_filename = $_REQUEST['file_name'];
                             } elseif(isset($processfile)) {
                                 $original_filename = $processfile['name'];
                             }
@@ -939,7 +951,7 @@ function extract_exif_comment($ref,$extension="")
             debug ("EXIF - custom option for filename field " . $filename_field . " : " . $exiffilenameoption);
             if ($exiffilenameoption!="yes") // We are not using the extracted filename as usual
                 {
-                $uploadedfilename=isset($_REQUEST['name'])?$_REQUEST['name']:$processfile['name'];
+                $uploadedfilename=isset($_REQUEST['file_name'])?$_REQUEST['file_name']:$processfile['name'];
                 
                 global $userref, $amended_filename;
                 $entered_filename=get_data_by_field(-$userref,$filename_field);
@@ -1379,7 +1391,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tile_size, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     if(!is_numeric($ref))
@@ -1446,7 +1458,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
-
+        if(is_null($sw) || is_null($sh))
+            {
+            // This is not a valid image
+            return false;
+            }
+        
         if($extension == "svg")
             {
             $o_width  = $sw;
@@ -1502,7 +1519,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $ps = array_values($ps);
             }
             
-        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes))
+        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
+            && !in_array($extension, config_merge_non_image_types())
+            )
             {
             // Ensure that scales are in order
             natsort($preview_tile_scale_factors);
@@ -1645,7 +1664,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             else
                 {
-                $flatten = "-flatten";
+                $flatten = "-background white -flatten";
                 }
 
             $addcheckbdpre = "";
@@ -1844,7 +1863,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : "");
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
@@ -3197,16 +3216,12 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
         return false;
         }
 
-    # Download a file from the provided URL, then upload it as if it was a local upload.
-    $file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
-    $s=explode("?",$file_path);$file_path=$s[0]; # Remove query string if it was present in the URL
-
-    $copied = @copy($url, $file_path); # Download the file.
-    if(!$copied)
+    $file_path = temp_local_download_remote_file($url);
+    if($file_path === false)
         {
-        debug("upload_file_by_url - failed to copy file from '$url' to '$file_path'");
         return false;
         }
+ 
     return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
     }
 
@@ -3261,6 +3276,11 @@ function delete_previews($resource,$alternative=-1)
     $delete_prefixes = array();
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
+
+    if(!file_exists($resourcefolder))
+        {
+        return;
+        }
     
     $allfiles = new DirectoryIterator($resourcefolder);
     foreach ($allfiles as $fileinfo)
@@ -3279,6 +3299,15 @@ function delete_previews($resource,$alternative=-1)
         }
     }
 
+/**
+ * Get dimensions of image file
+ *
+ * @param  string $identify_fullpath        path to IM identify command
+ * @param  string $prefix                   prefix - used by camera RAW files
+ * @param  string $file                     path to file
+ * @param  string $extension                file extension
+ * @return array width and height of image, elements are null if not possible e.g. not an image file
+ */
 function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     {
     # Get image's dimensions.
@@ -3298,7 +3327,16 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     else
         {
         // we really need dimensions here, so fallback to php's method
-        list($w,$h) = @getimagesize($file);
+        if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
+            {
+            list($w,$h) = getimagesize($file);
+            }
+        else
+            {
+            $w = null; 
+            $h = null;
+            debug("getFileDimensions: Unable to get image size for file: $file");
+            }
         }
     
     $dimensions = array($w, $h);
@@ -3604,12 +3642,17 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $keep_transparency=true;
         $cmd_args['%sourcepath'] = $sourcepath;
-        $command .= ' -background transparent %sourcepath';
+        $command .= ' -background transparent %sourcepath[0]';
         }
     else
         {
         $cmd_args['%sourcepath'] = $sourcepath;
         $command .= ' %sourcepath[0]';
+        }
+
+    if (isset($actions["repage"]) && $actions["repage"])
+        {
+        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
         }
 
     if(array_key_exists('transparent', $actions))
@@ -3756,11 +3799,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' -crop %finalwidthx%finalheight+%finalxcoord+%finalycoord';
         }
 
-    if (isset($actions["repage"]) && $actions["repage"])
-        {
-        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
-        }
-
     // Did the user request a width? If so, tack that on
     if ((isset($actions["new_width"]) && (int)$actions["new_width"] > 0) || (isset($actions["new_height"]) && (int)$actions["new_height"] > 0))
         {
@@ -3823,11 +3861,9 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         && $actions['resize']['width'] > 0
     )
         {
-        $cmd_args['%resize_width'] = $actions['resize']['width'];
-        $cmd_args['%resize_height'] = $actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '';
-
         # Apply resize ('>' means: never enlarge)
-        $command .= ' -resize "%resize_width%resize_height>"';
+        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '') . ">";
+        $command .= ' -resize %resize_dimensions';
         }
 
     $cmd_args['%outputpath'] = $outputpath;

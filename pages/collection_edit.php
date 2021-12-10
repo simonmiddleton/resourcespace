@@ -367,7 +367,7 @@ if(isset($error))
 			}
 		}
 
-	if (isset($collection['savedsearch'])&& $collection['savedsearch']==null)
+	if (!isset($collection['savedsearch']) || $collection['savedsearch']==null)
 		{
 		# disallowing share breaks smart collections 
 		?>

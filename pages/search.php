@@ -863,8 +863,17 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                     },
                                                     success: function(response){
                                                             <?php
-                                                            if(is_numeric($collection_add))
+                                                            if(is_int_loose($collection_add))
                                                                 {
+                                                                if($send_collection_to_admin) 
+                                                                    {
+                                                                    ?>
+                                                                    api('send_collection_to_admin',{'collection': <?php echo $collection_add; ?>}, function(response)
+                                                                        {
+                                                                        console.debug('A copy of collection #<?php echo $collection_add; ?> has been sent for review.');
+                                                                        });
+                                                                    <?php
+                                                                    }
                                                                 echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
                                                                 }
                                                             else
@@ -935,7 +944,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $result_count = $resources_count;
         }
     ?>
-    <div class="BasicsBox">
+    <div class="BasicsBox SearchSticky">
     <div class="TopInpageNav">
     <div class="TopInpageNavLeft">
 
@@ -1027,7 +1036,7 @@ if($responsive_ui)
                 else
                     {
                     ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo $lang["xlthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="xlthumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo $lang["xlthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="xlthumbsicon"></span>
                     </a>
                     <?php
@@ -1040,7 +1049,7 @@ if($responsive_ui)
             else
                 {
                 ?>
-                <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo $lang["largethumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="thumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo $lang["largethumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="largethumbsicon"></span>
                 </a>
                 <?php
@@ -1052,7 +1061,7 @@ if($responsive_ui)
             else
                 {
                 ?>
-                <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="strip_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="stripicon"></span>
                 </a>
                 <?php
@@ -1067,7 +1076,7 @@ if($responsive_ui)
                 else
                     {
                     ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo $lang["listtitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo $lang["listtitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="smalllisticon"></span>
                     </a>
                     <?php
@@ -1082,7 +1091,7 @@ if($responsive_ui)
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
+                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
                     if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
                         {
                         echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
@@ -1521,6 +1530,7 @@ if($responsive_ui)
         $result_count = count($result);
         for ($n=0;$n<$result_count;$n++)
             {
+            if(!is_array($result[$n])){continue;}
             if ($result[$n]["ref"]) {$refs[]=$result[$n]["ref"];} # add this to a list of results, for query refining later
             }
         $suggest=suggest_refinement($refs,$search);
@@ -1661,23 +1671,6 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-if($display != 'map' || !$modal)
-    {
-    if(!hook('bottomnavigation'))
-        { ?>
-        <!--Bottom Navigation - Archive, Saved Search plus Collection-->
-        <div class="BottomInpageNav">
-            <?php hook('add_bottom_in_page_nav_left'); ?>
-            <div class="BottomInpageNavRight">  
-           <?php 
-           if (isset($draw_pager)) {pager(false);} 
-            ?>
-            </div>
-            <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-    }
 } # End of replace all results hook conditional
 
 hook("endofsearchpage");

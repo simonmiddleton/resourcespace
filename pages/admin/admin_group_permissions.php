@@ -183,7 +183,7 @@ foreach ($fields as $field)
 $rtypes=sql_query("select * from resource_type order by name", "schema");
 foreach ($rtypes as $rtype)
 	{
-	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE","%REF"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-"),$rtype["ref"]),$lang["can_see_resource_type"]), true);
+	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
 	}
 
 # ------------ Restricted access to resource types
@@ -237,7 +237,7 @@ foreach ($additional_archive_states as $additional_archive_state)
 	}
 for ($n=0;$n<=($custom_access?3:2);$n++)
     {
-    DrawOption("ea" . $n,  str_replace(array("%STATE","%REF"),array($lang["access" . $n],$n),$lang["edit_access_to_access"]), true);
+    DrawOption("ea" . $n,  str_replace(array("%STATE"),array($lang["access" . $n]),$lang["edit_access_to_access"]), true);
     }
 
 DrawOption("c", $lang["can_create_resources_and_upload_files-admins"]);

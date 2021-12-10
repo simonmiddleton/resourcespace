@@ -42,6 +42,10 @@ $url_params = array("restypefilter"=>$restypefilter,
             "find" =>$find);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params);
 
+// Common ResourceSpace URL params are used as an override when calling {@see generateURL()}
+$common_rs_url_params = [
+    'backurl' => $url,
+];
 
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
@@ -218,9 +222,16 @@ for ($n=0;$n<count($fields);$n++)
                 ?>
             
             
-                <a href="<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
-                <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $fields[$n]["ref"] . "&backurl=" . $url?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
-                 
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+                <a href="<?php echo generateURL(
+                    "{$baseurl}/pages/admin/admin_system_log.php",
+                    [
+                        'table' => 'resource_type_field',
+                        'table_reference' => $fields[$n]['ref'],
+                    ],
+                    $common_rs_url_params
+                ); ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo htmlspecialchars($lang["log"]); ?></a>
             </div>
         </td>
     </tr>
@@ -257,7 +268,7 @@ for ($n=0;$n<count($fields);$n++)
              <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>""/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
 
-            <div class="Inline"><select name="field_type" class="medwidth">
+            <div class="Inline"><select name="field_type" id="new_field_type_select" class="medwidth">
          
             <?php
             foreach($field_types as $field_type=>$field_type_description)

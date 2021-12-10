@@ -82,6 +82,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     $checkvalues=$s[1];
                     # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
+                    $validvalues = array_map("i18n_get_translated", $validvalues);
 					$scriptconditions[$condref]['valid'] = array();
 					$scriptconditions[$condref]['validtext'] = array();
 					foreach($validvalues as $validvalue)
@@ -95,7 +96,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         # If there is a node which corresponds to that value name then append its node reference to a list of valid nodes
 						if(0 != count($found_validvalue))
 							{
-							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+							$scriptconditions[$condref]['valid'][] = (string)$found_validvalue['ref'];
                             
                             # Is the node present in search result list of nodes
                             if(in_array($found_validvalue['ref'],$searched_nodes))
@@ -489,9 +490,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			$minmax=explode('|',str_replace("numrange","",$value));
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
-			?>
-			<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
-			<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
+            echo $lang["from"]; ?><input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"><?php echo $lang["to"]; ?><input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
 			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
 		    <?php 
 			# Add to the clear function so clicking 'clear' clears this box.
@@ -1230,8 +1229,18 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'remove_collection':
                     if(confirm("<?php echo $lang['removecollectionareyousure']; ?>")) {
                         // most likely will need to be done the same way as delete_collection
-                        document.getElementById('collectionremove').value = '<?php echo urlencode($collection_data["ref"]); ?>';
-                        document.getElementById('collectionform').submit();
+                        var post_data = {
+                            ajax: true,
+                            dropdown_actions: true,
+                            remove: <?php echo urlencode($collection_data['ref']); ?>,
+                            <?php echo generateAjaxToken("remove_collection"); ?>
+                        };
+
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, 'json')
+                        .always(function(){
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php');
+                        }); 
+                        
                     }
                     break;
 
@@ -2494,7 +2503,52 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     else if (!$forsearch  && $edit_autosave)
                         {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
                 <?php
-                }?>
+                }
+            
+            if($forsearch !== true)
+                {
+                ?>
+        <script>
+            //Get value of the date element before the change
+            jQuery('[name^=<?php echo $name;?>]').on('focus', function(){
+                jQuery.data(this, 'current', jQuery(this).val());
+            });
+            //Check the value of the date after the change
+            jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+            //Same again but for the end of the date range
+            jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
+                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
+                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
+                    //format date string into yyyy-mm-dd
+                    let date_string = year + '-' + month + '-' + day;
+                    //get a timestamp from the date string and then convert that back to yyyy-mm-dd
+                    let date		= new Date(date_string).toISOString().split('T')[0];
+                    //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
+                    if(date_string !== date){
+                        styledalert('Error','You have entered an invalid date')
+                        jQuery(this).val(jQuery.data(this, 'current'))
+                    }
+                }
+            })
+        </script>
+        <?php } ?>
     <!--  date range search end date-->         
     </div>
     <div class="clearerleft"></div>
@@ -2915,24 +2969,30 @@ function render_share_options($shareopts=array())
 * 
 * @param string     $label      label for the field
 * @param string     $name       name of form select
-* @param array      $ftypes     array of field types to include
+* @param array      $ftypes     Array of integer field type ids to include. See definitions.php. Will return all types if incorrect value or empty array supplied.
 * @param string     $class      array CSS class to apply
 * @param boolean    $hidden     optionally hide the question usng CSS display:none
 * @param array      $current    Current selected value
 * 
 * @return void
 */
-function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false, $current = 0)
+function render_field_selector_question($label, $name, $ftypes, $class = "stdwidth", $hidden = false, $current = 0)
     {
     global $lang;
     $fieldtypefilter = "";
-	if(count($ftypes)>0)
-		{
-		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
-		}
+    $parameters = array();
+
+    // Check only valid field types supplied. An empty array is valid i.e. return all types.
+    $ftypes = array_filter($ftypes, function($t) {global $field_types; return is_int($t) && in_array($t, array_keys($field_types));});
         
-    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", "schema");
-    
+    if(count($ftypes)>0)
+        {
+        $fieldtypefilter = " WHERE type IN (" . ps_param_insert(count($ftypes)) . ")";
+        $parameters = ps_param_fill($ftypes, "i");
+        }
+
+    $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
+
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
     echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
@@ -3642,7 +3702,8 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 $checkvalues=$s[1];
                 // Break down values delimited with pipe characters
-                $validvalues=explode("|",mb_strtoupper($checkvalues));
+                $validvalues = explode("|",$checkvalues);
+                $validvalues = array_map("i18n_get_translated",$validvalues);
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 
@@ -3663,7 +3724,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                     if(0 != count($found_validvalue))
                         {
-                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+                        $scriptconditions[$condref]['valid'][] = (string)$found_validvalue['ref'];
 
                         if(in_array($found_validvalue['ref'], $v))
                             {
@@ -3952,6 +4013,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
+    $title=htmlspecialchars($field["title"]);
     # Populate field value for node based fields so it conforms to automatic ordering setting
 
     if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -3991,17 +4053,45 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$field=$modified_field;
 	    }
 	
-	# Handle expiry fields
-	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+    $warningtext="";
+    $dismisstext="";
+    $dismisslink="";
+    # Handle expiry date warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["warningexpired"] . "</h1><p>" . $lang["warningexpiredtext"] . "</p><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
+        $title = $lang["warningexpired"];
+        $warningtext = $lang["warningexpiredtext"];
+        $dismisstext = $lang["warningexpiredok"];
+        $dismisslink = "<p id=\"WarningOK\">
+        <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
+        $extra.="<style>#RecordDownload {display:none;}</style>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
+            <style>#RecordDownload {display:none;}</style>";
+            }   
 		}
 	
-	# Handle warning messages
-	if (!$valueonly && FIELD_TYPE_WARNING_MESSAGE == $field['type'] && '' != trim($value)) 
+	# Handle general warning messages
+	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
 		{
-		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
-		}
+        # title comes from field
+        # value comes from field
+        $warningtext = $value;
+        $dismisstext = $lang["warningdismiss"];
+        $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
+        <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
+
+        # If there is no display template then prepare the full markup here
+        if (trim($field["display_template"]) == "") 
+            {
+            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
+            }
+        }
 	
     if ($field['value_filter']!="")
         {
@@ -4066,6 +4156,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			$value = $modified_value['value'];
 		    }
 
+        # Final stages of rendering
+
+        # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"])!="")
 			{
 			# Highlight keywords
@@ -4081,8 +4174,10 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
             Format: [lang-language-name_here]
@@ -4106,9 +4201,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
             $extra   .= $template;
 			}
-		else
+		else # No display template
 			{
-			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
+			# There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars
@@ -4267,18 +4362,19 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($ref < 0 || $upload_review_mode)
             {
-            echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
+            echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
                name="save"
+               id="edit_save_button"
                class="editsave"
                type="submit"
                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
             <?php
             }
 
@@ -4685,11 +4781,6 @@ function render_featured_collection(array $ctx, array $fc)
 
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = ['display: none;'];
-    if(count($tools) > 3)
-        {
-        $html_actions_style[] = "height: 43px;";
-        }
-
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
