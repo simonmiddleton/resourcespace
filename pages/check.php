@@ -237,10 +237,6 @@ if($php_tz == $mysql_tz)
     <td colspan="2"><?php echo $lang['server_timezone_check']; ?></td>
     <td><b><?php echo $timezone_check; ?></b></td>
 </tr>
-<?php
-
-hook("addinstallationcheck");?>
-
 <tr>
 <td><?php echo $lang["lastscheduledtaskexection"] ?></td>
 <td><?php $last_cron=sql_value("select datediff(now(),value) value from sysvars where name='last_cron'",$lang["status-never"]);echo $last_cron ?></td>
@@ -264,6 +260,8 @@ $extensions_required["mbstring"] = "mb_strtoupper";
 $extensions_required["intl"] = "locale_get_default";
 $extensions_required["json"] = "json_decode";
 $extensions_required["zip"] = "zip_open";
+
+ksort($extensions_required, SORT_STRING);
 foreach($extensions_required as $module=> $required_fn)
     {?>
     <tr>
@@ -272,6 +270,9 @@ foreach($extensions_required as $module=> $required_fn)
     </tr>
     <?php
     }
+
+hook("addinstallationcheck");
+
 ?>
 <tr>
 <td><?php echo $lang["phpextensions"] ?></td>
