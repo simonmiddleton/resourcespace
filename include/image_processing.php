@@ -1863,7 +1863,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : "");
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
