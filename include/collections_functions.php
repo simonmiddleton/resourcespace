@@ -1299,6 +1299,58 @@ function save_collection($ref, $coldata=array())
             $sqlset["bg_img_resource_ref"] = null;
             }
 
+        /*
+        Order by is applicable only to featured collections.
+        Determine if we have to reset and, if required, re-order featured collections at the tree level
+
+        ----------------------------------------------------------------------------------------------------------------
+                                                        |     Old       |        Set        | 
+                                                        |---------------|-------------------|
+        Use cases                                       | Type | Parent | Type    | Parent  | Reset order_by? | Re-order?
+        ------------------------------------------------|------|--------|-----------------------------------------------
+        Move FC to private                              | 3    | null   | 0       | null    | yes             | no
+        Move FC to public                               | 3    | any    | 4       | null    | yes             | no
+        Move FC to new parent                           | 3    | null   | not set | X       | yes             | yes
+        Save FC but don’t change type or parent         | 3    | null   | not set | null    | no              | no
+        Save a child FC but don’t change type or parent | 3    | X      | not set | not set | no              | no
+        Move public to private                          | 4    | null   | 0       | null    | no              | no
+        Move public to FC (root)                        | 4    | null   | 3       | not set | yes             | yes
+        Move public to FC (others)                      | 4    | null   | 3       | X       | yes             | yes
+        Save public but don’t change type or parent     | 4    | null   | 4       | not set | no              | no
+        Create FC at root                               | 0    | null   | 3       | not set | yes             | yes
+        Create FC at other level                        | 0    | null   | 3       | X       | yes             | yes
+        ----------------------------------------------------------------------------------------------------------------
+        */
+        // Saving a featured collection without changing its type or parent
+        $rob_cond_fc_no_change = (
+            isset($oldcoldata['type']) && $oldcoldata['type'] === COLLECTION_TYPE_FEATURED
+            && !isset($sqlset['type'])
+            && (!isset($sqlset['parent']) || is_null($sqlset['parent']))
+        );
+        // Saving a public collection without changing it into a featured collection
+        $rob_cond_public_col_no_change = (
+            isset($oldcoldata['type'], $sqlset['type'])
+            && $oldcoldata['type'] === COLLECTION_TYPE_PUBLIC
+            && $sqlset["type"] !== COLLECTION_TYPE_FEATURED
+        );
+        if( !($rob_cond_fc_no_change || $rob_cond_public_col_no_change) )
+            {
+            $sqlset['order_by'] = 0;
+
+            if(
+                // Type changed to featured collection
+                (isset($sqlset['type']) && $sqlset['type'] === COLLECTION_TYPE_FEATURED)
+
+                // Featured collection moved in the tree (ie parent changed)
+                || ($oldcoldata['type'] === COLLECTION_TYPE_FEATURED && !isset($sqlset['type']) && isset($sqlset['parent']))
+            )
+                {
+                $reorder_fcs = true;
+                }
+            }
+
+
+        // Update collection record
         if(count($sqlset) > 0)
             {
             $sqlupdate = "";
@@ -1321,6 +1373,7 @@ function save_collection($ref, $coldata=array())
                 'parent',
                 'thumbnail_selection_method',
                 'bg_img_resource_ref',
+                'order_by',
             ];
             foreach($sqlset as $colopt => $colset)
                 {
@@ -1353,7 +1406,6 @@ function save_collection($ref, $coldata=array())
 
                 $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
                 }
-
             if($sqlupdate !== '')
                 {
                 $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
@@ -1509,6 +1561,40 @@ function save_collection($ref, $coldata=array())
 	if (isset($coldata["result_limit"]) && (int)$coldata["result_limit"] > 0)
         {
         sql_query("update collection_savedsearch set result_limit='" . $coldata["result_limit"] . "' where collection='$ref'");
+        }
+
+    // Re-order featured collections tree at the level of this collection (if applicable - only for featured collections)
+    if(isset($reorder_fcs))
+        {
+        if(isset($sqlset["parent"]) && $sqlset["parent"] > 0)
+            {
+            $sql_where_parent_is = '= ?';
+            $sql_where_parent_is_bp = ['i', $sqlset["parent"]];
+            }
+        else
+            {
+            $sql_where_parent_is = 'IS NULL';
+            $sql_where_parent_is_bp = [];
+            }
+
+
+        // get FCs at the new level and re-order them
+        $fcs_after_update = ps_query(
+              "SELECT DISTINCT c.ref,
+                      c.`name`,
+                      c.`type`,
+                      c.parent,
+                      c.order_by,
+                      count(DISTINCT cr.resource) > 0 AS has_resources
+                 FROM collection AS c
+            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+                WHERE c.`type` = ?
+                  AND c.parent {$sql_where_parent_is}
+             GROUP BY c.ref",
+            array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent_is_bp)
+        );
+        usort($fcs_after_update, 'order_featured_collections');
+        reorder_collections(array_column($fcs_after_update, 'ref'));
         }
 
     refresh_collection_frame();
@@ -4878,6 +4964,7 @@ function get_featured_collections(int $parent, array $ctx)
                       c.parent,
                       c.thumbnail_selection_method,
                       c.bg_img_resource_ref,
+                      c.order_by,
                       c.created,
                       count(DISTINCT cr.resource) > 0 AS has_resources,
                       count(DISTINCT cc.ref) > 0 AS has_children
@@ -5035,8 +5122,9 @@ function featured_collection_check_access_control(int $c_ref)
 
 
 /**
-* Helper comparison function for ordering featured collections by the "has_resource" property,  then by name, this takes into account the legacy
-* use of '*' as a prefix to move to the start.
+* Helper comparison function for ordering featured collections. It sorts using the order_by property, then based if the
+* collection is a category (using the "has_resource" property), then by name (this takes into account the legacy
+* use of '*' as a prefix to move to the start).
 * 
 * @param array $a First featured collection data structure to compare
 * @param array $b Second featured collection data structure to compare
@@ -5047,16 +5135,29 @@ function featured_collection_check_access_control(int $c_ref)
 function order_featured_collections(array $a, array $b)
     {
     global $descthemesorder;
-    if($a["has_resources"] == $b["has_resources"])
+
+    // Sort using the order_by property
+    if($a['order_by'] != $b['order_by'] && !($a['order_by'] == 0 || $b['order_by'] == 0))
         {
-        if ($descthemesorder)
+        if($descthemesorder)
             {
-            return strnatcasecmp($b["name"],$a["name"]);
+            return $a['order_by'] > $b['order_by'] ? -1 : 1;
             }
-        return strnatcasecmp($a["name"],$b["name"]);
+        return $a['order_by'] < $b['order_by'] ? -1 : 1;
         }
 
-    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    // Order by showing categories first
+    if($a['has_resources'] != $b['has_resources'])
+        {
+        return $a['has_resources'] < $b['has_resources'] ? -1 : 1;
+        }
+
+    // Order by collection name
+    if($descthemesorder)
+        {
+        return strnatcasecmp($b['name'], $a['name']);
+        }
+    return strnatcasecmp($a['name'], $b['name']);
     }
 
 /**
@@ -5660,6 +5761,17 @@ function compute_featured_collections_access_control()
     return $return;
     }
 
+
+/**
+ * Check if user is allowed to re-order featured collections
+ * @return boolean
+ */
+function can_reorder_featured_collections()
+    {
+    return checkperm('h') && compute_featured_collections_access_control() === true;
+    }
+
+
 /**
  * Remove all old anonymous collections
  *
@@ -6212,4 +6324,41 @@ function get_default_user_collection($setactive=false)
 		set_user_collection($userref,$usercollection);
         }
     return $usercollection;
+    }
+
+
+/**
+ * Re-order collections
+ * 
+ * @param array $refs List of collection IDs in the new order
+ * 
+ * @return void
+ */
+function reorder_collections(array $refs)
+    {
+    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $order_by = 0;
+
+    // Chunking the list of collection IDs in batches of 500 should be within the default max_allowed_packet size (with highest ID length)
+    $refs_chunked = array_filter(count($refs) <= 500 ? [$refs] : array_chunk($refs, 500));
+    foreach($refs_chunked as $refs)
+        {
+        $cases_params = [];
+        $cases = '';
+
+        foreach($refs as $ref)
+            {
+            $order_by += 10;
+            $cases .= ' WHEN ? THEN ?';
+            $cases_params = array_merge($cases_params, ['i', $ref, 'i', $order_by]);
+            }
+
+        $sql = sprintf('UPDATE collection SET order_by = (CASE ref %s END) WHERE ref IN (%s)',
+             $cases,
+             ps_param_insert(count($refs))
+         );
+        ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
+        }
+
+    return;
     }

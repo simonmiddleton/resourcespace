@@ -80,7 +80,10 @@ $rendering_options = array(
 
 $featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array()) : array());
 usort($featured_collections, "order_featured_collections");
-render_featured_collections($rendering_options, $featured_collections);
+render_featured_collections(
+    array_merge($rendering_options, ["reorder" => can_reorder_featured_collections()]),
+    $featured_collections
+);
 
 $smart_fcs_list = array();
 if($parent == 0 && $smart_rtf == 0)
@@ -203,6 +206,27 @@ jQuery(document).ready(function ()
             });
         }
     });
+
+
+// Re-order capability
+jQuery(function() {
+    // Disable for touch screens
+    if(is_touch_device())
+        {
+        return false;
+        }
+
+    jQuery('.BasicsBox.FeaturedSimpleLinks').sortable({
+        items: '.SortableItem',
+        update: function(event, ui)
+            {
+            let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
+            let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
+            console.debug('fcs_new_order=%o', fcs_new_order);
+            api('reorder_featured_collections', {'refs': fcs_new_order});
+            }
+    });
+});
 </script>
 <?php
 if($themes_show_background_image && !$full_width)

@@ -1044,3 +1044,15 @@ function api_send_collection_to_admin($collection)
     {
     return send_collection_to_admin($collection);
     }
+
+function api_reorder_featured_collections($refs)
+    {
+    if(can_reorder_featured_collections())
+        {
+        reorder_collections($refs);
+        return true;
+        }
+
+    http_response_code(403);
+    return false;
+    }

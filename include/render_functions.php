@@ -4726,10 +4726,19 @@ function render_featured_collection(array $ctx, array $fc)
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
     $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
+    $reorder = (bool) ($ctx['reorder'] ?? false);
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
     $html_container_style = array();
+    $html_container_data_items = [];
+
+    // Make featured collection tile sortable
+    if($reorder && !$is_smart_featured_collection)
+        {
+        $html_container_class[] = 'SortableItem';
+        $html_container_data_items['data-fc-ref'] = $fc['ref'];
+        }
 
 
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
@@ -4779,12 +4788,18 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
 
+    $html_container_data = '';
+    foreach($html_container_data_items as $name => $value)
+        {
+        $html_container_data .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
+        }
+
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = ['display: none;'];
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
-    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?>>
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
             <?php
